@@ -1,0 +1,335 @@
+<mat-card-header>
+    <mat-card-title
+        class="rudi-card-title f-w-600">{{'metaData.informationsComplémentaires'|translate}}</mat-card-title>
+</mat-card-header>
+<mat-card-content>
+    <mat-expansion-panel
+        (closed)="panelOpenStateCond = false"
+        (opened)="panelOpenStateCond = true"
+        [hidden]="metadata.access_condition === null"
+        class="rudi-expansion-panel">
+        <mat-expansion-panel-header [ngClass]="{'open': panelOpenStateCond}">
+            <mat-panel-title class="rudi-panel-title">
+                {{'conditionsUtilisationBox.conditionsUtilisation'|translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div [ngClass]="{'rudi-table-width-xl': mediaSize.isXl || mediaSize.isLg, 'rudi-table-width-md':mediaSize.isMd}"
+             class="rudi-bloc-access-condition">
+            <!-- Bloc condition d'utilisation -->
+            <ng-container>
+                <!--bloc Licence  -->
+                <div class="rudi-panel-table-header" id="licence-table-header">
+                    <span>{{'conditionsUtilisationBox.licenceReutilisationDonnees'|translate}}</span>
+                </div>
+                <table class="table rudi-panel-table" aria-describedby="licence-table-header">
+                    <tbody class="rudi-panel-tbody-border mat-header-row">
+                    <tr>
+                        <th scope="row">{{'conditionsUtilisationBox.typeLicence'|translate}}</th>
+                        <td *ngIf="metaDataFunctions.isLicenceTypeStandard(metadata.access_condition.licence)"
+                            class="type-licence-libelle">
+                            <a href="{{this.conceptUri | async}}" target="_blank">{{licenceLabel | async}}</a>
+                        </td>
+                        <td *ngIf="metaDataFunctions.isLicenceTypeCustom(metadata.access_condition.licence)"
+                            class="type-licence-libelle">
+                            <a href="{{getCustomLicenceUri()}}"
+                               target="_blank">{{getCustomLicenceLabel(metadata.access_condition.licence)}}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'conditionsUtilisationBox.acces' | translate}}</th>
+                        <td *ngIf="metadata.access_condition.confidentiality?.restricted_access">{{'conditionsUtilisationBox.donneesAccesRestreint' | translate}}</td>
+                        <td *ngIf="!(metadata.access_condition.confidentiality?.restricted_access)">{{'conditionsUtilisationBox.donneesOuvertes' | translate}}</td>
+                    </tr>
+                    <tr *ngIf="metadata.access_condition.confidentiality?.gdpr_sensitive">
+                        <th scope="row">{{'conditionsUtilisationBox.autre' | translate}}</th>
+                        <td>{{'conditionsUtilisationBox.contientDesDonneesPersonnelles' | translate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            <!--Fin -->
+
+            <!--bloc Obligations -->
+            <div
+                *ngIf="metadata.access_condition.bibliographical_reference || metadata.access_condition.mandatory_mention">
+                <div class="rudi-panel-table-header" id="obligations-table-header">
+                    <span>{{'conditionsUtilisationBox.obligationLegale'|translate}}</span>
+                </div>
+                <table class="table rudi-panel-table" aria-describedby="obligations-table-header">
+                    <tbody class="rudi-panel-tbody-border mat-header-row">
+                    <tr *ngIf="metadata.access_condition.mandatory_mention">
+                        <th scope="row">{{'conditionsUtilisationBox.mandatoryMention'|translate}}</th>
+                        <td>{{getMandatoryMention(metadata.access_condition)}}</td>
+                    </tr>
+                    <tr *ngIf="metadata.access_condition.bibliographical_reference">
+                        <th scope="row">{{'conditionsUtilisationBox.bibliographicalReference'|translate}}</th>
+                        <td>{{getBibliographicalReference(metadata.access_condition)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--Fin -->
+
+            <!--bloc Contraintes d'utilisation -->
+            <div *ngIf="metadata.access_condition.access_constraint || metadata.access_condition.usage_constraint
+               || metadata.access_condition.other_constraints">
+                <div class="rudi-panel-table-header" id="access_condition-table-header">
+                    <span>{{'conditionsUtilisationBox.contraintesUtilisationAcces'|translate}}</span>
+                </div>
+                <table class="table rudi-panel-table" aria-describedby="access_condition-table-header">
+                    <tbody class="rudi-panel-tbody-border mat-header-row">
+                    <tr *ngIf="metadata.access_condition.usage_constraint">
+                        <th scope="row">{{'conditionsUtilisationBox.utilisation'|translate}}</th>
+                        <td>{{getUsageConstraint(metadata.access_condition)}}</td>
+                    </tr>
+                    <tr *ngIf="metadata.access_condition.access_constraint">
+                        <th scope="row">{{'conditionsUtilisationBox.acces'|translate}}</th>
+                        <td>{{getAccessConstraint(metadata.access_condition)}}</td>
+                    </tr>
+                    <tr *ngIf="metadata.access_condition.other_constraints">
+                        <th scope="row">{{'conditionsUtilisationBox.autre'|translate}}</th>
+                        <td>{{getOtherConstraints(metadata.access_condition)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--Fin -->
+    </mat-expansion-panel>
+    <mat-expansion-panel
+        (closed)="panelOpenStateDate = false"
+        (opened)="panelOpenStateDate = true"
+        class="rudi-expansion-panel">
+        <mat-expansion-panel-header [ngClass]="{'open': panelOpenStateDate}">
+            <mat-panel-title class="rudi-panel-title">
+                {{'metaData.date'|translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngIf="metadata.dataset_dates.updated" class="rudi-panel-card">
+            <span>{{'metaData.derniereMajDonnee'|translate}}</span>
+            <span class="rudi-panel-card-data">{{ metadata?.dataset_dates.updated | date :'dd/MM/yyyy'}}
+                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.updated | date :'HH:mm'}}</span>
+      </span>
+        </div>
+        <div *ngIf="metadata.metadata_info.metadata_dates.updated" class="rudi-panel-card">
+            <span>{{'metaData.derniereMajDonneeInfo'|translate}}</span>
+            <span class="rudi-panel-card-data">{{metadata?.metadata_info.metadata_dates.updated | date :'dd/MM/yyyy'}}
+                <span
+                    class="rudi-panel-card-hour ml-2">{{ metadata?.metadata_info.metadata_dates.updated | date :'HH:mm'}}</span>
+      </span>
+        </div>
+        <div *ngIf="metadata.dataset_dates.published" class="rudi-panel-card">
+            <span>{{'metaData.publication'|translate}}</span>
+            <span class="rudi-panel-card-data">{{metadata?.dataset_dates.published | date :'dd/MM/yyyy'}}
+                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.published | date :'HH:mm'}}</span>
+      </span>
+        </div>
+        <div *ngIf="metadata.dataset_dates.created" class="rudi-panel-card">
+            <span>{{'metaData.creationJeuDonnée'|translate}}</span>
+            <span class="rudi-panel-card-data">{{metadata?.dataset_dates.created | date :'dd/MM/yyyy'}}
+                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.created | date :'HH:mm'}}</span>
+      </span>
+        </div>
+        <div *ngIf="metadata.dataset_dates.validated" class="rudi-panel-card">
+            <span>{{'metaData.validationJeuDonnee'|translate}}</span>
+            <span class="rudi-panel-card-data">{{ metadata?.dataset_dates.validated | date :'dd/MM/yyyy'}}
+                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.validated | date :'HH:mm'}}</span>
+      </span>
+        </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel
+        (closed)="panelOpenStateStockage = false"
+        (opened)="panelOpenStateStockage = true"
+        [disabled]="metadata.available_formats.length === 0"
+        class="rudi-expansion-panel stockage-expansion-panel"
+    >
+        <mat-expansion-panel-header [ngClass]="{'open': panelOpenStateStockage}">
+            <mat-panel-title class="rudi-panel-title">
+                {{'metaData.sourcesDonnees'|translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngIf="metadata.resource_languages" class="rudi-panel-data-language">
+            <span class="rudi-panel-data-data-language mr-3">{{'metaData.dataLanguage' | translate}}</span>
+            <span
+                class="rudi-panel-language-value">{{'languagesCodes.' + metadata.resource_languages | translate}}</span>
+        </div>
+        <div *ngIf="metadata.available_formats" class="mt-4">
+            <p class="rudi-panel-available">
+                {{metadata.available_formats.length}}
+                {{'common.source' | translate}}{{metadata.available_formats.length > 1 ? 's' : ''}}
+                {{'common.disponible' | translate}}{{metadata.available_formats.length > 1 ? 's' : ''}} :
+            </p>
+        </div>
+
+
+        <div *ngFor=" let media of metadata.available_formats; let i = index" class="mt-3" [ngClass]="mediaSize.isSm ? 'stockage-panel-sm' : 'stockage-panel'">
+            <!-- Accordéon source de données -->
+            <mat-expansion-panel
+                [expanded]="metadata.available_formats.length <= 3"
+            >
+                <mat-expansion-panel-header class="rudi-mat-expansion-panel-source" id="medias-table-header">
+                    <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeFile(media)" class="rudi-panel-source-title">
+                        {{'common.fichier'|translate}} {{getMediaFileExtension(media)}}
+                    </mat-panel-title>
+                    <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeSeries(media)" class="rudi-panel-source-title">
+                        <span>{{'common.streaming'|translate}} ({{(i + 1) - totalMediaTypeFile}})</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <!--Media de type File -->
+                <ng-container *ngIf="metaDataFunctions.isMediaTypeFile(media)">
+                    <table class="table rudi-panel-table" aria-describedby="medias-table-header">
+                        <tbody class="rudi-panel-tbody-border mat-header-row">
+                        <tr *ngIf="getMediaFile(media).file_size !== null">
+                            <th scope="row">{{'metaData.taille'|translate}}</th>
+                            <td>{{getMediaFile(media).file_size}} {{ 'metaData.octets'| translate }}</td>
+                        </tr>
+                        <tr *ngIf="getMediaFile(media).file_encoding">
+                            <th scope="row">{{'metaData.encodage'|translate}}</th>
+                            <td>{{getMediaFile(media).file_encoding}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaFile(media).checksum.algo">
+                            <th scope="row">{{'metaData.algoCompilation'|translate}}</th>
+                            <td>{{getMediaFile(media).checksum.algo}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaFile(media).checksum.hash">
+                            <th scope="row">{{'metaData.algoHashage'|translate}}</th>
+                            <td>{{getMediaFile(media).checksum.hash}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaFile(media).file_structure">
+                            <th scope="row">{{'metaData.nomenclature'|translate}}</th>
+                            <td tabindex="-1"><a href="{{getMediaFile(media).file_structure}}"
+                                   target="_blank" tabindex="-1">{{getMediaFile(media).file_structure}}</a></td>
+                        </tr>
+                        <ng-container *ngIf="!canDownloadMedia(media)">
+                            <tr *ngIf="getMediaFile(media).connector.interface_contract">
+                                <th scope="row">{{'metaData.modaliteAcces'|translate}}</th>
+                                <td>{{getMediaFile(media).connector.interface_contract}}</td>
+                            </tr>
+                            <tr *ngIf="getMediaFile(media).connector.url">
+                                <th scope="row">{{'metaData.urlAcces'|translate}}</th>
+                                <td tabindex="-1"><a href="{{getMediaFile(media).connector.url}}"
+                                       target="_blank" tabindex="-1">{{getMediaFile(media).connector.url}}</a></td>
+                            </tr>
+                        </ng-container>
+                        </tbody>
+                    </table>
+                    <div *ngIf="canDownloadMedia(media)" class="rudi-panel-source-download">
+                        <button (click)="onDownloadFile(media)"
+                                class="btn source-download-libelle" tabindex="-1">
+                            {{'common.telechargerFichier'|translate}}
+                        </button>
+                    </div>
+                </ng-container>
+
+                <!--Media de type Series -->
+                <ng-container *ngIf="metaDataFunctions.isMediaTypeSeries(media)">
+                    <table class="table rudi-panel-table" aria-describedby="medias-table-header">
+                        <tbody class="rudi-panel-tbody-border mat-header-row">
+                        <tr *ngIf="getMediaSerie(media).latency">
+                            <th scope="row">{{'metaData.tempsLantence'|translate}}</th>
+                            <td>{{getMediaSerie(media).latency}} {{'common.ms'|translate}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaSerie(media).period">
+                            <th scope="row">{{'metaData.tempsDeuxEnregistrement'|translate}}</th>
+                            <td>{{getMediaSerie(media).period}} {{'common.ms'|translate}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaSerie(media).current_number_of_records">
+                            <th scope="row">{{'metaData.nombreEnregistrements'|translate}}</th>
+                            <td>{{getMediaSerie(media).current_number_of_records}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaSerie(media).total_number_of_records">
+                            <th scope="row">{{'metaData.nombreEstimeEnregistrement'|translate}}</th>
+                            <td>{{getMediaSerie(media).total_number_of_records}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaSerie(media).current_size">
+                            <th scope="row">{{'metaData.tailleJeuDonnées'|translate}}</th>
+                            <td>{{getMediaSerie(media).current_size}} {{'common.bytes'|translate}}</td>
+                        </tr>
+                        <tr *ngIf="getMediaSerie(media).total_size">
+                            <th scope="row">{{'metaData.tailleTotale'|translate}}</th>
+                            <td>{{getMediaSerie(media).total_size}} {{'common.bytes'|translate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+            </mat-expansion-panel>
+        </div>
+        <!-- Fin Accordéon source de données -->
+    </mat-expansion-panel>
+
+    <mat-expansion-panel
+        (closed)="panelOpenStateLoc = false"
+        (opened)="panelOpenStateLoc = true"
+        [disabled]="!metadata.geography"
+    >
+        <mat-expansion-panel-header [ngClass]="{'open': panelOpenStateLoc}">
+            <mat-panel-title class="rudi-panel-title">
+                {{'metaData.localisationDonnees'|translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="d-flex rudi-panel-body panel-provider" [ngClass]="{'map-panel-mobile': mediaSize.isDeviceMobile}">
+            <div class="d-flex mr-4 align-items-start" [ngClass]="{'map-spacing-desktop': mediaSize.isDeviceDesktop}">
+                <div [ngClass]="{'map-container-desktop': mediaSize.isDeviceDesktop, 'map-container-mobile' : mediaSize.isDeviceMobile}">
+                    <app-map [metadata]="metadata"></app-map>
+                </div>
+            </div>
+            <div class="d-flex flex-column" [ngClass]="{'map-spacing-desktop': mediaSize.isDeviceDesktop}">
+                <ng-container *ngIf="metadata.geography">
+                    <span class="blue-theme mb-2">{{'metaData.coordonneesBoite'|translate}}</span>
+                    <span>{{'metaData.latitudeN'|translate}}: <ng-container
+                        *ngIf="metadata?.geography.bounding_box?.north_latitude !== undefined">{{ metadata?.geography.bounding_box.north_latitude}}</ng-container></span>
+                    <span>{{'metaData.latitudeS'|translate}}: <ng-container
+                        *ngIf="metadata?.geography.bounding_box?.south_latitude !== undefined">{{metadata?.geography.bounding_box.south_latitude}}</ng-container></span>
+                    <span>{{'metaData.longitudeE'|translate}}: <ng-container
+                        *ngIf="metadata?.geography.bounding_box?.east_longitude !== undefined">{{metadata?.geography.bounding_box.east_longitude}}</ng-container></span>
+                    <span>{{'metaData.longitudeO'|translate}}: <ng-container
+                        *ngIf="metadata?.geography.bounding_box?.west_longitude !== undefined">{{metadata?.geography.bounding_box.west_longitude}}</ng-container></span>
+
+                    <ng-container *ngIf="metadata.geography?.projection">
+                        <span class="blue-theme mt-4 mb-2">{{'metaData.projectionCartographique'|translate}}</span>
+                        <span>{{metadata.geography.projection}}</span>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel
+        (closed)="panelOpenStateProvider = false"
+        (opened)="panelOpenStateProvider = true"
+        [disabled]="!metadata.metadata_info.metadata_provider"
+    >
+        <mat-expansion-panel-header [ngClass]="{'open': panelOpenStateProvider}">
+            <mat-panel-title class="rudi-panel-title">
+                {{'metaData.informationFournisseur'|translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="d-flex rudi-panel-body panel-provider">
+            <div class="d-flex mr-4 align-items-center rudi-logo-provider-box">
+                <app-organization-logo organizationType="provider"
+                                       [organizationId]="this.metadata.metadata_info.metadata_provider?.organization_id"></app-organization-logo>
+            </div>
+            <div class="d-flex w-50 flex-column">
+                <span *ngIf="metadata?.metadata_info.metadata_provider?.organization_name" class="f-w-600">
+                    {{metadata?.metadata_info.metadata_provider.organization_name | uppercase}}
+                </span>
+                <span *ngIf="metadata.metadata_info.metadata_provider?.organization_address">
+                    {{metadata?.metadata_info.metadata_provider.organization_address}}
+                </span>
+
+                <ng-container *ngFor="let metadata_contact of metadata.metadata_info.metadata_contacts">
+                    <div class="mt-3 d-flex flex-column">
+                        <span *ngIf="metadata_contact.organization_name"
+                              class="f-w-500">{{metadata_contact.organization_name}}</span>
+                        <span *ngIf="metadata_contact.contact_name">{{metadata_contact.contact_name}}</span>
+                        <span *ngIf="metadata_contact.role">{{metadata_contact.role}}</span>
+                        <span *ngIf="metadata_contact.email" class="text-underline">{{metadata_contact.email}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+    </mat-expansion-panel>
+</mat-card-content>

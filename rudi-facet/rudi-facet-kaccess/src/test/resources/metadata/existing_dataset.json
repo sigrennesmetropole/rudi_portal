@@ -1,0 +1,165 @@
+{
+	"global_id": "460ace97-81a8-43e2-8916-4a8082fcb79f",
+	"local_id": "2020.11-Laennec-AQMO-air quality sensors measures",
+	"doi":"10.1594/PANGAEA.726855",
+	"resource_title": "JDD créé le 09/09/2021 pour test sur le DOI",
+	"synopsis": [
+		{
+			"lang": "fr-FR",
+			"text": "JDD créé le 09/09/2021 pour test sur le DOI = 10.1594/PANGAEA.726855"
+		}
+	],
+	"summary": [
+		{
+			"lang": "fr-FR",
+			"text": "Création JDD : mon titre est à modifier. Je vais tenter de le modifier avec une requête PUT."
+		}
+	],
+	"theme": "transportation",
+	"keywords": [
+		"métro", "bus"
+	],
+	"producer": {
+		"organization_id": "e9b8cabb-ae0e-48c3-8175-a19bb5011169",
+		"organization_name": "ADEME",
+		"organization_address": "Boulevard Voltaire, 35000 Rennes"
+	},
+	"contacts": [
+		{
+			"contact_id": "5f07d04a-f650-43c3-bb1a-d8d612a1fc8f",
+			"organization_name": "DSI ADEME",
+			"contact_name": "John Dupond",
+			"role": "Responsable SI",
+			"email": "j.dupond@ur1.fr"
+		}
+	],
+	"resource_languages": [
+		"fr-FR"
+	],
+	"temporal_spread": {
+		"start_date": "2021-04-01T12:10:48Z",
+		"end_date": "2021-10-15T06:31:48Z"
+	},
+	"geography": {
+		"bounding_box": {
+			"north_latitude": 8.5,
+			"south_latitude": -47,
+			"west_longitude": 10,
+			"east_longitude": 120
+		},
+		"geographic_distribution": {
+			"type": "Point",
+			"coordinates": [
+				-1.677803,
+				48.112834
+			],
+			"bbox": [
+				-1.677803,
+				48.112834,
+				-1.677803,
+				48.112834
+			]
+		},
+		"projection":"WGS 84 (EPSG:4326)"
+	},
+	"dataset_size": {
+		"numbers_of_records": 40,
+		"number_of_fields": 80
+	},
+	"dataset_dates": {
+		"created": "1991-07-10T18:10:48Z",
+		"validated": "2021-01-15T05:10:48Z",
+		"published": "2021-03-01T15:10:48Z",
+		"updated": "2021-10-05T23:18:48Z",
+		"deleted": "2021-08-05T12:19:48Z"
+	},
+	"storage_status": "online",
+	"access_condition": {
+		"confidentiality": {
+			"restricted_access": false,
+			"gdpr_sensitive": false
+		},
+		"licence": {
+			"licence_type": "CUSTOM",
+			"custom_licence_label": [
+				{
+					"lang": "fr",
+					"text": "licence custom"
+				}
+			],
+			"custom_licence_uri":"http://www.example.com/"
+		},
+		"usage_constraint": [
+			{
+				"lang": "fr-FR",
+				"text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+			}
+		],
+		"bibliographical_reference": [
+			{
+				"lang": "fr-FR",
+				"text": "Test bibliographie"
+			}
+		],
+		"mandatory_mention": [
+			{
+				"lang": "fr-FR",
+				"text": "Source: Région Bretagne"
+			}
+		],
+		"access_constraint": [
+			{
+				"lang": "fr-FR",
+				"text": "Pas de contrainte d'accès"
+			}
+		],
+		"other_constraints": [
+			{
+				"lang": "fr-FR",
+				"text": "Pas de restriction d'accès public"
+			}
+		]
+	},
+	"available_formats": [
+		{
+			"media_type": "FILE",
+			"media_id": "4473d4a0-a0c6-475c-a1d5-f9fc30a1d897",
+			"file_type": "text/csv",
+			"file_structure": "",
+			"file_size": 50,
+			"file_encoding": "UTF-8",
+			"checksum": {
+				"algo": "MD5",
+				"hash": "SHA-512"
+			},
+			"connector": {
+				"interface_contract": "dwnl",
+				"url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+			}
+		}
+	],
+	"metadata_info": {
+		"api_version": "1.2.0",
+		"metadata_dates": {
+			"created": "1998-07-11T23:10:48Z",
+			"validated": "2021-04-01T12:10:48Z",
+			"published": "2018-07-12T12:10:48Z",
+			"updated": "2020-06-10T23:15:48Z",
+			"deleted": "2021-04-01T12:10:48Z"
+		},
+		"metadata_provider": {
+			"organization_id": "de7dcb86-826f-49ce-b525-0c8b202fb90c",
+			"organization_name": "ADEME - DSI",
+			"organization_address": "Bureau 35"
+		},
+		"metadata_contacts": [
+			{
+				"contact_id": "fb3c5678-c7e3-43ae-9851-c839973f837c",
+				"organization_name": "ADEME",
+				"contact_name": "Denise Verte",
+				"role": "Test",
+				"email": "dv@ademe.fr"
+			}
+		]
+	}
+}

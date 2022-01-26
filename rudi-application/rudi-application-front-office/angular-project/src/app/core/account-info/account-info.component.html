@@ -1,0 +1,48 @@
+<!-- User account information -->
+<div *ngIf="user" [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd || mediaSize.isLg, 'p-large': mediaSize.isXl}"
+     class="account-container container-fluid data-set-main-container">
+    <ul>
+        <li>{{'accountInfo.nom' | translate}} : {{user.firstname}} </li>
+        <li>{{'accountInfo.prenom' | translate}} : {{user.lastname}}</li>
+        <li>{{'accountInfo.nomAssociation' | translate}} : {{user.company}}</li>
+    </ul>
+    <div>
+        <div class="ml-4">
+
+            <!-- Affichage téléphones-->
+            <div *ngIf="telephoneAddresses.length > 0">
+                <label>{{'accountInfo.numeroTelephone' | translate}} :</label>
+                <ng-container *ngFor="let address of telephoneAddresses">
+                    <p>{{address.addressRole.label}} : {{address.phoneNumber}}</p>
+                </ng-container>
+            </div>
+
+            <!--Affichage Email -->
+            <div *ngIf="emailAddresses.length > 0">
+                <label>{{'accountInfo.adresseEmail' | translate}} : </label>
+                <ng-container *ngFor="let address of emailAddresses">
+                    <p>{{address.addressRole.label}} : {{address.email}}</p>
+                </ng-container>
+            </div>
+
+            <!--Affichage Postal -->
+            <div *ngIf="postalAddresses.length > 0">
+                <label>{{'accountInfo.adressePostal' | translate}} : </label>
+                <ng-container *ngFor="let address of postalAddresses">
+                    <p>{{address.addressRole.label}}</p>
+                    <p>{{address.recipientIdentification}}</p>
+                    <span>{{address.additionalIdentification}}</span>
+                    <span>{{address.streetNumber}}</span>
+                    <p>{{address.distributionService}}</p>
+                    <p>{{address.locality}}</p>
+                </ng-container>
+            </div>
+
+        </div>
+    </div>
+
+    <ul *ngFor="let item of user.roles">
+        <li *ngIf="item">{{'accountInfo.role'|translate}} : {{item.label}}</li>
+    </ul>
+
+</div>

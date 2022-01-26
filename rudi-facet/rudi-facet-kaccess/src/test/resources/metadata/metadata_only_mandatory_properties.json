@@ -1,0 +1,47 @@
+{
+    "global_id": "fc8f0f43-80e3-458c-a320-f4efca0b24dd",
+    "resource_title": "Création d'un jeu de données avec uniquement les propriétés minimales",
+    "synopsis": [
+        {
+            "lang": "fr-FR",
+            "text": "Test rapport version API"
+        }
+    ],
+    "summary": [
+        {
+            "lang": "fr-FR",
+            "text": "Has autem provincias, quas Orontes ambiens amnis imosque pedes Cassii montis illius celsi praetermeans funditur in Parthenium mare, Gnaeus Pompeius superato Tigrane regnis Armeniorum abstractas dicioni Romanae coniunxit. Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab Euphrate flumine brevi spatio disparatur, refertum mercatoribus opulentis, ubi annua sollemnitate prope Septembris initium mensis ad nundinas magna promiscuae fortunae convenit multitudo ad commercanda quae Indi mittunt et Seres aliaque plurima vehi terra marique consueta. Ardeo, mihi credite, Patres conscripti (id quod vosmet de me existimatis et facitis ipsi) incredibili quodam amore patriae, qui me amor et subvenire olim impendentibus periculis maximis cum dimicatione capitis, et rursum, cum omnia tela undique esse intenta in patriam viderem, subire coegit atque excipere unum pro universis. Hic me meus in rem publicam animus pristinus ac perennis cum C. Caesare reducit, reconciliat, restituit in gratiam. Principium autem unde latius se funditabat, emersit ex negotio tali. Chilo ex vicario et coniux eius Maxima nomine, questi apud Olybrium ea tempestate urbi praefectum, vitamque suam venenis petitam adseverantes inpetrarunt ut hi, quos suspectati sunt, ilico rapti conpingerentur in vincula, organarius Sericus et Asbolius palaestrita et aruspex Campensis. Sed quid est quod in hac causa maxime homines admirentur et reprehendant meum consilium, cum ego idem antea multa decreverim, que magis ad hominis dignitatem quam ad rei publicae necessitatem pertinerent? Supplicationem quindecim dierum decrevi sententia mea. Rei publicae satis erat tot dierum quot C. Mario ; dis immortalibus non erat exigua eadem gratulatio quae ex maximis bellis. Ergo ille cumulus dierum hominis est dignitati tributus."
+        }
+    ],
+    "theme": "mandatory",
+    "keywords": [
+        "localisation",
+        "capteur",
+        "qualité de l'air"
+    ],
+    "producer": {
+        "organization_id": "df2148ae-4e33-4a34-8a9e-c2e04db10ebd",
+        "organization_name": "STAR"
+    },
+    "contacts": [
+        {
+            "contact_id": "512ea248-3570-44b8-ab37-5f3ea0d68ec7",
+            "contact_name": "Nom du contact",
+            "email": "contact_test@rudi.fr"
+        }
+    ],
+    "dataset_dates": {
+        "created": "2021-04-01T12:10:48.970Z",
+        "updated": "2021-04-01T12:10:48.970Z"
+    },
+    "storage_status": "online",
+    "metadata_info": {
+        "api_version": "1.2.0"
+    },
+    "access_condition": {
+        "licence": {
+            "licence_type": "STANDARD",
+            "licence_label": "licence_Apache-2.0"
+        }
+    }
+}

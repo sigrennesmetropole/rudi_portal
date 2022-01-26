@@ -1,0 +1,10 @@
+{
+	"confidentiality": {
+		"restricted_access": true,
+		"gdpr_sensitive": true
+	},
+	"licence": {
+		"licence_type": "CUSTOM",
+		"custom_licence_uri": "http://www.example.com/"
+	}
+}

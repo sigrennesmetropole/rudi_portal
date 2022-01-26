@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: rudi-registry
+
+---
+spring:
+  profiles: default
+  cloud:
+    config:
+      uri: http://localhost:8760/eureka  
+
+---
+spring:
+  profiles: ic
+  cloud:
+    config:
+      uri: http://10.50.1.45:8760/eureka
+
+---
+spring:
+  profiles: qualif
+  cloud:
+    config:
+      uri: http://todo:8760/eureka
+
+
+#Disable security of the Management endpoint
+management:
+  security:
+    enabled: false

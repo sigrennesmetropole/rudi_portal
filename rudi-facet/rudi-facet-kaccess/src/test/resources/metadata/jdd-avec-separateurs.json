@@ -1,0 +1,148 @@
+{
+	"global_id": "b8d83353-db25-4512-91ca-597b2754ec65",
+	"local_id": "b8d83353-db25-4512-91ca-597b2754ec65",
+	"doi": "10.5072/FK2/JV9LCP",
+	"dataverse_doi": null,
+	"resource_title": "Ce JDD contient un titre avec des séparateurs : 2021-09-20T15:26:31.911992100 | 09/09/2021 et aussi 31/08+",
+	"synopsis": [
+		{
+			"lang": "fr-FR",
+			"text": "Résumé court en français"
+		},
+		{
+			"lang": "en-US",
+			"text": "English short description"
+		}
+	],
+	"summary": [
+		{
+			"lang": "fr-FR",
+			"text": "Exploitations agricoles avec production de biogaz \n texte sur plusieurs lignes"
+		}
+	],
+	"theme": "environment",
+	"keywords": [
+		"biogaz"
+	],
+	"producer": {
+		"organization_id": "acdccf43-566b-4134-b39e-ddf46c801242",
+		"organization_name": "Producteur rudi",
+		"organization_address": "2 rue de rudi"
+	},
+	"contacts": [
+		{
+			"contact_id": "d1c4b0d9-d97f-41a8-860f-43a253370b4f",
+			"organization_name": "Association Nature",
+			"contact_name": "Dupont Pierre",
+			"role": "manager",
+			"email": "dupont@onu.org"
+		}
+	],
+	"available_formats": [
+		{
+			"media_type": "FILE",
+			"media_id": "5f0fb0d9-b9b3-4a03-b5c1-b42e63a2c3e7",
+			"connector": {
+				"url": "www.connector1.org",
+				"interface_contract": "interface contrat 1"
+			},
+			"file_structure": "https://filestructure.org/",
+			"file_size": 250,
+			"file_type": "application/pdf",
+			"file_encoding": "ISO-8859-1",
+			"checksum": {
+				"algo": "MD5",
+				"hash": "AZZ"
+			}
+		}
+	],
+	"resource_languages": [
+		"fr-FR"
+	],
+	"temporal_spread": {
+		"start_date": "2021-01-03T15:30:45",
+		"end_date": "2022-04-22T15:26:00"
+	},
+	"geography": {
+		"bounding_box": {
+			"north_latitude": 71,
+			"south_latitude": 42,
+			"west_longitude": 18,
+			"east_longitude": 10.1
+		},
+		"geographic_distribution": {
+			"type": "Polygon",
+			"coordinates": [
+				[
+					[
+						18,
+						71
+					],
+					[
+						10.1,
+						71
+					],
+					[
+						10.1,
+						42
+					],
+					[
+						18,
+						42
+					],
+					[
+						18,
+						71
+					]
+				]
+			]
+		},
+		"projection": "EPSG:4326"
+	},
+	"dataset_size": {
+		"numbers_of_records": 50,
+		"number_of_fields": 15
+	},
+	"dataset_dates": {
+		"created": "2021-02-01T00:00:00",
+		"validated": "2021-02-02T00:00:00",
+		"published": "2021-02-03T00:00:00",
+		"updated": "2021-03-12T07:00:00",
+		"deleted": "2021-04-29T00:00:00"
+	},
+	"storage_status": "online",
+	"access_condition": {
+		"confidentiality": {
+			"restricted_access": true,
+			"gdpr_sensitive": true
+		},
+		"licence": {
+			"licence_type": "STANDARD",
+			"licence_label": "SkosConcept.concept_code"
+		}
+	},
+	"metadata_info": {
+		"api_version": "1.2.0",
+		"metadata_dates": {
+			"created": "2021-03-01T00:00:00",
+			"validated": "2021-03-02T00:00:00",
+			"published": "2021-03-03T00:00:00",
+			"updated": "2021-03-11T07:00:00",
+			"deleted": "2021-03-22T00:00:00"
+		},
+		"metadata_provider": {
+			"organization_id": "1b988e5d-3c5d-4bcb-84f9-8a6702d5d7c0",
+			"organization_name": "Fournisseur rudi",
+			"organization_address": "4 rue de la pomme"
+		},
+		"metadata_contacts": [
+			{
+				"contact_id": "3b031485-5a9b-436c-abcc-053710f17994",
+				"organization_name": "organisation metadata 1",
+				"contact_name": "Contact metadata 1",
+				"role": "communication 1",
+				"email": "rudiMetadata@onu.org"
+			}
+		]
+	}
+}

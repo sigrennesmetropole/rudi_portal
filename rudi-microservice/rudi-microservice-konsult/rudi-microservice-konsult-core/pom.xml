@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-microservice-konsult</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>rudi-microservice-konsult-core</artifactId>
+	<description>RUDI Microservice Konsult Core ${project.version}</description>
+	<packaging>jar</packaging>
+
+	<properties>
+		<resource-directory>${project.basedir}/..</resource-directory>
+		<resource-generation-directory>${project.basedir}/..</resource-generation-directory>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-kaccess</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-apimaccess</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-acl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<!-- Swagger UI dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<!-- Swagger 2 doc dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<!-- Génération de classes Java a partir de fichier SWAGGER -->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-models</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<modelPackage>org.rudi.microservice.konsult.core.bean</modelPackage>
+							<inputSpec>${resource-directory}/openapi/rudi-konsult-api.json</inputSpec>
+							<importMappings>
+								<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
+								<importMapping>MetadataList=org.rudi.facet.kaccess.bean.MetadataList</importMapping>
+								<importMapping>MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets</importMapping>
+							</importMappings>
+							<languageSpecificPrimitives>
+								<languageSpecificPrimitive>Metadata</languageSpecificPrimitive>
+								<languageSpecificPrimitive>MetadataList</languageSpecificPrimitive>
+								<languageSpecificPrimitive>MetadataFacets</languageSpecificPrimitive>
+							</languageSpecificPrimitives>
+							<generatorName>spring</generatorName>
+							<library>spring-mvc</library>
+							<generateModelTests>false</generateModelTests>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApis>false</generateApis>
+							<generateModels>true</generateModels>
+							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<verbose>false</verbose>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<dateLibrary>legacy</dateLibrary>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>io.swagger.core.v3</groupId>
+						<artifactId>swagger-annotations</artifactId>
+						<version>2.1.4</version>
+					</dependency>
+					<dependency>
+						<groupId>${project.groupId}</groupId>
+						<artifactId>rudi-common-core</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

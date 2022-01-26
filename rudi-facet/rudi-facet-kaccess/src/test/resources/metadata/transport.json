@@ -1,0 +1,193 @@
+{
+	"global_id": "0a52ec9e-534c-4fa4-9b04-c5e967ccb78e",
+	"local_id": "0a52ec9e-534c-4fa4-9b04-c5e967ccb78e",
+	"doi": "10.5072/FK2/NLA4IC",
+	"dataverse_doi": null,
+	"resource_title": "Réseau de transport intermodal du 2021-04-22T15:26:31.961986900",
+	"synopsis": [
+		{
+			"lang": "fr-FR",
+			"text": "Synopsis : carte du transport intermodal de la métropole"
+		},
+		{
+			"lang": "en-US",
+			"text": "Intermodal transport network synopsis"
+		}
+	],
+	"summary": [
+		{
+			"lang": "fr-FR",
+			"text": "Résumé long réseau de transport intermodal bus tram train"
+		},
+		{
+			"lang": "en-US",
+			"text": "Summary intermodal transport network bus tram train "
+		}
+	],
+	"theme": "transport",
+	"keywords": [
+		"tram",
+		"intermodalité",
+		"bus"
+	],
+	"producer": {
+		"organization_id": "d41abc65-8a65-4dac-a12e-047d095ce43c",
+		"organization_name": "Metropole",
+		"organization_address": "2 rue de rudi"
+	},
+	"contacts": [
+		{
+			"contact_id": "63dbd88e-d522-43a9-a4f6-a49771706d3b",
+			"organization_name": "Réseau de transport de la métropole",
+			"contact_name": "Contact 1",
+			"role": "manager",
+			"email": "dupont@onu.org"
+		}
+	],
+	"available_formats": [
+		{
+			"media_type": "SERIES",
+			"media_id": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0",
+			"connector": {
+				"url": "www.connector2.org",
+				"interface_contract": "interface contrat 2"
+			},
+			"latency": 100,
+			"period": 10,
+			"current_number_of_records": 20,
+			"current_size": 328,
+			"total_number_of_records": 80,
+			"total_size": 500
+		}
+	],
+	"resource_languages": [
+		"fr-FR",
+		"en-US"
+	],
+	"temporal_spread": {
+		"start_date": "2021-01-03T15:30:45",
+		"end_date": "2022-04-22T15:26:00"
+	},
+	"geography": {
+		"bounding_box": {
+			"north_latitude": 71,
+			"south_latitude": 42,
+			"west_longitude": 18,
+			"east_longitude": 10.1
+		},
+		"geographic_distribution": {
+			"type": "Polygon",
+			"coordinates": [
+				[
+					[
+						18,
+						71
+					],
+					[
+						10.1,
+						71
+					],
+					[
+						10.1,
+						42
+					],
+					[
+						18,
+						42
+					],
+					[
+						18,
+						71
+					]
+				]
+			]
+		},
+		"projection": "EPSG:4326"
+	},
+	"dataset_size": {
+		"numbers_of_records": 50,
+		"number_of_fields": 15
+	},
+	"dataset_dates": {
+		"created": "2021-02-01T00:00:00",
+		"validated": "2021-02-02T00:00:00",
+		"published": "2021-02-03T00:00:00",
+		"updated": "2021-03-12T07:00:00",
+		"deleted": "2021-04-29T00:00:00"
+	},
+	"storage_status": "online",
+	"access_condition": {
+		"confidentiality": {
+			"restricted_access": true,
+			"gdpr_sensitive": true
+		},
+		"licence": {
+			"licence_type": "CUSTOM",
+			"custom_licence_uri": "https://www.example.com/animals",
+			"custom_licence_label": [
+				{
+					"lang": "fr-FR",
+					"text": "Animaux"
+				},
+				{
+					"lang": "en-US",
+					"text": "Animals"
+				}
+			]
+		},
+		"usage_constraint": [
+			{
+				"lang": "fr",
+				"text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+			}
+		],
+		"bibliographical_reference": [
+			{
+				"lang": "fr-FR",
+				"text": "abeilles"
+			}
+		],
+		"mandatory_mention": [
+			{
+				"lang": "fr-FR",
+				"text": "Source: Région Bretagne"
+			}
+		],
+		"access_constraint": [
+			{
+				"lang": "fr-FR",
+				"text": "abeilles"
+			}
+		],
+		"other_constraints": [
+			{
+				"lang": "fr",
+				"text": "Pas de restriction d'accès public"
+			}
+		]
+	},
+	"metadata_info": {
+		"api_version": "1.2.0",
+		"metadata_dates": {
+			"created": "2021-03-01T00:00:00",
+			"validated": "2021-03-02T00:00:00",
+			"published": "2021-03-03T00:00:00",
+			"updated": "2021-03-11T07:00:00",
+			"deleted": "2021-03-22T00:00:00"
+		},
+		"metadata_provider": {
+			"organization_id": "5023d723-e68e-4111-85a4-d14e188de857",
+			"organization_name": "Fournisseur transport",
+			"organization_address": "4 rue des lois"
+		},
+		"metadata_contacts": [
+			{
+				"contact_id": "74946567-6231-4e54-a71e-1e9a292ba63c",
+				"organization_name": "organisation metadata 1",
+				"contact_name": "Contact metadata 1",
+				"role": "communication 1",
+				"email": "rudiMetadata@onu.org"
+			}
+		]
+	}
+}

@@ -1,0 +1,102 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "${api.getName()}",
+        "version": "${api.getVersion()}"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "security": [
+        {
+            "default": []
+        }
+    ],
+    "paths": {
+        "/*": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "${api.getMediaType()}": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited",
+                "x-wso2-application-security": {
+                    "security-types": [
+                        "oauth2"
+                    ],
+                    "optional": false
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "default": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    },
+    "x-wso2-auth-header": "Authorization",
+    "x-wso2-cors": {
+        "corsConfigurationEnabled": false,
+        "accessControlAllowOrigins": [
+            "*"
+        ],
+        "accessControlAllowCredentials": false,
+        "accessControlAllowHeaders": [
+            "authorization",
+            "Access-Control-Allow-Origin",
+            "Content-Type",
+            "SOAPAction",
+            "apikey",
+            "testKey"
+        ],
+        "accessControlAllowMethods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE",
+            "PATCH",
+            "OPTIONS"
+        ]
+    },
+    "x-wso2-production-endpoints": {
+        "urls": [
+            "${api.getEndpointUrl()}"
+        ],
+        "type": "http"
+    },
+    "x-wso2-sandbox-endpoints": {
+        "urls": [
+            "${api.getEndpointUrl()}"
+        ],
+        "type": "http"
+    },
+    "x-wso2-basePath": "${api_context}/${api.getVersion()}",
+    "x-wso2-transports": [
+        "http",
+        "https"
+    ],
+    "x-wso2-response-cache": {
+        "enabled": false,
+        "cacheTimeoutInSeconds": 300
+    }
+}

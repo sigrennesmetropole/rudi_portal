@@ -1,0 +1,187 @@
+{
+	"global_id": "37b41f6f-20a7-4ecb-9756-2df17e472964",
+	"resource_title": "JDD ouvert à mettre à jour",
+	"synopsis": [
+		{
+			"lang": "fr-FR",
+			"text": "Test de mise à jour"
+		}
+	],
+	"summary": [
+		{
+			"lang": "fr-FR",
+			"text": "Test de mise à jour"
+		}
+	],
+	"theme": "agriculture",
+	"keywords": [
+		"biologie"
+	],
+	"producer": {
+		"organization_id": "b36affd6-4bf1-44f7-95d1-2cacfb461fb5",
+		"organization_name": "Rennes Métropole",
+		"organization_address": "Rennes"
+	},
+	"contacts": [
+		{
+			"contact_id": "a1c74a69-7908-4575-92af-4ab515578256",
+			"organization_name": "string",
+			"contact_name": "string",
+			"role": "Administrator",
+			"email": "contact@rudi.fr"
+		}
+	],
+	"available_formats": [
+		{
+			"media_type": "FILE",
+			"media_id": "fb0561a5-e5a0-4fe5-8db6-c04edc22752a",
+			"connector": {
+				"url": "https://data.rennesmetropole.fr/explore/dataset/cimetieres-sur-rennes-metropole/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+				"interface_contract": "dwnl"
+			},
+			"file_structure": "https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0",
+			"file_size": 50,
+			"file_type": "text/csv",
+			"file_encoding": "UTF-8",
+			"checksum": {
+				"algo": "MD5",
+				"hash": "SHA-256"
+			}
+		},
+		{
+			"media_type": "FILE",
+			"media_id": "06dfbddb-2083-41d1-be8c-7937f8b3135e",
+			"connector": {
+				"url": "https://data.rennesmetropole.fr/explore/dataset/cimetieres-sur-rennes-metropole/download/?format=json&timezone=Europe/Berlin&lang=fr",
+				"interface_contract": "dwnl"
+			},
+			"file_structure": "https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0",
+			"file_size": 50,
+			"file_type": "application/json",
+			"file_encoding": "ANSI",
+			"checksum": {
+				"algo": "MD5",
+				"hash": "SHA-512"
+			}
+		}
+	],
+	"resource_languages": [
+		"fr-FR"
+	],
+	"temporal_spread": {
+		"start_date": "2021-07-10T12:15:12",
+		"end_date": "2022-07-22T12:15:12"
+	},
+	"geography": {
+		"bounding_box": {
+			"north_latitude": 0,
+			"south_latitude": 0,
+			"west_longitude": 0,
+			"east_longitude": 0
+		},
+		"geographic_distribution": {
+			"type": "Polygon",
+			"coordinates": [
+				[
+					[
+						18,
+						71
+					],
+					[
+						10.1,
+						71
+					],
+					[
+						10.1,
+						42
+					],
+					[
+						18,
+						42
+					],
+					[
+						18,
+						71
+					]
+				]
+			]
+		},
+		"projection": "WGS 84 (EPSG:4326)"
+	},
+	"dataset_size": {
+		"numbers_of_records": 0,
+		"number_of_fields": 0
+	},
+	"dataset_dates": {
+		"created": "2021-03-22T12:15:12",
+		"validated": "2021-03-22T12:15:12",
+		"published": "2021-03-22T12:15:12",
+		"updated": "2021-03-22T12:15:12",
+		"deleted": "2021-06-22T12:15:12"
+	},
+	"storage_status": "online",
+	"access_condition": {
+		"confidentiality": {
+			"restricted_access": false,
+			"gdpr_sensitive": false
+		},
+		"licence": {
+			"licence_type": "STANDARD",
+			"licence_label": "open-source-licence"
+		},
+		"usage_constraint": [
+			{
+				"lang": "fr",
+				"text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+			}
+		],
+		"bibliographical_reference": [
+			{
+				"lang": "fr-FR",
+				"text": "abeilles"
+			}
+		],
+		"mandatory_mention": [
+			{
+				"lang": "fr-FR",
+				"text": "Source: Région Bretagne"
+			}
+		],
+		"access_constraint": [
+			{
+				"lang": "fr-FR",
+				"text": "abeilles"
+			}
+		],
+		"other_constraints": [
+			{
+				"lang": "fr",
+				"text": "Pas de restriction d'accès public"
+			}
+		]
+	},
+	"metadata_info": {
+		"api_version": "1.2.0",
+		"metadata_dates": {
+			"created": "2021-04-01T12:10:48",
+			"validated": "2021-04-01T12:10:48",
+			"published": "2021-04-01T12:10:48",
+			"updated": "2021-04-01T12:10:48",
+			"deleted": "2021-04-01T12:10:48"
+		},
+		"metadata_provider": {
+			"organization_id": "92c908ad-dcdb-400f-a248-f8adb955e252",
+			"organization_name": "Service Information Géographique ? Rennes Métropole",
+			"organization_address": "string"
+		},
+		"metadata_contacts": [
+			{
+				"contact_id": "c78e7567-5b0b-4068-bd45-fb7013bb072f",
+				"organization_name": "string",
+				"contact_name": "string",
+				"role": "Administrator",
+				"email": "contact@rudi.fr"
+			}
+		]
+	}
+}

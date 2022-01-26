@@ -1,0 +1,17 @@
+{
+	"rudi_media_type": [
+		"FILE",
+		"FILE",
+		"SERIES"
+	],
+	"rudi_mediafile_size": [
+		"50",
+		"50",
+		null
+	],
+	"rudi_mediaseries_current_size": [
+		null,
+		null,
+		"328"
+	]
+}

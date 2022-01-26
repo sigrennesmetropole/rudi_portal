@@ -1,0 +1,490 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Konsult Rudi",
+		"version": "0.0.1",
+		"title": "rudi-konsult-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Konsult API",
+			"variables": {
+				"basePath": {
+					"default": "konsult/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "konsult",
+			"description": "Services Konsult"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/datasets/metadatas": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Recherche dans les métadonnées des jeux de données",
+				"description": "Retourne la liste des jeux de données correspondant aux données de recherche",
+				"operationId": "searchMetadatas",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/FreeTextParam"
+					},
+					{
+						"$ref": "#/components/parameters/ThemesParam"
+					},
+					{
+						"$ref": "#/components/parameters/KeywordsParam"
+					},
+					{
+						"$ref": "#/components/parameters/ProducerNamesParam"
+					},
+					{
+						"$ref": "#/components/parameters/DateDebutParam"
+					},
+					{
+						"$ref": "#/components/parameters/DateFinParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					},
+					{
+						"$ref": "#/components/parameters/RestrictedAccessParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "MetadataList"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/datasets/metadatas/facets": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Recherche des facets liées aux métadonnées",
+				"description": "Retourne la liste des facets correspondants à l'ensemble des métadonnées enregistrées",
+				"operationId": "searchMetadataFacets",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/FacetsParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "MetadataFacets"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/metadatas": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des métadonnées d'un jeu de données.",
+				"description": "Retourne les métadonnées du jeu de données dont l'identifiant est spécifié.",
+				"operationId": "getMetadataById",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "globalId",
+						"description": "Identifiant du jeu de données",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "Metadata"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/media/{mediaId}/has-subscribe": {
+            "get": {
+                "tags": [
+                    "konsult"
+                ],
+                "summary": "Permet de savoir si l'utilisateur a souscrit au média associé au jdd",
+                "description": "Retourne true si l'utilisateur a souscrit au média associé au jdd",
+                "operationId": "hasSubscribeToMetadataMedia",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "globalId",
+                        "description": "Identifiant du jeu de données",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "mediaId",
+                        "description": "Identifiant du media",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retourne true si l'utilisateur a souscrit au média",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Erreur lorsque l'utilisateur n'a pas souscrit au jeux de données",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "480": {
+                        "description": "Erreur lorsque les clés de l'utilisateur sont inconnus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/datasets/{globalId}/media/{mediaId}/download": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des métadonné d'un jeu de données.",
+				"description": "Retourne les métadonnées du jeu de données dont l'identifiant est spécifié.",
+				"operationId": "downloadMetadataMedia",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "globalId",
+						"description": "Identifiant du jeu de données",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "mediaId",
+						"description": "Identifiant du media",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne les données d'un média",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"LimitParam": {
+				"in": "query",
+				"name": "limit",
+				"description": "Le nombre de résultats à retourner par page",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OffsetParam": {
+				"in": "query",
+				"name": "offset",
+				"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"FreeTextParam": {
+				"in": "query",
+				"name": "freeText",
+				"description": "Texte libre présent dans le titre ou dans le synopsis du jeu de données",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"ThemesParam": {
+				"in": "query",
+				"name": "themes",
+				"description": "Liste de thèmes (le thème du jeu de données doit correspondre à l'un de ces thèmes)",
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"KeywordsParam": {
+				"in": "query",
+				"name": "keywords",
+				"description": "Liste de mots clés du jeu de données",
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"ProducerNamesParam": {
+				"in": "query",
+				"name": "producerNames",
+				"description": "Liste de noms de producteurs (le nom du producteur du jeu de données doit correspondre à l'un de ces noms)",
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"DateDebutParam": {
+				"in": "query",
+				"name": "dateDebut",
+				"description": "Date de début du jeu de données",
+				"schema": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"DateFinParam": {
+				"in": "query",
+				"name": "dateFin",
+				"description": "Date de fin du jeu de données",
+				"schema": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"OrderParam": {
+				"in": "query",
+				"name": "order",
+				"description": "Liste des tris à réaliser. Valeurs possibles :  name, date, title, producername, updatedate. Mettre un signe - devant pour tri descendant (ex -name)",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"RestrictedAccessParam": {
+				"in": "query",
+				"name": "restrictedAccess",
+				"description": "Données ouvertes (false) ou restreintes (true)",
+				"required": false,
+				"schema": {
+					"type": "boolean"
+				}
+			},
+			"FacetsParam": {
+				"in": "query",
+				"name": "facets",
+				"description": "Liste des propriétés pour lesquelles on récupère la liste des valeurs possibles",
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
+}

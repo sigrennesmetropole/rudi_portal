@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-microservice-template</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>rudi-microservice-template-core</artifactId>
+	<description>RUDI Microservice Template Core ${project.version}</description>
+	<packaging>jar</packaging>
+
+	<properties>
+		<resource-directory>${project.basedir}/..</resource-directory>
+		<resource-generation-directory>${project.basedir}/..</resource-generation-directory>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<!-- Swagger UI dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<!-- Swagger 2 doc dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<!-- Génération de classes Java a partir de fichier SWAGGER -->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<configuration>
+					<modelPackage>org.rudi.microservice.template.core.bean</modelPackage>
+					<generatorName>spring</generatorName>
+					<library>spring-mvc</library>
+					<generateModelTests>false</generateModelTests>
+					<generateModelDocumentation>false</generateModelDocumentation>
+					<generateSupportingFiles>false</generateSupportingFiles>
+					<generateApiDocumentation>false</generateApiDocumentation>
+					<generateApis>false</generateApis>
+					<generateModels>true</generateModels>
+					<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+					<verbose>false</verbose>
+					<typeMappings>
+						<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+					</typeMappings>
+					<configOptions>
+						<dateLibrary>java8</dateLibrary>
+					</configOptions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-models-1</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${resource-directory}/openapi/rudi-template-model.json</inputSpec>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-models-2</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${resource-directory}/openapi/rudi-template-api.json</inputSpec>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>io.swagger.core.v3</groupId>
+						<artifactId>swagger-annotations</artifactId>
+						<version>2.1.4</version>
+					</dependency>
+					<dependency>
+						<groupId>${project.groupId}</groupId>
+						<artifactId>rudi-common-core</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

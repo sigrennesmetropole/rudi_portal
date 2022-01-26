@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+@import "app/styles/colors";
+@import "src/app/styles/font-open-sans";
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: "Open Sans", sans-serif; }
+
+.svg-primary {
+    fill: $primary-color;
+}
+
+.svg-secondary {
+    fill: $secondary-color;
+}
+
+.svg-accent {
+    fill: $accent-color-svg;
+}
+
+.svg-green {
+    fill: $green-color-svg;
+}
+
+.svg-no-fill {
+    fill: none;
+}

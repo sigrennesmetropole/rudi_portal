@@ -1,0 +1,31 @@
+@import "../styles/common-style";
+@import "../styles/font-open-sans";
+
+.mat-drawer-content {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Open Sans", normal !important;
+}
+
+.full-height {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.home-container {
+  padding-top: 200px;
+}
+
+.m-20 {
+  margin: 20px;
+}
+
+.m-40 {
+  margin: 40px;
+}
+
+.m-80 {
+  margin: 80px;
+}

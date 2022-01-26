@@ -1,0 +1,21 @@
+[
+  {
+    "typeName": "rudi_access_condition",
+    "typeClass": "compound",
+    "multiple": false,
+    "value": {
+      "rudi_access_condition_licence_licence_type": {
+        "typeName": "rudi_access_condition_licence_licence_type",
+        "typeClass": "controlledVocabulary",
+        "multiple": false,
+        "value": "STANDARD"
+      },
+      "rudi_access_condition_licence_licence_label": {
+        "typeName": "rudi_access_condition_licence_licence_label",
+        "typeClass": "primitive",
+        "multiple": false,
+        "value": "SkosConcept.concept_code"
+      }
+    }
+  }
+]

@@ -1,0 +1,652 @@
+{
+	"citation": {
+		"displayName": "Citation Metadata",
+		"fields": [
+			{
+				"typeName": "title",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "JDD mocké"
+			},
+			{
+				"typeName": "author",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"authorName": {
+							"typeName": "authorName",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "Rennes Métropole"
+						},
+						"authorAffiliation": {
+							"typeName": "authorAffiliation",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "datasetContact",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"datasetContactName": {
+							"typeName": "datasetContactName",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						},
+						"datasetContactAffiliation": {
+							"typeName": "datasetContactAffiliation",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						},
+						"datasetContactEmail": {
+							"typeName": "datasetContactEmail",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "contact@rudi.fr"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "dsDescription",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"dsDescriptionValue": {
+							"typeName": "dsDescriptionValue",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "Moi lu luig lush dqdh moh udhq"
+						},
+						"dsDescriptionDate": {
+							"typeName": "dsDescriptionDate",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "2021-05-27"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "subject",
+				"typeClass": "controlledVocabulary",
+				"multiple": true,
+				"value": [
+					"Other"
+				]
+			}
+		]
+	},
+	"rudi": {
+		"displayName": "Rudi Metadata",
+		"fields": [
+			{
+				"typeName": "rudi_global_id",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "09b737d6-9785-4216-8a1d-478c9c39e2d4"
+			},
+			{
+				"typeName": "rudi_resource_title",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "JDD mocké"
+			},
+			{
+				"typeName": "rudi_abstract",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"rudi_abstract_language": {
+							"typeName": "rudi_abstract_language",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "fr-FR"
+						},
+						"rudi_abstract_text": {
+							"typeName": "rudi_abstract_text",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwm"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "rudi_summary",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"rudi_summary_language": {
+							"typeName": "rudi_summary_language",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "cs-CZ"
+						},
+						"rudi_summary_text": {
+							"typeName": "rudi_summary_text",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "rudi_theme",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "biota"
+			},
+			{
+				"typeName": "rudi_keywords",
+				"typeClass": "primitive",
+				"multiple": true,
+				"value": [
+					"mot-clé_1"
+				]
+			},
+			{
+				"typeName": "rudi_producer",
+				"typeClass": "compound",
+				"multiple": false,
+				"value": {
+					"rudi_producer_organization_id": {
+						"typeName": "rudi_producer_organization_id",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "b36affd6-4bf1-44f7-95d1-2cacfb461fb5"
+					},
+					"rudi_producer_organization_name": {
+						"typeName": "rudi_producer_organization_name",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "Rennes Métropole"
+					},
+					"rudi_producer_organization_address": {
+						"typeName": "rudi_producer_organization_address",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "string"
+					}
+				}
+			},
+			{
+				"typeName": "rudi_contact",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"rudi_contact_organization_name": {
+							"typeName": "rudi_contact_organization_name",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						},
+						"rudi_contact_id": {
+							"typeName": "rudi_contact_id",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "a1c74a69-7908-4575-92af-4ab515578256"
+						},
+						"rudi_contact_name": {
+							"typeName": "rudi_contact_name",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						},
+						"rudi_contact_role": {
+							"typeName": "rudi_contact_role",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "Administrator"
+						},
+						"rudi_contact_email": {
+							"typeName": "rudi_contact_email",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "contact@rudi.fr"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "rudi_media",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"rudi_media_id": {
+							"typeName": "rudi_media_id",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "fb0561a5-e5a0-4fe5-8db6-c04edc22752a"
+						},
+						"rudi_media_type": {
+							"typeName": "rudi_media_type",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "FILE"
+						},
+						"rudi_media_connector_url": {
+							"typeName": "rudi_media_connector_url",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "https://data.rennesmetropole.fr/explore/dataset/cimetieres-sur-rennes-metropole/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+						},
+						"rudi_media_connector_interface_contract": {
+							"typeName": "rudi_media_connector_interface_contract",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "dwl1"
+						},
+						"rudi_mediafile_structure": {
+							"typeName": "rudi_mediafile_structure",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0"
+						},
+						"rudi_mediafile_size": {
+							"typeName": "rudi_mediafile_size",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "50"
+						},
+						"rudi_mediafile_type": {
+							"typeName": "rudi_mediafile_type",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "text/csv"
+						},
+						"rudi_mediafile_encoding": {
+							"typeName": "rudi_mediafile_encoding",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "UTF-8"
+						},
+						"rudi_mediafile_checksum_algo": {
+							"typeName": "rudi_mediafile_checksum_algo",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "MD5"
+						},
+						"rudi_mediafile_checksum_hash": {
+							"typeName": "rudi_mediafile_checksum_hash",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "SHA-256"
+						}
+					},
+					{
+						"rudi_media_id": {
+							"typeName": "rudi_media_id",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "06dfbddb-2083-41d1-be8c-7937f8b3135e"
+						},
+						"rudi_media_type": {
+							"typeName": "rudi_media_type",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "FILE"
+						},
+						"rudi_media_connector_url": {
+							"typeName": "rudi_media_connector_url",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "https://data.rennesmetropole.fr/explore/dataset/cimetieres-sur-rennes-metropole/download/?format=json&timezone=Europe/Berlin&lang=fr"
+						},
+						"rudi_media_connector_interface_contract": {
+							"typeName": "rudi_media_connector_interface_contract",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "dwl2"
+						},
+						"rudi_mediafile_structure": {
+							"typeName": "rudi_mediafile_structure",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0"
+						},
+						"rudi_mediafile_size": {
+							"typeName": "rudi_mediafile_size",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "50"
+						},
+						"rudi_mediafile_type": {
+							"typeName": "rudi_mediafile_type",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "application/json"
+						},
+						"rudi_mediafile_encoding": {
+							"typeName": "rudi_mediafile_encoding",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "ANSI"
+						},
+						"rudi_mediafile_checksum_algo": {
+							"typeName": "rudi_mediafile_checksum_algo",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "MD5"
+						},
+						"rudi_mediafile_checksum_hash": {
+							"typeName": "rudi_mediafile_checksum_hash",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "SHA-512"
+						}
+					},
+					{
+						"rudi_media_type": {
+							"typeName": "rudi_media_type",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "SERIES"
+						},
+						"rudi_media_connector_url": {
+							"typeName": "rudi_media_connector_url",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "www.connector2.org"
+						},
+						"rudi_mediaseries_current_number_of_records": {
+							"typeName": "rudi_mediaseries_current_number_of_records",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "20"
+						},
+						"rudi_mediaseries_period": {
+							"typeName": "rudi_mediaseries_period",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "10"
+						},
+						"rudi_mediaseries_total_number_of_records": {
+							"typeName": "rudi_mediaseries_total_number_of_records",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "80"
+						},
+						"rudi_media_connector_interface_contract": {
+							"typeName": "rudi_media_connector_interface_contract",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "interface contrat 2"
+						},
+						"rudi_media_id": {
+							"typeName": "rudi_media_id",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0"
+						},
+						"rudi_mediaseries_latency": {
+							"typeName": "rudi_mediaseries_latency",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "100"
+						},
+						"rudi_mediaseries_total_size": {
+							"typeName": "rudi_mediaseries_total_size",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "500"
+						},
+						"rudi_mediaseries_current_size": {
+							"typeName": "rudi_mediaseries_current_size",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "328"
+						}
+					}
+				]
+			},
+			{
+				"typeName": "rudi_resource_language",
+				"typeClass": "primitive",
+				"multiple": true,
+				"value": [
+					"cs-CZ"
+				]
+			},
+			{
+				"typeName": "rudi_temporal_spread",
+				"typeClass": "compound",
+				"multiple": false,
+				"value": {
+					"rudi_temporal_spread_start_date": {
+						"typeName": "rudi_temporal_spread_start_date",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1616415312"
+					},
+					"rudi_temporal_spread_end_date": {
+						"typeName": "rudi_temporal_spread_end_date",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1624364112"
+					}
+				}
+			},
+			{
+				"typeName": "rudi_geography",
+				"typeClass": "compound",
+				"multiple": false,
+				"value": {
+					"rudi_geography_bounding_box_west_longitude": {
+						"typeName": "rudi_geography_bounding_box_west_longitude",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "0"
+					},
+					"rudi_geography_bounding_box_east_longitude": {
+						"typeName": "rudi_geography_bounding_box_east_longitude",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "0"
+					},
+					"rudi_geography_bounding_box_north_latitude": {
+						"typeName": "rudi_geography_bounding_box_north_latitude",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "0"
+					},
+					"rudi_geography_bounding_box_south_latitude": {
+						"typeName": "rudi_geography_bounding_box_south_latitude",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "0"
+					},
+					"rudi_geography_geographic_distribution": {
+						"typeName": "rudi_geography_geographic_distribution",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "string"
+					},
+					"rudi_geography_projection": {
+						"typeName": "rudi_geography_projection",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "WGS 84 (EPSG:4326)"
+					}
+				}
+			},
+			{
+				"typeName": "rudi_dataset_size",
+				"typeClass": "compound",
+				"multiple": false,
+				"value": {
+					"rudi_dataset_size_numbers_of_records": {
+						"typeName": "rudi_dataset_size_numbers_of_records",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "0"
+					},
+					"rudi_dataset_size_number_of_fields": {
+						"typeName": "rudi_dataset_size_number_of_fields",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "0"
+					}
+				}
+			},
+			{
+				"typeName": "rudi_dataset_dates",
+				"typeClass": "compound",
+				"multiple": false,
+				"value": {
+					"rudi_dataset_dates_created": {
+						"typeName": "rudi_dataset_dates_created",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1616415312"
+					},
+					"rudi_dataset_dates_validated": {
+						"typeName": "rudi_dataset_dates_validated",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1616415312"
+					},
+					"rudi_dataset_dates_published": {
+						"typeName": "rudi_dataset_dates_published",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1616415312"
+					},
+					"rudi_dataset_dates_updated": {
+						"typeName": "rudi_dataset_dates_updated",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1616415312"
+					},
+					"rudi_dataset_dates_deleted": {
+						"typeName": "rudi_dataset_dates_deleted",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1624364112"
+					}
+				}
+			},
+			{
+				"typeName": "rudi_storage_status",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "online"
+			},
+			{
+				"typeName": "rudi_metadata_info",
+				"typeClass": "compound",
+				"multiple": false,
+				"value": {
+					"rudi_metadata_info_api_version": {
+						"typeName": "rudi_metadata_info_api_version",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1.1.0"
+					},
+					"rudi_metadata_info_dates_created": {
+						"typeName": "rudi_metadata_info_dates_created",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1617279048"
+					},
+					"rudi_metadata_info_dates_validated": {
+						"typeName": "rudi_metadata_info_dates_validated",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1617279048"
+					},
+					"rudi_metadata_info_dates_published": {
+						"typeName": "rudi_metadata_info_dates_published",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1617279048"
+					},
+					"rudi_metadata_info_dates_updated": {
+						"typeName": "rudi_metadata_info_dates_updated",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1617279048"
+					},
+					"rudi_metadata_info_dates_deleted": {
+						"typeName": "rudi_metadata_info_dates_deleted",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "1617279048"
+					},
+					"rudi_metadata_info_provider_organization_id": {
+						"typeName": "rudi_metadata_info_provider_organization_id",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "92c908ad-dcdb-400f-a248-f8adb955e252"
+					},
+					"rudi_metadata_info_provider_organization_name": {
+						"typeName": "rudi_metadata_info_provider_organization_name",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "Service Information Géographique ? Rennes Métropole"
+					},
+					"rudi_metadata_info_provider_organization_address": {
+						"typeName": "rudi_metadata_info_provider_organization_address",
+						"typeClass": "primitive",
+						"multiple": false,
+						"value": "string"
+					}
+				}
+			},
+			{
+				"typeName": "rudi_metadata_info_contact",
+				"typeClass": "compound",
+				"multiple": true,
+				"value": [
+					{
+						"rudi_metadata_info_contact_id": {
+							"typeName": "rudi_metadata_info_contact_id",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "c78e7567-5b0b-4068-bd45-fb7013bb072f"
+						},
+						"rudi_metadata_info_contact_organization_name": {
+							"typeName": "rudi_metadata_info_contact_organization_name",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						},
+						"rudi_metadata_info_contact_name": {
+							"typeName": "rudi_metadata_info_contact_name",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "string"
+						},
+						"rudi_metadata_info_contact_role": {
+							"typeName": "rudi_metadata_info_contact_role",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "Administrator"
+						},
+						"rudi_metadata_info_contact_email": {
+							"typeName": "rudi_metadata_info_contact_email",
+							"typeClass": "primitive",
+							"multiple": false,
+							"value": "contact@rudi.fr"
+						}
+					}
+				]
+			}
+		]
+	}
+}

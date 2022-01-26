@@ -1,0 +1,108 @@
+#metadataBlock	name	dataverseAlias	displayName													
+	rudi		Rudi Metadata													
+#datasetField	name	title	description	watermark	 fieldType	displayOrder	displayFormat	advancedSearchField	allowControlledVocabulary	allowmultiples	facetable	displayoncreate	required	parent	metadatablock_id	termURI
+	rudi_global_id	Global Id	global id for dataset		text	0	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		rudi	
+	rudi_local_id	Local Id	Identifier in the data producer system		text	1	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_doi	Doi	Digital object identifier of the provider		text	2	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_resource_title	Resource Title	Simple name for the resource	Enter title...	text	3	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		rudi	
+	rudi_abstract	Synopsis	Short description for the whole dataset		none	3	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_abstract_language	langage	Synopsis langage		text	4	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_abstract	rudi	
+	rudi_abstract_text	text	Synopsis text		textbox	5	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_abstract	rudi	
+	rudi_summary	Summary	More precise description for the whole dataset		none	4	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_summary_language	langage	Summary language		text	5	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_summary	rudi	
+	rudi_summary_text	text	Summary text		textbox	6	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_summary	rudi	
+	rudi_theme	Theme	Category for thematic classification of the data		text	7	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE		rudi	
+	rudi_keywords	Keywords	List of tags that can be used to retrieve the data		text	8	#VALUE	TRUE	FALSE	TRUE	TRUE	TRUE	FALSE		rudi	
+	rudi_producer	Producer	Entity that produces the data on the Producer node		none	9	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_producer_organization_id	organization uuid	Unique identifier of the organization in RUDI system		text	10	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_producer	rudi	
+	rudi_producer_organization_name	organization name	Updated offical name of the organization		text	11	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_producer	rudi	
+	rudi_producer_organization_address	organization address	Updated offical postal address of the organization		textbox	12	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_producer	rudi	
+	rudi_contact	Contact	Address to ask details on the dataset and its production		none	13	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_contact_organization_name	organization	Updated offical name of the organization		text	14	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_contact	rudi	
+	rudi_contact_id	uuid	Unique identifier of the contact		text	15	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_contact	rudi	
+	rudi_contact_name	name	Updated name of the service, or possibly the person		text	16	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_contact	rudi	
+	rudi_contact_role	role	Updated status of the contact person		text	17	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_contact	rudi	
+	rudi_contact_email	email	E-mail address of the contact		email	18	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_contact	rudi	
+	rudi_media	Available format	Available formats		none	19	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_media_id	Media uuid	Unique identifier of the media		text	20	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_media_type	Media type	Transmission mode		text	21	#VALUE	TRUE	TRUE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_media_connector_url	Media Connector URL	Connector URL		text	22	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_media_connector_interface_contract	Media Connector interface contract	Link towards the interface contract defined with RUDI Portal		text	23	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediafile_structure	File structure	Link towards the resource that describes the structure of the data		text	24	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediafile_size	File size	File size		int	25	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediafile_type	File type	File type		text	26	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediafile_encoding	File encoding	Source encoding of the data		text	27	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediafile_checksum_algo	File checksum algo	Method for computing the integrity hash of the data		text	28	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediafile_checksum_hash	File checksum hash	hash		text	29	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediaseries_latency	Series latency	Theorical delay between the production of the record and its availability in milliseconds		int	30	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediaseries_period	Series period	Theorical delay between the production of two records in milliseconds		int	31	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediaseries_current_number_of_records	Series current number of records	Actual number of records		int	32	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediaseries_current_size	Series current size	Actual size of the data in bytes		int	33	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediaseries_total_number_of_records	Series total number of records	Estimated total number of records		int	34	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_mediaseries_total_size	Series total size	Estimated total size of the data in bytes		int	35	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_media	rudi	
+	rudi_resource_language	Resource language	Resource language		text	36	#VALUE	TRUE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_temporal_spread	Temporal spread	Period of time described by the data		none	37	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_temporal_spread_start_date	Start date	Start date		float	38	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_temporal_spread	rudi	
+	rudi_temporal_spread_end_date	End date	End date		float	39	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_temporal_spread	rudi	
+	rudi_geography	Geography	Geographic localisation of the data		none	40	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_geography_bounding_box_west_longitude	Bounding box West Longitude	Bounding box West Longitude		float	41	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_geography	rudi	
+	rudi_geography_bounding_box_east_longitude	Bounding box East Longitude	Bounding box East Longitude		float	42	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_geography	rudi	
+	rudi_geography_bounding_box_north_latitude	Bounding box North Latitude	Bounding box North Latitude		float	43	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_geography	rudi	
+	rudi_geography_bounding_box_south_latitude	Bounding box South Latitude	Bounding box South Latitude		float	44	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_geography	rudi	
+	rudi_geography_geographic_distribution	Geographic distribution	Precise geographic distribution of the data		text	44	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_geography	rudi	
+	rudi_geography_projection	Projection	Cartographic projection used to describe the data		text	45	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_geography	rudi	
+	rudi_dataset_size	Dataset size	Indicative size of the data		none	46	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_dataset_size_numbers_of_records	Number of records	Number of records		int	47	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_dataset_size	rudi	
+	rudi_dataset_size_number_of_fields	Number of fields	Number of fields		int	48	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_dataset_size	rudi	
+	rudi_dataset_dates	Dataset dates	Dates of the actions performed on the data		none	49	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_dataset_dates_created	Created	Dataset creation date		float	50	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_dataset_dates	rudi	
+	rudi_dataset_dates_validated	Validated	Dataset validation date		float	51	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_dataset_dates	rudi	
+	rudi_dataset_dates_published	Published	Dataset publication date		float	52	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_dataset_dates	rudi	
+	rudi_dataset_dates_updated	Updated	Dataset update date		float	53	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_dataset_dates	rudi	
+	rudi_dataset_dates_deleted	Deleted	Dataset date of deletion		float	54	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_dataset_dates	rudi	
+	rudi_storage_status	Storage status	Status of the storage of the dataset		text	54	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE		rudi	
+	rudi_metadata_info	Metadata info	Metadata on the metadata		none	55	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_metadata_info_api_version	API version	Version of the API		text	55	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_dates_created	Metadata creation date	Metadata creation date		float	56	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_dates_validated	Metadata validation date	Metadata validation date		float	57	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_dates_published	Metadata publication date	Metadata publication date		float	58	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_dates_updated	Metadata update date	Metadata update date		float	59	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_dates_deleted	Metadata date of deletion	Metadata date of deletion		float	60	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_provider_organization_id	Provider organization uuid	Provider organization uuid		text	61	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_provider_organization_name	Provider organization name	Provider organization name		text	62	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_provider_organization_address	Provider organization address	Provider organization address		textbox	63	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info	rudi	
+	rudi_metadata_info_contact	Metadata info contact	Metadata contact		none	63	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_metadata_info_contact_id	Metadata contact uuid	Unique identifier of the metadata contact		text	64	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info_contact	rudi	
+	rudi_metadata_info_contact_organization_name	Metadata contact organization name	Updated offical name of the organization metadata contact		text	65	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info_contact	rudi	
+	rudi_metadata_info_contact_name	Metadata contact name	Updated name of the service, or possibly the person		text	66	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info_contact	rudi	
+	rudi_metadata_info_contact_role	Metadata contact role	Updated status of the metadata contact person		text	67	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info_contact	rudi	
+	rudi_metadata_info_contact_email	Metadata contact email	E-mail address of the metadata contact		email	68	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_metadata_info_contact	rudi	
+	rudi_access_condition	Access Condition	Access restrictions for the use of data in the form of licence, confidentiality, terms of service, habilitation or required rights, economical model. Default is open licence. #TODO: to be defined. Possible redundencies with other fields! 		none	69	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_confidentiality_restricted_access	Confidentiality : Restricted Access	True if the dataset has a restricted access. False for open data 		text	70	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition	rudi	
+	rudi_access_condition_confidentiality_gdpr_sensitive	Confidentiality : GDPR Sensitive	True if the dataset embeds personal data 		text	71	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition	rudi	
+	rudi_access_condition_licence_licence_type	Licence type	Licence type		text	72	#VALUE	FALSE	TRUE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition	rudi	
+	rudi_access_condition_licence_licence_label	Standard Licence label	Value of the field SkosConcept.concept_code		text	73	#VALUE	FALSE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_access_condition	rudi	
+	rudi_access_condition_licence_custom_licence_uri	Custom Licence URI	URL towards the custom licence		url	74	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition	rudi	
+	rudi_access_condition_licence_custom_licence_label	Custom Licence Label	Title of the custom licence		text	75	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_licence_custom_licence_label_lang	Language			text	76	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_licence_custom_licence_label	rudi	
+	rudi_access_condition_licence_custom_licence_label_text	Text			textbox	77	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_licence_custom_licence_label	rudi	
+	rudi_access_condition_usage_constraint	Usage Constraint	Describes how constrained is the use of the resource		text	78	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_usage_constraint_lang	Language			text	79	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_usage_constraint	rudi	
+	rudi_access_condition_usage_constraint_text	Text			textbox	80	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_usage_constraint	rudi	
+	rudi_access_condition_bibliographical_reference	Bibliographical Reference	Information that MUST be cited every time the data is used, most likely a BibTeX entry		text	81	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_bibliographical_reference_lang	Language			text	82	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_bibliographical_reference	rudi	
+	rudi_access_condition_bibliographical_reference_text	Text			textbox	83	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_bibliographical_reference	rudi	
+	rudi_access_condition_mandatory_mention	Mandatory Mention	Mention that must be cited verbatim in every publication that makes use of the data		text	84	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_mandatory_mention_lang	Language			text	85	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_mandatory_mention	rudi	
+	rudi_access_condition_mandatory_mention_text	Text			textbox	86	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_mandatory_mention	rudi	
+	rudi_access_condition_access_constraint	Access Constraint			text	87	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_access_constraint_lang	Language			text	88	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_access_constraint	rudi	
+	rudi_access_condition_access_constraint_text	Text			textbox	89	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_access_constraint	rudi	
+	rudi_access_condition_other_constraints	Other Constraints			text	90	";"	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		rudi	
+	rudi_access_condition_other_constraints_lang	Language			text	91	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_other_constraints	rudi	
+	rudi_access_condition_other_constraints_text	Text			textbox	92	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_access_condition_other_constraints	rudi	
+#controlledVocabulary	DatasetField	Value	identifier	displayOrder												
+	rudi_media_type	FILE	FILE	1
+	rudi_media_type	SERIES	SERIES	2
+	rudi_access_condition_licence_licence_type	STANDARD	STANDARD	1
+	rudi_access_condition_licence_licence_type	CUSTOM	CUSTOM	2												

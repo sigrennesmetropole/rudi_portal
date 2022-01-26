@@ -1,0 +1,23 @@
+<form class="w-100 d-flex">
+  <div class="search-box-container w-100">
+    <div class="search-box-title d-flex align-items-center justify-content-center w-100"
+         [ngClass]="{'search-box-title-sm': mediaSize.isXs || mediaSize.isSm || mediaSize.isMd, 'search-box-title-lg':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl }">
+      {{'searchbox.jeux'|translate}} <span class="ml-2"> {{'searchbox.donnees'|translate}}</span>
+    </div>
+
+    <!--   search zone-->
+    <div class="search-zone d-flex d-flex align-items-center" [ngClass]="{'search-zone-sm': mediaSize.isXs || mediaSize.isSm, 'search-zone-md': mediaSize.isMd, 'search-zone-lg':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+         <span class="search-box-icon mr-5">
+          <mat-icon class="mr-2" aria-hidden="false" aria-label="filter icon" svgIcon="search"></mat-icon>
+          </span>
+      <input class="form-control text-indent" type="search" name="search" autocomplete="off" [(ngModel)]="searchTerms"
+             (keydown.enter)="onChanges()"
+             [placeholder]="'searchbox.rechercherJeuDonnees' | translate">
+      <span class="search-box-clear" [ngClass]="searchTerms ? 'active' : ''" *ngIf="searchTerms">
+          <mat-icon class="pointer mr-2" aria-hidden="false" aria-label="clear"
+                    (click)="onReset()">close</mat-icon>
+        </span>
+    </div>
+
+  </div>
+</form>

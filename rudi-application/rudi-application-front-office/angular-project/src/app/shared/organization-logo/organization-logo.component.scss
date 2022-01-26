@@ -1,0 +1,25 @@
+@import "src/app/styles/variables-rudi";
+
+img {
+    width: 64px;
+    height: auto;
+}
+
+.metadata-theme {
+    width: 120px;
+    height: 88px;
+}
+
+.metadata-theme-sm {
+    width: 60px;
+    height: 60px;
+}
+
+.with-border {
+    width: 70px;
+    height: 70px;
+    padding: 10px 4px 10px 4px;
+    border-radius: 3.4px;
+    border: solid 0.9px $border-grey;
+    background: $secondary-color;
+}

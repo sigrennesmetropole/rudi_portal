@@ -1,0 +1,62 @@
+{
+  "access_condition": {
+    "confidentiality": {
+      "restricted_access": true,
+      "gdpr_sensitive": true
+    },
+    "licence": {
+      "licence_type": "STANDARD",
+      "licence_label": "SkosConcept.concept_code"
+    },
+    "usage_constraint": [
+      {
+        "lang": "fr-FR",
+        "text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+      },
+      {
+        "lang": "en-US",
+        "text": "Free use subject to the mandatory information on any distribution document"
+      }
+    ],
+    "bibliographical_reference": [
+      {
+        "lang": "fr-FR",
+        "text": "abeilles"
+      },
+      {
+        "lang": "en-US",
+        "text": "bees"
+      }
+    ],
+    "mandatory_mention": [
+      {
+        "lang": "fr-FR",
+        "text": "Source: Région Bretagne"
+      },
+      {
+        "lang": "en-US",
+        "text": "Source: Brittany region"
+      }
+    ],
+    "access_constraint": [
+      {
+        "lang": "fr-FR",
+        "text": "abeilles"
+      },
+      {
+        "lang": "en-US",
+        "text": "bees"
+      }
+    ],
+    "other_constraints": [
+      {
+        "lang": "fr-FR",
+        "text": "Pas de restriction d'accès public"
+      },
+      {
+        "lang": "en-US",
+        "text": "No public access restriction"
+      }
+    ]
+  }
+}

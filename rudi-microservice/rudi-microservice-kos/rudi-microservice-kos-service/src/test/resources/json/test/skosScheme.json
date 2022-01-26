@@ -1,0 +1,213 @@
+{
+    "scheme_code": "scheme-licence",
+    "openingDate": "2021-04-28T15:30:00.000Z",
+    "closingDate": "2021-05-03T15:30:00.000Z",
+    "uri": "https://fr.wikipedia.org/wiki/Licence_de_logiciel",
+    "role": "licence",
+    "scheme_labels": [
+        {
+            "lang": "en",
+            "text": "software licences"
+        },
+        {
+            "lang": "fr",
+            "text": "licences logicielles"
+        }
+    ],
+    "top_concepts": [
+        {
+            "concept_code": "free-software-licence",
+            "concept_uri": "https://www.gnu.org/philosophy/free-sw.html",
+            "concept_icon": "icon1",
+            "concept_role": "role1",
+            "openingDate": "2021-04-29T14:47:00.000Z",
+            "pref_label": [
+                {
+                    "lang": "fr",
+                    "text": "Logiciel Libre"
+                },
+                {
+                    "lang": "en",
+                    "text": "Free-software license"
+                }
+            ],
+            "narrower_concepts": [
+                {
+                    "concept_code": "licence_public-domain-CC0",
+                    "concept_uri": "https://creativecommons.org/share-your-work/public-domain/cc0/",
+                    "concept_icon": "icon2",
+                    "concept_role": "role2",
+                    "openingDate": "2021-04-29T14:47:00.000Z",
+                    "pref_label": [
+                        {
+                            "lang": "fr",
+                            "text": "Domaine Public"
+                        },
+                        {
+                            "lang": "en",
+                            "text": "Public Domain"
+                        }
+                    ],
+                    "sibling_concepts": [
+                        {
+                            "concept_code": "licence_MIT",
+                            "concept_icon": "icon5",
+                            "concept_role": "role5",
+                            "openingDate": "2021-04-29T14:47:00.000Z",
+                            "concept_uri": "https://opensource.org/licenses/MIT",
+                            "pref_label": [
+                                {
+                                    "lang": "fr",
+                                    "text": "Licence MIT"
+                                },
+                                {
+                                    "lang": "en",
+                                    "text": "MIT License"
+                                }
+                            ]
+                        }
+                    ],
+                    "narrower_concepts": [
+                        {
+                            "concept_code": "licence_pub-domain-CC0_narw_1",
+                            "concept_uri": "https://creativecommons.org/share-your-work/public-domain/cc0/",
+                            "concept_icon": "icon8",
+                            "concept_role": "role8",
+                            "openingDate": "2021-04-29T14:47:00.000Z",
+                            "pref_label": [
+                                {
+                                    "lang": "fr",
+                                    "text": "Domaine Public narw_1"
+                                },
+                                {
+                                    "lang": "en",
+                                    "text": "Public Domain narw_1"
+                                }
+                            ]
+                        },
+                        {
+                            "concept_code": "licence_pub-domain-CC0_narw_2",
+                            "concept_uri": "https://creativecommons.org/share-your-work/public-domain/cc0/",
+                            "concept_icon": "icon9",
+                            "concept_role": "role9",
+                            "openingDate": "2021-04-29T14:47:00.000Z",
+                            "pref_label": [
+                                {
+                                    "lang": "fr",
+                                    "text": "Domaine Public narw_2"
+                                },
+                                {
+                                    "lang": "en",
+                                    "text": "Public Domain narw_2"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "concept_code": "licence_GPL-3.0",
+                    "concept_uri": "https://www.gnu.org/licenses/gpl-3.0.en.html",
+                    "concept_icon": "icon3",
+                    "concept_role": "role3",
+                    "openingDate": "2021-04-29T14:47:00.000Z",
+                    "pref_label": [
+                        {
+                            "lang": "fr",
+                            "text": "GNU General Public License v3"
+                        },
+                        {
+                            "lang": "en",
+                            "text": "GNU General Public License v3"
+                        }
+                    ],
+                    "alt_labels": [
+                        {
+                            "lang": "fr",
+                            "text": [
+                                "GNU GPL v3",
+                                "GPL",
+                                "GPL v3",
+                                "GPL 3",
+                                "GPL3",
+                                "GNU General Public License v3"
+                            ]
+                        },
+                        {
+                            "lang": "en",
+                            "text": [
+                                "GPL",
+                                "GPL v3",
+                                "GPL 3",
+                                "GPL3",
+                                "GNU GPL v3",
+                                "GNU General Public License v3"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "concept_code": "open-source-licence",
+            "concept_uri": "https://opensource.org/licenses",
+            "concept_icon": "icon4",
+            "concept_role": "role4",
+            "openingDate": "2021-04-29T14:47:00.000Z",
+            "pref_label": [
+                {
+                    "lang": "fr",
+                    "text": "Licence Open-Source"
+                },
+                {
+                    "lang": "fr-FR",
+                    "text": "Licence Open-Source"
+                },
+                {
+                    "lang": "en",
+                    "text": "Open-Source Licence"
+                }
+            ],
+            "narrower_concepts": [
+                {
+                    "concept_code": "licence_MIT",
+                    "concept_icon": "icon5",
+                    "concept_role": "role5",
+                    "openingDate": "2021-04-29T14:47:00.000Z",
+                    "concept_uri": "https://opensource.org/licenses/MIT",
+                    "pref_label": [
+                        {
+                            "lang": "fr",
+                            "text": "Licence MIT"
+                        },
+                        {
+                            "lang": "en",
+                            "text": "MIT License"
+                        }
+                    ]
+                },
+                {
+                    "concept_code": "licence_Apache-2.0",
+                    "concept_icon": "icon6",
+                    "concept_role": "role6",
+                    "concept_uri": "https://opensource.org/licenses/Apache-2.0",
+                    "openingDate": "2021-04-29T14:47:00.000Z",
+                    "pref_label": [
+                        {
+                            "lang": "fr",
+                            "text": "Licence Apache v2"
+                        },
+                        {
+                            "lang": "en",
+                            "text": "Apache License v2"
+                        }
+                    ],
+                    "sibling_concepts": [
+                        {
+                            "concept_code": "licence_GPL-3.0"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

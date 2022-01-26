@@ -1,0 +1,1 @@
+CREATE SCHEMA if not exists kos_data;

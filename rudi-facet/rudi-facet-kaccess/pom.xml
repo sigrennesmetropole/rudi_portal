@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>rudi-facet</artifactId>
+		<groupId>org.rudi</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>rudi-facet-kaccess</artifactId>
+
+	<properties>
+		<surefire.plugin.version>2.22.2</surefire.plugin.version>
+		<resource-directory>${project.basedir}/src/main/resources</resource-directory>
+		<resource-generation-directory>${project.basedir}/src/main/resources</resource-generation-directory>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-dataverse</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+		<!-- Swagger 2 doc dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>${jetbrains.annotations.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<!-- Génération de classes Java a partir de fichier SWAGGER -->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-models</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<modelPackage>org.rudi.facet.kaccess.bean</modelPackage>
+							<inputSpec>${resource-directory}/openapi/rudi-kaccess-model.yml</inputSpec>
+							<importMappings>
+								<importMapping>.SearchItemInfo=org.rudi.facet.dataverse.bean.SearchItemInfo
+								</importMapping>
+								<importMapping>SearchType=org.rudi.facet.dataverse.bean.SearchType</importMapping>
+								<importMapping>SearchDatasetInfo=org.rudi.facet.dataverse.bean.SearchDatasetInfo
+								</importMapping>
+								<importMapping>Identifier=org.rudi.facet.dataverse.bean.Identifier</importMapping>
+								<importMapping>Dataset=org.rudi.facet.dataverse.bean.Dataset</importMapping>
+								<importMapping>DatasetVersion=org.rudi.facet.dataverse.bean.DatasetVersion
+								</importMapping>
+								<importMapping>DatasetFile=org.rudi.facet.dataverse.bean.DatasetFile</importMapping>
+								<importMapping>DataFile=org.rudi.facet.dataverse.bean.DataFile</importMapping>
+								<importMapping>DatasetMetadataBlock=org.rudi.facet.dataverse.bean.DatasetMetadataBlock
+								</importMapping>
+								<importMapping>
+									DatasetMetadataBlockElement=org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement
+								</importMapping>
+								<importMapping>
+									DatasetMetadataBlockElementField=org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField
+								</importMapping>
+								<importMapping>FieldTypeClass=org.rudi.facet.dataverse.bean.FieldTypeClass
+								</importMapping>
+							</importMappings>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+								<typeMapping>URI=String</typeMapping>
+							</typeMappings>
+							<generatorName>spring</generatorName>
+							<library>spring-mvc</library>
+							<generateModelTests>false</generateModelTests>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApis>false</generateApis>
+							<generateModels>true</generateModels>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<verbose>false</verbose>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<dateLibrary>java8</dateLibrary>
+								<performBeanValidation>true</performBeanValidation>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.plugin.version}</version>
+				<configuration>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

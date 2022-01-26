@@ -1,1 +1,4 @@
-# rudi_portal
+# RUDI
+
+## Organisation des projets
+

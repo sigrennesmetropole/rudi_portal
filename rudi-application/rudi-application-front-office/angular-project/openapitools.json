@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "generator-cli": {
+    "version": "5.0.0"
+  },
+  "importMappings": {
+    "MetadataList": "../api-kaccess/model/metadataList",
+    "Metadata": "../api-kaccess/model/metadata",
+    "MetadataFacets": "../api-kaccess/model/metadataFacets",
+    "KindOfData": "../../api-kmedia/model/kindOfData"
+  }
+}

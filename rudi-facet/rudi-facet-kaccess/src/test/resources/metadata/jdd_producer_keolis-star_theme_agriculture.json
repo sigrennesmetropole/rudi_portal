@@ -1,0 +1,124 @@
+{
+	"global_id": "091944f4-c6ab-43e8-920d-b9c1dd78d889",
+	"dataverse_doi": null,
+	"resource_title": "JDD producer keolis star avec thème agriculture",
+	"synopsis": [
+		{
+			"lang": "fr-FR",
+			"text": "jeux de données de kéolis en agriculture"
+		}
+	],
+	"summary": [
+		{
+			"lang": "fr-FR",
+			"text": "jeux de données de kéolis en agriculture"
+		}
+	],
+	"theme": "agriculture",
+	"keywords": [
+		"mot-clé_1"
+	],
+	"producer": {
+		"organization_id": "b36affd6-4bf1-44f7-95d1-2cacfb461fb5",
+		"organization_name": "Keolis star",
+		"organization_address": "string"
+	},
+	"contacts": [
+		{
+			"contact_id": "a1c74a69-7908-4575-92af-4ab515578256",
+			"organization_name": "string",
+			"contact_name": "string",
+			"role": "Administrator",
+			"email": "contact@rudi.fr"
+		}
+	],
+	"resource_languages": [
+		"cs-CZ"
+	],
+	"temporal_spread": {
+		"start_date": "2021-03-22T12:15:12",
+		"end_date": "2021-06-22T12:15:12"
+	},
+	"geography": {
+		"bounding_box": {
+			"north_latitude": 0,
+			"south_latitude": 0,
+			"west_longitude": 0,
+			"east_longitude": 0
+		},
+		"geographic_distribution": {
+			"type": "Polygon",
+			"coordinates": [
+				[
+					[
+						18,
+						71
+					],
+					[
+						10.1,
+						71
+					],
+					[
+						10.1,
+						42
+					],
+					[
+						18,
+						42
+					],
+					[
+						18,
+						71
+					]
+				]
+			]
+		},
+		"projection": "WGS 84 (EPSG:4326)"
+	},
+	"dataset_size": {
+		"numbers_of_records": 0,
+		"number_of_fields": 0
+	},
+	"dataset_dates": {
+		"created": "2021-03-22T12:15:12",
+		"validated": "2021-03-22T12:15:12",
+		"published": "2021-03-22T12:15:12",
+		"updated": "2021-03-22T12:15:12",
+		"deleted": "2021-06-22T12:15:12"
+	},
+	"storage_status": "online",
+	"access_condition": {
+		"confidentiality": {
+			"restricted_access": false,
+			"gdpr_sensitive": true
+		},
+		"licence": {
+			"licence_type": "STANDARD",
+			"licence_label": "open-source-licence"
+		}
+	},
+	"metadata_info": {
+		"api_version": "1.1.0",
+		"metadata_dates": {
+			"created": "2021-04-01T12:10:48",
+			"validated": "2021-04-01T12:10:48",
+			"published": "2021-04-01T12:10:48",
+			"updated": "2021-04-01T12:10:48",
+			"deleted": "2021-04-01T12:10:48"
+		},
+		"metadata_provider": {
+			"organization_id": "92c908ad-dcdb-400f-a248-f8adb955e252",
+			"organization_name": "Service Information Géographique ? Rennes Métropole",
+			"organization_address": "string"
+		},
+		"metadata_contacts": [
+			{
+				"contact_id": "c78e7567-5b0b-4068-bd45-fb7013bb072f",
+				"organization_name": "string",
+				"contact_name": "string",
+				"role": "Administrator",
+				"email": "contact@rudi.fr"
+			}
+		]
+	}
+}

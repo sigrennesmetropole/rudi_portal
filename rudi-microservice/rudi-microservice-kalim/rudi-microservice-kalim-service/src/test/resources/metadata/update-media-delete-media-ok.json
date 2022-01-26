@@ -1,0 +1,226 @@
+{
+	"global_id": "d2a257d7-b1b1-4692-905d-74504e9a6143",
+	"local_id": "f382ec4f-034b-411d-aab7-5b97a15eb92e",
+	"doi": "10.5072/FK2/JV9LCO",
+	"dataverse_doi": null,
+	"resource_title": "Recensement des exploitations agricoles avec production de biogaz test unitaire du 2021-04-22T15:26:31.911992100",
+	"synopsis": [
+		{
+			"lang": "fr-FR",
+			"text": "Résumé court en français"
+		},
+		{
+			"lang": "en-US",
+			"text": "English short description"
+		}
+	],
+	"summary": [
+		{
+			"lang": "fr-FR",
+			"text": "Exploitations agricoles avec production de biogaz \n texte sur plusieurs lignes"
+		},
+		{
+			"lang": "en-US",
+			"text": "dictionnary entry"
+		}
+	],
+	"theme": "environment",
+	"keywords": [
+		"biogaz",
+		"agriculture"
+	],
+	"producer": {
+		"organization_id": "acdccf43-566b-4134-b39e-ddf46c801242",
+		"organization_name": "Producteur rudi",
+		"organization_address": "2 rue de rudi"
+	},
+	"contacts": [
+		{
+			"contact_id": "d1c4b0d9-d97f-41a8-860f-43a253370b4f",
+			"organization_name": "Association Nature",
+			"contact_name": "Dupont Pierre",
+			"role": "manager",
+			"email": "dupont@onu.org"
+		},
+		{
+			"contact_id": "4a46ffa1-6f42-49f0-ae3c-2534d7aa71cd",
+			"organization_name": "rudi corp",
+			"contact_name": "rudi contact for test",
+			"role": "admmin",
+			"email": "rudi@onu.org"
+		}
+	],
+	"available_formats": [
+		{
+			"media_type": "FILE",
+			"media_id": "7a94b85a-9c8b-4639-8894-fd68c4c94b18",
+			"connector": {
+				"url": "www.connector1.org",
+				"interface_contract": "dwnl"
+			},
+			"file_structure": "https://filestructure.org/",
+			"file_size": 406,
+			"file_type": "text/xml",
+			"file_encoding": "UTF-8",
+			"checksum": {
+				"algo": "SHA-256",
+				"hash": "RAI"
+			}
+		},
+		{
+			"media_type": "SERIES",
+			"media_id": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0",
+			"connector": {
+				"url": "www.connector2.org",
+				"interface_contract": "dwnl"
+			},
+			"latency": 100,
+			"period": 10,
+			"current_number_of_records": 20,
+			"current_size": 328,
+			"total_number_of_records": 80,
+			"total_size": 500
+		},
+		{
+			"media_type": "SERIES",
+			"media_id": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0",
+			"connector": {
+				"url": "www.connector2.org",
+				"interface_contract": "dwnl"
+			},
+			"latency": 100,
+			"period": 10,
+			"current_number_of_records": 20,
+			"current_size": 328,
+			"total_number_of_records": 80,
+			"total_size": 500
+		}
+	],
+	"resource_languages": [
+		"fr-FR",
+		"en-US"
+	],
+	"temporal_spread": {
+		"start_date": "2021-01-03T15:30:45",
+		"end_date": "2022-04-22T15:26:00"
+	},
+	"geography": {
+		"bounding_box": {
+			"north_latitude": 71,
+			"south_latitude": 42,
+			"west_longitude": 18,
+			"east_longitude": 10.1
+		},
+		"geographic_distribution": {
+			"type": "Polygon",
+			"coordinates": [
+				[
+					[
+						18,
+						71
+					],
+					[
+						10.1,
+						71
+					],
+					[
+						10.1,
+						42
+					],
+					[
+						18,
+						42
+					],
+					[
+						18,
+						71
+					]
+				]
+			]
+		},
+		"projection": "EPSG:4326"
+	},
+	"dataset_size": {
+		"numbers_of_records": 50,
+		"number_of_fields": 15
+	},
+	"dataset_dates": {
+		"created": "2021-02-01T00:00:00",
+		"validated": "2021-02-02T00:00:00",
+		"published": "2021-02-03T00:00:00",
+		"updated": "2021-03-12T07:00:00",
+		"deleted": "2021-04-29T00:00:00"
+	},
+	"storage_status": "online",
+	"access_condition": {
+		"confidentiality": {
+			"restricted_access": true,
+			"gdpr_sensitive": true
+		},
+		"licence": {
+			"licence_type": "STANDARD",
+			"licence_label": "open-source-licence"
+		},
+		"usage_constraint": [
+			{
+				"lang": "fr",
+				"text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+			}
+		],
+		"bibliographical_reference": [
+			{
+				"lang": "fr-FR",
+				"text": "abeilles"
+			}
+		],
+		"mandatory_mention": [
+			{
+				"lang": "fr-FR",
+				"text": "Source: Région Bretagne"
+			}
+		],
+		"access_constraint": [
+			{
+				"lang": "fr-FR",
+				"text": "abeilles"
+			}
+		],
+		"other_constraints": [
+			{
+				"lang": "fr",
+				"text": "Pas de restriction d'accès public"
+			}
+		]
+	},
+	"metadata_info": {
+		"api_version": "1.2.0",
+		"metadata_dates": {
+			"created": "2021-03-01T00:00:00",
+			"validated": "2021-03-02T00:00:00",
+			"published": "2021-03-03T00:00:00",
+			"updated": "2021-03-11T07:00:00",
+			"deleted": "2021-03-22T00:00:00"
+		},
+		"metadata_provider": {
+			"organization_id": "1b988e5d-3c5d-4bcb-84f9-8a6702d5d7c0",
+			"organization_name": "Fournisseur rudi",
+			"organization_address": "4 rue de la pomme"
+		},
+		"metadata_contacts": [
+			{
+				"contact_id": "3b031485-5a9b-436c-abcc-053710f17994",
+				"organization_name": "organisation metadata 1",
+				"contact_name": "Contact metadata 1",
+				"role": "communication 1",
+				"email": "rudiMetadata@onu.org"
+			},
+			{
+				"contact_id": "c9475458-ccdd-4db5-9be7-96ee2ce46528",
+				"organization_name": "organisation metadata 2",
+				"contact_name": "Contact metadata 2",
+				"role": "communication 2",
+				"email": "contactMetadata@asso.org"
+			}
+		]
+	}
+}

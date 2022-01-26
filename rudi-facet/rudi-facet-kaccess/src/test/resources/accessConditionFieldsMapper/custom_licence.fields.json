@@ -1,0 +1,56 @@
+[
+  {
+    "typeName": "rudi_access_condition",
+    "typeClass": "compound",
+    "multiple": false,
+    "value": {
+      "rudi_access_condition_licence_licence_type": {
+        "typeName": "rudi_access_condition_licence_licence_type",
+        "typeClass": "controlledVocabulary",
+        "multiple": false,
+        "value": "CUSTOM"
+      },
+      "rudi_access_condition_licence_custom_licence_uri": {
+        "typeName": "rudi_access_condition_licence_custom_licence_uri",
+        "typeClass": "primitive",
+        "multiple": false,
+        "value": "https://www.example.com/animals"
+      }
+    }
+  },
+  {
+    "typeName": "rudi_access_condition_licence_custom_licence_label",
+    "typeClass": "compound",
+    "multiple": true,
+    "value": [
+      {
+        "rudi_access_condition_licence_custom_licence_label_lang": {
+          "typeName": "rudi_access_condition_licence_custom_licence_label_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "fr-FR"
+        },
+        "rudi_access_condition_licence_custom_licence_label_text": {
+          "typeName": "rudi_access_condition_licence_custom_licence_label_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Animaux"
+        }
+      },
+      {
+        "rudi_access_condition_licence_custom_licence_label_lang": {
+          "typeName": "rudi_access_condition_licence_custom_licence_label_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "en-US"
+        },
+        "rudi_access_condition_licence_custom_licence_label_text": {
+          "typeName": "rudi_access_condition_licence_custom_licence_label_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Animals"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-microservice-konsult</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>rudi-microservice-konsult-facade</artifactId>
+	<description>RUDI Microservice Konsult Facade ${project.version}</description>
+	<packaging>jar</packaging>
+
+	<properties>
+		<resource-directory>${project.basedir}/..</resource-directory>
+		<resource-generation-directory>${project.basedir}/..</resource-generation-directory>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-microservice-konsult-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-facade</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-security</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-circuitbreaker-resilience4j -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+
+		<!-- Server Web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Swagger UI dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<!-- Swagger 2 doc dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-support-springboot</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<configuration>
+					<modelPackage>org.rudi.microservice.konsult.core.bean</modelPackage>
+					<importMappings>
+						<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
+						<importMapping>MetadataList=org.rudi.facet.kaccess.bean.MetadataList</importMapping>
+						<importMapping>MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets</importMapping>
+					</importMappings>
+					<languageSpecificPrimitives>
+						<languageSpecificPrimitive>Metadata</languageSpecificPrimitive>
+						<languageSpecificPrimitive>MetadataList</languageSpecificPrimitive>
+						<languageSpecificPrimitive>MetadataFacets</languageSpecificPrimitive>
+					</languageSpecificPrimitives>
+					<typeMappings>
+						<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+					</typeMappings>
+					<generatorName>spring</generatorName>
+					<library>spring-boot</library>
+					<generateModelTests>false</generateModelTests>
+					<generateModelDocumentation>false</generateModelDocumentation>
+					<generateSupportingFiles>true</generateSupportingFiles>
+					<generateApiDocumentation>true</generateApiDocumentation>
+					<generateApis>true</generateApis>
+					<generateModels>false</generateModels>
+					<validateSpec>false</validateSpec>
+					<templateDirectory>${resource-generation-directory}/openapi/generation</templateDirectory>
+					<verbose>false</verbose>
+					<configOptions>
+						<!-- Activer le 'interfaceOnly' à true pour la compile, sinon conflit, 
+							et à false pour la génération -->
+						<interfaceOnly>true</interfaceOnly>
+						<dateLibrary>java8</dateLibrary>
+					</configOptions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-controllers-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<!-- Les interfaces sont généres dans la target, c'est normal -->
+							<apiPackage>org.rudi.microservice.konsult.facade.controller.api</apiPackage>
+							<inputSpec>${resource-directory}/openapi/rudi-konsult-api.json</inputSpec>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/log4j2.xml</exclude>
+						<exclude>**/konsult-dev.xml</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- JAR executable Spring Boot -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+					<finalName>${project.artifactId}</finalName>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Mise à jour BDD par flyway -->
+			<!--<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>6.5.5</version>
+				<configuration>
+					<flyway.locations>${project.parent.dir}/rudi-microservice-konsult-storage/src/main/resources/bdd/</flyway.locations>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.postgresql</groupId>
+						<artifactId>postgresql</artifactId>
+						<version>42.2.16</version>
+					</dependency>
+				</dependencies>
+			</plugin>-->
+
+		</plugins>
+	</build>
+
+	<profiles>
+
+		<!-- Profil de développement local -->
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+
+				<flyway.user>konsult</flyway.user>
+				<flyway.password>konsult</flyway.password>
+				<flyway.url>jdbc:postgresql://localhost:5432/konsult</flyway.url>
+				<flyway.schemas>konsult_data</flyway.schemas>
+
+			</properties>
+		</profile>
+
+		<!-- Profil de développement local sur docker -->
+		<profile>
+			<id>dev-docker</id>
+			<properties>
+				<spring.profiles.active>dev-docker</spring.profiles.active>
+
+				<flyway.user>konsult</flyway.user>
+				<flyway.password>konsult</flyway.password>
+				<flyway.url>jdbc:postgresql://localhost:5432/konsult</flyway.url>
+				<flyway.schemas>konsult_data</flyway.schemas>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-jar-docker</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<echo>ANT TASK - copying konsult jar file....</echo>
+										<copy file="target/${project.artifactId}.jar"
+												todir="${project.basedir}/../../../docker/konsult" overwrite="true"/>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Profil de intégration -->
+		<profile>
+			<id>ic</id>
+			<properties>
+				<spring.profiles.active>ic</spring.profiles.active>
+				<flyway.user>konsult</flyway.user>
+				<flyway.password>konsult</flyway.password>
+				<flyway.url>jdbc:postgresql://10.50.1.37:5432/konsult</flyway.url>
+				<flyway.schemas>konsult</flyway.schemas>
+			</properties>
+
+		</profile>
+
+		<profile>
+			<id>prod</id>
+			<properties>
+				<spring.profiles.active>prod</spring.profiles.active>
+				<flyway.user>konsult</flyway.user>
+				<flyway.password>konsult</flyway.password>
+				<flyway.url>jdbc:postgresql://10.50.1.37:5432/konsult</flyway.url>
+				<flyway.schemas>konsult</flyway.schemas>
+			</properties>
+		</profile>
+
+	</profiles>
+
+</project>

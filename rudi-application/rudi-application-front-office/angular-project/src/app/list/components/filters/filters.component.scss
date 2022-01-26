@@ -1,0 +1,61 @@
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+
+.rudi-filters-toolbar {
+  width: auto !important;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 42px;
+  margin-bottom: 35px;
+  background-color: $light-grey-bg;
+
+
+  :focus-visible {
+    outline: $blue-button solid 1px;
+    color: $blue-button;
+  }
+}
+
+.filter-icon {
+  font-size: 14px;
+  height: 15px;
+}
+
+
+.filter-link {
+  margin-left: 15px;
+  font-size: 14px;
+  color: grey;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.mat-menu-panel{
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: white; /* scroll thumb and track */
+}
+.mat-menu-panel::-webkit-scrollbar {
+  width: 30px;
+}
+
+.mat-menu-panel::-webkit-scrollbar-track {
+  background: white;
+}
+
+.mat-menu-panel::-webkit-scrollbar-thumb {
+  background-color: $light-grey;
+  border-radius: 40px;
+  border: 12px solid white;
+}
+
+.mat-form-field {
+  display: unset;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin-right: 1em;
+}

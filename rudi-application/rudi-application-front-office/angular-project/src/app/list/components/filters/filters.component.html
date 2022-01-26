@@ -1,0 +1,60 @@
+<mat-toolbar *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl"
+             [ngClass]="{'pl-small': mediaSize.isSm === true, 'pl-medium': mediaSize.isMd || mediaSize.isLg, 'pl-large': mediaSize.isXl || mediaSize.isXxl}"
+             class="rudi-filters-toolbar">
+
+    <app-filter-menu
+        #themesMenu
+        (closed)="themesForm.revert()"
+        [counter$]="themesForm.counter$"
+        buttonTextKey="filterBox.thematique">
+        <app-themes-filter-form
+            #themesForm
+            (selectedItemsChange)="selectedThemeItemsChange.emit($event)"
+            (submit)="themesMenu.close()"
+            [values]="themes"
+            ulClass="pl-0">
+        </app-themes-filter-form>
+    </app-filter-menu>
+
+    <app-filter-menu
+        #producerNamesMenu
+        (closed)="producerNamesForm.revert()"
+        [counter$]="producerNamesForm.counter$"
+        buttonTextKey="filterBox.producteur">
+        <app-producer-names-filter-form
+            #producerNamesForm
+            (selectedItemsChange)="selectedProducerItemsChange.emit($event)"
+            (submit)="producerNamesMenu.close()"
+            [values]="producerNames"
+            ulClass="pl-0">
+        </app-producer-names-filter-form>
+    </app-filter-menu>
+
+    <app-filter-menu
+        #datesMenu
+        (closed)="datesForm.revert()"
+        [counter$]="datesForm.counter$"
+        buttonTextKey="filterBox.couvertureTemporelle">
+        <app-dates-filter-form
+            #datesForm
+            (selectedItemsChange)="selectedDatesItemsChange.emit($event)"
+            (submit)="datesMenu.close()"
+            debutDivClass="d-flex mr-3"
+            finDivClass="d-flex mt-2 mr-3">
+        </app-dates-filter-form>
+    </app-filter-menu>
+
+    <app-filter-menu
+        #restrictedAccessMenu
+        (closed)="restrictedAccessForm.revert()"
+        [counter$]="restrictedAccessForm.counter$"
+        buttonTextKey="filterBox.restrictedAccess.statut">
+        <app-restricted-access-filter-form
+            #restrictedAccessForm
+            (selectedItemsChange)="selectedRestrictedAccessItemsChange.emit($event);"
+            (submit)="restrictedAccessMenu.close()"
+            ulClass="pl-0">
+        </app-restricted-access-filter-form>
+    </app-filter-menu>
+
+</mat-toolbar>

@@ -1,0 +1,33 @@
+[
+	{
+		"typeName": "rudi_geography",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_geography_bounding_box_north_latitude": {
+				"typeName": "rudi_geography_bounding_box_north_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "48.112834"
+			},
+			"rudi_geography_bounding_box_west_longitude": {
+				"typeName": "rudi_geography_bounding_box_west_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "-1.677803"
+			},
+			"rudi_geography_bounding_box_east_longitude": {
+				"typeName": "rudi_geography_bounding_box_east_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "-1.677803"
+			},
+			"rudi_geography_bounding_box_south_latitude": {
+				"typeName": "rudi_geography_bounding_box_south_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "48.112834"
+			}
+		}
+	}
+]

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-application</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<artifactId>rudi-application-front-office</artifactId>
+
+	<properties>
+		<angular.project.location>angular-project</angular.project.location>
+		<angular.project.nodeinstallation>node_installation</angular.project.nodeinstallation>
+	</properties>
+
+	<build>
+		<finalName>${project.parent.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.12.0</version>
+				<configuration>
+					<workingDirectory>${angular.project.location}</workingDirectory>
+					<installDirectory>${angular.project.nodeinstallation}</installDirectory>
+				</configuration>
+				<executions>
+					<!-- It will install nodejs and npm -->
+					<execution>
+						<phase>generate-resources</phase>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v12.16.3</nodeVersion>
+							<npmVersion>6.14.4</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<phase>generate-resources</phase>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>${npmicommand}</arguments>
+						</configuration>
+					</execution>
+
+					<!-- Generation des sources TypeScript à partir du fichier rudi-konsult.json -->
+					<execution>
+						<phase>generate-resources</phase>
+						<id>npm generate api</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>run generate:all</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<phase>prepare-package</phase>
+						<id>npm build</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>${npmcommand}</arguments>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
+			<!-- Plugin to copy the content of /angular/dist/ directory to output 
+				directory (ie/ /target/transactionManager-1.0/) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-copy-resources</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<delimiters>
+								<delimiter>@</delimiter>
+							</delimiters>
+							<useDefaultDelimiters>false</useDefaultDelimiters>
+							<overwrite>true</overwrite>
+							<outputDirectory>${project.build.directory}/${project.parent.artifactId}/dist
+							</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/${angular.project.location}/dist</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<finalName>${project.artifactId}</finalName>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+	<profiles>
+
+		<!-- Profil de développement local -->
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<npmicommand>install</npmicommand>
+				<npmcommand>run build-dev</npmcommand>
+				<spring.profiles.active>dev</spring.profiles.active>
+			</properties>
+		</profile>
+
+		<!-- Profil de production (utilisé sur la plateforme de DEV, QUALIF et 
+			PROD) -->
+		<profile>
+			<id>prod</id>
+			<properties>
+				<npmicommand>install</npmicommand>
+				<npmcommand>run build-prod</npmcommand>
+				<spring.profiles.active>prod</spring.profiles.active>
+			</properties>
+		</profile>
+
+	</profiles>
+
+</project>

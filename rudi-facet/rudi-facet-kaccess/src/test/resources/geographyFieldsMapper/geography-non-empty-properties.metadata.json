@@ -1,0 +1,44 @@
+{
+	"geography": {
+		"bounding_box": {
+			"west_longitude": -1.677803,
+			"east_longitude": -1.677803,
+			"north_latitude": 48.112834,
+			"south_latitude": 48.112834
+		},
+		"geographic_distribution": {
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							-1.7029707133769987,
+							48.126527839495004
+						],
+						[
+							-1.6730158030986784,
+							48.12641325748051
+						],
+						[
+							-1.6696684062480927,
+							48.115870618572586
+						],
+						[
+							-1.7055456340312956,
+							48.11312000910537
+						],
+						[
+							-1.7029707133769987,
+							48.126527839495004
+						]
+					]
+				]
+			},
+			"properties": {
+				"bidule": "chouette"
+			}
+		},
+		"projection": "WGS 84"
+	}
+}

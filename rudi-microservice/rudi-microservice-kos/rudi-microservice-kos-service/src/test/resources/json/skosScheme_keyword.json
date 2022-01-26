@@ -1,0 +1,223 @@
+{
+	"scheme_code": "scheme-keyword",
+	"openingDate": "2021-07-13T11:00:00.000Z",
+	"closingDate": "2021-07-14T11:00:00.000Z",
+	"uri": "https://fr.wikipedia.org/wiki/Mot_clé",
+	"role": "keyword",
+	"scheme_labels": [
+		{
+			"lang": "en",
+			"text": "Themes and keywords"
+		},
+		{
+			"lang": "fr",
+			"text": "Thèmes et mots clés"
+		}
+	],
+	"top_concepts": [
+		{
+			"concept_code": "agriculture",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Agriculture",
+			"concept_icon": "assets/pictos/farming.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Agriculture"
+				},
+				{
+					"lang": "en",
+					"text": "Agriculture"
+				}
+			]
+		},
+		{
+			"concept_code": "cadastre",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Cadastre",
+			"concept_icon": "assets/pictos/planningCadastre.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Cadastre"
+				},
+				{
+					"lang": "en",
+					"text": "Cadastre"
+				}
+			]
+		},
+		{
+			"concept_code": "weather",
+			"concept_uri": "https://opensource.org/licenses",
+			"concept_icon": "assets/pictos/weather.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Climat"
+				},
+				{
+					"lang": "en",
+					"text": "Weather"
+				}
+			]
+		},
+		{
+			"concept_code": "communication",
+			"concept_uri": "https://opensource.org/licenses",
+			"concept_icon": "assets/pictos/communication.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Communication"
+				},
+				{
+					"lang": "en",
+					"text": "Communication"
+				}
+			]
+		},
+		{
+			"concept_code": "defense",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Défense",
+			"concept_icon": "assets/pictos/intelligenceMilitary.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Défense"
+				},
+				{
+					"lang": "en",
+					"text": "Defense"
+				}
+			]
+		},
+		{
+			"concept_code": "economy",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Économie_(discipline)",
+			"concept_icon": "assets/pictos/economy.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Economie"
+				},
+				{
+					"lang": "en",
+					"text": "Economy"
+				}
+			]
+		},
+		{
+			"concept_code": "environment",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Environnement",
+			"concept_icon": "assets/pictos/environment.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Environnement"
+				},
+				{
+					"lang": "en",
+					"text": "Environment"
+				}
+			]
+		},
+		{
+			"concept_code": "fauna-flora",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Faune_(biologie)",
+			"concept_icon": "assets/pictos/biota.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Faune et Flore"
+				},
+				{
+					"lang": "en",
+					"text": "Fauna and Flora"
+				}
+			]
+		},
+		{
+			"concept_code": "geography",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Géographie",
+			"concept_icon": "assets/pictos/geoscientificInformation.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Géographie"
+				},
+				{
+					"lang": "en",
+					"text": "Geography"
+				}
+			]
+		},
+		{
+			"concept_code": "health",
+			"concept_uri": "https://opensource.org/licenses",
+			"concept_icon": "assets/pictos/health.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Santé"
+				},
+				{
+					"lang": "en",
+					"text": "Health"
+				}
+			]
+		},
+		{
+			"concept_code": "territory",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Territoire",
+			"concept_icon": "assets/pictos/boundaries.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Territoire"
+				},
+				{
+					"lang": "en",
+					"text": "Territory"
+				}
+			]
+		},
+		{
+			"concept_code": "transportation",
+			"concept_uri": "https://en.wikipedia.org/wiki/Transport",
+			"concept_icon": "assets/pictos/transportation.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-07-15T11:00:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Transport"
+				},
+				{
+					"lang": "en",
+					"text": "Transportation"
+				}
+			]
+		}
+	]
+}

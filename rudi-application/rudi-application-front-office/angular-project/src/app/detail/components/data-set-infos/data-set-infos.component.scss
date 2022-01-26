@@ -1,0 +1,328 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+
+.rudi-card-title {
+    margin-left: -16px;
+    font-size: 18px;
+    color: black;
+}
+
+.mat-card-header-text {
+    margin-left: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.rudi-panel-title {
+    font-size: 16px;
+    color: $dark-grey;
+    font-weight: 500;
+}
+
+.rudi-panel-data-language {
+    width: 460px;
+    height: 40px;
+    padding: 9px 123px 3px 14px;
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+
+    .rudi-panel-data-data-language {
+        font-size: 12px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        color: $dark-grey;
+    }
+
+    .rudi-panel-language-value {
+        font-size: 15px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        color: #000000
+    }
+}
+
+.rudi-panel-available-count {
+    font-size: 15px;
+    font-weight: 600;
+    color: $primary-color;
+    margin-left: -20px;
+}
+
+.rudi-panel-available {
+    font-size: 15px;
+    margin-left: 0;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $primary-color
+}
+
+.rudi-bloc-access-condition {
+    margin: 0 -24px 0 -24px;
+    color: $active-blue !important;
+}
+
+
+.map-spacing-desktop {
+    width: 50%;
+}
+
+.map-panel-mobile {
+    display: flex;
+    flex-direction: column;
+}
+
+.rudi-panel-body {
+    margin-left: -24px;
+    font-size: 15px;
+    color: $dark-grey;
+
+    &.panel-provider {
+
+        font-size: 15px;
+
+        .rudi-logo-provider-box {
+            border-radius: 3.4px;
+            border: solid 0.9px $border-grey;
+            height: 70px;
+            width: 70px;
+            justify-content: center;
+        }
+
+        img {
+            max-width: 64px;
+            height: auto;
+        }
+    }
+}
+
+.rudi-panel-card {
+    margin: 12px 0 0 -24px;
+    max-width: 440px;
+    font-size: 12px;
+    color: $dark-grey;
+    padding: 11px 16px;
+    border-radius: 6px;
+    background-color: $light-grey-bg;
+    display: flex;
+    justify-content: space-between;
+
+    &-data {
+        font-size: 15px;
+        font-weight: 600;
+        color: black;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    &-hour {
+        font-size: 13px;
+        color: black;
+        font-weight: normal;
+    }
+}
+
+.map-container-desktop {
+    width: 100%;
+    height: 200px;
+}
+
+.map-container-mobile {
+    // TODO rendre ça dynamique
+    width: 100%;
+    height: 300px;
+}
+
+::ng-deep {
+    .stockage-expansion-panel.rudi-expansion-panel {
+        .stockage-panel {
+            width: 70%;
+        }
+
+        &-sm {
+            .stockage-panel-sm {
+                width: 100%;
+            }
+        }
+
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .mat-expansion-panel-header.mat-expanded {
+            border-radius: 6px 6px 0 0 !important;
+            border-bottom: none !important;
+        }
+
+        .mat-expansion-indicator:hover, .mat-expansion-indicator:focus, .mat-expansion-indicator.open {
+            width: 30px;
+            border: none;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $gray;
+
+            &::after {
+                color: $gray;
+            }
+        }
+
+        .rudi-panel-table {
+            width: 100%;
+            border-left: 1px solid $border-grey;
+            border-right: 1px solid $border-grey;
+
+        }
+
+        .mat-expansion-panel-body {
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+}
+
+.rudi-mat-expansion-panel-source {
+    height: 40px;
+    border-radius: 6px;
+    border: solid 1px $border-grey;
+    background-color: $light-grey-bg;
+    padding: 0 20px 3px 17px;
+
+    .mat-expansion-indicator:hover, .mat-expansion-indicator:focus, .mat-expansion-indicator.open {
+        width: 30px;
+        border: 1.6px solid $active-blue;
+        border-radius: 15px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: grey !important;
+
+        &::after {
+            color: grey;
+        }
+    }
+}
+
+.rudi-panel-source-title {
+    font-size: 15px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+}
+
+table th {
+    width: 40%;
+    color: black;
+    font-size: 12px;
+    font-weight: normal !important;
+}
+
+table thead th {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
+    border-style: hidden; /* hide standard table (collapsed) border */
+
+}
+
+table td {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: normal;
+    font-stretch: normal;
+    font-style: normal;
+    word-wrap: break-word;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.rudi-panel-table-header {
+    background-color: $light-grey-bg;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    height: 40px;
+    padding: 20px;
+    display: flex;
+    color: $dark-grey;
+    font-size: 15px;
+    align-items: center;
+}
+
+.rudi-panel-tbody-border {
+    border-left: 1px solid $border-grey;
+    border-right: 1px solid $border-grey;
+    border-bottom: 1px solid $border-grey;
+}
+
+.rudi-panel-source-download {
+    background-color: $gray;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    height: 40px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .source-download-libelle {
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        color: $secondary-color;
+    }
+}
+
+.rudi-panel-source-download:hover {
+    background-color: $active-blue;
+    color: $secondary-color;
+
+    .source-download-libelle:hover {
+        color: $secondary-color;
+    }
+}
+
+.f-w-500 {
+    font-weight: 600;
+}
+
+.type-licence-libelle {
+    font-size: 14px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    color: $primary-color;
+    text-decoration: underline;
+}
+
+.rudi-table-width-xl {
+    width: 75%;
+}
+
+.rudi-table-width-md {
+    width: 75%;
+}
+
+.dataset-info-file-structure {
+    text-decoration: underline;
+    color: $active-blue !important;
+
+    a {
+        background-color: transparent;
+    }
+}

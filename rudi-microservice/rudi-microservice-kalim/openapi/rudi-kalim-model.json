@@ -1,0 +1,180 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Kalim Rudi",
+		"version": "0.0.1",
+		"title": "rudi-kalim-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"IntegrationStatus": {
+				"type": "string",
+				"enum": [
+					"OK",
+					"KO"
+				]
+			},
+			"ProgressStatus":{
+				"type": "string",
+				"enum":[
+					"CREATED",
+					"INTEGRATION_HANDLED",
+					"REPORT_SUCCESS",
+					"REPORT_ERROR"
+				]
+			},
+			"Method": {
+				"type": "string",
+				"enum": [
+					"POST",
+					"PUT",
+					"DELETE"
+				]
+			},
+			"ReportError": {
+				"type": "object",
+				"properties": {
+					"error_code": {
+						"type": "string"
+					},
+					"error_message": {
+						"type": "string"
+					},
+					"field_name": {
+						"type": "string"
+					}
+				}
+			},
+			"Report": {
+				"type": "object",
+				"properties": {
+					"report_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"submission_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"submitted_by_harvesting": {
+						"description": "La demande a été soumise par le moissonnage du nœud fournisseur ?",
+						"type": "boolean"
+					},
+					"treatment_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"method": {
+						"$ref": "#/components/schemas/Method"
+					},
+					"version": {
+						"type": "string"
+					},
+					"resource_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"resource_title": {
+						"type": "string"
+					},
+					"integration_status": {
+						"$ref": "#/components/schemas/IntegrationStatus"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"integration_errors": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ReportError"
+						}
+					}
+				}
+			},
+			"IntegrationRequest": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"submission_date": {
+						"description": "Date de soumission de la demande d’intégration",
+						"type": "string",
+						"format": "date"
+					},
+					"submitted_by_harvesting": {
+						"description": "La demande a été soumise par le moissonnage du nœud fournisseur ?",
+						"type": "boolean"
+					},
+					"treatment_date": {
+						"description": "Date de traitement de l’intégration du jeu de donnée dans Rudi",
+						"type": "string",
+						"format": "date"
+					},
+					"send_request_date": {
+						"description": "Dernière date d'envoi du rapport",
+						"type": "string",
+						"format": "date"
+					},
+					"method": {
+						"$ref": "#/components/schemas/Method"
+					},
+					"version": {
+						"type": "string"
+					},
+					"global_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"resource_title": {
+						"type": "string"
+					},
+					"integration_status": {
+						"$ref": "#/components/schemas/IntegrationStatus"
+					},
+					"progress_status": {
+						"$ref": "#/components/schemas/ProgressStatus"
+					}
+				}
+			},
+			"PageResult": {
+				"type": "object",
+				"properties": {
+					"total": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"IntegrationRequestPageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/IntegrationRequest"
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	}
+}

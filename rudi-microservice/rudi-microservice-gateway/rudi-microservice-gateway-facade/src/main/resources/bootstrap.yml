@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: rudi-gateway
+  main:
+    allow-bean-definition-overriding: true
+---
+spring:
+  profiles: default
+  cloud:
+    config:
+      uri: http://localhost:8760    
+
+---
+spring:
+  profiles: ic
+  cloud:
+    config:
+      uri: http://10.50.1.45:8760    
+
+---
+spring:
+  profiles: qualif
+  cloud:
+    config:
+      uri: http://todo:8760    
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+    com.netflix: DEBUG
+    org.rudi: DEBUG
+#Disable security of the Management endpoint
+management:
+  security:
+    enabled: false

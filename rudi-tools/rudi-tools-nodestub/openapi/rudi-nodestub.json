@@ -1,0 +1,332 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Node Stub Rudi",
+		"version": "0.0.1",
+		"title": "rudi-tools-nodestub",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Template API",
+			"variables": {
+				"basePath": {
+					"default": "nodestub"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/resources": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération des resources des jeux de données",
+				"operationId": "getRessources",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "updated_after",
+						"schema": {
+							"$ref": "#/components/schemas/RudiDate"
+						}
+					},
+					{
+						"in": "query",
+						"name": "updated_before",
+						"schema": {
+							"$ref": "#/components/schemas/RudiDate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "MetadataList"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resources/upload": {
+			"post": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Upload d'une ressource de jeu de données pour tester le moissonnage",
+				"operationId": "uploadResource",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "Metadata"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resources/{uuid}": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération d'une resource",
+				"operationId": "getRessource",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "Metadata"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resources/{uuid}/report": {
+			"put": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Soumission d'un rapport d'intégration",
+				"operationId": "sendResourceReport",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "Report"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/submit/{method}": {
+			"post": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Soumission d'un rapport d'intégration",
+				"operationId": "submitMetadata",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "method",
+						"required": true,
+						"schema": {
+							"$ref": "Method"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "Metadata"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/downloadReport/{uuid}": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Soumission d'un rapport d'intégration",
+				"operationId": "downloadReport",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+                  					"type": "string",
+                  					"format": "binary"
+                				}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			}
+		}
+	}
+}

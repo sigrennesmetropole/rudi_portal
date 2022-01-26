@@ -1,0 +1,50 @@
+<form [formGroup]="loginForm" (ngSubmit)="submitForm()" autocomplete="off">
+  <div class="login-dialog-container">
+    <div class="text-right pointer">
+      <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="onNoClick()">clear</mat-icon>
+    </div>
+    <div>
+      <h2 class="text-center">{{'authentification.connection'|translate}}</h2>
+    </div>
+    <div class=" form-group mt-5">
+      <!-- Login -->
+      <mat-form-field class="login-form-field" appearance="outline">
+        <mat-label>{{'authentification.login'|translate}}</mat-label>
+        <input matInput type="text" class="form-control" formControlName="login" autocomplete="off">
+        <mat-error *ngIf="formControls.login.errors">
+          {{'authentification.loginRequis'|translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field class="login-form-field" appearance="outline">
+        <mat-label>{{'authentification.password'|translate}}</mat-label>
+        <input matInput [type]="hide ? 'password': 'text'" class="form-control" formControlName="password"
+               autocomplete="off">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-error *ngIf="formControls.password.errors">
+          {{'authentification.passwordRequis'|translate}}
+        </mat-error>
+      </mat-form-field>
+      <p class="mb-4">{{'authentification.passwordForget'|translate}}</p>
+    </div>
+
+    <!--Button connextion -->
+    <div class="text-center mt-4">
+      <button class="login-button-connexion" mat-raised-button color="basic" type="submit"
+              [disabled]="!loginForm.valid">{{'authentification.seConnection'|translate}}</button>
+    </div>
+
+    <!--zone d'affichage des erreurs -->
+    <div class="serveur-error">
+      <p *ngIf="showError" class="text-danger text-center"
+         style="margin-top: 2em">{{'error.authentificationFailed'|translate}}</p>
+    </div>
+
+  </div>
+
+  <!--Inscription -->
+  <div class="inscription">
+    <p class="inscription-paragrah">{{'authentification.pasEncoreInscrit'|translate}}</p>
+  </div>
+</form>

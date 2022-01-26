@@ -1,0 +1,18 @@
+{
+  "access_condition": {
+    "licence": {
+      "licence_type": "CUSTOM",
+      "custom_licence_label": [
+        {
+          "lang": "fr-FR",
+          "text": "Animaux"
+        },
+        {
+          "lang": "en-US",
+          "text": "Animals"
+        }
+      ],
+      "custom_licence_uri": "https://www.example.com/animals"
+    }
+  }
+}

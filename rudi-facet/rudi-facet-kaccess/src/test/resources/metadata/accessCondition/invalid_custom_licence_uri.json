@@ -1,0 +1,20 @@
+{
+    "confidentiality": {
+        "restricted_access": true,
+        "gdpr_sensitive": true
+    },
+    "licence": {
+        "licence_type": "CUSTOM",
+        "custom_licence_uri": "animals",
+        "custom_licence_label": [
+            {
+                "lang": "fr-FR",
+                "text": "Animaux"
+            },
+            {
+                "lang": "en-US",
+                "text": "Animals"
+            }
+        ]
+    }
+}

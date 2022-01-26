@@ -1,0 +1,179 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+
+.data-set-card {
+    box-shadow: none;
+    border: solid 1.1px $border-grey;
+    cursor: pointer;
+    padding: 17px 17px 17px 17px;
+    overflow: hidden;
+
+    .keyword-padding {
+        margin: 22px 0 0 -4px;
+    }
+
+    mat-card-content {
+        height: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    img {
+        width: 70px;
+        height: 70px;
+        padding: 10px 4px 10px 4px;
+        border-radius: 3.4px;
+        border: solid 0.9px $border-grey;
+    }
+
+    .data-set-card-producer {
+        font-size: 14px;
+        color: $dark-grey;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .data-set-card-title {
+        font-size: 20px;
+        font-weight: 400;
+        color: $primary-color;
+        display: -webkit-box;
+        margin-bottom: 5px;
+        hyphens: auto;
+        min-height: 1.2em;
+        line-height: 1.3em;
+    }
+
+    .data-set-card-content {
+        height: auto;
+        flex-wrap: wrap;
+        align-content: baseline;
+        flex-direction: column;
+    }
+
+    .data-set-card-summary {
+        font-size: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        hyphens: auto;
+        padding-bottom: 0;
+    }
+
+    &-xs, &-sm, &-md {
+
+        min-height: $card-height-sm;
+        border-left: none;
+        border-right: none;
+        border-radius: unset;
+        border-bottom: none;
+        padding: 17px 25px 17px 0;
+
+        img, .logo-container {
+            margin: 0 16px 12px 0;
+        }
+
+        .data-set-card-producer {
+            font-size: 12px;
+        }
+
+        .data-set-card-title {
+            font-size: 19px;
+        }
+
+        .data-set-card-summary {
+            font-size: 14px;
+        }
+
+        .data-set-card-content {
+            flex-direction: revert;
+        }
+
+        &:hover {
+            background-color: $light-grey-bg;
+        }
+
+    }
+
+    &-sm, &-md {
+        .data-set-card-content {
+            height: auto;
+        }
+
+    }
+
+
+    &-lg, &-xl, &-xxl {
+        border-radius: 8.6px;
+        height: $card-height-lg;
+
+        &:hover {
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.05), 0 1px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .logo-container {
+            margin-right: 16px;
+        }
+
+        .data-set-card-content {
+            flex-direction: row;
+        }
+
+        .data-set-card-title {
+            line-height: 1.2em;
+        }
+    }
+
+}
+
+.restricted {
+    background: $primary-color;
+    color: $secondary-color;
+    border: none;
+
+    .data-set-card-producer,
+    .data-set-card-summary {
+        color: #b3c7d9;
+    }
+
+    .data-set-card-title {
+        color: $secondary-color;
+    }
+
+    .key-icon {
+        width: 16px;
+        vertical-align: text-top;
+    }
+
+    .triangle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 28px;
+        height: 28px;
+    }
+
+    .keywords-row button {
+        background: $primary-color;
+        color: $secondary-color;
+    }
+
+}
+
+@mixin restricted-card-padding($padding) {
+    margin-left: -$padding;
+    margin-right: -$padding;
+    padding-left: $padding;
+}
+
+.data-set-card-xs.restricted {
+    @include restricted-card-padding(15px);
+}
+
+.data-set-card-sm.restricted {
+    @include restricted-card-padding(20px);
+}
+
+.data-set-card-md.restricted {
+    @include restricted-card-padding(40px);
+}

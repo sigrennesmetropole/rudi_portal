@@ -1,0 +1,12 @@
+{
+	"geography": {
+		"bounding_box": {
+			"west_longitude": -1.677803,
+			"east_longitude": -1.677803,
+			"north_latitude": 48.112834,
+			"south_latitude": 48.112834
+		},
+		"geographic_distribution": "string",
+		"projection": "WGS 84"
+	}
+}

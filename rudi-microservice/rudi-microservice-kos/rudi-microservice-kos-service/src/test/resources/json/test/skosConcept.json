@@ -1,0 +1,30 @@
+{
+    "concept_code": "open-source-licences",
+    "concept_uri": "https://opensource.org/licenses",
+    "concept_icon": "icon44",
+    "concept_role": "role44",
+    "openingDate": "2021-05-03T16:55:00.000Z",
+    "pref_label": [
+        {
+            "lang": "fr",
+            "text": "Licences Open-Sources"
+        },
+        {
+            "lang": "en",
+            "text": "Open-Sources Licences"
+        }
+    ],
+    "narrower_concepts": [
+        {
+            "concept_code": "licence_MIT"
+        },
+        {
+            "concept_code": "licence_Apache-2.0",
+            "sibling_concepts": [
+                {
+                    "concept_code": "licence_MPL-2.0"
+                }
+            ]
+        }
+    ]
+}

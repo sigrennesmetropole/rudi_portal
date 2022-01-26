@@ -1,0 +1,279 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public ACL Rudi",
+		"version": "0.0.1",
+		"title": "rudi-acl-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"User": {
+			  "description": "Utilisateur RUDI",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"login": {
+						"type": "string",
+						"description": "Login de l'utilisateur"
+					},
+		          "password": {
+		            "type": "string",
+		            "description": "Mot de passe de l'utilisateur"
+		          },
+		          "lastname": {
+		            "type": "string",
+		            "description": "Nom de l'utilisateur"
+		          },
+		          "firstname": {
+		            "type": "string",
+		            "description": "Prénom de l'utilisateur"
+		          },
+		          "company": {
+		            "type": "string",
+		            "description": "Société de l'utilisateur (nom de l'association/start-up/entreprise à laquelle il est rattaché)"
+		          },
+		          "type": {
+		            "$ref": "#/components/schemas/UserType",
+		            "required": "true"
+		          },
+				  "addresses": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AbstractAddress"
+						}
+				  },
+				  "roles": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Role"
+						}
+				  }		                              					
+				}
+			},
+			  "UserType": {
+	          "description": "Type d'utilisateur (personne, robot)",
+	          "type": "string",
+	          "enum": [
+	            "PERSON",
+	            "ROBOT"
+	          ]
+	        },				
+	        "AddressType": {
+	          "description": "Type d'adresse (postale, téléphonique, courriel)",
+	          "type": "string",
+	          "enum": [
+	            "POSTAL",
+	            "PHONE",
+	            "EMAIL"
+	          ]
+	        },
+			"AbstractAddress": {
+				"discriminator": {
+					"propertyName": "type",
+					"mapping": {
+						"PHONE": "#/components/schemas/TelephoneAddress",
+						"EMAIL": "#/components/schemas/EmailAddress",
+						"POSTAL": "#/components/schemas/PostalAddress"
+					}
+				},
+				"description": "Adresse abstraite d'un producteur de données",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"type": {
+						"$ref": "#/components/schemas/AddressType",
+						"required": "true"
+					},
+					"addressRole": {
+						"$ref": "#/components/schemas/AddressRole"
+					}
+				}
+			},
+			"AddressRole": {
+				"description": "Rôle d'une adresse",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"code": {
+						"type": "string",
+						"description": "Code rôle adresse unique"
+					},
+					"label": {
+						"type": "string",
+						"description": "Libellé de l'adresse"
+						
+					},
+					"type": {
+						"$ref": "#/components/schemas/AddressType"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					},
+					"order": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"PostalAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"recipientIdentification": {
+								"type": "string",
+								"description": "Identification du destinataire"
+							},
+							"additionalIdentification": {
+								"type": "string",
+								"description": "Complément d’identification ou point de remise à l’intérieur du bâtiment "
+							},
+							"streetNumber": {
+								"type": "string",
+								"description": "Numéro et libellé de la voie"
+							},
+							"distributionService": {
+								"type": "string",
+								"description": "Lieu dit ou service particulier de distribution"
+							},
+							"locality": {
+								"type": "string",
+								"description": "Code postal et localité de destination"
+							}
+						}
+					}
+				]
+			},
+			"TelephoneAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"phoneNumber": {
+								"type": "string",
+								"description": "Numéro de téléphone"
+							}
+						}
+					}
+				]
+			},
+			"EmailAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"email": {
+								"type": "string",
+								"description": "Adresse email"
+							}
+						}
+					}
+				]
+			},
+			"Role": {
+				"description": "Rôle d'un utilisateur",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"code": {
+						"type": "string",
+						"description": "Code rôle utilisateur unique"
+					},
+					"label": {
+						"type": "string",
+						"description": "Libelle du rôle"
+						
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début du rôle"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin du rôle"
+					},
+					"order": {
+						"type": "integer",
+						"format": "int32",
+						"description": "Numéro d'ordre du rôle"
+					}
+				}
+			},
+			"PageResult": {
+				"type": "object",
+				"properties": {
+					"total": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"UserPageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ClientKey": {
+				"type": "object",
+				"properties": {
+					"clientId": {
+						"type": "string"
+					},
+					"clientSecret": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

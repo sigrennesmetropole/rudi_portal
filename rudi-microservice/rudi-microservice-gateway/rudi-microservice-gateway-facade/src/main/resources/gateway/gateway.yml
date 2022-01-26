@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: rudi-gateway
+  cloud:
+    gateway:
+      default-filters:
+      - RemoveRequestHeader=sec-login
+      - RemoveRequestHeader=sec-type
+      - RemoveRequestHeader=sec-firstname
+      - RemoveRequestHeader=sec-lastname
+      - RemoveRequestHeader=sec-email
+      - RemoveRequestHeader=sec-organization
+      - RemoveRequestHeader=sec-roles
+      routes:
+      - id: acl_service_oauth2
+        uri: lb://RUDI-ACL/
+        predicates:
+        - Path=/oauth/**
+      - id: acl_service_jwt
+        uri: lb://RUDI-ACL/
+        predicates:
+        - Path=/authenticate
+      - id: acl_service
+        uri: lb://RUDI-ACL/
+        predicates:
+        - Path=/acl/**
+      - id: providers_service
+        uri: lb://RUDI-PROVIDERS/
+        predicates:
+        - Path=/providers/**
+      - id: kalim_service
+        uri: lb://RUDI-KALIM/
+        predicates:
+        - Path=/kalim/**
+      - id: konsult_service
+        uri: lb://RUDI-KONSULT/
+        predicates:
+        - Path=/konsult/**
+      - id: template_service
+        uri: lb://RUDI-TEMPLATE/
+        predicates:
+        - Path=/template/**
+      - id: kos_service
+        uri: lb://RUDI-KOS/
+        predicates:
+        - Path=/kos/**
+
+
+

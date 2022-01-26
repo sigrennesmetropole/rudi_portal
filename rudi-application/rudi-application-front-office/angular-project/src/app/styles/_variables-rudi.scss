@@ -1,0 +1,36 @@
+@import 'mat-theming';
+
+$icon: 32px;
+
+$header-index: 2;
+$app-header-height: 148px;
+$bloc-min-width: 360px;
+$bloc-space-width: 16px;
+/**********************************************************************************************
+ ********************************** Screen size ***********************************************
+ **********************************************************************************************/
+// Mini smarphones
+$screen-sm-min: 360px;
+$screen-sm-max: 460px;
+
+// smarphones modernes
+$screen-sm-min: 360px;
+$screen-sm-max: 767px;
+$card-height-sm: 200px;
+
+// Tablettes
+$screen-md-min: 768px;
+$screen-md-max: 1023px;
+$card-height-md: 100px;
+
+
+// desktops
+$screen-lg-min: 1024px;
+$screen-lg-max: 1439px;
+$card-height-lg: 290px;
+
+// large desktops
+$screen-xl-min: 1440px;
+
+
+

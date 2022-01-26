@@ -1,0 +1,101 @@
+package org.rudi.facet.oauth2.config;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.server.AuthenticatedPrincipalServerOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import lombok.Getter;
+import reactor.netty.http.client.HttpClient;
+
+/**
+ * @author FNI18300
+ *
+ */
+public class WebClientConfig {
+
+	public static final String REGISTRATION_ID = "rudi_module";
+
+	@Getter
+	@Value("${module.oauth2.client-id}")
+	private String clientId;
+
+	@Getter
+	@Value("${module.oauth2.client-secret}")
+	private String clientSecret;
+
+	@Getter
+	@Value("${module.oauth2.provider-uri}")
+	private String tokenUri;
+
+	@Getter
+	@Value("${module.oauth2.scope}")
+	private String[] scopes;
+
+	@Bean(name = "rudi_oauth2_repository")
+	public ReactiveClientRegistrationRepository getRegistration() {
+		ClientRegistration clientRegistration = ClientRegistration.withRegistrationId(REGISTRATION_ID)
+				.tokenUri(tokenUri).clientId(clientId).clientSecret(clientSecret)
+				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS).scope(scopes).build();
+		return new InMemoryReactiveClientRegistrationRepository(clientRegistration);
+	}
+
+	@Bean(name = "rudi_oauth2_client_service")
+	public ReactiveOAuth2AuthorizedClientService clientService(
+			@Qualifier("rudi_oauth2_repository") ReactiveClientRegistrationRepository clientRegistrationRepository) {
+		return new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrationRepository);
+	}
+
+	@Bean(name = "rudi_oauth2_client_repository")
+	public ServerOAuth2AuthorizedClientRepository clientRepository(
+			@Qualifier("rudi_oauth2_client_service") ReactiveOAuth2AuthorizedClientService clientService) {
+		return new AuthenticatedPrincipalServerOAuth2AuthorizedClientRepository(clientService);
+	}
+
+	@Bean(name = "rudi_oauth2_client_manager")
+	public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
+			@Qualifier("rudi_oauth2_repository") ReactiveClientRegistrationRepository clientRegistrationRepository,
+			@Qualifier("rudi_oauth2_client_service") ReactiveOAuth2AuthorizedClientService clientService,
+			@Qualifier("rudi_oauth2_client_repository") ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
+		ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider = ReactiveOAuth2AuthorizedClientProviderBuilder
+				.builder().clientCredentials().build();
+
+		AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
+				clientRegistrationRepository, clientService);
+
+		authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+		return authorizedClientManager;
+	}
+
+	@LoadBalanced
+	@Bean(name = "rudi_oauth2_builder")
+	public WebClient.Builder webClientBuilder(@Qualifier("rudi_oauth2_client_manager") ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+		HttpClient httpClient = HttpClient.create();
+		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
+				authorizedClientManager);
+		oauthFilter.setDefaultClientRegistrationId(REGISTRATION_ID);
+		return WebClient.builder().filter(oauthFilter)
+				.defaultHeaders(header -> header.setBasicAuth(clientId, clientSecret))
+				.clientConnector(new ReactorClientHttpConnector(httpClient));
+	}
+
+	@Bean(name = "rudi_oauth2")
+	public WebClient webClient(@Qualifier("rudi_oauth2_builder") WebClient.Builder builder) {
+		return builder.build();
+	}
+}

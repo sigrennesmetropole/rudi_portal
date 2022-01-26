@@ -1,0 +1,130 @@
+---
+version: "3"
+
+volumes:
+  registry_data:
+  gateway_data:
+  providers_data:
+  konsult_data:
+  kalim_data:
+  acl_data:
+  kos_data:
+
+services:
+
+  registry:
+    container_name: registry
+    build: ./registry
+    profiles:
+      - docker_rudi_on
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./config:/etc/rudi/config
+      - registry_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  gateway:
+    container_name: gateway
+    build: ./gateway
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./config:/etc/rudi/config
+      - gateway_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  providers:
+    container_name: providers
+    build: ./providers
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./config:/etc/rudi/config
+      - providers_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  acl:
+    container_name: acl
+    build: ./acl
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./config:/etc/rudi/config
+      - acl_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  kalim:
+    container_name: kalim
+    build: ./kalim
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./config:/etc/rudi/config
+      - kalim_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  konsult:
+    container_name: konsult
+    build: ./konsult
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8087:8087"
+    volumes:
+      - ./config:/etc/rudi/config
+      - konsult_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  kos:
+    container_name: kos
+    build: ./kos
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./config:/etc/rudi/config
+      - kos_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G

@@ -1,0 +1,257 @@
+{
+	"scheme_code": "scheme-keyword",
+	"openingDate": "2021-04-28T15:30:00.000Z",
+	"closingDate": "2021-05-03T15:30:00.000Z",
+	"uri": "https://fr.wikipedia.org/wiki/Mot_clé",
+	"role": "keyword",
+	"scheme_labels": [
+		{
+			"lang": "en",
+			"text": "Themes and keywords"
+		},
+		{
+			"lang": "fr",
+			"text": "Thèmes et mots clés"
+		}
+	],
+	"top_concepts": [
+		{
+			"concept_code": "economy",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Économie_(discipline)",
+			"concept_icon": "assets/pictos/economy.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Economie"
+				},
+				{
+					"lang": "en",
+					"text": "Economy"
+				}
+			]
+		},
+		{
+			"concept_code": "citizenship",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Citoyennet%C3%A9",
+			"concept_icon": "assets/pictos/society.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Citoyenneté"
+				},
+				{
+					"lang": "en",
+					"text": "Citizenship"
+				}
+			]
+		},
+		{
+			"concept_code": "energyNetworks",
+			"concept_uri": "https://fr.wikipedia.org/wiki/%C3%89nergie_en_France",
+			"concept_icon": "assets/pictos/location.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Réseaux, Energie"
+				},
+				{
+					"lang": "en",
+					"text": "Networks, Energy"
+				}
+			]
+		},
+		{
+			"concept_code": "culture",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Culture",
+			"concept_icon": "assets/pictos/farming.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Culture, Sports, Loisirs"
+				},
+				{
+					"lang": "en",
+					"text": "Culture, Sports, Leisure"
+				}
+			]
+		},
+		{
+			"concept_code": "transportation",
+			"concept_uri": "https://en.wikipedia.org/wiki/Transport",
+			"concept_icon": "assets/pictos/transportation.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Mobilité, Transport"
+				},
+				{
+					"lang": "en",
+					"text": "Mobility, Transportation"
+				}
+			]
+		},
+		{
+			"concept_code": "children",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Enfance",
+			"concept_icon": "assets/pictos/geoscientificInformation.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Enfance"
+				},
+				{
+					"lang": "en",
+					"text": "Childhood"
+				}
+			]
+		},
+		{
+			"concept_code": "environment",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Environnement",
+			"concept_icon": "assets/pictos/environment.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Environnement"
+				},
+				{
+					"lang": "en",
+					"text": "Environment"
+				}
+			]
+		},
+		{
+			"concept_code": "townPlanning",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Urbanisme",
+			"concept_icon": "assets/pictos/planningCadastre.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Urbanisme"
+				},
+				{
+					"lang": "en",
+					"text": "Urban Planning"
+				}
+			]
+		},
+		{
+			"concept_code": "location",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Territoire",
+			"concept_icon": "assets/pictos/boundaries.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Référentiels géographiques"
+				},
+				{
+					"lang": "en",
+					"text": "Geographical references"
+				}
+			]
+		},
+		{
+			"concept_code": "education",
+			"concept_uri": "https://fr.wikipedia.org/wiki/%C3%89ducation",
+			"concept_icon": "assets/pictos/geoscientificInformation.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Education"
+				},
+				{
+					"lang": "en",
+					"text": "Education"
+				}
+			]
+		},
+		{
+			"concept_code": "publicSpace",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Espace_public",
+			"concept_icon": "assets/pictos/elevation.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Espace public"
+				},
+				{
+					"lang": "en",
+					"text": "Public Space"
+				}
+			]
+		},
+		{
+			"concept_code": "health",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Sant%C3%A9",
+			"concept_icon": "assets/pictos/health.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Santé, Sécurité"
+				},
+				{
+					"lang": "en",
+					"text": "Health, Safety"
+				}
+			]
+		},
+		{
+			"concept_code": "housing",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Logement",
+			"concept_icon": "assets/pictos/structure.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Logement"
+				},
+				{
+					"lang": "en",
+					"text": "Housing"
+				}
+			]
+		},
+		{
+			"concept_code": "society",
+			"concept_uri": "https://fr.wikipedia.org/wiki/Social",
+			"concept_icon": "assets/pictos/intelligenceMilitary.svg",
+			"concept_role": "theme",
+			"openingDate": "2021-04-29T14:47:00.000Z",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Social"
+				},
+				{
+					"lang": "en",
+					"text": "Society"
+				}
+			]
+		}
+	]
+}

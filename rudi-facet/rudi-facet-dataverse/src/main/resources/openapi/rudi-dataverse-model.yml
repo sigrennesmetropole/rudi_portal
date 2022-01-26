@@ -1,0 +1,218 @@
+openapi: 3.0.0
+info:
+  description: API Public Template Rudi
+  version: 0.0.1
+  title: rudi-template-api
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: ca.marchand@rennesmetropole.fr
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+paths: { }
+components:
+  schemas:
+    SearchItemInfo:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchType'
+        name:
+          type: string
+        url:
+          type: string
+        image_url:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          dataset: '#/components/schemas/SearchDatasetInfo'
+          dataverse: '#/components/schemas/SearchDataverseInfo'
+    SearchType:
+      type: string
+      enum:
+        - dataset
+        - dataverse
+    SearchDatasetInfo:
+      allOf:
+        - $ref: '#/components/schemas/SearchItemInfo'
+        - type: object
+          properties:
+            global_id:
+              type: string
+            description:
+              type: string
+            published_at:
+              type: string
+              format: date-time
+            publisher:
+              type: string
+            name_of_dataverse:
+              type: string
+            subjects:
+              type: array
+              items:
+                type: string
+            fileCount:
+              type: integer
+            authors:
+              type: array
+              items:
+                type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            contacts:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchContactInfo'
+            metadataBlocks:
+              $ref: '#/components/schemas/DatasetMetadataBlock'
+    SearchDataverseInfo:
+      allOf:
+        - $ref: '#/components/schemas/SearchItemInfo'
+        - type: object
+          properties:
+            identifier:
+              type: string
+            description:
+              type: string
+            published_at:
+              type: string
+              format: date-time
+    SearchContactInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        affiliation:
+          type: string
+    Identifier:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        persistentId:
+          type: string
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    Dataset:
+      allOf:
+        - $ref: '#/components/schemas/Identifier'
+        - type: object
+          properties:
+            identifier:
+              type: string
+            protocol:
+              type: string
+            authority:
+              type: string
+            persistentUrl:
+              type: string
+            publisher:
+              type: string
+            publicationDate:
+              type: string
+              format: date
+            datasetVersion:
+              $ref: '#/components/schemas/DatasetVersion'
+            latestVersion:
+              $ref: '#/components/schemas/DatasetVersion'
+    DatasetVersion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        datasetId:
+          type: integer
+          format: int64
+        datasetPersistentId:
+          type: string
+        versionState:
+          type: string
+        createTime:
+          type: string
+          format: date-time
+        lastUpdateTime:
+          type: string
+          format: date-time
+        versionNumber:
+          type: integer
+        versionMinorNumber:
+          type: integer
+        metadataBlocks:
+          $ref: '#/components/schemas/DatasetMetadataBlock'
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetFile'
+    DatasetFile:
+      type: object
+      properties:
+        description:
+          type: string
+        label:
+          type: string
+        restricted:
+          type: boolean
+        version:
+          type: string
+        datasetVersionId:
+          type: string
+        dataFile:
+          $ref: '#/components/schemas/DataFile'
+    DataFile:
+      type: object
+      properties:
+        id:
+          type: string
+        persistentId:
+          type: string
+        filename:
+          type: string
+        contentType:
+          type: string
+        filesize:
+          type: integer
+    DatasetMetadataBlock:
+      type: object
+      properties:
+        citation:
+          $ref: '#/components/schemas/DatasetMetadataBlockElement'
+        rudi:
+          $ref: '#/components/schemas/DatasetMetadataBlockElement'
+    DatasetMetadataBlockElement:
+      type: object
+      properties:
+        displayName:
+          type: string
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetMetadataBlockElementField'
+    DatasetMetadataBlockElementField:
+      type: object
+      properties:
+        typeName:
+          type: string
+        typeClass:
+          $ref: '#/components/schemas/FieldTypeClass'
+        multiple:
+          type: boolean
+        value:
+          type: object
+    FieldTypeClass:
+      type: string
+      enum:
+        - primitive
+        - compound
+        - controlledVocabulary
+

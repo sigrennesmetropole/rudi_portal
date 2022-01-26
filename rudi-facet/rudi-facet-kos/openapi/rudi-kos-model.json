@@ -1,0 +1,382 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Kos Rudi",
+		"version": "0.0.1",
+		"title": "rudi-kos-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {},
+	"components": {
+		"schemas": {
+			"DictionaryList": {
+				"type": "object",
+				"required": [
+					"lang",
+					"text"
+				],
+				"properties": {
+					"lang": {
+						"$ref": "#/components/schemas/Language"
+					},
+					"text": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"DictionaryEntry": {
+				"type": "object",
+				"required": [
+					"lang",
+					"text"
+				],
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"lang": {
+						"$ref": "#/components/schemas/Language"
+					},
+					"text": {
+						"type": "string"
+					}
+				}
+			},
+			"SkosScheme": {
+				"description": "Set of SKOS concepts gathered in a transversal and hierarchical  relationships.\n",
+				"type": "object",
+				"required": [
+					"scheme_code",
+					"scheme_label"
+				],
+				"properties": {
+					"scheme_id": {
+						"description": "ID of the SKOS concept scheme",
+						"type": "string",
+						"format": "uuid"
+					},
+					"scheme_code": {
+						"description": "Short abstract code that identifies uniquely the concept scheme",
+						"type": "string",
+						"minLength": 2,
+						"maxLength": 30
+					},
+					"scheme_labels": {
+						"description": "Short code for the concept scheme",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						},
+						"minItems": 1
+					},
+					"uri": {
+						"description": "URI towards a graphical resource that describes the concept scheme",
+						"type": "string",
+						"format": "uri"
+					},
+					"role": {
+						"type": "string"
+					},
+					"top_concepts": {
+						"description": "List of the highest level concepts in the concept scheme",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SkosConcept"
+						}
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					}
+				}
+			},
+			"SkosConcept": {
+				"description": "A SKOS concept is an element in a controlled vocabulary such as a  thesaurus. It offers to link concepts in hierarchical (broader/narrower)  or neighbouring relationships. A set of SKOS concepts is gathered in one concept scheme. If a SKOS concept appears in two different concept schemes, it should be duplicated as there are chances the context is slightly different and the meaning will be hard to unify.\n",
+				"type": "object",
+				"required": [
+					"concept_code",
+					"pref_label"
+				],
+				"properties": {
+					"concept_id": {
+						"description": "ID of the SKOS concept",
+						"type": "string",
+						"format": "uuid"
+					},
+					"concept_code": {
+						"description": "Short abstract code that identifies uniquely the concept",
+						"type": "string",
+						"minLength": 2,
+						"maxLength": 30
+					},
+					"concept_uri": {
+						"description": "Web page that document the SKOS concept",
+						"type": "string",
+						"format": "uri"
+					},
+					"concept_icon": {
+						"description": "URI towards a graphical resource that describes the concept",
+						"type": "string",
+						"format": "uri"
+					},
+					"pref_label": {
+						"description": "Preferred lexical label for the resource, one for each language",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"alt_labels": {
+						"description": "List of alternative labels (in each language)",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryList"
+						}
+					},
+					"hidden_labels": {
+						"description": "List of alternative orthographs for the label (in each language)",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryList"
+						}
+					},
+					"of_scheme": {
+						"$ref": "#/components/schemas/SkosScheme"
+					},
+					"concept_role": {
+						"description": "Underlines a particular use for this Concept, e.g. a potential value for a property (e.g. \"metadata.theme\", \"metadata.keywords\",  \"metadata.licence\")\n",
+						"type": "string"
+					},
+					"narrower_concepts": {
+						"description": "References to the SKOS concepts that can be associated in a  non-transitive relationship\n",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SkosConcept"
+						}
+					},
+					"sibling_concepts": {
+						"description": "References to the SKOS concepts that can be associated in a  non-transitive relationship\n",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SkosConcept"
+						}
+					},
+					"relative_concepts": {
+						"description": "References to the SKOS concepts that can be associated in a  non-transitive relationship\n",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SkosConcept"
+						}
+					},
+					"broader_concepts": {
+						"description": "References to the SKOS concepts that can be associated in a  non-transitive relationship\n",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SkosConcept"
+						}
+					},
+					"scope_note": {
+						"description": "Contextual information about the intended meaning of the concept,  especially as an indication of how the use of the concept\n",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"concept_definition": {
+						"description": "Complete explanation of the intended meaning of a concept",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"concept_example": {
+						"description": "Example of the use of a concept",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					}
+				}
+			},
+			"SimpleSkosConcept": {
+				"type": "object",
+				"properties": {
+					"concept_id": {
+						"description": "ID of the SKOS concept",
+						"type": "string",
+						"format": "uuid"
+					},
+					"concept_code": {
+						"description": "Short abstract code that identifies uniquely the concept",
+						"type": "string",
+						"minLength": 2,
+						"maxLength": 30
+					},
+					"concept_uri": {
+						"description": "Web page that document the SKOS concept",
+						"type": "string",
+						"format": "uri"
+					},
+					"concept_icon": {
+						"description": "URI towards a graphical resource that describes the concept",
+						"type": "string",
+						"format": "uri"
+					},
+					"of_scheme_code": {
+						"description": "code du schéma associé",
+						"type": "string"
+					},
+					"concept_role": {
+						"description": "Underlines a particular use for this Concept, e.g. a potential value for a property (e.g. \"metadata.theme\", \"metadata.keywords\",  \"metadata.licence\")\n",
+						"type": "string"
+					},
+					"text": {
+						"type": "string"
+					}
+				}
+			},
+			"SkosRelationType": {
+				"type": "string",
+				"enum": [
+					"BROADER",
+					"SIBLING",
+					"NARROWING",
+					"RELATIVE"
+				]
+			},
+			"SkosConceptLabel": {
+				"type": "string",
+				"enum": [
+					"ALTERNATE",
+					"PREFERRED",
+					"HIDDEN"
+				]
+			},
+			"SkosRelationConcept": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"type": {
+						"$ref": "#/components/schemas/SkosRelationType"
+					},
+					"target": {
+						"$ref": "#/components/schemas/SkosConcept"
+					}
+				}
+			},
+			"PageResult": {
+				"type": "object",
+				"properties": {
+					"total": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"SimpleSkosConceptPageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SimpleSkosConcept"
+								}
+							}
+						}
+					}
+				]
+			},
+			"SkosSchemePageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SkosScheme"
+								}
+							}
+						}
+					}
+				]
+			},
+			"Language": {
+				"type": "string",
+				"pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+				"enum": [
+					"cs-CZ",
+					"da-DK",
+					"de-CH",
+					"de-DE",
+					"en-GB",
+					"en-US",
+					"el-GR",
+					"es-ES",
+					"fr-FR",
+					"hu-HU",
+					"it-IT",
+					"no-NO",
+					"pl-PL",
+					"pt-PT",
+					"ro-RO",
+					"ru-RU",
+					"sk-SK",
+					"cs",
+					"da",
+					"de",
+					"en",
+					"el",
+					"es",
+					"fr",
+					"hu",
+					"it",
+					"no",
+					"pl",
+					"pt",
+					"ro",
+					"ru",
+					"sk"
+				]
+			}
+		}
+	}
+}

@@ -1,0 +1,208 @@
+[
+  {
+    "typeName": "rudi_access_condition",
+    "typeClass": "compound",
+    "multiple": false,
+    "value": {
+      "rudi_access_condition_confidentiality_restricted_access": {
+        "typeName": "rudi_access_condition_confidentiality_restricted_access",
+        "typeClass": "primitive",
+        "multiple": false,
+        "value": "true"
+      },
+      "rudi_access_condition_confidentiality_gdpr_sensitive": {
+        "typeName": "rudi_access_condition_confidentiality_gdpr_sensitive",
+        "typeClass": "primitive",
+        "multiple": false,
+        "value": "true"
+      },
+      "rudi_access_condition_licence_licence_type": {
+        "typeName": "rudi_access_condition_licence_licence_type",
+        "typeClass": "controlledVocabulary",
+        "multiple": false,
+        "value": "STANDARD"
+      },
+      "rudi_access_condition_licence_licence_label": {
+        "typeName": "rudi_access_condition_licence_licence_label",
+        "typeClass": "primitive",
+        "multiple": false,
+        "value": "SkosConcept.concept_code"
+      }
+    }
+  },
+  {
+    "typeName": "rudi_access_condition_usage_constraint",
+    "typeClass": "compound",
+    "multiple": true,
+    "value": [
+      {
+        "rudi_access_condition_usage_constraint_lang": {
+          "typeName": "rudi_access_condition_usage_constraint_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "fr-FR"
+        },
+        "rudi_access_condition_usage_constraint_text": {
+          "typeName": "rudi_access_condition_usage_constraint_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+        }
+      },
+      {
+        "rudi_access_condition_usage_constraint_lang": {
+          "typeName": "rudi_access_condition_usage_constraint_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "en-US"
+        },
+        "rudi_access_condition_usage_constraint_text": {
+          "typeName": "rudi_access_condition_usage_constraint_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Free use subject to the mandatory information on any distribution document"
+        }
+      }
+    ]
+  },
+  {
+    "typeName": "rudi_access_condition_bibliographical_reference",
+    "typeClass": "compound",
+    "multiple": true,
+    "value": [
+      {
+        "rudi_access_condition_bibliographical_reference_lang": {
+          "typeName": "rudi_access_condition_bibliographical_reference_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "fr-FR"
+        },
+        "rudi_access_condition_bibliographical_reference_text": {
+          "typeName": "rudi_access_condition_bibliographical_reference_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "abeilles"
+        }
+      },
+      {
+        "rudi_access_condition_bibliographical_reference_lang": {
+          "typeName": "rudi_access_condition_bibliographical_reference_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "en-US"
+        },
+        "rudi_access_condition_bibliographical_reference_text": {
+          "typeName": "rudi_access_condition_bibliographical_reference_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "bees"
+        }
+      }
+    ]
+  },
+  {
+    "typeName": "rudi_access_condition_mandatory_mention",
+    "typeClass": "compound",
+    "multiple": true,
+    "value": [
+      {
+        "rudi_access_condition_mandatory_mention_lang": {
+          "typeName": "rudi_access_condition_mandatory_mention_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "fr-FR"
+        },
+        "rudi_access_condition_mandatory_mention_text": {
+          "typeName": "rudi_access_condition_mandatory_mention_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Source: Région Bretagne"
+        }
+      },
+      {
+        "rudi_access_condition_mandatory_mention_lang": {
+          "typeName": "rudi_access_condition_mandatory_mention_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "en-US"
+        },
+        "rudi_access_condition_mandatory_mention_text": {
+          "typeName": "rudi_access_condition_mandatory_mention_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Source: Brittany region"
+        }
+      }
+    ]
+  },
+  {
+    "typeName": "rudi_access_condition_access_constraint",
+    "typeClass": "compound",
+    "multiple": true,
+    "value": [
+      {
+        "rudi_access_condition_access_constraint_lang": {
+          "typeName": "rudi_access_condition_access_constraint_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "fr-FR"
+        },
+        "rudi_access_condition_access_constraint_text": {
+          "typeName": "rudi_access_condition_access_constraint_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "abeilles"
+        }
+      },
+      {
+        "rudi_access_condition_access_constraint_lang": {
+          "typeName": "rudi_access_condition_access_constraint_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "en-US"
+        },
+        "rudi_access_condition_access_constraint_text": {
+          "typeName": "rudi_access_condition_access_constraint_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "bees"
+        }
+      }
+    ]
+  },
+  {
+    "typeName": "rudi_access_condition_other_constraints",
+    "typeClass": "compound",
+    "multiple": true,
+    "value": [
+      {
+        "rudi_access_condition_other_constraints_lang": {
+          "typeName": "rudi_access_condition_other_constraints_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "fr-FR"
+        },
+        "rudi_access_condition_other_constraints_text": {
+          "typeName": "rudi_access_condition_other_constraints_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "Pas de restriction d'accès public"
+        }
+      },
+      {
+        "rudi_access_condition_other_constraints_lang": {
+          "typeName": "rudi_access_condition_other_constraints_lang",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "en-US"
+        },
+        "rudi_access_condition_other_constraints_text": {
+          "typeName": "rudi_access_condition_other_constraints_text",
+          "typeClass": "primitive",
+          "multiple": false,
+          "value": "No public access restriction"
+        }
+      }
+    ]
+  }
+]

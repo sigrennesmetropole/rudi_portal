@@ -1,0 +1,281 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Providers Rudi",
+		"version": "0.0.1",
+		"title": "rudi-providers-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"Provider": {
+				"description": "Modèle producteur de jeux de données",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"code": {
+						"type": "string",
+						"description": "Code producteur unique"
+					},
+					"label": {
+						"type": "string",
+						"description": "Nom du producteur"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					},
+					"addresses": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AbstractAddress"
+						}
+					},
+					"nodeProviders": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/NodeProvider"
+						}
+					}
+				}
+			},
+			"AddressType": {
+				"description": "Type d'adresse (postale, téléphonique, courriel, site)",
+				"type": "string",
+				"enum": [
+					"POSTAL",
+					"PHONE",
+					"EMAIL",
+					"WEBSITE"
+				]
+			},
+			"AbstractAddress": {
+				"discriminator": {
+					"propertyName": "type",
+					"mapping": {
+						"PHONE": "#/components/schemas/TelephoneAddress",
+						"WEBSITE": "#/components/schemas/WebsiteAddress",
+						"EMAIL": "#/components/schemas/EmailAddress",
+						"POSTAL": "#/components/schemas/PostalAddress"
+					}
+				},
+				"description": "Adresse abstraite d'un producteur de données",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"type": {
+						"$ref": "#/components/schemas/AddressType",
+						"required": "true"
+					},
+					"addressRole": {
+						"$ref": "#/components/schemas/AddressRole"
+					}
+				}
+			},
+			"AddressRole": {
+				"description": "Rôle d'une adresse",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"code": {
+						"type": "string",
+						"description": "Code rôle adresse unique"
+					},
+					"label": {
+						"type": "string",
+						"description": "Libelle de l'adresse"
+						
+					},
+					"type": {
+						"$ref": "#/components/schemas/AddressType"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					},
+					"order": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"PostalAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"recipientIdentification": {
+								"type": "string",
+								"description": "Identification du destinataire"
+							},
+							"additionalIdentification": {
+								"type": "string",
+								"description": "Complément d’identification ou point de remise à l’intérieur du bâtiment "
+							},
+							"streetNumber": {
+								"type": "string",
+								"description": "Numéro et libellé de la voie"
+							},
+							"distributionService": {
+								"type": "string",
+								"description": "Lieu dit ou service particulier de distribution"
+							},
+							"locality": {
+								"type": "string",
+								"description": "Code postal et localité de destination"
+							}
+						}
+					}
+				]
+			},
+			"TelephoneAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"phoneNumber": {
+								"type": "string",
+								"description": "Numéro de téléphone"
+							}
+						}
+					}
+				]
+			},
+			"EmailAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"email": {
+								"type": "string",
+								"description": "Adresse email"
+							}
+						}
+					}
+				]
+			},
+			"WebsiteAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"url": {
+								"type": "string",
+								"description": "URL du site web"
+							}
+						}
+					}
+				]
+			},
+			"NodeProvider": {
+				"description": "Noeud producteur",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "UUID du noeud"
+					},
+					"version": {
+						"type": "string",
+						"description": "Version de l'API utilisé"
+					},
+					"url": {
+						"type": "string",
+						"description": "URL du noeud"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Une date de fin d'activité"
+					},
+					"harvestable": {
+						"type": "boolean"
+					},
+					"notifiable": {
+						"type": "boolean"
+					},
+					"harvestingCron": {
+						"type": "string",
+						"description": "Expression cron au format Spring pour planifier le moissonnage de ce nœud (cf : https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions)"
+					},
+					"lastHarvestingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date et heure du dernier moissonnage réussi"
+					}
+				}
+			},
+			"PageResult": {
+				"type": "object",
+				"properties": {
+					"total": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"ProviderPageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Provider"
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	}
+}

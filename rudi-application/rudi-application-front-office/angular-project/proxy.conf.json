@@ -1,0 +1,44 @@
+{
+  "/authenticate": {
+    "target": "http://localhost:8085/",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/anonymous": {
+    "target": "http://localhost:8085/",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/acl/v1": {
+    "target": "http://localhost:8085/acl/v1",
+    "secure": false,
+    "pathRewrite": {
+      "^/acl/v1": ""
+    },
+    "changeOrigin": true
+  },
+  "/konsult/v1": {
+    "target": "http://localhost:8087/konsult/v1",
+    "secure": false,
+    "pathRewrite": {
+      "^/konsult/v1": ""
+    },
+    "changeOrigin": true
+  },
+  "/providers/v1": {
+    "target": "http://localhost:8084/providers/v1",
+    "secure": false,
+    "pathRewrite": {
+      "^/providers/v1": ""
+    },
+    "changeOrigin": true
+  },
+  "/kos/v1": {
+    "target": "http://localhost:8088/kos/v1",
+    "secure": false,
+    "pathRewrite": {
+      "^/kos/v1": ""
+    },
+    "changeOrigin": true
+  }
+}

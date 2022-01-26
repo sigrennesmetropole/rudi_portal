@@ -1,0 +1,216 @@
+{
+	"scheme_code": "scheme-licence",
+	"openingDate": "2021-01-01T00:00:00.000Z",
+	"uri": "https://fr.wikipedia.org/wiki/Licence_de_logiciel",
+	"role": "licence",
+	"scheme_labels": [
+		{
+			"lang": "en",
+			"text": "software licences"
+		},
+		{
+			"lang": "fr",
+			"text": "licences logicielles"
+		}
+	],
+	"top_concepts": [
+		{
+			"concept_code": "free-software-licence",
+			"openingDate": "2021-01-01T00:00:00.000Z",
+			"concept_role": "licence-hierarchy",
+			"concept_icon": "free-software",
+			"concept_uri": "https://www.gnu.org/philosophy/free-sw.html",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Logiciel Libre"
+				},
+				{
+					"lang": "en",
+					"text": "Free-software license"
+				}
+			],
+			"narrower_concepts": [
+				{
+					"concept_code": "public-domain-cc0",
+					"concept_icon": "cc0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_role": "licence",
+					"concept_uri": "https://creativecommons.org/share-your-work/public-domain/cc0/",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Domaine Public"
+						},
+						{
+							"lang": "en",
+							"text": "Public Domain"
+						}
+					]
+				},
+				{
+					"concept_code": "gpl-3.0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_role": "licence",
+					"concept_uri": "https://www.gnu.org/licenses/gpl-3.0.en.html",
+					"concept_icon": "icon3",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "GNU General Public License v3"
+						},
+						{
+							"lang": "en",
+							"text": "GNU General Public License v3"
+						}
+					],
+					"alt_labels": [
+						{
+							"lang": "fr",
+							"text": [
+								"GNU GPL v3",
+								"GPL",
+								"GPL v3",
+								"GPL 3",
+								"GPL3",
+								"GNU General Public License v3"
+							]
+						},
+						{
+							"lang": "en",
+							"text": [
+								"GPL",
+								"GPL v3",
+								"GPL 3",
+								"GPL3",
+								"GNU GPL v3",
+								"GNU General Public License v3"
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"concept_code": "open-source-licence",
+			"openingDate": "2021-01-01T00:00:00.000Z",
+			"concept_role": "licence-hierarchy",
+			"concept_icon": "open-source",
+			"concept_uri": "https://opensource.org/licenses",
+			"pref_label": [
+				{
+					"lang": "fr",
+					"text": "Licence Open-Source"
+				},
+				{
+					"lang": "en",
+					"text": "Open-Source Licence"
+				}
+			],
+			"narrower_concepts": [
+				{
+					"concept_code": "mit",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_icon": "mit",
+					"concept_role": "licence",
+					"concept_uri": "https://opensource.org/licenses/MIT",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Licence MIT"
+						},
+						{
+							"lang": "en",
+							"text": "MIT License"
+						}
+					]
+				},
+				{
+					"concept_code": "apache-2.0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_icon": "apache2",
+					"concept_role": "licence",
+					"concept_uri": "https://opensource.org/licenses/Apache-2.0",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Licence Apache v2"
+						},
+						{
+							"lang": "en",
+							"text": "Apache License v2"
+						}
+					]
+				},
+				{
+					"concept_code": "odbl-1.0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_icon": "odbl",
+					"concept_role": "licence",
+					"concept_uri": "https://opendatacommons.org/licenses/odbl/1-0",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Licence ODbL 1.0"
+						},
+						{
+							"lang": "en",
+							"text": "Open Data Commons Open Database License 1.0"
+						}
+					]
+				},
+				{
+					"concept_code": "etalab-1.0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_icon": "etalab1",
+					"concept_role": "licence",
+					"concept_uri": "https://www.etalab.gouv.fr/wp-content/uploads/2014/05/Ouverte.pdf",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Licence Ouverte Etalab v1.0"
+						},
+						{
+							"lang": "en",
+							"text": "Etalab Open License 1.0"
+						}
+					]
+				},
+				{
+					"concept_code": "etalab-2.0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_icon": "etalab2",
+					"concept_role": "licence",
+					"concept_uri": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Licence Ouverte Etalab v2.0"
+						},
+						{
+							"lang": "en",
+							"text": "Etalab Open License 2.0"
+						}
+					]
+				},
+				{
+					"concept_code": "cc-by-nd-4.0",
+					"openingDate": "2021-01-01T00:00:00.000Z",
+					"concept_icon": "ccbynd4",
+					"concept_role": "licence",
+					"concept_uri": "https://creativecommons.org/licenses/by-nd/4.0/",
+					"pref_label": [
+						{
+							"lang": "fr",
+							"text": "Attribution - Pas de Modification 4.0 International (CC BY-ND 4.0)"
+						},
+						{
+							"lang": "en",
+							"text": "Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)"
+						}
+					]
+				}
+			]
+		}
+	]
+}

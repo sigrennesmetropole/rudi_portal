@@ -1,0 +1,24 @@
+{
+	"geography": {
+		"bounding_box": {
+			"west_longitude": -1.677803,
+			"east_longitude": -1.677803,
+			"north_latitude": 48.112834,
+			"south_latitude": 48.112834
+		},
+		"geographic_distribution": {
+			"type": "Point",
+			"coordinates": [
+				-1.677803,
+				48.112834
+			],
+			"bbox": [
+				-1.677803,
+				48.112834,
+				-1.677803,
+				48.112834
+			]
+		},
+		"projection": "WGS 84"
+	}
+}

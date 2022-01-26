@@ -1,0 +1,12 @@
+{
+    "report_id": "8b26a6b0-8d0d-48d9-9480-518b77bfb654",
+    "submission_date": 1628685947313,
+    "treatment_date": 1628685986692,
+    "method": "POST",
+    "version": "v1",
+    "resource_id": "1b664275-2423-461b-974d-62c229a694f7",
+    "resource_title": "RUDI-799 : JDD restreint 2021-08-11T12:45:45.388Z",
+    "integration_status": "OK",
+    "comment": "l’intégration du jeu de données RUDI-799 : JDD restreint 2021-08-11T12:45:45.388Z s’est bien déroulée le Mon Aug 16 09:42:57 CEST 2021",
+    "integration_errors": []
+}

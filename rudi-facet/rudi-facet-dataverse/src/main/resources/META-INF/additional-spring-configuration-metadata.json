@@ -1,0 +1,44 @@
+{
+	"properties": [
+		{
+			"name": "dataverse.api.token",
+			"type": "java.lang.String",
+			"description": "Token used to call Dataverse API."
+		},
+		{
+			"name": "dataverse.api.url",
+			"type": "java.lang.String",
+			"description": "Dataverse API URL."
+		},
+		{
+			"name": "dataverse.instance1.port",
+			"type": "java.lang.Integer",
+			"description": "Dataverse API instance 1 port number."
+		},
+		{
+			"name": "dataverse.instance2.port",
+			"type": "java.lang.Integer",
+			"description": "Dataverse API instance 2 port number."
+		}
+	],
+	"hints": [
+		{
+			"name": "dataverse.instance1.port",
+			"values": [
+				{
+					"value": "8095",
+					"description": "Default Dataverse API instance 1 port number."
+				}
+			]
+		},
+		{
+			"name": "dataverse.instance2.port",
+			"values": [
+				{
+					"value": "8385",
+					"description": "Default Dataverse API instance 2 port number."
+				}
+			]
+		}
+	]
+}

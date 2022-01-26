@@ -1,0 +1,47 @@
+<mat-card
+    [ngClass]="ngClass"
+    class="mat-elevation-z4 data-set-card"
+>
+    <mat-card-content class="d-flex mb-0">
+        <div class="d-flex align-items-start logo-container">
+            <app-organization-logo [organizationId]="this.metadata.producer.organization_id" cssClass="with-border"
+                                   organizationType="producer"></app-organization-logo>
+        </div>
+        <div class="d-flex data-set-card-content">
+            <span class="w-100 data-set-card-producer ">{{metadata.producer.organization_name}}</span>
+            <span class="w-100 data-set-card-title data-set-card-title-margin">
+                <mat-icon class="key-icon" *ngIf="isRestricted" svgIcon="key_icon_88_blue"></mat-icon>
+                {{metadata.resource_title | truncateText: titleMaxLength}}
+            </span>
+            <p class="data-set-card-summary">{{ getSynopsis(metadata) | truncateText: 181}}</p>
+        </div>
+        <mat-icon class="triangle" *ngIf="isRestricted" svgIcon="top-right-triangle"></mat-icon>
+    </mat-card-content>
+
+    <div class="d-flex d-table-cell keywords-row data-set-card-title-margin keyword-padding">
+        <button
+            [matTooltip]="themeLabel"
+            class="rudi-btn-sm rudi-btn-theme"
+            mat-flat-button
+        >
+            <mat-icon [svgIcon]="themePicto"></mat-icon>
+        </button>
+        <ng-container *ngIf="metadata.keywords.length <= 2">
+            <ng-container *ngFor="let keyword of metadata.keywords | slice:0:metadata.keywords.length">
+                <button class="rudi-btn-sm d-flex align-items-center" mat-flat-button>{{ keyword }}</button>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="metadata.keywords.length > 2">
+            <ng-container *ngFor="let keyword of metadata.keywords | slice:0:1;">
+                <button class="rudi-btn-sm d-flex align-items-center" mat-flat-button>{{ keyword }}</button>
+            </ng-container>
+            <button
+                class="rudi-btn-sm d-flex align-items-center"
+                mat-flat-button
+                matTooltip="{{metadata.keywords | split: ', ' }}">
+                + {{ metadata.keywords.length - 1}} autre{{(metadata.keywords.length - 1) > 1 ? 's' : ''}}
+            </button>
+        </ng-container>
+    </div>
+
+</mat-card>

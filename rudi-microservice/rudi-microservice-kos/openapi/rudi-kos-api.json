@@ -1,0 +1,668 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Kos Rudi",
+		"version": "0.0.1",
+		"title": "rudi-kos-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Kos API",
+			"variables": {
+				"basePath": {
+					"default": "kos/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "theme",
+			"description": "Services Theme"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/skosSchemes": {
+			"get": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Collection de skosScheme",
+				"description": "Retourne une liste de skosScheme",
+				"operationId": "searchSkosSchemes",
+				"parameters": [
+					{"$ref": "#/components/parameters/ActiveParam"},
+					{"$ref": "#/components/parameters/LimitParam"},
+					{"$ref": "#/components/parameters/OffsetParam"},
+					{"$ref": "#/components/parameters/OrderParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosSchemePageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Ajout d'un nouveau skosScheme",
+				"description": "Permet d'ajouter un nouveau skosScheme",
+				"operationId": "createSkosScheme",
+				"requestBody": {
+					"description": "info skosScheme",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-kos-model.json#/components/schemas/SkosScheme"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosScheme"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Mise à jour d'un skosScheme",
+				"description": "Mise à jour d'un skosScheme",
+				"operationId": "updateSkosScheme",
+				"requestBody": {
+					"description": "info skosScheme",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-kos-model.json#/components/schemas/SkosScheme"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosScheme"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/skosSchemes/{skosSchemeUuid}": {
+			"get": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Retourne un skosScheme sans les concepts",
+				"description": "Retourne un skosScheme sans les concepts",
+				"operationId": "getSkosScheme",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosScheme"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Suppression d'un skosScheme",
+				"description": "Suppression d'un skosScheme",
+				"operationId": "deleteSkosScheme",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/skosSchemes/{skosSchemeUuid}/skosConcepts": {
+			"get": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Collection de SkosConcept",
+				"description": "Retourne une liste des topConcepts de type SkosConcept associés à un skosScheme",
+				"operationId": "getTopConcepts",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-kos-model.json#/components/schemas/SkosConcept"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Ajout d'un nouveau skosConcept",
+				"description": "Permet d'ajouter un concept lié à un skosScheme, sans les broader, narrowing, sibling et relative",
+				"operationId": "createSkosConcept",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"},
+					{"$ref": "#/components/parameters/AsTopConceptParam"}
+				],
+				"requestBody": {
+					"description": "info skosConcept",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-kos-model.json#/components/schemas/SkosConcept"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosConcept"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Mise à jour d'un skosConcept",
+				"description": "Mise à jour d'un concept lié à un skosScheme, sans les broader, narrowing, sibling et relative",
+				"operationId": "updateSkosConcept",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"},
+					{"$ref": "#/components/parameters/AsTopConceptParam"}
+				],
+				"requestBody": {
+					"description": "info skosConcept",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-kos-model.json#/components/schemas/SkosConcept"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosConcept"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/skosSchemes/{skosSchemeUuid}/skosConcepts/{skosConceptUuid}": {
+			"get": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Retourne un skosConcept avec toute la grappe",
+				"description": "Retourne un skosConcept avec toute la grappe",
+				"operationId": "getSkosConcept",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"},
+					{"$ref": "#/components/parameters/SkosConceptUuidParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SkosConcept"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"skosSchemes"
+				],
+				"summary": "Suppression d'un skosConcept lié à un skosScheme",
+				"description": "Suppression d'un skosConcept lié à un skosScheme",
+				"operationId": "deleteSkosConcept",
+				"parameters": [
+					{"$ref": "#/components/parameters/SkosSchemeUuidParam"},
+					{"$ref": "#/components/parameters/SkosConceptUuidParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/skosConcepts": {
+			"get": {
+				"tags": [
+					"skosConcepts"
+				],
+				"summary": "Collection de skosConcept",
+				"description": "Recherche de skosConcept",
+				"operationId": "searchSkosConcepts",
+				"parameters": [
+					{"$ref": "#/components/parameters/LimitParam"},
+					{"$ref": "#/components/parameters/OffsetParam"},
+					{"$ref": "#/components/parameters/OrderParam"},
+					{"$ref": "#/components/parameters/LangParam"},
+					{"$ref": "#/components/parameters/TextParam"},
+					{"$ref": "#/components/parameters/SkosRelationTypeParam"},
+					{"$ref": "#/components/parameters/RolesParam"},
+					{"$ref": "#/components/parameters/CodesParam"},
+					{"$ref": "#/components/parameters/SchemesParam"},
+					{"$ref": "#/components/parameters/LabelsParam"}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-kos-model.json#/components/schemas/SimpleSkosConceptPageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"LimitParam": {
+				"in": "query",
+				"name": "limit",
+				"description": "Le nombre de résultats à retourner par page",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OffsetParam": {
+				"in": "query",
+				"name": "offset",
+				"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OrderParam": {
+				"in": "query",
+				"name": "order",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"LangParam": {
+				"in": "query",
+				"name": "lang",
+				"description": "",
+				"required": false,
+				"schema": {
+					"$ref": "rudi-kos-model.json#/components/schemas/Language"
+				}
+			},
+			"TextParam": {
+				"in": "query",
+				"name": "text",
+				"description": "",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"SkosRelationTypeParam": {
+				"name": "types",
+				"in": "query",
+				"description": "",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"$ref": "rudi-kos-model.json#/components/schemas/SkosRelationType"
+					}
+				}
+			},
+			"RolesParam": {
+				"name": "roles",
+				"in": "query",
+				"description": "",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"CodesParam": {
+				"name": "codes",
+				"in": "query",
+				"description": "",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"SchemesParam": {
+				"name": "schemes",
+				"in": "query",
+				"description": "",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"LabelsParam": {
+				"name": "labels",
+				"in": "query",
+				"description": "",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"$ref": "rudi-kos-model.json#/components/schemas/SkosConceptLabel"
+					}
+				}
+			},
+			"SkosSchemeUuidParam": {
+				"name": "skosSchemeUuid",
+				"in": "path",
+				"description": "uuid d'un skosScheme",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"SkosConceptUuidParam": {
+				"name": "skosConceptUuid",
+				"in": "path",
+				"description": "uuid d'un skosConcept",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"ActiveParam": {
+				"name": "active",
+				"in": "query",
+				"description": "Permet de savoir si on doit récupérer un skos scheme actif (la date actuelle est comprise entre openingDate et closingDate)",
+				"required": false,
+				"schema": {
+					"type": "boolean"
+				}
+			},
+			"AsTopConceptParam": {
+				"name": "asTopConcept",
+				"in": "query",
+				"description": "Permet de savoir s'il s'agit d'un top concept",
+				"required": false,
+				"schema": {
+					"type": "boolean"
+				}
+			}
+		},
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
+}

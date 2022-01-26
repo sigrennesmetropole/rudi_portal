@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>rudi-common</artifactId>
+	<description>RUDI Common ${project.version}</description>
+	<packaging>pom</packaging>
+
+	<!-- Sous-modules du projet -->
+	<modules>
+		<module>rudi-common-core</module>
+		<module>rudi-common-test</module>
+		<module>rudi-common-storage</module>
+		<module>rudi-common-service</module>
+		<module>rudi-common-facade</module>
+	</modules>
+
+</project>

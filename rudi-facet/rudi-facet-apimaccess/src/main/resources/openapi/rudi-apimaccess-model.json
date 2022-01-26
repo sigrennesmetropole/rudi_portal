@@ -1,0 +1,1050 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "Model of API Manager librairy",
+        "version": "0.0.1",
+        "title": "rudi-apimaccess-model",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "a.marchand@rennesmetropole.fr"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "paths": {},
+    "components": {
+        "schemas": {
+            "LimitingPolicies": {
+                "title": "Subscription Level Throttling Policy List",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of Subscription Throttling Policies returned.",
+                        "example": 1
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LimitingPolicy"
+                        }
+                    }
+                }
+            },
+            "LimitingPolicy": {
+                "title": "Tier",
+                "required": [
+                    "name",
+                    "tierPlan",
+                    "requestCount",
+                    "unitTime",
+                    "stopOnQuotaReach"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Platinum"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Allows 50 request(s) per minute."
+                    },
+                    "policyLevel": {
+                        "$ref": "#/components/schemas/PolicyLevel"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "example": "Platinum"
+                    },
+                    "attributes": {
+                        "description": "Custom attributes added to the policy policy\n",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "example": {}
+                    },
+                    "requestCount": {
+                        "description": "Maximum number of requests which can be sent within a provided unit time\n",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 50
+                    },
+                    "unitTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 60000
+                    },
+                    "timeUnit": {
+                        "type": "string",
+                        "example": "min"
+                    },
+                    "tierPlan": {
+                        "description": "This attribute declares whether this policy is available under commercial or free\n",
+                        "type": "string",
+                        "enum": [
+                            "FREE",
+                            "COMMERCIAL"
+                        ],
+                        "example": "FREE"
+                    },
+                    "stopOnQuotaReach": {
+                        "description": "By making this attribute to false, you are capabale of sending requests\neven if the request count exceeded within a unit time\n",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "monetizationProperties": {
+                        "description": "Properties of a tier plan which are related to monetization",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "example": {}
+                    }
+                }
+            },
+            "PolicyLevel": {
+                "type": "string",
+                "enum": [
+                    "SUBSCRIPTION",
+                    "API",
+                    "APPLICATION"
+                ],
+                "example": "API"
+            },
+            "APISubscriptions": {
+                "title": "Subscription List",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of Subscriptions returned.\n",
+                        "example": 1
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/APISubscription"
+                        }
+                    }
+                }
+            },
+            "APISubscription": {
+                "title": "Subscription",
+                "properties": {
+                    "subscriptionId": {
+                        "type": "string",
+                        "example": "01234567-0123-0123-0123-012345678901"
+                    },
+                    "applicationInfo": {
+                        "$ref": "#/components/schemas/ApplicationInfo"
+                    },
+                    "throttlingPolicy": {
+                        "type": "string",
+                        "example": "Unlimited"
+                    },
+                    "subscriptionStatus": {
+                        "$ref": "#/components/schemas/SubscriptionStatus"
+                    }
+                }
+            },
+            "ApplicationAPISubscriptions": {
+                "title": "Subscription List",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of Subscriptions returned.\n",
+                        "example": 1
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ApplicationAPISubscription"
+                        }
+                    }
+                }
+            },
+            "ApplicationAPISubscription": {
+                "title": "Subscription",
+                "properties": {
+                    "subscriptionId": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The UUID of the subscription",
+                        "example": "faae5fcc-cbae-40c4-bf43-89931630d313"
+                    },
+                    "applicationId": {
+                        "type": "string",
+                        "description": "The UUID of the application",
+                        "example": "b3ade481-30b0-4b38-9a67-498a40873a6d"
+                    },
+                    "apiId": {
+                        "type": "string",
+                        "description": "The unique identifier of the API.",
+                        "example": "2962f3bb-8330-438e-baee-0ee1d6434ba4"
+                    },
+                    "apiInfo": {
+                        "$ref": "#/components/schemas/APIInfo"
+                    },
+                    "applicationInfo": {
+                        "$ref": "#/components/schemas/ApplicationInfo"
+                    },
+                    "throttlingPolicy": {
+                        "type": "string",
+                        "example": "Unlimited"
+                    },
+                    "requestedThrottlingPolicy": {
+                        "type": "string",
+                        "example": "Unlimited"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/SubscriptionStatus"
+                    }
+                }
+            },
+            "SubscriptionStatus": {
+                "type": "string",
+                "enum": [
+                    "BLOCKED",
+                    "PROD_ONLY_BLOCKED",
+                    "UNBLOCKED",
+                    "ON_HOLD",
+                    "REJECTED",
+                    "TIER_UPDATE_PENDING"
+                ],
+                "example": "UNBLOCKED"
+            },
+            "SearchCriteria": {
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum size of resource array to return."
+                    },
+                    "offset": {
+                        "type": "integer",
+                        "description": "Starting point within the complete list of items qualified"
+                    },
+                    "query": {
+                        "type": "string"
+                    },
+                    "sortBy": {
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ApplicationSearchCriteria": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/SearchCriteria"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "APISearchCriteria": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/SearchCriteria"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "version": {
+                                "type": "string"
+                            },
+                            "providerUuid": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "providerCode": {
+                                "type": "string"
+                            },
+                            "globalId": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "mediaUuid": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "interfaceContract": {
+                                "type": "string"
+                            },
+                            "extension": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "APISubscriptionSearchCriteria": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/SearchCriteria"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "apiId": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "ApplicationAPISubscriptionSearchCriteria": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/SearchCriteria"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "apiId": {
+                                "type": "string"
+                            },
+                            "applicationId": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "API": {
+                "title": "API object",
+                "required": [
+                    "name",
+                    "context",
+                    "version"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/APIInfo"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "isDefaultVersion": {
+                                "type": "boolean",
+                                "example": false
+                            },
+                            "transport": {
+                                "description": "Supported transports for the API (http and/or https).\n",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": ["http", "https"]
+                                },
+                                "example": [
+                                    "http",
+                                    "https"
+                                ]
+                            },
+                            "tags": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "pizza",
+                                    "food"
+                                ]
+                            },
+                            "policies": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "Unlimited"
+                                ]
+                            },
+                            "apiThrottlingPolicy": {
+                                "description": "The API level throttling policy selected for the particular API",
+                                "type": "string",
+                                "example": "Unlimited"
+                            },
+                            "authorizationHeader": {
+                                "type": "string",
+                                "description": "Name of the Authorization header used for invoking the API. If it is not set, Authorization header name specified\nin tenant or system level will be used.\n",
+                                "example": "Authorization"
+                            },
+                            "visibleTenants": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": []
+                            },
+                            "endpointSecurity": {
+                                "$ref": "#/components/schemas/APIEndpointSecurity"
+                            },
+                            "gatewayEnvironments": {
+                                "description": "List of gateway environments the API is available\n",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": ["Production and Sandbox"]
+                                },
+                                "example": [
+                                    "Production and Sandbox"
+                                ]
+                            },
+                            "labels": {
+                                "description": "Labels of micro-gateway environments attached to the API.\n",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": []
+                            },
+                            "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "description": "Map of custom properties of API"
+                            },
+                            "businessInformation": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/APIBusinessInformation"
+                                    }
+                                ]
+                            },
+                            "createdTime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2017-02-20T13:57:16.229Z"
+                            },
+                            "lastUpdatedTime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2017-02-20T13:57:16.229Z"
+                            },
+                            "endpointConfig": {
+                                "$ref": "#/components/schemas/APIEndpointConfigHttp"
+                            },
+                            "endpointImplementationType": {
+                                "type": "string",
+                                "example": "INLINE",
+                                "enum": [
+                                    "INLINE",
+                                    "ENDPOINT"
+                                ],
+                                "default": "ENDPOINT"
+                            },
+                            "operations": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/APIOperations"
+                                },
+                                "example": [
+                                    {
+                                        "target": "/order/{orderId}",
+                                        "verb": "POST",
+                                        "authType": "Application & Application User",
+                                        "throttlingPolicy": "Unlimited"
+                                    },
+                                    {
+                                        "target": "/menu",
+                                        "verb": "GET",
+                                        "authType": "Application & Application User",
+                                        "throttlingPolicy": "Unlimited"
+                                    }
+                                ]
+                            },
+                            "threatProtectionPolicies": {
+                                "properties": {
+                                    "list": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "policyId": {
+                                                    "type": "string"
+                                                },
+                                                "priority": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "categories": {
+                                "description": "API categories\n",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": []
+                            },
+                            "keyManagers": {
+                                "description": "API Key Managers\n",
+                                "type": "object",
+                                "readOnly": true
+                            }
+                        }
+                    }
+                ]
+            },
+            "APIOperations": {
+                "title": "Operation",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "postapiresource"
+                    },
+                    "target": {
+                        "type": "string",
+                        "example": "/order/{orderId}"
+                    },
+                    "verb": {
+                        "type": "string",
+                        "example": "POST"
+                    },
+                    "authType": {
+                        "type": "string",
+                        "default": "Any",
+                        "example": "Application & Application User"
+                    },
+                    "throttlingPolicy": {
+                        "type": "string",
+                        "example": "Unlimited"
+                    },
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": []
+                    },
+                    "usedProductIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": []
+                    },
+                    "amznResourceName": {
+                        "type": "string",
+                        "example": ""
+                    },
+                    "amznResourceTimeout": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "APIEndpointSecurity": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "BASIC",
+                        "description": "Accepts one of the following, basic or digest.",
+                        "enum": [
+                            "BASIC",
+                            "DIGEST"
+                        ]
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "admin"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password"
+                    }
+                }
+            },
+            "APIBusinessInformation": {
+                "properties": {
+                    "businessOwner": {
+                        "type": "string",
+                        "example": "businessowner"
+                    },
+                    "businessOwnerEmail": {
+                        "type": "string",
+                        "example": "businessowner@wso2.com"
+                    },
+                    "technicalOwner": {
+                        "type": "string",
+                        "example": "technicalowner"
+                    },
+                    "technicalOwnerEmail": {
+                        "type": "string",
+                        "example": "technicalowner@wso2.com"
+                    }
+                }
+            },
+            "APIList": {
+                "title": "API List",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of APIs returned.\n",
+                        "example": 1
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/APIInfo"
+                        }
+                    }
+                }
+            },
+            "APIInfo": {
+                "title": "API Info object with basic API details.",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "01234567-0123-0123-0123-012345678901"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "CalculatorAPI"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A calculator API that supports basic operations"
+                    },
+                    "context": {
+                        "type": "string",
+                        "example": "CalculatorAPI"
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.0.0"
+                    },
+                    "provider": {
+                        "description": "If the provider value is not given, the user invoking the API will be used as the provider.\n",
+                        "type": "string",
+                        "example": "admin"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The api creation type to be used. Accepted values are HTTP, WS, SOAPTOREST, GRAPHQL",
+                        "enum": [
+                            "HTTP",
+                            "WS",
+                            "SOAPTOREST",
+                            "SOAP",
+                            "GRAPHQL"
+                        ],
+                        "example": "HTTP",
+                        "default": "HTTP"
+                    },
+                    "lifeCycleStatus": {
+                        "$ref": "#/components/schemas/APILifecycleStatusState"
+                    },
+                    "workflowStatus": {
+                        "type": "string",
+                        "example": "APPROVED"
+                    },
+                    "hasThumbnail": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "securityScheme": {
+                        "type": "array",
+                        "description": "Types of API security, the current API secured with. It can be either OAuth2 or mutual SSL or both. If\nit is not set OAuth2 will be set as the security for the current API.\n",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "oauth2"
+                        ]
+                    }
+                }
+            },
+            "OpenAPIVersion": {
+                "type": "string",
+                "enum": ["V2", "V3"]
+            },
+            "APIEndpointType": {
+                "type": "string",
+                "enum": ["http"]
+            },
+            "APIEndpointConfig": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "APIEndpointConfigHttp": {
+                "type": "object",
+                "description": "Endpoint configuration of the API. This can be used to provide different types of endpoints including Simple REST Endpoints, Loadbalanced and Failover",
+                "properties": {
+                    "endpoint_type": {
+                        "$ref": "#/components/schemas/APIEndpointType"
+                    },
+                    "sandbox_endpoints": {
+                        "$ref": "#/components/schemas/APIEndpointConfig"
+                    },
+                    "production_endpoints": {
+                        "$ref": "#/components/schemas/APIEndpointConfig"
+                    }
+                },
+                "example": {
+                    "endpoint_type": "http",
+                    "sandbox_endpoints": {
+                        "url": "https://localhost:9443/am/sample/pizzashack/v1/api/"
+                    },
+                    "production_endpoints": {
+                        "url": "https://localhost:9443/am/sample/pizzashack/v1/api/"
+                    }
+                }
+            },
+            "Application": {
+                "title": "Application",
+                "required": [
+                    "name",
+                    "throttlingPolicy"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApplicationInfo"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "tokenType": {
+                                "type": "string",
+                                "enum": [
+                                    "JWT"
+                                ],
+                                "description": "Type of the access token generated for this application.\n\n**JWT:** A self-contained, signed JWT based access token which is issued by default.\n",
+                                "default": "JWT"
+                            }
+                        }
+                    }
+                ]
+            },
+            "ApplicationInfo": {
+                "title": "Application info object with basic application details",
+                "readOnly": true,
+                "properties": {
+                    "applicationId": {
+                        "type": "string",
+                        "example": "01234567-0123-0123-0123-012345678901"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "CalculatorApp"
+                    },
+                    "throttlingPolicy": {
+                        "type": "string",
+                        "example": "Unlimited"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Sample calculator application"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "APPROVED",
+                        "default": ""
+                    },
+                    "subscriptionCount": {
+                        "type": "integer"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "example": "admin"
+                    }
+                }
+            },
+            "Applications": {
+                "title": "Application List",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of applications returned.\n",
+                        "example": 1
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ApplicationInfo"
+                        }
+                    }
+                }
+            },
+            "APIDescription": {
+                "type": "object",
+                "description": "Objet contenant les paramètres requis pour la création/mise à jour d'une API",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string"
+                    },
+                    "providerUuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "providerCode": {
+                        "type": "string"
+                    },
+                    "globalId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "mediaUuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "interfaceContract": {
+                        "type": "string"
+                    },
+                    "mediaType": {
+                        "type": "string"
+                    },
+                    "endpointUrl": {
+                        "type": "string"
+                    }
+                }
+            },
+            "APILifecycleStatusState": {
+                "type": "string",
+                "enum": [
+                    "CREATED",
+                    "PUBLISHED",
+                    "PROTOTYPED",
+                    "DEPRECATED",
+                    "BLOCKED",
+                    "RETIRED"
+                ]
+            },
+            "APILifecycleStatusAction": {
+                "type": "string",
+                "enum": [
+                    "Publish",
+                    "Deploy as a Prototype",
+                    "Demote to Created",
+                    "Block",
+                    "Deprecate",
+                    "Re-Publish",
+                    "Retire"
+                ]
+            },
+            "APIWorkflowResponse": {
+                "title": "workflow Response",
+                "required": [
+                    "workflowStatus"
+                ],
+                "properties": {
+                    "workflowStatus": {
+                        "description": "This attribute declares whether this workflow task is approved or rejected.\n",
+                        "type": "string",
+                        "enum": [
+                            "CREATED",
+                            "APPROVED",
+                            "REJECTED",
+                            "REGISTERED"
+                        ],
+                        "example": "APPROVED"
+                    },
+                    "lifecycleState": {
+                        "$ref": "#/components/schemas/APILifecycleTransitions"
+                    }
+                }
+            },
+            "APILifecycleTransitions": {
+                "title": "",
+                "type": "object",
+                "properties": {
+                    "availableTransitions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/APILifecycleTransition"
+                        }
+                    }
+                }
+            },
+            "APILifecycleTransition": {
+                "title": "",
+                "type": "object",
+                "properties": {
+                    "event": {
+                        "$ref": "#/components/schemas/APILifecycleStatusAction"
+                    }
+                }
+            },
+            "ApplicationKeyGenerateRequest": {
+                "title": "Application key generation request object",
+                "required": [
+                    "keyType",
+                    "grantTypesToBeSupported"
+                ],
+                "properties": {
+                    "keyType": {
+                        "$ref": "#/components/schemas/EndpointKeyType"
+                    },
+                    "keyManager": {
+                        "type": "string",
+                        "description": "key Manager to Generate Keys",
+                        "example": "Resident Key Manager"
+                    },
+                    "grantTypesToBeSupported": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OauthGrantType"
+                        },
+                        "description": "Grant types that should be supported by the application",
+                        "example": [
+                            "password",
+                            "client_credentials"
+                        ]
+                    },
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ApplicationScope"
+                        },
+                        "description": "Allowed scopes for the access token",
+                        "example": [
+                            "am_application_scope",
+                            "default"
+                        ]
+                    },
+                    "validityTime": {
+                        "type": "string",
+                        "example": 3600
+                    }
+                }
+            },
+            "ApplicationTokenGenerateRequest": {
+                "title": "Application access token generation request object",
+                "properties": {
+                    "consumerSecret": {
+                        "type": "string",
+                        "description": "Consumer secret of the application",
+                        "example": "cV5pvyisxug5b5QZInq9cGZrMOMa"
+                    },
+                    "validityPeriod": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Token validity period",
+                        "example": 3600
+                    },
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ApplicationScope"
+                        },
+                        "description": "Allowed scopes (space seperated) for the access token",
+                        "example": [
+                            "apim:subscribe"
+                        ]
+                    },
+                    "revokeToken": {
+                        "type": "string",
+                        "description": "Token to be revoked, if any",
+                        "example": ""
+                    }
+                }
+            },
+            "OauthGrantType": {
+                "type": "string",
+                "enum": ["refresh_token", "password", "client_credentials", "urn:ietf:params:oauth:grant-type:jwt-bearer"]
+            },
+            "ApplicationScope": {
+                "type": "string",
+                "enum": ["apim:subscribe", "am_application_scope", "default"]
+            },
+            "EndpointKeyType": {
+                "type": "string",
+                "enum": [
+                    "PRODUCTION",
+                    "SANDBOX"
+                ]
+            },
+            "ApplicationToken": {
+                "title": "Application token details to invoke APIs",
+                "properties": {
+                    "accessToken": {
+                        "type": "string",
+                        "description": "Access token",
+                        "example": "01234567890123456789012345678901"
+                    },
+                    "validityTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Maximum validity time for the access token",
+                        "example": 3600
+                    }
+                }
+            },
+            "ApplicationKeys": {
+                "title": "Application Keys List",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of applications keys returned.\n",
+                        "example": 1
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ApplicationKey"
+                        }
+                    }
+                }
+            },
+            "ApplicationKey": {
+                "title": "Application key details",
+                "properties": {
+                    "keyMappingId": {
+                        "type": "string",
+                        "description": "Key Manager Mapping UUID",
+                        "readOnly": true,
+                        "example": "92ab520c-8847-427a-a921-3ed19b15aad7"
+                    },
+                    "keyManager": {
+                        "type": "string",
+                        "description": "Key Manager Name",
+                        "example": "Resident Key Manager"
+                    },
+                    "consumerKey": {
+                        "type": "string",
+                        "description": "Consumer key of the application",
+                        "readOnly": true,
+                        "example": "vYDoc9s7IgAFdkSyNDaswBX7ejoa"
+                    },
+                    "consumerSecret": {
+                        "type": "string",
+                        "description": "Consumer secret of the application",
+                        "readOnly": true,
+                        "example": "TIDlOFkpzB7WjufO3OJUhy1fsvAa"
+                    },
+                    "keyState": {
+                        "type": "string",
+                        "description": "Describes the state of the key generation.",
+                        "example": "APPROVED"
+                    },
+                    "keyType": {
+                        "$ref": "#/components/schemas/EndpointKeyType"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,231 @@
+{
+	"title": "JDD ouvert 2021-05-27T08:58:58.489Z",
+	"authorName": [
+		"Rennes Métropole"
+	],
+	"authorAffiliation": [
+		"string"
+	],
+	"datasetContactEmail": [
+		"contact@rudi.fr"
+	],
+	"datasetContactAffiliation": [
+		"string"
+	],
+	"datasetContactName": [
+		"string"
+	],
+	"dsDescriptionDate": [
+		"2021-05-27"
+	],
+	"dsDescriptionValue": [
+		"Moi lu luig lush dqdh moh udhq"
+	],
+	"subject": [
+		"Other"
+	],
+	"rudi_storage_status": "online",
+	"rudi_resource_title": "Titre mocké de JDD",
+	"rudi_global_id": "09b737d6-9785-4216-8a1d-478c9c39e2d4",
+	"rudi_local_id": "f382ec4f-034b-411d-aab7-5b97a15eb92e",
+	"rudi_abstract_language": [
+		"fr-FR"
+	],
+	"rudi_abstract_text": [
+		"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwm"
+	],
+	"rudi_summary_language": [
+		"cs-CZ"
+	],
+	"rudi_summary_text": [
+		"string"
+	],
+	"rudi_theme": "biota",
+	"rudi_keywords": [
+		"mot-clé_1"
+	],
+	"rudi_producer_organization_id": "b36affd6-4bf1-44f7-95d1-2cacfb461fb5",
+	"rudi_producer_organization_name": "Rennes Métropole",
+	"rudi_producer_organization_address": "string",
+	"rudi_contact_organization_name": [
+		"string"
+	],
+	"rudi_contact_id": [
+		"a1c74a69-7908-4575-92af-4ab515578256"
+	],
+	"rudi_contact_name": [
+		"string"
+	],
+	"rudi_contact_role": [
+		"Administrator"
+	],
+	"rudi_contact_email": [
+		"contact@rudi.fr"
+	],
+	"rudi_media_id": [
+		"fb0561a5-e5a0-4fe5-8db6-c04edc22752a",
+		"06dfbddb-2083-41d1-be8c-7937f8b3135e",
+		"1a3b81cf-7ca4-4055-b2c6-aa8971faadc0"
+	],
+	"rudi_media_type": [
+		"FILE",
+		"FILE",
+		"SERIES"
+	],
+	"rudi_media_connector_url": [
+		"https://data.rennesmetropole.fr/explore/dataset/cimetieres-sur-rennes-metropole/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+		"https://data.rennesmetropole.fr/explore/dataset/cimetieres-sur-rennes-metropole/download/?format=json&timezone=Europe/Berlin&lang=fr",
+		"www.connector2.org"
+	],
+	"rudi_media_connector_interface_contract": [
+		"dwl1",
+		"dwl2",
+		"interface contrat 2"
+	],
+	"rudi_mediafile_structure": [
+		"https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0",
+		"https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0",
+		null
+	],
+	"rudi_mediafile_size": [
+		"50",
+		"50",
+		null
+	],
+	"rudi_mediafile_type": [
+		"text/csv",
+		"application/json",
+		null
+	],
+	"rudi_mediafile_encoding": [
+		"UTF-8",
+		"ANSI",
+		null
+	],
+	"rudi_mediafile_checksum_algo": [
+		"MD5",
+		"MD5",
+		null
+	],
+	"rudi_mediafile_checksum_hash": [
+		"SHA-256",
+		"SHA-512",
+		null
+	],
+	"rudi_mediaseries_current_number_of_records": [
+		null,
+		null,
+		"20"
+	],
+	"rudi_mediaseries_period": [
+		null,
+		null,
+		"10"
+	],
+	"rudi_mediaseries_total_number_of_records": [
+		null,
+		null,
+		"80"
+	],
+	"rudi_mediaseries_latency": [
+		null,
+		null,
+		"100"
+	],
+	"rudi_mediaseries_total_size": [
+		null,
+		null,
+		"500"
+	],
+	"rudi_mediaseries_current_size": [
+		null,
+		null,
+		"328"
+	],
+	"rudi_resource_language": [
+		"cs-CZ"
+	],
+	"rudi_temporal_spread_start_date": "1616415312",
+	"rudi_temporal_spread_end_date": "1624364112",
+	"rudi_geography_bounding_box_west_longitude": "0",
+	"rudi_geography_bounding_box_east_longitude": "0",
+	"rudi_geography_bounding_box_north_latitude": "0",
+	"rudi_geography_bounding_box_south_latitude": "0",
+	"rudi_geography_geographic_distribution": "string",
+	"rudi_geography_projection": "WGS 84 (EPSG:4326)",
+	"rudi_dataset_size_numbers_of_records": "0",
+	"rudi_dataset_size_number_of_fields": "0",
+	"rudi_dataset_dates_created": "1616415312",
+	"rudi_dataset_dates_validated": "1616415312",
+	"rudi_dataset_dates_published": "1616415312",
+	"rudi_dataset_dates_updated": "1616415312",
+	"rudi_dataset_dates_deleted": "1624364112",
+	"rudi_metadata_info_api_version": "1.1.0",
+	"rudi_metadata_info_dates_created": "1617279048",
+	"rudi_metadata_info_dates_validated": "1617279048",
+	"rudi_metadata_info_dates_published": "1617279048",
+	"rudi_metadata_info_dates_updated": "1617279048",
+	"rudi_metadata_info_dates_deleted": "1617279048",
+	"rudi_metadata_info_provider_organization_id": "92c908ad-dcdb-400f-a248-f8adb955e252",
+	"rudi_metadata_info_provider_organization_name": "Service Information Géographique ? Rennes Métropole",
+	"rudi_metadata_info_provider_organization_address": "string",
+	"rudi_metadata_info_contact_id": [
+		"c78e7567-5b0b-4068-bd45-fb7013bb072f"
+	],
+	"rudi_metadata_info_contact_organization_name": [
+		"string"
+	],
+	"rudi_metadata_info_contact_name": [
+		"string"
+	],
+	"rudi_metadata_info_contact_role": [
+		"Administrator"
+	],
+	"rudi_metadata_info_contact_email": [
+		"contact@rudi.fr"
+	],
+	"rudi_access_condition_licence_licence_type": "STANDARD",
+	"rudi_access_condition_licence_licence_label": "SkosConcept.concept_code",
+	"rudi_access_condition_confidentiality_restricted_access": "true",
+	"rudi_access_condition_confidentiality_gdpr_sensitive": "true",
+	"rudi_access_condition_usage_constraint_lang": [
+		"fr-FR",
+		"en-US"
+	],
+	"rudi_access_condition_usage_constraint_text": [
+		"Usage libre sous réserve des mentions obligatoires sur tout document de diffusion",
+		"Free use subject to the mandatory information on any distribution document"
+	],
+	"rudi_access_condition_bibliographical_reference_lang": [
+		"fr-FR",
+		"en-US"
+	],
+	"rudi_access_condition_bibliographical_reference_text": [
+		"abeilles",
+		"bees"
+	],
+	"rudi_access_condition_mandatory_mention_lang": [
+		"fr-FR",
+		"en-US"
+	],
+	"rudi_access_condition_mandatory_mention_text": [
+		"Source: Région Bretagne",
+		"Source: Brittany region"
+	],
+	"rudi_access_condition_access_constraint_lang": [
+		"fr-FR",
+		"en-US"
+	],
+	"rudi_access_condition_access_constraint_text": [
+		"abeilles",
+		"bees"
+	],
+	"rudi_access_condition_other_constraints_lang": [
+		"fr-FR",
+		"en-US"
+	],
+	"rudi_access_condition_other_constraints_text": [
+		"Pas de restriction d'accès public",
+		"No public access restriction"
+	]
+}

@@ -1,0 +1,18 @@
+[
+	{
+		"media_type": "FILE",
+		"media_id": "7eafd872-5c1e-47c2-ac57-c07926fe482e",
+		"connector": {
+			"interface_contract": "dwnl",
+			"url": "https://www.star.fr/fileadmin/PDF_perturbations/Greve_2021/Horaires_ligne_C1.pdf"
+		},
+		"file_structure": "https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0",
+		"file_size": 50,
+		"file_type": "text/csv",
+		"file_encoding": "UTF-8",
+		"checksum": {
+			"algo": "MD5",
+			"hash": "SHA-256"
+		}
+	}
+]

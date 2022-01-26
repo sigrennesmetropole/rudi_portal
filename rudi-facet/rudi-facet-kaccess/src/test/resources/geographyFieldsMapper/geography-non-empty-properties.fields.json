@@ -1,0 +1,45 @@
+[
+	{
+		"typeName": "rudi_geography",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_geography_projection": {
+				"typeName": "rudi_geography_projection",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "WGS 84"
+			},
+			"rudi_geography_bounding_box_north_latitude": {
+				"typeName": "rudi_geography_bounding_box_north_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "48.112834"
+			},
+			"rudi_geography_geographic_distribution": {
+				"typeName": "rudi_geography_geographic_distribution",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[-1.7029707133769987,48.126527839495004],[-1.6730158030986784,48.12641325748051],[-1.6696684062480927,48.115870618572586],[-1.7055456340312956,48.11312000910537],[-1.7029707133769987,48.126527839495004]]]},\"properties\":{\"bidule\":\"chouette\"}}"
+			},
+			"rudi_geography_bounding_box_west_longitude": {
+				"typeName": "rudi_geography_bounding_box_west_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "-1.677803"
+			},
+			"rudi_geography_bounding_box_east_longitude": {
+				"typeName": "rudi_geography_bounding_box_east_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "-1.677803"
+			},
+			"rudi_geography_bounding_box_south_latitude": {
+				"typeName": "rudi_geography_bounding_box_south_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "48.112834"
+			}
+		}
+	}
+]

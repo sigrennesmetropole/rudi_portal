@@ -1,0 +1,50 @@
+{
+  "confidentiality": {
+    "restricted_access": true,
+    "gdpr_sensitive": true
+  },
+  "licence": {
+    "licence_type": "CUSTOM",
+    "custom_licence_uri": "https://www.example.com/animals",
+    "custom_licence_label": [
+      {
+        "lang": "fr-FR",
+        "text": "Animaux"
+      },
+      {
+        "lang": "en-US",
+        "text": "Animals"
+      }
+    ]
+  },
+  "usage_constraint": [
+    {
+      "lang": "fr",
+      "text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+    }
+  ],
+  "bibliographical_reference": [
+    {
+      "lang": "fr-FR",
+      "text": "abeilles"
+    }
+  ],
+  "mandatory_mention": [
+    {
+      "lang": "fr-FR",
+      "text": "Source: Région Bretagne"
+    }
+  ],
+  "access_constraint": [
+    {
+      "lang": "fr-FR",
+      "text": "abeilles"
+    }
+  ],
+  "other_constraints": [
+    {
+      "lang": "fr",
+      "text": "Pas de restriction d'accès public"
+    }
+  ]
+}
