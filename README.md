@@ -1,4 +1,4 @@
-# Poratil Rudi
+# Portail Rudi
 
 ## Présentation
 Ce répertoire regroupe le code du portail Rudi dans sa version stable.
