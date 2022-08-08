@@ -16,7 +16,9 @@ EXPOSE 8082
 ADD rudi-microservice-gateway-facade.jar /opt/rudi/microservice.jar
 
 CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty \
-      -Drudi.datadir=/etc/rudi/data/gateway -Drudi.config=/etc/rudi/config \
+      -Drudi.datadir=/etc/rudi/data/gateway \
+      -Drudi.config=/etc/rudi/config \
+      -Dspring.config.additional-location=file:/etc/rudi/config/gateway/ \
       ${ADD_JAVA_OPTS}                                   \
       -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
       -jar /opt/rudi/microservice.jar" ]

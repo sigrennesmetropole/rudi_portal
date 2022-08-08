@@ -3,6 +3,7 @@ package org.rudi.microservice.kalim.service.integration.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.providers.bean.NodeProvider;
@@ -201,19 +202,31 @@ public class IntegrationRequestServiceImpl implements IntegrationRequestService 
 		report.setIntegrationErrors(errorsDto);
 
 		// Génération du commentaire
+		val requestTypeForComment = getRequestTypeForComment(integrationRequest);
 		String comment;
 		if (integrationRequest.getIntegrationStatus() == IntegrationStatus.OK) {
-			comment = String.format("l’intégration du jeu de données %s s’est bien déroulée le %s",
-					integrationRequest.getResourceTitle(), LocalDateTime.now());
+			comment = String.format("%s du jeu de données %s s’est bien déroulée le %s",
+					requestTypeForComment, integrationRequest.getResourceTitle(), LocalDateTime.now());
 		} else {
 			comment = String.format(
-					"l’intégration du jeu de données %s ne s’est pas déroulée correctement, le %s. Veuillez consulter les erreurs ci-dessous et après correction des erreurs, renvoyer votre jeu de données. Pour plus d’information, vous pouvez contacter votre administrateur Rudi.",
-					integrationRequest.getResourceTitle(), LocalDateTime.now());
+					"%s du jeu de données %s ne s’est pas déroulée correctement, le %s. Veuillez consulter les erreurs ci-dessous et après correction des erreurs, renvoyer votre jeu de données. Pour plus d’information, vous pouvez contacter votre administrateur Rudi.",
+					requestTypeForComment, integrationRequest.getResourceTitle(), LocalDateTime.now());
 		}
 		report.setComment(comment);
 		report.setSubmissionDate(integrationRequest.getSubmissionDate());
 		report.setSubmittedByHarvesting(integrationRequest.isSubmittedByHarvesting());
 		return report;
+	}
+
+	private String getRequestTypeForComment(IntegrationRequestEntity integrationRequest) {
+		switch (integrationRequest.getMethod()) {
+			case PUT:
+				return "la modification";
+			case DELETE:
+				return "la suppression";
+			default:
+				return "l’intégration";
+		}
 	}
 
 	/**

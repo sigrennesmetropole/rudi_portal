@@ -6,7 +6,6 @@ import org.rudi.microservice.acl.core.bean.AddressRoleSearchCriteria;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleCustomDao;
 import org.rudi.microservice.acl.storage.entity.address.AddressRoleEntity;
 import org.rudi.microservice.acl.storage.entity.address.AddressType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
@@ -30,15 +29,16 @@ import java.util.List;
  *
  */
 @Repository
-public class AddressRoleCustomDaoImpl extends AbstractCustomDaoImpl implements AddressRoleCustomDao {
+public class AddressRoleCustomDaoImpl extends AbstractCustomDaoImpl<AddressRoleEntity, AddressRoleSearchCriteria> implements AddressRoleCustomDao {
 
 	// Champs utilisés pour le filtrage
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_OPENING_DATE = "openingDate";
 	public static final String FIELD_CLOSING_DATE = "closingDate";
 
-	@Autowired
-	private EntityManager entityManager;
+	public AddressRoleCustomDaoImpl(EntityManager entityManager) {
+		super(entityManager, AddressRoleEntity.class);
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)

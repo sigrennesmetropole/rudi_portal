@@ -1,7 +1,7 @@
 package org.rudi.common.service.exception;
 
-public class MissingParameterException extends AppServiceException {
+public class MissingParameterException extends AppServiceBadRequestException {
 	public MissingParameterException(String message) {
-		super(message, AppServiceExceptionsStatus.BAD_REQUEST);
+		super(message);
 	}
 }

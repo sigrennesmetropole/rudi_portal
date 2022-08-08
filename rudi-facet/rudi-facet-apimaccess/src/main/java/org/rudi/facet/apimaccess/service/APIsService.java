@@ -8,35 +8,26 @@ import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APIsOperationException;
 
 import java.util.List;
 
 public interface APIsService {
 
     /**
-     * Création d'une API
-     * @param apiDescription        paramètre de la nouvelle API
+     * Création d'une API ou mise à jour si l'API existe déjà
+     * @param apiDescription        paramètre de l'API
      * @return                      API
-     * @throws APIManagerException  Erreur lors de la création
+     * @throws APIManagerException  Erreur lors de la création / mise à jour
      */
-    API createAPI(APIDescription apiDescription) throws APIManagerException;
-
-    /**
-     * Mise à jour d'une API
-     * @param apiDescription        paramètres de l'API
-     * @param apiId                 Identifiant de l'API
-     * @return                      API
-     * @throws APIManagerException  Erreur lors de la mise à jour
-     */
-    API updateAPI(APIDescription apiDescription, String apiId) throws APIManagerException;
+    API createOrUnarchiveAPI(APIDescription apiDescription) throws APIManagerException;
 
     /**
      * Mise à jour d'une API en se basant sur son nom
      * @param apiDescription        paramètres de l'API
-     * @return                      API
      * @throws APIManagerException  Erreur lors de la mise à jour
      */
-    API updateAPIByName(APIDescription apiDescription) throws APIManagerException;
+    void updateAPIByName(APIDescription apiDescription) throws APIManagerException;
 
     /**
      * Modifier le cycle de vie d'une API
@@ -48,9 +39,42 @@ public interface APIsService {
     APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws APIManagerException;
 
     /**
-     * Suppression d'une API
-     * @param apiId         identifiant de l'API
-     * @throws APIManagerException  Erreur lors du changement de status
+     * Archivage d'une API par son nom avant suppression définitive.
+     * L'API est automatiquement désarchivée lorsqu'on la recrée avec {@link #createOrUnarchiveAPI(APIDescription)}.
+     *
+     * @param apiDescription identifiant de l'API
+     * @throws APIManagerException Erreur lors du changement de statut
+     * @see #deleteAPI(String)
+     * @see #createOrUnarchiveAPI(APIDescription)
+     * @return l'API archivée
+     */
+    API archiveAPIByName(APIDescription apiDescription) throws APIManagerException;
+
+    /**
+     * Archivage d'une API avant suppression définitive.
+     * L'API est automatiquement désarchivée lorsqu'on la recrée avec {@link #createOrUnarchiveAPI(APIDescription)}.
+     *
+     * @param apiId identifiant de l'API
+     * @throws APIManagerException Erreur lors du changement de statut
+     * @see #deleteAPI(String)
+     * @see #createOrUnarchiveAPI(APIDescription)
+     */
+    void archiveAPI(String apiId) throws APIManagerException;
+
+    /**
+     * Désarchivage / Republication d'une API.
+     *
+     * @param apiId identifiant de l'API
+     * @throws APIManagerException Erreur lors du changement de statut
+     */
+    void unarchiveAPI(String apiId) throws APIManagerException;
+
+    /**
+     * Suppression définitive d'une API
+     *
+     * @param apiId identifiant de l'API
+     * @throws APIManagerException Erreur lors du changement de statut
+     * @see #archiveAPI(String)
      */
     void deleteAPI(String apiId) throws APIManagerException;
 
@@ -68,7 +92,7 @@ public interface APIsService {
      * @return                      APIList
      * @throws APIManagerException  Erreur lors de la recherche
      */
-    APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIManagerException;
+    APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIsOperationException;
 
     /**
      * Liste des subscription policies disponibles pour une API

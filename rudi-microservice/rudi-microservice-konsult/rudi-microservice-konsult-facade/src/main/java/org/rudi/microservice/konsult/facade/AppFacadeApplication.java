@@ -22,8 +22,7 @@ import org.springframework.context.annotation.PropertySource;
 ,
 		"org.rudi.facet.acl" })
 @EnableEurekaClient
-@PropertySource(value = { "classpath:konsult-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/konsult/konsult.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:konsult/konsult-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {
@@ -32,8 +31,6 @@ public class AppFacadeApplication extends SpringBootServletInitializer {
 		// applications sur le tomcat
 		System.setProperty("spring.config.name", "konsult");
 		System.setProperty("spring.devtools.restart.enabled", "false");
-		System.setProperty("logging.level.org.rudi.facet.dataverse.api.dataset", "TRACE");
-		System.setProperty("logging.level.org.rudi.facet.kaccess.service.dataset.impl", "TRACE");
 		SpringApplication.run(AppFacadeApplication.class, args);
 
 	}

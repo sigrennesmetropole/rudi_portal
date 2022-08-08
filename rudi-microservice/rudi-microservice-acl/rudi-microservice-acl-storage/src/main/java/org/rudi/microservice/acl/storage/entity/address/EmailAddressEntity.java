@@ -26,6 +26,10 @@ public class EmailAddressEntity extends AbstractAddressEntity {
 	@Column(name = "email", length = 150, nullable = false)
 	private String email;
 
+	public EmailAddressEntity() {
+		super(AddressType.EMAIL);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

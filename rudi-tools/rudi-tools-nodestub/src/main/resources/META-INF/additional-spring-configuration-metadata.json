@@ -1,0 +1,39 @@
+{
+	"properties": [
+		{
+			"name": "rudi.appdata",
+			"type": "java.lang.String",
+			"description": "Parent directory for rudi.nodestub.*-directory properties."
+		},
+		{
+			"name": "rudi.facet.kalim.service.url",
+			"type": "java.lang.String",
+			"description": "URL of kalim microservice."
+		},
+		{
+			"name": "rudi.facet.kalim.endpoint.resources",
+			"type": "java.lang.String",
+			"description": "Resources API path."
+		}
+	],
+	"hints": [
+		{
+			"name": "rudi.facet.kalim.service.url",
+			"values": [
+				{
+					"value": "http://localhost:8086",
+					"description": "Use local kalim microservice."
+				}
+			]
+		},
+		{
+			"name": "rudi.facet.kalim.endpoint.resources",
+			"values": [
+				{
+					"value": "/kalim/v1/resources",
+					"description": "Default API path."
+				}
+			]
+		}
+	]
+}

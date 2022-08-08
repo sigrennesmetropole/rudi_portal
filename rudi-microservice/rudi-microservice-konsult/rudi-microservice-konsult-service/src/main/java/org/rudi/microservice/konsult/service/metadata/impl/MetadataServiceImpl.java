@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -51,6 +52,7 @@ public class MetadataServiceImpl implements MetadataService {
 	private final ACLHelper aclHelper;
 	private final APIManagerHelper apiManagerHelper;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
+	private final MetadataWithSameThemeFinder metadataWithSameThemeFinder;
 	@Value("${apimanager.oauth2.client.anonymous.username}")
 	private String anonymousUsername;
 
@@ -127,12 +129,12 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException {
+	public DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException {
 
 		final Metadata metadata = getMetadataById(globalId);
 		final Media media = getMetadataMediaById(metadata, mediaId);
-		final String authorizedUsername = getAuthorizedUsername(metadata, media);
-		return downloadMetadataMedia(metadata, media, authorizedUsername);
+		final String loginAbleToDownloadMedia = getLoginAbleToDownloadMedia(metadata, media);
+		return downloadMetadataMedia(metadata, media, loginAbleToDownloadMedia);
 	}
 
 	private Media getMetadataMediaById(Metadata metadata, UUID mediaId) throws MediaNotFoundException {
@@ -144,14 +146,14 @@ public class MetadataServiceImpl implements MetadataService {
 		return optionalMedia.get();
 	}
 
-	private String getAuthorizedUsername(Metadata metadata, Media media) throws AppServiceException {
-		// nom d'utilisateur utilisé pour faire les requêtes wso2
-		return apiManagerHelper.checkUsernameAbleToDownloadMedia(metadata, media);
+	/** Nom d'utilisateur utilisé pour télécharger le média à travers WSO2 */
+	private String getLoginAbleToDownloadMedia(Metadata metadata, Media media) throws AppServiceException {
+		return apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media);
 	}
 
-	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String authorizedUsername) throws UnhandledMediaTypeException, APIManagerExternalServiceException {
+	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException {
 		// si l'utilisateur est anonymous, il faut récupérer ses client id et client secret s'ils ne sont pas déjà dans le cache
-		if (authorizedUsername.equals(anonymousUsername) && customClientRegistrationRepository.findByRegistrationId(anonymousUsername).block() == null) {
+		if (loginAbleToDownloadMedia.equals(anonymousUsername) && customClientRegistrationRepository.findByRegistrationId(anonymousUsername).block() == null) {
 			ClientKey clientKey = aclHelper.getClientKeyByLogin(anonymousUsername);
 			customClientRegistrationRepository.addClientRegistration(anonymousUsername,
 					new ClientAccessKey().setClientId(clientKey.getClientId()).setClientSecret(clientKey.getClientSecret()));
@@ -159,7 +161,7 @@ public class MetadataServiceImpl implements MetadataService {
 
 		if (media.getMediaType().equals(Media.MediaTypeEnum.FILE)) {
 			try {
-				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(), authorizedUsername);
+				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(), loginAbleToDownloadMedia);
 			} catch (APIManagerException e) {
 				throw new APIManagerExternalServiceException(e);
 			}
@@ -182,5 +184,26 @@ public class MetadataServiceImpl implements MetadataService {
 			datasetSearchCriteria.setLimit(DEFAULT_RESULTS_NUMBER);
 		}
 		return datasetService.searchDatasets(datasetSearchCriteria, facets);
+	}
+
+	@Override
+	public List<Metadata> getMetadatasWithSameTheme(UUID globalId, Integer limit) throws AppServiceException {
+		final var metadata = getMetadataById(globalId);
+		try {
+			return metadataWithSameThemeFinder.find(metadata.getDataverseDoi(), limit);
+		} catch (DataverseAPIException e) {
+			throw new DataverseExternalServiceException(e);
+		}
+	}
+
+	@Override
+	public Integer getNumberOfDatasetsOnTheSameTheme(UUID globalId) throws AppServiceException {
+		final var metadata = getMetadataById(globalId);
+		try {
+			return metadataWithSameThemeFinder.getNumberOfDatasetsOnTheSameTheme(metadata.getDataverseDoi());
+		} catch (DataverseAPIException de) {
+			throw new DataverseExternalServiceException(de);
+		}
+
 	}
 }

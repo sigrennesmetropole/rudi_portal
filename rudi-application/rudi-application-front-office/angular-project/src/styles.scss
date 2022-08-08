@@ -4,24 +4,86 @@
 
 
 html, body { height: 100%; }
-body { margin: 0; font-family: "Open Sans", sans-serif; }
+body { margin: 0; font-family: OpenSans, sans-serif; }
 
-.svg-primary {
-    fill: $primary-color;
+/** !important pour surcharger l'attribut fill tout en le conservant dans le fichier SVG original (aperçu plus propre) */
+.svg {
+
+    &-primary {
+        fill: $primary-color !important;
+    }
+
+    &-secondary {
+        fill: $secondary-color !important;
+    }
+
+    &-accent {
+        fill: $accent-color-svg !important;
+    }
+
+    &-green {
+        fill: $green-color-svg !important;
+    }
+
+    &-no-fill {
+        fill: none !important;
+    }
+
 }
 
-.svg-secondary {
-    fill: $secondary-color;
+.restricted .rudi-btn-theme {
+
+    .svg-primary {
+        fill: $secondary-color !important;
+    }
+
+    .svg-secondary {
+        fill: $primary-color !important;
+    }
 }
 
-.svg-accent {
-    fill: $accent-color-svg;
+.restricted:focus {
+
+    .key-icon {
+        .svg-primary {
+            fill: $secondary-color !important;
+        }
+    }
+
+    .rudi-btn-theme {
+        .svg-primary {
+            fill: $primary-color !important;
+        }
+        .svg-secondary {
+            fill: $secondary-color !important;
+        }
+    }
+
 }
 
-.svg-green {
-    fill: $green-color-svg;
+.rudi-menu, .rudi-sidenav-container {
+    ul {
+        list-style-type: none;
+    }
 }
 
-.svg-no-fill {
-    fill: none;
+.not-clickable {
+    pointer-events: none;
+
+    & > * {
+        pointer-events: all;
+    }
+}
+
+.margin-to-11 {
+    margin-bottom: 11px;
+}
+
+.cdk-overlay-container {
+    z-index: 1 !important;
+}
+
+//overide the mat table margin css
+.th.mat-header-cell:first-of-type, td.mat-cell:first-of-type{
+    padding: 0px !important;
 }

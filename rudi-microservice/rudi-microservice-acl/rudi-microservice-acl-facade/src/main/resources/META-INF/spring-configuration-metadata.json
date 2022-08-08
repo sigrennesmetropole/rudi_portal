@@ -1,0 +1,66 @@
+{
+  "properties": [
+    {
+      "name": "mail.transport.protocol",
+      "type": "java.lang.String",
+      "description": "Protocol to use."
+    },
+    {
+      "name": "mail.smtp.host",
+      "type": "java.lang.String",
+      "description": "Host to use."
+    },
+    {
+      "name": "mail.smtp.auth",
+      "type": "java.lang.Boolean",
+      "description": "Authenticate with user and password ?"
+    },
+    {
+      "name": "mail.smtp.port",
+      "type": "java.lang.Integer",
+      "description": "SMTP port."
+    },
+    {
+      "name": "mail.smtp.user",
+      "type": "java.lang.String",
+      "description": "User to use to authenticate."
+    },
+    {
+      "name": "mail.smtp.password",
+      "type": "java.lang.String",
+      "description": "Password to use to authenticate."
+    },
+    {
+      "name": "mail.from",
+      "type": "java.lang.String",
+      "description": "Sender email adress."
+    },
+    {
+      "name": "mail.smtp.starttls.enable",
+      "type": "java.lang.Boolean",
+      "description": "Enable TLS."
+    },
+    {
+      "name": "mail.debug",
+      "type": "java.lang.Boolean",
+      "description": "Enable debug."
+    },
+    {
+      "name": "rudi.acl.scheduler.expiredResetPasswordRequestCleaner.delay",
+      "type": "java.lang.String",
+      "description": "Delai de lancement du scheduler (en millisecondes)"
+    },
+    {
+      "name": "rudi.acl.accountregistration.validity",
+      "type": "java.lang.Integer",
+      "description": "Durée de validité d'une demande de création de compte (en secondes)"
+    },
+    {
+      "name": "rudi.acl.resetPasswordRequest.validity",
+      "type": "java.lang.Integer",
+      "description": "Durée de validité d'une demande de changement de mot-de-passe (en secondes)"
+    }
+  ],
+  "hints": [
+  ]
+}

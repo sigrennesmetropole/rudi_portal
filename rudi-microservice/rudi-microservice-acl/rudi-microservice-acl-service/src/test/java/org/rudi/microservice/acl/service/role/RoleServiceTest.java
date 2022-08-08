@@ -3,14 +3,11 @@ package org.rudi.microservice.acl.service.role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.microservice.acl.core.bean.Role;
 import org.rudi.microservice.acl.core.bean.RoleSearchCriteria;
-import org.rudi.microservice.acl.service.SpringBootTestApplication;
+import org.rudi.microservice.acl.service.AclSpringBootTest;
 import org.rudi.microservice.acl.storage.dao.role.RoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,9 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * Class de test du service RoleService
  *
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpringBootTestApplication.class })
-public class RoleServiceTest {
+@AclSpringBootTest
+class RoleServiceTest {
 
 	@Autowired
 	private RoleService roleService;
@@ -55,7 +51,7 @@ public class RoleServiceTest {
 		adminRole = roles.get(0);
 
 		// roleModuleProvider
-		roleSearchCriteria.setCode("MODULE_PROVIDER");
+		roleSearchCriteria.setCode("MODULE_STRUKTURE");
 		roles = roleService.searchRoles(roleSearchCriteria);
 		assertEquals(1, roles.size());
 		moduleProviderRole = roles.get(0);
@@ -67,7 +63,7 @@ public class RoleServiceTest {
 	}
 
 	@Test
-	public void testCRUDRole() {
+	void testCRUDRole() {
 
 		assertNotNull(roleService);
 

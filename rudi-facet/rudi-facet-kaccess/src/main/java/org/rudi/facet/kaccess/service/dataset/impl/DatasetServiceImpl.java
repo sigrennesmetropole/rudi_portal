@@ -95,7 +95,7 @@ public class DatasetServiceImpl implements DatasetService {
 		}
 
 		MetadataListFacets metadataListFacets = searchDatasets(
-				new DatasetSearchCriteria().globalId(globalId).offset(0).limit(1), Collections.emptyList(), true);
+				new DatasetSearchCriteria().globalIds(Collections.singletonList(globalId)).offset(0).limit(1), Collections.emptyList(), true);
 		MetadataList metadataList = metadataListFacets.getMetadataList();
 
 		if (metadataList.getTotal() == 0 || metadataList.getItems().isEmpty()) {
@@ -203,7 +203,7 @@ public class DatasetServiceImpl implements DatasetService {
 
 	@Override
 	public void deleteDataset(UUID globalId) throws DataverseAPIException {
-		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria().globalId(globalId);
+		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria().globalIds(Collections.singletonList(globalId));
 		final SearchParams searchParams = searchCriteriaMapper.datasetSearchCriteriaToSearchParams(datasetSearchCriteria, false);
 
 		final SearchElements<SearchDatasetInfo> searchElements = datasetOperationAPI.searchDataset(searchParams);
@@ -235,7 +235,7 @@ public class DatasetServiceImpl implements DatasetService {
 			throw new DataverseAPIException(MISSING_GLOBAL_ID);
 		}
 
-		return datasetExists(new DatasetSearchCriteria().globalId(globalId));
+		return datasetExists(new DatasetSearchCriteria().globalIds(Collections.singletonList(globalId)));
 	}
 
 	@Override

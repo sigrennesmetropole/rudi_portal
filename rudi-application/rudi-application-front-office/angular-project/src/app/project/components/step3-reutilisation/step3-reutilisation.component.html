@@ -1,0 +1,56 @@
+<div class="step-card" [ngClass]="{'text-center': isPublished}">
+
+    <!-- Étape 3 avant publication de la réutilisation -->
+    <ng-container *ngIf="!isPublished">
+        <div class="step-card-header">
+            <h2 class="step-title">{{'project.stepper.reuse.step3.title' | translate}}</h2>
+            <p class="step-description">{{'project.stepper.reuse.step3.description' | translate}}</p>
+            <p class="step-required-information"><span
+                class="required-symbol">*</span>&nbsp;{{'project.stepper.reuse.step3.requiredInformation' | translate}}
+            </p>
+        </div>
+
+        <form [formGroup]="step3FormGroup">
+
+            <div class="d-flex justify-content-center">
+                <button class="button mat-stroked-button add-dataset-button"
+                        mat-raised-button (click)="openDialog()">
+                    <mat-icon svgIcon="icon-add" class="icon-add-jdd"></mat-icon>
+                    <span>{{ 'project.stepper.reuse.step3.uuid.add-button' | translate }}</span>
+                </button>
+            </div>
+
+            <mat-error *ngIf="linkedDatasetsError"
+                       class="stepper-mat-error">
+                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.stepper.reuse.step3.requiredInformation'|translate}}
+            </mat-error>
+
+            <!-- list linkedDatasets -->
+            <div *ngIf="linkedDatasets.length" class="datasets-container">
+                <div class="datasets-container-header">
+                    <div
+                        class="count">{{linkedDatasets.length}} {{'project.stepper.reuse.step3.linkedDatasets.count' | translate:{count: linkedDatasets.length} }}</div>
+                </div>
+                <div class="datasets">
+                    <app-project-dataset-list [items]="linkedDatasets" (delete)="removeDataset($event)">
+                    </app-project-dataset-list>
+                </div>
+            </div>
+
+        </form>
+    </ng-container>
+
+    <!-- Message d'information en cas de succès de la publication -->
+    <ng-container *ngIf="isPublished">
+        <app-success-step3-template
+            [stepTitle]="'project.stepper.reuse.publish.ok.title' | translate"
+            [stepDescription]="'project.stepper.reuse.publish.ok.description' | translate"
+            [buttonTitle]="'project.stepper.reuse.publish.ok.see' | translate "
+            [routerLink]="createdProjectLink"
+        >
+
+        </app-success-step3-template>
+
+    </ng-container>
+
+</div>

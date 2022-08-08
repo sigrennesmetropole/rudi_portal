@@ -1,16 +1,19 @@
 import {Injectable} from '@angular/core';
-import {ProvidersService} from '../../providers/api-providers';
+import {OrganizationService, ProvidersService} from '../../strukture/api-strukture';
 import {KindOfData} from '../../api-kmedia';
 import {OrganizationMetierService} from './organization-metier.service';
 import {Observable} from 'rxjs';
+import {ImageLogoService} from './image-logo.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProvidersMetierService extends OrganizationMetierService {
 
-    constructor(private providersService: ProvidersService) {
-        super();
+    constructor(protected imageLogoService: ImageLogoService,
+                private providersService: ProvidersService,
+                protected organizationService: OrganizationService) {
+        super(imageLogoService, organizationService);
     }
 
     protected downloadProducerMediaByType(providerUuid: string, kindOfData: KindOfData): Observable<Blob> {

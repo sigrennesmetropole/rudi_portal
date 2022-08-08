@@ -30,8 +30,7 @@ class MediaSearchCriteriaMapperTest {
 
 		assertThat(searchParams)
 				.hasFieldOrPropertyWithValue("type", EnumSet.of(SearchType.DATASET))
-				// TODO cette query paraît étrange (aucun espace entre les champs) : cf RUDI-582
-				.hasFieldOrPropertyWithValue("q", "authorIdentifier:\"5596b5b2-b227-4c74-a9a1-719e7c1008c7\"authorAffiliation:providerkindOfData:LOGO")
+				.hasFieldOrPropertyWithValue("q", "authorIdentifier:\"5596b5b2\\-b227\\-4c74\\-a9a1\\-719e7c1008c7\" AND authorAffiliation:\"provider\" AND kindOfData:\"LOGO\"")
 				.hasFieldOrPropertyWithValue("subtree", mediaDataAlias)
 				.hasFieldOrPropertyWithValue("sortBy", "name")
 				.hasFieldOrPropertyWithValue("sortOrder", "asc")

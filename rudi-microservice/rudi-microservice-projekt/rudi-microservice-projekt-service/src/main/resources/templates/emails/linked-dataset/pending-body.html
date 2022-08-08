@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Demande d'accès à un jdd restreint</title>
+    <style type="text/css">
+        body {
+            font-family: Montserrat;
+            font-size: 12px;
+            color: #004680;
+        }
+
+        a {
+            font-weight: bold;
+            color: #004680;
+        }
+
+        a:hover {
+            color: #004680;
+        }
+    </style>
+</head>
+<body style="font-family:Montserrat;font-size:12px;	color:#004680;">
+<#assign login = dataUtils.getUser(asset.initiator)>
+<p>Bonjour,</p>
+<p>Un porteur de projet vient de demander l'accès à un ou plusieurs de vos jeux de données. <br/>
+    Il s'agit <#if login??>de ${login.getLastname()!""} ${login.getFirstname()!""}, pour le<#else>du</#if> projet ${project.title}.<br/>
+    La demande d'accès concerne le jeu de données : ${asset.description} <br/>
+    Afin de traiter ces demandes d'accès, veuillez vous connecter à votre espace personnel en cliquant
+    <a href="${urlServer}/login">ici</a>.</p>
+
+<br/>
+<p>A tr&egrave;s bient&ocirc;t,</p>
+<p>L'&eacute;quipe RUDI</p>
+<p>${urlServer}</p>
+
+</body>
+</html>

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.microservice.kos.core.bean.Language;
 import org.rudi.microservice.kos.core.bean.SimpleSkosConcept;
@@ -17,17 +16,16 @@ import org.rudi.microservice.kos.core.bean.SkosConceptSearchCriteria;
 import org.rudi.microservice.kos.core.bean.SkosRelationType;
 import org.rudi.microservice.kos.core.bean.SkosScheme;
 import org.rudi.microservice.kos.core.bean.SkosSchemeSearchCriteria;
-import org.rudi.microservice.kos.service.SpringBootTestApplication;
+import org.rudi.microservice.kos.service.KosSpringBootTest;
+import org.rudi.microservice.kos.service.exception.MissingPreferredLabelForDefaultLanguageException;
 import org.rudi.microservice.kos.storage.dao.skos.SkosConceptDao;
 import org.rudi.microservice.kos.storage.dao.skos.SkosSchemeDao;
 import org.rudi.microservice.kos.storage.entity.skos.SkosConceptEntity;
 import org.rudi.microservice.kos.storage.entity.skos.SkosSchemeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -44,8 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Class de test de la couche service de domaina
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpringBootTestApplication.class })
+@KosSpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SkosSchemeServiceTest {
 
@@ -77,7 +74,7 @@ public class SkosSchemeServiceTest {
 
 	@Test
 	@Order(1)
-	public void testCreateSkosScheme() {
+	public void testCreateSkosScheme() throws MissingPreferredLabelForDefaultLanguageException {
 		// création du schema licence avec toutes la grappe
 		skosSchemeLicence = skosSchemeService.createSkosScheme(skosSchemeLicence);
 		assertNotNull(skosSchemeLicence.getSchemeId());
@@ -202,7 +199,7 @@ public class SkosSchemeServiceTest {
 
 	@Test
 	@Order(4)
-	public void testCreateSkosConcept() {
+	public void testCreateSkosConcept() throws MissingPreferredLabelForDefaultLanguageException {
 		skosConcept = skosSchemeService.createSkosConcept(skosSchemeLicence.getSchemeId(), skosConcept, true);
 
 		SkosConcept skosConceptGet = skosSchemeService.getSkosConcept(skosSchemeLicence.getSchemeId(), skosConcept.getConceptId());

@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-facet</artifactId>
+		<version>0.3.0</version>
+	</parent>
+	<artifactId>rudi-facet-generator</artifactId>
+	<description>Facet pour les éléments transverses aux différents types
+		de générateur</description>
+
+
+	<properties>
+		<surefire.plugin.version>2.22.2</surefire.plugin.version>
+		<resource-directory>${project.basedir}/src/main/resources
+		</resource-directory>
+		<resource-generation-directory>${project.basedir}/src/main/resources
+		</resource-generation-directory>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>

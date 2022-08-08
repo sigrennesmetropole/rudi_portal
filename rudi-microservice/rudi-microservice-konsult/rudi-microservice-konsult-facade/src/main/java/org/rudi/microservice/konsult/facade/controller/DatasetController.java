@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,9 +26,9 @@ public class DatasetController implements DatasetsApi {
 	private final ControllerHelper controllerHelper;
 
 	@Override
-	public ResponseEntity<MetadataList> searchMetadatas(Integer limit, Integer offset, String freeText,
-			List<String> themes, List<String> keywords, List<String> producerNames, LocalDateTime dateDebut,
-			LocalDateTime dateFin, String order, Boolean restrictedAccess) throws Exception {
+	public ResponseEntity<MetadataList> searchMetadatas(String freeText,
+			List<String> themes, List<String> keywords, List<String> producerNames, OffsetDateTime dateDebut,
+			OffsetDateTime dateFin, Boolean restrictedAccess, List<UUID> globalIds, Integer offset, Integer limit, String order) throws Exception {
 
 		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria()
 				.limit(limit)
@@ -40,7 +40,8 @@ public class DatasetController implements DatasetsApi {
 				.dateDebut(dateDebut)
 				.dateFin(dateFin)
 				.order(order)
-				.restrictedAccess(restrictedAccess);
+				.restrictedAccess(restrictedAccess)
+				.globalIds(globalIds);
 
 		return ResponseEntity.ok(metadataService.searchMetadatas(datasetSearchCriteria));
 	}
@@ -64,5 +65,15 @@ public class DatasetController implements DatasetsApi {
 	@Override
 	public ResponseEntity<Boolean> hasSubscribeToMetadataMedia(UUID globalId, UUID mediaId) throws Exception {
 		return ResponseEntity.ok(metadataService.hasSubscribeToMetadataMedia(globalId, mediaId));
+	}
+
+	@Override
+	public ResponseEntity<List<Metadata>> getMetadatasWithSameTheme(UUID globalId, Integer limit) throws Exception {
+		return ResponseEntity.ok(metadataService.getMetadatasWithSameTheme(globalId, limit));
+	}
+
+	@Override
+	public ResponseEntity<Integer> getNumberOfDatasetsOnTheSameTheme(UUID globalId) throws Exception {
+		return ResponseEntity.ok(metadataService.getNumberOfDatasetsOnTheSameTheme(globalId));
 	}
 }

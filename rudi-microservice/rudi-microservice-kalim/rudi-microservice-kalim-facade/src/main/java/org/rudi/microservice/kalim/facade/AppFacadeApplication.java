@@ -20,15 +20,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 		"org.rudi.facet.kaccess",
 		"org.rudi.facet.kos",
 		"org.rudi.facet.acl",
+		"org.rudi.facet.strukture",
 		"org.rudi.facet.providers",
+		"org.rudi.facet.organization",
 		"org.rudi.microservice.kalim.facade",
 		"org.rudi.microservice.kalim.service",
 		"org.rudi.microservice.kalim.storage"
 })
 @EnableEurekaClient
 @EnableScheduling
-@PropertySource(value = { "classpath:kalim-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/kalim/kalim.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:kalim/kalim-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {

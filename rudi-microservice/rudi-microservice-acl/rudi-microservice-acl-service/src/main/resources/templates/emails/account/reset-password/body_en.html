@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Reset your password</title>
+<style type="text/css">
+body {font-family: Montserrat; font-size:12px; color:#004680;}
+a {font-weight: bold;color:#004680;}
+a:hover { color:#004680; }
+</style>
+</head>
+<body style="font-family:Montserrat;font-size:12px;	color:#004680;">
+<p>Hello,</p>
+<p>A request to reset your password for your Rudi account has been made. <br/>
+    If you are not the originator of this request, please ignore this email.
+    To reset your password, click on the link below <a
+            href="${urlServer}${pathServer}?token=${resetPasswordRequest.token}">here</a> or paste the following link into your
+    Navigator : <em>${urlServer}${pathServer}?token=${resetPasswordRequest.token}</em>
+</p>
+
+<p>
+    For security reasons, this link will only be valid for 1 hour. After this period, we invite you to renew
+    your request by clicking on this link <a href="${urlServer}/login/forgot-password">Forgot your password ?</a> .
+</p>
+<br/>
+<p>See you soon,</p>
+<p>RUDI's team</p>
+<p>${urlServer}<p>
+</body>
+</html>

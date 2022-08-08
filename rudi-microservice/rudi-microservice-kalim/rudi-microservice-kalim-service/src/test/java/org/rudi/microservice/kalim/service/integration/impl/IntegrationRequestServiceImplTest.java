@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -174,14 +176,19 @@ class IntegrationRequestServiceImplTest {
 		assertThat(createdIntegrationRequestEntity.getSubmissionDate()).isEqualToIgnoringHours(integrationRequest.getSubmissionDate().atStartOfDay());
 	}
 
-	@Test
-	void handleIntegrationRequestReport() {
+	@ParameterizedTest
+	@CsvSource({
+			"POST,l’intégration du jeu de données Test de rapport minoritaire s’est bien déroulée le ",
+			"PUT,la modification du jeu de données Test de rapport minoritaire s’est bien déroulée le ",
+			"DELETE,la suppression du jeu de données Test de rapport minoritaire s’est bien déroulée le ",
+	})
+	void handleIntegrationRequestReport(final String methodString, final String expectedMessageBeginning) {
 		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder()
 				.progressStatus(ProgressStatus.INTEGRATION_HANDLED)
 				.uuid(UUID.randomUUID())
 				.globalId(UUID.randomUUID())
 				.treatmentDate(LocalDateTime.now())
-				.method(Method.POST)
+				.method(Method.fromValue(methodString))
 				.resourceTitle("Test de rapport minoritaire")
 				.version("v1")
 				.integrationStatus(IntegrationStatus.OK)
@@ -214,7 +221,7 @@ class IntegrationRequestServiceImplTest {
 				.hasFieldOrPropertyWithValue("submissionDate", integrationRequest.getSubmissionDate())
 				.hasFieldOrPropertyWithValue("submittedByHarvesting", integrationRequest.isSubmittedByHarvesting())
 		;
-		assertThat(report.getComment()).startsWith("l’intégration du jeu de données Test de rapport minoritaire s’est bien déroulée le ");
+		assertThat(report.getComment()).startsWith(expectedMessageBeginning);
 
 		verify(integrationRequestDao).save(integrationRequest);
 	}

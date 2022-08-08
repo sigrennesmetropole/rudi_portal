@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.test.UUIDUtils;
 import org.rudi.facet.dataverse.api.dataset.DatasetOperationAPI;
@@ -14,8 +13,6 @@ import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.kmedia.bean.MediaDataset;
 import org.rudi.facet.kmedia.bean.MediaOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,8 +21,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = StarterSpringBootTestApplication.class)
+@KmediaSpringBootTest
 class MediaServiceTest {
 
 	@Autowired

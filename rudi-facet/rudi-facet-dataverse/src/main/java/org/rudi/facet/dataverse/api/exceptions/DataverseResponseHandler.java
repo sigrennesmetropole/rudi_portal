@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.rudi.facet.dataverse.model.ApiResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
@@ -25,7 +25,7 @@ public class DataverseResponseHandler extends DefaultResponseErrorHandler {
 
 	@SneakyThrows
 	@Override
-	public void handleError(@NotNull ClientHttpResponse clientHttpResponse) {
+	public void handleError(@Nonnull ClientHttpResponse clientHttpResponse) {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientHttpResponse.getBody()))) {
 			ApiResponseInfo apiResponseInfo;
 			String httpBodyResponse = reader.lines().collect(Collectors.joining(""));

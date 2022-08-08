@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-microservice</artifactId>
+		<version>0.3.0</version>
+	</parent>
+
+	<artifactId>rudi-microservice-projekt</artifactId>
+	<packaging>pom</packaging>
+
+	<!-- Sous-modules du projet -->
+	<modules>
+		<module>rudi-microservice-projekt-core</module>
+		<module>rudi-microservice-projekt-storage</module>
+		<module>rudi-microservice-projekt-service</module>
+		<module>rudi-microservice-projekt-facade</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-microservice-projekt-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-microservice-projekt-storage</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-microservice-projekt-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>

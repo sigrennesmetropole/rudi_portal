@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.core.json.JsonResourceReader;
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -46,8 +47,8 @@ class CustomClientRegistrationRepositoryTest {
 				wso2Url + "/client-registration/v0.17/register",
 				"rest_api_admin",
 				null,
-				"ZHL_pEV0g4eHhf5S_xZNNIJ5YGka",
-				"SxZpbh4Kmbx4jSvcpT0s3PgpHsAa",
+				"lYIEBuZiVjPDcvbJzKgFHQPmJk8a",
+				"zDeef8__2r058SRgoHMrveenQc0a",
 				new String[]{ SCOPE },
 				cache
 		);
@@ -59,7 +60,7 @@ class CustomClientRegistrationRepositoryTest {
 	}
 
 	@Test
-	void addClientRegistration_success() throws IOException {
+	void addClientRegistration_success() throws IOException, BuildClientRegistrationException {
 		final String username = "anonymous";
 		final String password = "anonymous";
 		final ClientAccessKey clientAccessKey = jsonResourceReader.read("wso2/ClientAccessKey.json", ClientAccessKey.class);
@@ -96,10 +97,10 @@ class CustomClientRegistrationRepositoryTest {
 		);
 
 		assertThatThrownBy(() -> customClientRegistrationRepository.addClientRegistration(username, password))
-				.as("On retrouve le statut HTTP")
-				.hasMessageContaining(Integer.toString(HttpStatus.SC_INTERNAL_SERVER_ERROR))
+				.as("On retrouve le username dans le message d'erreur")
+				.hasMessageContaining(username)
 				.as("On retrouve le body renvoyé par WSO2")
-				.hasMessageContaining(body)
+				.hasRootCauseMessage("HTTP 500 INTERNAL_SERVER_ERROR received from API Manager with body : %s", body)
 		;
 	}
 

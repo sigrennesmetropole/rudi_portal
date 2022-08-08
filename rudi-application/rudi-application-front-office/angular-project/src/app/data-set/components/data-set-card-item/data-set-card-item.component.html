@@ -1,0 +1,16 @@
+<div class="d-flex my-3" [routerLink]="'/catalogue/detail/' + dataset.global_id">
+    <div class="align-items-center producteur-img-box">
+        <app-organization-logo [organizationId]="dataset?.producer.organization_id"
+                               cssClass="producteur-img"
+                               organizationType="producer"></app-organization-logo>
+    </div>
+    <div [ngClass]="{'col-8': mediaSize.isLg, 'col-9': mediaSize.isXl || mediaSize.isXxl}">
+        <div class="dataset-info">
+            <div *ngIf="dataset.producer.organization_name"
+                 class="dataset-info-organization_name">{{dataset.producer.organization_name}}</div>
+            <div *ngIf="dataset.resource_title"
+                 class="dataset-info-resource_title">{{dataset.resource_title}}</div>
+        </div>
+    </div>
+</div>
+<mat-divider *ngIf="divider"></mat-divider>

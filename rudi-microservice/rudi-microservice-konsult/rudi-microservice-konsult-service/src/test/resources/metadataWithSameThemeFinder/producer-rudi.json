@@ -1,0 +1,13 @@
+{
+	"resource_title": "JDD du producteur rudi",
+	"theme": "environment",
+	"keywords": [
+		"biogaz",
+		"agriculture"
+	],
+	"producer": {
+		"organization_id": "acdccf43-566b-4134-b39e-ddf46c801242",
+		"organization_name": "Producteur rudi",
+		"organization_address": "2 rue de rudi"
+	}
+}

@@ -13,10 +13,17 @@ import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.apimaccess.bean.API;
 import org.rudi.facet.apimaccess.bean.APIInfo;
 import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
+import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APINotFoundException;
+import org.rudi.facet.apimaccess.exception.APINotUniqueException;
+import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
+import org.rudi.facet.apimaccess.exception.MissingAPIPropertiesException;
+import org.rudi.facet.apimaccess.exception.MissingAPIPropertyException;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
@@ -24,10 +31,15 @@ import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.MediaFile;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
-import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMedia;
+import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +48,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class APIManagerHelperTest {
+class APIManagerHelperTest {
 
 	private static String anonymousUsername;
 	private APIManagerHelper apiManagerHelper;
@@ -59,13 +71,13 @@ public class APIManagerHelperTest {
 	}
 
 	@BeforeEach
-	public void beforeEachTest() {
+	void beforeEachTest() {
 		apiManagerHelper = new APIManagerHelper(apIsService, applicationService, metadataDetailsHelper, anonymousUsername, customClientRegistrationRepository, utilContextHelper, aclHelper);
 	}
 
 	@Test
 	@DisplayName("Test pour savoir si l'utilisateur a souscrit à un jdd alors que l'api n'existe pas")
-	public void TestUserHasSubscribeToMetadataMedia() throws APIManagerException {
+	void TestUserHasSubscribeToMetadataMedia() throws APIManagerException {
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
 
@@ -77,13 +89,14 @@ public class APIManagerHelperTest {
 		UUID mediaId = UUID.randomUUID();
 		assertThatThrownBy(() -> apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId))
 				.isInstanceOf(AppServiceException.class)
-				.hasMessage("Aucune API retrouvé pour le global_id = %s et media_id = %s", globalId, mediaId);
+				.hasMessage("Erreur lors de la récupération de la souscription à l'api globalId = %s et mediaId = %s", globalId, mediaId)
+				.hasCauseInstanceOf(APINotFoundException.class);
 	}
 
 	@Test
 	@DisplayName("Test pour savoir si l'utilisateur a souscrit à un media d'un jdd, " +
 			"lorsque son application wso n'a pas souscrit à l'api correspondante dans WSO2")
-	public void testHasSubscribeToJddMediaWithNoSubscriptionToAPI() throws APIManagerException, AppServiceException {
+	void testHasSubscribeToJddMediaWithNoSubscriptionToAPI() throws APIManagerException, AppServiceException {
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
 
@@ -103,7 +116,7 @@ public class APIManagerHelperTest {
 	@Test
 	@DisplayName("Test pour savoir si l'utilisateur a souscrit à un media d'un jdd, " +
 			"lorsque son application wso a souscrit à l'api correspondante dans WSO2")
-	public void testHasSubscribeToJddMediaWithSubscriptionToAPI() throws APIManagerException, AppServiceException {
+	void testHasSubscribeToJddMediaWithSubscriptionToAPI() throws APIManagerException, AppServiceException {
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
 
@@ -122,7 +135,7 @@ public class APIManagerHelperTest {
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd ouvert auquel le user connu a souscrit")
-	public void testCheckUsernameAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
+	void getLoginAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
 			throws APIManagerException, AppServiceException {
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
@@ -138,13 +151,13 @@ public class APIManagerHelperTest {
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin())).thenReturn(true);
 
-		assertThat(apiManagerHelper.checkUsernameAbleToDownloadMedia(metadata, media))
+		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isEqualTo(authenticatedUser.getLogin());
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd ouvert auquel le user connu n'a pas souscrit")
-	public void testCheckUsernameAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
+	void getLoginAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
 			throws APIManagerException, AppServiceException {
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
@@ -162,13 +175,13 @@ public class APIManagerHelperTest {
 				.thenReturn(false);
 		when(metadataDetailsHelper.isRestricted(metadata)).thenReturn(false);
 
-		assertThat(apiManagerHelper.checkUsernameAbleToDownloadMedia(metadata, media))
+		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isEqualTo(anonymousUsername);
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd restreint auquel le user connu a souscrit")
-	public void testCheckUsernameAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
+	void getLoginAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
 			throws APIManagerException, AppServiceException {
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
@@ -185,19 +198,19 @@ public class APIManagerHelperTest {
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
 				.thenReturn(true);
 
-		assertThat(apiManagerHelper.checkUsernameAbleToDownloadMedia(metadata, media))
+		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isEqualTo(authenticatedUser.getLogin());
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd restreint auquel le user connu n'a pas souscrit")
-	public void testCheckUsernameAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
+	void getLoginAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
 			throws APIManagerException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("mpokora", UserType.PERSON);
 		final ClientKey clientKey = new ClientKey();
 
-		Metadata metadata = new Metadata().globalId(UUID.randomUUID());
-		Media media = new MediaFile().mediaId(UUID.randomUUID());
+		Metadata metadata = new Metadata().globalId(UUID.fromString("92569f8a-2885-44d0-9fd6-f97d05f05b80"));
+		Media media = new MediaFile().mediaId(UUID.fromString("51ce9dfd-3d84-48d8-848e-6094b9de1e5b"));
 
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(metadata.getGlobalId()).mediaUuid(media.getMediaId());
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
@@ -209,9 +222,140 @@ public class APIManagerHelperTest {
 				.thenReturn(false);
 		when(metadataDetailsHelper.isRestricted(metadata)).thenReturn(true);
 
-		assertThatThrownBy(() -> apiManagerHelper.checkUsernameAbleToDownloadMedia(metadata, media))
-				.isInstanceOf(AccessDeniedMetadataMedia.class)
-				.hasMessage("L'utilisateur ne peut pas accéder au média media_id = %s du jeu de données global_id = %s",
-						metadata.getGlobalId(), media.getMediaId());
+		assertThatThrownBy(() -> apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
+				.isInstanceOf(AccessDeniedMetadataMediaException.class)
+				.hasMessage("L'utilisateur mpokora ne peut pas accéder au média media_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80 du jeu de données global_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b");
 	}
+
+	@Test
+	void getGlobalIdFromMediaId_apiInfoNotFound() throws APIManagerException {
+		final UUID mediaId = UUID.fromString("ac27b14c-4b9e-4ee1-9436-0d603dd05137");
+
+		final APIList apiList = new APIList();
+		when(apIsService.searchAPI(any())).thenReturn(apiList);
+
+		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
+				.as("Une exception est lancée si on ne retrouve pas les infos sur l'API")
+				.isInstanceOf(APINotFoundException.class)
+				.hasMessage("Aucune API ne correspond aux informations globalId = null et mediaId = ac27b14c-4b9e-4ee1-9436-0d603dd05137")
+				;
+	}
+
+	@Test
+	void getGlobalIdFromMediaId_apiNotFound() throws APIManagerException {
+		final UUID mediaId = UUID.fromString("ac27b14c-4b9e-4ee1-9436-0d603dd05137");
+
+		final var apiId = "05b0b019-ae02-4d09-917e-29f2dc91a6c9";
+		final APIInfo apiInfo = new APIInfo()
+				.id(apiId);
+		final APIList apiList = new APIList()
+				.count(1)
+				.list(Collections.singletonList(apiInfo));
+		when(apIsService.searchAPI(any())).thenReturn(apiList);
+
+		final var httpNotFoundException = new ResponseStatusException(HttpStatus.NOT_FOUND);
+		when(apIsService.getAPI(apiId)).thenThrow(new APIsOperationWithIdException(apiId, httpNotFoundException));
+
+		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
+				.as("Une exception est lancée si on ne retrouve pas les détails de l'API")
+				.isInstanceOf(APIsOperationWithIdException.class)
+				.hasMessage("API operation failed for apiId = 05b0b019-ae02-4d09-917e-29f2dc91a6c9")
+				.hasCauseInstanceOf(ResponseStatusException.class)
+		;
+	}
+
+	@Test
+	void getGlobalIdFromMediaId_apiNotUnique() throws APIManagerException {
+		final UUID mediaId = UUID.fromString("ac27b14c-4b9e-4ee1-9436-0d603dd05137");
+
+		final APIInfo apiInfo1 = new APIInfo()
+				.id("05b0b019-ae02-4d09-917e-29f2dc91a6c9");
+		final APIInfo apiInfo2 = new APIInfo()
+				.id("eef6832f-6a06-4f65-8f95-a533ac8926a7");
+		final APIList apiList = new APIList()
+				.count(2)
+				.list(Arrays.asList(apiInfo1, apiInfo2));
+		when(apIsService.searchAPI(any())).thenReturn(apiList);
+
+		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
+				.as("Une exception est lancée si on ne retrouve pas les détails de l'API")
+				.isInstanceOf(APINotUniqueException.class)
+				.hasMessage("Il y a 2 API qui correspondent aux informations globalId = null et mediaId = ac27b14c-4b9e-4ee1-9436-0d603dd05137. Veuillez vérifier la cohérence des API créées dans l'API Manager.")
+		;
+	}
+
+	@Test
+	void getGlobalIdFromMediaId_apiWithoutProperties() throws APIManagerException {
+		final UUID mediaId = UUID.fromString("ac27b14c-4b9e-4ee1-9436-0d603dd05137");
+
+		final var apiId = "05b0b019-ae02-4d09-917e-29f2dc91a6c9";
+		final APIInfo apiInfo = new APIInfo()
+				.id(apiId);
+		final APIList apiList = new APIList()
+				.count(1)
+				.list(Collections.singletonList(apiInfo));
+		when(apIsService.searchAPI(any())).thenReturn(apiList);
+
+		final API api = new API()
+				.id(apiId);
+		when(apIsService.getAPI(apiId)).thenReturn(api);
+
+		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
+				.as("Une exception est lancée si on ne retrouve pas les propriétés de l'API")
+				.isInstanceOf(MissingAPIPropertiesException.class)
+				.hasMessage("L'API 05b0b019-ae02-4d09-917e-29f2dc91a6c9 ne possède aucune propriétés")
+		;
+	}
+
+	@Test
+	void getGlobalIdFromMediaId_apiWithoutGlobalIdProperty() throws APIManagerException {
+		final UUID mediaId = UUID.fromString("ac27b14c-4b9e-4ee1-9436-0d603dd05137");
+
+		final var apiId = "05b0b019-ae02-4d09-917e-29f2dc91a6c9";
+		final APIInfo apiInfo = new APIInfo()
+				.id(apiId);
+		final APIList apiList = new APIList()
+				.count(1)
+				.list(Collections.singletonList(apiInfo));
+		when(apIsService.searchAPI(any())).thenReturn(apiList);
+
+		final Map<String, String> apiProperties = new HashMap<>();
+		final API api = new API()
+				.id(apiId)
+				.additionalProperties(apiProperties);
+		when(apIsService.getAPI(apiId)).thenReturn(api);
+
+		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
+				.as("Une exception est lancée si on ne retrouve pas les propriétés de l'API")
+				.isInstanceOf(MissingAPIPropertyException.class)
+				.hasMessage("L'API 05b0b019-ae02-4d09-917e-29f2dc91a6c9 ne possède pas la propriété global_id")
+		;
+	}
+
+	@Test
+	void getGlobalIdFromMediaId_apiWithGlobalIdProperty() throws APIManagerException {
+		final UUID globalId = UUID.fromString("76b52ccb-6297-42a6-8c08-8305d6bc6dee");
+		final UUID mediaId = UUID.fromString("ac27b14c-4b9e-4ee1-9436-0d603dd05137");
+
+		final var apiId = "05b0b019-ae02-4d09-917e-29f2dc91a6c9";
+		final APIInfo apiInfo = new APIInfo()
+				.id(apiId);
+		final APIList apiList = new APIList()
+				.count(1)
+				.list(Collections.singletonList(apiInfo));
+		when(apIsService.searchAPI(any())).thenReturn(apiList);
+
+		final Map<String, String> apiProperties = new HashMap<>();
+		apiProperties.put(APISearchPropertyKey.GLOBAL_ID, globalId.toString());
+		final API api = new API()
+				.id(apiId)
+				.additionalProperties(apiProperties);
+		when(apIsService.getAPI(apiId)).thenReturn(api);
+
+		assertThat(apiManagerHelper.getGlobalIdFromMediaId(mediaId))
+				.as("On retrouve le global_id dans les propriétés de l'API")
+				.isEqualTo(globalId)
+		;
+	}
+
 }

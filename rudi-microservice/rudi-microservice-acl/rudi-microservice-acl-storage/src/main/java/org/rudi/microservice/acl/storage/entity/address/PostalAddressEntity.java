@@ -1,13 +1,14 @@
 package org.rudi.microservice.acl.storage.entity.address;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.rudi.microservice.acl.core.common.SchemaConstants;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.rudi.microservice.acl.core.common.SchemaConstants;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * PostalAddress Entity
@@ -36,6 +37,10 @@ public class PostalAddressEntity extends AbstractAddressEntity {
 
 	@Column(name = "locality")
 	private String locality;
+
+	public PostalAddressEntity() {
+		super(AddressType.POSTAL);
+	}
 
 	@Override
 	public int hashCode() {

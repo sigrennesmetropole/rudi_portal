@@ -33,6 +33,8 @@ public enum IntegrationError {
 	ERR_303("ERR-303", "La valeur saisie '%s' pour le champ '%s' ne correspond pas à %s"),
 	ERR_304("ERR-304", "La valeur saisie '%s' pour le champ '%s' est déjà utilisée"),
 
+	ERR_403("ERR-403", "Le nœud fournisseur authentifié n'est pas le créateur du jeu de données"),
+
 	ERR_500("ERR-500", "Une erreur technique est survenue. Veuillez contacter l'administrateur Rudi pour analyser l'erreur.");
 
 	private final String message;

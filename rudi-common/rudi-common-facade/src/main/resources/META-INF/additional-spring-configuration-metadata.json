@@ -1,0 +1,10 @@
+{
+	"properties": [
+		{
+			"name": "pagination.size",
+			"type": "java.lang.Integer",
+			"description": "Number of items per page.",
+			"defaultValue": "10"
+		}
+	]
+}

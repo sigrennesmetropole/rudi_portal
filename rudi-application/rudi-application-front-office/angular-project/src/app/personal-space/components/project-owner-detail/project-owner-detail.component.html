@@ -1,0 +1,16 @@
+<div class="card-project-type">
+    <!-- Informations générales -->
+    <mat-card class="card-main-information project-card pb-4">
+        <mat-card-title
+            class="card-demand-label">{{'personalSpace.requestDetail.projectOwner.label'|translate}}
+        </mat-card-title>
+        <app-loader [active]="loading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
+        <mat-card-content class="organization-name" *ngIf="!loading">
+            <div>
+                <span class=""> {{dependencies?.ownerName}} </span>
+            </div>
+            <app-contact-button [email]="dependencies?.ownerEmail"></app-contact-button>
+        </mat-card-content>
+    </mat-card>
+</div>
+

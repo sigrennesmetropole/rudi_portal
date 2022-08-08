@@ -14,8 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.common.storage", "org.rudi.microservice.kos.facade", "org.rudi.microservice.kos.service",
 		"org.rudi.microservice.kos.storage" })
 @EnableEurekaClient
-@PropertySource(value = { "classpath:kos-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/kos/kos.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:kos/kos-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {

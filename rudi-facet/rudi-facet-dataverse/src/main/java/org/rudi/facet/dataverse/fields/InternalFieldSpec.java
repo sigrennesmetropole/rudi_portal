@@ -19,6 +19,11 @@ class InternalFieldSpec extends ChildFieldSpec {
 	}
 
 	@Override
+	public String getFacet() {
+		return getParent().getFacet();
+	}
+
+	@Override
 	protected Class<?> getType() {
 		return null;
 	}

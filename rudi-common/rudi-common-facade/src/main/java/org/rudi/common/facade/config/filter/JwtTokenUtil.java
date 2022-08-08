@@ -1,83 +1,29 @@
 package org.rudi.common.facade.config.filter;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+
+import org.apache.commons.collections4.MapUtils;
+import org.rudi.common.core.security.AuthenticatedUser;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 
 /**
  * Classe utilitaire des gestion de token JWT
  */
 @Component
-@Slf4j
-public class JwtTokenUtil extends CommonJwtTokenUtil<Claims> implements Serializable {
+public class JwtTokenUtil extends AbstractJwtTokenUtil implements Serializable {
 
 	private static final long serialVersionUID = -2550185165626007488L;
-
-	@Override
-	protected Function<Claims, String> getSubjectFunction() {
-		return Claims::getSubject;
-	}
-
-	/**
-	 * récupération une propriété d'un token
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getTokenProperty(final String token, final String propertyName) {
-		return (T) getAllClaimsFromToken(token).get(propertyName);
-	}
-
-	@Override
-	protected Function<Claims, Date> getExpirationFunction() {
-		return Claims::getExpiration;
-	}
-
-	@Override
-	protected void handleTokenWithTryCatch(BiConsumer<String, JwtTokenData> tokenConsumer, String tokenJwt, JwtTokenData token) {
-		try {
-			tokenConsumer.accept(tokenJwt, token);
-		} catch (final IllegalArgumentException ex) {
-			log.error("impossible de récupérer le token JWT", ex);
-			token.setHasError(true);
-		} catch (final ExpiredJwtException ex) {
-			log.error("Token JWT expiré", ex);
-			token.setExpired(true);
-		} catch (final MalformedJwtException ex) {
-			log.error("Erreur de formatage du token JWT", ex);
-			token.setHasError(true);
-		}
-	}
-
-	/**
-	 * récupération de toutes les propriétes d'un token
-	 */
-	@Override
-	protected Claims getAllClaimsFromToken(final String token) {
-		return Jwts.parser().setSigningKey(getSecretKey()).parseClaimsJws(token).getBody();
-	}
-
-	/**
-	 * Détermine si le token est expiré
-	 */
-	protected boolean isTokenExpired(final String token) {
-		try {
-			// la récupération de la date retourne une exection si le token est déjà expiré
-			getExpirationDateFromToken(token);
-			return false;
-		} catch (final ExpiredJwtException e) {
-			return true;
-		}
-	}
 
 	/**
 	 * Generation d'un token
@@ -88,13 +34,38 @@ public class JwtTokenUtil extends CommonJwtTokenUtil<Claims> implements Serializ
 	 * @return le token généré
 	 */
 	@Override
-	protected String doGenerateToken(final Map<String, Object> claims, final String subject, final int validity) {
-		return Jwts.builder()
-				.setClaims(claims)
-				.setSubject(subject)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + validity * 1000L))
-				.signWith(SignatureAlgorithm.HS512, getSecretKey()).compact();
+	protected String doGenerateToken(final Map<String, Object> claims, final String subject, final int validity)
+			throws JOSEException {
+		JWSSigner signer = new MACSigner(getSecretKey());
+		JWTClaimsSet.Builder jwtClaimsSetBuilder = new JWTClaimsSet.Builder().subject(subject).issuer(ISSUER_RUDI)
+				.jwtID(getJWTId()).expirationTime(new Date(System.currentTimeMillis() + validity * 1000))
+				.issueTime(new Date(System.currentTimeMillis()));
+
+		if (MapUtils.isNotEmpty(claims)) {
+			for (Map.Entry<String, Object> claim : claims.entrySet()) {
+				jwtClaimsSetBuilder.claim(claim.getKey(), claim.getValue());
+			}
+		}
+
+		JWTClaimsSet claimsSet = jwtClaimsSetBuilder.build();
+
+		SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.HS512).build(), claimsSet);
+		signedJWT.sign(signer);
+
+		return signedJWT.serialize();
+	}
+
+	@Override
+	protected void handleExternalAccount(JwtTokenData token, JWTClaimsSet claims) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void handlePortailAccount(JwtTokenData token, JWTClaimsSet claims) throws JsonProcessingException {
+		String serializedConnectedUser = getTokenProperty(claims, CONNECTED_USER);
+		AuthenticatedUser connectedUser = getMapper().readValue(serializedConnectedUser, AuthenticatedUser.class);
+		token.setAccount(connectedUser);
 	}
 
 }

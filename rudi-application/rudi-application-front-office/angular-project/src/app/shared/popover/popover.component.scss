@@ -1,0 +1,125 @@
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+@import "bootstrap/scss/functions";
+
+// Ajustement des variables initialisées dans ngx-smart-popover/scss/popover-content.component
+$popover-arrow-width: 16px;
+$popover-arrow-height: 8px;
+$popover-border-width: 1px;
+$popover-arrow-color: $secondary-color;
+$popover-arrow-outer-color: rgb(0 0 0 / 20%);
+$popover-header-bg: white;
+
+::ng-deep {
+    .popover-content {
+        min-width: 430px;
+        font-size: 15px;
+        box-shadow: 0 3px 6px 0 rgb(0 0 0 / 20%);
+        margin-left: -33px;
+
+        .arrow {
+            left: calc(100% - 194px);
+        }
+    }
+
+    // Copié depuis la classe bs-popover-bottom de _popover.scss
+    .bs-popover-bottom-left {
+
+        .arrow {
+        }
+
+        margin-top: $popover-arrow-height;
+
+        > .arrow {
+            top: subtract(-$popover-arrow-height, $popover-border-width);
+            left: unset; // ajustement RUDI
+            right: 25px; // ajustement RUDI
+
+            &::before {
+                top: 0;
+                border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+                border-bottom-color: $popover-arrow-outer-color;
+            }
+
+            &::after {
+                top: $popover-border-width;
+                border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+                border-bottom-color: $popover-arrow-color;
+            }
+        }
+
+        // This will remove the popover-header's border just below the arrow
+        .popover-header::before {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            display: block;
+            width: $popover-arrow-width;
+            margin-left: -$popover-arrow-width / 2;
+            content: "";
+            border-bottom: $popover-border-width solid $popover-header-bg;
+        }
+    }
+}
+
+.popover-content-child {
+    display: flex;
+
+    .popover_logo-container {
+        width: 77px;
+    }
+}
+
+.project-btn-reutilisation {
+    background-color: $primary-color;
+    color: $secondary-color;
+    font-family: OpenSans, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    margin: 0 auto;
+    width: 212px;
+    height: 42px;
+    border-radius: 6px;
+
+    &:hover {
+        background-color: $focus;
+        color: $secondary-color;
+    }
+
+    &-sm {
+        display: none;
+    }
+}
+
+.popover_logo-style.rudi_picto_reutilisations {
+    width: 90px;
+    height: 90px;
+    position: relative;
+    left: -12px;
+    top: -3px;
+}
+
+.v-align-middle {
+    display: flex;
+    align-items: center;
+}
+
+.popover-text-style {
+    padding-top: 1em;
+    padding-right: 2em;
+    font-size: 15px;
+    color: #323643;
+    letter-spacing: normal;
+    line-height: 1.4;
+
+    .firstParagraph {
+        font-weight: normal;
+    }
+
+    .secondParagraph {
+        font-weight: 600;
+    }
+}

@@ -1,53 +1,51 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
 import {HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateCompiler, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {CoreModule} from './core/core.module';
 import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
-import {LoginDialogComponent} from './authent/login-dialog/login-dialog.component';
 import {LogService} from './core/services/log.service';
 import {HttpTokenInterceptor} from './core/interceptors/http.token.interceptor';
 import {ResponseTokenInterceptor} from './core/interceptors/response.token.interceptor';
-import {NotAuthorizedComponent} from './authent/not-authorized/not-authorized.component';
-import {ListModule} from './list/list.module';
-import {DetailModule} from './detail/detail.module';
 import {SharedModule} from './shared/shared.module';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler} from 'ngx-translate-messageformat-compiler';
+import {PopoverModule} from 'ngx-smart-popover';
+import {MatPaginatorIntl} from '@angular/material/paginator';
+import {TranslatedMatPaginatorIntl} from './i18n/translated-mat-paginator-intl';
+import {appInitializerFactory} from './app-initializer-factory';
 
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent,
-        LoginDialogComponent,
-        NotAuthorizedComponent,
+        HomeComponent
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         CoreModule,
+        SharedModule,
         AppRoutingModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
+            },
+            compiler: {
+                provide: TranslateCompiler,
+                useClass: TranslateMessageFormatCompiler
             }
         }),
-        SharedModule,
-        ListModule,
-        DetailModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatSidenavModule,
+        PopoverModule,
     ],
-    exports: [
-    ],
+    exports: [],
     providers: [
         LogService,
         {provide: LocationStrategy, useClass: PathLocationStrategy},
@@ -58,10 +56,22 @@ import {MatSidenavModule} from '@angular/material/sidenav';
             useClass: ResponseTokenInterceptor,
             multi: true
         },
-        {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'}
+        {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
+        {provide: MESSAGE_FORMAT_CONFIG, useValue: {locales: ['fr']}},
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appInitializerFactory,
+            deps: [TranslateService, Injector],
+            multi: true
+        },
+        {
+            provide: MatPaginatorIntl,
+            deps: [TranslateService, Injector],
+            useFactory: (translateService: TranslateService) => new TranslatedMatPaginatorIntl(translateService)
+        },
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    entryComponents: [LoginDialogComponent],
+    entryComponents: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

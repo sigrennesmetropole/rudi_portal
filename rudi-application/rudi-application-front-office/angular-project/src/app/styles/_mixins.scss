@@ -1,0 +1,92 @@
+@import 'colors';
+
+@mixin card-container-bgcolor {
+    background-color: $rudi-login-background-color;
+}
+
+@mixin card-form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin card-header-title {
+    font-size: 28px;
+    line-height: 49.2px;
+    color: $primary-color;
+    font-weight: bold;
+}
+
+@mixin card-text-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+@mixin card-px-19-mx-auto {
+    padding: 45px 19px 51px 19px;
+    margin: 2em auto;
+}
+
+@mixin card-px-60-mx-auto {
+    padding: 46px 60px 51px 60px;
+    margin: 2em auto;
+}
+
+@mixin card-main-button {
+    font-size: 16px;
+    height: 60px;
+    border-radius: 6px;
+    padding: 0.5em;
+    background-color: $primary-color;
+    color: $secondary-color;
+    width: 100%;
+}
+
+@mixin card-main-button-desktop {
+    width: 350px;
+}
+
+@mixin card-main-button-mobile {
+    max-width: 350px;
+}
+
+@mixin card-error-pb {
+    padding-bottom: 1em;
+}
+
+@mixin card-form-field-my {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+/// Centre verticalement l'étiquette d'un champ Angular Material
+@mixin centered-mat-field-label {
+    position: relative;
+    top: -0.21428em;
+}
+
+@mixin max-N-lignes($n) {
+    max-height: #{$n * 3.8 / 3}em;
+    overflow: hidden;
+}
+
+@mixin max-2-lignes {
+    @include max-N-lignes(2);
+}
+
+@mixin max-3-lignes {
+    @include max-N-lignes(3);
+}
+
+@mixin truncate-text($maxLinesCount) {
+    display: -webkit-box;
+    -webkit-line-clamp: $maxLinesCount;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+}
+
+@mixin mat-icon-size($size: 18px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+}

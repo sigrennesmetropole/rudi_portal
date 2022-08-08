@@ -21,6 +21,12 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
  */
 public class ClientDetailServiceImpl extends AbstractDetailServiceImpl implements ClientDetailsService {
 
+	private static final String GRANT_PASSWORD = "password";
+	private static final String GRANT_CLIENT_CREDENTIALS = "client_credentials";
+	private static final String GRANT_REFRESH_TOKEN = "refresh_token";
+	private static final String SCOPE_WRITE = "write";
+	private static final String SCOPE_READ = "read";
+
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 		User user = getUserService().getUserByLogin(clientId, true);
@@ -30,9 +36,9 @@ public class ClientDetailServiceImpl extends AbstractDetailServiceImpl implement
 		List<GrantedAuthority> grantedAuthorities = computeGrantedAuthorities(user);
 		BaseClientDetails result = new BaseClientDetails();
 		result.setClientId(clientId);
-		result.setAuthorizedGrantTypes(Arrays.asList("password", "client_credentials"));
+		result.setAuthorizedGrantTypes(Arrays.asList(GRANT_PASSWORD, GRANT_CLIENT_CREDENTIALS, GRANT_REFRESH_TOKEN));
 		result.setClientSecret(user.getPassword());
-		result.setScope(Arrays.asList("read", "write"));
+		result.setScope(Arrays.asList(SCOPE_READ, SCOPE_WRITE));
 		result.setAuthorities(grantedAuthorities);
 		return result;
 	}

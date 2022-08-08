@@ -26,6 +26,10 @@ public class TelephoneAddressEntity extends AbstractAddressEntity {
 	@Column(name = "phone_number", length = 20, nullable = false)
 	private String phoneNumber;
 
+	public TelephoneAddressEntity() {
+		super(AddressType.PHONE);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

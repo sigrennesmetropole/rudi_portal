@@ -6,6 +6,7 @@ import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.AbstractMetadataBlockElementMapper;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.kmedia.bean.MediaDataset;
 import org.rudi.facet.kmedia.bean.MediaOrigin;
@@ -48,8 +49,8 @@ public class MediaDatasetCitationBlockMapper extends AbstractMetadataBlockElemen
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public MediaDatasetCitationBlockMapper(FieldGenerator fieldGenerator) {
-		super(fieldGenerator);
+	public MediaDatasetCitationBlockMapper(FieldGenerator fieldGenerator, DateTimeMapper dateTimeMapper) {
+		super(fieldGenerator, dateTimeMapper);
 	}
 
 	@Override

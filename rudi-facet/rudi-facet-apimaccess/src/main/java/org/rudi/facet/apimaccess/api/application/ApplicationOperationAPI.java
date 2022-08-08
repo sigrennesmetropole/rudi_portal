@@ -18,7 +18,9 @@ import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.bean.EndpointKeyType;
 import org.rudi.facet.apimaccess.bean.OauthGrantType;
 import org.rudi.facet.apimaccess.exception.APIEndpointException;
-import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.ApplicationKeysNotFoundException;
+import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.rudi.facet.apimaccess.exception.ApplicationTokenGenerationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,7 +76,7 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 		this.temporaryDirectory = temporaryDirectory;
 	}
 
-	public Applications searchApplication(ApplicationSearchCriteria applicationSearchCriteria, String username) throws APIManagerException {
+	public Applications searchApplication(ApplicationSearchCriteria applicationSearchCriteria, String username) throws ApplicationOperationException {
 
 		final Mono<Applications> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(APPLICATION_PATH),
 				uriBuilder -> uriBuilder
@@ -86,33 +88,33 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 						.build())
 				.retrieve()
 				.bodyToMono(Applications.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(applicationSearchCriteria, username, e));
 	}
 
-	public Application getApplication(String applicationId, String username) throws APIManagerException {
+	public Application getApplication(String applicationId, String username) throws ApplicationOperationException {
 		final Mono<Application> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(APPLICATION_GET_PATH), Map.of(APPLICATION_ID, applicationId))
 				.retrieve()
 				.bodyToMono(Application.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(applicationId, username, e));
 	}
 
-	public Application createApplication(Application application, String username) throws APIManagerException {
+	public Application createApplication(Application application, String username) throws ApplicationOperationException {
 		final Mono<Application> mono = populateRequestWithRegistrationId(HttpMethod.POST, username, buildDevPortalURIPath(APPLICATION_PATH))
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(Mono.just(application), Application.class)
 				.retrieve()
 				.bodyToMono(Application.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(application, username, e));
 	}
 
-	public void deleteApplication(String applicationId, String username) throws APIManagerException {
+	public void deleteApplication(String applicationId, String username) throws ApplicationOperationException {
 		final Mono<Void> mono = populateRequestWithRegistrationId(HttpMethod.DELETE, username, buildDevPortalURIPath(APPLICATION_GET_PATH), Map.of(APPLICATION_ID, applicationId))
 				.retrieve()
 				.bodyToMono(Void.class);
-		MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(applicationId, username, e));
 	}
 
-	public void generateKeysApplication(String applicationId, String username) throws APIManagerException {
+	public void generateKeysApplication(String applicationId, String username) throws ApplicationOperationException {
 		ApplicationKeyGenerateRequest applicationKeyGenerateRequest = new ApplicationKeyGenerateRequest()
 				.keyManager("Resident Key Manager")
 				.keyType(EndpointKeyType.PRODUCTION)
@@ -125,37 +127,37 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 				.body(Mono.just(applicationKeyGenerateRequest), ApplicationKeyGenerateRequest.class)
 				.retrieve()
 				.bodyToMono(Void.class);
-		MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(applicationId, username, e));
 	}
 
-	public ApplicationKeys getApplicationKeyList(String applicationId, String username) throws APIManagerException {
+	public ApplicationKeys getApplicationKeyList(String applicationId, String username) throws ApplicationOperationException {
 		final Mono<ApplicationKeys> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(APPLICATION_OAUTH_KEYS), Map.of(APPLICATION_ID, applicationId))
 				.retrieve()
 				.bodyToMono(ApplicationKeys.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(applicationId, username, e));
 	}
 
-	public ApplicationToken generateApplicationToken(String applicationId, String keyMappingId, ApplicationTokenGenerateRequest applicationTokenGenerateRequest, String username) throws APIManagerException {
+	public ApplicationToken generateApplicationToken(String applicationId, String keyMappingId, ApplicationTokenGenerateRequest applicationTokenGenerateRequest, String username) throws ApplicationTokenGenerationException {
 		final Mono<ApplicationToken> mono = populateRequestWithRegistrationId(HttpMethod.POST, username, buildDevPortalURIPath(APPLICATION_GENERATE_TOKEN),
 				Map.of(APPLICATION_ID, applicationId, KEYMAPPING_ID, keyMappingId))
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(Mono.just(applicationTokenGenerateRequest), ApplicationTokenGenerateRequest.class)
 				.retrieve()
 				.bodyToMono(ApplicationToken.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ApplicationTokenGenerationException(applicationId, keyMappingId, applicationTokenGenerateRequest, username, e));
 	}
 
-	public DocumentContent getAPIContent(String context, String version, String applicationId, String username) throws APIManagerException {
+	public DocumentContent getAPIContent(String context, String version, String applicationId, String username) throws ApplicationOperationException, ApplicationKeysNotFoundException, APIEndpointException, IOException, ApplicationTokenGenerationException {
 		ApplicationKeys applicationKeys = getApplicationKeyList(applicationId, username);
 		if (applicationKeys.getCount() == 0) {
-			throw new APIManagerException();
+			throw new ApplicationKeysNotFoundException(applicationId, username);
 		}
 		Optional<ApplicationKey> optionalApplicationKey = applicationKeys.getList()
 				.stream()
 				.filter(apk -> apk.getKeyType() == EndpointKeyType.PRODUCTION)
 				.findFirst();
 		if (optionalApplicationKey.isEmpty()) {
-			throw new APIManagerException("Aucune clé d'accès trouvée pour l'accès à l'API");
+			throw new ApplicationKeysNotFoundException(applicationId, username, EndpointKeyType.PRODUCTION);
 		}
 
 		ApplicationKey applicationKey = optionalApplicationKey.get();
@@ -165,18 +167,19 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 				.scopes(Collections.emptyList());
 		ApplicationToken applicationToken = generateApplicationToken(applicationId, applicationKey.getKeyMappingId(), applicationTokenGenerateRequest, username);
 
+		final var apiAccessUrl = buildAPIAccessUrl(context, version);
 		ClientResponse response = webClient.get()
-				.uri(buildAPIAccessUrl(context, version))
+				.uri(apiAccessUrl)
 				.headers(httpHeaders -> httpHeaders.setBearerAuth(applicationToken.getAccessToken()))
 				.exchange()
 				.block();
 
 		if (response == null) {
-			throw new APIManagerException("Erreur lors de l'appel du contexte de l'API");
+			throw new APIEndpointException(apiAccessUrl);
 		}
 
 		if (response.statusCode().isError()) {
-			throw new APIEndpointException(response.statusCode());
+			throw new APIEndpointException(apiAccessUrl, response.statusCode());
 		}
 
 		Flux<DataBuffer> dataBufferFlux = response.bodyToFlux(DataBuffer.class);
@@ -192,12 +195,7 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 			fileName = defaultFileName;
 		}
 
-		File tempFile;
-		try {
-			tempFile = File.createTempFile("rudi", FilenameUtils.getExtension(fileName), new File(temporaryDirectory));
-		} catch (IOException e) {
-			throw new APIManagerException(e);
-		}
+		final File tempFile = File.createTempFile("rudi", FilenameUtils.getExtension(fileName), new File(temporaryDirectory));
 
 		DataBufferUtils.write(dataBufferFlux, tempFile.toPath())
 				.block();

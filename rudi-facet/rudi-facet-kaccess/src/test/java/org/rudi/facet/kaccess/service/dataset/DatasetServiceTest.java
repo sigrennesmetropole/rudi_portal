@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.rudi.common.core.json.JsonResourceReader;
@@ -26,14 +25,13 @@ import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.exceptions.DatasetAlreadyExists;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
-import org.rudi.facet.kaccess.service.StarterSpringBootTestApplication;
+import org.rudi.facet.kaccess.service.KaccessSpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,12 +40,12 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.rudi.common.core.util.DateTimeUtils.toUTC;
 import static org.rudi.facet.kaccess.constant.ConstantMetadata.DOI_REGEX;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.DATASET_DATES_UPDATED;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.METADATA_INFO_DATES_UPDATED;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = StarterSpringBootTestApplication.class)
+@KaccessSpringBootTest
 @Slf4j
 class DatasetServiceTest {
 
@@ -123,9 +121,10 @@ class DatasetServiceTest {
 		// recherche tous critères renseignés
 		// -----------------------------------
 		MetadataList metadataList1 = datasetService.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100)
-						.globalId(metadata.getGlobalId()).freeText("exploitations").addThemesItem("environment")
+						.globalIds(Collections.singletonList(metadata.getGlobalId())).freeText("exploitations").addThemesItem("environment")
 						.addKeywordsItem("agriculture").addKeywordsItem("biogaz").addProducerNamesItem("Producteur rudi")
-						.dateDebut(LocalDateTime.of(2021, Month.JANUARY, 1, 0, 0, 0)).dateFin(LocalDateTime.now().plusYears(1)),
+						.dateDebut(toUTC(LocalDateTime.of(2021, Month.JANUARY, 1, 0, 0, 0)))
+						.dateFin(OffsetDateTime.now().plusYears(1)),
 				Collections.emptyList()).getMetadataList();
 
 		Assertions.assertTrue(metadataList1.getTotal() > 0);
@@ -162,7 +161,7 @@ class DatasetServiceTest {
 		// recherche sur global id
 		// -----------------------
 		MetadataList metadataList5 = datasetService.searchDatasets(
-				new DatasetSearchCriteria().offset(0).limit(100).globalId(metadataTransport.getGlobalId()),
+				new DatasetSearchCriteria().offset(0).limit(100).globalIds(Collections.singletonList(metadataTransport.getGlobalId())),
 				Collections.emptyList()).getMetadataList();
 		Assertions.assertTrue(metadataList5.getTotal() > 0);
 		Assertions.assertTrue(metadataList5.getItems().stream()
@@ -291,8 +290,8 @@ class DatasetServiceTest {
 				.hasMessage(MessageUtils.buildErrorMessageRequiredMandatoryAttributes(DATASET_DATES_UPDATED));
 
 		// test de la valeur metadata_info.metadata_dates.updated
-		metadataWithoutUpdatedDatasetDates.getDatasetDates().setUpdated(LocalDateTime.now());
-		metadataWithoutUpdatedDatasetDates.getMetadataInfo().setMetadataDates(new ReferenceDates().created(LocalDateTime.now()));
+		metadataWithoutUpdatedDatasetDates.getDatasetDates().setUpdated(OffsetDateTime.now());
+		metadataWithoutUpdatedDatasetDates.getMetadataInfo().setMetadataDates(new ReferenceDates().created(OffsetDateTime.now()));
 		assertThatThrownBy(() -> createDataset(metadataWithoutUpdatedDatasetDates))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(MessageUtils.buildErrorMessageRequiredMandatoryAttributes(METADATA_INFO_DATES_UPDATED));
@@ -364,7 +363,7 @@ class DatasetServiceTest {
 				.freeText(freeText);
 		final MetadataList metadataList = datasetService.searchDatasets(criteria, Collections.emptyList()).getMetadataList();
 
-		assertThat(metadataList.getItems()).as("On retrouve le JDD attendu").extracting("dataverseDoi").containsExactly(dataverseDoi);
+		assertThat(metadataList.getItems()).as("On retrouve le JDD attendu").extracting("dataverseDoi").contains(dataverseDoi);
 	}
 
 	/**
@@ -471,12 +470,12 @@ class DatasetServiceTest {
 
 		final Metadata metadata = readMetadata("existing_dataset");
 		createDataset(metadata);
-		
+
 		val existingGlobalId = metadata.getGlobalId();
 		val nonExistingGlobalId = UUIDUtils.eraseOnlyUUIDSegment(1, existingGlobalId); // seul un groupe de chiffres change
 
 		final DatasetSearchCriteria existingCriteria = new DatasetSearchCriteria();
-		existingCriteria.globalId(existingGlobalId);
+		existingCriteria.globalIds(Collections.singletonList(existingGlobalId));
 		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
@@ -484,7 +483,7 @@ class DatasetServiceTest {
 
 
 		final DatasetSearchCriteria nonExistingCriteria = new DatasetSearchCriteria();
-		nonExistingCriteria.globalId(nonExistingGlobalId);
+		nonExistingCriteria.globalIds(Collections.singletonList(nonExistingGlobalId));
 		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingCriteria, Collections.emptyList());
 
 		assertThat(nonExistingResult.getMetadataList().getTotal()).isZero();

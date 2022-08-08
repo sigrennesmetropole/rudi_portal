@@ -17,13 +17,12 @@ import org.rudi.facet.apimaccess.bean.ApplicationInfo;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.rudi.facet.apimaccess.helper.search.SearchCriteriaMapper;
+import org.rudi.facet.apimaccess.helper.search.QueryBuilder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +33,7 @@ class ApplicationServiceImplTest {
 	@Mock
 	private ApplicationOperationAPI applicationOperationAPI;
 	@Mock
-	private SearchCriteriaMapper searchCriteriaMapper;
+	private QueryBuilder queryBuilder;
 	@Mock
 	private SubscriptionOperationAPI subscriptionOperationAPI;
 
@@ -61,13 +60,12 @@ class ApplicationServiceImplTest {
 	void subscribeAPIToDefaultUserApplication(final String username, final String expectedThrottlingPolicy) throws APIManagerException {
 		final String apiId = "API_ID";
 
-		final ApplicationSearchCriteria applicationSearchCriteria = mock(ApplicationSearchCriteria.class);
 		final ApplicationInfo applicationInfo = new ApplicationInfo()
 				.applicationId("application_id");
 		final Applications applications = new Applications().addListItem(applicationInfo).count(1);
 
-		when(searchCriteriaMapper.buildApplicationSearchCriteriaQuery(any())).thenReturn(applicationSearchCriteria);
-		when(applicationOperationAPI.searchApplication(applicationSearchCriteria, username)).thenReturn(applications);
+		when(queryBuilder.buildFrom(any(ApplicationSearchCriteria.class))).thenReturn(null);
+		when(applicationOperationAPI.searchApplication(any(), eq(username))).thenReturn(applications);
 
 		applicationService.subscribeAPIToDefaultUserApplication(apiId, username);
 

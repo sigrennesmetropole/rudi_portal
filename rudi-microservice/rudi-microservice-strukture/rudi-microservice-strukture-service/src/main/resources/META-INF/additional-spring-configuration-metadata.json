@@ -1,0 +1,9 @@
+{
+	"properties": [
+		{
+			"name": "nodeProvider.roles",
+			"type": "java.util.List<java.lang.String>",
+			"description": "Comma separated list of roles node provider users have."
+		}
+	]
+}

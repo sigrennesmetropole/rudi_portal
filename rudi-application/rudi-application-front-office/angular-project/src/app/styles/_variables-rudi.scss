@@ -1,9 +1,9 @@
-@import 'mat-theming';
-
 $icon: 32px;
 
 $header-index: 2;
 $app-header-height: 148px;
+$app-footer-height: 231px;
+$content-margin-top: 106px;
 $bloc-min-width: 360px;
 $bloc-space-width: 16px;
 /**********************************************************************************************
@@ -28,9 +28,19 @@ $card-height-md: 100px;
 $screen-lg-min: 1024px;
 $screen-lg-max: 1439px;
 $card-height-lg: 290px;
+$card-project-height-lg: 440px;
 
 // large desktops
 $screen-xl-min: 1440px;
 
+// Bootstrap
+$bootstrap-gutter: 15px;
 
+/// Hauteur de la bannière affichant des informations sur la version en cours tout en haut de l'écran
+$header-version-height: 50px;
 
+/** project-pt ***/
+$padding-top: 150px;
+
+//**gap ***/
+$gap: 16px;

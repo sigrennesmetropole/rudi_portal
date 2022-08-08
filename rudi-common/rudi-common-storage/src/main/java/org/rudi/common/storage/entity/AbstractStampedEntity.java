@@ -12,8 +12,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * Entité technique administrable via un BackOffice
  * @author FNI18300
- *
  */
 @MappedSuperclass
 @Setter

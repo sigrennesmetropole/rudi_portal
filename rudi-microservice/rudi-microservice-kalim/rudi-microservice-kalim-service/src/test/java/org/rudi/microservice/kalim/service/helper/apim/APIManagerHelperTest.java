@@ -11,26 +11,29 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.providers.bean.NodeProvider;
 import org.rudi.facet.providers.bean.Provider;
 import org.rudi.facet.providers.helper.ProviderHelper;
-import org.rudi.microservice.kalim.service.SpringBootTestApplication;
+import org.rudi.microservice.kalim.service.KalimSpringBootTest;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.rudi.microservice.kalim.service.KalimTestConfigurer.initMetadataWithName;
 
-@SpringBootTest(classes = { SpringBootTestApplication.class })
+@KalimSpringBootTest
 class APIManagerHelperTest {
 
 	@Autowired
@@ -44,6 +47,9 @@ class APIManagerHelperTest {
 
 	@MockBean
 	private ProviderHelper providerHelper;
+
+	@MockBean
+	private OrganizationHelper organizationHelper;
 
 	// Le JDD de base
 	private Metadata initialMetadata;
@@ -89,14 +95,6 @@ class APIManagerHelperTest {
 	}
 
 	/**
-	 * Mock de l'appel vers l'update de l'API
-	 * @return objet métier
-	 */
-	private API updateApiMockWso2() {
-		return new API();
-	}
-
-	/**
 	 * Mock d'un node provider
 	 * @return un node provider mocké
 	 */
@@ -128,7 +126,7 @@ class APIManagerHelperTest {
 	void test_updateApi_createApi_OK() throws IOException, APIManagerException {
 
 		// On veut que quand on demande a créer une API dans WSO2 ça marche
-		when(apIsService.createAPI(any())).thenReturn(createMockedApiWsO2());
+		when(apIsService.createOrUnarchiveAPI(any())).thenReturn(createMockedApiWsO2());
 
 		// On veut que quand on demande à souscrire à une API dans WSO2 ça marche
 		when(applicationService.subscribeAPIToDefaultUserApplication(any(), any())).thenReturn(subscribeToMockedApiWsO2());
@@ -140,7 +138,7 @@ class APIManagerHelperTest {
 		apiManagerHelper.updateAPI(new IntegrationRequestEntity(), newMetadata, initialMetadata);
 
 		// On veut vérifier que l'action de création est bien demandée dans WSO2
-		verify(apIsService, atLeast(1)).createAPI(any());
+		verify(apIsService, atLeast(1)).createOrUnarchiveAPI(any());
 
 		// On veut vérifier que l'action de souscription à l'API est bien demandée dans WSO2
 		verify(applicationService, atLeast(1)).subscribeAPIToDefaultUserApplication(any(), any());
@@ -155,6 +153,10 @@ class APIManagerHelperTest {
 		// On veut que quand on cherche les infos sur l'API a supprimer dans WSO2 ça réponde
 		when(apIsService.searchAPI(any())).thenReturn(createMockedApiList());
 
+		final var apiToArchive = new API()
+				.id("6fb4e5da-c497-4828-8855-589332fa0ede");
+		when(apIsService.archiveAPIByName(any())).thenReturn(apiToArchive);
+
 		// On crée la nouvelle version du JDD
 		Metadata newMetadata = initMetadataWithName("update-media-delete-media-ok.json");
 
@@ -162,14 +164,15 @@ class APIManagerHelperTest {
 		apiManagerHelper.updateAPI(new IntegrationRequestEntity(), newMetadata, initialMetadata);
 
 		// On veut vérifier que l'action de "suppression" est bien demandée dans WSO2
-		verify(apIsService, atLeast(1)).updateAPILifecycleStatus(any(), any());
+		final UUID deleteMediaUuid = UUID.fromString("5f0fb0d9-b9b3-4a03-b5c1-b42e63a2c3e7");
+		verify(apIsService).archiveAPIByName(argThat(apiDescription -> apiDescription.getMediaUuid().equals(deleteMediaUuid)));
 	}
 
 	@Test
 	void test_updateApi_updatingApi_OK() throws IOException, APIManagerException {
 
 		// On veut que quand on demande a "MAJ" dans WSO2 ça marche
-		when(apIsService.updateAPIByName(any())).thenReturn(updateApiMockWso2());
+		doNothing().when(apIsService).updateAPIByName(any());
 
 		// On crée la nouvelle version du JDD
 		Metadata newMetadata = initMetadataWithName("update-media-update-media-ok.json");

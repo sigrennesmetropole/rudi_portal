@@ -1,13 +1,10 @@
 package org.rudi.microservice.acl.facade.config.security;
 
-import java.util.Arrays;
-
-import javax.servlet.Filter;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.rudi.common.facade.config.filter.JwtRequestFilter;
 import org.rudi.common.facade.config.filter.OAuth2RequestFilter;
 import org.rudi.common.facade.config.filter.PreAuthenticationFilter;
+import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.microservice.acl.facade.config.security.anonymous.AnonymousAuthenticationLoginSuccessHandler;
 import org.rudi.microservice.acl.facade.config.security.anonymous.AnonymousAuthenticationProcessingFilter;
 import org.rudi.microservice.acl.facade.config.security.jwt.JwtAuthenticationEntryPoint;
@@ -37,6 +34,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.Filter;
+import java.util.Arrays;
+
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -51,11 +51,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] SB_PERMIT_ALL_URL = {
 			// URL public
-			"/acl/v1/application-information", "/acl/v1/healthCheck", "/oauth/*token*", "/oauth/logout",
+			"/acl/v1/application-information", "/acl/v1/healthCheck", "/oauth/*token*", "/oauth/logout", "oauth/jwks",
 			AUTHENTICATE_URL,
 			// swagger ui / openapi
 			"/acl/v3/api-docs/**", "/acl/swagger-ui/**", "/acl/swagger-ui.html", "/acl/swagger-resources/**",
-			"/configuration/ui", "/configuration/security", "/webjars/**" };
+			"/configuration/ui", "/configuration/security", "/webjars/**", "/error" };
 
 	@Value("${module.oauth2.check-token-uri}")
 	private String checkTokenUri;
@@ -85,10 +85,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AnonymousAuthenticationLoginSuccessHandler anonymousSuccessHandler;
 
+	@Autowired
+	private UtilContextHelper utilContextHelper;
+
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		if (!disableAuthentification) {
-			http.cors().and().csrf().disable().anonymous().disable()
+			http.cors().and().csrf().disable()
 					// starts authorizing configurations
 					.authorizeRequests().antMatchers(SB_PERMIT_ALL_URL).permitAll()
 					// autorisatio des actuators aux seuls role admin
@@ -152,7 +155,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public JwtRequestFilter createJwtRequestFilter() {
-		return new JwtRequestFilter(ArrayUtils.addAll(SB_PERMIT_ALL_URL, AUTHENTICATION_PERMIT_URL));
+		return new JwtRequestFilter(ArrayUtils.addAll(SB_PERMIT_ALL_URL, AUTHENTICATION_PERMIT_URL), utilContextHelper);
 	}
 
 	@Bean
@@ -168,7 +171,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	private Filter createOAuth2Filter() {
-		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri);
+		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri, utilContextHelper);
 	}
 
 	protected Filter createPreAuthenticationFilter() {

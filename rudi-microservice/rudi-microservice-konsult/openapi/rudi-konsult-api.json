@@ -76,6 +76,38 @@
 				}
 			}
 		},
+		"/properties/front-office": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Propriétés de configuration du Front Office",
+				"description": "Toutes les propriétés sous forme de clé/valeur pour configurer l'application Front Office",
+				"operationId": "getFrontOfficeProperties",
+				"responses": {
+					"200": {
+						"description": "Propriétés au format JSON.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FrontOfficeProperties"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/datasets/metadatas": {
 			"get": {
 				"tags": [
@@ -85,12 +117,6 @@
 				"description": "Retourne la liste des jeux de données correspondant aux données de recherche",
 				"operationId": "searchMetadatas",
 				"parameters": [
-					{
-						"$ref": "#/components/parameters/LimitParam"
-					},
-					{
-						"$ref": "#/components/parameters/OffsetParam"
-					},
 					{
 						"$ref": "#/components/parameters/FreeTextParam"
 					},
@@ -110,15 +136,24 @@
 						"$ref": "#/components/parameters/DateFinParam"
 					},
 					{
-						"$ref": "#/components/parameters/OrderParam"
+						"$ref": "#/components/parameters/RestrictedAccessParam"
 					},
 					{
-						"$ref": "#/components/parameters/RestrictedAccessParam"
+						"$ref": "#/components/parameters/GlobalIdParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "Note : pour des raisons de performance, seuls certains champs de l'objet Metadata sont renvoyés dans la recherche : global_id, resource_title, synopsis, summary.text, theme, keywords, producer.organization_id, storage_status, access_condition.confidentiality.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -204,6 +239,106 @@
 							"application/json": {
 								"schema": {
 									"type": "Metadata"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/metadatas-with-same-theme": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des métadonnées sur le même thème qu'un jeu de données.",
+				"description": "Retourne les métadonnées sur le même thème, si possible de producteur différent et avec le plus de mots-clés en commun que le JDD spécifié.",
+				"operationId": "getMetadatasWithSameTheme",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "globalId",
+						"description": "Identifiant du jeu de données",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"description": "Le nombre de résultats souhaité",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "Metadata"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/number-metadatas-with-same-theme": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération du nombre de jdd sur le même thème qu'un jeu de données.",
+				"description": "Retourne le nombre total de jdd sur le même thème.",
+				"operationId": "getNumberOfDatasetsOnTheSameTheme",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "globalId",
+						"description": "Identifiant du jeu de données",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "integer"
 								}
 							}
 						}
@@ -349,6 +484,72 @@
 					}
 				}
 			}
+		},
+		"/medias/{mediaId}/{interfaceContract}/{version}": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Téléchargement d'un média en s'authentifiant implicitement en tant qu'anonymous.",
+				"description": "Équivalent à l'appel à l'API /datasets/{globalId}/media/{mediaId}/download en s'authentifiant automatiquement en tant qu'anonymous.",
+				"operationId": "downloadMedia",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "mediaId",
+						"description": "Identifiant du media",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "ac27b14c-4b9e-4ee1-9436-0d603dd05137"
+					},
+					{
+						"in": "path",
+						"name": "interfaceContract",
+						"description": "Contrat d'interface",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "dwnl"
+					},
+					{
+						"in": "path",
+						"name": "version",
+						"description": "Version",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "1.0.0"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne les données d'un média",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -458,6 +659,19 @@
 						"type": "string"
 					}
 				}
+			},
+			"GlobalIdParam": {
+				"in": "query",
+				"name": "globalId",
+				"description": "Global ID du ou des jeux de données",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
 			}
 		},
 		"schemas": {
@@ -482,6 +696,43 @@
 					"comment": {
 						"type": "string",
 						"description": "Description de la version de l'application"
+					}
+				}
+			},
+			"FrontOfficeProperties": {
+				"type": "object",
+				"properties": {
+					"rudidatarennes": {
+						"type": "object",
+						"properties": {
+							"index": {
+								"type": "string"
+							},
+							"beta": {
+								"type": "string"
+							},
+							"cgu": {
+								"type": "string"
+							},
+							"contact": {
+								"type": "string"
+							},
+							"confidentialite": {
+								"type": "string"
+							},
+							"forum": {
+								"type": "string"
+							},
+							"mentionsLegales": {
+								"type": "string"
+							},
+							"wiki": {
+								"type": "string"
+							},
+							"apidocumentation": {
+								"type": "string"
+							}
+						}
 					}
 				}
 			}

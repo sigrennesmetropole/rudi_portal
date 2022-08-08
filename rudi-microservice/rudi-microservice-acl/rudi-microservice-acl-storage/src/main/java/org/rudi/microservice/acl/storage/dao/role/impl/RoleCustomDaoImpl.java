@@ -5,7 +5,6 @@ import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.acl.core.bean.RoleSearchCriteria;
 import org.rudi.microservice.acl.storage.dao.role.RoleCustomDao;
 import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
@@ -28,7 +27,7 @@ import java.util.List;
  *
  */
 @Repository
-public class RoleCustomDaoImpl extends AbstractCustomDaoImpl implements RoleCustomDao {
+public class RoleCustomDaoImpl extends AbstractCustomDaoImpl<RoleEntity, RoleSearchCriteria> implements RoleCustomDao {
 
 	// Champs utilisés pour le filtrage
 	public static final String FIELD_CODE = "code";
@@ -36,8 +35,9 @@ public class RoleCustomDaoImpl extends AbstractCustomDaoImpl implements RoleCust
 	public static final String FIELD_OPENING_DATE = "openingDate";
 	public static final String FIELD_CLOSING_DATE = "closingDate";
 
-	@Autowired
-	private EntityManager entityManager;
+	public RoleCustomDaoImpl(EntityManager entityManager) {
+		super(entityManager, RoleEntity.class);
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)

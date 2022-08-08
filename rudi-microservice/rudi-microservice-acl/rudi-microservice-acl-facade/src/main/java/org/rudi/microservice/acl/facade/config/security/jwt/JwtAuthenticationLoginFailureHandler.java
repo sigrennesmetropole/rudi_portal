@@ -29,17 +29,19 @@ public class JwtAuthenticationLoginFailureHandler extends SimpleUrlAuthenticatio
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		AuthenticationException exp = null;
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		if (exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
 			exp = new BadCredentialsException("Account bad_credentials");
 		} else if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
 			exp = new BadCredentialsException("Account bad_credentials");
 		} else if (exception.getClass().isAssignableFrom(LockedException.class)) {
 			exp = new LockedException("Account locked");
+			status = HttpStatus.LOCKED;
 		} else if (exception.getClass().isAssignableFrom(DisabledException.class)) {
 			exp = new DisabledException("Account disabled");
 		}
 		if (exp != null) {
-			response.sendError(HttpStatus.UNAUTHORIZED.value(), exp.getMessage());
+			response.sendError(status.value(), exp.getMessage());
 		}
 	}
 

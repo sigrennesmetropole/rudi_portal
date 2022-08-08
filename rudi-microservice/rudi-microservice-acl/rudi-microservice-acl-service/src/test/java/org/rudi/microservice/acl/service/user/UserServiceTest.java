@@ -3,7 +3,6 @@ package org.rudi.microservice.acl.service.user;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
@@ -17,18 +16,16 @@ import org.rudi.microservice.acl.core.bean.TelephoneAddress;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.core.bean.UserType;
-import org.rudi.microservice.acl.service.SpringBootTestApplication;
+import org.rudi.microservice.acl.service.AclSpringBootTest;
 import org.rudi.microservice.acl.service.address.AddressRoleService;
 import org.rudi.microservice.acl.service.role.RoleService;
 import org.rudi.microservice.acl.storage.dao.address.AbstractAddressDao;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleDao;
 import org.rudi.microservice.acl.storage.dao.user.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,9 +40,8 @@ import static org.mockito.Mockito.when;
 /**
  * Class de test de la couche service de user
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpringBootTestApplication.class })
-public class UserServiceTest {
+@AclSpringBootTest
+class UserServiceTest {
 
 	@MockBean
 	private UtilContextHelper mockedUtilContextHelper;
@@ -95,7 +91,7 @@ public class UserServiceTest {
 		roleAdmin = roles.get(0);
 
 		// roleModuleProvider
-		roleSearchCriteria.setCode("MODULE_PROVIDER");
+		roleSearchCriteria.setCode("MODULE_STRUKTURE");
 		roles = roleService.searchRoles(roleSearchCriteria);
 		assertEquals(1, roles.size());
 		roleModuleProvider = roles.get(0);
@@ -176,7 +172,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testCRUDUser() {
+	void testCRUDUser() {
 
 		assertNotNull(userService);
 		assertNotNull(roleUtilisateur);
@@ -303,7 +299,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testCRUDAddresses() {
+	void testCRUDAddresses() {
 
 		assertNotNull(userRobot);
 
@@ -419,4 +415,50 @@ public class UserServiceTest {
 
 	}
 
+	@Test
+	void testRecordAuthentification() {
+		// creation de userCitoyen
+		User u = userService.createUser(initUserCitoyen());
+		assertNull(u.getLastConnexion());
+		assertNull(u.getLastFailedAttempt());
+
+		userService.recordAuthentication(u.getUuid(), true);
+		User u1 = userService.getUser(u.getUuid());
+		assertEquals(false, u1.getAccountLocked());
+		assertNotNull(u1.getLastConnexion());
+		assertNull(u1.getLastFailedAttempt());
+
+		userService.recordAuthentication(u.getUuid(), false);
+		User u2 = userService.getUser(u.getUuid());
+		assertEquals(false, u1.getAccountLocked());
+		assertNotNull(u2.getLastConnexion());
+		assertNotNull(u2.getLastFailedAttempt());
+
+		userService.recordAuthentication(u.getUuid(), true);
+		User u3 = userService.getUser(u.getUuid());
+		assertEquals(false, u1.getAccountLocked());
+		assertNotNull(u3.getLastConnexion());
+		assertNull(u3.getLastFailedAttempt());
+
+	}
+
+	@Test
+	void testLock() {
+		// creation de userCitoyen
+		User u = userService.createUser(initUserCitoyen());
+		assertNull(u.getLastConnexion());
+		assertNull(u.getLastFailedAttempt());
+
+		for (int i = 0; i < userService.getMaxFailedAttempt(); i++) {
+			userService.recordAuthentication(u.getUuid(), false);
+			User u1 = userService.getUser(u.getUuid());
+			assertEquals(false, u1.getAccountLocked());
+			assertNotNull(u1.getLastFailedAttempt());
+		}
+
+		userService.recordAuthentication(u.getUuid(), false);
+		User u2 = userService.getUser(u.getUuid());
+		assertEquals(true, u2.getAccountLocked());
+
+	}
 }

@@ -12,12 +12,14 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.bean.Method;
 import org.rudi.microservice.kalim.core.bean.ProgressStatus;
 import org.rudi.microservice.kalim.service.helper.Error500Builder;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
+import org.rudi.microservice.kalim.service.integration.impl.validator.DatasetCreatorIsAuthenticatedValidator;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 
 import java.util.HashSet;
@@ -38,14 +40,18 @@ class DeleteIntegrationRequestTreatmentHandlerTest {
 	private DatasetService datasetService;
 	@Mock
 	private APIManagerHelper apiManagerHelper;
+	@Mock
+	private DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator;
+	@Mock
+	private MetadataDetailsHelper metadataDetailsHelper;
 
 	@BeforeEach
 	void setUp() {
 		handler = new DeleteIntegrationRequestTreatmentHandler(
 				datasetService,
 				apiManagerHelper,
-				error500Builder
-		);
+				error500Builder,
+				datasetCreatorIsAuthenticatedValidator, metadataDetailsHelper);
 	}
 
 	@Test
@@ -72,8 +78,8 @@ class DeleteIntegrationRequestTreatmentHandlerTest {
 		// No more interactions with DataSet
 		verifyNoMoreInteractions(datasetService);
 
-		// API is deleted
-		verify(apiManagerHelper).deleteAPI(integrationRequest, integrationRequest.getGlobalId());
+		// API is archived
+		verify(apiManagerHelper).archiveAllAPI(integrationRequest, false);
 	}
 
 	private Metadata buildMetadataToDelete() {
@@ -107,8 +113,8 @@ class DeleteIntegrationRequestTreatmentHandlerTest {
 		// DataSet is archived
 		verify(datasetService).archiveDataset(metadataToDelete.getDataverseDoi());
 
-		// API is deleted
-		verify(apiManagerHelper).deleteAPI(integrationRequest, integrationRequest.getGlobalId());
+		// API is archived
+		verify(apiManagerHelper).archiveAllAPI(integrationRequest, false);
 	}
 
 }

@@ -143,7 +143,6 @@ class MetadataServiceImplTest {
 
 		assertThatThrownBy(() -> service.getMetadataById(originalMetadata.getGlobalId()))
 				.isInstanceOf(MetadataNotFoundException.class)
-				.hasCause(datasetNotFoundException)
 				.hasMessage("Le Dataset de globalId=\"72121fbc-9ab6-4cf5-83b5-b4621c97c737\" est introuvable");
 	}
 

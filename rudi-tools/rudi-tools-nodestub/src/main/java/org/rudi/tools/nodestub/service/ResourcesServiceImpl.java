@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +26,7 @@ class ResourcesServiceImpl implements ResourcesService {
 	private final ObjectMapper mapper;
 
 	@Override
-	public List<Metadata> getMetadataList(int limit, int offset, LocalDateTime updateAfter) {
+	public List<Metadata> getMetadataList(int limit, int offset, OffsetDateTime updateAfter) {
 		final File resourcesDirectory = nodeStubConfiguration.getResourcesDirectory();
 		final File[] files = resourcesDirectory.listFiles();
 		if (files != null) {
@@ -60,7 +60,7 @@ class ResourcesServiceImpl implements ResourcesService {
 		}
 	}
 
-	private boolean wasUpdatedAfter(Metadata metadata, @NotNull LocalDateTime updateAfter) {
+	private boolean wasUpdatedAfter(Metadata metadata, @NotNull OffsetDateTime updateAfter) {
 		return metadata.getDatasetDates().getUpdated().isAfter(updateAfter);
 	}
 

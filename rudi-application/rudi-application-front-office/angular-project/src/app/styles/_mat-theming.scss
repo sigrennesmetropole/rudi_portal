@@ -2,7 +2,7 @@
 
 .mat-expansion-panel {
     box-shadow: none;
-    border-bottom: 1px solid $border-grey;
+    border-bottom: 1px solid $blocks-and-menus-outline;
     border-radius: unset;
 
     &:last-of-type {
@@ -11,14 +11,14 @@
 }
 
 .mat-badge-content {
-    background: $active-blue;
+    background: $focus;
     top: 7px !important;
     left: 110px;
 }
 
 .rudi-sidenav-container-filter {
     .mat-badge-content {
-        background: $active-blue;
+        background: $focus;
         top: 0 !important;
         font-size: 14px;
         font-weight: normal;
@@ -42,19 +42,19 @@ button.mat-menu-item {
 }
 
 button.mat-menu-item:hover {
-    background-color: $blue-button;
+    background-color: $focus;
     color: white;
 }
 
 .mat-badge-content {
-    background: $active-blue;
+    background: $focus;
     top: 7px !important;
     left: 110px;
 }
 
 .rudi-sidenav-container-filter {
     .mat-badge-content {
-        background: $active-blue;
+        background: $focus;
         top: 0 !important;
         font-size: 14px;
         font-weight: normal;
@@ -84,32 +84,32 @@ button.mat-menu-item:hover {
 .mat-expansion-panel-header.open {
     ::ng-deep.mat-expansion-indicator {
         width: 30px;
-        border: 1.6px solid $active-blue;
+        border: 1.6px solid $focus;
         border-radius: 15px;
         height: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $active-blue;
+        color: $focus;
 
         &::after {
-            color: $active-blue;
+            color: $focus;
         }
     }
 }
 
 ::ng-deep.mat-expansion-indicator:hover, ::ng-deep.mat-expansion-indicator:focus, ::ng-deep.mat-expansion-indicator.open {
     width: 30px;
-    border: 1.6px solid $active-blue;
+    border: 1.6px solid $focus;
     border-radius: 15px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $active-blue;
+    color: $focus;
 
     &::after {
-        color: $active-blue;
+        color: $focus;
     }
 }
 
@@ -128,11 +128,11 @@ button.mat-menu-item:hover {
 }
 
 ::ng-deep.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-    background-color: $blue-button;
+    background-color: $focus;
 }
 
 ::ng-deep.mat-checkbox-frame {
-    border: 1px solid $border-grey-darker;
+    border: 1px solid $blocks-and-menus-outline;
 }
 
 ::ng-deep.mat-checkbox-label {
@@ -145,22 +145,29 @@ button.mat-menu-item:hover {
 }
 
 ::ng-deep.mat-menu-panel {
-    max-height: min-content;
+    max-height: 50vh;
     overflow: hidden !important;
     border-radius: 6px !important;
     box-shadow: -1px 1px 8px 0 rgba(0, 0, 0, 0.25);
-    border: solid 1px $border-grey;
+    border: solid 1px $blocks-and-menus-outline;
     margin-top: 12px;
     min-width: 244px;
     width: auto;
+
+    rudi-select-panel-with-footer {
+        ul {
+            max-height: 36vh;
+            overflow: auto;
+        }
+    }
 }
 
 ::ng-deep.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-    background-color: $blue-button;
+    background-color: $focus;
 }
 
 ::ng-deep.mat-checkbox-frame {
-    border: 1px solid $border-grey-darker;
+    border: 1px solid $blocks-and-menus-outline;
 }
 
 ::ng-deep.mat-checkbox-label {
@@ -181,16 +188,13 @@ button.mat-menu-item:hover {
 }
 
 ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: $active-blue;
+    border-color: $focus;
 }
 
 ::ng-deep.mat-radio-button.mat-accent .mat-radio-inner-circle {
-    background-color: $active-blue;
+    background-color: $focus;
 }
 
 ::ng-deep.mat-checkbox-layout {
     white-space: normal;
 }
-
-
-

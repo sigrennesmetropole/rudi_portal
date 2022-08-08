@@ -1,12 +1,10 @@
 package org.rudi.microservice.kalim.facade.config.security;
 
-import java.util.Arrays;
-
-import javax.servlet.Filter;
-
+import lombok.RequiredArgsConstructor;
 import org.rudi.common.facade.config.filter.JwtRequestFilter;
 import org.rudi.common.facade.config.filter.OAuth2RequestFilter;
 import org.rudi.common.facade.config.filter.PreAuthenticationFilter;
+import org.rudi.common.service.helper.UtilContextHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -21,8 +19,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.Filter;
+import java.util.Arrays;
+
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String ACTUATOR_URL = "/actuator/**";
@@ -42,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Value("${rudi.kalim.security.authentication.disabled:false}")
 	private boolean disableAuthentification = false;
+
+	private final UtilContextHelper utilContextHelper;
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
@@ -93,12 +97,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	private Filter createOAuth2Filter() {
-		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri);
+		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri, utilContextHelper);
 	}
 
 	@Bean
 	public JwtRequestFilter createJwtRequestFilter() {
-		return new JwtRequestFilter(SB_PERMIT_ALL_URL);
+		return new JwtRequestFilter(SB_PERMIT_ALL_URL, utilContextHelper);
 	}
 
 }

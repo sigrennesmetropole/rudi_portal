@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +54,7 @@ public class ResourcesApiController implements ResourcesApi {
 
 	@Override
 	public ResponseEntity<MetadataList> getRessources(@Valid Integer incomingLimit, @Valid Integer incomingOffset,
-			@Valid LocalDateTime updatedAfter, @Valid LocalDateTime updateBefore) {
+			@Valid OffsetDateTime updatedAfter, @Valid OffsetDateTime updateBefore) {
 
 		final int limit;
 		if (incomingLimit == null || incomingLimit < 0) {

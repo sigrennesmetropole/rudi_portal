@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.rudi.microservice.template.core.common;
 
 /**

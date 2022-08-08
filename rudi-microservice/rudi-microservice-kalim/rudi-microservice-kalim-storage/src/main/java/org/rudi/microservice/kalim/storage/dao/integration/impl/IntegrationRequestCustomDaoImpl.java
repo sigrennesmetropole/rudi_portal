@@ -5,7 +5,6 @@ import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequestSearchCriteria;
 import org.rudi.microservice.kalim.storage.dao.integration.IntegrationRequestCustomDao;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class IntegrationRequestCustomDaoImpl extends AbstractCustomDaoImpl implements IntegrationRequestCustomDao {
+public class IntegrationRequestCustomDaoImpl extends AbstractCustomDaoImpl<IntegrationRequestEntity, IntegrationRequestSearchCriteria> implements IntegrationRequestCustomDao {
 
     private static final String FIELD_TREATMENT_DATE = "treatmentDate";
     private static final String FIELD_SEND_REQUEST_DATE = "sendRequestDate";
@@ -33,8 +32,9 @@ public class IntegrationRequestCustomDaoImpl extends AbstractCustomDaoImpl imple
     private static final String FIELD_INTEGRATION_STATUS = "integrationStatus";
     private static final String FIELD_GLOBAL_ID = "globalId";
 
-    @Autowired
-    private EntityManager entityManager;
+    public IntegrationRequestCustomDaoImpl(EntityManager entityManager) {
+        super(entityManager, IntegrationRequestEntity.class);
+    }
 
     @Override
     public Page<IntegrationRequestEntity> searchIntegrationRequests(IntegrationRequestSearchCriteria searchCriteria,

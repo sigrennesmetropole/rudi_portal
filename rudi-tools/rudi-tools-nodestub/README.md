@@ -4,7 +4,7 @@ Pour faire fonctionner le NodeStub sur un poste de dev local, il faut ajuster ce
 
 ## URL du NodeProvider
 
-Dans le schéma `providers_data`, ouvrir la table `provider` et noter l'UUID du fournisseur portant le code `'NODE_STUB'`
+Dans le schéma `strukture_data`, ouvrir la table `provider` et noter l'UUID du fournisseur portant le code `'NODE_STUB'`
 .
 
 Ouvrir la table `node_provider` et se placer sur la ligne portant cet UUID. Remplacer alors son `url` :

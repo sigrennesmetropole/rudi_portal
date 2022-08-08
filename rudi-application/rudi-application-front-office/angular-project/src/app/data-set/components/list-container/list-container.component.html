@@ -1,0 +1,110 @@
+<div class="container-fluid">
+    <!--Composant de recherche libre-->
+    <app-search-box
+        [mediaSize]="mediaSize"
+        class="d-flex justify-content-center w-100"
+    ></app-search-box>
+
+    <app-banner
+        (selectedDatesItemsChange)="selectedDatesItems = $event"
+        (selectedProducerItemsChange)="selectedProducerItems = $event"
+        (selectedRestrictedAccessItemsChange)="selectedRestrictedAccessItems = $event"
+        (selectedThemeItemsChange)="selectedThemeItems = $event"
+        [mediaSize]="mediaSize"
+        [producerNames]="producerNames"
+        [themes]="themes"
+        [restrictedAccessForcedValue]="restrictedAccessForcedValue"
+    ></app-banner>
+
+    <app-filters-items-list
+        [selectedDatesItems]="selectedDatesItems"
+        [selectedProducerItems]="selectedProducerItems"
+        [hasSelectedItems]="hasSelectedItems"
+        [selectedRestrictedAccessItems]="restrictedAccessForcedValue === undefined ? selectedRestrictedAccessItems : []"
+        [selectedThemeItems]="selectedThemeItems"
+    >
+    </app-filters-items-list>
+
+    <div [ngClass]="{'data-set-full-height-sm': mediaSize.isSm || mediaSize.isMd }"
+         class="data-set-full-height">
+        <app-loader
+            [active]="isLoading">
+        </app-loader>
+
+        <div class="d-flex py-3 justify-content-between">
+            <!--Nombre de résultats-->
+            <div class=" w-50 search-count">
+                <ng-container *ngIf="searchIsRunning">
+                    {{'searchbox.searchIsRunning'|translate}}
+                </ng-container>
+                <ng-container *ngIf="!searchIsRunning">
+                    {{metadataList.total}} {{'searchbox.results'|translate}}{{metadataList.total > 1 ? 's' : ''}}
+                </ng-container>
+                <span *ngIf="searche$ | async">{{'searchbox.pour'|translate}} "{{searche$ | async}}"</span>
+            </div>
+
+            <!--Composant de tri-->
+            <app-order
+                [values]="orders"
+                *ngIf="mediaSize.isXl || mediaSize.isLg || mediaSize.isXxl"
+            >
+            </app-order>
+
+            <!--Ouverture des filtres en mode mobile-->
+            <div
+                (click)="openSidenav()"
+                *ngIf="mediaSize.isMd || mediaSize.isSm"
+                class="rudi-filter-box pointer w-50 d-flex justify-content-end align-items-center blue-theme">
+                <ng-container *ngIf="!this.isFiltered" class="container-filter-box">
+                    <mat-icon [ngClass]="this.isFiltered ? 'rudi-icon-bordered' : ''" aria-hidden="false"
+                              aria-label="filter icon"
+                              class="pointer mr-1 font-weight-bold">tune
+                    </mat-icon>
+                    <span class="rudi-filter-box-libelle">{{'filterBox.filtrer'|translate}}</span>
+                </ng-container>
+                <button *ngIf="this.isFiltered" class="rudi-icon-bordered" color="primary" mat-flat-button>
+                    <mat-icon aria-hidden="false" aria-label="filter icon "
+                              class="pointer mr-1 font-weight-bold">tune
+                    </mat-icon>
+                    <span class="rudi-filter-box-libelle-hover">{{'filterBox.filtres'|translate}}</span>
+                </button>
+            </div>
+            <!---------------------------------------->
+        </div>
+        <div class="content">
+            <div fxLayout="row wrap" class="gap">
+                <div
+                    *ngFor="let metadata of metadataListItems | paginate: {
+              itemsPerPage: limit,
+              currentPage: page,
+              totalItems: metadataList.total
+            }"
+                    [ngClass]="{'data-set-container-sm': mediaSize.isSm || mediaSize.isMd, 'data-set-container-lg':  mediaSize.isLg,
+        'data-set-container-xl': mediaSize.isXl, 'data-set-container-xxl': mediaSize.isXxl}"
+                    [class]="resultsPerRow ? 'data-set-container-'+resultsPerRow+'-cards': ''"
+                >
+                    <app-data-set-card
+                        [metadata]="metadata"
+                        [themePicto]="getThemePictoFor(metadata)"
+                        [themeLabel]="getThemeLabelFor(metadata)"
+                        [isSelectable]="isSelectable"
+                        (selectMetadata)="selectMetadata.emit($event)"
+                        (dbSelectMetadata)="dbSelectMetadata.emit($event)"
+                    ></app-data-set-card>
+                </div>
+
+            </div>
+        </div>
+        <!-- Pagination des jdd -->
+
+        <pagination-controls
+            (pageChange)="handlePageChange($event)"
+            [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
+            class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
+            [ngClass]="paginationControlsNgClass"
+            [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
+            [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate">
+        </pagination-controls>
+
+    </div>
+</div>

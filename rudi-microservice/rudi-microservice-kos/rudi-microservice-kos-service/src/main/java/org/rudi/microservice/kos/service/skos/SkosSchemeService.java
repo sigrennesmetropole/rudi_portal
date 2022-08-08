@@ -6,6 +6,7 @@ package org.rudi.microservice.kos.service.skos;
 import org.rudi.microservice.kos.core.bean.SkosConcept;
 import org.rudi.microservice.kos.core.bean.SkosScheme;
 import org.rudi.microservice.kos.core.bean.SkosSchemeSearchCriteria;
+import org.rudi.microservice.kos.service.exception.MissingPreferredLabelForDefaultLanguageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -32,7 +33,7 @@ public interface SkosSchemeService {
 	 * @param skosScheme		skosScheme à créer
 	 * @return SkosScheme
 	 */
-	SkosScheme createSkosScheme(SkosScheme skosScheme);
+	SkosScheme createSkosScheme(SkosScheme skosScheme) throws MissingPreferredLabelForDefaultLanguageException;
 
 	/**
 	 * Update a SkosScheme entity
@@ -40,7 +41,7 @@ public interface SkosSchemeService {
 	 * @param skosScheme		skosScheme à créer
 	 * @return SkosScheme
 	 */
-	SkosScheme updateSkosScheme(SkosScheme skosScheme);
+	SkosScheme updateSkosScheme(SkosScheme skosScheme) throws MissingPreferredLabelForDefaultLanguageException;
 
 	/**
 	 * Delete a SkosScheme entity
@@ -66,7 +67,7 @@ public interface SkosSchemeService {
 	 * @param asTopConcept			permet de savoir si les concepts ajoutés sont des tops concepts
      * @return						SkosConcept
 	 */
-	SkosConcept createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept);
+	SkosConcept createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept) throws MissingPreferredLabelForDefaultLanguageException;
 
 	/**
 	 * Mise à jour d'un skosConcept à associer à un skosScheme
@@ -76,7 +77,7 @@ public interface SkosSchemeService {
 	 * @param asTopConcept			permet de savoir si les concepts ajoutés sont des tops concepts
 	 * @return						SkosConcept
 	 */
-	SkosConcept updateSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept);
+	SkosConcept updateSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept) throws MissingPreferredLabelForDefaultLanguageException;
 
 	/**
 	 * Suppression d'un skosConcept à associer à un skosScheme

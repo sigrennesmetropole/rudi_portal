@@ -10,7 +10,10 @@ import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.OpenAPIVersion;
-import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APIsOperationException;
+import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
+import org.rudi.facet.apimaccess.exception.UpdateAPILifecycleStatusException;
+import org.rudi.facet.apimaccess.exception.UpdateAPIOpenapiDefinitionException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -20,6 +23,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -48,23 +52,24 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 		super(webClient, managerAPIProperties);
 	}
 
-	public List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIManagerException {
+	public List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIsOperationWithIdException {
 		//noinspection Convert2Diamond Provoque l'erreur : java: Compilation failed: internal java compiler error
 		final Mono<List<LimitingPolicy>> mono = populateRequestWithAdminRegistrationId(HttpMethod.GET, buildPublisherURIPath(API_GET_POLICY_PATH), Map.of(API_ID, apiId))
 				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<List<LimitingPolicy>>() {
 				});
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
 	}
 
-	public API getAPI(String apiId) throws APIManagerException {
+	@Nonnull
+	public API getAPI(String apiId) throws APIsOperationWithIdException {
 		final Mono<API> mono = populateRequestWithAdminRegistrationId(HttpMethod.GET, buildPublisherURIPath(API_GET_PATH), Map.of(API_ID, apiId))
 				.retrieve()
 				.bodyToMono(API.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
 	}
 
-	public APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIManagerException {
+	public APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIsOperationException {
 		final Mono<APIList> mono = populateRequestWithAdminRegistrationId(HttpMethod.GET, buildPublisherURIPath(API_PATH),
 				uriBuilder -> uriBuilder
 						.queryParam(OFFSET, apiSearchCriteria.getOffset())
@@ -72,10 +77,10 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 						.queryParam(QUERY, apiSearchCriteria.getQuery()).build())
 				.retrieve()
 				.bodyToMono(APIList.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationException(apiSearchCriteria, e));
 	}
 
-	public API createAPI(API api) throws APIManagerException {
+	public API createAPI(API api) throws APIsOperationException {
 		final Mono<API> mono = populateRequestWithAdminRegistrationId(HttpMethod.POST, buildPublisherURIPath(API_PATH),
 				uriBuilder -> uriBuilder
 						.queryParam(OPENAPI_VERSION, OpenAPIVersion.V3).build())
@@ -83,28 +88,28 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 				.body(Mono.just(api), API.class)
 				.retrieve()
 				.bodyToMono(API.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationException(api, e));
 	}
 
-	public API updateAPI(API api) throws APIManagerException {
+	public API updateAPI(API api) throws APIsOperationException {
 		final Mono<API> mono = populateRequestWithAdminRegistrationId(HttpMethod.PUT, buildPublisherURIPath(API_GET_PATH), Map.of(API_ID, api.getId()))
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(Mono.just(api), API.class)
 				.retrieve()
 				.bodyToMono(API.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationException(api, e));
 	}
 
-	public void updateAPIOpenapiDefinition(String apiDefinition, String apiId) throws APIManagerException {
+	public void updateAPIOpenapiDefinition(String apiDefinition, String apiId) throws UpdateAPIOpenapiDefinitionException {
 		final Mono<String> mono = populateRequestWithAdminRegistrationId(HttpMethod.PUT, buildPublisherURIPath(API_UPDATE_SWAGGER_DEFINITION_PATH), Map.of(API_ID, apiId))
 				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.body(BodyInserters.fromMultipartData(API_DEFINITION, apiDefinition))
 				.retrieve()
 				.bodyToMono(String.class);
-		MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		MonoUtils.blockOrThrow(mono, e -> new UpdateAPIOpenapiDefinitionException(apiId, apiDefinition, e));
 	}
 
-	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws APIManagerException {
+	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws UpdateAPILifecycleStatusException {
 		final Mono<APIWorkflowResponse> mono = populateRequestWithAdminRegistrationId(HttpMethod.POST, buildPublisherURIPath(API_UPDATE_LIFECYCLE_STATUS_PATH),
 				uriBuilder -> uriBuilder
 						.queryParam(API_ID, apiId)
@@ -113,13 +118,13 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 				.contentType(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(APIWorkflowResponse.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new UpdateAPILifecycleStatusException(apiId, apiLifecycleStatusAction, e));
 	}
 
-	public void deleteAPI(String apiId) throws APIManagerException {
+	public void deleteAPI(String apiId) throws APIsOperationWithIdException {
 		final Mono<Void> mono = populateRequestWithAdminRegistrationId(HttpMethod.DELETE, buildPublisherURIPath(API_GET_PATH), Map.of(API_ID, apiId))
 				.retrieve()
 				.bodyToMono(Void.class);
-		MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
 	}
 }

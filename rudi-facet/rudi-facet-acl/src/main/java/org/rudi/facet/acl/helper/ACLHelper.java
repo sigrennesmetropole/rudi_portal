@@ -1,16 +1,24 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.acl.helper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.rudi.facet.acl.bean.AddressType;
 import org.rudi.facet.acl.bean.ClientKey;
+import org.rudi.facet.acl.bean.EmailAddress;
 import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserPageResult;
@@ -28,7 +36,7 @@ import lombok.Getter;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
- * 
+ *
  * @author FNI18300
  *
  */
@@ -42,6 +50,10 @@ public class ACLHelper {
 	private static final String LIMIT_PARAMETER = "limit";
 
 	private static final String ACTIVE_PARAMETER = "active";
+
+	private static final String CODE_PARAMETER = "code";
+
+	private static final String ROLE_UUIDS_PARAMETER = "role-uuids";
 
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.search.url:/acl/v1/roles}")
@@ -68,11 +80,11 @@ public class ACLHelper {
 	private WebClient loadBalancedWebClient;
 
 	/**
-	 * Accède au service µProviders pour trouver un provider par son uuid
-	 * 
-	 * @param providerUuid
-	 * @return le provider
+	 * Accède au service µACL pour trouver un utilisateur par son uuid
+	 *
+	 * @return l'utilisateur, <code>null</code> si l'utilisateur n'existe pas
 	 */
+	@Nullable
 	public User getUserByUUID(UUID userUuid) {
 		if (userUuid == null) {
 			throw new IllegalArgumentException("user uuid required");
@@ -110,7 +122,7 @@ public class ACLHelper {
 			throw new IllegalArgumentException("login required");
 		}
 
-		UserPageResult pageResult = loadBalancedWebClient.get().uri(buildUsersSearchURL(login)).retrieve()
+		UserPageResult pageResult = loadBalancedWebClient.get().uri(buildUsersSearchURL(login, null, 1)).retrieve()
 				.bodyToMono(UserPageResult.class).block();
 		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
 			result = pageResult.getElements().get(0);
@@ -152,9 +164,32 @@ public class ACLHelper {
 	 * @return le provider correspondant
 	 */
 	public List<Role> searchRoles() {
-		Role[] roles = loadBalancedWebClient.get().uri(buildRolesSearchURL()).retrieve().bodyToMono(Role[].class)
+		Role[] roles = loadBalancedWebClient.get().uri(buildRolesSearchURL(null)).retrieve().bodyToMono(Role[].class)
 				.block();
 		return Arrays.stream(roles).collect(Collectors.toList());
+	}
+
+	/**
+	 * Retourne la liste des utilisateurs associé à un rôle dont le code est passé en paramètre
+	 * 
+	 * @param roleCode
+	 * @return
+	 */
+	@NotNull
+	public List<User> searchUsers(String roleCode) {
+		List<User> result = new ArrayList<>();
+		Role[] roles = loadBalancedWebClient.get().uri(buildRolesSearchURL(roleCode)).retrieve()
+				.bodyToMono(Role[].class).block();
+		if (ArrayUtils.isNotEmpty(roles)) {
+			UserPageResult pageResult = loadBalancedWebClient
+					.get().uri(buildUsersSearchURL(null,
+							Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList()), 1))
+					.retrieve().bodyToMono(UserPageResult.class).block();
+			if (pageResult != null && pageResult.getElements() != null) {
+				result.addAll(pageResult.getElements());
+			}
+		}
+		return result;
 	}
 
 	protected String buildUsersGetDeleteURL(UUID value) {
@@ -169,18 +204,33 @@ public class ACLHelper {
 		return urlBuilder.toString();
 	}
 
-	protected String buildUsersSearchURL(String login) {
+	protected String buildUsersSearchURL(String login, List<UUID> roleUuids, int limit) {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(getAclServiceURL()).append(getUsersEndpointSearchURL());
-		urlBuilder.append("?").append(LIMIT_PARAMETER).append('=').append(1);
-		urlBuilder.append('&').append(USER_LOGIN_PARAMETER).append('=').append(login);
+		boolean and = false;
+		if (limit > 0) {
+			and = andOrWhat(urlBuilder, and);
+			urlBuilder.append(LIMIT_PARAMETER).append('=').append(1);
+		}
+		if (StringUtils.isNotEmpty(login)) {
+			and = andOrWhat(urlBuilder, and);
+			urlBuilder.append(USER_LOGIN_PARAMETER).append('=').append(login);
+		}
+		if (CollectionUtils.isNotEmpty(roleUuids)) {
+			andOrWhat(urlBuilder, and);
+			urlBuilder.append(ROLE_UUIDS_PARAMETER).append('=')
+					.append(roleUuids.stream().map(UUID::toString).collect(Collectors.joining(",")));
+		}
 		return urlBuilder.toString();
 	}
 
-	protected String buildRolesSearchURL() {
+	protected String buildRolesSearchURL(String code) {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(getAclServiceURL()).append(getRolesEndpointSearchURL());
 		urlBuilder.append("?").append(ACTIVE_PARAMETER).append('=').append(true);
+		if (StringUtils.isNotEmpty(code)) {
+			urlBuilder.append("&").append(CODE_PARAMETER).append('=').append(code);
+		}
 		return urlBuilder.toString();
 	}
 
@@ -189,4 +239,37 @@ public class ACLHelper {
 		urlBuilder.append(getAclServiceURL()).append(getClientKeyEndpointURL());
 		return urlBuilder.toString();
 	}
+
+	public String lookupEMailAddress(User user) {
+		String result = null;
+		if (CollectionUtils.isNotEmpty(user.getAddresses())) {
+			result = user.getAddresses().stream().filter(a -> a.getType() == AddressType.EMAIL)
+					.map(a -> ((EmailAddress) a).getEmail()).findFirst().orElse(null);
+		}
+		if (StringUtils.isEmpty(result) && user.getLogin().contains("@")) {
+			return user.getLogin();
+		}
+		return result;
+	}
+
+	public List<String> lookupEmailAddresses(List<User> users) {
+		List<String> result = new ArrayList<>();
+		for (User user : users) {
+			String email = lookupEMailAddress(user);
+			if (StringUtils.isNotEmpty(email)) {
+				result.add(email);
+			}
+		}
+		return result;
+	}
+
+	protected boolean andOrWhat(StringBuilder urlBuilder, boolean and) {
+		if (and) {
+			urlBuilder.append("&");
+		} else {
+			urlBuilder.append("?");
+		}
+		return true;
+	}
+
 }

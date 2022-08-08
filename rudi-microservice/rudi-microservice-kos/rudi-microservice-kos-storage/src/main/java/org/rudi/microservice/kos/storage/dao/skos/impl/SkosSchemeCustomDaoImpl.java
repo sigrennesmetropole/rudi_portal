@@ -6,7 +6,6 @@ import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.kos.core.bean.SkosSchemeSearchCriteria;
 import org.rudi.microservice.kos.storage.dao.skos.SkosSchemeCustomDao;
 import org.rudi.microservice.kos.storage.entity.skos.SkosSchemeEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,14 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class SkosSchemeCustomDaoImpl extends AbstractCustomDaoImpl implements SkosSchemeCustomDao {
+public class SkosSchemeCustomDaoImpl extends AbstractCustomDaoImpl<SkosSchemeEntity, SkosSchemeSearchCriteria> implements SkosSchemeCustomDao {
 
     // Champs utilisés pour le filtrage
     public static final String FIELD_OPENING_DATE = "openingDate";
     public static final String FIELD_CLOSING_DATE = "closingDate";
 
-    @Autowired
-    private EntityManager entityManager;
+    public SkosSchemeCustomDaoImpl(EntityManager entityManager) {
+        super(entityManager, SkosSchemeEntity.class);
+    }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)

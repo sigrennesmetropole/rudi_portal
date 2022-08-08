@@ -1,0 +1,270 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+
+/***** Nav bar style *********/
+
+.header-nav {
+    color: black;
+}
+
+.header-logo-container {
+    position: absolute;
+    z-index: -1;
+}
+
+.nav-item {
+    background: $secondary-color;
+}
+
+.header-logo {
+    width: 100px;
+    height: 40px;
+}
+
+.search-icon-mobile {
+    line-height: 3;
+    font-size: 19px;
+    color: $rudi-header-primary-color;
+}
+
+.custom-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,39,72)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.custom-toggler.navbar-toggler {
+    border-color: rgb(0, 39, 72);
+}
+
+.header-btn-toggle {
+    border-left: none;
+    border-bottom: none;
+    border-top: none;
+    border-right: none;
+    color: $rudi-header-primary-color;
+}
+
+/***** Nav navbar-collaps style *********/
+
+.rudi-header-container {
+    top: $header-version-height;
+    max-width: 100%;
+    width: 100%;
+    height: 94px;
+    position: fixed;
+    z-index: 100;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #d5d8de;
+}
+
+.header-right-menu-items li {
+    display: inline-block;
+    margin-right: 40px;
+}
+
+.header-container-lg li {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 12px;
+    letter-spacing: 0.07em;
+    color: $rudi-header-primary-color;
+    text-transform: uppercase;
+}
+
+.search-icon-desktop {
+    font-size: 17px;
+    line-height: 6;
+}
+
+.header-btn-toggle {
+    border-left: none;
+    border-bottom: none;
+    border-top: none;
+    border-right: none;
+    color: $rudi-header-primary-color;
+}
+
+.navbar-link-color {
+    color: $rudi-header-primary-color;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+
+    &:hover {
+        color: $accent-color-svg;
+    }
+
+    &.active {
+        color: $accent-color-svg !important;
+    }
+}
+
+.collapse ul.header-navbar-link-color > li > a {
+    @extend .navbar-link-color
+}
+
+/***** Fin *********/
+
+
+/**** Partie droite du header avec la loupe ***/
+.header-right-menu-items {
+    color: $rudi-header-primary-color;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    width: 100px;
+    border-left: 1px solid #d5d8de;
+    height: 94px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-version {
+    width: 100%;
+    height: $header-version-height;
+    margin: 0 -20px 0 0;
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    &-title {
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+
+        a {
+            text-decoration: underline;
+        }
+    }
+}
+
+/********* SM container style *********/
+
+.header-container {
+    &-sm, &-md {
+        text-align: center;
+        font-size: 4.5vw !important;
+        line-height: 1.3 !important;
+        padding-bottom: 5px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+
+        .header-btn-mon-compte {
+            text-align: center;
+        }
+
+        .icon-hide-mobile {
+            display: none;
+        }
+
+        .navbar-menu-items {
+            background-color: $rudi-header-primary-color;
+            margin-top: 20px;
+            padding-top: 25px;
+            padding-bottom: 30px;
+            margin-right: -16px;
+            margin-left: -16px;
+        }
+
+        .mon-compte-item {
+            border: solid 1px white;
+            padding: 13px 31px;
+            border-radius: 2px;
+            width: 164px;
+            height: 44px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            line-height: 3;
+        }
+
+        .collapse ul.header-navbar-link-color > li > a.active-item {
+            color: $accent-color-svg !important;
+        }
+    }
+
+    .header-version {
+        position: fixed;
+        z-index: 100;
+        height: $header-version-height;
+        padding: 8px 0 4px 0;
+
+        &-title {
+            display: inline-block;
+            vertical-align: middle;
+            margin: .5rem;
+            font-size: 12px;
+        }
+    }
+
+    .rudi-icon-launch {
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.notification-connected {
+    position: relative;
+    background: $accent-color-svg;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    bottom: 8px;
+    right: 9px;
+}
+
+.account-btn {
+    cursor: pointer;
+
+    button {
+        @extend .navbar-link-color;
+        padding: 0 8px;
+        border: 1px solid black;
+        width: 150px;
+        border-radius: 2px;
+        background-color: #fff;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: .07em;
+        color: $rudi-header-primary-color;
+
+        &:focus {
+            outline:none;
+        }
+
+        &:hover {
+            border-color: $accent-color-svg;
+        }
+
+        mat-icon {
+            margin-right: 8px;
+        }
+    }
+
+}
+
+*[mat-menu-item] {
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        border-radius: 0;
+    }
+
+}
+
+::ng-deep {
+    .mat-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay,
+    .mat-stroked-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay {
+        opacity: 0 !important;
+    }
+}

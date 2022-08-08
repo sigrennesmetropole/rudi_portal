@@ -1,0 +1,69 @@
+{
+	"fieldDefinitions": [
+		{
+			"name": "string",
+			"label": "Chaine",
+			"type": "STRING",
+			"readOnly": false,
+			"required": true,
+			"multiple": false,
+			"extendedType": "",
+			"validators": [
+				{
+					"type": "MAXLENGTH",
+					"attribute": "10"
+				}
+			]
+		},
+		{
+			"name": "bool",
+			"label": "Booléen",
+			"type": "BOOLEAN",
+			"readOnly": false,
+			"required": true,
+			"multiple": false,
+			"extendedType": "",
+			"validators": [
+			]
+		},
+		{
+			"name": "long",
+			"label": "Long",
+			"type": "LONG",
+			"readOnly": false,
+			"required": false,
+			"multiple": false,
+			"extendedType": "",
+			"validators": [
+				{
+					"type": "POSITIVE"
+				}
+			]
+		},
+		{
+			"name": "double",
+			"label": "Double",
+			"type": "DOUBLE",
+			"readOnly": false,
+			"required": true,
+			"multiple": false,
+			"extendedType": "",
+			"validators": [
+				{
+					"type": "NEGATIVE"
+				}
+			]
+		},
+		{
+			"name": "list",
+			"label": "Liste",
+			"type": "LIST",
+			"readOnly": false,
+			"required": false,
+			"multiple": true,
+			"extendedType": "[{\"code\":\"a\", \"label\": \"A\"},{\"code\":\"b\", \"label\": \"B\"}]",
+			"validators": [
+			]
+		}
+	]
+}

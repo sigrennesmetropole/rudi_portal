@@ -5,6 +5,8 @@ package org.rudi.microservice.gateway.facade.config;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -24,5 +26,6 @@ public class OAuth2TokenData {
 
 	private String jti;
 
+	@JsonProperty("client_id")
 	private String clientId;
 }

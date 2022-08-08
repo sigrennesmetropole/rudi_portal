@@ -1,11 +1,11 @@
 package org.rudi.microservice.konsult.service.exception;
 
-import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceExceptionsStatus;
+import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-public class MetadataNotFoundException extends AppServiceException {
+public class MetadataNotFoundException extends AppServiceNotFoundException {
 	public MetadataNotFoundException(DatasetNotFoundException cause) {
-		super(cause.getMessage(), cause, AppServiceExceptionsStatus.NOT_FOUND);
+		super(new EmptyResultDataAccessException(cause.getMessage(), 1));
 	}
 }

@@ -1,0 +1,11 @@
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+
+:host {
+    display: flex;
+    background-color: $banner-solid-color;
+    height: 60px;
+    padding: 8px 80px;
+    gap: 10px;
+}

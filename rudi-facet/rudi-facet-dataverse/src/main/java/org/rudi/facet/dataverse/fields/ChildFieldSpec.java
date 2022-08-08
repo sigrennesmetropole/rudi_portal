@@ -1,20 +1,23 @@
 package org.rudi.facet.dataverse.fields;
 
-import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.rudi.facet.dataverse.bean.FieldTypeClass;
 
+import lombok.Getter;
+
+import javax.annotation.Nonnull;
+
 public abstract class ChildFieldSpec extends FieldSpec {
+
 	private static final String ID_SEPARATOR = "_";
 
-	@NotNull
+	@Nonnull
 	@Getter
 	private final FieldSpec parent;
 	private Boolean controlledVocabulary;
 
-	ChildFieldSpec(@NotNull FieldSpec parent) {
+	ChildFieldSpec(@Nonnull FieldSpec parent) {
 		this.parent = parent;
 	}
 
@@ -24,8 +27,8 @@ public abstract class ChildFieldSpec extends FieldSpec {
 	public abstract String getLocalName();
 
 	/**
-	 * Par défaut on regarde si les types des valeurs est un Enum pour déterminer si le champ est contrôlé.
-	 * Si on appelle cette méthode alors on indique explicitement que de champ est de type CONTROLLEDVOCABULARY.
+	 * Par défaut on regarde si les types des valeurs est un Enum pour déterminer si le champ est contrôlé. Si on appelle cette méthode alors on indique
+	 * explicitement que de champ est de type CONTROLLEDVOCABULARY.
 	 *
 	 * @return this
 	 */
@@ -47,7 +50,15 @@ public abstract class ChildFieldSpec extends FieldSpec {
 
 	@Override
 	public String getName() {
-		final String parentName = getParentName();
+		return concatenateLocalNameAfter(parent.getName());
+	}
+
+	@Override
+	public String getFacet() {
+		return concatenateLocalNameAfter(parent.getFacet());
+	}
+
+	private String concatenateLocalNameAfter(String parentName) {
 		if (StringUtils.isEmpty(parentName)) {
 			return getLocalName();
 		}
@@ -58,14 +69,25 @@ public abstract class ChildFieldSpec extends FieldSpec {
 		}
 	}
 
-	protected String getParentName() {
-		return parent.getName();
-	}
-
 	@Override
 	public FieldSpecNamingCase getNamingCase() {
 		return parent.getNamingCase();
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return (obj instanceof ChildFieldSpec);
+	}
 
 }

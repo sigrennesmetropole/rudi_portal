@@ -1,6 +1,7 @@
 package org.rudi.facet.kaccess.service.dataset;
 
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataListFacets;
@@ -60,7 +61,7 @@ public interface DatasetService {
 	 * Recherche de jeu de données avec éventuellement les facets
 	 *
 	 * @param datasetSearchCriteria critères de recherche
-	 * @param facets                propriétés pour lesquelles on retourne la liste des valeurs possibles
+	 * @param facets                propriétés pour lesquelles on retourne la liste des valeurs possibles (cf {@link FieldSpec#getFacet()}}
 	 * @return MetadataListFacets
 	 * @throws DataverseAPIException Erreur lors de la recherche
 	 */

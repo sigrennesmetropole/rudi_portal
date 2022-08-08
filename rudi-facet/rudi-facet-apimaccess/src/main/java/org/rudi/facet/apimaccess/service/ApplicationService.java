@@ -9,6 +9,7 @@ import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public interface ApplicationService {
@@ -73,6 +74,15 @@ public interface ApplicationService {
      */
     ApplicationAPISubscription subscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
 
+    /**
+     * Suppression de la souscription de l'application par défaut de l'admin à une API
+     * @param apiId                     Identifiant de l'API
+     * @param username                  username de l'utilisateur
+     * @return                          ApplicationAPISubscription
+     * @throws APIManagerException      Erreur lors de la suppression de la souscription
+     */
+    void unsubscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
+
     boolean hasSubscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
 
     /**
@@ -122,7 +132,7 @@ public interface ApplicationService {
      * @return                      DocumentContent
      * @throws APIManagerException  Erreur lors de la récupération des informations
      */
-    DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username) throws APIManagerException;
+    DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username) throws APIManagerException, IOException;
 
     /**
      * Supprimer une application
@@ -148,4 +158,5 @@ public interface ApplicationService {
      * @return si oui ou non le JDD a une API
      */
     boolean hasApi(UUID globalId, UUID mediaId) throws APIManagerException;
+
 }

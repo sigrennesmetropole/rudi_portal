@@ -9,6 +9,7 @@ import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.AbstractMetadataBlockElementMapper;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 import org.rudi.facet.dataverse.utils.MessageUtils;
 import org.rudi.facet.kaccess.bean.Connector;
 import org.rudi.facet.kaccess.bean.Contact;
@@ -33,7 +34,6 @@ import org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields.RootFie
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -125,8 +125,8 @@ public class RudiMetadataBlockMapper extends AbstractMetadataBlockElementMapper<
 
 	private final Collection<FieldsMapper<?>> fieldsMappers;
 
-	public RudiMetadataBlockMapper(FieldGenerator fieldGenerator, Collection<FieldsMapper<?>> fieldsMappers) {
-		super(fieldGenerator);
+	public RudiMetadataBlockMapper(FieldGenerator fieldGenerator, DateTimeMapper dateTimeMapper, Collection<FieldsMapper<?>> fieldsMappers) {
+		super(fieldGenerator, dateTimeMapper);
 		this.fieldsMappers = fieldsMappers;
 	}
 
@@ -289,11 +289,11 @@ public class RudiMetadataBlockMapper extends AbstractMetadataBlockElementMapper<
 
 			DatasetMetadataBlockElementField startDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(TEMPORAL_SPREAD_START_DATE.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime startDate = getLocalDateTimeFieldValue(startDateField);
+			final var startDate = getOffsetDateTimeFieldValue(startDateField);
 
 			DatasetMetadataBlockElementField endDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(TEMPORAL_SPREAD_END_DATE.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime endDate = getLocalDateTimeFieldValue(endDateField);
+			final var endDate = getOffsetDateTimeFieldValue(endDateField);
 
 			MetadataTemporalSpread temporalSpread = new MetadataTemporalSpread().startDate(startDate).endDate(endDate);
 
@@ -325,23 +325,23 @@ public class RudiMetadataBlockMapper extends AbstractMetadataBlockElementMapper<
 
 			DatasetMetadataBlockElementField createdDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(DATASET_DATES_CREATED.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime created = getLocalDateTimeFieldValue(createdDateField);
+			final var created = getOffsetDateTimeFieldValue(createdDateField);
 
 			DatasetMetadataBlockElementField validatedDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(DATASET_DATES_VALIDATED.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime validated = getLocalDateTimeFieldValue(validatedDateField);
+			final var validated = getOffsetDateTimeFieldValue(validatedDateField);
 
 			DatasetMetadataBlockElementField publishedDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(DATASET_DATES_PUBLISHED.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime published = getLocalDateTimeFieldValue(publishedDateField);
+			final var published = getOffsetDateTimeFieldValue(publishedDateField);
 
 			DatasetMetadataBlockElementField updatedDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(DATASET_DATES_UPDATED.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime updated = getLocalDateTimeFieldValue(updatedDateField);
+			final var updated = getOffsetDateTimeFieldValue(updatedDateField);
 
 			DatasetMetadataBlockElementField deletedDateField = objectMapper.convertValue(
 					temporalSpreadValues.get(DATASET_DATES_DELETED.getName()), DatasetMetadataBlockElementField.class);
-			LocalDateTime deleted = getLocalDateTimeFieldValue(deletedDateField);
+			final var deleted = getOffsetDateTimeFieldValue(deletedDateField);
 
 			ReferenceDates datesDataset = new ReferenceDates().created(created).validated(validated)
 					.published(published).updated(updated).deleted(deleted);
@@ -920,23 +920,23 @@ public class RudiMetadataBlockMapper extends AbstractMetadataBlockElementMapper<
 
 		DatasetMetadataBlockElementField createdDateField = objectMapper.convertValue(
 				metadataInfoValues.get(METADATA_INFO_DATES_CREATED.getName()), DatasetMetadataBlockElementField.class);
-		LocalDateTime created = getLocalDateTimeFieldValue(createdDateField);
+		final var created = getOffsetDateTimeFieldValue(createdDateField);
 
 		DatasetMetadataBlockElementField validatedDateField = objectMapper.convertValue(
 				metadataInfoValues.get(METADATA_INFO_DATES_VALIDATED.getName()), DatasetMetadataBlockElementField.class);
-		LocalDateTime validated = getLocalDateTimeFieldValue(validatedDateField);
+		final var validated = getOffsetDateTimeFieldValue(validatedDateField);
 
 		DatasetMetadataBlockElementField publishedDateField = objectMapper.convertValue(
 				metadataInfoValues.get(METADATA_INFO_DATES_PUBLISHED.getName()), DatasetMetadataBlockElementField.class);
-		LocalDateTime published = getLocalDateTimeFieldValue(publishedDateField);
+		final var published = getOffsetDateTimeFieldValue(publishedDateField);
 
 		DatasetMetadataBlockElementField updatedDateField = objectMapper.convertValue(
 				metadataInfoValues.get(METADATA_INFO_DATES_UPDATED.getName()), DatasetMetadataBlockElementField.class);
-		LocalDateTime updated = getLocalDateTimeFieldValue(updatedDateField);
+		final var updated = getOffsetDateTimeFieldValue(updatedDateField);
 
 		DatasetMetadataBlockElementField deletedDateField = objectMapper.convertValue(
 				metadataInfoValues.get(METADATA_INFO_DATES_DELETED.getName()), DatasetMetadataBlockElementField.class);
-		LocalDateTime deleted = getLocalDateTimeFieldValue(deletedDateField);
+		final var deleted = getOffsetDateTimeFieldValue(deletedDateField);
 
 		return new ReferenceDates().created(created).validated(validated).published(published).updated(updated)
 				.deleted(deleted);

@@ -1,0 +1,43 @@
+<div class="card-description-keyword">
+    <mat-card class="project-card project-card-description">
+        <mat-card-title
+            class="card-demand-label">{{'personalSpace.requestDetail.title'|translate}}
+        </mat-card-title>
+        <app-loader [active]="loading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
+        <mat-card-content *ngIf="!loading">
+            <div class="vertical-space">
+                <label class="data-label">{{'personalSpace.requestDetail.datasetTitle'|translate}}</label> <br>
+                <span class="data-value">{{requestToPrint?.datasetTitle}}</span>
+            </div>
+            <div class="vertical-space">
+                <label class="data-label">{{'personalSpace.requestDetail.requestDate'|translate}}</label> <br>
+                <span class="data-value">{{requestToPrint?.receivedDate.toLocaleString()}}</span>
+            </div>
+            <div class="vertical-space">
+                <label class="data-label">{{'personalSpace.requestDetail.endDate'|translate}}</label> <br>
+                <span class="data-value">{{formatEndDate(requestToPrint?.endDate)}}</span> <!-- get date from RUDI-35 -->
+            </div>
+            <!-- Format et niveau non affiché ?
+            <div class="vertical-space">
+                <label class="data-label">{{'producerAccount.requestDetail.format'|translate}}</label> <br>
+                <span class="data-value">Valeur</span>
+            </div>
+            <div class="vertical-space">
+                <label class="data-label">{{'producerAccount.requestDetail.serviceLevel'|translate}}</label> <br>
+                <span class="data-value">Valeur</span>
+            </div> -->
+            <div class="vertical-space">
+                <label class="data-label">{{'personalSpace.requestDetail.comment'|translate}}</label> <br>
+                <span class="data-value">{{requestToPrint?.comment}}</span>
+            </div>
+        </mat-card-content>
+        <!--                    TODO : Non compris dans l'US-->
+        <!--                    <mat-card-footer class="contact">-->
+        <!--                        <div class="specific-infos">Info spé</div>-->
+        <!--                        <div class="vertical-space">-->
+        <!--                            <label class="data-label">Libelle</label> <br>-->
+        <!--                            <span class="data-value">Valeur</span>-->
+        <!--                        </div>-->
+        <!--                    </mat-card-footer>-->
+    </mat-card>
+</div>

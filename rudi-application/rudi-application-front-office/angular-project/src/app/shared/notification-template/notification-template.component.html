@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-1">
+        <em class="fa {{faIcon}} notif-icon-style mr-2"></em>
+    </div>
+    <div class="col-10">
+        <mat-label [innerHTML]="data.message"></mat-label>
+    </div>
+    <div class="col-1 text-right"  [ngClass]="{'block-icon-close': mediaSize.isDeviceMobile}">
+        <em class="fa fa-times notif-icon-style" (click)="snackBarRef.dismiss()"></em>
+    </div>
+</div>

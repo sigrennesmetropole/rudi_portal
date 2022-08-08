@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.rudi.common.storage.entity.AbstractStampedEntity;
+import org.rudi.common.storage.entity.SkosConceptCodeColumn;
 import org.rudi.microservice.kos.core.common.SchemaConstants;
 
 import javax.persistence.CascadeType;
@@ -19,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "skos_concept", schema = SchemaConstants.DATA_SCHEMA)
+@Table(name = SkosConceptCodeColumn.TABLE_NAME, schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
 @ToString

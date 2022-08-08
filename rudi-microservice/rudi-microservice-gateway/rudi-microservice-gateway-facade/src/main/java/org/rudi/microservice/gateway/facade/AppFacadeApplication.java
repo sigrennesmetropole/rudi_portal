@@ -15,10 +15,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableEurekaClient
 @EnableScheduling
 @EnableCircuitBreaker
-@PropertySource(value = { "classpath:gateway-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/gateway/gateway.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:gateway/gateway-common.properties" })
 @PropertySource(value = {
-		"file:${rudi.config}/gateway/gateway.yml" }, ignoreResourceNotFound = true, factory = YamlPropertySourceFactory.class)
+		"classpath:gateway/gateway.yml" }, ignoreResourceNotFound = true, factory = YamlPropertySourceFactory.class)
 public class AppFacadeApplication {
 
 	public static void main(final String[] args) {

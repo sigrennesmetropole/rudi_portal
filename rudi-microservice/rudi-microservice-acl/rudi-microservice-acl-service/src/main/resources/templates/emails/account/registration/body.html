@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<title>Confirmation de cr&eacute;ation de compte</title>
+<style type="text/css">
+body {font-family: Montserrat; font-size:12px; color:#004680;}
+a {font-weight: bold;color:#004680;}
+a:hover { color:#004680; }
+</style>
+</head>
+<body style="font-family:Montserrat;font-size:12px;	color:#004680;">
+<p>Bonjour,</p>
+<p>Nous vous confirmons la bonne cr&eacute;ation de votre compte sur le portail RUDI. <br/>
+Pour finaliser sa cr&eacute;ation, nous vous remercions de confirmer votre adresse e-mail. 
+Pour cela, veuillez cliquer <a href="${urlServer}${pathServer}?token=${account.token}">ici</a> ou coller le lien suivant dans votre navigateur  : <em>${urlServer}${pathServer}?token=${account.token}</em>
+</p>
+
+<p>
+Ce lien de confirmation n'est valable que pour une dur&eacute;e de 24 heures.<br/>
+Au-del&agrave;, vous serez invit&eacute; &agrave; renouveler votre demande sur <a href="${urlServer}">${urlServer}</a> .
+</p>
+<p>
+Si vous avez reçu ce message alors qu'il ne vous &eacute;tait pas destin&eacute;, il se peut qu'un autre utilisateur ait entr&eacute; votre adresse e-mail par erreur alors qu'il tentait de cr&eacute;er un compte en ligne.<br/>
+Si vous n'avez formul&eacute; aucune demande en ce sens, aucune action suppl&eacute;mentaire de votre part n'est n&eacute;cessaire et vous pouvez ignorer ce message.
+</p>
+<br/>
+<p>A tr&egrave;s bient&ocirc;t,</p>
+<p>L'&eacute;quipe RUDI</p>
+<p><a href="${urlServer}">${urlServer}</a><p>
+</body>
+</html>

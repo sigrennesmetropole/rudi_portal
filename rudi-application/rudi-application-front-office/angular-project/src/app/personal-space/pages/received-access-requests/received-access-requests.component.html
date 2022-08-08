@@ -1,0 +1,16 @@
+<app-page>
+    <app-page-title [title1]="'personalSpace.receivedAccessRequests.title1'|translate"
+                    [title2]="'personalSpace.receivedAccessRequests.title2'|translate"
+                    class="d-flex justify-content-center w-100"></app-page-title>
+
+    <app-tabs>
+        <app-tab [label]="'personalSpace.receivedAccessRequests.tab1'|translate">
+            <ng-template>
+                <app-linked-dataset-tasks></app-linked-dataset-tasks>
+            </ng-template>
+        </app-tab>
+        <app-tab [label]="'personalSpace.receivedAccessRequests.tab2'|translate">
+        </app-tab>
+    </app-tabs>
+
+</app-page>

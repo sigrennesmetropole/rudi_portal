@@ -3,11 +3,11 @@ package org.rudi.facet.dataverse.fields;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -19,25 +19,25 @@ import java.util.List;
 class FieldSpecFromJavaField extends ChildFieldSpec {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldSpecFromJavaField.class);
 
-	@NotNull
+	@Nonnull
 	private final Field javaField;
 
-	private FieldSpecFromJavaField(@NotNull FieldSpec parent, @NotNull Field javaField) {
+	private FieldSpecFromJavaField(@Nonnull FieldSpec parent, @Nonnull Field javaField) {
 		super(parent);
 		this.javaField = javaField;
 
 		parent.getChildren().add(this);
 	}
 
-	FieldSpecFromJavaField(@NotNull FieldSpec parent, Class<?> javaFieldClass, @NotNull String javaFieldName) {
+	FieldSpecFromJavaField(@Nonnull FieldSpec parent, Class<?> javaFieldClass, @Nonnull String javaFieldName) {
 		this(parent, getJavaField(javaFieldClass, javaFieldName));
 	}
 
-	FieldSpecFromJavaField(@NotNull FieldSpec parent, @NotNull String javaFieldName) {
+	FieldSpecFromJavaField(@Nonnull FieldSpec parent, @Nonnull String javaFieldName) {
 		this(parent, parent.getValueType(), javaFieldName);
 	}
 
-	@NotNull
+	@Nonnull
 	private static <T> Field getJavaField(Class<T> javaFieldClass, String javaFieldName) {
 		try {
 			return javaFieldClass.getDeclaredField(javaFieldName);
@@ -72,7 +72,7 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 		}
 	}
 
-	private static Type getListItemType(@NotNull Field javaField) {
+	private static Type getListItemType(@Nonnull Field javaField) {
 		final ParameterizedType parameterizedType = (ParameterizedType) javaField.getGenericType();
 		return parameterizedType.getActualTypeArguments()[0];
 	}

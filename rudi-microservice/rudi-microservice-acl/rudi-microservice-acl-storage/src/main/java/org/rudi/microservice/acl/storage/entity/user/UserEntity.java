@@ -1,8 +1,13 @@
 package org.rudi.microservice.acl.storage.entity.user;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.common.storage.entity.AbstractLongIdEntity;
+import org.rudi.microservice.acl.core.common.SchemaConstants;
+import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
+import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,16 +19,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.rudi.common.storage.entity.AbstractLongIdEntity;
-import org.rudi.microservice.acl.core.common.SchemaConstants;
-import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
-import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * User entity
@@ -40,6 +40,10 @@ public class UserEntity extends AbstractLongIdEntity {
 	@Column(name = "login", length = 100, nullable = false)
 	private String login;
 
+	/**
+	 * Mot de passe <b>encodé</b> de l'utilisateur.
+	 * Cf PasswordHelper#encodePassword(java.lang.String).
+	 */
 	@Column(name = "password", length = 150, nullable = false)
 	private String password;
 
@@ -56,6 +60,18 @@ public class UserEntity extends AbstractLongIdEntity {
 	@Column(name = "company", length = 100)
 	private String company;
 
+	@Column(name = "failed_attempt", nullable = false)
+	private int failedAttempt;
+
+	@Column(name = "last_failed_attempt")
+	private LocalDateTime lastFailedAttempt;
+
+	@Column(name = "last_connexion")
+	private LocalDateTime lastConnexion;
+
+	@Column(name = "account_locked", nullable = false)
+	private boolean accountLocked;
+
 	@ManyToMany
 	@JoinTable(name = "user_role", schema = SchemaConstants.DATA_SCHEMA, joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
 	private Set<RoleEntity> roles;
@@ -63,6 +79,12 @@ public class UserEntity extends AbstractLongIdEntity {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "user_fk")
 	private Set<AbstractAddressEntity> addresses;
+
+	/**
+	 * Peut-on contacter l'utilisateur sur son adresse mail ?
+	 */
+	@NotNull
+	private boolean hasSubscribeToNotifications;
 
 	/**
 	 * Supprime une addresse de la liste
@@ -160,4 +182,31 @@ public class UserEntity extends AbstractLongIdEntity {
 		return true;
 	}
 
+	/**
+	 * Réinit of number of failed attempt
+	 */
+	public void resetFailedAttempt() {
+		setFailedAttempt(0);
+	}
+
+	/**
+	 * Increment failed attempt count
+	 */
+	public void incrementFailedAttempts() {
+		setFailedAttempt(getFailedAttempt() + 1);
+	}
+
+	/**
+	 * Lock the user account
+	 */
+	public void lockAccount() {
+		setAccountLocked(true);
+	}
+
+	/**
+	 * Unlock the user account
+	 */
+	public void unlockAccount() {
+		setAccountLocked(false);
+	}
 }

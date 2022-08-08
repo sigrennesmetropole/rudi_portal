@@ -31,7 +31,7 @@ components:
         authorAffiliation:
           $ref: '#/components/schemas/MediaOrigin' 
         authorName:
-          description: Nom de l'auteur du media (nom du fournisseur ou du producteur)       
+          description: Nom de l'auteur du media (nom du fournisseur ou du producteur ou du projet)
           type: string            
         kindOfData:
           $ref: '#/components/schemas/KindOfData'
@@ -80,4 +80,4 @@ components:
     MediaOrigin:
       description: origine du media (type d'auteur dont provient le media)
       type: string 
-      enum: [provider, producer] 
+      enum: [provider, producer, project]

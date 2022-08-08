@@ -3,9 +3,18 @@
  */
 package org.rudi.microservice.acl.facade.config.security.anonymous;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.facade.config.filter.CommonJwtTokenUtil;
+import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
 import org.rudi.common.facade.config.filter.JwtTokenUtil;
 import org.rudi.common.facade.config.filter.Tokens;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +30,6 @@ import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author FNI18300
@@ -83,12 +84,12 @@ public class AnonymousAuthenticationLoginSuccessHandler implements Authenticatio
 		Object body = null;
 		if (tokenResponse.hasBody()) {
 			body = tokenResponse.getBody();
-			value = CommonJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX
+			value = AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX
 					+ ((body != null) ? ((OAuth2AccessToken) body).getValue() : "");
 		} else {
 			/// ça marche pas on généère nous même
 			AuthenticatedUser user = (AuthenticatedUser) customToken.getDetails();
-			body = jwtTokenUtil.generateTokens(user.getLogin(), user);
+			body = generateTokens(user);
 			value = ((Tokens) body).getJwtToken();
 		}
 
@@ -112,5 +113,15 @@ public class AnonymousAuthenticationLoginSuccessHandler implements Authenticatio
 			return;
 		}
 		session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+	}
+
+	private Tokens generateTokens(AuthenticatedUser user) throws IOException {
+		Tokens tokens = null;
+		try {
+			tokens = jwtTokenUtil.generateTokens(user.getLogin(), user);
+		} catch (Exception e) {
+			throw new IOException("Failed to generate tokens", e);
+		}
+		return tokens;
 	}
 }

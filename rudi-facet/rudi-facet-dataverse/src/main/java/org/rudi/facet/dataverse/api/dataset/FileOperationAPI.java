@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.NotNull;
 import org.rudi.facet.dataverse.api.AbstractDataverseAPI;
 import org.rudi.facet.dataverse.api.exceptions.CannotReplaceUnpublishedFileException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -20,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class FileOperationAPI extends AbstractDataverseAPI {
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	private Dataset getDataset(String mediaPersistentId) throws DataverseAPIException {
 		return datasetOperationAPI.getDataset(mediaPersistentId);
 	}
@@ -73,7 +73,7 @@ public class FileOperationAPI extends AbstractDataverseAPI {
 			final String uri = UriComponentsBuilder
 					.fromHttpUrl(createUrl("files", fileId, "replace"))
 					.toUriString();
-			postFile(uri, file);
+			postFile(uri, file, "{ \"forceReplace\": \"true\" }");
 		} catch (final CannotReplaceUnpublishedFileException e) {
 			final String apiUrl = createUrl();
 			final String datasetUri = UriComponentsBuilder.fromUriString(apiUrl)
@@ -99,7 +99,9 @@ public class FileOperationAPI extends AbstractDataverseAPI {
 		postFile(uri, file);
 	}
 
-	private void postFile(String uri, File file) throws DataverseAPIException {
+	private void postFile(String uri, File file, String... jsonData) throws DataverseAPIException {
+
+		boolean forceReplaceMedia = jsonData.length > 0; //Si on a forcé les types dans l'appel du Post
 
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -108,6 +110,9 @@ public class FileOperationAPI extends AbstractDataverseAPI {
 		final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		body.add("file", new FileSystemResource(file));
 		// On n'ajoute pas le fichier JSON "jsonData" car pour le moment aucune information supplémentaire n'est exploitée
+		if(forceReplaceMedia) {
+			body.add("jsonData", jsonData[0]);
+		}
 
 		final HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 

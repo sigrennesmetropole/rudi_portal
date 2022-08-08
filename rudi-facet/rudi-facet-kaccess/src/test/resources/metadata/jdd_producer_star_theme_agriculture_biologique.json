@@ -36,8 +36,8 @@
 		"cs-CZ"
 	],
 	"temporal_spread": {
-		"start_date": "2021-03-22T12:15:12",
-		"end_date": "2021-06-22T12:15:12"
+		"start_date": "2021-03-22T12:15:12+01:00",
+		"end_date": "2021-06-22T12:15:12+02:00"
 	},
 	"geography": {
 		"bounding_box": {
@@ -80,11 +80,11 @@
 		"number_of_fields": 0
 	},
 	"dataset_dates": {
-		"created": "2021-03-22T12:15:12",
-		"validated": "2021-03-22T12:15:12",
-		"published": "2021-03-22T12:15:12",
-		"updated": "2021-03-22T12:15:12",
-		"deleted": "2021-06-22T12:15:12"
+		"created": "2021-03-22T12:15:12+01:00",
+		"validated": "2021-03-22T12:15:12+01:00",
+		"published": "2021-03-22T12:15:12+01:00",
+		"updated": "2021-03-22T12:15:12+01:00",
+		"deleted": "2021-06-22T12:15:12+02:00"
 	},
 	"storage_status": "online",
 	"access_condition": {
@@ -100,11 +100,11 @@
 	"metadata_info": {
 		"api_version": "1.1.0",
 		"metadata_dates": {
-			"created": "2021-04-01T12:10:48",
-			"validated": "2021-04-01T12:10:48",
-			"published": "2021-04-01T12:10:48",
-			"updated": "2021-04-01T12:10:48",
-			"deleted": "2021-04-01T12:10:48"
+			"created": "2021-04-01T12:10:48+02:00",
+			"validated": "2021-04-01T12:10:48+02:00",
+			"published": "2021-04-01T12:10:48+02:00",
+			"updated": "2021-04-01T12:10:48+02:00",
+			"deleted": "2021-04-01T12:10:48+02:00"
 		},
 		"metadata_provider": {
 			"organization_id": "92c908ad-dcdb-400f-a248-f8adb955e252",

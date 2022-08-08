@@ -13,27 +13,27 @@ import org.rudi.microservice.acl.core.bean.EmailAddress;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.facade.config.security.AbstractDetailServiceImpl;
 import org.rudi.microservice.acl.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author FNI18300
  *
  */
 @Component
+@Slf4j
 public class JwtAuthenticationProvider extends AbstractDetailServiceImpl implements AuthenticationProvider {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationProvider.class);
 
 	@Autowired
 	private UserService userService;
@@ -62,7 +62,7 @@ public class JwtAuthenticationProvider extends AbstractDetailServiceImpl impleme
 				customClientRegistrationRepository.addClientRegistration(login, password);
 			}
 		} catch (Exception e) {
-			LOGGER.error(String.format(
+			log.error(String.format(
 					"Impossible de générer les paramètres d'authentification à l'API Manager pour l'utilisateur %s",
 					login), e);
 		}
@@ -99,16 +99,26 @@ public class JwtAuthenticationProvider extends AbstractDetailServiceImpl impleme
 
 	private void checkUser(User user, String login) {
 		if (user == null) {
-			LOGGER.info("Impossible de trouver l'utilisateur: {}", login);
+			log.info("Impossible de trouver l'utilisateur: {}", login);
 			throw new UsernameNotFoundException("Impossible de trouver l'utilisateur : " + login + ".");
+		} else if (Boolean.TRUE.equals(user.getAccountLocked())) {
+			log.warn("Le compte est vérouillé l'utilisateur: {}", login);
+			throw new LockedException("Le compte est vérouillé");
 		}
 	}
 
 	private void checkPassword(Authentication authentication, User user) {
 		if (!isAnonymous(user)
 				&& !passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
-			LOGGER.info("Mot de passe erroné pour l'utilisateur: {}", user.getLogin());
-			throw new BadCredentialsException("Mot de passe erroné.");
+			if (!userService.recordAuthentication(user.getUuid(), false)) {
+				log.info("Mot de passe erroné pour l'utilisateur: {}", user.getLogin());
+				throw new BadCredentialsException("Mot de passe erroné.");
+			} else {
+				log.info("Compte verouillé: {}", user.getLogin());
+				throw new LockedException("Account is locked");
+			}
+		} else {
+			userService.recordAuthentication(user.getUuid(), true);
 		}
 	}
 

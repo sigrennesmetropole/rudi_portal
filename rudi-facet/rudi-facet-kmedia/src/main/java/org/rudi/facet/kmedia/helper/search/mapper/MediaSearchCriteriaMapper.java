@@ -2,15 +2,14 @@ package org.rudi.facet.kmedia.helper.search.mapper;
 
 import org.rudi.facet.dataverse.api.search.mapper.DatasetSearchCriteriaMapper;
 import org.rudi.facet.dataverse.bean.SearchType;
-import org.rudi.facet.dataverse.model.search.QueryBuilder;
+import org.rudi.facet.dataverse.helper.query.FilterQuery;
 import org.rudi.facet.dataverse.model.search.SearchParams;
 import org.rudi.facet.kmedia.bean.MediaSearchCriteria;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 import static org.rudi.facet.dataverse.constant.CitationMetadataField.AUTHOR_AFFILIATION;
 import static org.rudi.facet.dataverse.constant.CitationMetadataField.AUTHOR_IDENTIFIER;
@@ -33,20 +32,19 @@ public class MediaSearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 	}
 
 	public SearchParams mediaSearchCriteriaToSearchParams(MediaSearchCriteria mediaSearchCriteria) {
-		List<String> fqFilter = new ArrayList<>();
-
-		final String query = new QueryBuilder()
+		final String query = new FilterQuery()
+				.withExactMatch()
 				.add(AUTHOR_IDENTIFIER, mediaSearchCriteria.getMediaAuthorIdentifier())
 				.add(AUTHOR_AFFILIATION, mediaSearchCriteria.getMediaAuthorAffiliation())
 				.add(KIND_OF_DATA, mediaSearchCriteria.getKindOfData())
-				.build();
+				.joinWithAnd();
 
 		// tri
-		String[] criteresTri = extractSortParams(mediaSearchCriteria.getOrder());
+		final var criteresTri = extractSortParams(mediaSearchCriteria.getOrder());
 
 		return SearchParams.builder().q(query).type(EnumSet.of(SearchType.DATASET)).subtree(mediaDataAlias)
-				.start(mediaSearchCriteria.getOffset()).perPage(mediaSearchCriteria.getLimit()).filterQuery(fqFilter)
-				.sortBy(criteresTri[0]).sortOrder(criteresTri[1]).showFacets(false).build();
+				.start(mediaSearchCriteria.getOffset()).perPage(mediaSearchCriteria.getLimit()).filterQuery(Collections.emptyList())
+				.sortBy(criteresTri.field).sortOrder(criteresTri.order.stringValue).showFacets(false).build();
 	}
 
 	@Override

@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {AuthenticationMethod} from "./authentication-method";
-import {HttpParams} from "@angular/common/http";
-import {FormGroup} from "@angular/forms";
+import {AuthenticationMethod, AuthenticationState} from './authentication-method';
+import {HttpParams} from '@angular/common/http';
+import {FormGroup} from '@angular/forms';
+import {URIComponentCodec} from '../codecs/uri-component-codec';
 
 @Injectable({
     providedIn: 'root'
@@ -22,14 +23,21 @@ export class LoginAuthentication extends AuthenticationMethod {
 
     getPayload(formGroup: FormGroup): any {
         const _form = formGroup.value;
-        const identifiant = _form['login'];
-        const password = _form['password'];
-        return new HttpParams().set('login', identifiant).set('password', password);
+        const identifiant = _form.login;
+        const password = _form.password;
+        return new HttpParams({
+            encoder: new URIComponentCodec()
+        })
+            .set('login', identifiant)
+            .set('password', password);
     }
 
     getLogin(formGroup: FormGroup): string {
         const _form = formGroup.value;
-        return _form['login'];
+        return _form.login;
     }
 
+    getTargetState(): AuthenticationState {
+        return AuthenticationState.USER;
+    }
 }

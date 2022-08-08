@@ -1,0 +1,24 @@
+{
+	"properties": [
+		{
+			"name": "security.jwt.access.tokenKey",
+			"type": "java.lang.String",
+			"description": "Token key as a plain string or stored in a file."
+		}
+	],
+	"hints": [
+		{
+			"name": "security.jwt.access.tokenKey",
+			"values": [
+				{
+					"value": "901c990dd69fb05617ccbbae01e73053da60099bb5a759e2286c40471af275eb9c55bc54cb4213db3ca29f528586b862251385f78052439c01fe22268e421b60",
+					"description": "Token key as a plain string."
+				},
+				{
+					"value": "file:/etc/rudi/config/key/id_rsa",
+					"description": "Token key stored in a file."
+				}
+			]
+		}
+	]
+}

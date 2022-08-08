@@ -1,0 +1,10 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+
+.filter-link {
+    margin-left: 15px;
+    font-size: 14px;
+    color: grey;
+    cursor: pointer;
+    text-decoration: underline;
+}

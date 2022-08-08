@@ -1,0 +1,79 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.card-demand-label {
+    height: 36px;
+    margin: 0 105px 8px 2px;
+    font-family: OpenSans;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.72;
+    letter-spacing: normal;
+    text-align: left;
+    color: $black;
+}
+
+.data-label {
+    width: 520px;
+    height: 21px;
+    //margin: 8px 240px 5px 1px;
+    font-family: OpenSans;
+    font-size: 13px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.54;
+    letter-spacing: normal;
+    text-align: left;
+    color: $primary-color;
+}
+
+.data-value {
+    width: 355px;
+    height: 27px;
+    //margin: 28px 404px 5px 2px;
+    font-family: OpenSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: $black;
+}
+
+.vertical-space {
+    margin-bottom: 20px;
+}
+
+.mat-drawer-content {
+    overflow-x: hidden;
+}
+
+.specific-infos {
+    width: 654px;
+    height: 36px;
+    margin: 16px 105px 8px 2px;
+    font-family: OpenSans;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.72;
+    letter-spacing: normal;
+    text-align: left;
+    color: $black;
+}
+
+.contact-label {
+    width: 400px;
+    height: 320px;
+    margin: 32px 36.5px 627.9px 40px;
+    padding: 70px 119px 26px 35px;
+    border-radius: 6px;
+    border: solid 1px ;
+}

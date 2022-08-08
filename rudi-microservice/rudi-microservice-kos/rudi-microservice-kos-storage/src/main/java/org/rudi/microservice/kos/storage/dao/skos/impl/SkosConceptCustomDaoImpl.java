@@ -1,6 +1,5 @@
 package org.rudi.microservice.kos.storage.dao.skos.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
@@ -40,8 +39,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
-public class SkosConceptCustomDaoImpl extends AbstractCustomDaoImpl implements SkosConceptCustomDao {
+public class SkosConceptCustomDaoImpl extends AbstractCustomDaoImpl<SkosConceptEntity, SkosConceptSearchCriteria> implements SkosConceptCustomDao {
 
 	// Champs utilisés pour le filtrage
 	public static final String FIELD_UUID = "uuid";
@@ -59,9 +57,16 @@ public class SkosConceptCustomDaoImpl extends AbstractCustomDaoImpl implements S
 	public static final String FIELD_TARGET = "target";
 	public static final String FIELD_URI = "conceptUri";
 	public static final String FIELD_ICON = "conceptIcon";
-	private final EntityManager entityManager;
-	@Value("${kos.translation.default.language.value:fr}")
-	private String defaultLanguageValue;
+
+	private final String defaultLanguageValue;
+
+	public SkosConceptCustomDaoImpl(
+			EntityManager entityManager,
+			@Value("${kos.translation.default.language.value:fr}") String defaultLanguageValue
+	) {
+		super(entityManager, SkosConceptEntity.class);
+		this.defaultLanguageValue = defaultLanguageValue;
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)

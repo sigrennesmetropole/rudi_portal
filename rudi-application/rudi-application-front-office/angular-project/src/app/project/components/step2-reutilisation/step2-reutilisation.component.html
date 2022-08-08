@@ -1,0 +1,106 @@
+<div class="step-card">
+
+    <div class="step-card-header">
+        <h2 class="step-title">{{'project.stepper.reuse.step2.title' | translate}}</h2>
+        <p class="step-description">{{'project.stepper.reuse.step2.description' | translate}}</p>
+        <p class="step-required-information"><span
+            class="required-symbol">*</span>&nbsp;{{'project.stepper.reuse.step2.requiredInformation' | translate}}
+        </p>
+    </div>
+
+    <form [formGroup]="step2FormGroup">
+
+
+        <label class="step-form-card-label" id="ownerTypeLabel">
+                        <span class="step-form-card-label-title">{{'project.stepper.reuse.step2.ownerType.title' | translate}}
+                            <span class="required-symbol">*</span></span><br/>
+            <span
+                class="step-form-card-label-description">{{'project.stepper.reuse.step2.ownerType.description' | translate}}</span>
+        </label>
+
+        <mat-radio-group
+            formControlName="ownerType"
+            aria-labelledby="ownerTypeLabel"
+            class="step-form-card">
+
+            <!-- Individuel -->
+            <div class="mat-radio-button-container">
+
+                <mat-radio-button checked="true"
+                                  value="USER">{{'project.stepper.reuse.step2.ownerType.user.label' | translate}}</mat-radio-button>
+
+                <div class="mat-radio-button-panel">
+                    <p class="mat-radio-button-description">{{'project.stepper.reuse.step2.ownerType.user.description' | translate}}</p>
+
+                    <div *ngIf="step2FormGroup.get('ownerType').value === 'USER'">
+                        <label for="lastname">{{'project.stepper.reuse.step2.ownerType.lastname'|translate}}<span
+                            class="required-symbol">*</span></label><br/>
+                        <mat-form-field appearance="outline">
+                            <input autocomplete="off" formControlName="lastname"
+                                   id="lastname"
+                                   matInput
+                                   placeholder="{{'project.stepper.reuse.step2.ownerType.lastname'|translate}}"
+                                   required type="text">
+                        </mat-form-field>
+
+                        <br/>
+
+                        <label for="firstname">{{'project.stepper.reuse.step2.ownerType.firstname'|translate}}<span
+                            class="required-symbol">*</span></label><br/>
+                        <mat-form-field appearance="outline">
+                            <input autocomplete="off" formControlName="firstname"
+                                   id="firstname"
+                                   matInput
+                                   placeholder="{{'project.stepper.reuse.step2.ownerType.firstname'|translate}}"
+                                   required type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organisation -->
+            <div class="mat-radio-button-container">
+
+                <mat-radio-button checked="true" (change)="onChangeOwnerType($event)"
+                                  value="ORGANIZATION">{{'project.stepper.common.step2.ownerType.organization.label' | translate}}</mat-radio-button>
+
+                <div class="mat-radio-button-panel">
+                    <p class="mat-radio-button-description">{{'project.stepper.common.step2.ownerType.organization.description' | translate}}</p>
+
+                    <div *ngIf="step2FormGroup.get('ownerType').value === 'ORGANIZATION'">
+                        <label for="organization-name">{{'project.stepper.common.step2.ownerType.organization.name.label'|translate}}<span
+                            class="required-symbol">*</span></label><br/>
+                        <mat-form-field id="organization-name" appearance="outline" *ngIf="organizationItems?.length">
+                            <mat-select placeholder="{{'project.stepper.common.step2.ownerType.organization.name.placeholder'|translate}}"
+                                        formControlName="organizationUuid">
+                                <mat-option *ngFor="let organization of organizationItems" [value]="organization.uuid">
+                                    {{ organization.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+        </mat-radio-group>
+
+        <label class="step-form-card-label" for="contactEmail">
+                        <span
+                            class="step-form-card-label-title">{{'project.stepper.reuse.step2.contactEmail.title' | translate}}
+                            <span class="required-symbol">*</span></span><br/>
+            <span
+                class="step-form-card-label-description">{{'project.stepper.reuse.step2.contactEmail.description' | translate}}</span>
+        </label>
+        <mat-form-field appearance="outline">
+            <input autocomplete="off" formControlName="contactEmail"
+                   id="contactEmail"
+                   matInput
+                   required type="text">
+            <mat-error *ngIf="step2FormGroup.get('contactEmail').errors?.email"
+                       class="stepper-mat-error">
+                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.emailError'|translate}}
+            </mat-error>
+        </mat-form-field>
+
+    </form>
+</div>

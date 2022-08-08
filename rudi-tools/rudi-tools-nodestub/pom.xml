@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-tools</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.3.0</version>
 	</parent>
 	<artifactId>rudi-tools-nodestub</artifactId>
 	<name>rudi-tools-nodestub</name>
@@ -154,9 +154,6 @@
 					<generateModels>true</generateModels>
 					<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
 					<verbose>false</verbose>
-					<typeMappings>
-						<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-					</typeMappings>
 					<configOptions>
 						<dateLibrary>java8</dateLibrary>
 					</configOptions>
@@ -210,7 +207,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.xml</exclude>
-						<exclude>**/nodestub-dev.xml</exclude>
+						<exclude>**/nodestub-dev.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

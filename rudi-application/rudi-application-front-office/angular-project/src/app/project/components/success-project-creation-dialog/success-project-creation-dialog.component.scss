@@ -1,0 +1,67 @@
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+
+#content {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    max-width: 640px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.main-content {
+    padding: 0 60px;
+}
+
+.dialog-header-button {
+    float: right;
+    margin-top: -70px;
+}
+
+.icon-close {
+
+    svg {
+        height: 36px;
+        width: 36px;
+        fill: black;
+        opacity: 0.54;
+        border: solid 1px grey;
+        border-radius: 20px;
+        padding: 5px;
+    }
+
+    svg:hover {
+        opacity: 1;
+        background-color: $focus;
+        fill: white;
+    }
+}
+
+.title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: $primary-color;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: $primary-color;
+}
+
+.content-text {
+    text-align: center;
+}
+
+.body-text {
+    font-size: 16px;
+}
+
+.link-text {
+    font-size: 16px;
+    color: $primary-color;
+    text-decoration: underline;
+    font-weight: bold;
+}

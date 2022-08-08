@@ -3,17 +3,15 @@
  */
 package org.rudi.common.storage.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
-import org.rudi.common.core.Coded;
-import org.rudi.common.core.Labelized;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.rudi.common.core.Coded;
+import org.rudi.common.core.Labelized;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * @author FNI18300
@@ -25,9 +23,11 @@ import lombok.ToString;
 @ToString
 public abstract class AbstractLabelizedEntity extends AbstractLongIdEntity implements Coded, Labelized, Serializable {
 
+	public static final String CODE_COLUMN_NAME = "code";
+	public static final int CODE_COLUMN_LENGTH = 30;
 	private static final long serialVersionUID = 3642617461998137595L;
 
-	@Column(name = "code", length = 30, nullable = false)
+	@Column(name = CODE_COLUMN_NAME, length = CODE_COLUMN_LENGTH, nullable = false)
 	private String code;
 
 	@Column(name = "label", length = 100)

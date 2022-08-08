@@ -45,6 +45,10 @@ public abstract class AbstractAddressEntity extends AbstractLongIdEntity impleme
 	@JoinColumn(name = "address_role_fk")
 	private AddressRoleEntity addressRole;
 
+	protected AbstractAddressEntity(AddressType type) {
+		this.type = type;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

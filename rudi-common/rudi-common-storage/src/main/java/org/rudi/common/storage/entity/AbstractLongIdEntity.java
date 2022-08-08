@@ -33,7 +33,7 @@ public abstract class AbstractLongIdEntity implements LongId, Serializable {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "uuid", nullable = false)
+	@Column(name = "uuid", nullable = false, unique = true)
 	private UUID uuid;
 
 	@Override

@@ -1,0 +1,21 @@
+@import "src/app/styles/common-style";
+
+button, button.mat-raised-button {
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 6px;
+    background-color: $primary-color;
+    color: $secondary-color;
+    font-family: OpenSans, sans-serif;
+    font-size: 14px;
+    font-stretch: normal;
+    font-style: normal;
+    margin: 0 auto;
+    height: 42px;
+
+    &:hover {
+        background-color: $focus;
+        color: $secondary-color;
+    }
+
+}

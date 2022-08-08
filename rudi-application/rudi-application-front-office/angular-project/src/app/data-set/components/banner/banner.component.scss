@@ -1,0 +1,56 @@
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+
+.rudi-filters-toolbar {
+    width: auto;
+    margin: 42px -95px 35px -95px;
+    background-color: #e7e9ed;
+    padding-left: 95px;
+
+    :focus-visible {
+    outline: $focus solid 1px;
+    color: $focus;
+    }
+}
+
+.filter-icon {
+    font-size: 14px;
+    height: 15px;
+}
+
+.mat-menu-panel::-webkit-scrollbar {
+    width: 30px;
+}
+
+.mat-menu-panel::-webkit-scrollbar-track {
+    background: white;
+}
+
+.mat-menu-panel::-webkit-scrollbar-thumb {
+  background-color: $keywords-outline;
+    border-radius: 40px;
+    border: 12px solid white;
+}
+
+.mat-form-field {
+    display: unset;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin-right: 1em;
+    width: 230px;
+}
+
+.route-button {
+    background-color: $primary-color;
+    color: #e7e9ed;
+    font-weight: 600;
+    padding: 7px 22px 7px 22px;
+    line-height: 1.84rem;
+
+    &:hover {
+        background-color: $focus;
+        color: $secondary-color;
+    }
+}

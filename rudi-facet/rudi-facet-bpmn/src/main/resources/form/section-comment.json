@@ -1,0 +1,19 @@
+{
+	"fieldDefinitions": [
+		{
+			"name": "comment-user",
+			"label": "Commentaire sur le traitement",
+			"type": "STRING",
+			"readOnly": false,
+			"required": false,
+			"multiple": false,
+			"extendedType": "textarea",
+			"validators": [
+				{
+					"type": "MAXLENGTH",
+					"attribute": "1024"
+				}
+			]
+		}
+	]
+}

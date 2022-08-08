@@ -9,6 +9,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
 /**
@@ -16,11 +17,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
  */
 @SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
 		"org.rudi.common.storage", "org.rudi.microservice.acl.facade", "org.rudi.microservice.acl.service",
-		"org.rudi.microservice.acl.storage", "org.rudi.facet.apimaccess" })
+		"org.rudi.microservice.acl.storage", "org.rudi.facet.apimaccess", "org.rudi.facet.email",
+		"org.rudi.facet.generator" })
 @EnableEurekaClient
+@EnableScheduling
 @EnableAuthorizationServer
-@PropertySource(value = { "classpath:acl-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/acl/acl.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:acl/acl-common.properties" })
+@PropertySource(value = { "classpath:acl/acl-email.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {

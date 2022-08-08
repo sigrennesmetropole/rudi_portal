@@ -1,0 +1,37 @@
+<div [ngClass]="{'project-card-full-height-sm': mediaSize.isSm || mediaSize.isMd }"
+     class="project-card-full-height">
+    <app-loader [active]="isLoading">
+    </app-loader>
+
+    <div *ngIf="projectList && projectList.items.length > 0" class="content"
+         [ngClass]="{'mb-4': projectList?.total <= maxResultsPerPage}">
+        <div class="project-cards-container" fxLayout="row wrap">
+            <div
+                *ngFor="let project of projectListItems | paginate: {
+                              itemsPerPage: maxResultsPerPage,
+                              currentPage: page,
+                              totalItems: projectList.total
+                            }"
+                [ngClass]="{'project-card-container-sm': mediaSize.isSm || mediaSize.isMd,
+                                        'project-card-container-lg':  mediaSize.isLg,
+                                        'project-card-container-xl': mediaSize.isXl,
+                                        'project-card-container-xxl': mediaSize.isXxl}"
+                [class]="resultsPerRow ? 'project-card-container-'+resultsPerRow+'-cards': ''"
+            >
+                <app-project-card (click)="clickProject.emit(project)" [projectCatalogItem]="project">
+                </app-project-card>
+            </div>
+        </div>
+    </div>
+
+    <pagination-controls
+        *ngIf="projectList?.total > maxResultsPerPage"
+        (pageChange)="handlePageChange($event)"
+        [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
+        [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
+        [ngClass]="paginationControlsNgClass"
+        [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate"
+        class="d-flex justify-content-center mt-4 pagination-font-size pagination-container">
+    </pagination-controls>
+
+</div>

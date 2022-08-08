@@ -1,0 +1,9 @@
+<button *ngIf="!emailIsVisible" class="button" (click)="clickContactButton()"
+        mat-raised-button>{{'metaData.contact'|translate}}</button>
+<button *ngIf="emailIsVisible" class="button email" (click)="clickEmailButton()"
+        mat-raised-button>
+    <span>{{email}}</span>
+    <mat-icon *ngIf="!copiedSuccess">content_copy</mat-icon>
+    <mat-icon *ngIf="copiedSuccess">done_all</mat-icon>
+</button>
+

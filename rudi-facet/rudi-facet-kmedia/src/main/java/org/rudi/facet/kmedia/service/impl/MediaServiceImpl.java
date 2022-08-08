@@ -97,7 +97,7 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	private Identifier getOrCreateMediaDatasetFor(MediaOrigin mediaOrigin, UUID mediaAuthorIdentifier, KindOfData kindOfData) throws DataverseAPIException {
-		final MediaDataset existingMediaDataset = getMediaDatasetFor(mediaAuthorIdentifier, kindOfData);
+		final MediaDataset existingMediaDataset = getMediaDatasetFor(mediaAuthorIdentifier, mediaOrigin, kindOfData);
 
 		final Identifier mediaDatasetId;
 		if (existingMediaDataset == null) {
@@ -111,13 +111,14 @@ public class MediaServiceImpl implements MediaService {
 	/**
 	 * @param mediaAuthorIdentifier l'auteur dont on cherche le média associé
 	 * @param kindOfData            type du média demandé
+	 * @param mediaAuthorAffiliation            Affiliation du propriétaire (Producteur ou fournisseur)
 	 * @return le DataSet du média pour cet auteur, <code>null</code> s'il n'existe aucun média du type demandé pour cet auteur
 	 */
 	@Nullable
-	private MediaDataset getMediaDatasetFor(UUID mediaAuthorIdentifier, KindOfData kindOfData) throws DataverseAPIException {
+	private MediaDataset getMediaDatasetFor(UUID mediaAuthorIdentifier, MediaOrigin mediaAuthorAffiliation, KindOfData kindOfData) throws DataverseAPIException {
 		final MediaSearchCriteria mediaSearchCriteria = new MediaSearchCriteria()
 				.kindOfData(kindOfData)
-				.mediaAuthorAffiliation(MediaOrigin.PROVIDER)
+				.mediaAuthorAffiliation(mediaAuthorAffiliation) // before : .mediaAuthorAffiliation(MediaOrigin.PROVIDER)
 				.mediaAuthorIdentifier(mediaAuthorIdentifier)
 				.offset(0)
 				.limit(1);
@@ -193,7 +194,7 @@ public class MediaServiceImpl implements MediaService {
 
 	@Override
 	public void deleteMediaFor(MediaOrigin mediaAuthorAffiliation, UUID mediaAuthorIdentifier, KindOfData kindOfData) throws DataverseAPIException {
-		final MediaDataset mediaDataset = getMediaDatasetFor(mediaAuthorIdentifier, kindOfData);
+		final MediaDataset mediaDataset = getMediaDatasetFor(mediaAuthorIdentifier, mediaAuthorAffiliation, kindOfData);
 		if (mediaDataset != null) {
 			deleteMedia(getIdentifier(mediaDataset));
 		}

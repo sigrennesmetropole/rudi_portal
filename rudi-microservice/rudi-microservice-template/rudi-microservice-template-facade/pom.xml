@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-template</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.3.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-template-facade</artifactId>
@@ -173,7 +173,6 @@
 					<generateApiDocumentation>true</generateApiDocumentation>
 					<generateApis>true</generateApis>
 					<generateModels>false</generateModels>
-					<validateSpec>false</validateSpec>
 					<templateDirectory>${resource-generation-directory}/openapi/generation</templateDirectory>
 					<verbose>false</verbose>
 					<configOptions>
@@ -215,7 +214,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.xml</exclude>
-						<exclude>**/template-dev.xml</exclude>
+						<exclude>**/template-dev.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -242,10 +241,6 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>6.5.5</version>
-				<configuration>
-					<flyway.locations>${project.parent.dir}/rudi-microservice-template-storage/src/main/resources/bdd/
-					</flyway.locations>
-				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>org.postgresql</groupId>
@@ -268,12 +263,6 @@
 			</activation>
 			<properties>
 				<spring.profiles.active>dev</spring.profiles.active>
-
-				<flyway.user>template</flyway.user>
-				<flyway.password>template</flyway.password>
-				<flyway.url>jdbc:postgresql://localhost:5432/template</flyway.url>
-				<flyway.schemas>template</flyway.schemas>
-
 			</properties>
 		</profile>
 
@@ -282,11 +271,6 @@
 			<id>dev-docker</id>
 			<properties>
 				<spring.profiles.active>dev-docker</spring.profiles.active>
-
-				<flyway.user>template</flyway.user>
-				<flyway.password>template</flyway.password>
-				<flyway.url>jdbc:postgresql://localhost:5432/template</flyway.url>
-				<flyway.schemas>template</flyway.schemas>
 			</properties>
 			<build>
 				<plugins>
@@ -318,10 +302,6 @@
 			<id>ic</id>
 			<properties>
 				<spring.profiles.active>ic</spring.profiles.active>
-				<flyway.user>template</flyway.user>
-				<flyway.password>template</flyway.password>
-				<flyway.url>jdbc:postgresql://10.50.1.37:5432/template</flyway.url>
-				<flyway.schemas>template</flyway.schemas>
 			</properties>
 
 		</profile>
@@ -330,10 +310,6 @@
 			<id>prod</id>
 			<properties>
 				<spring.profiles.active>prod</spring.profiles.active>
-				<flyway.user>template</flyway.user>
-				<flyway.password>template</flyway.password>
-				<flyway.url>jdbc:postgresql://10.50.1.37:5432/template</flyway.url>
-				<flyway.schemas>template</flyway.schemas>
 			</properties>
 		</profile>
 

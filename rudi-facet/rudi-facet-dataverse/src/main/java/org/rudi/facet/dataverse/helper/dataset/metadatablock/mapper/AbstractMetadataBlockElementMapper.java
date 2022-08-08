@@ -8,8 +8,7 @@ import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.dataverse.utils.MessageUtils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class AbstractMetadataBlockElementMapper<T> implements MetadataBlockElementMapper<T> {
 	private final FieldGenerator fieldGenerator;
+	private final DateTimeMapper dateTimeMapper;
 
 	protected DatasetMetadataBlockElementField createField(FieldSpec fieldSpec, Object value) {
 		return fieldGenerator.generateField(fieldSpec, value);
@@ -49,18 +49,16 @@ public abstract class AbstractMetadataBlockElementMapper<T> implements MetadataB
 		addOptionalPrimitiveField(stringValue, map, fieldSpec);
 	}
 
-	protected void addOptionalDateTimeField(LocalDateTime dateTime, Map<String, Object> map, FieldSpec fieldSpec) {
+	protected void addOptionalDateTimeField(OffsetDateTime dateTime, Map<String, Object> map, FieldSpec fieldSpec) {
 		if (dateTime != null) {
-			long epochSecond = dateTime.toEpochSecond(ZoneOffset.UTC);
-			DatasetMetadataBlockElementField dateTimeField = fieldGenerator.generateField(fieldSpec, Long.toString(epochSecond));
+			DatasetMetadataBlockElementField dateTimeField = fieldGenerator.generateField(fieldSpec, dateTimeMapper.toDataverseTimestamp(dateTime));
 			map.put(fieldSpec.getName(), dateTimeField);
 		}
 	}
 
-	protected void addMandatoryDateTimeField(LocalDateTime dateTime, Map<String, Object> map, FieldSpec fieldSpec) {
+	protected void addMandatoryDateTimeField(OffsetDateTime dateTime, Map<String, Object> map, FieldSpec fieldSpec) {
 		Objects.requireNonNull(dateTime, MessageUtils.buildErrorMessageRequiredMandatoryAttributes(fieldSpec));
-		long epochSecond = dateTime.toEpochSecond(ZoneOffset.UTC);
-		addMandatoryPrimitiveField(Long.toString(epochSecond), map, fieldSpec);
+		addMandatoryPrimitiveField(dateTimeMapper.toDataverseTimestamp(dateTime), map, fieldSpec);
 	}
 
 	protected DatasetMetadataBlockElementField getField(List<DatasetMetadataBlockElementField> fields, FieldSpec spec) {
@@ -79,15 +77,14 @@ public abstract class AbstractMetadataBlockElementMapper<T> implements MetadataB
 		return field != null && field.getValue() != null ? field.getValue().toString() : "";
 	}
 
-	protected LocalDateTime getLocalDateTimeFieldValue(DatasetMetadataBlockElementField dateTimeField) {
-		LocalDateTime localDateTime = null;
+	protected OffsetDateTime getOffsetDateTimeFieldValue(DatasetMetadataBlockElementField dateTimeField) {
+		OffsetDateTime offsetDateTime = null;
 
 		if (dateTimeField != null && dateTimeField.getValue() != null) {
 
-			long epochSecond = Long.parseLong(dateTimeField.getValue().toString());
-			localDateTime = LocalDateTime.ofEpochSecond(epochSecond, 0, ZoneOffset.UTC);
+			offsetDateTime = dateTimeMapper.fromDataverseTimestamp(dateTimeField.getValue().toString());
 		}
-		return localDateTime;
+		return offsetDateTime;
 	}
 
 	protected Integer getIntegerFieldValue(DatasetMetadataBlockElementField integerField) {

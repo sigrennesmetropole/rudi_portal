@@ -3,18 +3,18 @@
  */
 package org.rudi.microservice.acl.service.user;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.net.ssl.SSLException;
-import javax.validation.Valid;
-
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.ClientKey;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import javax.net.ssl.SSLException;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Service de gestion des utilisateurs Rudi
@@ -23,6 +23,10 @@ import org.springframework.data.domain.Pageable;
  *
  */
 public interface UserService {
+
+	int getMaxFailedAttempt();
+
+	int getLockDuration();
 
 	/**
 	 * Charge la liste paginée des utilisateurs en fonction de critères de recherche
@@ -40,6 +44,14 @@ public interface UserService {
 	 * @return
 	 */
 	User getUser(UUID uuid);
+
+	/**
+	 * Retourne un utilisateur en fonction de son uuid, avec uniquement les propriétés minimales
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	User getUserInfo(UUID uuid);
 
 	/**
 	 * Retourne l'utilisateur connecté
@@ -125,10 +137,24 @@ public interface UserService {
 
 	/**
 	 * Récupération des clés WSO2 d'un utilisateur
-	 * @param login				login de l'utilisateur
-	 * @return					ClientKey
-	 * @throws SSLException		Erreur lors de la récupération des clés
+	 * 
+	 * @param login login de l'utilisateur
+	 * @return ClientKey
+	 * @throws SSLException Erreur lors de la récupération des clés
 	 */
-	ClientKey getClientKeyByLogin(String login) throws SSLException;
+	ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException;
 
+	/**
+	 * Enregistre une authentification avec ou sans succès
+	 * 
+	 * @param userUuid
+	 * @param success
+	 * @return true if account is locked
+	 */
+	boolean recordAuthentication(UUID userUuid, boolean success);
+
+	/**
+	 * Déverouille les comptes après un certains délais
+	 */
+	void unlockUsers();
 }

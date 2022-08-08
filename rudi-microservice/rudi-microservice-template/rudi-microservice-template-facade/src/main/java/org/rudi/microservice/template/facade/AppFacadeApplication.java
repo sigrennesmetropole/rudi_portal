@@ -10,12 +10,16 @@ import org.springframework.context.annotation.PropertySource;
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
-		"org.rudi.common.storage", "org.rudi.microservice.template.facade", "org.rudi.microservice.template.service",
-		"org.rudi.microservice.template.storage" })
+@SpringBootApplication(scanBasePackages = {
+		"org.rudi.common.facade",
+		"org.rudi.common.service",
+		"org.rudi.common.storage",
+		"org.rudi.microservice.template.facade",
+		"org.rudi.microservice.template.service",
+		"org.rudi.microservice.template.storage",
+})
 @EnableEurekaClient
-@PropertySource(value = { "classpath:template-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/template/template.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:template/template-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {

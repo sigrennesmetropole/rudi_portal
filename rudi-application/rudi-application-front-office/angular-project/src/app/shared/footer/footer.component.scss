@@ -1,0 +1,245 @@
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+
+.mat-divider.mat-divider-horizontal {
+    margin: 0 80px 0 80px !important;
+    color: $keywords-outline;
+}
+
+.mat-divider.mat-divider-horizontal-mobile {
+    margin: 0 20px 0 20px !important;
+    color: $keywords-outline;
+}
+
+.rudi-footer-container {
+    background-color: $secondary-color;
+    height: 170px;
+    padding-bottom: 16px;
+    position: relative;
+
+    &-lg {
+        background-color: $secondary-color;
+        height: 70px;
+        position: relative;
+
+        .toolbar-icon {
+            color: $primary-color;
+        }
+
+        .mat-divider.mat-divider-vertical {
+            margin: 0 15px;
+        }
+
+        .mat-toolbar-row {
+            padding: 0 80px 0 80px;
+        }
+
+        .bandeau-bleu-footer {
+            margin-top: 59px;
+            background-color: $primary-color;
+            min-height: 80px;
+            height: 80px;
+
+            .rudi-label-lien {
+                color: $secondary-color;
+                font-size: 13px;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+            }
+
+            .mat-divider {
+                background-color: $secondary-color;
+            }
+
+            .rudi-icon-bottom {
+                color: $secondary-color;
+            }
+
+            .fa-icon-style {
+                color: $secondary-color;
+                font-size: 20px;
+            }
+
+            .fa-angle-marge {
+                margin-left: 157px;
+            }
+        }
+
+        .mat-divider-vertical {
+            background-color: $primary-color;
+        }
+    }
+
+    .rudi-social-network {
+        border-bottom: 1px solid $keywords-outline;
+        height: 60px;
+        margin-bottom: 22px;
+    }
+
+}
+
+.mat-divider.mat-divider-vertical {
+    height: 15px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.rudi-icon-language {
+    margin-left: 78px;
+}
+
+.footer-expand-icon {
+    height: 31px;
+    width: 31px;
+
+    .footer-expand-margin {
+        margin-top: -10px;
+    }
+}
+
+.footer-expand-icon-md {
+    height: 28px;
+    width: 28px;
+
+    .footer-expand-margin {
+        margin-top: -15px;
+    }
+}
+
+.text-underline {
+    text-decoration: underline !important;
+}
+
+#menu-footer-md li::after {
+    content: "|";
+    float: right;
+    color: $secondary-color;
+}
+
+.footer-cgu {
+    height: 80px;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.rudi-icon-bottom {
+    background-color: transparent;
+    opacity: 0.5;
+    color: $secondary-color;
+}
+
+.rudi-label-lien {
+    font-size: 13px;
+    color: $primary-color;
+    margin-right: -8px;
+    margin: 0px -9px 0 -9px;
+}
+
+.footer-menu-lg {
+
+    a {
+        color: $primary-color;
+        font-size: 14px;
+        white-space: normal;
+
+        &:hover {
+            color: $accent-color-svg;
+            text-decoration: none !important;
+        }
+    }
+
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.footer-cgu a {
+    text-decoration: none;
+}
+
+.fa-icon-style:hover {
+    color: $accent-color-svg !important;
+}
+
+.fa-icon-style-mobile:hover {
+    color: $accent-color-svg;
+}
+
+/*******mobile********/
+.btn-nous-contacter {
+    color: $accent-color-svg;
+    background-color: $secondary-color;
+    line-height: 1;
+    border: 1px solid $accent-color-svg;
+    border-radius: 1px;
+    width: 162px;
+    height: 32px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding: 7px 0 0 0;
+
+
+    a {
+        color: $accent-color-svg;
+    }
+}
+
+.btn-nous-contacter:hover {
+    color: $secondary-color;
+    background-color: $accent-color-svg;
+    line-height: 1;
+    border: 1px solid $accent-color-svg;
+    border-radius: 1px;
+    width: 162px;
+    height: 32px;
+    text-decoration: none !important;
+
+    a {
+        text-decoration: none !important;
+        color: $secondary-color;
+    }
+}
+
+.rudi-label-lien-mobile {
+    font-size: 13px;
+    color: $secondary-color;
+    margin: 0 9px 0 6px;
+    font-weight: 400;
+}
+
+.rudi-label-lien-mobile-mention {
+    font-size: 13px;
+    color: $primary-color;
+    margin: 0 9px 0 6px;
+
+    &:hover {
+        color: $accent-color-svg;
+        text-decoration: none !important;
+}
+}
+
+.mat-divider.divider-bleu {
+    border-right-color: $primary-color;
+    opacity: 0.5;
+}
+
+.fa-icon-style-mobile {
+    color: $secondary-color;
+}
+
+.toolbar-row-copyright {
+    margin-top: 53px;
+    display: inline-block;
+    min-height: 200px !important;
+    height: 200px !important;
+    background-color: $primary-color;
+}
+
+

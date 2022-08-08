@@ -1,12 +1,14 @@
 package org.rudi.facet.apimaccess.api.subscription;
 
+import lombok.extern.slf4j.Slf4j;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
 import org.rudi.facet.apimaccess.api.ManagerAPIProperties;
 import org.rudi.facet.apimaccess.api.MonoUtils;
 import org.rudi.facet.apimaccess.bean.ApplicationAPISubscription;
 import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptionSearchCriteria;
 import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptions;
-import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APISubscriptionException;
+import org.rudi.facet.apimaccess.exception.SubscriptionOperationException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -25,6 +27,7 @@ import static org.rudi.facet.apimaccess.constant.QueryParameterKey.SUBSCRIPTION_
 
 @Component
 @SuppressWarnings({ "java:S1075" })
+@Slf4j
 public class SubscriptionOperationAPI extends AbstractManagerAPI {
 
 	private static final String SUBSCRIPTION_PATH = "/subscriptions";
@@ -37,7 +40,7 @@ public class SubscriptionOperationAPI extends AbstractManagerAPI {
 		super(webClient, managerAPIProperties);
 	}
 
-	public ApplicationAPISubscriptions searchApplicationAPISubscriptions(ApplicationAPISubscriptionSearchCriteria applicationAPISubscriptionSearchCriteria, String username) throws APIManagerException {
+	public ApplicationAPISubscriptions searchApplicationAPISubscriptions(ApplicationAPISubscriptionSearchCriteria applicationAPISubscriptionSearchCriteria, String username) throws SubscriptionOperationException {
 		final Mono<ApplicationAPISubscriptions> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(SUBSCRIPTION_PATH),
 				uriBuilder -> uriBuilder
 						.queryParam(API_ID, applicationAPISubscriptionSearchCriteria.getApiId())
@@ -46,40 +49,40 @@ public class SubscriptionOperationAPI extends AbstractManagerAPI {
 						.queryParam(OFFSET, applicationAPISubscriptionSearchCriteria.getOffset()).build())
 				.retrieve()
 				.bodyToMono(ApplicationAPISubscriptions.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new SubscriptionOperationException(applicationAPISubscriptionSearchCriteria, username, e));
 	}
 
-	public ApplicationAPISubscription createApplicationAPISubscription(ApplicationAPISubscription applicationAPISubscription, String username) throws APIManagerException {
+	public ApplicationAPISubscription createApplicationAPISubscription(ApplicationAPISubscription applicationAPISubscription, String username) throws APISubscriptionException {
 		final Mono<ApplicationAPISubscription> mono = populateRequestWithRegistrationId(HttpMethod.POST, username, buildDevPortalURIPath(SUBSCRIPTION_PATH))
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(Mono.just(applicationAPISubscription), ApplicationAPISubscription.class)
 				.retrieve()
 				.bodyToMono(ApplicationAPISubscription.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APISubscriptionException(applicationAPISubscription, username, e));
 	}
 
-	public ApplicationAPISubscription updateApplicationAPISubscription(ApplicationAPISubscription applicationAPISubscription, String username) throws APIManagerException {
+	public ApplicationAPISubscription updateApplicationAPISubscription(ApplicationAPISubscription applicationAPISubscription, String username) throws SubscriptionOperationException {
 		final Mono<ApplicationAPISubscription> mono = populateRequestWithRegistrationId(HttpMethod.PUT, username, buildDevPortalURIPath(SUBSCRIPTION_GET_PATH),
 				Map.of(SUBSCRIPTION_ID, applicationAPISubscription.getSubscriptionId()))
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(Mono.just(applicationAPISubscription), ApplicationAPISubscription.class)
 				.retrieve()
 				.bodyToMono(ApplicationAPISubscription.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new SubscriptionOperationException(applicationAPISubscription, username, e));
 	}
 
-	public void deleteApplicationAPISubscription(String subscriptionId, String username) throws APIManagerException {
+	public void deleteApplicationAPISubscription(String subscriptionId, String username) throws SubscriptionOperationException {
 		final Mono<Void> mono = populateRequestWithRegistrationId(HttpMethod.DELETE, username, buildDevPortalURIPath(SUBSCRIPTION_GET_PATH), Map.of(SUBSCRIPTION_ID, subscriptionId))
 				.retrieve()
 				.bodyToMono(Void.class);
-		MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		MonoUtils.blockOrThrow(mono, e -> new SubscriptionOperationException(subscriptionId, username, e));
 	}
 
-	public ApplicationAPISubscription getApplicationAPISubscription(String subscriptionId, String username) throws APIManagerException {
+	public ApplicationAPISubscription getApplicationAPISubscription(String subscriptionId, String username) throws SubscriptionOperationException {
 		final Mono<ApplicationAPISubscription> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(SUBSCRIPTION_GET_PATH), Map.of(SUBSCRIPTION_ID, subscriptionId))
 				.retrieve()
 				.bodyToMono(ApplicationAPISubscription.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new SubscriptionOperationException(subscriptionId, username, e));
 	}
 
 }

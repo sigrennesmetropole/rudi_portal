@@ -17,8 +17,48 @@
 	},
 	"components": {
 		"schemas": {
+			"Account": {
+				"description": "Informations de création de compte utilisateur",
+				"type": "object",
+				"properties": {
+					"login": {
+						"type": "string",
+						"description": "Login de l'utilisateur au format : adresse e-mail"
+					},
+					"password": {
+						"type": "string",
+						"description": "Mot de passe de l'utilisateur"
+					},
+					"lastname": {
+						"type": "string",
+						"description": "Nom de l'utilisateur"
+					},
+					"firstname": {
+						"type": "string",
+						"description": "Prénom de l'utilisateur"
+					},
+					"hasSubscribeToNotifications": {
+						"$ref": "#/components/schemas/UserHasSubscribeToNotificationsParam"
+					}
+				}
+			},
+			"PasswordChange": {
+				"description": "Informations nécessaires pour modifier le mot-de-passe d'un compte",
+				"type": "object",
+				"properties": {
+					"token": {
+						"description": "Token obtenu suite à une demande de changement de mot-de-passe.",
+						"type": "string",
+						"format": "uuid"
+					},
+					"password": {
+						"description": "Le nouveau mot-de-passe",
+						"type": "string"
+					}
+				}
+			},
 			"User": {
-			  "description": "Utilisateur RUDI",
+				"description": "Utilisateur RUDI",
 				"type": "object",
 				"properties": {
 					"uuid": {
@@ -29,57 +69,78 @@
 						"type": "string",
 						"description": "Login de l'utilisateur"
 					},
-		          "password": {
-		            "type": "string",
-		            "description": "Mot de passe de l'utilisateur"
-		          },
-		          "lastname": {
-		            "type": "string",
-		            "description": "Nom de l'utilisateur"
-		          },
-		          "firstname": {
-		            "type": "string",
-		            "description": "Prénom de l'utilisateur"
-		          },
-		          "company": {
-		            "type": "string",
-		            "description": "Société de l'utilisateur (nom de l'association/start-up/entreprise à laquelle il est rattaché)"
-		          },
-		          "type": {
-		            "$ref": "#/components/schemas/UserType",
-		            "required": "true"
-		          },
-				  "addresses": {
+					"password": {
+						"type": "string",
+						"description": "Mot de passe de l'utilisateur"
+					},
+					"lastname": {
+						"type": "string",
+						"description": "Nom de l'utilisateur"
+					},
+					"firstname": {
+						"type": "string",
+						"description": "Prénom de l'utilisateur"
+					},
+					"company": {
+						"type": "string",
+						"description": "Société de l'utilisateur (nom de l'association/start-up/entreprise à laquelle il est rattaché)"
+					},
+					"failedAttempt": {
+						"type": "integer",
+						"description": "Nombre d'essaie infrusteux"
+					},
+					"lastFailedAttempt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date/heure de dernier essai infructueux "
+					},
+					"lastConnexion": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date/heure de dernière connexion"
+					},
+					"accountLocked": {
+						"type": "boolean",
+						"description": "Compte bloqué"
+					},
+					"type": {
+						"$ref": "#/components/schemas/UserType",
+						"required": "true"
+					},
+					"addresses": {
 						"type": "array",
 						"items": {
 							"$ref": "#/components/schemas/AbstractAddress"
 						}
-				  },
-				  "roles": {
+					},
+					"roles": {
 						"type": "array",
 						"items": {
 							"$ref": "#/components/schemas/Role"
 						}
-				  }		                              					
+					},
+					"hasSubscribeToNotifications": {
+						"$ref": "#/components/schemas/UserHasSubscribeToNotificationsParam"
+					}
 				}
 			},
-			  "UserType": {
-	          "description": "Type d'utilisateur (personne, robot)",
-	          "type": "string",
-	          "enum": [
-	            "PERSON",
-	            "ROBOT"
-	          ]
-	        },				
-	        "AddressType": {
-	          "description": "Type d'adresse (postale, téléphonique, courriel)",
-	          "type": "string",
-	          "enum": [
-	            "POSTAL",
-	            "PHONE",
-	            "EMAIL"
-	          ]
-	        },
+			"UserType": {
+				"description": "Type d'utilisateur (personne, robot)",
+				"type": "string",
+				"enum": [
+					"PERSON",
+					"ROBOT"
+				]
+			},
+			"AddressType": {
+				"description": "Type d'adresse (postale, téléphonique, courriel)",
+				"type": "string",
+				"enum": [
+					"POSTAL",
+					"PHONE",
+					"EMAIL"
+				]
+			},
 			"AbstractAddress": {
 				"discriminator": {
 					"propertyName": "type",
@@ -120,7 +181,6 @@
 					"label": {
 						"type": "string",
 						"description": "Libellé de l'adresse"
-						
 					},
 					"type": {
 						"$ref": "#/components/schemas/AddressType"
@@ -217,7 +277,6 @@
 					"label": {
 						"type": "string",
 						"description": "Libelle du rôle"
-						
 					},
 					"openingDate": {
 						"type": "string",
@@ -244,6 +303,11 @@
 						"format": "int64"
 					}
 				}
+			},
+			"UserHasSubscribeToNotificationsParam": {
+				"description": "Peut-on contacter l'utilisateur sur son adresse mail ?",
+				"type": "boolean",
+				"default": false
 			},
 			"UserPageResult": {
 				"allOf": [

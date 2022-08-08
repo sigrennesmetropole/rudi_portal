@@ -1,0 +1,13 @@
+{
+	"rudidatarennes": {
+		"index": "https://rudi.datarennes.fr/",
+		"beta": "https://rudi.datarennes.fr/portail-beta/",
+		"cgu": "https://rudi.datarennes.fr/cgu/",
+		"contact": "https://rudi.datarennes.fr/portail-beta-contact/",
+		"confidentialite": "https://rudi.datarennes.fr/politique-de-confidentialite",
+		"forum": "https://rudi.datarennes.fr/portail-beta-forum/",
+		"mentionsLegales": "https://rudi.datarennes.fr/mentions-legales/",
+		"wiki": "https://rudi.datarennes.fr/yeswiki/?PagePrincipale",
+		"apidocumentation": "https://sigrennesmetropole.github.io/rudi_documentation/api/authentification/"
+	}
+}

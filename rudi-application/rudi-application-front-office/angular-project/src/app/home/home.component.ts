@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BreakpointObserverService} from '../core/services/breakpoint-observer.service';
 
-export interface DialogData {
-}
 
 @Component({
     selector: 'app-home',
@@ -12,7 +10,6 @@ export interface DialogData {
 export class HomeComponent implements OnInit {
 
     mediaSize = {
-        isXs: false,
         isSm: false,
         isMd: false,
         isLg: false,
@@ -20,7 +17,7 @@ export class HomeComponent implements OnInit {
     };
 
     constructor(
-        public breakpointObserver: BreakpointObserverService
+        public breakpointObserver: BreakpointObserverService,
     ) {
     }
 

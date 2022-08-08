@@ -16,6 +16,7 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
+import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.bean.Method;
 import org.rudi.microservice.kalim.core.bean.ProgressStatus;
@@ -23,6 +24,8 @@ import org.rudi.microservice.kalim.service.IntegrationError;
 import org.rudi.microservice.kalim.service.helper.Error500Builder;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.integration.impl.validator.AbstractMetadataValidator;
+import org.rudi.microservice.kalim.service.integration.impl.validator.DatasetCreatorIsAuthenticatedValidator;
+import org.rudi.microservice.kalim.service.integration.impl.validator.MetadataInfoProviderIsAuthenticatedValidator;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 
@@ -56,6 +59,12 @@ class PostIntegrationRequestTreatmentHandlerTest {
 	private DatasetService datasetService;
 	@Mock
 	private APIManagerHelper apiManagerHelper;
+	@Mock
+	private MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator;
+	@Mock
+	private DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator;
+	@Mock
+	private OrganizationHelper organizationHelper;
 	@Captor
 	private ArgumentCaptor<Metadata> metadataArgumentCaptor;
 
@@ -66,8 +75,10 @@ class PostIntegrationRequestTreatmentHandlerTest {
 				apiManagerHelper,
 				objectMapper,
 				Collections.singletonList(validator),
-				error500Builder
-		);
+				error500Builder,
+				metadataInfoProviderIsAuthenticatedValidator,
+				datasetCreatorIsAuthenticatedValidator,
+				organizationHelper);
 
 		when(validator.canBeUsedBy(handler)).thenReturn(true);
 	}

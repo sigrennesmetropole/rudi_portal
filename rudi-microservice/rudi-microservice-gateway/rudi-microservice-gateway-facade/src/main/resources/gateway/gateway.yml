@@ -12,22 +12,18 @@ spring:
       - RemoveRequestHeader=sec-organization
       - RemoveRequestHeader=sec-roles
       routes:
+      - id: acl_service
+        uri: lb://RUDI-ACL/
+        predicates:
+          - Path=/acl/**
+      - id: acl_service_jwt
+        uri: lb://RUDI-ACL/
+        predicates:
+          - Path=/authenticate
       - id: acl_service_oauth2
         uri: lb://RUDI-ACL/
         predicates:
         - Path=/oauth/**
-      - id: acl_service_jwt
-        uri: lb://RUDI-ACL/
-        predicates:
-        - Path=/authenticate
-      - id: acl_service
-        uri: lb://RUDI-ACL/
-        predicates:
-        - Path=/acl/**
-      - id: providers_service
-        uri: lb://RUDI-PROVIDERS/
-        predicates:
-        - Path=/providers/**
       - id: kalim_service
         uri: lb://RUDI-KALIM/
         predicates:
@@ -36,14 +32,22 @@ spring:
         uri: lb://RUDI-KONSULT/
         predicates:
         - Path=/konsult/**
-      - id: template_service
-        uri: lb://RUDI-TEMPLATE/
-        predicates:
-        - Path=/template/**
       - id: kos_service
         uri: lb://RUDI-KOS/
         predicates:
         - Path=/kos/**
+      - id: projekt_service
+        uri: lb://RUDI-PROJEKT/
+        predicates:
+          - Path=/projekt/**
+      - id: strukture_service
+        uri: lb://RUDI-STRUKTURE/
+        predicates:
+          - Path=/strukture/**
+      - id: template_service
+        uri: lb://RUDI-TEMPLATE/
+        predicates:
+          - Path=/template/**
 
 
 

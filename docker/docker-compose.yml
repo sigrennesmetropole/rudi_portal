@@ -4,7 +4,8 @@ version: "3"
 volumes:
   registry_data:
   gateway_data:
-  providers_data:
+  strukture_data:
+  projekt_data:
   konsult_data:
   kalim_data:
   acl_data:
@@ -44,9 +45,9 @@ services:
       - ADD_JAVA_OPTS=
       - XMX=1G
 
-  providers:
-    container_name: providers
-    build: ./providers
+  strukture:
+    container_name: strukture
+    build: ./strukture
     profiles:
       - docker_rudi_on
     depends_on:
@@ -55,7 +56,24 @@ services:
       - "8084:8084"
     volumes:
       - ./config:/etc/rudi/config
-      - providers_data:/opt/rudi/data
+      - strukture_data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+
+  projekt:
+    container_name: projekt
+    build: ./projekt
+    profiles:
+      - docker_rudi_on
+    depends_on:
+      - registry
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./config:/etc/rudi/config
+      - projekt_data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=

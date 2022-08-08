@@ -1,23 +1,96 @@
 @import "../styles/colors";
+@import "../styles/variables-rudi";
 @import "../styles/mat-theming";
 @import "font-open-sans";
 @import "font-montserrat";
 @import '~@angular/material/theming';
+@import 'mixins';
+@import 'functions';
+@import "../styles/variables-rudi";
 
 $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-serif;');
 @include mat-core($custom-typography);
+
+.search-box-title {
+    color: $primary-color;
+    height: 56px;
+
+    span {
+        color: $accent-color;
+        font-weight: normal;
+    }
+
+    &-sm {
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    &-lg {
+        font-weight: bold;
+        font-size: 38px;
+        margin-bottom: 20px;
+    }
+
+}
+
 
 .pagination-container {
     margin-top: 40px;
     width: 100%;
 }
 
-::ng-deep .style-snackbar {
-    color: #FF4658;
+.block-icon-close {
+    margin: 16px 0 0 -20px;
 }
 
+::ng-deep .style-snackbar {
+    color: $secondary-color;
+    width: 75%;
+    position: absolute !important;
+    top: 54px;
+}
+
+::ng-deep .mat-snack-bar-container {
+    transform: scale(1);
+    opacity: 1;
+    z-index: 100;
+    background-color: #004680;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
+    position: fixed;
+    top: 100px;
+    width: 90vw !important;
+    margin: auto !important;
+    left: 0;
+    right: 0;
+    max-width: 95vw !important;
+    min-width: 15vw !important;
+}
+
+::ng-deep .red-snackbar {
+    background: $error-color;
+
+    a {
+        color: $error-color-text;
+        text-decoration: underline;
+    }
+}
+
+::ng-deep .account-error-style {
+    background-color: #d04838 !important;
+    opacity: 1;
+    z-index: 100;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
+    position: fixed;
+    top: 100px;
+    margin: auto;
+    left: 0;
+    right: 0;
+}
+
+
 *:focus-visible {
-    outline: $blue-button solid 1px;
+    outline: $focus solid 1px;
 }
 
 .keywords-row {
@@ -27,7 +100,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 }
 
 .rudi-card-border {
-    border-color: $border-grey;
+    border-color: $blocks-and-menus-outline;
 }
 
 .rudi-simple-menu-button {
@@ -55,14 +128,14 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         box-shadow: none !important;
         color: #000000;
         border-radius: 6px;
-        border: 1px solid $border-grey;
+        border: 1px solid $blocks-and-menus-outline;
         padding-right: 15px;
         margin-right: 12px;
         min-width: 190px;
 
         &.active {
-            border-color: $blue-button;
-            color: $blue-button;
+            border-color: $focus;
+            color: $focus;
         }
 
         &:focus {
@@ -82,6 +155,8 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 
         .mat-badge-content {
             text-align: center !important;
+            color: white !important;
+            background-color: $primary-color !important;
         }
     }
 }
@@ -89,7 +164,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 .rudi-select-panel {
     height: min-content;
     padding: 16px 10px 16px 25px;
-    color: $dark-grey;
+    color: $primary-text;
     font-size: 15px;
 
     ul {
@@ -120,7 +195,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         &.mat-mini-fab.mat-accent {
             background-color: white !important;
             color: $primary-color !important;
-            border: 1px solid $light-grey !important;
+            border: 1px solid $keywords-outline !important;
             box-shadow: none;
         }
 
@@ -131,15 +206,9 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
     }
 }
 
-.rudi-menu, .rudi-sidenav-container {
-    ul {
-        list-style-type: none;
-    }
-}
-
 .rudi-radio-group {
     font-size: 14px;
-    color: $dark-grey;
+    color: $primary-text;
 }
 
 .rudi-radio-button {
@@ -152,7 +221,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         margin: 20px 0 0 0;
         padding: 14px 0 14px 0;
         border-radius: 3px;
-        background-color: $blue-button;
+        background-color: $focus;
         color: white;
         font-size: 16px;
         display: flex;
@@ -160,7 +229,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         justify-content: center;
 
         &.mat-raised-button.mat-button-disabled {
-            background-color: $gray !important;
+            background-color: $primary-text-light !important;
             color: white;
             font-size: 16px;
         }
@@ -172,7 +241,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         margin: 20px 15px 0 0;
         padding: 7px 0 7px 0;
         border-radius: 3px;
-        background-color: $blue-button;
+        background-color: $focus;
         color: white;
         font-size: 14px;
         display: flex;
@@ -180,7 +249,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         justify-content: center;
 
         &.mat-raised-button.mat-button-disabled {
-            background-color: $gray !important;
+            background-color: $primary-text-light !important;
             color: white;
         }
     }
@@ -199,32 +268,32 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
     justify-content: center;
 
     &:hover {
-        background-color: $blue-button;
+        background-color: $focus;
     }
 }
 
 .rudi-btn {
     &-sm {
-        border: 1px solid $light-grey;
+        border: 1px solid $keywords-outline;
         border-radius: 4px;
         height: 30px;
         margin: 0 4px 0;
         padding: 0 7px;
         font-size: 13px;
         font-weight: normal;
-        color: $dark-grey;
+        color: $primary-text;
         min-width: initial;
     }
 
     &-md {
-        border: 1px solid $light-grey;
+        border: 1px solid $keywords-outline;
         border-radius: 4px;
         height: 30px;
         margin-right: 6px;
         padding: 10px 10px 10px 14px;
         font-size: 13px;
         font-weight: normal;
-        color: $dark-grey;
+        color: $primary-text;
         min-width: initial;
     }
 
@@ -236,7 +305,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 
     &-theme-detail {
         font-size: 14px;
-        color: $dark-grey;
+        color: $primary-text;
         background-position-x: 10px;
         background-position-y: center;
         background-size: 20px;
@@ -330,6 +399,12 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
     padding: 150px 80px 30px 80px !important;
 }
 
+.m-large-negative {
+    margin-right: -80px;
+    margin-bottom: -30px;
+    margin-left: -80px;
+}
+
 .p-small {
     padding: 150px 20px 10px 20px !important;
 }
@@ -339,7 +414,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 }
 
 .pl-large {
-    padding-left: 80px !important;
+    padding-left: 50vw !important;
 }
 
 .pl-small {
@@ -370,9 +445,20 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
     font-style: normal;
     letter-spacing: normal;
     color: $secondary-color;
-    background-color: $active-blue;
-    border: 1px solid $active-blue;
+    background-color: $focus;
+    border: 1px solid $focus;
     line-height: 2.5;
+}
+
+.rudi-icon-encircled {
+    border: solid 1px;
+    border-radius: 100%;
+    height: 1.7em;
+    width: 1.7em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .rudi-filter-box-libelle {
@@ -408,14 +494,74 @@ mat-toolbar a:hover {
     text-decoration: underline;
 }
 
-.restricted {
-
-    .svg-primary {
-        fill: $secondary-color;
-    }
-
-}
-
 .disabled {
     pointer-events: none;
+}
+
+.required-symbol {
+    color: $error-color;
+}
+
+.link-bold-underlined-colored {
+    color: $primary-color;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/****Banner / Toolbar container style *****/
+@mixin button-blue() {
+    background-color: $primary-color;
+    color: $banner-solid-color;
+    font-weight: 600;
+    height: 42px;
+}
+
+.bandeau-card {
+    background-color: $banner-solid-color;
+    height: 60px;
+    padding: 8px 80px;
+
+    .button {
+        font-family: OpenSans, sans-serif;
+        cursor: pointer;
+        font-weight: 400;
+        border-radius: 6px;
+    }
+
+    .bandeau-btn-access {
+        @include button-blue;
+
+        .icon-style {
+            color: white;
+        }
+    }
+
+    .bandeau-btn-access:hover {
+        background-color: $focus;
+        color: $secondary-color;
+    }
+
+    .button-info {
+        background-color: $secondary-color;
+        color: $primary-text;
+        font-weight: 600;
+        height: 42px;
+
+        .icon-information {
+            fill: $primary-text;
+            vertical-align: top;
+            margin-right: 10px;
+            height: 22px;
+            width: 22px;
+            font-weight: 400;
+        }
+    }
+}
+
+.sidebar-content-pd{
+    padding: $header-version-height 0 0 0;
+}
+
+.mt-6 {
+    margin-top: 6rem;
 }

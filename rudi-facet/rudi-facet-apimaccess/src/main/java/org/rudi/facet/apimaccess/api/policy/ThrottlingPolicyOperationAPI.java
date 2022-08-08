@@ -7,7 +7,7 @@ import org.rudi.facet.apimaccess.bean.LimitingPolicies;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.PolicyLevel;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
-import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.ThrottlingPolicyOperationException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class ThrottlingPolicyOperationAPI extends AbstractManagerAPI {
 		super(webClient, managerAPIProperties);
 	}
 
-	public LimitingPolicies searchLimitingPoliciesByPublisher(SearchCriteria searchCriteria, PolicyLevel policyLevel) throws APIManagerException {
+	public LimitingPolicies searchLimitingPoliciesByPublisher(SearchCriteria searchCriteria, PolicyLevel policyLevel) throws ThrottlingPolicyOperationException {
 		final Mono<LimitingPolicies> mono = populateRequestWithAdminRegistrationId(HttpMethod.GET, buildPublisherURIPath(POLICY_LIST_PATH),
 				uriBuilder -> uriBuilder
 						.queryParam(OFFSET, searchCriteria.getOffset())
@@ -43,10 +43,10 @@ public class ThrottlingPolicyOperationAPI extends AbstractManagerAPI {
 						.build(Map.of(POLICY_LEVEL, policyLevel.getValue().toLowerCase())))
 				.retrieve()
 				.bodyToMono(LimitingPolicies.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ThrottlingPolicyOperationException(searchCriteria, policyLevel, null, e));
 	}
 
-	public LimitingPolicies searchLimitingPoliciesByDev(SearchCriteria searchCriteria, PolicyLevel policyLevel, String username) throws APIManagerException {
+	public LimitingPolicies searchLimitingPoliciesByDev(SearchCriteria searchCriteria, PolicyLevel policyLevel, String username) throws ThrottlingPolicyOperationException {
 		final Mono<LimitingPolicies> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(POLICY_LIST_PATH),
 				uriBuilder -> uriBuilder
 						.queryParam(OFFSET, searchCriteria.getOffset())
@@ -54,22 +54,22 @@ public class ThrottlingPolicyOperationAPI extends AbstractManagerAPI {
 						.build(Map.of(POLICY_LEVEL, policyLevel.getValue().toLowerCase())))
 				.retrieve()
 				.bodyToMono(LimitingPolicies.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ThrottlingPolicyOperationException(searchCriteria, policyLevel, username, e));
 	}
 
-	public LimitingPolicy getLimitingPolicyByPublisher(String policyName, PolicyLevel policyLevel) throws APIManagerException {
+	public LimitingPolicy getLimitingPolicyByPublisher(String policyName, PolicyLevel policyLevel) throws ThrottlingPolicyOperationException {
 		final Mono<LimitingPolicy> mono = populateRequestWithAdminRegistrationId(HttpMethod.GET, buildPublisherURIPath(POLICY_GET_PATH),
 				Map.of(POLICY_LEVEL, policyLevel.getValue().toLowerCase(), POLICY_NAME, policyName))
 				.retrieve()
 				.bodyToMono(LimitingPolicy.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ThrottlingPolicyOperationException(policyName, policyLevel, null, e));
 	}
 
-	public LimitingPolicy getLimitingPolicyByDev(String policyName, PolicyLevel policyLevel, String username) throws APIManagerException {
+	public LimitingPolicy getLimitingPolicyByDev(String policyName, PolicyLevel policyLevel, String username) throws ThrottlingPolicyOperationException {
 		final Mono<LimitingPolicy> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(POLICY_GET_PATH),
 				Map.of(POLICY_LEVEL, policyLevel.getValue().toLowerCase(), POLICY_NAME, policyName))
 				.retrieve()
 				.bodyToMono(LimitingPolicy.class);
-		return MonoUtils.blockOrThrow(mono, APIManagerException.class);
+		return MonoUtils.blockOrThrow(mono, e -> new ThrottlingPolicyOperationException(policyName, policyLevel, username, e));
 	}
 }

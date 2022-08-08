@@ -10,7 +10,7 @@
     "changeOrigin": true
   },
   "/acl/v1": {
-    "target": "http://localhost:8085/acl/v1",
+    "target": "http://localhost:8082/acl/v1",
     "secure": false,
     "pathRewrite": {
       "^/acl/v1": ""
@@ -18,27 +18,35 @@
     "changeOrigin": true
   },
   "/konsult/v1": {
-    "target": "http://localhost:8087/konsult/v1",
+    "target": "http://localhost:8082/konsult/v1",
     "secure": false,
     "pathRewrite": {
       "^/konsult/v1": ""
     },
     "changeOrigin": true
   },
-  "/providers/v1": {
-    "target": "http://localhost:8084/providers/v1",
+  "/strukture/v1": {
+    "target": "http://localhost:8082/strukture/v1",
     "secure": false,
     "pathRewrite": {
-      "^/providers/v1": ""
+      "^/strukture/v1": ""
     },
     "changeOrigin": true
   },
   "/kos/v1": {
-    "target": "http://localhost:8088/kos/v1",
+    "target": "http://localhost:8082/kos/v1",
     "secure": false,
     "pathRewrite": {
       "^/kos/v1": ""
     },
     "changeOrigin": true
-  }
+  },
+    "/projekt/v1": {
+        "target": "http://localhost:8082/projekt/v1",
+        "secure": false,
+        "pathRewrite": {
+            "^/projekt/v1": ""
+        },
+        "changeOrigin": true
+    }
 }

@@ -1,5 +1,7 @@
 package org.rudi.facet.apimaccess.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.facet.apimaccess.api.apis.APIsOperationAPI;
 import org.rudi.facet.apimaccess.api.policy.ThrottlingPolicyOperationAPI;
@@ -17,18 +19,22 @@ import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.PolicyLevel;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APINotFoundException;
+import org.rudi.facet.apimaccess.exception.APIsOperationException;
+import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
+import org.rudi.facet.apimaccess.exception.ThrottlingPolicyOperationException;
+import org.rudi.facet.apimaccess.exception.UpdateAPILifecycleStatusException;
 import org.rudi.facet.apimaccess.helper.generator.OpenApiGenerator;
-import org.rudi.facet.apimaccess.helper.search.SearchCriteriaMapper;
+import org.rudi.facet.apimaccess.helper.search.QueryBuilder;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,36 +47,33 @@ import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.INTERFACE_
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.MEDIA_UUID;
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.PROVIDER_CODE;
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.PROVIDER_UUID;
-import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_SEARCH_MAPPER;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.DEFAULT_API_VERSION;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
 
 @Service
+@RequiredArgsConstructor
 public class APIsServiceImpl implements APIsService {
 
 	private static final String CONTEXT_SEPARATOR = "/";
 	private static final Logger LOGGER = LoggerFactory.getLogger(APIsServiceImpl.class);
 
-	@Autowired
-	private APIsOperationAPI apIsOperationAPI;
-
-	@Autowired
-	private ThrottlingPolicyOperationAPI throttlingPolicyOperationAPI;
-
-	@Autowired
-	private OpenApiGenerator openApiGenerator;
-
-	@Autowired
-	@Qualifier(value = API_MACCESS_SEARCH_MAPPER)
-	private SearchCriteriaMapper searchCriteriaMapper;
+	private final APIsOperationAPI apIsOperationAPI;
+	private final ThrottlingPolicyOperationAPI throttlingPolicyOperationAPI;
+	private final OpenApiGenerator openApiGenerator;
+	private final QueryBuilder queryBuilder;
 
 	@Value("${apimanager.api.store.api.categories:RudiData}")
 	private String[] apiCategories;
 
-	@Override
-	public API createAPI(APIDescription apiDescription) throws APIManagerException {
+	/**
+	 * Création d'une API
+	 * @param apiDescription        paramètre de la nouvelle API
+	 * @return                      API
+	 * @throws APIManagerException  Erreur lors de la création
+	 */
+	private API createAPI(APIDescription apiDescription) throws APIManagerException {
 		if (apiDescription == null) {
-			throw new APIManagerException("Les paramètres de l'API à créer sont absents");
+			throw new IllegalArgumentException("Les paramètres de l'API à créer sont absents");
 		}
 		setAPIDefaultValues(apiDescription);
 
@@ -87,68 +90,92 @@ public class APIsServiceImpl implements APIsService {
 	}
 
 	@Override
-	public API updateAPI(APIDescription apiDescription, String apiId) throws APIManagerException {
-		if (apiDescription == null) {
-			throw new APIManagerException("Les paramètres de l'API à modifier sont absents");
+	public API createOrUnarchiveAPI(APIDescription apiDescription) throws APIManagerException {
+		val apiList = searchAPIByName(apiDescription);
+		final var apiExists = apiList.getCount() > 0;
+		if (apiExists) {
+			val apiId = apiList.getList().get(0).getId();
+			unarchiveAPI(apiId);
+			return apIsOperationAPI.getAPI(apiId);
+		} else {
+			return createAPI(apiDescription);
 		}
-		setAPIDefaultValues(apiDescription);
-
-		API apiToUpdated = getAPI(apiId);
-		API apiResult = apIsOperationAPI.updateAPI(buildAPIToSave(apiDescription, apiToUpdated));
-
-		apIsOperationAPI.updateAPIOpenapiDefinition(openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
-
-		return apIsOperationAPI.getAPI(apiResult.getId());
 	}
 
 	@Override
-	public API updateAPIByName(APIDescription apiDescription) throws APIManagerException {
-		if (apiDescription == null) {
-			throw new APIManagerException("Les paramètres de l'API à modifier par le nom sont absents");
-		}
-		setAPIDefaultValues(apiDescription);
+	public void updateAPIByName(APIDescription apiDescription) throws APIManagerException {
+		val apiToUpdated = getAPIByName(apiDescription);
 
-		// recherche de l'api par son nom
-		APISearchCriteria apiSearchCriteria = new APISearchCriteria()
-				.globalId(apiDescription.getGlobalId())
-				.providerUuid(apiDescription.getProviderUuid())
-				.providerCode(apiDescription.getProviderCode())
-				.name(apiDescription.getName());
-		APIList apis = searchAPI(apiSearchCriteria);
-		if (apis.getCount() == 0) {
-			throw new APIManagerException("Aucune API ne possède le nom " + apiDescription.getName());
-		}
-		// il y a normalement qu'une seule api avec ce nom
-		API apiToUpdated = getAPI(apis.getList().get(0).getId());
-
-		apiToUpdated = buildAPIToSave(apiDescription, apiToUpdated);
-		API apiResult = apIsOperationAPI.updateAPI(apiToUpdated);
+		buildAPIToSave(apiDescription, apiToUpdated);
+		val apiResult = apIsOperationAPI.updateAPI(apiToUpdated);
 
 		apIsOperationAPI.updateAPIOpenapiDefinition(openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
-
-		return apIsOperationAPI.getAPI(apiResult.getId());
 	}
 
 	@Override
-	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws APIManagerException {
+	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws UpdateAPILifecycleStatusException {
 		return apIsOperationAPI.updateAPILifecycleStatus(apiId, apiLifecycleStatusAction);
 	}
 
 	@Override
-	public void deleteAPI(String apiId) throws APIManagerException {
-		apIsOperationAPI.deleteAPI(apiId);
+	public API archiveAPIByName(APIDescription apiDescription) throws UpdateAPILifecycleStatusException, APIsOperationException, APINotFoundException, APIsOperationWithIdException {
+		final var api = getAPIByName(apiDescription);
+		archiveAPI(api.getId());
+		return api;
 	}
 
 	@Override
-	public API getAPI(String apiId) throws APIManagerException {
+	public  void archiveAPI(String apiId) throws UpdateAPILifecycleStatusException {
+		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.BLOCK);
+	}
+
+	@Override
+	public  void unarchiveAPI(String apiId) throws UpdateAPILifecycleStatusException {
+		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.RE_PUBLISH);
+	}
+
+	@Override
+	public void deleteAPI(String apiId) throws UpdateAPILifecycleStatusException, APIsOperationWithIdException {
+		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.DEPRECATE);
+		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.RETIRE);
+		apIsOperationAPI.deleteAPI(apiId);
+	}
+
+	private API getAPIByName(APIDescription apiDescription) throws APINotFoundException, APIsOperationException, APIsOperationWithIdException {
+		val apis = searchAPIByName(apiDescription);
+		if (apis.getCount() == 0) {
+			throw new APINotFoundException(apiDescription);
+		}
+		// il y a normalement qu'une seule api avec ce nom
+		return getAPI(apis.getList().get(0).getId());
+	}
+
+	@Nonnull
+	private APIList searchAPIByName(APIDescription apiDescription) throws APIsOperationException {
+		if (apiDescription == null) {
+			throw new IllegalArgumentException("Les paramètres de l'API à rechercher par nom sont absents");
+		}
+		setAPIDefaultValues(apiDescription);
+
+		// recherche de l'api par son nom
+		val apiSearchCriteria = new APISearchCriteria()
+				.globalId(apiDescription.getGlobalId())
+				.providerUuid(apiDescription.getProviderUuid())
+				.providerCode(apiDescription.getProviderCode())
+				.name(apiDescription.getName());
+		return searchAPI(apiSearchCriteria);
+	}
+
+	@Override
+	public API getAPI(String apiId) throws APIsOperationWithIdException {
 		if (StringUtils.isEmpty(apiId)) {
-			throw new APIManagerException("L'identifiant de l'API n'est pas renseigné");
+			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
 		}
 		return apIsOperationAPI.getAPI(apiId);
 	}
 
 	@Override
-	public APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIManagerException {
+	public APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIsOperationException {
 		if (apiSearchCriteria == null) {
 			apiSearchCriteria = new APISearchCriteria();
 		}
@@ -156,13 +183,14 @@ public class APIsServiceImpl implements APIsService {
 			LOGGER.warn("Le nombre d'API demandé dépasse le nombre d'élément maximum autorisé: {} > {}", apiSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
 			apiSearchCriteria.setLimit(LIMIT_MAX_VALUE);
 		}
-		return apIsOperationAPI.searchAPI(searchCriteriaMapper.buildAPISearchCriteriaQuery(apiSearchCriteria));
+		apiSearchCriteria.setQuery(queryBuilder.buildFrom(apiSearchCriteria));
+		return apIsOperationAPI.searchAPI(apiSearchCriteria);
 	}
 
 	@Override
-	public List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIManagerException {
+	public List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIsOperationWithIdException {
 		if (StringUtils.isEmpty(apiId)) {
-			throw new APIManagerException("L'identifiant de l'API n'est pas renseigné");
+			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
 		}
 		return apIsOperationAPI.getAPISubscriptionPolicies(apiId);
 	}
@@ -173,18 +201,20 @@ public class APIsServiceImpl implements APIsService {
 		}
 	}
 
-	private API buildAPIToSave(APIDescription apiDescription) throws APIManagerException {
+	private API buildAPIToSave(APIDescription apiDescription) throws ThrottlingPolicyOperationException {
 		// get actual subscription policies (pour le moment on récupère toutes les subscriptions policies)
-		LimitingPolicies limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(new SearchCriteria().offset(0), PolicyLevel.SUBSCRIPTION);
+		final var searchCriteria = new SearchCriteria().offset(0);
+		final var policyLevel = PolicyLevel.SUBSCRIPTION;
+		LimitingPolicies limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(searchCriteria, policyLevel);
 		if (limitingPolicies == null || limitingPolicies.getCount() == 0) {
-			throw new APIManagerException("Aucune politique d'abonnement pour des APIs n'a été trouvée");
+			throw new ThrottlingPolicyOperationException(searchCriteria, policyLevel);
 		}
 
 		MediaType mediaType;
 		try {
 			mediaType = MediaType.parseMediaType(apiDescription.getMediaType());
 		} catch (InvalidMediaTypeException e) {
-			throw new APIManagerException("Le media type est invalide : " + apiDescription.getMediaType(), e);
+			throw new IllegalArgumentException("Le media type est invalide : " + apiDescription.getMediaType(), e);
 		}
 
 		return new API()
@@ -210,16 +240,16 @@ public class APIsServiceImpl implements APIsService {
 				);
 	}
 
-	private API buildAPIToSave(APIDescription apiDescription, API api) throws APIManagerException {
+	private void buildAPIToSave(APIDescription apiDescription, API api) {
 
 		MediaType mediaType;
 		try {
 			mediaType = MediaType.parseMediaType(apiDescription.getMediaType());
 		} catch (InvalidMediaTypeException e) {
-			throw new APIManagerException("Le media type est invalide : " + apiDescription.getMediaType(), e);
+			throw new IllegalArgumentException("Le media type est invalide : " + apiDescription.getMediaType(), e);
 		}
 
-		api = api
+		api
 				.name(apiDescription.getName())
 				.endpointConfig(new APIEndpointConfigHttp()
 						.endpointType(APIEndpointType.HTTP)
@@ -234,8 +264,6 @@ public class APIsServiceImpl implements APIsService {
 						INTERFACE_CONTRACT, apiDescription.getInterfaceContract(),
 						EXTENSION, mediaType.getSubtype())
 				);
-
-		return api;
 	}
 
 	private String buildAPIContext(APIDescription apiDescription) {

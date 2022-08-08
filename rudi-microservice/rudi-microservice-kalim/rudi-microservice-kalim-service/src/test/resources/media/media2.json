@@ -1,0 +1,16 @@
+{
+	"media_type": "FILE",
+	"media_id": "b6ddce4e-bf2d-4d9a-bee5-999d780dfa5d",
+	"connector": {
+		"url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=json",
+		"interface_contract": "dwnl"
+	},
+	"file_structure": "https://:@public.sig.rennesmetropole.fr/geonetwork/srv/fre/csw?service=CSW&SERVICE=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&namespace=xmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&resultType=results&VERSION=2.0.2&version=2.0.2&ElementSetName=full&id=5fa3811a-7bb8-4899-8af1-4cda386f26b0",
+	"file_size": 50,
+	"file_type": "application/json",
+	"file_encoding": "ANSI",
+	"checksum": {
+		"algo": "MD5",
+		"hash": "SHA-512"
+	}
+}

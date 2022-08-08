@@ -16,7 +16,8 @@ EXPOSE 8088
 ADD rudi-microservice-kos-facade.jar /opt/rudi/microservice.jar
 
 CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty \
-      -Drudi.datadir=/etc/rudi/data/kos -Drudi.config=/etc/rudi/config \
+      -Drudi.datadir=/etc/rudi/data/kos \
+      -Dspring.config.additional-location=file:/etc/rudi/config/kos/ \
       ${ADD_JAVA_OPTS}                                   \
       -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
       -jar /opt/rudi/microservice.jar" ]

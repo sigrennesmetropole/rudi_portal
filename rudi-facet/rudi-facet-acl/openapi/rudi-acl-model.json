@@ -60,6 +60,9 @@
 						"items": {
 							"$ref": "#/components/schemas/Role"
 						}
+					},
+					"hasSubscribeToNotifications": {
+						"$ref": "../../../rudi-microservice/rudi-microservice-acl/openapi/rudi-acl-model.json#/components/schemas/UserHasSubscribeToNotificationsParam"
 					}
 				}
 			},

@@ -1,0 +1,379 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.mat-drawer-content {
+    overflow-x: hidden;
+}
+
+//****** Style mat-menu du bandeau *******
+.menu-libelle {
+    font-size: 15px;
+    color: $primary-text;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+}
+
+::ng-deep.mat-radio-container, ::ng-deep.mat-radio-outer-circle, ::ng-deep.mat-radio-inner-circle {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+//****** Fin Style mat-menu du bandeau *******
+
+.project-container {
+    padding-top: 115px;
+    height: calc(100% - 170px);
+
+    .card-project-type-sm-title {
+        border-bottom: 1px solid $blocks-and-menus-outline;
+        padding-top: 15px;
+    }
+
+    .project-header {
+        display: flex;
+        margin-left: 80px;
+        padding-top: 20px;
+
+        .header-img {
+            align-items: center;
+            width: 228px;
+            height: 120px;
+            overflow: hidden;
+            border-radius: 4px;
+            border: solid 1px $keywords-outline;
+
+            img {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+        }
+
+        .header-ressource {
+            padding-left: 20px;
+
+            h2 {
+                font-size: 28px;
+                max-width: 734px;
+                max-height: 110px;
+                font-weight: 600;
+                font-stretch: normal;
+                font-style: normal;
+                letter-spacing: normal;
+                word-wrap: break-word;
+            }
+
+        }
+
+    }
+
+    .project-card {
+        box-shadow: none;
+        border: solid 1.1px $blocks-and-menus-outline;
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 29px;
+    }
+
+    .project-card-description {
+        height: 100%;
+    }
+
+    .card-label {
+        font-size: 18px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+    }
+
+    .text-underline {
+        text-decoration: underline;
+    }
+
+    .user-identity {
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        margin-bottom: 0.5ex;
+    }
+
+    .bandeau {
+        padding-top: 38px;
+    }
+
+    .card-description-keyword-row {
+        margin-bottom: 80px;
+    }
+
+    .card-main-information {
+        max-height: 439px;
+        margin: 0 0 16px 6px;
+        border-radius: 6px;
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .project-type {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .date-range {
+            display: flex;
+            padding: 15px 0 15px 0;
+            justify-content: space-between;
+
+            .display-block {
+                display: block;
+            }
+
+            .label-date {
+                font-size: 12px;
+                font-weight: 400;
+                color: gray;
+            }
+
+            .date {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .date-range-hour {
+                font-size: 14px;
+                font-weight: normal;
+                color: black;
+            }
+
+            .date-range-update-maj {
+                font-size: 13px;
+                font-weight: normal;
+                color: black;
+            }
+        }
+
+        .date-range-md {
+            justify-content: space-around;
+
+            .debutPeriode {
+                flex: 0 0 38%;
+            }
+        }
+
+        .contact {
+            padding: 20px 0;
+            border-top: 1px solid $blocks-and-menus-outline;
+            border-bottom: 1px solid $blocks-and-menus-outline;
+
+            a {
+                color: $focus !important;
+                text-decoration: underline;
+            }
+
+            .label-licence {
+                font-size: 12px;
+            }
+
+            .label-licence-status {
+                font-size: 18px;
+                font-weight: bold;
+                display: block;
+            }
+
+            .button-contact {
+                @include button-blue;
+            }
+        }
+
+        .date-created, .date-modified {
+            padding: 8px 11px 0 11px;
+            height: 40px;
+            border-radius: 4px;
+            border: solid 1px $blocks-and-menus-outline;
+            background-color: $banner-solid-color;;
+
+            .label-date {
+                font-size: 12px;
+                font-weight: normal
+            }
+
+            .date-value {
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .date-range-update-maj {
+                font-weight: normal;
+            }
+        }
+    }
+
+    .card-datasets {
+        margin-left: 6px;
+        max-height: 50vh;
+        overflow: auto;
+
+        .row {
+            margin-left: 0;
+            margin-bottom: 2em;
+            align-items: center;
+        }
+
+        .mat-divider-horizontal {
+            position: inherit;
+        }
+
+        .producteur-img-box {
+            width: 70px;
+            height: 70px;
+            padding: 10px 4px 10px 4px;
+            border-radius: 3.4px;
+            border: solid 0.9px $blocks-and-menus-outline;
+            justify-content: center;
+        }
+
+    }
+
+    &-sm {
+
+        .bandeau {
+            margin: 0 -60px 0 -60px;
+        }
+
+        .bandeau-icon-libelle {
+            display: none;
+        }
+
+        .icon-information-sm {
+            margin-right: 0;
+        }
+
+        .card-margin-top {
+            margin-top: 15px;
+        }
+
+        .card-project-type {
+            display: none;
+
+            &-title {
+                border-bottom: 1px solid $blocks-and-menus-outline;
+            }
+        }
+
+        .project-header {
+            margin-left: 20px;
+        }
+
+        .header-img {
+            width: auto;
+            height: 70px;
+            padding: 5px;
+            align-items: center;
+            border-radius: 3.4px;
+            border: solid 0.9px $blocks-and-menus-outline;
+            margin-left: 0;
+        }
+
+        .user-identity {
+            font-size: 13px;
+        }
+
+        .header-ressource {
+            padding-left: 15px;
+            margin-right: 20px;
+        }
+
+        .header-ressource h2 {
+            font-size: 24px;
+            line-height: 1em;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            hyphens: auto;
+            min-height: 1.2em;
+            max-height: 5em;
+        }
+
+        .date-range-update-maj {
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        .date-range-hour {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .bandeau-btn-access {
+            color: black;
+            background-color: $secondary-color;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .button-info {
+            background-color: $primary-color;
+            color: $banner-solid-color;
+        }
+
+        .card-description-keyword {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+
+        .card-description-keyword-row {
+            padding: 0 20px;
+            margin-bottom: auto;
+        }
+
+        .project-card {
+            border-left: none;
+            border-right: none;
+            border-radius: unset;
+            border-top: none;
+            padding: 0;
+        }
+
+
+    }
+
+    &-md {
+        .card-project-type {
+            display: none;
+        }
+
+    }
+
+    &-lg {
+        .card-project-type-sm {
+            display: none;
+        }
+    }
+
+    &-xl {
+
+        .card-project-type-sm {
+            display: none;
+        }
+    }
+
+    &-xxl {
+
+        .card-project-type-sm {
+            display: none;
+        }
+    }
+
+}
+
+// On annule la règle /pages/list/list.component.scss "::ng-deep .row"
+.row {
+    margin-right: -15px;
+}
+

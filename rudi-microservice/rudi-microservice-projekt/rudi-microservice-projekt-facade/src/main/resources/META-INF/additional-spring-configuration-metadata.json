@@ -1,0 +1,56 @@
+{
+	"properties": [
+		{
+			"name": "application.role.administrateur.code",
+			"type": "java.lang.String",
+			"description": "Admin role code (see acl_data.role.code)."
+		},
+		{
+			"name": "module.oauth2.check-token-uri",
+			"type": "java.net.URI",
+			"description": "ACL check_token URI."
+		},
+		{
+			"name": "rudi.template.security.authentication.disabled",
+			"type": "java.lang.Boolean",
+			"description": "Disable authentification."
+		}
+	],
+	"hints": [
+		{
+			"name": "application.role.administrateur.code",
+			"values": [
+				{
+					"value": "ADMINISTRATOR",
+					"description": "Default admin role code."
+				}
+			]
+		},
+		{
+			"name": "module.oauth2.check-token-uri",
+			"values": [
+				{
+					"value": "http://acl:8085/oauth/check_token",
+					"description": "ACL through gateway/registry."
+				},
+				{
+					"value": "http://localhost:8085/oauth/check_token",
+					"description": "Local ACL."
+				}
+			]
+		},
+		{
+			"name": "rudi.template.security.authentication.disabled",
+			"values": [
+				{
+					"value": "true",
+					"description": "Disable authentification."
+				},
+				{
+					"value": "false",
+					"description": "Don't disable authentification."
+				}
+			]
+		}
+	]
+}

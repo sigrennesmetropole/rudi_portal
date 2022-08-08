@@ -1,0 +1,46 @@
+@import "src/app/styles/common-style";
+
+.mat-table-demandes-acces{
+    width: 100%;
+}
+.table-title-style {
+    font-family: OpenSans;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+.align-left{
+    text-align: left;
+}
+.titre-jdd{
+    font-family: OpenSans;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+    color: $primary-color;
+    padding-bottom: 0.3em;
+}
+.table-jdd {
+    margin-top: 3em;
+}
+.table-header{
+    font-family: OpenSans;
+    font-size: 13px;
+    font-weight: 600;
+    color:$primary-text;
+    //overide the mat table margin css
+    padding: 0px !important
+}
+.table-header:first-child {
+    text-decoration: underline;
+}
+.data-town-name {
+    font-family: OpenSans;
+    font-size: 13px;
+    line-height: 1.54;
+    color: $primary-text;
+    padding-top: 0.2em;
+}
+.first-row{
+    width: 20%;
+}

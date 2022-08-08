@@ -5,15 +5,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.microservice.acl.core.bean.AddressRole;
 import org.rudi.microservice.acl.core.bean.AddressRoleSearchCriteria;
 import org.rudi.microservice.acl.core.bean.AddressType;
-import org.rudi.microservice.acl.service.SpringBootTestApplication;
+import org.rudi.microservice.acl.service.AclSpringBootTest;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,8 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * Class de test du service AddressRoleService
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpringBootTestApplication.class })
+@AclSpringBootTest
 public class AddressRoleServiceTest {
 
 	@Autowired

@@ -1,0 +1,4061 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Projekt Rudi",
+		"version": "0.0.1",
+		"title": "rudi-projekt-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Projekt API",
+			"variables": {
+				"basePath": {
+					"default": "projekt/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "projekt",
+			"description": "Services Projekt"
+		},
+		{
+			"name": "task",
+			"description": "Services de gestion de tâches"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/types": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un type de projet",
+				"description": "Crée un type de projet",
+				"operationId": "createProjectType",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/ProjectType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Type de projet créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/ProjectType"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche de type de projet",
+				"description": "Recherche de type de projet",
+				"operationId": "searchProjectTypes",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedProjectTypeList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/types/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un type de projet",
+				"description": "Modifie un type de projet",
+				"operationId": "updateProjectType",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/ProjectType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Type de projet modifié avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un type de projet donné",
+				"description": "Récupère un type de projet donné via son UUID",
+				"operationId": "getProjectType",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/ProjectType"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un type de projet",
+				"description": "Supprime un type de projet via son UUID",
+				"operationId": "deleteProjectType",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Type de projet supprimé avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/confidentialities": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un niveau de confidentialité",
+				"description": "Crée un niveau de confidentialité",
+				"operationId": "createConfidentiality",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Confidentiality"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Niveau de confidentialité créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Confidentiality"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Liste tous les niveaux de confidentialité",
+				"description": "Liste tous les niveaux de confidentialité",
+				"operationId": "searchConfidentialities",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedConfidentialityList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/confidentialities/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un niveau de confidentialité",
+				"description": "Modifie un niveau de confidentialité",
+				"operationId": "updateConfidentiality",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Confidentiality"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Niveau de confidentialité modifié avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un niveau de confidentialité donné",
+				"description": "Récupère un niveau de confidentialité donné via son UUID",
+				"operationId": "getConfidentiality",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Confidentiality"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un niveau de confidentialité",
+				"description": "Supprime un niveau de confidentialité",
+				"operationId": "deleteConfidentiality",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Niveau de confidentialité supprimé avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/managers": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un porteur de projet",
+				"description": "Crée un porteur de projet",
+				"operationId": "createManager",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Manager"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Porteur de projet créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Manager"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Liste tous les porteur de projets",
+				"description": "Liste tous les porteur de projets",
+				"operationId": "searchManagers",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "userUuid",
+						"description": "UUID de l'utilisateur dans ACL",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedManagerList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/managers/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un porteur de projet",
+				"description": "Modifie un porteur de projet",
+				"operationId": "updateManager",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Manager"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Porteur de projet modifié avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un porteur de projet donné",
+				"description": "Récupère un porteur de projet donné via son UUID",
+				"operationId": "getManager",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Manager"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un porteur de projet",
+				"description": "Supprime un porteur de projet",
+				"operationId": "deleteManager",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Porteur de projet supprimé avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un projet",
+				"description": "Crée un projet",
+				"operationId": "createProject",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Project"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Projet créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Project"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche de projets",
+				"description": "Recherche de projets",
+				"operationId": "searchProjects",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "datasetUuids",
+						"description": "UUIDs des jeux de données liés aux projets recherchés",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},{
+						"in": "query",
+						"name": "linkedDatasetUuids",
+						"description": "UUIDs des LinkedDatasetEntity (des demandes d'accès) liées aux projets recherchés",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "ownerUuids",
+						"description": "UUIDs des utilisateurs ou des organisations ayant déclaré la réutilisation ou soumis le projet",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/ProjectStatus"
+							}
+						}
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedProjectList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un projet",
+				"description": "Modifie un projet",
+				"operationId": "updateProject",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Project"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Projet modifié avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un projet donné",
+				"description": "Récupère un projet donné via son UUID",
+				"operationId": "getProject",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Project"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un projet",
+				"description": "Supprime un projet via son UUID",
+				"operationId": "deleteProject",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Projet supprimé avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{project-uuid}/linked-datasets": {
+			"description": "Consultation des jeux de données liés à un projet",
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Jeux de données d'un projet",
+				"description": "Liste tous les jeux de données réutilisés par un projet.",
+				"operationId": "getLinkedDatasets",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"description": "Statut de la demande, optionnel. Si vide : récupération de tous les JDDs",
+						"schema": {
+							"$ref":"rudi-projekt-model.json#/components/schemas/LinkedDatasetStatus"
+						},
+						"example": "DRAFT"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Jeux de données listés avec succès.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Ajoute un lien entre un projet et un jeu de données",
+				"description": "Indique quel jeu de données est réutilisé par le projet ou en fait la demande pour un jdd restreint.",
+				"operationId": "linkProjectToDataset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Le projet a été lié au jeu de données avec succès | La demande a été envoyée.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie une demande d'accès à un jdd",
+				"description": "Modifie une demande d'accès à un jdd",
+				"operationId": "updateLinkedDataset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "JDD lié modifié avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{project-uuid}/linked-datasets/{linked-dataset-uuid}": {
+			"description": "Consultation et suppresion des jeux de données liés à un projet",
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Un jeu de données d'un projet",
+				"description": "Affiche un jdd réutilisé par un projet.",
+				"operationId": "getLinkedDataset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "path",
+						"name": "linked-dataset-uuid",
+						"description": "UUID du linked dataset",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Jeu de données lié affiché avec succès.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un lien entre un projet et un jeu de données",
+				"description": "Indique que le jeu de données n'est plus réutilisé par le projet | ou la demande a été supprimée.",
+				"operationId": "unlinkProjectToDataset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "path",
+						"name": "linked-dataset-uuid",
+						"description": "UUID du linked dataset",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "53ac7c69-acd9-49c5-a74d-22647cf3e2e3"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Le lien entre le projet et le jeu de données a été supprimé avec succès."
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{project-uuid}/indicators": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche des informations sur les autres demandes d'accès d'un projet",
+				"description": "Recherche des informations sur les autres demandes d'accès qui ne concernent pas le producteur de données fourni pour un projet.",
+				"operationId": "computeIndicators",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "excluded-producer-uuid",
+						"description": "UUID du producteur de données dont on ne veut pas les infos sur les demandes d'accès",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Indicators"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{projectUuid}/new-dataset-requests": {
+			"description": "Demandes de nouveaux jeux de données liées à un projet",
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée une demande de nouveau JDD",
+				"description": "Crée une demande de nouveau JDD",
+				"operationId": "createNewDatasetRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/NewDatasetRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Demande de nouveau JDD créée avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/NewDatasetRequest"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Demandes de nouveau JDD",
+				"description": "Liste toutes les demandes de nouveau JDD d'un projet.",
+				"operationId": "getNewDatasetRequests",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Jeux de données listés avec succès.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-projekt-model.json#/components/schemas/NewDatasetRequest"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie une demande de nouveau JDD",
+				"description": "Modifie une demande de nouveau JDD",
+				"operationId": "updateNewDatasetRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/NewDatasetRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Demande modifiée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{projectUuid}/new-dataset-requests/{requestUuid}": {
+			"description": "Demande de nouveaux jeux de données liée à un projet",
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère une demande de nouveau JDD donnée",
+				"description": "Récupère une demande de nouveau JDD donnée via son UUID",
+				"operationId": "getNewDatasetRequestByUuid",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "requestUuid",
+						"description": "UUID de la demande de nouveau JDD",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/NewDatasetRequest"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime une demande de nouveau JDD",
+				"description": "Supprime une demande de nouveau JDD via son UUID",
+				"operationId": "deleteNewDatasetRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "requestUuid",
+						"description": "UUID de la demande de nouveau JDD",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Demande de nouveau JDD supprimée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{uuid}/media/{kindOfData}": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Téléchargement du média d'un projet",
+				"description": "Retourne le média d'un projet, pour le type de média demandé (logo par exemple).",
+				"operationId": "downloadProjectMediaByType",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "kindOfData",
+						"description": "Type de média",
+						"required": true,
+						"schema": {
+							"$ref": "KindOfData"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne le média du projet",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Ajout ou modification d'un média pour un projet",
+				"description": "Upload le média du projet, pour le type de média demandé (logo par exemple).",
+				"operationId": "uploadProjectMediaByType",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "path",
+						"name": "kindOfData",
+						"description": "Type de média",
+						"required": true,
+						"schema": {
+							"$ref": "KindOfData"
+						},
+						"example": "LOGO"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/octet-stream": {
+							"schema": {
+								"type": "string",
+								"format": "binary"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Le média du projet a été créé ou mis à jour avec succès."
+					},
+					"400": {
+						"description": "La requête est incorrecte et doit être corrigée avant de réessayer."
+					},
+					"500": {
+						"description": "Erreur interne du serveur. Contacter un développeur pour avoir plus d'informations sur la cause de l'erreur."
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Suppression d'un média pour un projet",
+				"description": "Supprime le média d'un projet, pour le type de média demandé (logo par exemple).",
+				"operationId": "deleteProjectMediaByType",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "path",
+						"name": "kindOfData",
+						"description": "Type de média",
+						"required": true,
+						"schema": {
+							"$ref": "KindOfData"
+						},
+						"example": "LOGO"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Le média du projet a été supprimé avec succès."
+					},
+					"400": {
+						"description": "La requête est incorrecte et doit être corrigée avant de réessayer."
+					},
+					"500": {
+						"description": "Erreur interne du serveur. Contacter un développeur pour avoir plus d'informations sur la cause de l'erreur."
+					}
+				}
+			}
+		},
+		"/supports": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un type d’accompagnement",
+				"description": "Crée un type d’accompagnement",
+				"operationId": "createSupport",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Support"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Type d’accompagnement créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Support"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Liste tous les type d’accompagnements",
+				"description": "Liste tous les type d’accompagnements",
+				"operationId": "searchSupports",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedSupportList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/supports/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un type d’accompagnement",
+				"description": "Modifie un type d’accompagnement",
+				"operationId": "updateSupport",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Support"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Type d’accompagnement modifié avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un type d’accompagnement donné",
+				"description": "Récupère un type d’accompagnement donné via son UUID",
+				"operationId": "getSupport",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Support"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un type d’accompagnement",
+				"description": "Supprime un type d’accompagnement via son UUID",
+				"operationId": "deleteSupport",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Type d’accompagnement supprimé avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/territorial-scales": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée une échelle de territoire",
+				"description": "Crée une échelle de territoire",
+				"operationId": "createTerritorialScale",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/TerritorialScale"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Échelle de territoire créée avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/TerritorialScale"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche d'échelles de territoires",
+				"description": "Recherche d'échelles de territoires",
+				"operationId": "searchTerritorialScales",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedTerritorialScaleList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/territorial-scales/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie une échelle de territoire",
+				"description": "Modifie une échelle de territoire",
+				"operationId": "updateTerritorialScale",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/TerritorialScale"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Échelle de territoire modifiée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère une échelle de territoire donnée",
+				"description": "Récupère une échelle de territoire donnée via son UUID",
+				"operationId": "getTerritorialScale",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/TerritorialScale"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime une échelle de territoire",
+				"description": "Supprime une échelle de territoire via son UUID",
+				"operationId": "deleteTerritorialScale",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Échelle de territoire supprimée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/owner-info/{ownerType}/{ownerUuid}": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Informations minimales sur un porteur de projet",
+				"description": "Un porteur de projet peut être un utilisateur ou une organisation.",
+				"operationId": "getOwnerInfo",
+				"parameters": [
+					{
+						"name": "ownerType",
+						"in": "path",
+						"description": "Type du porteur de projet",
+						"required": true,
+						"schema": {
+							"$ref": "rudi-projekt-model.json#/components/schemas/OwnerType"
+						}
+					},
+					{
+						"name": "ownerUuid",
+						"in": "path",
+						"description": "UUID du porteur de projet",
+						"required": true,
+						"schema": {
+							"$ref": "rudi-projekt-model.json#/components/schemas/OwnerUuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/OwnerInfo"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/process-definitions": {
+			"get": {
+				"tags": [
+					"administration"
+				],
+				"summary": "List process definition",
+				"description": "List process definition",
+				"operationId": "searchProcessDefinitions",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/ProcessDefinition"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/process-definitions/{deployment-name}": {
+			"put": {
+				"tags": [
+					"administration"
+				],
+				"summary": "Création ou mise à jour d'un processus",
+				"description": "Création ou mise à jour d'un processus",
+				"operationId": "updateProcessDefinition",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "deployment-name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+		          "content": {
+		            "application/xml": {
+		              "schema": {
+		                "type": "string",
+		                "format": "binary"
+		              }
+		            }
+		          }
+		        },
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/process-definitions/{process-definition-key}": {
+			"delete": {
+				"tags": [
+					"administration"
+				],
+				"summary": "Supprime un processus",
+				"description": "Supprime un processus",
+				"operationId": "deleteProcessDefinition",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "process-definition-key",
+						"description": "Key du processus",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "version",
+						"description": "Version du processus",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Échelle de territoire supprimée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/tasks": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Recherche des tâches",
+				"description": "Recherche des tâches",
+				"operationId": "searchTasks",
+				"parameters": [				
+					{
+						"in": "query",
+						"name": "title",
+						"description": "Titre de la tâche",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "description",
+						"description": "Description de la tâche",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "process-definition-keys",
+						"description": "Type du processus",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"description": "etat de la tâche",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Status"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "fonctional-status",
+						"description": "Etat fonctionnel",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "project-status",
+						"description": "etat de la tâche",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-projekt-model.json#/components/schemas/ProjectStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "asAdmin",
+						"description": "En tant qu'admin",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dataset-producer-uuid",
+						"description": "UUID du producteur de données du JDD concerné par la demande d'accès",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "project-uuid",
+						"description": "UUID du projet pour filtrer les tâches",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/tasks/{task-id}": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement d'une tâche",
+				"description": "Chargement d'une tâche",
+				"operationId": "getTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks/draft-form": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement de formulaire draft s'il existe",
+				"description": "Chargement de formulaire draft s'il existe",
+				"operationId": "lookupProjectDraftForm",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks/{task-id}/claim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Claim d'une tâche",
+				"description": "Claim d'une tâche",
+				"operationId": "claimProjectTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks/{task-id}/unclaim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Unclaim d'une tâche",
+				"description": "Unclaim d'une tâche",
+				"operationId": "unclaimProjectTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks/{task-id}/do-it/{action-name}": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Fait avancer la tâche",
+				"description": "Fait avancer la tâche à partir d'une action",
+				"operationId": "doItProject",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "action-name",
+						"description": "Nom de l'action à réaliser",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Mets à jour une tâche",
+				"description": "Mets à jour une tâche et l'asset associée",
+				"operationId": "updateProjectTask",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"task"
+				],
+				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"operationId": "createProjectDraft",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/Project"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks/start": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Démarre la tâche",
+				"description": "Démarre la tâche",
+				"operationId": "startProjectTask",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		
+		"/linked-dataset/tasks/draft-form": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement de formulaire draft s'il existe",
+				"description": "Chargement de formulaire draft s'il existe",
+				"operationId": "lookupLinkedDatasetDraftForm",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/linked-dataset/tasks/{task-id}/claim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Claim d'une tâche",
+				"description": "Claim d'une tâche",
+				"operationId": "claimLinkedDatasetTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/linked-dataset/tasks/{task-id}/unclaim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Unclaim d'une tâche",
+				"description": "Unclaim d'une tâche",
+				"operationId": "unclaimLinkedDatasetTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/linked-dataset/tasks/{task-id}/do-it/{action-name}": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Fait avancer la tâche",
+				"description": "Fait avancer la tâche à partir d'une action",
+				"operationId": "doItLinkedDataset",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "action-name",
+						"description": "Nom de l'action à réaliser",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/linked-dataset/tasks": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Mets à jour une tâche",
+				"description": "Mets à jour une tâche et l'asset associée",
+				"operationId": "updateLinkedDatasetTask",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"task"
+				],
+				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"operationId": "createLinkedDatasetDraft",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDataset"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/linked-dataset/tasks/start": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Démarre la tâche",
+				"description": "Démarre la tâche",
+				"operationId": "startLinkedDatasetTask",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		
+		"/new-dataset-request/tasks/draft-form": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement de formulaire draft s'il existe",
+				"description": "Chargement de formulaire draft s'il existe",
+				"operationId": "lookupNewDatasetRequestDraftForm",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/new-dataset-request/tasks/{task-id}/claim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Claim d'une tâche",
+				"description": "Claim d'une tâche",
+				"operationId": "claimNewDatasetRequestTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/new-dataset-request/tasks/{task-id}/unclaim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Unclaim d'une tâche",
+				"description": "Unclaim d'une tâche",
+				"operationId": "unclaimNewDatasetRequestTask",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/new-dataset-request/tasks/{task-id}/do-it/{action-name}": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Fait avancer la tâche",
+				"description": "Fait avancer la tâche à partir d'une action",
+				"operationId": "doItNewDatasetRequest",
+				"parameters": [				
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "action-name",
+						"description": "Nom de l'action à réaliser",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/new-dataset-request/tasks": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Mets à jour une tâche",
+				"description": "Mets à jour une tâche et l'asset associée",
+				"operationId": "updateNewDatasetRequestTask",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"task"
+				],
+				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"operationId": "createNewDatasetRequestDraft",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/NewDatasetRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/new-dataset-request/tasks/start": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Démarre la tâche",
+				"description": "Démarre la tâche",
+				"operationId": "startNewDatasetRequestTask",
+				"parameters": [	],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		}
+		
+	},
+	"components": {
+		"parameters": {
+			"LimitParam": {
+				"in": "query",
+				"name": "limit",
+				"description": "Le nombre de résultats à retourner par page",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OffsetParam": {
+				"in": "query",
+				"name": "offset",
+				"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OrderParam": {
+				"in": "query",
+				"name": "order",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error"
+			},
+			"BadRequestError": {
+				"description": "Bad Request Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Unauthorized": {
+				"description": "Unauthorized",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Forbidden": {
+				"description": "Forbidden",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotAcceptable": {
+				"description": "Not Acceptable",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"RequestTimeout": {
+				"description": "Request Timeout",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"TooManyRequests": {
+				"description": "Too Many Requests",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"ServiceUnavailable": {
+				"description": "Service Unavailable"
+			}
+		},
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
+}

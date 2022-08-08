@@ -136,7 +136,7 @@ class ApplicationOperationAPITest {
 
 		assertThatThrownBy(() -> applicationOperationAPI.getAPIContent(context, version, applicationId, username))
 				.isInstanceOf(APIEndpointException.class)
-				.hasMessage("HTTP 404 NOT_FOUND reçu du endpoint de l'API.")
+				.hasMessage("HTTP 404 NOT_FOUND reçu du endpoint de l'API http://localhost:%s/datasets/659ad57a-d2b0-442c-af4d-9b57ede31224/dwnl/1.0.0. Si l'erreur HTTP renvoyée par WSO2 n'est pas reproduite en interrogeant directement le endpoint alors WSO2 est la cause du problème. Il peut être nécessaire d'exécuter le script re-publish-all-apis.sh sur la machine hébergeant WSO2 (cf RUDI-1938).", mockWebServer.getPort())
 		;
 	}
 }

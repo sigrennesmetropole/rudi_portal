@@ -1,0 +1,27 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+
+.project-search-box-title {
+    color: $primary-color;
+    height: 56px;
+    font-family: OpenSans, sans-serif;
+
+    span {
+        color: $accent-color;
+        font-weight: normal;
+    }
+
+    &-sm {
+        font-weight: bold;
+        font-size: 26px;
+        margin-bottom: 5px;
+    }
+
+    &-lg {
+        font-weight: bold;
+        font-size: 38px;
+        margin-bottom: 20px;
+    }
+
+}

@@ -1,0 +1,35 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.card-demand-label {
+    height: 36px;
+    margin: 0 105px 8px 2px;
+    font-family: OpenSans;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.72;
+    letter-spacing: normal;
+    text-align: left;
+    color: $black;
+}
+
+.organization-name {
+    margin: 0 37px 5px 0;
+    font-family: OpenSans;
+    font-size: 15px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-align: left;
+    color: #323643;
+}
+
+.organization-name .text-style-1 {
+    font-weight: 600;
+    color: $black;
+}

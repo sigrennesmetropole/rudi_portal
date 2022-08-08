@@ -16,7 +16,8 @@ EXPOSE 8087
 ADD rudi-microservice-konsult-facade.jar /opt/rudi/microservice.jar
 
 CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty \
-      -Drudi.datadir=/etc/rudi/data/konsult -Drudi.config=/etc/rudi/config \
+      -Drudi.datadir=/etc/rudi/data/konsult \
+      -Dspring.config.additional-location=file:/etc/rudi/config/konsult/ \
       ${ADD_JAVA_OPTS}                                   \
       -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
       -jar /opt/rudi/microservice.jar" ]

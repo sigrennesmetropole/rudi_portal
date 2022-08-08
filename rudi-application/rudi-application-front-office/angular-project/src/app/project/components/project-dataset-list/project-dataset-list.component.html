@@ -1,0 +1,28 @@
+<div *ngFor="let item of items" class="dataset-card">
+    <div class="logo-container">
+        <ng-container *ngIf="isItemLogo(item)">
+            <app-organization-logo [organizationId]="item.pictoValue"
+                                   cssClass="with-border"
+                                   organizationType="producer">
+            </app-organization-logo>
+        </ng-container>
+        <ng-container *ngIf="!isItemLogo(item)">
+            <mat-icon class="logo-static" [svgIcon]="item.pictoValue"></mat-icon>
+        </ng-container>
+    </div>
+    <div class="dataset-info">
+        <div class="jdd-info-container">
+            <div *ngIf="item.overTitle"
+                 class="dataset-info-organization_name">{{item.overTitle}}</div>
+            <div *ngIf="item.title"
+                 class="dataset-info-resource_title">
+                <mat-icon class="dataset-info-title-icon" *ngIf="item.titleIcon" [svgIcon]="item.titleIcon"></mat-icon>
+                {{item.title}}
+            </div>
+        </div>
+    </div>
+    <div class="dataset-actions">
+        <mat-icon *ngIf="item.editable" class="rudi-icon-encircled" (click)="handleEdit(item)">edit</mat-icon>
+        <mat-icon class="rudi-icon-encircled" (click)="handleDelete(item)">delete</mat-icon>
+    </div>
+</div>

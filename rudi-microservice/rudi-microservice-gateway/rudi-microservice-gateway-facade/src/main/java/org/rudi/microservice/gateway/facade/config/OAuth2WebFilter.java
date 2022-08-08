@@ -45,11 +45,12 @@ public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 				return authenticationSuccess(checkToken);
 			} else {
 				// On considère que le token est invalide
-				LOGGER.warn("Le token est invalide {}", checkToken.getStatusCode());
+				LOGGER.warn("Le token OAuth2 est invalide {}", checkToken.getStatusCode());
 				return Mono.empty();
 			}
 		} catch (HttpClientErrorException.BadRequest e) {
 			// c'est la cas d'un token jwt reçu
+			LOGGER.warn("OAuth2 token check by Gateway failed. JWT token check should be done afterward by another filter. See ACL logs for details.");
 			return Mono.empty();
 		} catch (Exception e) {
 			LOGGER.warn("OAuth2 authentication failed", e);
@@ -71,7 +72,7 @@ public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 		} else {
 			// On considère que le token est invalide
 			if (tokenData != null) {
-				LOGGER.warn("Le token pour {} est inactif", tokenData.getClientId());
+				LOGGER.warn("Le token OAuth2 pour {} est inactif", tokenData.getClientId());
 			} else {
 				LOGGER.warn("Aucune donnée trouvée dans le token");
 			}

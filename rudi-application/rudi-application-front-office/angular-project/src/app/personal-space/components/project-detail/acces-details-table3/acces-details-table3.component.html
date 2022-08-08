@@ -1,0 +1,29 @@
+<div class="table-jdd">
+    <hr>
+    <span class="table-title-style" [translate]="'personalSpace.project.details.projectDatas'"> </span>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-table-demandes-acces">
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header first-row">
+            {{'personalSpace.project.details.submited'|translate}}
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+    </ng-container>
+
+    <!-- Title Column -->
+    <ng-container matColumnDef="titre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">
+            {{'personalSpace.project.details.datas'|translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="data-town-name">{{element.nom}} </div>
+            <div class="titre-jdd">{{element.titre}} </div>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+</div>

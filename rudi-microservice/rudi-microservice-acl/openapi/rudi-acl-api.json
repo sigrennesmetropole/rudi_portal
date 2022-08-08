@@ -76,6 +76,233 @@
                 }
             }
         },
+        "/account/{login}/is-created-not-validated": {
+        	"get": {
+        		 "tags": [
+                    "acl"
+                ],
+                "summary": "Indique si un compte en attente d'activation existe pour le login",
+                "description": "Indique si un compte en attente d'activation existe pour le login",
+                "operationId": "isCreatedNotValidated",
+               	"parameters": [
+               		{
+                        "in": "path",
+                        "name": "login",
+                        "description": "Le login du compte",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+               	],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+        	}
+        },
+        "/account": {
+            "post": {
+                "tags": [
+                    "acl"
+                ],
+                "summary": "Création d'un compte utilisateur",
+                "description": "Permet à un utilisateur anonyme du site de créer un compte utilisateur",
+                "operationId": "requestAccountCreation",
+                "requestBody": {
+                    "description": "Informations pour la création du compte",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "rudi-acl-model.json#/components/schemas/Account"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "acl"
+                ],
+                "summary": "Validation d'un compte utilisateur",
+                "description": "Valide une demande création de compte",
+                "operationId": "validateAccount",
+                "requestBody": {
+                    "description": "Informations pour la création du compte",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                             	"type": "string"   
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        },
+        "/account/change-password": {
+            "get": {
+                "tags": [
+                    "acl"
+                ],
+                "summary": "Demande de réinitialisation de mot-de-passe",
+                "description": "Génère un token pour réinitialiser le mot-de-passe d'un compte et l'envoie par mail à l'utilisateur.",
+                "operationId": "requestPasswordChange",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "email",
+                        "description": "Email de l'utilisateur souhaitant changer de mot-de-passe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Un token pour changer le mot-de-passe. Pour des raisons de sécurité, on envoie un token factice lorsque l'email n'est pas connu."
+                    },
+                    "500": {
+                        "description": "Erreur technique liée au serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "acl"
+                ],
+                "summary": "Modification du mot-de-passe d'un compte",
+                "description": "Modifie le mot-de-passe d'un compte à partir d'un token. Ce token est obtenu suite à une demande de changement de mot-de-passe. Envoie un mail de confirmation à l'utilisateur concerné",
+                "operationId": "validatePasswordChange",
+                "requestBody": {
+                    "description": "Informations pour la modification du mot-de-passe",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "rudi-acl-model.json#/components/schemas/PasswordChange"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "OK. Pour des raisons de sécurité, on répond toujours OK, même lorsque le token n'est pas connu."
+                    },
+                    "500": {
+                        "description": "Erreur technique liée au serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/change-password/check-token": {
+            "get": {
+                "tags": [
+                    "acl"
+                ],
+                "summary": "Vérification du token",
+                "description": "Vérifie le token utilisé pour modifier le mot-de-passe d'un compte. Ce token est obtenu suite à une demande de changement de mot-de-passe.",
+                "operationId": "checkPasswordChangeToken",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Le token est valide."
+                    },
+                    "500": {
+                        "description": "Erreur technique liée au serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "tags": [
@@ -129,6 +356,19 @@
                         "schema": {
                             "$ref": "rudi-acl-model.json#/components/schemas/UserType"
                         }
+                    },
+                    {
+                    	"in": "query",
+                    	"name": "role-uuids",
+                    	"description": "UUIDS des roles",
+                    	"required": "false",
+                    	"schema": {
+                    		"type": "array",
+                    		"items": {
+                    			"type": "string",
+                    			"format": "uuid"
+                    		}
+                    	}
                     },
                     {
                         "in": "query",
@@ -331,6 +571,50 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user-info/{userUuid}": {
+            "get": {
+                "tags": [
+                    "acl"
+                ],
+                "summary": "Retourne un utilisateur avec les données minimales pour un affichage web",
+                "description": "Retourne un utilisateur avec les données minimales pour un affichage web",
+                "operationId": "getUserInfo",
+                "parameters": [
+                    {
+                        "name": "userUuid",
+                        "in": "path",
+                        "description": "uuid pour la récupération d'un élément",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal server error",

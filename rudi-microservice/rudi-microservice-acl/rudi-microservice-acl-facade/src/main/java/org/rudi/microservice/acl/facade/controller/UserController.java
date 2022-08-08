@@ -39,15 +39,11 @@ public class UserController implements UsersApi {
 	@Override
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE')")
 	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String lastname,
-			@Valid String firstname, @Valid String company, @Valid UserType type, @Valid Integer offset,
-			@Valid Integer limit, @Valid String order) throws Exception {
+			@Valid String firstname, @Valid String company, @Valid UserType type, @Valid List<UUID> roleUuids,
+			@Valid Integer offset, @Valid Integer limit, @Valid String order) throws Exception {
 
-		UserSearchCriteria searchCriteria = new UserSearchCriteria();
-		searchCriteria.setLogin(login);
-		searchCriteria.setFirstname(firstname);
-		searchCriteria.setLastname(lastname);
-		searchCriteria.setCompany(company);
-		searchCriteria.setType(type);
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().login(login).firstname(firstname)
+				.lastname(lastname).company(company).type(type).roleUuids(roleUuids).build();
 
 		Pageable pageable = utilPageable.getPageable(offset, limit, order);
 

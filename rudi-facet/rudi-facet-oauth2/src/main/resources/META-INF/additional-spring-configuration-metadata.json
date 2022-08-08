@@ -1,0 +1,48 @@
+{
+	"properties": [
+		{
+			"name": "module.oauth2.provider-uri",
+			"type": "java.lang.String",
+			"description": "l'url d'accès à oauth2 (qq chose de la forme http(s)://<host>:<port>/oauth/token."
+		},
+		{
+			"name": "module.oauth2.client-id",
+			"type": "java.lang.String",
+			"description": "l'id du client (le nom du module)."
+		},
+		{
+			"name": "module.oauth2.client-secret",
+			"type": "java.lang.String",
+			"description": "le mot de passe associé."
+		},
+		{
+			"name": "module.oauth2.scope",
+			"type": "java.lang.String",
+			"description": "un tableau de portée."
+		}
+	],
+	"hints": [
+		{
+			"name": "module.oauth2.provider-uri",
+			"values": [
+				{
+					"value": "http://acl:8085/oauth/token",
+					"description": "Use ACL as provider through gateway/loadbalancer."
+				},
+				{
+					"value": "http://localhost:8085/oauth/token",
+					"description": "Use ACL as provider on the local machine."
+				}
+			]
+		},
+		{
+			"name": "module.oauth2.scope",
+			"values": [
+				{
+					"value": "read,write",
+					"description": "Read and write scopes."
+				}
+			]
+		}
+	]
+}

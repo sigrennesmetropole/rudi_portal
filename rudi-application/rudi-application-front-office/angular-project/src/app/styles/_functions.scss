@@ -1,0 +1,9 @@
+
+/**
+ * @param $n   number of elements sharing the same space
+ * @param $gap margin between elements (parent's flex attribute : gap), default : 0
+ * @return one portion of a shared 100% space divided by $n
+ */
+@function calc-shared-space($n, $gap: 0) {
+    @return calc((100% - (#{$n} - 1) * #{$gap}) / #{$n});
+}

@@ -1,0 +1,24 @@
+// Tous les styles sont définis dans le composant parent
+@import "../../pages/reuse-declaration/reuse-declaration.component";
+
+.buttons-container {
+    gap: 19px;
+}
+
+.add-dataset-button-multi {
+    border-radius: 6px;
+    background-color: $primary-color;
+    color: $secondary-color;
+    font-size: 16px;
+    font-weight: bold;
+
+    &:hover {
+        background-color: $focus;
+        color: $secondary-color;
+    }
+
+    width: 190px;
+    height: 70px;
+    white-space: normal;
+    line-height: 1.25;
+}

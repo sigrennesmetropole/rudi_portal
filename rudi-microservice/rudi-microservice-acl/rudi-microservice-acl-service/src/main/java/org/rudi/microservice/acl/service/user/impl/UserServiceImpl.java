@@ -3,10 +3,13 @@
  */
 package org.rudi.microservice.acl.service.user.impl;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.ClientKey;
@@ -16,6 +19,7 @@ import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.service.helper.PasswordHelper;
 import org.rudi.microservice.acl.service.mapper.AbstractAddressMapper;
 import org.rudi.microservice.acl.service.mapper.UserFullMapper;
+import org.rudi.microservice.acl.service.mapper.UserLightMapper;
 import org.rudi.microservice.acl.service.mapper.UserMapper;
 import org.rudi.microservice.acl.service.user.UserService;
 import org.rudi.microservice.acl.storage.dao.address.AbstractAddressDao;
@@ -27,6 +31,7 @@ import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
 import org.rudi.microservice.acl.storage.entity.address.AddressRoleEntity;
 import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
+import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -34,10 +39,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.net.ssl.SSLException;
 import javax.validation.Valid;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +56,7 @@ import java.util.UUID;
  */
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 	private static final String UUID_USER_MISSING_MESSAGE = "UUID user missing";
@@ -65,6 +72,14 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${apimanager.oauth2.client.anonymous.password}")
 	private String anonymousPassword;
+
+	@Value("${user.authentication.maxFailedAttempt:10}")
+	@Getter
+	private int maxFailedAttempt;
+
+	@Value("${user.authentication.lockDuration:20}")
+	@Getter
+	private int lockDuration;
 
 	@Autowired
 	private UtilContextHelper utilContextHelper;
@@ -94,6 +109,9 @@ public class UserServiceImpl implements UserService {
 	private UserFullMapper userFullMapper;
 
 	@Autowired
+	private UserLightMapper userLightMapper;
+
+	@Autowired
 	private AbstractAddressMapper abstractAddressMapper;
 
 	@Autowired
@@ -113,6 +131,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User getUserInfo(UUID uuid) {
+		return userLightMapper.entityToDto(userDao.findByUuid(uuid));
+	}
+
+	@Override
 	public User getMe() {
 		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
 		if (authenticatedUser != null) {
@@ -125,7 +148,7 @@ public class UserServiceImpl implements UserService {
 	public User getUserByLogin(String login, boolean withPassword) {
 		UserEntity user = userDao.findByLogin(login);
 		User result = userFullMapper.entityToDto(user);
-		if (withPassword) {
+		if (result != null && withPassword) {
 			result.setPassword(user.getPassword());
 		}
 		return result;
@@ -298,19 +321,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ClientKey getClientKeyByLogin(String login) throws SSLException {
+	public ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException {
 		ClientKey clientKey = null;
 		if (StringUtils.isEmpty(login)) {
 			throw new IllegalArgumentException(LOGIN_USER_MISSING_MESSAGE);
 		}
 		ClientRegistration clientRegistration = customClientRegistrationRepository.findByRegistrationId(login).block();
 		if (clientRegistration != null) {
-			clientKey = new ClientKey().clientId(clientRegistration.getClientId()).clientSecret(clientRegistration.getClientSecret());
+			clientKey = new ClientKey().clientId(clientRegistration.getClientId())
+					.clientSecret(clientRegistration.getClientSecret());
 		}
 		// si c'est l'utilisateur anonymous, on crée son client id et client secret
 		else if (login.equals(anonymousUsername)) {
-			clientRegistration = customClientRegistrationRepository.addClientRegistration(anonymousUsername, anonymousPassword);
-			clientKey = new ClientKey().clientId(clientRegistration.getClientId()).clientSecret(clientRegistration.getClientSecret());
+			clientRegistration = customClientRegistrationRepository.addClientRegistration(anonymousUsername,
+					anonymousPassword);
+			clientKey = new ClientKey().clientId(clientRegistration.getClientId())
+					.clientSecret(clientRegistration.getClientSecret());
 		}
 
 		return clientKey;
@@ -334,5 +360,49 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 		return roleDao.findByUUID(role.getUuid());
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public boolean recordAuthentication(UUID userUuid, boolean success) {
+		UserEntity user = userDao.findByUuid(userUuid);
+		if (user == null) {
+			throw new IllegalArgumentException("Unknown user:" + userUuid);
+		}
+		if (success) {
+			unlockUser(user);
+			user.setLastConnexion(LocalDateTime.now());
+		} else {
+			user.setLastFailedAttempt(LocalDateTime.now());
+			user.incrementFailedAttempts();
+			if (user.getFailedAttempt() > maxFailedAttempt) {
+				if (user.getType() != UserType.ROBOT) {
+					user.lockAccount();
+					log.info("Lock account for {} due to maxFailedAttempt exceeded", user.getLogin());
+				} else {
+					log.warn("Record authentication failure for robot {}. Failed attempts execeeded:{}",
+							user.getLogin(), user.getFailedAttempt());
+				}
+			}
+		}
+		userDao.save(user);
+		return user.isAccountLocked();
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void unlockUsers() {
+		LocalDateTime d = LocalDateTime.now().minus(Duration.ofMinutes(lockDuration));
+		List<UserEntity> users = userDao.findByAccountLockedAndLastFailedAttemptLessThan(true, d);
+		if (CollectionUtils.isNotEmpty(users)) {
+			users.stream().forEach(user -> unlockUser(user));
+		}
+	}
+
+	protected void unlockUser(UserEntity user) {
+		user.unlockAccount();
+		user.resetFailedAttempt();
+		user.setLastFailedAttempt(null);
+		userDao.save(user);
 	}
 }

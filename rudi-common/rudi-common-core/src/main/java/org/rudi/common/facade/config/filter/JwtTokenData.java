@@ -1,15 +1,18 @@
 package org.rudi.common.facade.config.filter;
 
-import lombok.Data;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import lombok.Data;
 
 @Data
 public class JwtTokenData {
 
 	// Token JWT
 	private String token;
+
+	// Issuer du token
+	private String issuer;
 
 	// Nom unique contenu dans le token
 	private String subject;

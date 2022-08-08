@@ -1,0 +1,14 @@
+{
+	"resource_title": "JDD avec 3 mots-clés en commun",
+	"theme": "environment",
+	"keywords": [
+		"biogaz",
+		"agriculture",
+		"méthane"
+	],
+	"producer": {
+		"organization_id": "57c5db0a-2cc3-4e38-9d6e-a28802dec092",
+		"organization_name": "Ademe",
+		"organization_address": "15 rue des déménageurs bretons"
+	}
+}

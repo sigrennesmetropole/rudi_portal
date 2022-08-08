@@ -1,12 +1,13 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
-import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.ehcache.Cache;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
+import org.rudi.facet.apimaccess.api.MonoUtils;
 import org.rudi.facet.apimaccess.exception.APIManagerHttpException;
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,7 +75,7 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
         }
     }
 
-    public ClientRegistration addClientRegistration(String username, String password) throws SSLException {
+    public ClientRegistration addClientRegistration(String username, String password) throws SSLException, BuildClientRegistrationException {
         ClientRegistration clientRegistration = buildClientRegistration(username, password);
         cache.put(username, clientRegistration);
         return clientRegistration;
@@ -86,8 +87,8 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
         }
     }
 
-	private ClientRegistration buildClientRegistration(String username, String password) throws SSLException {
-		ClientAccessPayload clientAccessPayload = ClientAccessPayload.builder()
+	private ClientRegistration buildClientRegistration(String username, String password) throws SSLException, BuildClientRegistrationException {
+		final var clientAccessPayload = ClientAccessPayload.builder()
 				.callbackUrl("www.google.lk")
 				.clientName(username)
 				.owner(username)
@@ -95,17 +96,17 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
 				.saasApp(true)
 				.build();
 
-		SslContext sslContext = SslContextBuilder
+		final var sslContext = SslContextBuilder
 				.forClient()
 				.trustManager(InsecureTrustManagerFactory.INSTANCE)
 				.build();
-		HttpClient httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+		final var httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
 
-		final WebClient webClient = WebClient.builder()
+		final var webClient = WebClient.builder()
 				.clientConnector(new ReactorClientHttpConnector(httpClient))
 				.filter(APIManagerHttpException.errorHandlingFilter())
 				.build();
-		return webClient
+		final var mono = webClient
 				.post()
 				.uri(registrationUri)
 				.headers(httpHeaders -> httpHeaders.setBasicAuth(username, password))
@@ -115,8 +116,8 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
 				.flatMap((ClientResponse clientResponse) ->
 						clientResponse.bodyToMono(ClientAccessKey.class).map(clientAccessKey ->
 								buildClientRegistration(username, clientAccessKey)
-						))
-				.block();
+						));
+		return MonoUtils.blockOrThrow(mono, e -> new BuildClientRegistrationException(username, e));
 	}
 
     private ClientRegistration buildClientRegistration(String registrationId, ClientAccessKey clientAccessKey) {

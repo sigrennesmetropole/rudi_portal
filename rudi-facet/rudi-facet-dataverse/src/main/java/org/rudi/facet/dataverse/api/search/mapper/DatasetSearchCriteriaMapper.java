@@ -7,11 +7,11 @@ public abstract class DatasetSearchCriteriaMapper {
 
 	protected abstract String getSortField(String sortBy);
 
-	protected String[] extractSortParams(String sort) {
+	protected SortParam extractSortParams(String sort) {
 
 		String sortBy = null;
 		// ordre de tri par défaut : ascendant
-		String orderBy = "asc";
+		var orderBy = SortParam.Order.ASC;
 
 		if (sort != null) {
 
@@ -25,24 +25,16 @@ public abstract class DatasetSearchCriteriaMapper {
 
 				if (f.startsWith("-")) {
 					// signe - : ordre descendant
-					orderBy = "desc";
+					orderBy = SortParam.Order.DESC;
 					sortBy = f.substring(1);
 				} else {
 					// pas de signe : odre ascendant
-					orderBy = "asc";
+					orderBy = SortParam.Order.ASC;
 					sortBy = f;
 				}
 			}
 		}
-		return new String[]{ getSortField(sortBy), orderBy };
-	}
-
-	protected String wildcardSingleTerm(String term) {
-		return "*" + term + "*";
-	}
-
-	protected String putInQuotes(String phrase) {
-		return "\"" + phrase + "\"";
+		return new SortParam(getSortField(sortBy), orderBy);
 	}
 
 }

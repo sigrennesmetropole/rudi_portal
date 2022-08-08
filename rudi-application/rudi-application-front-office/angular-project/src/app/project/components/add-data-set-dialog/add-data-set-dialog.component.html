@@ -1,0 +1,29 @@
+<div id="content">
+    <mat-dialog-actions class="dialog-header-button">
+        <mat-icon svgIcon="icon-close" class="icon-close" [mat-dialog-close]="null"></mat-icon>
+        <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+    </mat-dialog-actions>
+    <mat-dialog-content>
+        <app-page-title class="dialog-title"
+                        [title1]="'project.addDatasetPopup.title1'|translate"></app-page-title>
+        <app-list-container [hidePagination]="true" [limit]="maxResultPerPage" [resultsPerRow]="3" [isSelectable]="true"
+                            (dbSelectMetadata)="doubleSelect($event)  " (selectMetadata)="selectMetadata($event)"
+                            [restrictedAccessForcedValue]="restrictedAccessForcedValue" [orders]="orders"
+                            [mediaSize]="mediaSize"></app-list-container>
+
+        <mat-dialog-actions class="d-flex justify-content-between dialog-footer-button">
+            <button class="buttons mat-stroked-button btn dialog-cancel" mat-raised-button [mat-dialog-close]="null">
+                <span>{{'project.addDatasetPopup.cancel'|translate}}</span>
+            </button>
+            <button class="buttons mat-stroked-button btn dialog-validate" mat-raised-button (click)="validate()"
+                    [disabled]="!selectedMetadata">
+                <span>{{'project.addDatasetPopup.validate'|translate}}</span>
+            </button>
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</div>
+
+
+
+
+

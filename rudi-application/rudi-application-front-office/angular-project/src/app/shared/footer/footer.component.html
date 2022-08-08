@@ -1,0 +1,107 @@
+<mat-divider
+    [ngClass]="{'mat-divider-horizontal': mediaSize.isDeviceDesktop, 'mat-divider-horizontal-mobile': mediaSize.isDeviceMobile}"
+    xmlns="http://www.w3.org/1999/html"></mat-divider>
+
+<!--Toolbar nous contacter - Mention legales-->
+<mat-toolbar *ngIf="mediaSize.isDeviceDesktop" class="rudi-footer-container-lg">
+    <mat-toolbar-row class="toolbar-icon-group justify-content-between" style="margin-top:59px">
+        <div class="d-flex align-items-center w-15 justify-content-start">
+            <a class="btn-nous-contacter" href="{{'rudidatarennes.contact' | getBackendProperty|async}}"
+               rel="noopener noreferrer"
+                >{{'footer.nousContacter'|translate}}</a>
+        </div>
+        <div id="menu-footer"
+             class="menu-footer font-weight-normal footer-menu-lg d-flex justify-content-end align-items-center w-85">
+            <a href="{{'rudidatarennes.cgu'|getBackendProperty|async}}" rel="noopener noreferrer"
+               class="rudi-label-lien">{{'footer.cgu'|translate}}</a>
+            <mat-divider class="divider-color" [vertical]="true"></mat-divider>
+            <a href="{{'rudidatarennes.confidentialite'|getBackendProperty|async}}" rel="noopener noreferrer"
+               class="rudi-label-lien">{{'footer.politiqueConfidentialite'|translate}}</a>
+            <mat-divider [vertical]="true"></mat-divider>
+            <a href="{{'rudidatarennes.mentionsLegales'|getBackendProperty|async}}" rel="noopener noreferrer"
+               class="rudi-label-lien">{{'footer.mentionLegale'|translate}}</a>
+        </div>
+    </mat-toolbar-row>
+
+    <!--    Toolbar Copyright - reseau social-->
+    <mat-toolbar-row class="toolbar-icon-group justify-content-between bandeau-bleu-footer" style="margin-top:59px">
+        <div id="bandeau-bleu-footer" class="d-flex align-items-center w-15 justify-content-start">
+            <span
+                class="rudi-label-lien">{{'footer.rudiCopyright'|translate}}</span>
+            <mat-divider [vertical]="true"></mat-divider>
+            <span
+                class="rudi-label-lien">{{'footer.tousDroits'|translate}}</span>
+            <mat-divider [vertical]="true"></mat-divider>
+            <span class="rudi-label-lien" *ngIf="appInfo !== undefined">{{'footer.version' | translate}} {{appInfo?.version}}</span>
+        </div>
+        <div
+            class="font-weight-normal footer-menu-lg d-flexjustify-content-end align-items-center w-85 pointer footer-social-link">
+            <span><a href="https://twitter.com/projetrudi?lang=fr" rel="noopener noreferrer" target="_blank">
+                <em class="fa fa-twitter fa-1x fa-icon-style mr-4"></em></a></span>
+            <span><a href="https://www.linkedin.com/company/projet-rudi/" rel="noopener noreferrer" target="_blank"><em
+                class="fa fa-linkedin fa-1x fa-icon-style"></em></a></span>
+            <span><em
+                class="fa fa-angle-up fa-1x fa-icon-style fa-angle-marge" (click)="goToTop()"></em>
+            </span>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<!--Fin toolbar Desktop -->
+
+<!-- Toolbar Mobile -->
+<!--Button nous contacter-->
+<mat-toolbar *ngIf="mediaSize.isDeviceMobile" class="rudi-footer-container">
+    <mat-toolbar-row style="margin-top: 56px">
+        <div class="d-flex align-items-center w-15 justify-content-start">
+            <button mat-flat-button class="btn-nous-contacter text-uppercase">
+                <a href="{{'rudidatarennes.contact'|getBackendProperty|async}}"
+                   rel="noopener noreferrer">{{'footer.nousContacter'|translate}}</a>
+            </button>
+        </div>
+    </mat-toolbar-row>
+
+    <!--    Block CDU et Mentions legales-->
+    <mat-toolbar-row class="justify-content-end font-weight-normal footer-legal-notice" style="margin-top: 132px">
+        <p class="d-flex align-items-center">
+            <a href="{{'rudidatarennes.cgu'|getBackendProperty|async}}"
+               class="rudi-label-lien-mobile-mention">{{'footer.cgu'|translate}}</a>
+            <mat-divider class="divider-bleu" [vertical]="true"></mat-divider>
+            <a href="{{'rudidatarennes.confidentialite'|getBackendProperty|async}}"
+               class="rudi-label-lien-mobile-mention">{{'footer.politiqueConfidentialite'|translate}}</a>
+            <mat-divider class="divider-bleu" [vertical]="true"></mat-divider>
+            <a href="{{'rudidatarennes.mentionsLegales'|getBackendProperty|async}}"
+               class="rudi-label-lien-mobile-mention">{{'footer.mentionLegale'|translate}}</a>
+        </p>
+    </mat-toolbar-row>
+
+    <!-- Block Copyright -->
+    <mat-toolbar-row class="toolbar-icon-group toolbar-row-copyright">
+        <div class="d-flex align-items-center justify-content-center" style="margin-top: 60px;">
+            <span class="rudi-label-lien-mobile">{{'footer.rudiCopyright'|translate}}</span>
+            <span class="rudi-label-lien-mobile mx-0">|</span>
+            <span class="rudi-label-lien-mobile">{{'footer.tousDroits'|translate}}</span>
+            <span class="rudi-label-lien-mobile mx-0">|</span>
+            <span class="rudi-label-lien-mobile">{{appInfo?.version}}</span>
+        </div>
+
+        <!--  Group reseau social-->
+        <div class="font-weight-normal d-flex align-items-center justify-content-center footer-social-link"
+             style="margin-top: 25px;">
+            <span><a href="https://twitter.com/projetrudi?lang=fr" rel="noopener noreferrer" target="_blank">
+                <em class="fa fa-twitter fa-1x fa-icon-style-mobile mr-4"></em></a></span>
+            <span><a href="https://www.linkedin.com/company/projet-rudi/" rel="noopener noreferrer" target="_blank"><em
+                class="fa fa-linkedin fa-1x fa-icon-style-mobile"></em></a></span>
+        </div>
+
+        <!--   Button goTop-->
+        <div class="font-weight-normal d-flex align-items-center justify-content-end mr-3"
+             style="margin-top: 5px;margin-bottom: 34px">
+            <span><em
+                class="fa fa-angle-up fa-1x fa-icon-style-mobile fa-angle-marge" (click)="goToTop()"></em>
+            </span>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+<!-- Fin toolbar Mobile -->
+

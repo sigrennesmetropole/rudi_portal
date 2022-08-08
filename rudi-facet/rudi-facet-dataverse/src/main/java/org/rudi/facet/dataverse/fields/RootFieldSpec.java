@@ -1,6 +1,7 @@
 package org.rudi.facet.dataverse.fields;
 
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.rudi.facet.dataverse.bean.FieldTypeClass;
 
@@ -22,6 +23,11 @@ public class RootFieldSpec extends FieldSpec {
 	@Override
 	public String getLocalName() {
 		return name;
+	}
+
+	@Override
+	public String getFacet() {
+		return StringUtils.EMPTY;
 	}
 
 	@Override

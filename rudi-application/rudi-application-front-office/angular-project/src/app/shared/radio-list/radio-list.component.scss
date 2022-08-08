@@ -1,0 +1,51 @@
+@import "src/app/styles/font-open-sans";
+
+.radio-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 5px;
+}
+
+.radio-body {
+    margin-bottom: 10px;
+}
+
+:host ::ng-deep .mat-radio-label{
+    margin: 0;
+}
+
+// Pouvoir modifier la taille du bouton radio
+:host ::ng-deep .mat-radio-container{
+    height: 13px;
+    width: 13px;
+}
+
+// Pouvoir modifier la taille du bouton radio
+:host ::ng-deep .mat-radio-outer-circle{
+    height: 13px;
+    width: 13px;
+}
+
+// Pouvoir modifier la taille du bouton radio
+:host ::ng-deep .mat-radio-inner-circle{
+    height: 13px;
+    width: 13px;
+}
+:host ::ng-deep .mat-radio-button .mat-radio-ripple{
+    height: 26px; /*double of your required circle radius*/
+    width: 26px;  /*double of your required circle radius*/
+    left: calc(50% - 13px); /*'10px'-same as your required circle radius*/
+    top: calc(50% - 13px); /*'10px'-same as your required circle radius*/
+}
+
+.option-title {
+    font-weight: bold;
+}
+
+.option-detail {
+    margin-left: 22px;
+    font-size: small;
+    color: #71757e;
+}

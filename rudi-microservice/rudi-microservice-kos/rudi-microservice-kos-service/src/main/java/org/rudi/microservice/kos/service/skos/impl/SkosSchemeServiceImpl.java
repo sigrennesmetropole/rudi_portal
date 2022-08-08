@@ -8,6 +8,7 @@ import org.rudi.microservice.kos.core.bean.SkosConcept;
 import org.rudi.microservice.kos.core.bean.SkosRelationType;
 import org.rudi.microservice.kos.core.bean.SkosScheme;
 import org.rudi.microservice.kos.core.bean.SkosSchemeSearchCriteria;
+import org.rudi.microservice.kos.service.exception.MissingPreferredLabelForDefaultLanguageException;
 import org.rudi.microservice.kos.service.mapper.SkosConceptFullMapper;
 import org.rudi.microservice.kos.service.mapper.SkosConceptMapper;
 import org.rudi.microservice.kos.service.mapper.SkosSchemeMapper;
@@ -18,6 +19,7 @@ import org.rudi.microservice.kos.storage.dao.skos.SkosSchemeDao;
 import org.rudi.microservice.kos.storage.entity.skos.SkosConceptEntity;
 import org.rudi.microservice.kos.storage.entity.skos.SkosRelationConceptEntity;
 import org.rudi.microservice.kos.storage.entity.skos.SkosSchemeEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,9 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 	private final SkosConceptMapper skosConceptMapper;
 	private final SkosConceptFullMapper skosConceptFullMapper;
 
+	@Value("${kos.translation.default.language.value:fr}")
+	private String defaultLanguageValue;
+
 	@Override
 	public SkosScheme getSkosScheme(UUID uuid) {
 		if (uuid == null) {
@@ -62,7 +67,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	@Override
 	@Transactional
-	public SkosScheme createSkosScheme(SkosScheme skosScheme) {
+	public SkosScheme createSkosScheme(SkosScheme skosScheme) throws MissingPreferredLabelForDefaultLanguageException {
 		if (skosScheme == null) {
 			throw new IllegalArgumentException(SKOS_SCHEME_MISSING_MESSAGE);
 		}
@@ -80,7 +85,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	@Override
 	@Transactional
-	public SkosScheme updateSkosScheme(SkosScheme skosScheme) {
+	public SkosScheme updateSkosScheme(SkosScheme skosScheme) throws MissingPreferredLabelForDefaultLanguageException {
 
 		if (skosScheme == null) {
 			throw new IllegalArgumentException(SKOS_SCHEME_MISSING_MESSAGE);
@@ -141,7 +146,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	@Override
 	@Transactional
-	public SkosConcept createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept) {
+	public SkosConcept createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept) throws MissingPreferredLabelForDefaultLanguageException {
 		if (skosSchemeUuid == null) {
 			throw new IllegalArgumentException(UUID_SKOS_SCHEME_MISSING_MESSAGE);
 		}
@@ -175,7 +180,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	@Override
 	@Transactional
-	public SkosConcept updateSkosConcept(UUID skosSchemeUuid, @Valid SkosConcept skosConcept, Boolean asTopConcept) {
+	public SkosConcept updateSkosConcept(UUID skosSchemeUuid, @Valid SkosConcept skosConcept, Boolean asTopConcept) throws MissingPreferredLabelForDefaultLanguageException {
 		if (skosSchemeUuid == null) {
 			throw new IllegalArgumentException(UUID_SKOS_SCHEME_MISSING_MESSAGE);
 		}
@@ -265,7 +270,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 	}
 
-	private void validEntity(SkosConceptEntity entity) {
+	private void validEntity(SkosConceptEntity entity) throws MissingPreferredLabelForDefaultLanguageException {
 		if (StringUtils.isEmpty(entity.getCode())) {
 			throw new IllegalArgumentException("Invalid empty code:" + entity);
 		}
@@ -273,6 +278,13 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		if (CollectionUtils.isEmpty(entity.getPreferedLabels())) {
 			throw new IllegalArgumentException("Invalid empty preferedLabels:" + entity);
 		}
+
+		// Concept must have at least one preferred label for default language
+		entity.getPreferedLabels()
+				.stream()
+				.filter(preferedLabel -> preferedLabel.getLang().equals(defaultLanguageValue))
+				.findAny()
+				.orElseThrow(() -> new MissingPreferredLabelForDefaultLanguageException(entity.getCode(), defaultLanguageValue));
 	}
 
 	/**
@@ -281,15 +293,15 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 	 * @param topConcepts			liste des tops concepts
 	 * @param skosSchemeEntity		skosScheme
 	 */
-	private void saveSkosSchemeTopConcepts(List<SkosConcept> topConcepts, SkosSchemeEntity skosSchemeEntity) {
+	private void saveSkosSchemeTopConcepts(List<SkosConcept> topConcepts, SkosSchemeEntity skosSchemeEntity) throws MissingPreferredLabelForDefaultLanguageException {
 		if (CollectionUtils.isNotEmpty(topConcepts)) {
-			topConcepts.forEach(topConcept -> {
+			for (SkosConcept topConcept : topConcepts) {
 				SkosConceptEntity skosConceptEntity = skosConceptFullMapper.dtoToEntity(topConcept);
 				skosConceptEntity.setUuid(UUID.randomUUID());
 				saveSkosConceptEntitiesFromRootTopConcept(skosConceptEntity, topConcept, skosSchemeEntity);
 
 				skosSchemeEntity.addTopConcept(skosConceptEntity);
-			});
+			}
 			skosSchemeDao.save(skosSchemeEntity);
 		}
 	}
@@ -300,11 +312,11 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 	 * @param skosConcept			skosConcept
 	 * @param skosSchemeEntity		skosSchemeEntity
 	 */
-	private void saveSkosConceptEntitiesFromRootTopConcept(SkosConceptEntity skosConceptEntity, SkosConcept skosConcept, SkosSchemeEntity skosSchemeEntity) {
+	private void saveSkosConceptEntitiesFromRootTopConcept(SkosConceptEntity skosConceptEntity, SkosConcept skosConcept, SkosSchemeEntity skosSchemeEntity) throws MissingPreferredLabelForDefaultLanguageException {
 		validEntity(skosConceptEntity);
 		skosConceptEntity.setOfScheme(skosSchemeEntity);
 		if (CollectionUtils.isNotEmpty(skosConcept.getNarrowerConcepts())) {
-			skosConcept.getNarrowerConcepts().forEach(narrowerSkosConcept -> {
+			for (SkosConcept narrowerSkosConcept : skosConcept.getNarrowerConcepts()) {
 				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(narrowerSkosConcept, skosSchemeEntity);
 				saveSkosConceptEntitiesFromRootTopConcept(generatedEntity, narrowerSkosConcept, skosSchemeEntity);
 
@@ -314,10 +326,10 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 				skosRelationConceptEntity.setType(SkosRelationType.NARROWING);
 
 				skosConceptEntity.addSkosRelation(skosRelationConceptEntity);
-			});
+			}
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getSiblingConcepts())) {
-			skosConcept.getSiblingConcepts().forEach(siblingSkosConcept -> {
+			for (SkosConcept siblingSkosConcept : skosConcept.getSiblingConcepts()) {
 				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(siblingSkosConcept, skosSchemeEntity);
 				saveSkosConceptEntitiesFromRootTopConcept(generatedEntity, siblingSkosConcept, skosSchemeEntity);
 
@@ -327,10 +339,10 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 				skosRelationConceptEntity.setType(SkosRelationType.SIBLING);
 
 				skosConceptEntity.addSkosRelation(skosRelationConceptEntity);
-			});
+			}
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getRelativeConcepts())) {
-			skosConcept.getRelativeConcepts().forEach(relativeSkosConcept -> {
+			for (SkosConcept relativeSkosConcept : skosConcept.getRelativeConcepts()) {
 				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(relativeSkosConcept, skosSchemeEntity);
 				saveSkosConceptEntitiesFromRootTopConcept(generatedEntity, relativeSkosConcept, skosSchemeEntity);
 
@@ -340,7 +352,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 				skosRelationConceptEntity.setType(SkosRelationType.RELATIVE);
 
 				skosConceptEntity.addSkosRelation(skosRelationConceptEntity);
-			});
+			}
 		}
 		skosConceptDao.save(skosConceptEntity);
 	}

@@ -1,0 +1,78 @@
+@import "../../../styles/variables-rudi";
+@import "../../../styles/common-style";
+
+.dataset-card {
+
+    border-top: solid 1px $keywords-outline;
+    margin: 1em 0 0 0;
+    padding-top: 1em;
+
+    display: flex;
+
+    .logo-container {
+        justify-content: center;
+
+        .logo-static {
+            width: 70px;
+            height: 70px;
+            padding: 10px 4px 10px 4px;
+            border-radius: 3.4px;
+            border: solid 0.9px $blocks-and-menus-outline;
+            background: $secondary-color;
+        }
+    }
+
+    .dataset-info {
+        display: flex;
+        align-items: center;
+        width: 70%;
+        overflow: hidden;
+        font-family: OpenSans, sans-serif;
+        margin-left: 12px;
+        margin-right: 12px;
+
+        .jdd-info-container {
+            text-align: left;
+        }
+
+        &-organization_name {
+            font-size: 12px;
+            line-height: 1.67;
+            color: $primary-text;
+        }
+
+        &-resource_title {
+            font-size: 16px;
+            color: $primary-color;
+            font-weight: 600;
+            @include max-3-lignes;
+        }
+
+        &-title-icon {
+            @include mat-icon-size(18px);
+            margin-right: 2px;
+        }
+    }
+
+    .dataset-actions {
+        width: 15%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        mat-icon {
+            cursor: pointer;
+        }
+
+        .rudi-icon-encircled {
+            font-size: 18px;
+            border-color: $encircled-color;
+            color: $encircled-color
+        }
+
+        mat-icon {
+            margin-right: 14px;
+        }
+    }
+
+}

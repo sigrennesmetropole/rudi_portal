@@ -8,6 +8,7 @@ import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataFacets;
 import org.rudi.facet.kaccess.bean.MetadataList;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,7 +49,7 @@ public interface MetadataService {
 	 * @return DocumentContent
 	 * @throws AppServiceException Erreur lors de la récupération des données
 	 */
-	DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException;
+	DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException;
 
 	/**
 	 * Permet de savoir si l'utilisateur connecté a souscrit à l'api
@@ -59,4 +60,15 @@ public interface MetadataService {
 	 * @throws AppServiceException Pas de souscription à l'API
 	 */
 	Boolean hasSubscribeToMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException;
+
+	/**
+	 * @return liste des JDD partageant le même thème (cf RUDI-292)
+	 */
+	List<Metadata> getMetadatasWithSameTheme(UUID globalId, Integer limit) throws AppServiceException;
+
+	/**
+	 * @param globalId du dataset
+	 * @return nombre de dataset sur le même thème
+	 */
+	Integer getNumberOfDatasetsOnTheSameTheme(UUID globalId) throws AppServiceException;
 }

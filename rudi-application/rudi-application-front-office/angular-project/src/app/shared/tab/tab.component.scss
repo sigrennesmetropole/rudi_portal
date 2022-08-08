@@ -1,0 +1,41 @@
+@import "src/app/styles/common-style";
+
+:host {
+    position: relative;
+    top: 1px;
+}
+
+button, .button {
+    font-family: OpenSans, sans-serif;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 6px;
+    height: 42px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: $primary-text;
+    border: solid 1px var(--4-contours-blocs-menus);
+    background-color: $secondary-color;
+
+    &.active {
+        color: $secondary-color;
+        background-color: var(--0-classic-blue);
+    }
+
+    &.with-icon {
+        padding-left: 14px;
+    }
+}
+
+mat-icon {
+    top: -3px;
+    position: relative;
+    height: 20px;
+    margin-right: 5px;
+}
+
+::ng-deep {
+    svg {
+        vertical-align: unset;
+    }
+}

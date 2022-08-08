@@ -6,16 +6,14 @@ import {Filter} from './filter';
 export type OrderValue =
     'name' |
     '-name' |
-    'title' |
-    '-title' |
-    'producername' |
-    '-producername' |
-    'updatedate' |
-    '-updatedate';
+    'resource_title' |
+    '-resource_title' |
+    'producer.organization_name' |
+    '-producer.organization_name' |
+    'dataset_dates.updated' |
+    '-dataset_dates.updated';
 
-export const DESC_PREFIX = '-';
-
-export const DEFAULT_VALUE: OrderValue = 'name';
+export const DEFAULT_VALUE: OrderValue = 'resource_title';
 
 export class OrderFilter extends Filter<OrderValue> {
     protected filtersKey = 'order';

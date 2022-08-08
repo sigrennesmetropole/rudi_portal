@@ -1,10 +1,4 @@
-/**
- * 
- */
 package org.rudi.microservice.template.service.domaina.impl;
-
-import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.service.helper.UtilContextHelper;
@@ -17,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author FNI18300
@@ -41,22 +38,22 @@ public class TemplateServiceImpl implements TemplateService {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional // readOnly = false
 	public Template createTemplate(Template template) {
-		TemplateEntity entity = templateMapper.dtoToEntity(template);
+		final var entity = templateMapper.dtoToEntity(template);
 		entity.setUuid(UUID.randomUUID());
 		validEntity(entity);
-		templateDao.save(entity);
-		return templateMapper.entityToDto(entity);
+		final var savedEntity = templateDao.save(entity);
+		return templateMapper.entityToDto(savedEntity);
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional // readOnly = false
 	public Template updateTemplate(Template template) {
 		if (template.getUuid() == null) {
 			throw new IllegalArgumentException("UUID manquant");
 		}
-		TemplateEntity entity = templateDao.findByUUID(template.getUuid());
+		TemplateEntity entity = templateDao.findByUuid(template.getUuid());
 		if (entity == null) {
 			throw new IllegalArgumentException("Resource inexistante:" + template.getUuid());
 		}
@@ -67,9 +64,9 @@ public class TemplateServiceImpl implements TemplateService {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional // readOnly = false
 	public void deleteTemplate(UUID uuid) {
-		TemplateEntity entity = templateDao.findByUUID(uuid);
+		TemplateEntity entity = templateDao.findByUuid(uuid);
 		if (entity == null) {
 			throw new IllegalArgumentException("Resource inexistante:" + uuid);
 		}

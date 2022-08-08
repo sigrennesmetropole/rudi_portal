@@ -2,7 +2,6 @@ package org.rudi.microservice.konsult.service.metadata;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
@@ -17,14 +16,12 @@ import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
-import org.rudi.microservice.konsult.service.SpringBootTestApplication;
-import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMedia;
+import org.rudi.microservice.konsult.service.KonsultSpringBootTest;
+import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
 import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -44,8 +41,7 @@ import static org.mockito.Mockito.when;
 /**
  * Class de test de MetadataService
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpringBootTestApplication.class })
+@KonsultSpringBootTest
 public class MetadataServiceTest {
 
 	private static final JsonResourceReader JSON_RESOURCE_READER = new JsonResourceReader();
@@ -95,7 +91,7 @@ public class MetadataServiceTest {
 
 		mockBuildAPIAccessUrls(jddOuvert);
 
-		when(apiManagerHelper.checkUsernameAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert), argThatAsSameMediaIdAs(media)))
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert), argThatAsSameMediaIdAs(media)))
 				.thenReturn(anonymousUsername);
 
 		DocumentContent mediaTelechargeJdd = new DocumentContent("test", "mediaType", new File("null"));
@@ -137,7 +133,7 @@ public class MetadataServiceTest {
 
 		mockBuildAPIAccessUrls(jddOuvert);
 
-		when(apiManagerHelper.checkUsernameAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert), argThatAsSameMediaIdAs(media)))
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert), argThatAsSameMediaIdAs(media)))
 				.thenReturn(anonymousUsername);
 
 		assertThatThrownBy(() -> metadataService.downloadMetadataMedia(jddOuvert.getGlobalId(), media.getMediaId()))
@@ -157,11 +153,11 @@ public class MetadataServiceTest {
 
 		mockBuildAPIAccessUrls(jddRestreint);
 
-		when(apiManagerHelper.checkUsernameAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint), argThatAsSameMediaIdAs(media)))
-				.thenThrow(AccessDeniedMetadataMedia.class);
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint), argThatAsSameMediaIdAs(media)))
+				.thenThrow(AccessDeniedMetadataMediaException.class);
 
 		assertThatThrownBy(() -> metadataService.downloadMetadataMedia(jddRestreint.getGlobalId(), media.getMediaId()))
-				.isInstanceOf(AccessDeniedMetadataMedia.class);
+				.isInstanceOf(AccessDeniedMetadataMediaException.class);
 	}
 
 	@Test
@@ -176,7 +172,7 @@ public class MetadataServiceTest {
 
 		mockBuildAPIAccessUrls(jddRestreint);
 
-		when(apiManagerHelper.checkUsernameAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint), argThatAsSameMediaIdAs(media)))
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint), argThatAsSameMediaIdAs(media)))
 				.thenReturn(username);
 
 		DocumentContent mediaTelechargeJdd = new DocumentContent("test", "mediaType", new File("null"));

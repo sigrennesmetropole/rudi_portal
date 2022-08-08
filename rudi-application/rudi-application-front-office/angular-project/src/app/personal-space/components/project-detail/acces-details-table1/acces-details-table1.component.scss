@@ -1,0 +1,75 @@
+@import "src/app/styles/common-style";
+
+.mat-table-demandes-acces {
+    width: 100%;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.titre-jdd {
+    font-family: OpenSans;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+    color: $primary-color;
+}
+
+.fake-btn-status {
+    border-radius: 14px;
+    background-color: $banner-solid-color;
+    text-align: center;
+    border: none;
+    padding: 0.5em;
+    margin: 0.5em;
+}
+
+.svg-style {
+    margin-right: 1em;
+}
+
+.table-title-style {
+    font-family: OpenSans;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.table-jdd {
+    margin-top: 3em;
+}
+
+.table-header {
+    font-family: OpenSans;
+    font-size: 13px;
+    font-weight: 600;
+    color: $primary-text;
+    //overide the mat table margin css
+    padding: 0px !important
+}
+
+.first-row {
+    width: 20%;
+}
+
+.second-row {
+    width: 50%;
+}
+
+.table-header:first-child {
+    text-decoration: underline;
+}
+
+.table-header:last-child {
+    display: flex;
+    justify-content: center;
+    height: inherit;
+}
+
+.other-requests-from-others {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+}

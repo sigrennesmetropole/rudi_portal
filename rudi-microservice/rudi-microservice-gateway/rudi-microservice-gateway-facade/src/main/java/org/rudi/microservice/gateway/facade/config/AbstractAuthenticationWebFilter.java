@@ -5,7 +5,7 @@ package org.rudi.microservice.gateway.facade.config;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.facade.config.filter.CommonJwtTokenUtil;
+import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -80,18 +80,18 @@ public abstract class AbstractAuthenticationWebFilter implements WebFilter {
 	protected Mono<Authentication> authenticationConvert(ServerWebExchange exchange) {
 		// Request token header
 		String requestAuthentTokenHeader = exchange.getRequest().getHeaders()
-				.getFirst(CommonJwtTokenUtil.HEADER_TOKEN_JWT_AUTHENT_KEY);
+				.getFirst(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_AUTHENT_KEY);
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Header: {}", requestAuthentTokenHeader);
 		}
 		if (requestAuthentTokenHeader == null) {
 			return Mono.empty();
-		} else if (!requestAuthentTokenHeader.startsWith(CommonJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX)) {
+		} else if (!requestAuthentTokenHeader.startsWith(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX)) {
 			LOGGER.error("Le token ne commence pas avec la chaine Bearer");
 			return Mono.empty();
 		} else {
-			final String token = requestAuthentTokenHeader.substring(CommonJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX.length());
+			final String token = requestAuthentTokenHeader.substring(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX.length());
 
 			return handleToken(token);
 		}

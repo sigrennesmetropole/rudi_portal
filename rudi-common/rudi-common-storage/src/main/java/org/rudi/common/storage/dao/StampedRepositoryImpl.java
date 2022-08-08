@@ -4,6 +4,7 @@ import org.rudi.common.storage.entity.AbstractStampedEntity;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -81,7 +82,18 @@ public class StampedRepositoryImpl<T extends AbstractStampedEntity> extends Simp
 
 	}
 
+	/**
+	 * <b>Attention</b> : cette méthode ne peut être utilisée que pour des entités {@link AbstractStampedEntity}.
+	 * Si on souhaite faire une recherche par UUID pour d'autres entités, il utiliser à la place dans la DAO :
+	 *
+	 * <pre>{@code
+	 * T findByUuid(UUID uuid);
+	 * }</pre>
+	 *
+	 * @throws org.springframework.dao.EmptyResultDataAccessException si l'entité demandée n'a pas été trouvée
+	 */
 	@Override
+	@Nonnull
 	public T findByUUID(UUID uuid) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 

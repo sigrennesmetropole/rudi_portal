@@ -11,7 +11,7 @@ import org.rudi.tools.nodestub.config.NodeStubConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -53,7 +53,7 @@ class ResourcesServiceImplTest {
 
 		when(nodeStubConfiguration.getResourcesDirectory()).thenReturn(RESOURCES_DIRECTORY);
 
-		final LocalDateTime updateAfter = expectedMetadata.getDatasetDates().getUpdated().plus(1, ChronoUnit.SECONDS);
+		final OffsetDateTime updateAfter = expectedMetadata.getDatasetDates().getUpdated().plus(1, ChronoUnit.SECONDS);
 		final List<Metadata> metadataList = resourcesService.getMetadataList(DEFAULT_LIMIT, DEFAULT_OFFSET, updateAfter);
 
 		assertThat(metadataList)

@@ -1,10 +1,5 @@
 package org.rudi.microservice.kalim.facade.controller;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import javax.validation.Valid;
-
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequestPageResult;
@@ -19,6 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
 @RestController
 public class IntegrationRequestController implements IntegrationRequestApi {
 
@@ -31,10 +30,10 @@ public class IntegrationRequestController implements IntegrationRequestApi {
 	@Override
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KALIM_ADMINISTRATOR')")
 	public ResponseEntity<IntegrationRequestPageResult> searchIntegrationRequests(
-			@Valid IntegrationStatus integrationStatus, @Valid LocalDateTime creationDateMin,
-			@Valid LocalDateTime creationDateMax, @Valid LocalDateTime treatmentDateMin,
-			@Valid LocalDateTime treatmentDateMax, @Valid LocalDateTime sendRequestDateMin,
-			@Valid LocalDateTime sendRequestDateMax, @Valid UUID globalId, @Valid Integer offset, @Valid Integer limit,
+			@Valid IntegrationStatus integrationStatus, @Valid OffsetDateTime creationDateMin,
+			@Valid OffsetDateTime creationDateMax, @Valid OffsetDateTime treatmentDateMin,
+			@Valid OffsetDateTime treatmentDateMax, @Valid OffsetDateTime sendRequestDateMin,
+			@Valid OffsetDateTime sendRequestDateMax, @Valid UUID globalId, @Valid Integer offset, @Valid Integer limit,
 			@Valid String order) {
 
 		IntegrationRequestSearchCriteria integrationRequestSearchCriteria = new IntegrationRequestSearchCriteria();

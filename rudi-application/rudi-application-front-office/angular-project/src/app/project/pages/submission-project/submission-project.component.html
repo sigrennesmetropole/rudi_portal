@@ -1,0 +1,97 @@
+<div id="content">
+
+    <app-loader [active]="isLoading"></app-loader>
+
+    <h1>
+        <span class="title-1">{{'project.stepper.submission.title.1' | translate}}</span>&nbsp;<span
+        class="title-2">{{'project.stepper.submission.title.2' | translate}}</span>
+    </h1>
+    <p class="description">{{'project.stepper.submission.description' | translate}}</p>
+
+    <mat-horizontal-stepper [disableRipple]="true" class="rudi-stepper" labelPosition="bottom" linear>
+        <ng-template matStepperIcon="edit">
+            <mat-icon>check</mat-icon>
+        </ng-template>
+
+
+        <!-- Etape 1 -->
+        <mat-step [editable]="true" [stepControl]="step1FormGroup"
+                  label="{{'project.stepper.submission.step1.label' | translate}}">
+
+            <!-- Formulaire de l'étape 1-->
+            <app-step1-project [isPublished]="isPublished"
+                               [step1FormGroup]="step1FormGroup"
+                               [suggestions]="suggestions"
+                               [publicCible]="publicCible"
+                               [territoireScale]="territorialScales"
+                               [supports]="supports"
+                               [projectType]="projectType"
+                               (imageModified)="handleImageChanged($event)">
+            </app-step1-project>
+
+            <!-- Boutons de gestion de l'étape -->
+            <div class="buttons">
+                <button class="button mat-stroked-button previous-button" mat-button (click)="clickCancel()">
+                    <span>{{ 'project.stepper.cancel' | translate }}</span>
+                </button>
+                <button class="button mat-stroked-button next-button" mat-raised-button matStepperNext>
+                    <span>{{ 'project.stepper.continue' | translate }}</span>
+                </button>
+            </div>
+        </mat-step>
+
+        <!-- Etape 2 -->
+        <mat-step [editable]="true" [stepControl]="step2FormGroup"
+                  label="{{'project.stepper.submission.step2.label' | translate}}">
+
+            <!-- Formulaire de l'étape 2 -->
+            <app-step2-project [step2FormGroup]="step2FormGroup" [organizationItems]="organizationItems">
+            </app-step2-project>
+
+            <!-- Boutons de gestion de l'étape -->
+            <div class="buttons">
+                <button class="button mat-stroked-button previous-button" mat-button matStepperPrevious>
+                    <span>{{ 'project.stepper.previous' | translate }}</span>
+                </button>
+                <button class="button mat-stroked-button next-button" mat-raised-button matStepperNext>
+                    <span>{{ 'project.stepper.continue' | translate }}</span>
+                </button>
+            </div>
+        </mat-step>
+
+
+        <!-- Etape 3 -->
+        <mat-step [editable]="true" [stepControl]="step3FormGroup"
+                  label="{{'project.stepper.submission.step3.label' | translate}}">
+
+            <!-- Formulaire de l'étape 3-->
+            <app-step3-project [isPublished]="isPublished"
+                               [isSubmitted]="isSubmitted"
+                               [createdProjectLink]="createdProjectLink"
+                               [step3FormGroup]="step3FormGroup"
+                               [datasetItems]="projectDatasetItems"
+                               (openDatasetDialogOpened)="openDialogAddLinkedDataset(false)"
+                               (restrictedAccessDatasetsDialogOpened)="openDialogAddLinkedDataset(true)"
+                               (requestDatasetDialogOpened)="openDialogAskNewDatasetRequest()"
+                               (itemRemoved)="handleItemRemoved($event)"
+                               (itemEdited)="handleItemEdited($event)"
+            >
+            </app-step3-project>
+            <!-- Boutons de gestion de l'étape -->
+            <div class="buttons" *ngIf="!isSubmitted">
+                <button class="button mat-stroked-button" mat-button matStepperPrevious>
+                    <span>{{ 'project.stepper.previous' | translate }}</span>
+                </button>
+                <span class="spacer"></span>
+                <button (click)="save()" class="button mat-stroked-button next-button mr-3"
+                        mat-raised-button matStepperNext>
+                    <span>{{ 'project.stepper.submission.publish.enregistrer' | translate }}</span>
+                </button>
+                <button (click)="submit()" class="button mat-stroked-button next-button"
+                        mat-raised-button matStepperNext [ngClass]="!isSubmit ? 'submit': 'next-button'">
+                    <span>{{ 'project.stepper.submission.publish.submit' | translate }}</span>
+                </button>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>

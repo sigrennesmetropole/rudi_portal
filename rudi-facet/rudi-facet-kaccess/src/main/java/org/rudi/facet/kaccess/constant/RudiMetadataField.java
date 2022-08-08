@@ -37,7 +37,8 @@ public class RudiMetadataField {
 	 * Correspond au champ DatasetVersion#datasetPersistentId côté Dataverse mais n'existe pas dans les blocks
 	 */
 	public static final FieldSpec DATAVERSE_DOI = ROOT.newChildFromJavaField("dataverseDoi");
-	public static final FieldSpec RESOURCE_TITLE = ROOT.newChildFromJavaField("resourceTitle");
+	public static final FieldSpec RESOURCE_TITLE = ROOT.newChildFromJavaField("resourceTitle")
+			.isSortable(false);
 
 	// abstract renommé en synopsis : l'identifiant rudi_abstract est conservé cause impact dataverse
 	public static final FieldSpec SYNOPSIS = ROOT.newChildFromJavaField("synopsis", "abstract");
@@ -48,8 +49,8 @@ public class RudiMetadataField {
 	public static final FieldSpec SUMMARY_LANGUAGE = SUMMARY.newChildFromJavaField("lang", "language");
 	public static final FieldSpec SUMMARY_TEXT = SUMMARY.newChildFromJavaField("text");
 
-	public static final FieldSpec THEME = ROOT.newChildFromJavaField("theme");
-	public static final FieldSpec KEYWORDS = ROOT.newChildFromJavaField("keywords");
+	public static final FieldSpec THEME = ROOT.newChildFromJavaField("theme").isSortable(false);
+	public static final FieldSpec KEYWORDS = ROOT.newChildFromJavaField("keywords").isSortable(false);
 
 	public static final FieldSpec CONTACT = ROOT.newChildFromJavaField("contacts", "contact");
 	public static final FieldSpec CONTACT_ID = CONTACT.newChildFromJavaField("contactId", "id");
@@ -60,7 +61,8 @@ public class RudiMetadataField {
 
 	public static final FieldSpec PRODUCER = ROOT.newChildFromJavaField("producer");
 	public static final FieldSpec PRODUCER_ORGANIZATION_ID = PRODUCER.newChildFromJavaField("organizationId");
-	public static final FieldSpec PRODUCER_ORGANIZATION_NAME = PRODUCER.newChildFromJavaField(ORGANIZATION_NAME);
+	public static final FieldSpec PRODUCER_ORGANIZATION_NAME = PRODUCER.newChildFromJavaField(ORGANIZATION_NAME)
+			.isSortable(true);
 	public static final FieldSpec PRODUCER_ORGANIZATION_ADDRESS = PRODUCER.newChildFromJavaField("organizationAddress");
 
 	public static final FieldSpec MEDIA = ROOT.newChildFromJavaField(AVAILABLE_FORMATS, "media");
@@ -107,10 +109,11 @@ public class RudiMetadataField {
 	public static final FieldSpec DATASET_SIZE_NUMBER_OF_FIELDS = DATASET_SIZE.newChildFromJavaField("numberOfFields");
 
 	public static final FieldSpec DATASET_DATES = ROOT.newChildFromJavaField("datasetDates");
-	public static final FieldSpec DATASET_DATES_CREATED = DATASET_DATES.newChildFromJavaField("created");
-	public static final FieldSpec DATASET_DATES_VALIDATED = DATASET_DATES.newChildFromJavaField("validated");
-	public static final FieldSpec DATASET_DATES_PUBLISHED = DATASET_DATES.newChildFromJavaField("published");
-	public static final FieldSpec DATASET_DATES_UPDATED = DATASET_DATES.newChildFromJavaField("updated");
+	public static final FieldSpec DATASET_DATES_CREATED = DATASET_DATES.newChildFromJavaField("created").isSortable(false);
+	public static final FieldSpec DATASET_DATES_VALIDATED = DATASET_DATES.newChildFromJavaField("validated").isSortable(false);
+	public static final FieldSpec DATASET_DATES_PUBLISHED = DATASET_DATES.newChildFromJavaField("published").isSortable(false);
+	public static final FieldSpec DATASET_DATES_UPDATED = DATASET_DATES.newChildFromJavaField("updated")
+			.isSortable(false);
 	public static final FieldSpec DATASET_DATES_DELETED = DATASET_DATES.newChildFromJavaField("deleted");
 
 	public static final FieldSpec STORAGE_STATUS = RudiMetadataField.ROOT.newChildFromJavaField("storageStatus");

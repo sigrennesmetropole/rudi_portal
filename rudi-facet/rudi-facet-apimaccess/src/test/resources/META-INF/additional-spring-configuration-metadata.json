@@ -1,0 +1,9 @@
+{
+	"properties": [
+		{
+			"name": "apimanager.oauth2.client.admin.registration.client-id",
+			"type": "java.lang.String",
+			"description": "client_id utilisé par l'admin pour s'authentifier auprès de WSO2."
+		}
+	]
+}

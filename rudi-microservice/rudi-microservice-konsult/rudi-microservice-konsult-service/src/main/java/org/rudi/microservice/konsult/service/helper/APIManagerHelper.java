@@ -1,17 +1,21 @@
 package org.rudi.microservice.konsult.service.helper;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.BooleanUtils;
-import org.rudi.common.core.security.AuthenticatedUser;
+import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
-import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.bean.APIInfo;
 import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
+import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APINotFoundException;
+import org.rudi.facet.apimaccess.exception.APINotUniqueException;
+import org.rudi.facet.apimaccess.exception.MissingAPIPropertiesException;
+import org.rudi.facet.apimaccess.exception.MissingAPIPropertyException;
 import org.rudi.facet.apimaccess.helper.rest.ClientAccessKey;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
@@ -19,11 +23,13 @@ import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
-import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMedia;
-import org.rudi.microservice.konsult.service.exception.UnKnownClientKeyException;
+import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
+import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @Component
@@ -64,64 +70,84 @@ public class APIManagerHelper {
 	 * @return true si le user a souscrit
 	 */
 	public boolean userHasSubscribeToMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException {
-		final AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
+		val authenticatedUser = utilContextHelper.getAuthenticatedUser();
 		final String username = authenticatedUser.getLogin();
-		final ClientKey clientKey = aclHelper.getClientKeyByLogin(username);
+		val clientKey = aclHelper.getClientKeyByLogin(username);
 		if (clientKey == null) {
-			throw new UnKnownClientKeyException();
+			throw new ClientKeyNotFoundException(username);
 		}
 
 		customClientRegistrationRepository.addClientRegistration(username,
 				new ClientAccessKey().setClientId(clientKey.getClientId()).setClientSecret(clientKey.getClientSecret()));
 
-		final APIInfo apiInfo = getApiInfo(globalId, mediaId);
-
 		try {
+			val apiInfo = getApiInfo(globalId, mediaId);
 			return applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), username);
 		} catch (APIManagerException e) {
 			throw new AppServiceException(
-					String.format("Erreur lors de la récupération de la souscription à l'api id = %s", apiInfo.getId()), e);
+					String.format("Erreur lors de la récupération de la souscription à l'api globalId = %s et mediaId = %s", globalId, mediaId), e);
 		}
 	}
 
-	private APIInfo getApiInfo(UUID globalId, UUID mediaId) throws AppServiceException {
+	@Nonnull
+	private APIInfo getApiInfo(@Nullable UUID globalId, UUID mediaId) throws APIManagerException {
 		final APIList apiList;
 		try {
 			apiList = apIsService.searchAPI(new APISearchCriteria().globalId(globalId).mediaUuid(mediaId));
 		} catch (APIManagerException e) {
-			throw new AppServiceException(
+			throw new APIManagerException(
 					String.format("Erreur lors de la récupération des apis liées au global_id = %s et media_id = %s", globalId, mediaId), e);
 		}
 
-		if (CollectionUtils.isEmpty(apiList.getList())) {
-			throw new AppServiceException(String.format("Aucune API retrouvé pour le global_id = %s et media_id = %s", globalId, mediaId));
+		final var list = apiList.getList();
+		if (CollectionUtils.isEmpty(list)) {
+			throw new APINotFoundException(globalId, mediaId);
+		} else {
+			final var size = CollectionUtils.size(list);
+			if (size > 1) {
+				throw new APINotUniqueException(globalId, mediaId, size);
+			}
 		}
 
-		return apiList.getList().get(0);
+		return list.get(0);
 	}
 
 	/**
-	 * Récupération du username habilité à télécharger un jdd si il en a l'accès
-	 *
-	 * @param metadata metadata
-	 * @param media    media
-	 * @return username
-	 * @throws AppServiceException Accès non autorisé au jdd
+	 * @param metadata JDD
+	 * @param media    média du JDD
+	 * @return le login de l'utilisateur actuel s'il a souscrit au média, "anonymous" si le média est ouvert, exception sinon
+	 * @throws AccessDeniedMetadataMediaException si l'utilisateur n'est pas autorisé à télécharger ce média restreint
+	 * @throws AppServiceException                en cas d'erreur avec WSO2
 	 */
-	public String checkUsernameAbleToDownloadMedia(Metadata metadata, Media media) throws AppServiceException {
-		final String actualUsername = utilContextHelper.getAuthenticatedUser().getLogin();
+	public String getLoginAbleToDownloadMedia(Metadata metadata, Media media) throws AppServiceException {
+		final String authenticatedUserLogin = utilContextHelper.getAuthenticatedUser().getLogin();
 
-		// nom d'utilisateur utilisé pour télécharger un jdd
-		String usernameAbleToDownload;
-		if (BooleanUtils.isTrue(userHasSubscribeToMetadataMedia(metadata.getGlobalId(), media.getMediaId()))) {
-			usernameAbleToDownload = actualUsername;
+		if (userHasSubscribeToMetadataMedia(metadata.getGlobalId(), media.getMediaId())) {
+			return authenticatedUserLogin;
 		} else if (!metadataDetailsHelper.isRestricted(metadata)) {
-			log.warn("L'utilisateur n'a pas souscrit au jeu de données, passage en mode anonyme");
-			usernameAbleToDownload = anonymousUsername;
-		} else { // si le user utilisé est anonymous et que le jdd est restreint, ca veut dire que le user ne peut pas accéder au jdd
-			throw new AccessDeniedMetadataMedia(metadata.getGlobalId(), media.getMediaId());
+			log.warn("L'utilisateur {} n'a pas souscrit au jeu de données {}, on utilise donc le login {} pour télécharger le média {}", authenticatedUserLogin, metadata.getGlobalId(), anonymousUsername, media.getMediaId());
+			return anonymousUsername;
+		} else { // le JDD est restreint et l'utilisateur n'y a pas souscrit => il ne peut pas télécharger le média
+			throw new AccessDeniedMetadataMediaException(authenticatedUserLogin, metadata.getGlobalId(), media.getMediaId());
 		}
+	}
 
-		return usernameAbleToDownload;
+	/**
+	 * @return l'UUID du JDD (global_id) qui contient ce media
+	 * @throws MissingAPIPropertiesException si l'API correspondant au média n'a aucune propriétés dans WSO2
+	 * @throws MissingAPIPropertyException si l'API correspondant au média n'a pas la propriété contenant le global_id dans WSO2
+	 */
+	public UUID getGlobalIdFromMediaId(UUID mediaId) throws APIManagerException {
+		final var apiInfo = getApiInfo(null, mediaId);
+		final var api = apIsService.getAPI(apiInfo.getId());
+		final var additionalProperties = api.getAdditionalProperties();
+		if (additionalProperties == null) {
+			throw new MissingAPIPropertiesException(apiInfo.getId());
+		}
+		final var globalIdProperty = additionalProperties.get(APISearchPropertyKey.GLOBAL_ID);
+		if (StringUtils.isEmpty(globalIdProperty)) {
+			throw new MissingAPIPropertyException(APISearchPropertyKey.GLOBAL_ID, apiInfo.getId());
+		}
+		return UUID.fromString(globalIdProperty);
 	}
 }

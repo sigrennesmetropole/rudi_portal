@@ -1,0 +1,7 @@
+<ng-container *ngIf="searchIsRunning">
+    {{'searchbox.searchIsRunning'|translate}}
+</ng-container>
+<ng-container *ngIf="!searchIsRunning">
+    <ng-container *ngIf="count">{{count}} {{'searchbox.results'|translate}}{{count > 1 ? 's' : ''}}</ng-container>
+    <ng-container *ngIf="!count">{{noResultMessage}}</ng-container>
+</ng-container>

@@ -1042,10 +1042,12 @@ components:
       description: Critère de recherche dans le dataset, notamment dans ses métadonnées
       type: object
       properties:
-        globalId:
-          description: Identifiant du jeu de données basé sur le datasetField global_id
-          type: string
-          format: uuid
+        globalIds:
+          description: Identifiants des jeux de données basés sur le datasetField global_id
+          type: array
+          items:
+            type: string
+            format: uuid
         limit:
           type: integer
           description: Nombre d'élément maximum
@@ -1081,6 +1083,10 @@ components:
         order:
           description: 'Liste des tris à réaliser. Valeurs possibles :  name, date, title, producername, updatedate. Mettre un signe - devant pour tri descendant (ex -name)'
           type: string
+        orderByScoreOfKeywords:
+          description: Ordonne les résultats pour avoir en premier les JDD avec le plus de mots-clés en commun avec le critère keywords. Les JDD sans mots-clés en commun sont quand même listés mais en dernier.
+          type: boolean
+          default: false
         restrictedAccess:
           description: Données ouvertes (false) ou restreintes (true)
           type: boolean

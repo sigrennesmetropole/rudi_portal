@@ -3,8 +3,7 @@
  */
 package org.rudi.microservice.gateway.facade.config;
 
-import io.jsonwebtoken.Claims;
-import org.rudi.common.facade.config.filter.CommonJwtTokenUtil;
+import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
@@ -44,7 +43,7 @@ public class WebSecurityConfig {
 	private boolean disableAuthentification = false;
 
 	@Autowired
-	private CommonJwtTokenUtil<Claims> jwtTokenUtil;
+	private AbstractJwtTokenUtil jwtTokenUtil;
 
 	@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
@@ -62,6 +61,8 @@ public class WebSecurityConfig {
 		http.httpBasic(Customizer.withDefaults());
 		http.formLogin(Customizer.withDefaults());
 		http.csrf().disable();
+		http.exceptionHandling()
+				.authenticationEntryPoint(new HttpBearerServerAuthenticationEntryPoint());
 		return http.build();
 	}
 

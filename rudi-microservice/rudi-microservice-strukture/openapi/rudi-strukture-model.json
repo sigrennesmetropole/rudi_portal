@@ -1,0 +1,500 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Strukture Rudi",
+		"version": "0.0.1",
+		"title": "rudi-strukture-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths":{
+	},
+	"components": {
+		"schemas": {
+			"AbstractLongIdDto": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					}
+				}
+			},
+			"AbstractLabelizedDto": {
+				"type": "object",
+				"required": [
+					"code"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string",
+								"maxLength": 30
+							},
+							"label": {
+								"type": "string",
+								"maxLength": 100
+							}
+						}
+					}
+				]
+			},
+			"AbstractStampedDto": {
+				"type": "object",
+				"required": [
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLabelizedDto"
+					},
+					{
+						"properties": {
+							"opening_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"closing_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"order": {
+								"type": "integer",
+								"description": "Ordre d'affichage dans l'interface"
+							}
+						}
+					}
+				]
+			},
+			"Provider": {
+				"description": "Modèle producteur de jeux de données",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"code": {
+						"type": "string",
+						"description": "Code producteur unique"
+					},
+					"label": {
+						"type": "string",
+						"description": "Nom du producteur"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					},
+					"addresses": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AbstractAddress"
+						}
+					},
+					"nodeProviders": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/NodeProvider"
+						}
+					}
+				}
+			},
+			"AddressType": {
+				"description": "Type d'adresse (postale, téléphonique, courriel, site)",
+				"type": "string",
+				"enum": [
+					"POSTAL",
+					"PHONE",
+					"EMAIL",
+					"WEBSITE"
+				]
+			},
+			"AbstractAddress": {
+				"discriminator": {
+					"propertyName": "type",
+					"mapping": {
+						"PHONE": "#/components/schemas/TelephoneAddress",
+						"WEBSITE": "#/components/schemas/WebsiteAddress",
+						"EMAIL": "#/components/schemas/EmailAddress",
+						"POSTAL": "#/components/schemas/PostalAddress"
+					}
+				},
+				"description": "Adresse abstraite d'un producteur de données",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"type": {
+						"$ref": "#/components/schemas/AddressType",
+						"required": "true"
+					},
+					"addressRole": {
+						"$ref": "#/components/schemas/AddressRole"
+					}
+				}
+			},
+			"AddressRole": {
+				"description": "Rôle d'une adresse",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"code": {
+						"type": "string",
+						"description": "Code rôle adresse unique"
+					},
+					"label": {
+						"type": "string",
+						"description": "Libelle de l'adresse"
+					},
+					"type": {
+						"$ref": "#/components/schemas/AddressType"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de fin d'activité"
+					},
+					"order": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"Organization": {
+				"description": "Organisation",
+				"type": "object",
+				"required": [
+					"name",
+					"openingDate"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"name": {
+								"description": "Nom",
+								"type": "string"
+							},
+							"openingDate": {
+								"type": "string",
+								"format": "date-time",
+								"description": "Date de début d'activité"
+							},
+							"closingDate": {
+								"type": "string",
+								"format": "date-time",
+								"description": "Une date de fin d'activité"
+							}
+						}
+					}
+				]
+			},
+			"OrganizationActiveParam": {
+				"description": "true si on souhaite obtenir uniquement les organisations qui n'ont pas de closing_date",
+				"type": "boolean"
+			},
+			"OrganizationMember": {
+				"description": "Membre d'une organisation",
+				"type": "object",
+				"required": [
+					"user_uuid",
+					"role"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"user_uuid": {
+								"description": "UUID de l'utilisateur dans ACL",
+								"type": "string",
+								"format": "uuid"
+							},
+							"role": {
+								"$ref": "#/components/schemas/OrganizationRole"
+							}
+						}
+					}
+				]
+			},
+			"OrganizationNameParam": {
+				"description": "Tout ou partie du nom d'une organisation",
+				"type": "string"
+			},
+			"OrganizationRole": {
+				"description": "Rôle dans une organisation",
+				"type": "string",
+				"enum": [
+					"EDITOR",
+					"ADMINISTRATOR"
+				]
+			},
+			"OrganizationUuidParam": {
+				"description": "UUID d'une organisation",
+				"type": "string",
+				"format": "uuid"
+			},
+			"OrganizationUserUuidParam": {
+				"description": "UUID d'un membre de l'organisation (tous rôles confondus)",
+				"type": "string",
+				"format": "uuid"
+			},
+			"OrganizationSearchCriteria": {
+				"description": "Critère de recherche d'organisations",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"uuid": {
+								"$ref": "#/components/schemas/OrganizationUuidParam"
+							},
+							"name": {
+								"$ref": "#/components/schemas/OrganizationNameParam"
+							},
+							"active": {
+								"$ref": "#/components/schemas/OrganizationActiveParam"
+							},
+							"user_uuid": {
+								"$ref": "#/components/schemas/OrganizationUserUuidParam"
+							}
+						}
+					}
+				]
+			},
+			"PagedList": {
+				"description": "Liste paginée d'éléments",
+				"type": "object",
+				"required": [
+					"total",
+					"elements"
+				],
+				"properties": {
+					"total": {
+						"description": "Nombre total d'éléments pour cette recherche (peut être supérieur au nombre d'éléments de la page courante)",
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"PagedOrganizationList": {
+				"description": "Liste paginée d'organisations",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Organisations de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PostalAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"recipientIdentification": {
+								"type": "string",
+								"description": "Identification du destinataire"
+							},
+							"additionalIdentification": {
+								"type": "string",
+								"description": "Complément d’identification ou point de remise à l’intérieur du bâtiment "
+							},
+							"streetNumber": {
+								"type": "string",
+								"description": "Numéro et libellé de la voie"
+							},
+							"distributionService": {
+								"type": "string",
+								"description": "Lieu dit ou service particulier de distribution"
+							},
+							"locality": {
+								"type": "string",
+								"description": "Code postal et localité de destination"
+							}
+						}
+					}
+				]
+			},
+			"SearchCriteria": {
+				"description": "Critère de recherche",
+				"type": "object",
+				"properties": {
+					"offset": {
+						"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+						"type": "integer",
+						"format": "int32"
+					},
+					"limit": {
+						"description": "Le nombre de résultats à retourner par page",
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"TelephoneAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"phoneNumber": {
+								"type": "string",
+								"description": "Numéro de téléphone"
+							}
+						}
+					}
+				]
+			},
+			"EmailAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"email": {
+								"type": "string",
+								"description": "Adresse email"
+							}
+						}
+					}
+				]
+			},
+			"WebsiteAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"url": {
+								"type": "string",
+								"description": "URL du site web"
+							}
+						}
+					}
+				]
+			},
+			"NodeProvider": {
+				"description": "Noeud producteur",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "UUID du noeud"
+					},
+					"version": {
+						"type": "string",
+						"description": "Version de l'API utilisé"
+					},
+					"url": {
+						"type": "string",
+						"description": "URL du noeud"
+					},
+					"openingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de début d'activité"
+					},
+					"closingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Une date de fin d'activité"
+					},
+					"harvestable": {
+						"type": "boolean"
+					},
+					"notifiable": {
+						"type": "boolean"
+					},
+					"harvestingCron": {
+						"type": "string",
+						"description": "Expression cron au format Spring pour planifier le moissonnage de ce nœud (cf : https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions)"
+					},
+					"lastHarvestingDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date et heure du dernier moissonnage réussi"
+					}
+				}
+			},
+			"PageResult": {
+				"type": "object",
+				"properties": {
+					"total": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"ProviderPageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Provider"
+								}
+							}
+						}
+					}
+				]
+			},
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			}
+		}
+	}
+}

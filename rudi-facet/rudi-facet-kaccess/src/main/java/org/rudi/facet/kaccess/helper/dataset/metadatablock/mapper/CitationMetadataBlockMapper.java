@@ -6,6 +6,7 @@ import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.AbstractMetadataBlockElementMapper;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 import org.rudi.facet.kaccess.bean.Contact;
 import org.rudi.facet.kaccess.bean.DictionaryEntry;
 import org.rudi.facet.kaccess.bean.Language;
@@ -47,8 +48,8 @@ public class CitationMetadataBlockMapper extends AbstractMetadataBlockElementMap
 	private static final String DEFAULT_SUBJECT = "Other";
 	private static final String DEFAULT_CONTACT_EMAIL = "dataverse@rudi.com";
 
-	public CitationMetadataBlockMapper(FieldGenerator fieldGenerator) {
-		super(fieldGenerator);
+	public CitationMetadataBlockMapper(FieldGenerator fieldGenerator, DateTimeMapper dateTimeMapper) {
+		super(fieldGenerator, dateTimeMapper);
 	}
 
 	@Override

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Réinitialisation de votre mot de passe</title>
+    <style type="text/css">
+        body {
+            font-family: Montserrat;
+            font-size: 12px;
+            color: #004680;
+        }
+
+        a {
+            font-weight: bold;
+            color: #004680;
+        }
+
+        a:hover {
+            color: #004680;
+        }
+    </style>
+</head>
+<body style="font-family:Montserrat;font-size:12px;	color:#004680;">
+<p>Bonjour,</p>
+<p>Une demande de r&eacute;initialisation de votre mot de passe pour votre compte Rudi a &eacute;t&eacute; effectu&eacute;e. <br/>
+    Si vous n’&ecirc;tes pas à l’origine de cette demande, veuillez ignorer ce mail.
+    Pour r&eacute;initialiser votre mot de passe, cliquez sur le lien ci-dessous <a
+            href="${urlServer}${pathServer}?token=${resetPasswordRequest.token}">ici</a> ou coller le lien suivant dans votre
+    navigateur : <em>${urlServer}${pathServer}?token=${resetPasswordRequest.token}</em>
+</p>
+
+<p>
+    Pour des raisons de s&eacute;curit&eacute;, ce lien ne sera valable que 1 heure. Pass&eacute; ce d&eacute;lai, nous vous invitons à renouveler
+    votre demande en cliquant sur ce lien <a href="${urlServer}/login/forgot-password">Mot de passe oubli&eacute; ?</a> .
+</p>
+<br/>
+<p>A tr&egrave;s bient&ocirc;t,</p>
+<p>L'&eacute;quipe RUDI</p>
+<p>${urlServer}
+<p>
+</body>
+</html>

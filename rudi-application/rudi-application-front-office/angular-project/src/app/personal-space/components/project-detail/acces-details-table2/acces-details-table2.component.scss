@@ -1,0 +1,42 @@
+@import "src/app/styles/common-style";
+
+.mat-table-demandes-acces{
+    width: 100%;
+}
+.table-title-style {
+    font-family: OpenSans;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+.align-left{
+    text-align: left;
+}
+.titre-jdd{
+    font-family: OpenSans;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+    color: $primary-color;
+}
+.table-jdd {
+    margin-top: 3em;
+}
+.svg-style{
+    margin-right: 1em;
+    width: 1.5em;
+}
+.table-header{
+    font-family: OpenSans;
+    font-size: 13px;
+    font-weight: 600;
+    color:$primary-text;
+    //overide the mat table margin css
+    padding: 0px !important
+}
+.table-header:first-child {
+    text-decoration: underline;
+}
+.first-row{
+    width: 20%;
+}

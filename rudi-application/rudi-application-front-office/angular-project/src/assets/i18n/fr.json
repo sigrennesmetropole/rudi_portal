@@ -1,5 +1,279 @@
 {
     "headerAppTitle": "App blanche",
+    "pageTitle": {
+        "/": "Catalogue",
+        "/catalogue": "Catalogue",
+        "/projets": "Réutilisations",
+        "/login": "Mon compte",
+        "/personal-space/received-access-requests": "Demandes d’accès reçues",
+        "/personal-space": "Demandes d’accès reçues",
+        "/personal": "Demandes d’accès reçues"
+    },
+    "project": {
+        "confidentiality": {
+            "CONFIDENTIAL": {
+                "label": "Confidentiel",
+                "description": "Si vous cochez cette case, votre projet ne sera pas visible dans le catalogue Rudi. Seuls vous et l'animateur Rudi pourront le consulter."
+            },
+            "OPEN": {
+                "label": "Visible en ligne",
+                "description": "Si vous cochez cette case, votre projet sera visible dans le catalogue Rudi. Tous les visiteurs de Rudi pourront le consulter."
+            }
+        },
+        "catalogue": "Catalogue",
+        "reutilisations": " des réutilisations",
+        "declarerReutilisation": "Declarer une réutilisation",
+        "buttonPopover": {
+            "declareReuse": "Déclarer une réutilisation",
+            "submitProject": "Soumettre un projet",
+            "genericUnauthorizedMessage": "Veuillez vous connecter ou vous inscrire pour accéder à cette page."
+        },
+        "datasetButton": {
+            "askNewData": "Demander de nouvelles données"
+        },
+        "dialogEditNewDatasetRequest": {
+            "descriptionHint": "Présentez votre besoin en données en essayant d'être le plus précis possible (attributs nécessaires, granularité temporelle / spatiale du jeu de données, période temporelle nécessaire, contexte d'utilisation du jeu de données, spécificités des traitements que vous souhaitez réaliser sur le jeu de données, ce jeu de données sera-t-il croisé avec un jeu de données existant, etc…).",
+            "title": "Nouvelle demande de données",
+            "titleHint": "Le titre doit vous permettre d'identifier rapidement votre demande. Si vous n'indiquez pas de titre, le titre de votre demande sera de la forme : \"Nouvelle demande (X)\".",
+            "description": "Vous n'avez pas trouvé le jeu de données dont vous avez besoin pour réaliser votre projet ? Expliquer votre besoin en complétant ce formulaire. Votre demande sera ensuite étudiée afin d'y répondre au mieux. Vous serez contacté par l'animateur via votre adresse mail de contact."
+        },
+        "buttonReutilisationParagraph1": "Vous avez créé un nouveau service en utilisant des jeux de données disponibles depuis Rudi ?",
+        "buttonReutilisationParagraph2": "Déclarez votre réutilisation afin de la rendre visible et accessible pour tous.",
+        "buttonSubmitParagraph1": "Vous préparez un projet et vous avez besoin d'accompagnement ou de données spécifiques pour le mettre en œuvre ?",
+        "buttonSubmitParagraph2": "Soumettez votre projet afin de prendre contact avec nous.",
+        "addDatasetPopup": {
+            "title1": "Ajouter un jeu de données",
+            "validate": "Valider",
+            "cancel": "Annuler"
+        },
+        "imageUploader": {
+            "ajouterImage": "Ajouter une image",
+            "formatImage": "au format png ou jpg. 1 Mo maximum."
+        },
+        "firstStepForm": {
+            "reuseDescription": "Décrivez votre réutilisation en saisissant les informations ci-dessous.",
+            "title": "Titre",
+            "titleHint": "Définissez votre réutilisation en quelques mots. Le titre est visible depuis le catalogue.",
+            "description": "Description",
+            "descriptionHint": "Présentez l’objectif de votre réutilisation en une phrase. Puis expliquez comment vous avez réalisé votre réutilisation (outils utilisés, traitements réalisés…), et quelles en sont les conclusions. Ce résumé est visible depuis le catalogue et depuis la page de présentation de votre réutilisation. 3000 signes maximum sont autorisés.",
+            "image": "Image",
+            "imageHint": "Nous vous conseillons de choisir une image représentant concrètement votre réutilisation (par exemple : capture d’écran). Cette image est visible depuis le catalogue des réutilisations. Si vous n'en avez pas, une image par défaut sera utilisée.",
+            "reuseType": "Type de réutilisation",
+            "reuseTypeHint": "Le type nous permet de catégoriser votre réutilisation.",
+            "publicCible": "Public cible",
+            "publicCibleHint": "Le public cible est le public à destination de votre projet. Vous pouvez sélectionner plusieurs options.",
+            "publicCiblePlaceholder": "Cocher une ou plusieurs options",
+            "accessUrl": "URL d'accès",
+            "accessUrlHint": "Cette url est le chemin d'accès à votre réutilisation. Elle est accessible depuis le détail de votre réutilisation.",
+            "errorFieldRequired": "Ce champ est obligatoire, veuillez le renseigner.",
+            "errorPattern": "Veuillez renseigner l'url au bon format",
+            "errorImage": "Veuiller vérifier le format ou la taille de l'image"
+        },
+        "stepper": {
+            "common": {
+                "step2": {
+                    "ownerType": {
+                        "organization": {
+                            "label": "Organisation",
+                            "description": "Vous avez réalisé cette réutilisation au sein d’une organisation. Le nom de l’organisation apparaitra depuis votre réutilisation.",
+                            "name": {
+                                "label": "Nom de l’organisation",
+                                "placeholder": "Sélectionner une option"
+                            },
+                            "userHasNoOrganization": {
+                                "messageBeforeLink": "Vous n'êtes rattaché à aucune organisation dans Rudi. Veuillez contacter l'équipe Rudi en cliquant ",
+                                "linkLabel": "ici",
+                                "messageAfterLink": ", afin de paramétrer votre compte."
+                            }
+                        }
+                    }
+                }
+            },
+            "reuse": {
+                "title": {
+                    "1": "Nouvelle",
+                    "2": "réutilisation"
+                },
+                "description": "Renseignez le formulaire ci-dessous pour rendre votre réutilisation visible et accessible depuis Rudi. Une fois les 3 étapes renseignées, votre réutilisation sera visible depuis le catalogue des réutilisations. Vous pourrez la modifier à tout moment depuis votre espace personnel.",
+                "step1": {
+                    "label": "Réutilisation",
+                    "title": "Réutilisation",
+                    "description": "Décrivez votre réutilisation en saisissant les informations ci-dessous.",
+                    "requiredInformation": "Informations obligatoires à renseigner."
+                },
+                "step2": {
+                    "label": "Identité",
+                    "title": "Identité",
+                    "description": "Qui déclare la réutilisation ? Vous pouvez déclarer une réutilisation en votre nom ou au nom d’une organisation à laquelle vous appartenez. \nLes informations ci-dessous sont reprises de votre compte.",
+                    "requiredInformation": "Informations obligatoires à renseigner.",
+                    "ownerType": {
+                        "title": "Identité du réutilisateur",
+                        "description": "Le réutilisateur est la personne qui a réalisé la réutilisation.",
+                        "firstname": "Prénom",
+                        "lastname": "Nom",
+                        "user": {
+                            "label": "Individuel",
+                            "description": "Vous avez réalisé cette réutilisation tout seul. Votre identité, telle que nous la connaissons, sera visible depuis votre réutilisation."
+                        }
+                    },
+                    "contactEmail": {
+                        "title": "Adresse e-mail de contact pour cette réutilisation",
+                        "description": "Cette adresse sera accessible dans le catalogue des réutilisations. Vous pouvez indiquer une adresse spécifique sur laquelle vous souhaitez être contacté."
+                    }
+                },
+                "step3": {
+                    "label": "Jeux de données",
+                    "title": "Jeux de données utilisés",
+                    "description": "Les jeux de données à lister ici sont tous les jeux de données que vous avez utilisés pour réaliser votre réutilisation. Vous pouvez en sélectionner autant que vous le souhaitez. Si votre réutilisation, vous a amené à créer de nouveaux jeux de données, pensez à les publier dans le catalogue de données.",
+                    "requiredInformation": "Au moins un jeu de données doit être sélectionné pour déclarer une réutilisation.",
+                    "uuid": {
+                        "title": "Uuid",
+                        "description": "Le uuid est défini dans l'url de détail d'un jdd. Pour le récupérer, veuillez accéder à l'écran de détail du jdd concerné et copier le dernier élément de l'url. (Par exemple dans https://rudi.bzh/detail/111f22c3-c888-55ab-45f9-e11azer99b11 , le uuid est 111f22c3-c888-55ab-45f9-e11azer99b11)",
+                        "add-button": "Ajouter un jeu de données"
+                    },
+                    "linkedDatasets": {
+                        "count": "jeu{count, plural, one{} other{x}} de données",
+                        "alreadyAdded": "Le jeu de données sélectionné a déjà été ajouté"
+                    }
+                },
+                "publish": {
+                    "button": "Publier",
+                    "enregistrer": "Enregistrer",
+                    "error": "Une erreur est survenue lors de la création de la réutilisation. Veuillez contacter un administrateur.",
+                    "ok": {
+                        "title": "Votre réutilisation a bien été publiée sur le portail.",
+                        "description": "Vous pouvez la modifier à tout moment, depuis votre espace personnel.",
+                        "see": "Voir ma réutilisation"
+                    }
+                },
+                "submit": {
+                    "ok": {
+                        "title": "Votre projet a bien été soumis.",
+                        "description1": "Si vous avez fait des demandes, celles-ci viennent d'être transmises à l'animateur et aux producteurs de données.",
+                        "description2": "Vous pouvez le consulter à tout moment depuis votre espace personnel.",
+                        "description3": "Vous pouvez également lui ajouter de nouvelles demandes d'accès.",
+                        "see": "Voir mon projet"
+                    }
+                }
+            },
+            "submission": {
+                "title": {
+                    "1": "Nouveau",
+                    "2": "projet"
+                },
+                "description": "Renseignez le formulaire ci-dessous afin de soumettre votre projet à l'équipe Rudi. Les 2 premières étapes vous permettent de contextualiser votre projet. La dernière étape vous permet de demander l'accès à des jeux de données. Une fois créé, votre projet sera visible depuis le catalogue (sauf mention contraire).",
+                "step1": {
+                    "label": "Projet",
+                    "header-title": "Projet",
+                    "header-description": "Décrivez votre projet en saisissant les informations ci-dessous",
+                    "requiredInformation": "Informations obligatoires à renseigner",
+                    "title": "Titre",
+                    "titleHint": "Définissez votre projet en quelques mots. Le titre est visible depuis le catalogue.",
+                    "description": "Description",
+                    "descriptionHint": "Présentez votre projet (objectifs, outils, traitements envisagés...). Ce résumé est visible depuis le catalogue des réutilisations et depuis la page de présentation de votre projet. 3000 signes maximum sont autorisés.",
+                    "image": "Image",
+                    "imageHint": "Nous vous conseillons de choisir une image représentant votre projet. Cette image est visible depuis le catalogue. Si vous n'en avez pas, une image par défaut sera utilisée.",
+                    "periode": "Période de réalisation envisagée",
+                    "periodeHint": "Les mois et années sélectionnés ici définissent la période envisagée pour la réalisation de votre projet. Format attendu MM/AAAA.",
+                    "periodeBeginPlaceholder": "Date de début",
+                    "periodeEndPlaceholder": "Date de fin",
+                    "periodeBeginError": "Date de début de période saisie invalide",
+                    "periodeEndError": "Date de fin de période saisie invalide",
+                    "echelle": "Échelle",
+                    "echelleHint": "L'échelle indique le périmètre géographique de votre projet.",
+                    "select-option": "Sélectionner une option",
+                    "select-options": "Cocher une ou plusieurs options",
+                    "territoireConcerne": "Territoire concerné",
+                    "territoireConcerneHint": "Ce champ vous permet de préciser le territoire où se déroule votre projet en listant le(s) quartier(s), la(les) commune(s), la(les) métropole(s) concerné(s).",
+                    "reuseType": "Type de réutilisation",
+                    "reuseTypeHint": "Le type de réutilisation définit le type de service que votre projet permettra de mettre en oeuvre.",
+                    "accompagnementSouhaite": "Accompagnement souhaité",
+                    "accompagnementSouhaiteHint": "Le type d'accompagnement nous indique dans quelle mesure Rudi pourra vous aider. Vous pouvez sélectionner plusieurs options.",
+                    "projectConfidentiality": "Confidentialité du projet"
+                },
+                "step2": {
+                    "label": "Identité",
+                    "title": "Identité",
+                    "description": "Qui soumet le projet ? Vous pouvez soumettre votre projet en votre nom ou au nom d’une organisation à laquelle vous appartenez. \nLes informations ci-dessous sont reprises de votre compte.",
+                    "requiredInformation": "Informations obligatoires à renseigner.",
+                    "ownerType": {
+                        "title": "Identité du porteur de projet",
+                        "description": "Le porteur de projet est la personne qui gère le projet",
+                        "firstname": "Prénom",
+                        "lastname": "Nom",
+                        "user": {
+                            "label": "Individuel",
+                            "description": "Vous réalisez ce projet tout seul. Votre identité, telle que nous la connaissons, sera visible depuis votre projet."
+                        }
+                    },
+                    "contactEmail": {
+                        "title": "Adresse e-mail de contact pour ce projet",
+                        "description": "Cette adresse sera accessible depuis le catalogue sauf si votre projet est confidentiel. Vous pouvez indiquer une adresse spécifique sur laquelle vous souhaitez être contacté."
+                    }
+                },
+                "step3": {
+                    "label": "Jeux de données",
+                    "title": "Jeux de données",
+                    "description": "Vous pouvez dès à présent ajouter des jeux de données, faire des demandes d'accès à des jeux de données non présents dans le catalogue. Les demandes une fois créées et le projet soumis sont transmises à l'animateur Rudi et aux producteurs de donnée pour étude. Vous serez informés de l'état d'avancement de vos demandes par la suite.",
+                    "requiredInformation": "Informations obligatoires à renseigner",
+                    "uuid": {
+                        "title": "Uuid",
+                        "description": "Le uuid est défini dans l'url de détail d'un jdd. Pour le récupérer, veuillez accéder à l'écran de détail du jdd concerné et copier le dernier élément de l'url. (Par exemple dans https://rudi.bzh/detail/111f22c3-c888-55ab-45f9-e11azer99b11 , le uuid est 111f22c3-c888-55ab-45f9-e11azer99b11)",
+                        "add-open": "Ajouter un jeu de données ouvert",
+                        "add-restricted": "Demander l'accès à un jeu de données"
+                    },
+                    "linkedDatasets": {
+                        "count": "jeu{count, plural, one{} other{x}} de données",
+                        "alreadyAdded": "Le jeu de données sélectionné a déjà été ajouté"
+                    }
+                },
+                "publish": {
+                    "button": "Publier",
+                    "enregistrer": "Enregistrer",
+                    "submit": "Soumettre",
+                    "error-update": "Une erreur est survenue lors de la mise à jour du projet. Veuillez contacter un administrateur.",
+                    "error": "Une erreur est survenue lors de la création du projet. Veuillez contacter un administrateur.",
+                    "ok": {
+                        "title": "Votre projet a bien été sauvegardé.",
+                        "title-info": "Les demandes associées n'ont pas encore été transmises à l'animateur et aux producteurs de données concernés.",
+                        "description1": "Pour transmettre vos demandes, vous devez soumettre votre projet depuis votre ",
+                        "description2": "espace personnel",
+                        "description3": ". Vous pouvez également le modifier depuis cet espace et lui ajouter de nouvelles demandes d'accès."
+                    }
+                }
+            },
+            "cancel": "Annuler",
+            "previous": "Précédent",
+            "continue": "Continuer"
+        },
+        "detail": {
+            "informations": "Informations",
+            "description": "Description",
+            "access": "Accéder à la réutilisation",
+            "type": "Type de réutilisation",
+            "contactEmail": "Identité du réutilisateur",
+            "contact": "Contacter",
+            "creation_date": "Date de déclaration",
+            "updated_date": "Mise à jour",
+            "datasets": "Jeux de données utilisés",
+            "defaultType": "Réutilisation"
+        },
+        "orders": {
+            "title": "Titre de A à Z",
+            "-title": "Titre de Z à A",
+            "updatedDate": "Le plus ancien",
+            "-updatedDate": "Le plus récent"
+        },
+        "request-details-dialog": {
+            "title": "Précision sur la demande",
+            "description": "Pour accéder à ce jeu de données, des informations supplémentaires peuvent vous être demandées.",
+            "comment": "Commentaire",
+            "commentHint": "Vous avez la possibilité d'ajouter un commentaire sur le jeu de données sélectionné, notamment si certaines de ses caractéristiques ne vous conviennent pas tout à fait ou que vous souhaitez apporter des précisions sur son utilisation.",
+            "date": "Date de fin d'accès souhaitée",
+            "dateHint": "Cette date correspond à la date jusqu'à laquelle vous souhaitez utiliser ce jeu de données dans le cadre de ce projet",
+            "dateError": "la date de fin d'accès est obligatoire"
+        }
+    },
     "popup": {
         "ok": "Ok",
         "close": "Fermer",
@@ -8,6 +282,10 @@
         "validate": "Valider"
     },
     "header": {
+        "creationPortal": "Portail en cours de création.",
+        "appointment": "Pour en savoir plus, rendez-vous sur ",
+        "site": "le site de présentation du projet RUDI",
+        "versionBeta": "VERSION BETA 1.0",
         "catalogue": "Catalogue",
         "accueil": "Accueil",
         "reutilisations": "Réutilisations",
@@ -16,7 +294,11 @@
         "blogProjet": "Blog du projet",
         "projets": "Projets",
         "contact": "Contact",
-        "monCompte": "Mon compte"
+        "monCompte": "Mon compte",
+        "accountMenu": {
+            "myAccount": "Mon compte",
+            "receivedLinkedDatasets": "Demandes d'accès reçues"
+        }
     },
     "footer": {
         "rudiCopyright": "© 2021 RUDI",
@@ -29,31 +311,58 @@
         "linkedin": "LinkedIn",
         "politiqueConfidentialite": "Politique de confidentialité",
         "tousDroits": "Tous droits réservés",
-        "nousContacter": "Nous contacter"
+        "nousContacter": "Nous contacter",
+        "version": "Version : "
     },
     "authentification": {
         "title": "Bienvenue",
         "contactAdmin": "Contacter l'administrateur",
         "getApplicationAcces": "Demande d'accès",
-        "seConnection": " Se connecter",
+        "seConnection": "Se connecter",
         "connection": "Connexion",
         "login": "Identifiant",
         "logout": "Déconnexion",
         "password": "Mot de passe",
-        "loginRequis": "L'identifiant est requis",
-        "passwordRequis": "Le champ Mot de passe est requis",
+        "loginRequired": "Vous n'avez pas saisi votre identifiant. Veuillez le renseigner afin de vous connecter.",
+        "passwordRequired": "Vous n'avez pas saisi votre mot de passe. Veuillez le renseigner afin de vous connecter.",
         "inProgress": "Authentification en cours",
-        "passwordForget": "Mot de passe oublié",
+        "passwordForget": "Mot de passe oublié ?",
         "pasEncoreInscrit": "Pas encore inscrit ? Faire une demande",
-        "habilitation": "Vous n'êtes pas habilité à accéder à l'application"
+        "habilitation": "Vous n'êtes pas habilité à accéder à l'application",
+        "pas-compte": "Vous n'avez pas encore de compte ?",
+        "inscrire": "S'inscrire",
+        "connectez-vous": "Connectez-vous avec votre adresse e-mail",
+        "connectez-vous-mobileDebut": "Connectez-vous",
+        "connectez-vous-mobileFin": "avec votre adresse e-mail",
+        "error-body": "L'identifiant ou le mot de passe que vous avez saisi n’est pas valide. Essayez une nouvelle combinaison ou ",
+        "error-footer": "inscrivez-vous dès maintenant.",
+        "errorBodyAccountNotActif": "Votre compte n'a pas encore été activé. Veuillez vérifier votre boite mail et activer votre compte en cliquant sur le lien présent dans le mail envoyé par Rudi. En cas de non réception du mail ou tout autre problème, veuillez contacter ",
+        "errorFooterAccountNotActif": "l'équipe technique de Rudi",
+        "errorServerIsNotActive": "Une erreur s'est produite lors de la vérification de votre compte",
+        "errorServerAuthent": "Erreur interne du serveur pendant l'authentification. Veuillez contacter un administrateur",
+        "error-server": "Erreur interne du serveur. Veuillez contacter un administrateur.",
+        "errorLoginLocked": "Votre compte a été bloqué pendant 20 minutes suite à 10 essais infructueux d'authentification. Passé ce délai vous pourrez de nouveau vous authentifier. Vous avez oublié votre mot de passe ? Cliquez ",
+        "errorLoginLockedFooter": "ici"
+    },
+    "resetPassword": {
+        "reset": "Page de réinitialisation du mot de passe",
+        "resetPasswordLabel": "Réinitialiser son mot de passe",
+        "resetMail": "Saisissez votre adresse mail",
+        "resetPasswordPageTitle": "Veuillez saisir votre nouveau mot de passe",
+        "snackbar": {
+            "messageBeforeLink": "Si l'adresse renseignée est connue de Rudi, nous vous avons envoyé un mail. Vous n'avez pas reçu de mail ? Veuillez consulter vos spams puis contacter le ",
+            "linkLabel": "support"
+        }
     },
     "error": {
         "authentificationFailed": "L’identifiant et/ou le mot de passe sont erronés.",
-        "internalError": "Désolé, une erreur interne est survenue, veuillez réessayer ultérieurement !"
+        "internalError": "Désolé, une erreur interne est survenue, veuillez réessayer ultérieurement !",
+        "technicalError": "Erreur interne du serveur. Veuillez contacter un administrateur."
     },
     "common": {
         "modifier": "Modifier",
         "creer": "Créer",
+        "validate": "Valider",
         "enregistrer": "Enregistrer",
         "annuler": "Annuler",
         "dateFormat": "dd/MM/yyyy",
@@ -61,21 +370,93 @@
         "datetimeFormat": "dd/MM/yyyy à HH:mm",
         "appliquer": "Appliquer",
         "et": "et",
-        "echec": "Echec du téléchargement",
+        "echec": "Echec du téléchargement. Veuillez contacter un administrateur en cliquant",
+        "fileExtensionsError": "Veuiller ajouter au image au bon format (png ou jpg)",
+        "fileSizeError": "La taille de l'image est trop grande",
+        "fileValidationError": {
+            "FILE_MAX_COUNT": "Nombre maximal de fichiers atteint"
+        },
         "source": "source",
         "disponible": "disponible",
         "telechargerFichier": "Télécharger le fichier",
         "fichier": "Fichier",
         "streaming": "Streaming",
         "ms": "ms",
-        "bytes": "octets"
+        "emailError": "Cette information est obligatoire. Assurez-vous qu'elle respecte ce format : exemple@domaine.com",
+        "bytes": "octets",
+        "loaderDescription": "Chargement...",
+        "requiredInformation": "Informations obligatoires à renseigner."
+    },
+    "strengthPassword": {
+        "lowerLetters": "Au moins une minuscule",
+        "upperLetters": "Au moins une majuscule",
+        "numbers": "Au moins un chiffre",
+        "symbols": "Au moins un caractère spécial"
+    },
+    "signup": {
+        "labelInscription": "Inscrivez-vous avec votre adresse e-mail",
+        "etoile": "*",
+        "infoObligatoire": "Informations obligatoires",
+        "nom": "Nom",
+        "prenom": "Prénom",
+        "adresseMail": "Adresse e-mail",
+        "password": "Mot de passe",
+        "ConfirmPassword": "Confirmation de mot de passe",
+        "lu": "J'ai lu et j'accepte",
+        "cgu": "les conditions générales d'utilisation du service",
+        "subscribeToNotifications": "J'accepte d'être contacté(e) par l'équipe Rudi concernant mon utilisation de la plateforme et pour être informé(e) des nouveautés et des évènements à venir.",
+        "sinscrire": "S'inscrire",
+        "connceter": "Se connecter",
+        "sansCompte": "Vous avez déjà un compte ?",
+        "emailError": "Cette information est obligatoire. Assurez-vous qu'elle respecte ce format : exemple@domaine.com",
+        "passwordMsgPre": "Veuillez utiliser au minimum ",
+        "passwordMsgPost": " caractères. Nous vous conseillons d'y intégrer des majuscules, minuscules, chiffres et caractères spéciaux.",
+        "passwordErrorPre": "Votre mot de passe ne doit pas être inférieur à ",
+        "passwordErrorPost": " caractères.",
+        "passwordRequired": "Vous n'avez pas saisi votre Mot de passe. Veuillez le renseigner afin de vous inscrire.",
+        "passwordConfirmError": "Votre mot de passe ne correspond pas. Veuillez réessayer.",
+        "passwordConfirmRequired": "Vous n'avez pas saisi la confirmation de votre mot de passe. Veuillez le renseigner afin de vous inscrire.",
+        "cguError": "Vous devez accepter les conditions générales pour pouvoir vous inscrire.",
+        "compteExistant": "Vous avez déjà un compte ?",
+        "pSeconnecter": "Se connecter",
+        "errorCreateAccount": "Erreur lors de la création du compte : ",
+        "errorAutoLogin": "Erreur lors de l'authentification automatique après la création du compte : ",
+        "errorServer": "Erreur interne du serveur, veuillez contacter un Administrateur.",
+        "errorMissingFieldAccount": "Un champ obligatoire n'était pas rempli",
+        "errorLoginNotMail": "Le champ login n'est pas au format : adresse e-mail",
+        "errorLoginAlreadyExists": "Le login renseigné est déjà associé à un compte utilisateur",
+        "errorPasswordLength": "Le mot de passe renseigné ne respecte pas les contraintes de longueur",
+        "rgpd": {
+            "title": "Protection des données personnelles",
+            "p1": "Les données personnelles vous concernant recueillies dans ce formulaire seront utilisées uniquement pour la gestion de votre compte Rudi et afin de vous contacter concernant l'utilisation du service et ses évolutions. Ces données seront supprimées en l'absence d'utilisation de votre compte durant 24 mois.",
+            "p2": "Conformément au Règlement général sur la protection des données (RGPD) (UE) n°2016/679 du 27 avril 2016 et à la loi n°2018-493 du 20 juin 2018 relative à la protection des données personnelles, vous pouvez accéder aux données vous concernant ou demander leur effacement. Vous disposez également d'un droit d’opposition, d’un droit de rectification et d’un droit à la limitation du traitement de vos données.",
+            "p3": {
+                "1": "Pour exercer ces droits ou pour toute question sur le traitement de vos données, vous pouvez contacter le Délégué à la protection des données de Rennes (Ville et Métropole) via le formulaire de contact",
+                "2": "e-démarches",
+                "3": "du site internet",
+                "4": "ou par voie postale à adresser à"
+            },
+            "p4": "Madame la Présidente de Rennes Métropole - A l'attention du Délégué à la protection des données - 4 avenue Henri Fréville -CS93111 - 35031 Rennes Cedex",
+            "p5": "Plus d’informations sur"
+        }
+    },
+    "snackbarTemplate": {
+        "successIncription": "Votre compte a bien été créé. Pour vous connecter, vous devez maintenant activer votre compte en cliquant sur le lien contenu dans le mail que nous venons de vous envoyer. Vous n'avez pas reçu de mail ? Consulter vos spams et si le mail n'y figure pas, veuillez contacter",
+        "successIncriptionLinkText": "l'équipe technique de Rudi",
+        "successAccountValidation": "Votre compte est bien activé, vous pouvez maintenant vous connecter au portail Rudi.",
+        "errorAccountValidationStart": "Une erreur est survenue. Veuillez renouveler la création de votre compte en cliquant ",
+        "errorAccountValidationEnd": "Vous pouvez saisir la même adresse mail que précédemment.",
+        "successResetPassword": "Votre mot de passe a bien été modifié. Vous pouvez maintenant vous connecter au portail Rudi.",
+        "resetPasswordError": "Le délai de réinitialisation de votre mot de passe est dépassé. Nous vous invitons à renouveler votre demande en cliquant ",
+        "ici": "ici"
     },
     "searchbox": {
         "jeux": "Jeux",
         "donnees": "de données",
         "rechercherJeuDonnees": "Rechercher un jeu de données...",
         "searchIsRunning": "Recherche en cours",
-        "resultats": "résultat",
+        "results": "résultat",
+        "noResult": "Aucun résultat",
         "filtres": "Filtres",
         "pour": " pour "
     },
@@ -89,18 +470,22 @@
         "restrictedAccess": {
             "statut": "Statut",
             "true": "Restreint",
-            "false": "Ouvert"
+            "false": "Ouvert",
+            "all": "Tous"
         },
         "dateDebutCouvertureTemporelle": "Date de début de couverture temporelle",
         "dateFinCouvertureTemporelle": "Date de fin de couverture temporelle",
         "valider": "Valider"
     },
     "sortBox": {
-        "sort": "Trier par",
+        "sort": "Trie par",
         "orderedBy": "Trié par",
-        "name": "Titre",
-        "asc": "de A à Z",
-        "desc": "de Z à A"
+        "resource_title": "Titre de A à Z",
+        "-resource_title": "Titre de Z à A",
+        "dataset_dates.updated": "Le plus ancien",
+        "-dataset_dates.updated": "Le plus récent",
+        "producer.organization_name": "Nom de producteur de A à Z",
+        "-producer.organization_name": "Nom de producteur de Z à A"
     },
     "conditionsUtilisationBox": {
         "conditionsUtilisation": "Conditions d'utilisation",
@@ -119,7 +504,7 @@
     },
     "accountInfo": {
         "nom": "Nom",
-        "prenom": "Prenom",
+        "prenom": "Prénom",
         "nomAssociation": "Nom d'association",
         "adresseEmail": "Adresse Email",
         "adressePostal": "Adresse Postale",
@@ -172,6 +557,7 @@
         "api": "API :",
         "informationFournisseur": "Information fournisseur",
         "producteur": "Producteur",
+        "contact": "Contacter",
         "motsclesAssocies": "Mots-clés associés",
         "themes": "Thèmes :",
         "themeEtMotCle": "Thème et mots-clés",
@@ -184,7 +570,33 @@
         "projetMemeTheme": "Projets sur le même thème",
         "dataLanguage": "Langue des données",
         "french": "Français",
-        "octets": "octets"
+        "octets": "octets",
+        "reutilisations": {
+            "titre": "Réutilisation",
+            "aucuneReutilisation": "Aucune réutilisation n'a été déclarée pour le moment."
+        },
+        "otherDatasets": "Sur le même thème",
+        "seeMoreDatasets": "Voir plus dans le catalogue",
+        "url": "URL",
+        "copy-url-explanation": "Copier l'URL d'accès dans le presse-papier",
+        "url-api-documentation": "Consulter de la documentation expliquant comment utiliser cette URL",
+        "restrictedDatasetRequest": "Demander l'accès",
+        "error-request-access": "Une erreur s'est produite lors de la demande d'accès. Veuillez contacter un administrateur.",
+        "error-server-while-checking-project": "Une erreur s'est produite pendant le contrôle du projet choisi. Veuillez contacter un administrateur.",
+        "error-project-already-linked": "Le projet sélectionné possède déjà une demande d'accès vers ce jeu de données.",
+        "restrictedDatasetRequestDialog": {
+            "title": "Demande d'accès",
+            "description": "Une demande d’accès doit obligatoirement être réalisée dans le cadre d’un projet.",
+            "selectProject": "Sélectionner un projet existant",
+            "chooseProject": "Choisir un projet",
+            "ok": {
+                "title": "Votre demande d'accès a bien été envoyée.",
+                "description1": "Vous pouvez la modifier à tout moment,",
+                "description2": "dans votre projet depuis votre",
+                "description3": " espace personnel",
+                "see": "Voir ma demande"
+            }
+        }
     },
     "availableFormats": {
         "formatsDisponibles": "Formats disponibles :",
@@ -207,8 +619,8 @@
         "PREVIOUS_PAGE_LABEL": "Précédent",
         "FIRST_PAGE_LABEL": "Première page",
         "LAST_PAGE_LABEL": "Dernière page",
-        "RANGE_PAGE_LABEL_1": "{{length}}",
-        "RANGE_PAGE_LABEL_2": "{{startIndex}} - {{endIndex}} sur {{length}}"
+        "page": "Page",
+        "of": "sur"
     },
     "placeholder": {
         "editionEvenement": "Saisissez votre message d'événement ici...",
@@ -565,5 +977,71 @@
         "tr": "Turkish",
         "uk-UA": "Ukrainian (Ukraine)",
         "uk": "Ukrainian"
+    },
+    "logo": {
+        "alt": {
+            "producer": "Logo du producteur",
+            "provider": "Logo du fournisseur"
+        }
+    },
+    "personalSpace": {
+        "receivedAccessRequests": {
+            "title1": "Demandes",
+            "title2": "d’accès reçues",
+            "tab1": "Demandes à étudier",
+            "tab2": "Toutes les demandes",
+            "noResult": "Vous n'avez pas de nouvelle demande. Vous pouvez consulter l'historique de vos demandes dans l'onglet \"Toutes les demandes\".",
+            "receivedDate": "Reçue le",
+            "datasetTitle": "Titre du jeu de données",
+            "ownerName": "Porteur de projet",
+            "status": "Statut",
+            "endDate": "Fin d’accès"
+        },
+        "project": {
+            "project": "Projet",
+            "projectTitle": "Titre du projet",
+            "description": "Description",
+            "periodRealization": "Période de réalisation envisagée",
+            "beginDate": "Date de début :",
+            "endDate": "Date de fin :",
+            "targetAudience": "Public cible",
+            "scale": "Echelle",
+            "territorialScale": "Territoire concerné",
+            "desiredSupport": "Accompagnement souhaité",
+            "confidentiality": "Confidentialité du projet",
+            "details": {
+                "othersFromOtherProducers": "+ {x} autres demandes formulées auprès de {n} producteurs",
+                "otherDetails": "Autres demandes d’accès reçues",
+                "receive": "Reçue le",
+                "title": "Titre du jeu de données",
+                "status": "Statut",
+                "new-data": "Demandes de nouvelles données",
+                "submited": "Soumis le",
+                "name": "Titre de la demande",
+                "projectDatas": "Jeux de données ajoutés au projet ",
+                "datas": "Jeu de données"
+            }
+        },
+        "requestDetail": {
+            "requestDate": "Demande d'accès reçue le",
+            "title": "Demande",
+            "datasetTitle": "Titre du jeu de données",
+            "endDate": "Date de fin d'accès",
+            "format": "Format d'accès",
+            "serviceLevel": "Niveau de service",
+            "comment": "Commentaire",
+            "notAuthorized": "Vous n'êtes pas autorisé à accéder à cette ressource",
+            "projectOwner": {
+                "label": "Porteur de projet"
+            },
+            "tabs": {
+                "demand": "Demande",
+                "project": "Projet"
+            },
+            "action": {
+                "accept": "Accepter",
+                "decline": "Refuser"
+            }
+        }
     }
 }

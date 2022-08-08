@@ -1,0 +1,31 @@
+{
+	"properties": [
+		{
+			"name": "application.version"
+		},
+		{
+			"name": "application.comment"
+		}
+	],
+	"hints": [
+		{
+			"name": "application.version",
+			"values": [
+				{
+					"value": "@project.version@"
+				}
+			]
+		},
+		{
+			"name": "application.comment",
+			"values": [
+				{
+					"value": "RUDI @project.artifactId@ @project.version@"
+				},
+				{
+					"value": "RUDI @project.version@"
+				}
+			]
+		}
+	]
+}

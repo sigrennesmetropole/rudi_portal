@@ -11,4 +11,7 @@ export interface Filters {
   };
   order: OrderValue;
   restrictedAccess: boolean;
+
+  /** Global ID du ou des jeux de données */
+  globalIds: string[];
 }

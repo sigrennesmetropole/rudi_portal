@@ -1,0 +1,13 @@
+<app-shared-banner>
+    <app-tab *ngFor="let tab of tabs" [icon]="tab.icon" [label]="tab.label" (click)="selectTab(tab)"
+             [active]="tab.active" [disabled]="!tab.templateRef"></app-tab>
+    <span class="spacer"></span>
+    <ng-content select="app-banner-button"></ng-content>
+</app-shared-banner>
+
+<div id="tab-content-container">
+    <!-- Layout par défaut -->
+    <ng-container #defaultLayoutTabContent></ng-container>
+    <!-- Layout personnalisé -->
+    <ng-content select="[appTabsLayout]"></ng-content>
+</div>

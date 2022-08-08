@@ -1,0 +1,71 @@
+@import "~loaders.css/loaders.min.css";
+@import "../../styles/colors";
+
+.custom-loader {
+    position: inherit;
+    min-height: 100px;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.light {
+        background: $ligth-bacground;
+
+        > div {
+            background-color: $black;
+        }
+
+    }
+
+    &.dark {
+        background: $dark-bacground;
+
+        > div {
+            background-color: $white;
+        }
+    }
+
+    small {
+        position: absolute;
+        top: 53%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        &.dark {
+            color: $white;
+        }
+
+        &.white {
+            color: $black;
+        }
+    }
+}
+
+.all-page-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.min-loader {
+    border: 1px solid $min-loader;
+    border-radius: 50%;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    width: 20px;
+    height: 20px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+}
+
+.loaderPopin {
+    .custom-loader {
+        margin-top: -20px;
+        margin-left: -20px;
+    }
+}

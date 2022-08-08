@@ -1,0 +1,16 @@
+{
+	"media_type": "FILE",
+	"media_id": "ce8a1f00-e00c-4c1b-a030-aeaee6ebabe8",
+	"connector": {
+		"url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+		"interface_contract": "dwnl"
+	},
+	"file_structure": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+	"file_size": 50,
+	"file_type": "text/csv",
+	"file_encoding": "UTF-8",
+	"checksum": {
+		"algo": "MD5",
+		"hash": "SHA-256"
+	}
+}

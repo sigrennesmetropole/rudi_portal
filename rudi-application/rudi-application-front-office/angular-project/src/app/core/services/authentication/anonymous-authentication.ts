@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AuthenticationMethod} from './authentication-method';
+import {AuthenticationMethod, AuthenticationState} from './authentication-method';
 import {FormGroup} from '@angular/forms';
 
 export const ANONYMOUS_USERNAME = "anonymous";
@@ -29,4 +29,7 @@ export class AnonymousAuthentication extends AuthenticationMethod {
         return ANONYMOUS_USERNAME;
     }
 
+    getTargetState(): AuthenticationState {
+        return AuthenticationState.ANONYMOUS;
+    }
 }

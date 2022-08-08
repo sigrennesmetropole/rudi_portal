@@ -1,5 +1,6 @@
 package org.rudi.microservice.konsult.facade.exception;
 
+import org.rudi.facet.apimaccess.exception.APINotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.microservice.konsult.core.bean.ApiError;
 import org.slf4j.Logger;
@@ -36,4 +37,13 @@ public class KonsultExceptionHandler {
 
         return apiError;
     }
+
+    @ExceptionHandler(APINotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected @ResponseBody ApiError handleNotFoundException(final APINotFoundException e) {
+        return new ApiError()
+                .code(Integer.toString(HttpStatus.NOT_FOUND.value()))
+                .label(e.getMessage());
+    }
+
 }

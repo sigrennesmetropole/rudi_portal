@@ -84,8 +84,8 @@
 		"en-US"
 	],
 	"temporal_spread": {
-		"start_date": "2021-01-03T15:30:45",
-		"end_date": "2022-04-22T15:26:00"
+		"start_date": "2021-01-03T15:30:45+01:00",
+		"end_date": "2022-04-22T15:26:00+02:00"
 	},
 	"geography": {
 		"bounding_box": {
@@ -128,11 +128,11 @@
 		"number_of_fields": 15
 	},
 	"dataset_dates": {
-		"created": "2021-02-01T00:00:00",
-		"validated": "2021-02-02T00:00:00",
-		"published": "2021-02-03T00:00:00",
-		"updated": "2021-03-12T07:00:00",
-		"deleted": "2021-04-29T00:00:00"
+		"created": "2021-02-01T00:00:00+01:00",
+		"validated": "2021-02-02T00:00:00+01:00",
+		"published": "2021-02-03T00:00:00+01:00",
+		"updated": "2021-03-12T07:00:00+01:00",
+		"deleted": "2021-04-29T00:00:00+02:00"
 	},
 	"storage_status": "online",
 	"access_condition": {
@@ -178,11 +178,11 @@
 	"metadata_info": {
 		"api_version": "1.2.0",
 		"metadata_dates": {
-			"created": "2021-03-01T00:00:00",
-			"validated": "2021-03-02T00:00:00",
-			"published": "2021-03-03T00:00:00",
-			"updated": "2021-03-11T07:00:00",
-			"deleted": "2021-03-22T00:00:00"
+			"created": "2021-03-01T00:00:00+01:00",
+			"validated": "2021-03-02T00:00:00+01:00",
+			"published": "2021-03-03T00:00:00+01:00",
+			"updated": "2021-03-11T07:00:00+01:00",
+			"deleted": "2021-03-22T00:00:00+01:00"
 		},
 		"metadata_provider": {
 			"organization_id": "1b988e5d-3c5d-4bcb-84f9-8a6702d5d7c0",

@@ -7,6 +7,7 @@
     "MetadataList": "../api-kaccess/model/metadataList",
     "Metadata": "../api-kaccess/model/metadata",
     "MetadataFacets": "../api-kaccess/model/metadataFacets",
-    "KindOfData": "../../api-kmedia/model/kindOfData"
+    "KindOfData": "../../api-kmedia/model/kindOfData",
+    "AssetDescription": "../../../api-bpmn/model/assetDescription"
   }
 }

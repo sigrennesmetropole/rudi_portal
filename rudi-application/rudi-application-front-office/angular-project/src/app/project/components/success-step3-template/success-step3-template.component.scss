@@ -1,0 +1,32 @@
+// Tous les styles sont définis dans le composant parent
+@import "../../pages/reuse-declaration/reuse-declaration.component";
+
+@mixin title-properties() {
+    color: $primary-color;
+    font-weight: bold;
+    text-align: center;
+}
+
+.step-title {
+    font-size: 26px;
+    @include title-properties;
+}
+
+.step-subTitle {
+    font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    @include title-properties;
+}
+
+.step-description {
+    font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    color: $primary-text;
+    text-align: center;
+}
+
+.button-see {
+    @include button-blue;
+    padding: 14px 29px 14px 30px;
+    font-size: 16px;
+}

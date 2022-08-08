@@ -10,11 +10,11 @@ public class APIManagerException extends Exception {
         super(message);
     }
 
-    public APIManagerException(final String message, final Throwable exception) {
-        super(message, exception);
+    public APIManagerException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 
-    public APIManagerException(Throwable e) {
-        super(e);
+    public APIManagerException(Throwable cause) {
+        super(cause);
     }
 }

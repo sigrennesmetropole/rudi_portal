@@ -16,7 +16,8 @@ EXPOSE 8086
 ADD rudi-microservice-kalim-facade.jar /opt/rudi/microservice.jar
 
 CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty \
-      -Drudi.datadir=/etc/rudi/data/kalim -Drudi.config=/etc/rudi/config \
+      -Drudi.datadir=/etc/rudi/data/kalim \
+      -Dspring.config.additional-location=file:/etc/rudi/config/kalim/ \
       ${ADD_JAVA_OPTS}                                   \
       -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
       -jar /opt/rudi/microservice.jar" ]

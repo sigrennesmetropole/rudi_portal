@@ -1,0 +1,79 @@
+@import "../../../styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.main-container {
+    @include card-container-bgcolor;
+}
+
+*:focus-visible {
+    // on ne veut pas les rectangles bleu sur focus du champ input
+    outline: none;
+}
+
+.login-header-title {
+    @include card-header-title;
+}
+
+mat-form-field {
+    @include card-form-field-my;
+}
+
+mat-error {
+    @include card-error-pb;
+}
+
+.p-19 {
+    @include card-px-19-mx-auto;
+    max-width: 640px;
+}
+
+.p-60 {
+    @include card-px-60-mx-auto;
+    width: 640px;
+}
+
+.forgot-password {
+    cursor: pointer;
+    font-size: 14px;
+    color: $primary-text;
+}
+
+.login-text-title {
+    @include card-text-title;
+    padding-bottom: 1em;
+
+    .login-text-title-mobile {
+        display: block;
+    }
+}
+
+.login-form-container {
+    @include card-form-container;
+    width: 100%;
+}
+
+.visibility-icon {
+    cursor: pointer;
+    color: $primary-text-light;
+}
+
+.bouton-login {
+    @include card-main-button;
+}
+
+.login-btn-desktop {
+    @include card-main-button-desktop;
+}
+
+.login-btn-mobile {
+    @include card-main-button-mobile;
+}
+
+a {
+    color: $primary-color;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: normal;
+    font-weight: bold;
+}

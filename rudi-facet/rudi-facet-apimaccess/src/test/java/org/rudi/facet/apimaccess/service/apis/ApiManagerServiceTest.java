@@ -7,7 +7,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.facet.apimaccess.api.application.ApplicationOperationAPI;
 import org.rudi.facet.apimaccess.bean.API;
 import org.rudi.facet.apimaccess.bean.APIDescription;
@@ -27,19 +26,16 @@ import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.service.APIsService;
+import org.rudi.facet.apimaccess.service.ApimaccessSpringBootTest;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.apimaccess.service.PolicyService;
-import org.rudi.facet.apimaccess.service.StarterSpringBootTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.UUID;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = StarterSpringBootTestApplication.class)
+@ApimaccessSpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ApiManagerServiceTest {
 
@@ -86,7 +82,7 @@ class ApiManagerServiceTest {
 				.providerUuid(UUID.randomUUID())
 				.providerCode(RandomStringUtils.randomAlphabetic(10))
 				.mediaUuid(UUID.randomUUID());
-		api = apIsService.createAPI(apiDescription);
+		api = apIsService.createOrUnarchiveAPI(apiDescription);
 		Assertions.assertNotNull(api);
 
 		// publication de l'api

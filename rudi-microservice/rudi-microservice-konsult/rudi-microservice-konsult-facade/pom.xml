@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsult</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.3.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsult-facade</artifactId>
@@ -168,9 +168,6 @@
 						<languageSpecificPrimitive>MetadataList</languageSpecificPrimitive>
 						<languageSpecificPrimitive>MetadataFacets</languageSpecificPrimitive>
 					</languageSpecificPrimitives>
-					<typeMappings>
-						<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-					</typeMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
@@ -179,7 +176,6 @@
 					<generateApiDocumentation>true</generateApiDocumentation>
 					<generateApis>true</generateApis>
 					<generateModels>false</generateModels>
-					<validateSpec>false</validateSpec>
 					<templateDirectory>${resource-generation-directory}/openapi/generation</templateDirectory>
 					<verbose>false</verbose>
 					<configOptions>
@@ -221,7 +217,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.xml</exclude>
-						<exclude>**/konsult-dev.xml</exclude>
+						<exclude>**/konsult-dev.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -243,23 +239,6 @@
 				</executions>
 			</plugin>
 
-			<!-- Mise à jour BDD par flyway -->
-			<!--<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<version>6.5.5</version>
-				<configuration>
-					<flyway.locations>${project.parent.dir}/rudi-microservice-konsult-storage/src/main/resources/bdd/</flyway.locations>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>42.2.16</version>
-					</dependency>
-				</dependencies>
-			</plugin>-->
-
 		</plugins>
 	</build>
 
@@ -273,12 +252,6 @@
 			</activation>
 			<properties>
 				<spring.profiles.active>dev</spring.profiles.active>
-
-				<flyway.user>konsult</flyway.user>
-				<flyway.password>konsult</flyway.password>
-				<flyway.url>jdbc:postgresql://localhost:5432/konsult</flyway.url>
-				<flyway.schemas>konsult_data</flyway.schemas>
-
 			</properties>
 		</profile>
 
@@ -287,11 +260,6 @@
 			<id>dev-docker</id>
 			<properties>
 				<spring.profiles.active>dev-docker</spring.profiles.active>
-
-				<flyway.user>konsult</flyway.user>
-				<flyway.password>konsult</flyway.password>
-				<flyway.url>jdbc:postgresql://localhost:5432/konsult</flyway.url>
-				<flyway.schemas>konsult_data</flyway.schemas>
 			</properties>
 			<build>
 				<plugins>
@@ -323,10 +291,6 @@
 			<id>ic</id>
 			<properties>
 				<spring.profiles.active>ic</spring.profiles.active>
-				<flyway.user>konsult</flyway.user>
-				<flyway.password>konsult</flyway.password>
-				<flyway.url>jdbc:postgresql://10.50.1.37:5432/konsult</flyway.url>
-				<flyway.schemas>konsult</flyway.schemas>
 			</properties>
 
 		</profile>
@@ -335,10 +299,6 @@
 			<id>prod</id>
 			<properties>
 				<spring.profiles.active>prod</spring.profiles.active>
-				<flyway.user>konsult</flyway.user>
-				<flyway.password>konsult</flyway.password>
-				<flyway.url>jdbc:postgresql://10.50.1.37:5432/konsult</flyway.url>
-				<flyway.schemas>konsult</flyway.schemas>
 			</properties>
 		</profile>
 

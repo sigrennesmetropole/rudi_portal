@@ -13,8 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
 		"org.rudi.common.storage", "org.rudi.microservice.registry.facade" })
 @EnableEurekaServer
-@PropertySource(value = { "classpath:registry-common.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "file:${rudi.config}/registry/registry.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = { "classpath:registry/registry-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {

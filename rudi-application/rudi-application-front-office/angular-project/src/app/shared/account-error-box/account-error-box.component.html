@@ -1,0 +1,13 @@
+<div class="row error-zone">
+    <div class="col-1">
+        <em class="fa fa-exclamation-circle fa-2x notif-icon-style mr-2"></em>
+    </div>
+    <div class="col-10">
+        <span>{{'snackbarTemplate.errorAccountValidationStart'|translate}}
+            <a class="pointer text-underline link-color" (click)="goToAccountRegistration()">{{'snackbarTemplate.ici'|translate}}</a>.
+            {{'snackbarTemplate.errorAccountValidationEnd'|translate}}</span>
+    </div>
+    <div class="col-1 text-right" [ngClass]="{'block-icon-close': mediaSize.isDeviceMobile}">
+        <em class="fa fa-times notif-icon-style mr-2 pointer" (click)="snackBarRef.dismiss()"></em>
+    </div>
+</div>

@@ -1,12 +1,22 @@
-import {EMPTY, Observable, Observer} from 'rxjs';
+import {Observable} from 'rxjs';
 import {KindOfData} from '../../api-kmedia';
-import {catchError, shareReplay, switchMap} from 'rxjs/operators';
+import {shareReplay, switchMap} from 'rxjs/operators';
+import {Base64EncodedLogo, ImageLogoService} from './image-logo.service';
+import {Organization, OrganizationSearchCriteria, PagedOrganizationList} from '../../strukture/strukture-model';
+import {OrganizationService} from '../../strukture/api-strukture';
+import {PageResultUtils} from '../../shared/utils/page-result-utils';
+import {Injectable} from '@angular/core';
 
-export const DEFAULT_LOGO: Base64EncodedLogo = '/assets/images/logo_rennes_metropole.svg';
-
-export type Base64EncodedLogo = string;
-
+@Injectable({
+    providedIn: 'root'
+})
 export abstract class OrganizationMetierService {
+
+    protected constructor(
+        protected imageLogoService: ImageLogoService,
+        protected organizationService: OrganizationService,
+    ) {}
+
     private readonly logosByOrganizationId: { [key: string]: Observable<Base64EncodedLogo> } = {};
 
     getLogo(organizationId: string): Observable<Base64EncodedLogo> {
@@ -17,33 +27,27 @@ export abstract class OrganizationMetierService {
         return this.logosByOrganizationId[organizationId] = this.downloadProducerMediaByType(organizationId, KindOfData.Logo).pipe(
             // Source pour la gestion du cache : https://betterprogramming.pub/how-to-create-a-caching-service-for-angular-bfad6cbe82b0
             shareReplay(1),
-            catchError(() => this.logosByOrganizationId[organizationId] = EMPTY),
-            switchMap(blob => this.createImageFromBlob(blob, organizationId)),
-            catchError(() => EMPTY)
+            switchMap(blob => this.imageLogoService.createImageFromBlob(blob))
         );
     }
 
     protected abstract downloadProducerMediaByType(organizationId: string, kindOfData: KindOfData): Observable<Blob>;
 
-    protected createImageFromBlob(image: Blob, organizationId: string): Observable<Base64EncodedLogo> {
-        return new Observable((observer: Observer<Base64EncodedLogo>) => {
-            const reader = new FileReader();
-            let logo;
-            reader.addEventListener('load', () => {
-                logo = reader.result;
-                const logoWithUuid = {
-                    uuid: organizationId,
-                    logo
-                };
-                observer.next(logo);
-            }, false);
-
-            if (image) {
-                reader.readAsDataURL(image);
-            }
-
-            // TODO gestion d'erreur
-        });
+    searchOrganizations(searchCriteria: OrganizationSearchCriteria): Observable<PagedOrganizationList> {
+        return this.organizationService.searchOrganizations(
+            searchCriteria.uuid,
+            searchCriteria.name,
+            searchCriteria.active,
+            searchCriteria.user_uuid,
+            searchCriteria.offset,
+            searchCriteria.limit);
     }
 
+    getMyOrganizations(userUuid: string): Observable<Organization[]> {
+        return PageResultUtils.fetchAllElementsUsing(offset =>
+            this.searchOrganizations({
+                offset,
+                user_uuid: userUuid,
+            }));
+    }
 }

@@ -3,16 +3,17 @@
  */
 package org.rudi.microservice.gateway.facade.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.facade.config.filter.CommonJwtTokenUtil;
+import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
 import org.rudi.common.facade.config.filter.JwtTokenData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import reactor.core.publisher.Mono;
 
 /**
@@ -24,10 +25,10 @@ public class JwtWebFilter extends AbstractAuthenticationWebFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JwtWebFilter.class);
 
-	private final CommonJwtTokenUtil<Claims> jwtTokenUtil;
+	private final AbstractJwtTokenUtil jwtTokenUtil;
 	private final ObjectMapper mapper = new ObjectMapper();
 
-	public JwtWebFilter(final String[] excludeUrlPatterns, CommonJwtTokenUtil<Claims> jwtTokenUtil) {
+	public JwtWebFilter(final String[] excludeUrlPatterns, AbstractJwtTokenUtil jwtTokenUtil) {
 		super(excludeUrlPatterns);
 		this.jwtTokenUtil = jwtTokenUtil;
 	}
@@ -35,9 +36,10 @@ public class JwtWebFilter extends AbstractAuthenticationWebFilter {
 	protected Mono<Authentication> handleToken(String requestAuthentTokenHeader) {
 		try {
 			// Récupération des données du token
-			// Attention la superclass du présent filtre supprime le Bearer déjà 
+			// Attention la superclass du présent filtre supprime le Bearer déjà
 			// mais pour le bon fonctionnement du CommonJwtTokenUtil il faut le remettre
-			final JwtTokenData authentJtd = jwtTokenUtil.validateToken(CommonJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX + requestAuthentTokenHeader);
+			final JwtTokenData authentJtd = jwtTokenUtil
+					.validateToken(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX + requestAuthentTokenHeader);
 
 			// Si le token est expiré
 			if (!authentJtd.isHasError() && authentJtd.isExpired()) {
@@ -57,7 +59,7 @@ public class JwtWebFilter extends AbstractAuthenticationWebFilter {
 				return Mono.just(usernamePasswordAuthenticationToken);
 			} else {
 				// On considère que le token est invalide
-				LOGGER.warn("Le token est invalide");
+				LOGGER.warn("Le token reçu par Gateway n'est pas un token JWT valide");
 				return Mono.empty();
 			}
 		} catch (Exception e) {

@@ -6,6 +6,7 @@ import {switchMap} from 'rxjs/operators';
 export abstract class Filter<T> {
 
   readonly value$: Observable<T>;
+  private _forcedValue: T;
 
   protected constructor(private readonly filtersService: FiltersService, private readonly filters: BehaviorSubject<Filters>) {
     this.value$ = this.filters.asObservable().pipe(
@@ -33,8 +34,17 @@ export abstract class Filter<T> {
     }
   }
 
+  get forcedValue(): T {
+    return this._forcedValue;
+  }
+
+  set forcedValue(value: T) {
+    this._forcedValue = value;
+    this.value = value;
+  }
+
   clear(): void {
-    this.value = this.getEmptyValue();
+    this.value = this.forcedValue !== undefined ? this.forcedValue : this.getEmptyValue();
   }
 
   protected abstract getEmptyValue(): T;

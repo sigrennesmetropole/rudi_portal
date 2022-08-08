@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -100,8 +100,8 @@ class HarvestingHelper {
 
 	private Method getMethodToUse(Metadata metadata) throws DataverseAPIException {
 		if (alreadyExists(metadata)) {
-			final @Nullable LocalDateTime deletedDateTime = metadata.getDatasetDates().getDeleted();
-			if (deletedDateTime == null || deletedDateTime.isAfter(LocalDateTime.now())) {
+			final @Nullable OffsetDateTime deletedDateTime = metadata.getDatasetDates().getDeleted();
+			if (deletedDateTime == null || deletedDateTime.isAfter(OffsetDateTime.now())) {
 				return Method.PUT;
 			} else {
 				return Method.DELETE;

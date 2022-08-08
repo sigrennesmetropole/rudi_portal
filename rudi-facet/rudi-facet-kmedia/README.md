@@ -35,11 +35,11 @@ On utilise les champs suivants du bloc citation qui est le bloc fourni par défa
 
 * Chargement des informations d'un dataset en fonction de son persistentId :
 
-curl -H "X-Dataverse-key:55ce2276-3a16-47e1-9064-09514e5eb80e" http://dv.open-dev.com:8095/api/datasets/:persistentId?persistentId=doi:10.5072/FK2/EDIQSA
+curl -H "X-Dataverse-key:2b559ee1-40e4-4044-9862-c554b33b3947" http://dv.open-dev.com:8095/api/datasets/:persistentId?persistentId=doi:10.5072/FK2/EDIQSA
 
 * Téléchargement d'un fichier à partir de son identifiant, que l'on trouve dans le dataset (data.latestVersion.files.dataFile.id) :
 
-curl -O -J -H "X-Dataverse-key:55ce2276-3a16-47e1-9064-09514e5eb80e" http://dv.open-dev.com:8095/api/access/datafile/581
+curl -O -J -H "X-Dataverse-key:2b559ee1-40e4-4044-9862-c554b33b3947" http://dv.open-dev.com:8095/api/access/datafile/581
 
 ### Documentation
 Pour interroger le dataverse, kaccess utilise l'API du dataverse : [API guide](https://guides.dataverse.org/en/5.1/api/index.html)

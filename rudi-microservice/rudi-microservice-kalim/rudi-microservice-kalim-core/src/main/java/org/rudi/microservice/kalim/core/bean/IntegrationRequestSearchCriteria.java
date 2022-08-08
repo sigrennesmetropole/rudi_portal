@@ -1,10 +1,10 @@
 package org.rudi.microservice.kalim.core.bean;
 
-import java.time.LocalDateTime;
+import lombok.Data;
+
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import lombok.Data;
 
 @Data
 public class IntegrationRequestSearchCriteria {
@@ -13,17 +13,17 @@ public class IntegrationRequestSearchCriteria {
 
 	private List<ProgressStatus> progressStatus;
 
-	private LocalDateTime creationDateMin;
+	private OffsetDateTime creationDateMin;
 
-	private LocalDateTime creationDateMax;
+	private OffsetDateTime creationDateMax;
 
-	private LocalDateTime treatmentDateMin;
+	private OffsetDateTime treatmentDateMin;
 
-	private LocalDateTime treatmentDateMax;
+	private OffsetDateTime treatmentDateMax;
 
-	private LocalDateTime sendRequestDateMin;
+	private OffsetDateTime sendRequestDateMin;
 
-	private LocalDateTime sendRequestDateMax;
+	private OffsetDateTime sendRequestDateMax;
 
 	private UUID globalId;
 

@@ -1,5 +1,7 @@
 package org.rudi.common.test;
 
+import static org.junit.Assert.assertTrue;
+
 import org.assertj.core.api.FileAssert;
 import org.rudi.common.core.DocumentContent;
 
@@ -14,8 +16,8 @@ public class RudiDocumentContentAssert extends RudiObjectAssert<DocumentContent>
 	}
 
 	public void hasFileContent(String expected) {
-		hasFieldOrPropertyWithValue("isFile", true);
 		hasFieldOrPropertyWithValue("fileSize", (long) expected.length());
+		assertTrue(actual.isFile());
 		fileAssert.hasContent(expected);
 	}
 

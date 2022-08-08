@@ -18,7 +18,7 @@ public class NodeStubConfiguration {
 	private File reportsDirectory;
 	private File resourcesDirectory;
 
-	@Value("#{'${rudi.nodestub.errors.429}'.split(',')}")
+	@Value("#{'${rudi.nodestub.errors429}'.split(',')}")
 	private List<String> errors429;
 
 	/**

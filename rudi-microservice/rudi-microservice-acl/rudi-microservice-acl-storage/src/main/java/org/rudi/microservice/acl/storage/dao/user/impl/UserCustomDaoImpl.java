@@ -4,9 +4,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.storage.dao.user.UserCustomDao;
+import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
+import org.rudi.microservice.acl.storage.entity.address.EmailAddressEntity;
+import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ import java.util.List;
  *
  */
 @Repository
-public class UserCustomDaoImpl extends AbstractCustomDaoImpl implements UserCustomDao {
+public class UserCustomDaoImpl extends AbstractCustomDaoImpl<UserEntity, UserSearchCriteria> implements UserCustomDao {
 
 	// Champs utilisés pour le filtrage
 	private static final String FIELD_LOGIN = "login";
@@ -38,9 +41,14 @@ public class UserCustomDaoImpl extends AbstractCustomDaoImpl implements UserCust
 	private static final String FIELD_LASTNAME = "lastname";
 	private static final String FIELD_COMPANY = "company";
 	private static final String FIELD_TYPE = "type";
+	private static final String FIELD_ROLES = "roles";
+	private static final String FIELD_UUID = "uuid";
+	private static final String FIELD_ADDRESSES = "addresses";
+	private static final String FIELD_EMAIL = "email";
 
-	@Autowired
-	private EntityManager entityManager;
+	public UserCustomDaoImpl(EntityManager entityManager) {
+		super(entityManager, UserEntity.class);
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -96,6 +104,19 @@ public class UserCustomDaoImpl extends AbstractCustomDaoImpl implements UserCust
 			// type
 			if (searchCriteria.getType() != null) {
 				predicates.add(builder.equal(root.get(FIELD_TYPE), UserType.valueOf(searchCriteria.getType().name())));
+			}
+
+			// roles
+			if (CollectionUtils.isNotEmpty(searchCriteria.getRoleUuids())) {
+				Join<UserEntity, RoleEntity> joinRoles = root.join(FIELD_ROLES);
+				predicates.add((joinRoles.get(FIELD_UUID).in(searchCriteria.getRoleUuids())));
+			}
+
+			// Email address
+			if(searchCriteria.getUserEmail() != null) {
+				Join<UserEntity, AbstractAddressEntity> joinAddresses = root.join(FIELD_ADDRESSES);
+				Join<UserEntity, EmailAddressEntity> joinEmailAddresses = builder.treat(joinAddresses, EmailAddressEntity.class);
+				predicateStringCriteriaForJoin(searchCriteria.getUserEmail(), FIELD_EMAIL, predicates, builder, joinEmailAddresses);
 			}
 
 			// Définition de la clause Where

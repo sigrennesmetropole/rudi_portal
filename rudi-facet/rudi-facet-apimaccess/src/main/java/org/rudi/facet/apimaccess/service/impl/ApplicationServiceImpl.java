@@ -1,5 +1,7 @@
 package org.rudi.facet.apimaccess.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
@@ -15,22 +17,27 @@ import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptions;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.rudi.facet.apimaccess.helper.search.SearchCriteriaMapper;
+import org.rudi.facet.apimaccess.exception.APINotFoundException;
+import org.rudi.facet.apimaccess.exception.APISubscriptionException;
+import org.rudi.facet.apimaccess.exception.APIsOperationException;
+import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.rudi.facet.apimaccess.exception.SubscriptionOperationException;
+import org.rudi.facet.apimaccess.helper.search.QueryBuilder;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.UUID;
 
-import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_SEARCH_MAPPER;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
 
 @Service
+@RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationServiceImpl.class);
@@ -53,27 +60,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private final ApplicationOperationAPI applicationOperationAPI;
 	private final APIsService apIsService;
 	private final SubscriptionOperationAPI subscriptionOperationAPI;
-	private final SearchCriteriaMapper searchCriteriaMapper;
-
-	public ApplicationServiceImpl(ApplicationOperationAPI applicationOperationAPI, APIsService apIsService, SubscriptionOperationAPI subscriptionOperationAPI, @Qualifier(API_MACCESS_SEARCH_MAPPER) SearchCriteriaMapper searchCriteriaMapper) {
-		this.applicationOperationAPI = applicationOperationAPI;
-		this.apIsService = apIsService;
-		this.subscriptionOperationAPI = subscriptionOperationAPI;
-		this.searchCriteriaMapper = searchCriteriaMapper;
-	}
+	private final QueryBuilder queryBuilder;
 
 	@Override
-	public Application createApplication(Application application, String username) throws APIManagerException {
+	public Application createApplication(Application application, String username) throws ApplicationOperationException {
 		return applicationOperationAPI.createApplication(application, username);
 	}
 
 	@Override
-	public Application getApplication(String applicationId, String username) throws APIManagerException {
+	public Application getApplication(String applicationId, String username) throws ApplicationOperationException {
 		return applicationOperationAPI.getApplication(applicationId, username);
 	}
 
 	@Override
-	public Applications searchApplication(ApplicationSearchCriteria applicationSearchCriteria, String username) throws APIManagerException {
+	public Applications searchApplication(ApplicationSearchCriteria applicationSearchCriteria, String username) throws ApplicationOperationException {
 		if (applicationSearchCriteria == null) {
 			applicationSearchCriteria = new ApplicationSearchCriteria();
 		}
@@ -82,18 +82,18 @@ public class ApplicationServiceImpl implements ApplicationService {
 					applicationSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
 			applicationSearchCriteria.setLimit(LIMIT_MAX_VALUE);
 		}
-		return applicationOperationAPI.searchApplication(searchCriteriaMapper.buildApplicationSearchCriteriaQuery(applicationSearchCriteria), username);
+		applicationSearchCriteria.setQuery(queryBuilder.buildFrom(applicationSearchCriteria));
+		return applicationOperationAPI.searchApplication(applicationSearchCriteria, username);
 	}
 
 	@Override
-	public ApplicationAPISubscriptions searchApplicationAPISubscriptions(ApplicationAPISubscriptionSearchCriteria applicationAPISubscriptionSearchCriteria, String username)
-			throws APIManagerException {
+	public ApplicationAPISubscriptions searchApplicationAPISubscriptions(ApplicationAPISubscriptionSearchCriteria applicationAPISubscriptionSearchCriteria, String username) throws SubscriptionOperationException {
 		if (applicationAPISubscriptionSearchCriteria == null) {
-			throw new APIManagerException("Les paramètres de recherche sont absents");
+			throw new IllegalArgumentException("Les paramètres de recherche sont absents");
 		}
 		if (StringUtils.isEmpty(applicationAPISubscriptionSearchCriteria.getApplicationId())
 				&& StringUtils.isEmpty(applicationAPISubscriptionSearchCriteria.getApiId())) {
-			throw new APIManagerException("Au moins un des paramètres apiId et applicationId est obligatoire");
+			throw new IllegalArgumentException("Au moins un des paramètres apiId et applicationId est obligatoire");
 		}
 		if (applicationAPISubscriptionSearchCriteria.getLimit() != null && applicationAPISubscriptionSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
 			LOGGER.warn("Le nombre de souscriptions application - api dépasse le nombre d'élément maximum autorisé: {} > {}",
@@ -104,13 +104,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public ApplicationAPISubscription subscribeAPI(ApplicationAPISubscription applicationAPISubscription, String username) throws APIManagerException {
+	public ApplicationAPISubscription subscribeAPI(ApplicationAPISubscription applicationAPISubscription, String username) throws APISubscriptionException {
 		checkApplicationAPISubscription(applicationAPISubscription);
 		return subscriptionOperationAPI.createApplicationAPISubscription(applicationAPISubscription, username);
 	}
 
 	@Override
-	public ApplicationAPISubscription subscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException {
+	public ApplicationAPISubscription subscribeAPIToDefaultUserApplication(String apiId, String username) throws APISubscriptionException, ApplicationOperationException {
 		String applicationId = getDefaultApplicationId(username);
 		ApplicationAPISubscription applicationAPISubscription = new ApplicationAPISubscription()
 				.applicationId(applicationId)
@@ -120,13 +120,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public boolean hasSubscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException {
+	public void unsubscribeAPIToDefaultUserApplication(String apiId, String username) throws SubscriptionOperationException, ApplicationOperationException {
+		val applicationId = getDefaultApplicationId(username);
+		val searchCriteria = new ApplicationAPISubscriptionSearchCriteria()
+				.apiId(apiId)
+				.applicationId(applicationId);
+		val applicationAPISubscriptions = searchApplicationAPISubscriptions(searchCriteria, username);
+		for (final ApplicationAPISubscription applicationAPISubscription : applicationAPISubscriptions.getList()) {
+			unsubscribeAPI(applicationAPISubscription.getSubscriptionId(), username);
+		}
+	}
+
+	@Override
+	public boolean hasSubscribeAPIToDefaultUserApplication(String apiId, String username) throws ApplicationOperationException, SubscriptionOperationException {
 		String applicationId = getDefaultApplicationId(username);
 		return hasSubscribeAPI(apiId, applicationId, username);
 	}
 
 	@Override
-	public boolean hasSubscribeAPI(String apiId, String applicationId, String username) throws APIManagerException {
+	public boolean hasSubscribeAPI(String apiId, String applicationId, String username) throws SubscriptionOperationException {
 		ApplicationAPISubscriptions applicationAPISubscriptions = searchApplicationAPISubscriptions(
 				new ApplicationAPISubscriptionSearchCriteria().apiId(apiId).applicationId(applicationId),
 				username);
@@ -134,53 +146,53 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public ApplicationAPISubscription getSubscriptionAPI(String subscriptionId, String username) throws APIManagerException {
+	public ApplicationAPISubscription getSubscriptionAPI(String subscriptionId, String username) throws SubscriptionOperationException {
 		if (StringUtils.isEmpty(subscriptionId)) {
-			throw new APIManagerException("L'identifiant de la souscription à récupérer est absent");
+			throw new IllegalArgumentException("L'identifiant de la souscription à récupérer est absent");
 		}
 		return subscriptionOperationAPI.getApplicationAPISubscription(subscriptionId, username);
 	}
 
 	@Override
-	public ApplicationAPISubscription updateSubscriptionAPI(ApplicationAPISubscription applicationAPISubscription, String username) throws APIManagerException {
+	public ApplicationAPISubscription updateSubscriptionAPI(ApplicationAPISubscription applicationAPISubscription, String username) throws SubscriptionOperationException {
 		checkApplicationAPISubscription(applicationAPISubscription);
 		if (StringUtils.isEmpty(applicationAPISubscription.getSubscriptionId())) {
-			throw new APIManagerException("L'identifiant de la souscription à mettre à jour est absent");
+			throw new IllegalArgumentException("L'identifiant de la souscription à mettre à jour est absent");
 		}
 		return subscriptionOperationAPI.updateApplicationAPISubscription(applicationAPISubscription, username);
 	}
 
 	@Override
-	public void unsubscribeAPI(String subscriptionId, String username) throws APIManagerException {
+	public void unsubscribeAPI(String subscriptionId, String username) throws SubscriptionOperationException {
 		if (StringUtils.isEmpty(subscriptionId)) {
-			throw new APIManagerException("L'identifiant de la souscription à supprimer est absent");
+			throw new IllegalArgumentException("L'identifiant de la souscription à supprimer est absent");
 		}
 		subscriptionOperationAPI.deleteApplicationAPISubscription(subscriptionId, username);
 	}
 
 	@Override
-	public DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username) throws APIManagerException {
+	public DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username) throws APIManagerException, IOException {
 		final APIInfo apiInfo = getApiInfo(globalId, mediaId);
 		return applicationOperationAPI.getAPIContent(apiInfo.getContext(), apiInfo.getVersion(), getDefaultApplicationId(username), username);
 	}
 
 	@Override
-	public void deleteApplication(String applicationId, String username) throws APIManagerException {
+	public void deleteApplication(String applicationId, String username) throws ApplicationOperationException {
 		applicationOperationAPI.deleteApplication(applicationId, username);
 	}
 
-	private void checkApplicationAPISubscription(ApplicationAPISubscription applicationAPISubscription) throws APIManagerException {
+	private void checkApplicationAPISubscription(ApplicationAPISubscription applicationAPISubscription)  {
 		if (applicationAPISubscription == null) {
-			throw new APIManagerException("Les paramètres de souscription sont absents");
+			throw new IllegalArgumentException("Les paramètres de souscription sont absents");
 		}
 		if (StringUtils.isEmpty(applicationAPISubscription.getApplicationId())) {
-			throw new APIManagerException("L'identifiant de l'application qui souscrit est absent");
+			throw new IllegalArgumentException("L'identifiant de l'application qui souscrit est absent");
 		}
 		if (StringUtils.isEmpty(applicationAPISubscription.getApiId())) {
-			throw new APIManagerException("L'identifiant de l'API de souscription est absent");
+			throw new IllegalArgumentException("L'identifiant de l'API de souscription est absent");
 		}
 		if (StringUtils.isEmpty(applicationAPISubscription.getThrottlingPolicy())) {
-			throw new APIManagerException("La politique de souscription est absente");
+			throw new IllegalArgumentException("La politique de souscription est absente");
 		}
 	}
 
@@ -189,7 +201,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	 *
 	 * @return String
 	 */
-	private String getDefaultApplicationId(String username) throws APIManagerException {
+	private String getDefaultApplicationId(String username) throws ApplicationOperationException {
 
 		Applications applications = searchApplication(new ApplicationSearchCriteria().name(defaultApplicationName), username);
 		if (CollectionUtils.isEmpty(applications.getList())) {
@@ -213,13 +225,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public String buildAPIAccessUrl(UUID globalId, UUID mediaId) throws APIManagerException {
+	public String buildAPIAccessUrl(UUID globalId, UUID mediaId) throws APIsOperationException, APINotFoundException {
 		final APIInfo apiInfo = getApiInfo(globalId, mediaId);
 		return applicationOperationAPI.buildAPIAccessUrl(apiInfo.getContext(), apiInfo.getVersion());
 	}
 
 	@Override
-	public boolean hasApi(UUID globalId, UUID mediaId) throws APIManagerException {
+	public boolean hasApi(UUID globalId, UUID mediaId) throws APIsOperationException {
 
 		// On regarde s'il y'a une API via une requête de recherche
 		final APIList apiList = apIsService.searchAPI(new APISearchCriteria()
@@ -230,12 +242,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 		return apiList.getCount() != 0;
 	}
 
-	private APIInfo getApiInfo(UUID globalId, UUID mediaId) throws APIManagerException {
+	private APIInfo getApiInfo(UUID globalId, UUID mediaId) throws APIsOperationException, APINotFoundException {
 		final APIList apiList = apIsService.searchAPI(new APISearchCriteria()
 				.globalId(globalId)
 				.mediaUuid(mediaId));
 		if (apiList.getCount() == 0) {
-			throw new APIManagerException("Aucune API ne correspond aux information globalId = " + globalId + " et mediaId = " + mediaId);
+			throw new APINotFoundException(globalId, mediaId);
 		}
 		return apiList.getList().get(0);
 	}

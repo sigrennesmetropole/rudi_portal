@@ -48,15 +48,25 @@ public class JwtAuthenticationLoginSuccessHandler implements AuthenticationSucce
 		SecurityContextHolder.getContext().setAuthentication(customToken);
 
 		AuthenticatedUser user = (AuthenticatedUser) customToken.getDetails();
-		Tokens tokens = jwtTokenUtil.generateTokens(user.getLogin(), user);
+		Tokens tokens = generateTokens(user);
 
 		response.setHeader(AUTHORIZATION_HEADER, tokens.getJwtToken());
-		response.setHeader(X_TOKEN_HEADER, tokens.getJwtToken());
+		response.setHeader(X_TOKEN_HEADER, tokens.getRefreshToken());
 		response.setStatus(HttpStatus.OK.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		objectMapper.writeValue(response.getWriter(), tokens);
 
 		clearAuthenticationAttributes(request);
+	}
+
+	private Tokens generateTokens(AuthenticatedUser user) throws IOException {
+		Tokens tokens = null;
+		try {
+			tokens = jwtTokenUtil.generateTokens(user.getLogin(), user);
+		} catch (Exception e) {
+			throw new IOException("Failed to generate tokens", e);
+		}
+		return tokens;
 	}
 
 	/**

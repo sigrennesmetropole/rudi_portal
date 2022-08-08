@@ -1,0 +1,24 @@
+{
+	"properties": [
+		{
+			"name": "dataverse.api.rudi.media.data.alias",
+			"type": "java.lang.String",
+			"description": "Name of the Dataverse use to store media files."
+		}
+	],
+	"hints": [
+		{
+			"name": "dataverse.api.rudi.media.data.alias",
+			"values": [
+				{
+					"value": "rudi_media_data",
+					"description": "Default Dataverse."
+				},
+				{
+					"value": "rudi_media_test",
+					"description": "Dataverse for testing purposes."
+				}
+			]
+		}
+	]
+}

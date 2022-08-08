@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.OngoingStubbing;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.test.RudiAssertions;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
@@ -31,7 +32,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.rudi.common.core.util.DateTimeUtils.toUTC;
+import static org.rudi.microservice.kalim.test.HasGlobalId.withSameGlobalIdAs;
 
 @ExtendWith(MockitoExtension.class)
 class HarvestingHelperTest {
@@ -169,8 +173,8 @@ class HarvestingHelperTest {
 		when(configuration.getResourcesPath()).thenReturn(RESOURCES_PATH);
 		when(datasetService.getDataset(metadataWithoutError.getGlobalId())).thenThrow(DatasetNotFoundException.fromGlobalId(metadataWithoutError.getGlobalId()));
 		when(datasetService.getDataset(metadataWithError.getGlobalId())).thenThrow(DatasetNotFoundException.fromGlobalId(metadataWithError.getGlobalId()));
-		when(integrationRequestService.createIntegrationRequestFromHarvesting(metadataWithoutError, Method.POST, node)).thenReturn(successfulIntegrationRequest);
-		when(integrationRequestService.createIntegrationRequestFromHarvesting(metadataWithError, Method.POST, node)).thenThrow(new IntegrationException("Mocked exception"));
+		whenCreateIntegrationRequestFromHarvesting(metadataWithoutError, Method.POST, node).thenReturn(successfulIntegrationRequest);
+		whenCreateIntegrationRequestFromHarvesting(metadataWithError, Method.POST, node).thenThrow(new IntegrationException("Mocked exception"));
 
 		mockWebServer.enqueue(new MockResponse()
 				.setBody(JSON_RESOURCE_READER.getObjectMapper().writeValueAsString(metadataList))
@@ -190,11 +194,11 @@ class HarvestingHelperTest {
 				.lastHarvestingDate(LocalDateTime.of(2021, Month.AUGUST, 18, 10, 0));
 		final Metadata existingMetadata = new Metadata().globalId(UUID.randomUUID())
 				.datasetDates(new ReferenceDates()
-						.created(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0)));
+						.created(toUTC(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0))));
 		final Metadata modifiedMetadata = new Metadata().globalId(existingMetadata.getGlobalId())
 				.datasetDates(new ReferenceDates()
-						.created(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0))
-						.updated(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0)));
+						.created(toUTC(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0)))
+						.updated(toUTC(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0))));
 		final MetadataList metadataList = new MetadataList()
 				.total(1L)
 				.addItemsItem(modifiedMetadata);
@@ -202,7 +206,7 @@ class HarvestingHelperTest {
 
 		when(configuration.getResourcesPath()).thenReturn(RESOURCES_PATH);
 		when(datasetService.getDataset(modifiedMetadata.getGlobalId())).thenReturn(existingMetadata);
-		when(integrationRequestService.createIntegrationRequestFromHarvesting(modifiedMetadata, Method.PUT, node)).thenReturn(successfulIntegrationRequest);
+		whenCreateIntegrationRequestFromHarvesting(modifiedMetadata, Method.PUT, node).thenReturn(successfulIntegrationRequest);
 
 		mockWebServer.enqueue(new MockResponse()
 				.setBody(JSON_RESOURCE_READER.getObjectMapper().writeValueAsString(metadataList))
@@ -222,13 +226,13 @@ class HarvestingHelperTest {
 				.lastHarvestingDate(LocalDateTime.of(2021, Month.AUGUST, 20, 10, 0));
 		final Metadata existingMetadata = new Metadata().globalId(UUID.randomUUID())
 				.datasetDates(new ReferenceDates()
-						.created(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0))
-						.updated(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0)));
+						.created(toUTC(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0)))
+						.updated(toUTC(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0))));
 		final Metadata metadataToDelete = new Metadata().globalId(existingMetadata.getGlobalId())
 				.datasetDates(new ReferenceDates()
-						.created(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0))
-						.updated(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0))
-						.deleted(LocalDateTime.now().minus(1, ChronoUnit.HOURS)));
+						.created(toUTC(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0)))
+						.updated(toUTC(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0)))
+						.deleted(toUTC(LocalDateTime.now()).minus(1, ChronoUnit.HOURS)));
 		final MetadataList metadataList = new MetadataList()
 				.total(1L)
 				.addItemsItem(metadataToDelete);
@@ -236,7 +240,7 @@ class HarvestingHelperTest {
 
 		when(configuration.getResourcesPath()).thenReturn(RESOURCES_PATH);
 		when(datasetService.getDataset(metadataToDelete.getGlobalId())).thenReturn(existingMetadata);
-		when(integrationRequestService.createIntegrationRequestFromHarvesting(metadataToDelete, Method.DELETE, node)).thenReturn(successfulIntegrationRequest);
+		whenCreateIntegrationRequestFromHarvesting(metadataToDelete, Method.DELETE, node).thenReturn(successfulIntegrationRequest);
 
 		mockWebServer.enqueue(new MockResponse()
 				.setBody(JSON_RESOURCE_READER.getObjectMapper().writeValueAsString(metadataList))
@@ -256,21 +260,21 @@ class HarvestingHelperTest {
 				.lastHarvestingDate(LocalDateTime.of(2021, Month.AUGUST, 20, 10, 0));
 		final Metadata existingMetadata = new Metadata().globalId(UUID.randomUUID())
 				.datasetDates(new ReferenceDates()
-						.created(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0))
-						.updated(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0)));
-		final Metadata metadataToDelete = new Metadata().globalId(existingMetadata.getGlobalId())
+						.created(toUTC(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0)))
+						.updated(toUTC(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0))));
+		final Metadata metadataToDeleteTomorrow = new Metadata().globalId(existingMetadata.getGlobalId())
 				.datasetDates(new ReferenceDates()
-						.created(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0))
-						.updated(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0))
-						.deleted(LocalDateTime.now().plus(1, ChronoUnit.HOURS)));
+						.created(toUTC(LocalDateTime.of(2021, Month.AUGUST, 17, 10, 0)))
+						.updated(toUTC(LocalDateTime.of(2021, Month.AUGUST, 19, 10, 0)))
+						.deleted(toUTC(LocalDateTime.now()).plus(1, ChronoUnit.DAYS)));
 		final MetadataList metadataList = new MetadataList()
 				.total(1L)
-				.addItemsItem(metadataToDelete);
+				.addItemsItem(metadataToDeleteTomorrow);
 		final IntegrationRequest successfulIntegrationRequest = new IntegrationRequest();
 
 		when(configuration.getResourcesPath()).thenReturn(RESOURCES_PATH);
-		when(datasetService.getDataset(metadataToDelete.getGlobalId())).thenReturn(existingMetadata);
-		when(integrationRequestService.createIntegrationRequestFromHarvesting(metadataToDelete, Method.PUT, node)).thenReturn(successfulIntegrationRequest);
+		when(datasetService.getDataset(metadataToDeleteTomorrow.getGlobalId())).thenReturn(existingMetadata);
+		whenCreateIntegrationRequestFromHarvesting(metadataToDeleteTomorrow, Method.PUT, node).thenReturn(successfulIntegrationRequest);
 
 		mockWebServer.enqueue(new MockResponse()
 				.setBody(JSON_RESOURCE_READER.getObjectMapper().writeValueAsString(metadataList))
@@ -282,4 +286,12 @@ class HarvestingHelperTest {
 				.verifyComplete();
 
 	}
+
+	/**
+	 * shorthand to avoid stubbing argument mismatch with OffsetDateTime fields
+	 */
+	private OngoingStubbing<IntegrationRequest> whenCreateIntegrationRequestFromHarvesting(Metadata metadata, Method method, NodeProvider node) throws IllegalAccessException, IntegrationException {
+		return when(integrationRequestService.createIntegrationRequestFromHarvesting(withSameGlobalIdAs(metadata), eq(method), eq(node)));
+	}
+
 }

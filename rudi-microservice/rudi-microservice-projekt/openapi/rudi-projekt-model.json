@@ -1,0 +1,898 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Projekt Rudi",
+		"version": "0.0.1",
+		"title": "rudi-projekt-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Projekt API",
+			"variables": {
+				"basePath": {
+					"default": "projekt/v1"
+				}
+			}
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AbstractLongIdDto": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					}
+				}
+			},
+			"AbstractLabelizedDto": {
+				"type": "object",
+				"required": [
+					"code"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string",
+								"maxLength": 30
+							},
+							"label": {
+								"type": "string",
+								"maxLength": 100
+							}
+						}
+					}
+				]
+			},
+			"AbstractStampedDto": {
+				"type": "object",
+				"required": [
+					"opening_date",
+					"order"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLabelizedDto"
+					},
+					{
+						"properties": {
+							"opening_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"closing_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"order": {
+								"type": "integer"
+							}
+						}
+					}
+				]
+			},
+			"ProjectStatus": {
+				"description": "Statut. Les projets au statut VALIDATED sont considérés comme étant des réutilisations.",
+				"type": "string",
+				"enum": [
+					"DRAFT",
+					"IN_PROGRESS",
+					"VALIDATED",
+					"CANCELLED",
+					"DISENGAGED"
+				]
+			},
+			"NewDatasetRequestStatus": {
+				"description": "Statut des demandes de nouveau",
+				"type": "string",
+				"enum": [
+					"DRAFT",
+					"IN_PROGRESS",
+					"VALIDATED",
+					"REFUSED"
+				]
+			},
+			"AssetDescription": {
+				"type": "object",
+				"properties": {
+					"object_type": {
+						"type": "string"
+					}	
+				},
+				"discriminator": {
+        			"propertyName": "object_type",
+        			"mapping": {
+						"Project": "#/components/schemas/Project",
+						"NewDatasetRequest": "#/components/schemas/NewDatasetRequest",
+						"LinkedDataset": "#/components/schemas/LinkedDataset"
+					}
+        		}
+        	},
+			"Project": {
+				"type": "object",
+				"required": [
+					"title",
+					"description",
+					"owner_uuid",
+					"owner_type"
+				],
+				"allOf": [
+					{
+						"$ref": "AssetDescription"
+					},
+					{
+						"properties": {
+							"title": {
+								"description": "Titre",
+								"type": "string",
+								"maxLength": 150
+							},
+							"project_status": {
+								"description": "Statut",
+								"$ref": "#/components/schemas/ProjectStatus"
+							},
+							"expected_completion_start_date": {
+								"description": "Date du début de la période pour laquelle le projet sera accompli (timestamp+zone mais info fonctionnelle véhiculée au format MM/YYYY)",
+								"type": "string",
+								"format": "date-time"
+							},
+							"expected_completion_end_date": {
+								"description": "Date de fin de la période pour laquelle le projet sera accompli (timestamp+zone mais info fonctionnelle véhiculée au format MM/YYYY)",
+								"type": "string",
+								"format": "date-time"
+							},
+							"themes": {
+								"description": "Thèmes du jeu de données (codes SKOS)",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"keywords": {
+								"description": "Mots-clés du projet (codes SKOS)",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"type": {
+								"$ref": "#/components/schemas/ProjectType"
+							},
+							"access_url": {
+								"description": "URL d'accès",
+								"type": "string",
+								"format": "uri"
+							},
+							"organization": {
+								"$ref": "#/components/schemas/Organization"
+							},
+							"target_audiences": {
+								"description": "Mots-clés du projet (codes SKOS)",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"territorial_scale": {
+								"$ref": "#/components/schemas/TerritorialScale"
+							},
+							"detailed_territorial_scale": {
+								"description": "Précision sur l'échelle du territoire",
+								"type": "string",
+								"maxLength": 150
+							},
+							"desired_supports": {
+								"description": "Type d’accompagnement souhaité",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Support"
+								},
+								"minItems": 1
+							},
+							"desired_support_description": {
+								"description": "Description de l’accompagnement sollicité",
+								"type": "string",
+								"maxLength": 150
+							},
+							"confidentiality": {
+								"$ref": "#/components/schemas/Confidentiality"
+							},
+							"contact_email": {
+								"description": "Adresse mail de contact (peut être différente du porteur de projet)",
+								"type": "string",
+								"format": "email"
+							},
+							"owner_uuid": {
+								"$ref": "#/components/schemas/OwnerUuid"
+							},
+							"owner_type": {
+								"$ref": "#/components/schemas/OwnerType"
+							},
+							"dataset_requests": {
+								"description": "Demande de nouveau jdd associé",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/NewDatasetRequest"
+								},
+								"minItems": 0
+							}
+						}
+					}
+				]
+			},
+			"LinkedDataset": {
+				"description": "Lie un jdd ouvert ou restreint (génère une demande dans ce cas) à un projet",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "AssetDescription"
+					},
+					{
+						"properties": {
+							"dataset_uuid": {
+								"description": "UUID du dataset",
+								"type": "string",
+								"format": "uuid",
+								"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+							},
+							"dataset_organization_uuid": {
+								"description": "UUID du producer du jdd",
+								"type": "string",
+								"format": "uuid",
+								"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+							},
+							"comment": {
+								"description": "Commentaire pour justifier la demande d'accès à ce jdd restreint | Null si jdd ouvert",
+								"type": "string",
+								"example": "Need it"
+							},
+							"linked_dataset_status": {
+								"$ref": "#/components/schemas/LinkedDatasetStatus"
+							},
+							"dataset_confidentiality" : {
+								"$ref": "#/components/schemas/DatasetConfidentiality"
+							},
+							"end_date": {
+								"description": "Date de fin envisagée de la demande d'accès, (tmestamp+zone info fonctionnelle au format MM/YYYY)",
+								"type": "string",
+								"format": "date-time"
+							}
+						}
+					}
+				]
+			},
+			"Indicators": {
+				"type": "object",
+				"properties": {
+					"numberOfRequest": {
+						"type": "integer",
+						"description": "Nombre d'autres demandes (X)"
+					},
+					"numberOfProducer": {
+						"type": "integer",
+						"description": "Le nombre de producer concerné par ces demandes (N)"
+					}
+				}
+			},
+			"SearchCriteria": {
+				"description": "Critère de recherche",
+				"type": "object",
+				"properties": {
+					"offset": {
+						"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+						"type": "integer",
+						"format": "int32"
+					},
+					"limit": {
+						"description": "Le nombre de résultats à retourner par page",
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"ProjectSearchCriteria": {
+				"description": "Critère de recherche d'un projet",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"themes": {
+								"description": "Thèmes du jeu de données (codes SKOS)",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"keywords": {
+								"description": "Mots-clés du projet (codes SKOS)",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"target_audiences": {
+								"description": "Mots-clés du projet (codes SKOS)",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"dataset_uuids": {
+								"description": "UUIDs des jeux de données liés aux projets recherchés",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid"
+								}
+							},
+							"linked_dataset_uuids": {
+								"description": "UUIDs des LinkedDatasetEntity (des demandes d'accès) liées aux projets recherchés",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid"
+								}
+							},
+							"owner_uuids": {
+								"description": "UUIDs des utilisateurs ou des organisations ayant déclaré la réutilisation ou soumis le projet",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid"
+								}
+							},
+							"status": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/ProjectStatus"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ComputeIndicatorsSearchCriteria": {
+				"description": "Critère de recherche d'indicateurs d'un projet",
+				"type": "object",
+				"required": [
+					"project_uuid"
+				],
+				"allOf": [
+					{
+						"properties": {
+							"project_uuid": {
+								"description": "UUID du projet sur lequel on cherche des indicators",
+								"type": "string",
+								"format": "uuid"
+							},
+							"excluded_producer_uuid ": {
+								"description": "UUID du producer à exclure dans le calcul des indicateurs (facultatif)",
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				]
+			},
+			"LinkedDatasetStatus": {
+				"description": "Etat de la demande",
+				"type": "string",
+				"enum": [
+					"DRAFT", "IN_PROGRESS", "VALIDATED", "CANCELLED"
+				]
+			},
+			"DatasetConfidentiality": {
+				"description": "Type du JDD (Ouvert | Restreint)",
+				"type": "string",
+				"enum": [
+					"OPENED", "RESTRICTED"
+				]
+			},
+			"ProjectTypeSearchCriteria": {
+				"description": "Critère de recherche d'un type de projet",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
+			},
+			"ConfidentialitySearchCriteria": {
+				"description": "Critère de recherche d'un niveau de confidentialité",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
+			},
+			"NewDatasetRequest": {
+				"description": "Demande de nouveau JDD",
+				"type": "object",
+				"required": [
+					"description"
+				],
+				"allOf": [
+					{
+						"$ref": "AssetDescription"
+					},
+					{
+						"properties": {
+							"title": {
+								"description": "Titre de la demande",
+								"type": "string",
+								"example": "Nouvelle demande (1)"
+							},
+							"new_dataset_request_status": {
+								"$ref": "#/components/schemas/NewDatasetRequestStatus"
+							},
+							"description": {
+								"description": "Description de la demande",
+								"type": "string",
+								"example": "Je souhaiterais accéder à un JDD qui recense tous les lampadaires de la ville."
+							}
+						}
+					}
+				]
+			},
+			"TerritorialScaleSearchCriteria": {
+				"description": "Critère de recherche d'une échelle de territoire",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
+			},
+			"SupportSearchCriteria": {
+				"description": "Critère de recherche d'un type d’accompagnement",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
+			},
+			"LinkedDatasetSearchCriteria": {
+				"description": "Critère de recherche d'un dataset lié",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"comment": {
+								"description": "Cherche un texte présent dans le commentaire",
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"NewDatasetRequestSearchCriteria": {
+				"description": "Critère de recherche d'une demande d'un nouveau jdd",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"title_description": {
+								"description": "Cherche un texte présent dans le titre ou la description",
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"PagedList": {
+				"description": "Liste paginée d'éléments",
+				"type": "object",
+				"required": [
+					"total",
+					"elements"
+				],
+				"properties": {
+					"total": {
+						"description": "Nombre total d'éléments pour cette recherche (peut être supérieur au nombre d'éléments de la page courante)",
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"PagedProjectList": {
+				"description": "Liste paginée de projets",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Projets de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Project"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedProjectTypeList": {
+				"description": "Liste paginée de types de projet",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Types de projet de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/ProjectType"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedConfidentialityList": {
+				"description": "Liste paginée de niveaux de confidentialité",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Niveaux de confidentialité de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Confidentiality"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedManagerList": {
+				"description": "Liste paginée de porteurs de projets",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Porteurs de projets de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Manager"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedTerritorialScaleList": {
+				"description": "Liste paginée d'échelles de territoire",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Échelles de territoire de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/TerritorialScale"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedSupportList": {
+				"description": "Liste paginée de types d’accompagnement",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Types d’accompagnement de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Support"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedLinkedDatasetList": {
+				"description": "Liste paginée des dataset liés ou demandés",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Liste des datasets liés ou demandés",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/LinkedDataset"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ProjectType": {
+				"description": "Type de projet",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					}
+				]
+			},
+			"Organization": {
+				"description": "Organisation",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					},
+					{
+						"properties": {
+							"members": {
+								"description": "Membres",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Manager"
+								}
+							},
+							"addresses": {
+								"description": "Adresses",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/AbstractAddress"
+								}
+							}
+						}
+					}
+				]
+			},
+			"TerritorialScale": {
+				"description": "Échelle du territoire",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					}
+				]
+			},
+			"Support": {
+				"description": "Type d’accompagnement souhaité",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					}
+				]
+			},
+			"Confidentiality": {
+				"description": "Caractère confidentiel du projet (par défaut : confidentiel)",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					}
+				]
+			},
+			"Manager": {
+				"description": "Porteur de projet",
+				"type": "object",
+				"required": [
+					"user_uuid"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"user_uuid": {
+								"description": "Lien vers un utilisateur présent dans ACL avec le rôle PROJECT_MANAGER",
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				]
+			},
+			"OwnerType": {
+				"description": "Type du porteur de projet.",
+				"type": "string",
+				"enum": [
+					"USER",
+					"ORGANIZATION"
+				]
+			},
+			"OwnerUuid": {
+				"description": "UUID de l'utilisateur dans ACL du porteur de projet (si owner_type = USER) ou de l'organization dans strukture (si owner_type = ORGANIZATION).",
+				"type": "string",
+				"format": "uuid"
+			},
+			"OwnerInfo": {
+				"description": "Informations minimales sur un porteur de projet.",
+				"type": "object",
+				"required": [
+					"name"
+				],
+				"properties": {
+					"name": {
+						"description": "Nom du porteur de projet (prénom et nom si utilisateur, nom de l'organisation sinon)",
+						"type": "string"
+					}
+				}
+			},
+			"AbstractAddress": {
+				"description": "Adresse",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"type": {
+								"$ref": "#/components/schemas/AddressType"
+							},
+							"address_role": {
+								"$ref": "#/components/schemas/AddressRole"
+							}
+						}
+					}
+				],
+				"discriminator": {
+					"propertyName": "type",
+					"mapping": {
+						"PHONE": "#/components/schemas/TelephoneAddress",
+						"EMAIL": "#/components/schemas/EmailAddress",
+						"POSTAL": "#/components/schemas/PostalAddress"
+					}
+				}
+			},
+			"AddressType": {
+				"description": "Le type des adresses",
+				"type": "string",
+				"enum": [
+					"POSTAL",
+					"PHONE",
+					"EMAIL"
+				]
+			},
+			"AddressRole": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					},
+					{
+						"properties": {
+							"type": {
+								"$ref": "#/components/schemas/AddressType"
+							}
+						}
+					}
+				]
+			},
+			"PostalAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"recipient_identification": {
+								"type": "string",
+								"description": "Identification du destinataire"
+							},
+							"additional_identification": {
+								"type": "string",
+								"description": "Complément d’identification ou point de remise à l’intérieur du bâtiment "
+							},
+							"street_number": {
+								"type": "string",
+								"description": "Numéro et libellé de la voie"
+							},
+							"distribution_service": {
+								"type": "string",
+								"description": "Lieu dit ou service particulier de distribution"
+							},
+							"locality": {
+								"type": "string",
+								"description": "Code postal et localité de destination"
+							}
+						}
+					}
+				]
+			},
+			"TelephoneAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"phone_number": {
+								"type": "string",
+								"description": "Numéro de téléphone"
+							}
+						}
+					}
+				]
+			},
+			"EmailAddress": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractAddress"
+					},
+					{
+						"properties": {
+							"email": {
+								"type": "string",
+								"description": "Adresse email"
+							}
+						}
+					}
+				]
+			},
+			"ReadOnlyDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time",
+				"readOnly": true
+			},
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			}
+		}
+	}
+}

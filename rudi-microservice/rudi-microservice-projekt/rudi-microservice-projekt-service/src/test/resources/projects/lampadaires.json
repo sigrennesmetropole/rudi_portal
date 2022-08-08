@@ -1,0 +1,64 @@
+{
+    "object_type": "Project",
+	"title": "Projet de comptage des lampadaires",
+	"description": "On compte des lampadaires parce que c'est bien",
+	"process_definition_key": "project-process",
+	"status": "DRAFT",
+	"project_status": "DRAFT",
+	"functional_status": "draft",
+	"initiator": "mpokora",
+	"expected_completion_start_date": "2022-11-03T15:00:00.000",
+	"expected_completion_end_date": "2023-11-03T15:00:00.000",
+	"themes": [
+		"comptage",
+		"lampadaires"
+	],
+	"keywords": [
+		"comptage",
+		"lampadaires"
+	],
+	"type": {
+		"uuid": "f9a37c0b-f2ae-4aea-b383-0e92af6f2923",
+		"code": "inutile",
+		"label": "Projets complètement inutiles",
+		"opening_date": "2021-10-29T10:36:40.614",
+		"closing_date": "2021-10-29T10:36:40.614",
+		"order": 1
+	},
+	"target_audiences": [
+		"Enfants",
+		"Ados",
+		"Seniors"
+	],
+	"territorial_scale": {
+		"uuid": "88cbe712-4a61-460d-b0f7-4ecd97b18608",
+		"code": "metropole",
+		"label": "Métropole",
+		"opening_date": "2021-10-29T12:01:04.403",
+		"closing_date": "2021-10-29T12:01:04.403",
+		"order": 1
+	},
+	"detailed_territorial_scale": "Rennes",
+	"desired_supports": [
+		{
+			"uuid": "ce22e0aa-90d2-4485-a83e-7baecdad1139",
+			"code": "technique",
+			"label": "Recherche d’aide technique",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		}
+	],
+	"desired_support_description": "je suis nul en informatique",
+	"confidentiality": {
+		"uuid": "37011cbf-4393-4e6b-ac97-f989f89c3693",
+		"code": "top-secret",
+		"label": "Top Secret",
+		"opening_date": "2021-10-29T12:01:04.403",
+		"closing_date": "2021-10-29T12:01:04.403",
+		"order": 1
+	},
+	"owner_uuid": "ca4a5ae2-c88f-415f-8c56-762bc7c2fd97",
+	"contact_email": "mm@test.fr",
+	"owner_type": "USER"
+}

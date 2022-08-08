@@ -1,0 +1,22 @@
+@import "src/app/styles/colors";
+
+.field-content {
+    display: inline-block;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+
+    ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0;
+    }
+}
+
+.error-label {
+    font-size: 14px;
+    padding-top: 0.2em;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: $error-color;
+}

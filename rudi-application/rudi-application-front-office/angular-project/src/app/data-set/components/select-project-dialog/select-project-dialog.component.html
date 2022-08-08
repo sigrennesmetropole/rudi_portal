@@ -1,0 +1,61 @@
+<div id="dialog-content">
+    <mat-dialog-actions class="dialog-header-button">
+        <mat-icon svgIcon="icon-close" class="icon-close" (click)="handleClose()"></mat-icon>
+    </mat-dialog-actions>
+    <mat-dialog-content>
+        <span class="dialog-title">{{'metaData.restrictedDatasetRequestDialog.title'|translate}}</span>
+        <p class="description">{{'metaData.restrictedDatasetRequestDialog.description' | translate}}</p>
+
+        <form [formGroup]="formGroup">
+
+            <!-- selectionner projet -->
+            <ng-container>
+                <mat-card class="restrictedDataset-card">
+                    <div class="d-flex justify-content-center">
+                        <mat-label class="font-weight-bold">
+                            {{'metaData.restrictedDatasetRequestDialog.selectProject'|translate}}
+                        </mat-label>
+                    </div>
+                    <div class="d-flex justify-content-center pt-2">
+                        <mat-spinner *ngIf="isLoading"></mat-spinner>
+                    </div>
+                    <mat-form-field *ngIf="!isLoading" appearance="outline" hideRequiredMarker>
+                        <mat-select formControlName="selectProject" (selectionChange)="checkProjectSelected($event)"
+                                    placeholder="{{'metaData.restrictedDatasetRequestDialog.chooseProject'|translate}}">
+                            <mat-option *ngFor="let myProject of myProjects"
+                                        [value]="myProject">{{myProject.title}}</mat-option>
+                        </mat-select>
+                        <mat-error class="stepper-mat-error"
+                                   *ngIf="formGroup.get('selectProject').errors?.required">
+                            <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.requiredInformation'|translate}}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="d-flex justify-content-center" *ngIf="isProjectValidationLoading">
+                        <mat-spinner [diameter]="30"></mat-spinner>
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="isProjectInvalid && projectSelected &&
+                        !errorWhileChecking && !isProjectValidationLoading">
+                        <app-error-box [text]="'metaData.error-project-already-linked' | translate"></app-error-box>
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="isProjectInvalid && errorWhileChecking &&
+                        !isProjectValidationLoading">
+                        <app-error-box [text]="'metaData.error-server-while-checking-project' | translate"></app-error-box>
+                    </div>
+                </mat-card>
+            </ng-container>
+
+
+        </form>
+
+        <mat-dialog-actions class="d-flex justify-content-between">
+            <button class="buttons mat-stroked-button btn dialog-cancel" mat-raised-button (click)="handleClose()">
+                <span>{{'project.addDatasetPopup.cancel'|translate}}</span>
+            </button>
+            <button class="buttons mat-stroked-button btn dialog-validate" mat-raised-button
+                    (click)="validate()" [disabled]="formGroup.invalid || isProjectInvalid || isProjectValidationLoading">
+                <span>{{'project.addDatasetPopup.validate'|translate}}</span>
+            </button>
+        </mat-dialog-actions>
+
+    </mat-dialog-content>
+</div>
