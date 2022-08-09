@@ -1,0 +1,103 @@
+import {Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {Field, Section} from '../../api-bpmn';
+import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
+import {Observable, of} from 'rxjs';
+import {WorkflowFieldTextComponent} from '../workflow-field-text/workflow-field-text.component';
+
+@Component({
+    selector: 'app-workflow-field-template',
+    template: ''
+})
+export class WorkflowFieldTemplateComponent implements OnInit {
+
+    /**
+     * On est obligé d'avoir un élément parent de <mat-form-field> avec [formGroup]="formGroup" dans le template de chaque component
+     */
+    @Input()
+    formGroup: FormGroup;
+
+    /**
+     * Section contenant le champ <i>field</i>
+     */
+    @Input()
+    section: Section;
+
+    @Input()
+    field: Field;
+
+    @Output()
+    submit: EventEmitter<void> = new EventEmitter<void>();
+
+    constructor(
+        public viewContainerRef: ViewContainerRef,
+        private componentFactoryResolver: ComponentFactoryResolver
+    ) {
+    }
+
+    ngOnInit(): void {
+        this.loadWorkflowFieldComponent();
+    }
+
+    loadWorkflowFieldComponent(): void {
+        const viewContainerRef = this.viewContainerRef;
+        viewContainerRef.clear();
+
+        this.getWorkflowFieldComponentType().subscribe(componentType => {
+            const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentType);
+            const componentRef = viewContainerRef.createComponent<WorkflowFieldComponent>(componentFactory);
+            Object.assign(componentRef.instance, {
+                formGroup: this.formGroup,
+                section: this.section,
+                field: this.field,
+                submit: this.submit,
+            });
+        });
+    }
+
+    /**
+     * Méthode pour retrouver le composant Angular associé à un type de champ du workflow.
+     *
+     * <p>
+     * Attention on ne peut pas faire d'import dynamique à partir d'un string.
+     * C'est pourquoi on doit importer tous les modules préalablement.
+     * </p>
+     *
+     * <p>
+     * Par exemple, ce code fonctionne :
+     * </p>
+     *
+     * <pre>
+     *     import('../workflow-field/workflow-field.component')
+     * </pre>
+     *
+     * <p>
+     * Mais pas celui-ci :
+     * </p>
+     *
+     * <pre>
+     *     const file = '../workflow-field/workflow-field.component';
+     *     import(file)
+     * </pre>
+     *
+     * <p>L'erreur suivante est lancée:</p>
+     *
+     * <pre>
+     * Critical dependency: the request of a dependency is an expression
+     * </pre>
+     */
+    private getWorkflowFieldComponentType(): Observable<Type<WorkflowFieldComponent>> {
+        return of(this.getTypeFromAlreadyImportedModules());
+    }
+
+    private getTypeFromAlreadyImportedModules(): Type<WorkflowFieldComponent> {
+        const type = this.field.definition.type;
+        switch (type) {
+            case 'TEXT':
+                return WorkflowFieldTextComponent;
+            default:
+                console.warn(`WorkFlow FieldType "${type}" not handled. Using default component : WorkflowFieldComponent`);
+                return WorkflowFieldComponent;
+        }
+    }
+}

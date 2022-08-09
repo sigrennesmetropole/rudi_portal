@@ -1,0 +1,47 @@
+{
+	"$id": "https://guides.dataverse.org/en/latest/api/native-api.html#metadatablocks",
+	"title": "Dataverse MetadataBlocks",
+	"type": "object",
+	"properties": {
+		"citation": {
+			"allOf": [
+				{
+					"$ref": "#/definitions/MetadataBlock"
+				},
+				{
+					"description": "Block \"citation\" contenant les champs par défaut de Dataverse."
+				}
+			]
+		},
+		"rudi": {
+			"allOf": [
+				{
+					"$ref": "#/definitions/MetadataBlock"
+				},
+				{
+					"description": "Block \"rudi\" contenant les champs ajoutés par RUDI via le fichier TSV."
+				}
+			]
+		}
+	},
+	"patternProperties": {
+		".+": {
+			"type": "object",
+			"$ref": "#/definitions/MetadataBlock",
+			"description": "Block (autre que \"citation\" ou \"rudi\") contenant des champs personnalisés."
+		}
+	},
+	"definitions": {
+		"MetadataBlock": {
+			"properties": {
+				"fields": {
+					"$ref": "dataverse-fields.schema.json"
+				},
+				"displayName": {
+					"type": "string",
+					"description": "Nom du block tel qui s'affiche dans Dataverse."
+				}
+			}
+		}
+	}
+}

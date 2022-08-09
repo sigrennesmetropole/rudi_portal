@@ -25,7 +25,7 @@ import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.exceptions.DatasetAlreadyExists;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
-import org.rudi.facet.kaccess.service.KaccessSpringBootTest;
+import org.rudi.facet.kaccess.KaccessSpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -427,7 +427,9 @@ class DatasetServiceTest {
 		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
-		assertThat(existingResult.getMetadataList().getItems()).containsExactly(metadata);
+		assertThat(existingResult.getMetadataList().getItems())
+				.extracting(Metadata::getDataverseDoi)
+				.containsExactly(metadata.getDataverseDoi());
 
 
 		final DatasetSearchCriteria nonExistingDoiCriteria = new DatasetSearchCriteria();
@@ -453,7 +455,9 @@ class DatasetServiceTest {
 		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
-		assertThat(existingResult.getMetadataList().getItems()).containsExactly(metadata);
+		assertThat(existingResult.getMetadataList().getItems())
+				.extracting(Metadata::getDataverseDoi)
+				.containsExactly(metadata.getDataverseDoi());
 
 
 		final DatasetSearchCriteria nonExistingDoiCriteria = new DatasetSearchCriteria();
@@ -479,7 +483,9 @@ class DatasetServiceTest {
 		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
-		assertThat(existingResult.getMetadataList().getItems()).containsExactly(metadata);
+		assertThat(existingResult.getMetadataList().getItems())
+				.extracting(Metadata::getDataverseDoi)
+				.containsExactly(metadata.getDataverseDoi());
 
 
 		final DatasetSearchCriteria nonExistingCriteria = new DatasetSearchCriteria();

@@ -18,4 +18,8 @@ public interface ProjectCustomDao {
 	ProjectEntity findProjectByLinkedDatasetUuid(UUID linkedDatasetUuid);
 
 	Indicators computeProjectInfos(ComputeIndicatorsSearchCriteria searchCriteria);
+
+	Integer getNumberOfLinkedDatasets(UUID projectUuid);
+
+	Integer getNumberOfNewRequests(UUID projectUuid);
 }

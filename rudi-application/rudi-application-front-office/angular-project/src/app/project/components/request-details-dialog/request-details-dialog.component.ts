@@ -16,6 +16,11 @@ export interface RequestDetailsDialogData {
         requestDetails: RequestDetails;
     };
 }
+/**
+ * taille maximal du commentaire
+ */
+const COMMENT_MAX_LENGTH = 3000;
+
 
 @Component({
     selector: 'app-request-details-dialog',
@@ -38,6 +43,11 @@ export class RequestDetailsDialogComponent implements OnInit {
      * La date de fin de la demande par défaut
      */
     endDateDefault: Moment;
+
+    /**
+     * passe plat de la taille maximal du commentaire
+     */
+    commentMaxLength = COMMENT_MAX_LENGTH;
 
     constructor(
         public dialogRef: MatDialogRef<RequestDetailsDialogComponent, DialogClosedData<RequestDetails>>,

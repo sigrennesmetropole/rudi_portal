@@ -451,14 +451,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 }
 
 .rudi-icon-encircled {
-    border: solid 1px;
-    border-radius: 100%;
-    height: 1.7em;
-    width: 1.7em;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include encircled(1.7em);
 }
 
 .rudi-filter-box-libelle {
@@ -551,17 +544,26 @@ mat-toolbar a:hover {
             fill: $primary-text;
             vertical-align: top;
             margin-right: 10px;
-            height: 22px;
-            width: 22px;
+            height: 18px;
+            width: 18px;
             font-weight: 400;
         }
     }
 }
 
-.sidebar-content-pd{
+.sidebar-content-pd {
     padding: $header-version-height 0 0 0;
 }
 
 .mt-6 {
     margin-top: 6rem;
+}
+
+// Style custom imposé pour la première collone du tableau
+.th.mat-header-cell:first-of-type, td.mat-cell:first-of-type {
+    padding: 24px 24px !important;
+}
+
+.dataset-card-infos {
+    cursor: pointer;
 }

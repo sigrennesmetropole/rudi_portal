@@ -2,14 +2,18 @@ package org.rudi.microservice.konsult.service.metadata.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceForbiddenException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.exception.MissingParameterException;
+import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.rudi.facet.apimaccess.helper.rest.ClientAccessKey;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
@@ -20,8 +24,11 @@ import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataFacets;
 import org.rudi.facet.kaccess.bean.MetadataList;
 import org.rudi.facet.kaccess.bean.MetadataListFacets;
+import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
+import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.konsult.service.exception.APIManagerExternalServiceException;
+import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 import org.rudi.microservice.konsult.service.exception.DataverseExternalServiceException;
 import org.rudi.microservice.konsult.service.exception.MediaNotFoundException;
 import org.rudi.microservice.konsult.service.exception.MetadataNotFoundException;
@@ -53,6 +60,9 @@ public class MetadataServiceImpl implements MetadataService {
 	private final APIManagerHelper apiManagerHelper;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final MetadataWithSameThemeFinder metadataWithSameThemeFinder;
+	private final MetadataDetailsHelper metadataDetailsHelper;
+	private final ProjektHelper projektHelper;
+	private final UtilContextHelper utilContextHelper;
 	@Value("${apimanager.oauth2.client.anonymous.username}")
 	private String anonymousUsername;
 
@@ -70,6 +80,7 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
+	@Nonnull
 	public Metadata getMetadataById(UUID globalId) throws AppServiceException {
 		if (globalId == null) {
 			throw new MissingParameterException("L'identifiant du jeu de donnée est absent");
@@ -89,7 +100,7 @@ public class MetadataServiceImpl implements MetadataService {
 
 	private void rewriteMediaUrls(Metadata metadata) throws APIManagerException {
 		for (final Media media : metadata.getAvailableFormats()) {
-			if(applicationService.hasApi(metadata.getGlobalId(), media.getMediaId())) {
+			if (applicationService.hasApi(metadata.getGlobalId(), media.getMediaId())) {
 				this.rewriteMediaUrl(metadata, media);
 			}
 		}
@@ -137,6 +148,45 @@ public class MetadataServiceImpl implements MetadataService {
 		return downloadMetadataMedia(metadata, media, loginAbleToDownloadMedia);
 	}
 
+	@Override
+	public boolean hasSubscribeToDataset(UUID globalId) throws ClientKeyNotFoundException, APIManagerException {
+		return apiManagerHelper.userHasSubscribeToEachMediaOfDataset(globalId);
+	}
+
+	@Override
+	public void subscribeToDataset(UUID globalId) throws APIManagerException, AppServiceException {
+		final var metadata = getMetadataById(globalId);
+		if (metadataDetailsHelper.isRestricted(metadata)) {
+			checkAuthenticatedUserHasAccessToDataset(globalId);
+		}
+		apiManagerHelper.subscribeToEachMediaOfDataset(globalId);
+	}
+
+	private void checkAuthenticatedUserHasAccessToDataset(UUID globalId) throws AppServiceUnauthorizedException, AppServiceForbiddenException {
+		val authenticatedUser = utilContextHelper.getAuthenticatedUser();
+		if (authenticatedUser == null) {
+			throw new AppServiceUnauthorizedException(
+					String.format("Cannot subscribe to restricted dataset %s without authentication",
+							globalId));
+		}
+
+		final var user = aclHelper.getUserByLogin(authenticatedUser.getLogin());
+		if (user == null) {
+			throw new AppServiceForbiddenException(
+					String.format("Cannot subscribe to restricted dataset %s because user %s does not exist",
+							globalId,
+							authenticatedUser.getLogin()));
+		}
+
+		final var ownerHasAccessToDataset = projektHelper.checkOwnerHasAccessToDataset(user.getUuid(), globalId);
+		if (!ownerHasAccessToDataset) {
+			throw new AppServiceForbiddenException(
+					String.format("Cannot subscribe because user %s has not been granted access to restricted dataset %s",
+							authenticatedUser.getLogin(),
+							globalId));
+		}
+	}
+
 	private Media getMetadataMediaById(Metadata metadata, UUID mediaId) throws MediaNotFoundException {
 		final Optional<Media> optionalMedia = metadata.getAvailableFormats().stream()
 				.filter(actualMedia -> actualMedia.getMediaId().equals(mediaId)).findFirst();
@@ -146,14 +196,16 @@ public class MetadataServiceImpl implements MetadataService {
 		return optionalMedia.get();
 	}
 
-	/** Nom d'utilisateur utilisé pour télécharger le média à travers WSO2 */
+	/**
+	 * Nom d'utilisateur utilisé pour télécharger le média à travers WSO2
+	 */
 	private String getLoginAbleToDownloadMedia(Metadata metadata, Media media) throws AppServiceException {
 		return apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media);
 	}
 
 	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException {
 		// si l'utilisateur est anonymous, il faut récupérer ses client id et client secret s'ils ne sont pas déjà dans le cache
-		if (loginAbleToDownloadMedia.equals(anonymousUsername) && customClientRegistrationRepository.findByRegistrationId(anonymousUsername).block() == null) {
+		if (loginAbleToDownloadMedia.equals(anonymousUsername) && customClientRegistrationRepository.findByUsername(anonymousUsername) == null) {
 			ClientKey clientKey = aclHelper.getClientKeyByLogin(anonymousUsername);
 			customClientRegistrationRepository.addClientRegistration(anonymousUsername,
 					new ClientAccessKey().setClientId(clientKey.getClientId()).setClientSecret(clientKey.getClientSecret()));

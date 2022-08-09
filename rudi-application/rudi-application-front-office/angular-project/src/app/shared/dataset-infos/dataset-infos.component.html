@@ -1,0 +1,19 @@
+<div class="d-flex my-3" (click)="handleClickOnDatasetCard(currentJddId)">
+    <div class="align-items-center producteur-img-box" *ngIf="showLogo">
+        <app-organization-logo [organizationId]="organizationId"
+                               cssClass="producteur-img"
+                               organizationType="producer"></app-organization-logo>
+    </div>
+    <div [ngClass]="{'col-8': mediaSize.isLg, 'col-9': mediaSize.isXl || mediaSize.isXxl}">
+        <div class="dataset-info">
+            <div *ngIf="organizationName"
+                 class="dataset-info-organization_name">{{organizationName}}</div>
+            <div *ngIf="resourceTitle"
+                 class="dataset-info-resource_title">
+                <mat-icon [svgIcon]="restrictedDatasetIcon" *ngIf="isRestricted"
+                          class="svg-style"></mat-icon>
+                {{resourceTitle}}</div>
+        </div>
+    </div>
+</div>
+<mat-divider *ngIf="divider"></mat-divider>

@@ -2,7 +2,7 @@
 # Corrections additionnelles pour faire fonctionner la génération de code
 openapi: 3.0.0
 info:
-  version: 1.0.0
+  version: 1.0.1
   title: GeoJSON format
   description: >
     This document defines the GeoJSON format as an OpenAPI.
@@ -29,6 +29,10 @@ externalDocs:
 #•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 security:
   - UserSecurity: []
+
+#•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+servers:
+  - url: 'http://myHost/'
 
 #•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 paths:
@@ -98,6 +102,17 @@ components:
       properties:
         'type':
           type: string
+        # Remplacé par discriminator.mapping pour éviter l'erreur : Could not resolve type id 'Polygon' as a subtype of `org.rudi.facet.kaccess.bean.GeoJsonObject`
+        #          enum:
+        #            - Feature
+        #            - FeatureCollection
+        #            - Point
+        #            - MultiPoint
+        #            - LineString
+        #            - MultiLineString
+        #            - Polygon
+        #            - MultiPolygon
+        #            - GeometryCollection
         'bbox':
           description: >
             A GeoJSON object MAY have a member named "bbox" to include
@@ -138,6 +153,15 @@ components:
           properties:
             'type':
               type: string
+          # Remplacé par discriminator.mapping pour éviter l'erreur : Could not resolve type id 'Polygon' as a subtype of `org.rudi.facet.kaccess.bean.GeoJsonObject`
+          #              enum:
+          #                - Point
+          #                - MultiPoint
+          #                - LineString
+          #                - MultiLineString
+          #                - Polygon
+          #                - MultiPolygon
+          #                - GeometryCollection
           required:
             - type
           discriminator:
@@ -164,6 +188,14 @@ components:
           properties:
             'type':
               type: string
+          # Remplacé par discriminator.mapping pour éviter l'erreur : Could not resolve type id 'Polygon' as a subtype of `org.rudi.facet.kaccess.bean.GeoJsonObject`
+          #              enum:
+          #                - Point
+          #                - MultiPoint
+          #                - LineString
+          #                - MultiLineString
+          #                - Polygon
+          #                - MultiPolygon
           required:
             - type
           discriminator:
@@ -285,6 +317,7 @@ components:
           properties:
             'type':
               type: 'string'
+#              enum: [Point] # Commenté pour éviter l'erreur : getType() in org.rudi.facet.kaccess.bean.Point cannot override getType() in org.rudi.facet.kaccess.bean.GeometryElement
             'coordinates':
               $ref: '#/components/schemas/Position'
 

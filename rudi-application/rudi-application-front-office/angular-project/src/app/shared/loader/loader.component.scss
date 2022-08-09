@@ -11,6 +11,14 @@
     justify-content: center;
     align-items: center;
 
+    &.transparent {
+        background: none;
+
+        > div {
+            background-color: $black;
+        }
+    }
+
     &.light {
         background: $ligth-bacground;
 

@@ -4,6 +4,7 @@ import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.kmedia.bean.KindOfData;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
@@ -123,4 +124,21 @@ public interface ProjectService {
 	 *
 	 */
 	Indicators computeIndicators(ComputeIndicatorsSearchCriteria searchCriteria);
+
+	/**
+	 *
+	 * @param projectUuid
+	 * @return nombre de jdds rattachés au projet (restreint + ouvert + nouvelle demande)
+	 */
+	Integer getNumberOfRequests(UUID projectUuid) throws AppServiceNotFoundException;
+
+
+	/**
+	 * Recherche mes projets et ceux de mon organisation
+	 * @param searchCriteria critère de filtrage
+	 * @param pageable info de pagination
+	 * @return Une page de project (limit max sinon 10)
+	 * @throws GetOrganizationException si erreur
+	 */
+	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException;
 }

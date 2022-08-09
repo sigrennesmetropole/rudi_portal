@@ -15,14 +15,14 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class ResourceTitleValidatorTest {
+class ResourceTitleValidatorTest {
 
 	@InjectMocks
 	private ResourceTitleValidator resourceTitleValidator;
 
 	@Test
 	@DisplayName("Test de la validation titre du jdd avec une valeur vide")
-	public void testValidateResourceTitleWithEmptyValue() {
+	void testValidateResourceTitleWithEmptyValue() {
 		Metadata metadata = new Metadata().resourceTitle("");
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				resourceTitleValidator.validateMetadata(metadata);
@@ -38,7 +38,7 @@ public class ResourceTitleValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation titre du jdd avec une valeur valide")
-	public void testValidateResourceTitleWithNoErrors() {
+	void testValidateResourceTitleWithNoErrors() {
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				resourceTitleValidator.validate("Test validate");
 

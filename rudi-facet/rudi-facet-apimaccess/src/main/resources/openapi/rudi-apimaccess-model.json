@@ -113,95 +113,6 @@
                 ],
                 "example": "API"
             },
-            "APISubscriptions": {
-                "title": "Subscription List",
-                "properties": {
-                    "count": {
-                        "type": "integer",
-                        "description": "Number of Subscriptions returned.\n",
-                        "example": 1
-                    },
-                    "list": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/APISubscription"
-                        }
-                    }
-                }
-            },
-            "APISubscription": {
-                "title": "Subscription",
-                "properties": {
-                    "subscriptionId": {
-                        "type": "string",
-                        "example": "01234567-0123-0123-0123-012345678901"
-                    },
-                    "applicationInfo": {
-                        "$ref": "#/components/schemas/ApplicationInfo"
-                    },
-                    "throttlingPolicy": {
-                        "type": "string",
-                        "example": "Unlimited"
-                    },
-                    "subscriptionStatus": {
-                        "$ref": "#/components/schemas/SubscriptionStatus"
-                    }
-                }
-            },
-            "ApplicationAPISubscriptions": {
-                "title": "Subscription List",
-                "properties": {
-                    "count": {
-                        "type": "integer",
-                        "description": "Number of Subscriptions returned.\n",
-                        "example": 1
-                    },
-                    "list": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ApplicationAPISubscription"
-                        }
-                    }
-                }
-            },
-            "ApplicationAPISubscription": {
-                "title": "Subscription",
-                "properties": {
-                    "subscriptionId": {
-                        "type": "string",
-                        "readOnly": true,
-                        "description": "The UUID of the subscription",
-                        "example": "faae5fcc-cbae-40c4-bf43-89931630d313"
-                    },
-                    "applicationId": {
-                        "type": "string",
-                        "description": "The UUID of the application",
-                        "example": "b3ade481-30b0-4b38-9a67-498a40873a6d"
-                    },
-                    "apiId": {
-                        "type": "string",
-                        "description": "The unique identifier of the API.",
-                        "example": "2962f3bb-8330-438e-baee-0ee1d6434ba4"
-                    },
-                    "apiInfo": {
-                        "$ref": "#/components/schemas/APIInfo"
-                    },
-                    "applicationInfo": {
-                        "$ref": "#/components/schemas/ApplicationInfo"
-                    },
-                    "throttlingPolicy": {
-                        "type": "string",
-                        "example": "Unlimited"
-                    },
-                    "requestedThrottlingPolicy": {
-                        "type": "string",
-                        "example": "Unlimited"
-                    },
-                    "status": {
-                        "$ref": "#/components/schemas/SubscriptionStatus"
-                    }
-                }
-            },
             "SubscriptionStatus": {
                 "type": "string",
                 "enum": [
@@ -287,220 +198,85 @@
                             },
                             "extension": {
                                 "type": "string"
+                            },
+                            "status": {
+                                "$ref": "#/components/schemas/APILifecycleStatusState"
                             }
                         }
                     }
                 ]
             },
-            "APISubscriptionSearchCriteria": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/SearchCriteria"
+            "SubscriptionSearchCriteria": {
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum size of resource array to return.",
+                        "default": 25
                     },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "apiId": {
-                                "type": "string"
-                            }
-                        }
+                    "offset": {
+                        "type": "integer",
+                        "description": "Starting point within the complete list of items qualified",
+                        "default": 0
                     }
-                ]
+                }
             },
-            "ApplicationAPISubscriptionSearchCriteria": {
+            "DevPortalSubscriptionSearchCriteria": {
                 "allOf": [
                     {
-                        "$ref": "#/components/schemas/SearchCriteria"
+                        "$ref": "#/components/schemas/SubscriptionSearchCriteria"
                     },
                     {
                         "type": "object",
                         "properties": {
                             "apiId": {
+                                "description": "**API ID** consisting of the **UUID** of the API.",
                                 "type": "string"
                             },
                             "applicationId": {
+                                "description": "**Application Identifier** consisting of the UUID of the Application.",
+                                "type": "string"
+                            },
+                            "groupId": {
+                                "description": "Application Group Id",
+                                "type": "string"
+                            },
+                            "requestedTenant": {
+                                "description": "For cross-tenant invocations, this is used to specify the tenant domain, where the resource need to be retrieved from.",
                                 "type": "string"
                             }
                         }
                     }
                 ]
             },
-            "API": {
-                "title": "API object",
-                "required": [
-                    "name",
-                    "context",
-                    "version"
-                ],
+            "PublisherSubscriptionSearchCriteria": {
                 "allOf": [
                     {
-                        "$ref": "#/components/schemas/APIInfo"
+                        "$ref": "#/components/schemas/SubscriptionSearchCriteria"
                     },
                     {
                         "type": "object",
                         "properties": {
-                            "isDefaultVersion": {
-                                "type": "boolean",
-                                "example": false
-                            },
-                            "transport": {
-                                "description": "Supported transports for the API (http and/or https).\n",
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "enum": ["http", "https"]
-                                },
-                                "example": [
-                                    "http",
-                                    "https"
-                                ]
-                            },
-                            "tags": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "example": [
-                                    "pizza",
-                                    "food"
-                                ]
-                            },
-                            "policies": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "example": [
-                                    "Unlimited"
-                                ]
-                            },
-                            "apiThrottlingPolicy": {
-                                "description": "The API level throttling policy selected for the particular API",
-                                "type": "string",
-                                "example": "Unlimited"
-                            },
-                            "authorizationHeader": {
-                                "type": "string",
-                                "description": "Name of the Authorization header used for invoking the API. If it is not set, Authorization header name specified\nin tenant or system level will be used.\n",
-                                "example": "Authorization"
-                            },
-                            "visibleTenants": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "example": []
-                            },
-                            "endpointSecurity": {
-                                "$ref": "#/components/schemas/APIEndpointSecurity"
-                            },
-                            "gatewayEnvironments": {
-                                "description": "List of gateway environments the API is available\n",
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "enum": ["Production and Sandbox"]
-                                },
-                                "example": [
-                                    "Production and Sandbox"
-                                ]
-                            },
-                            "labels": {
-                                "description": "Labels of micro-gateway environments attached to the API.\n",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "example": []
-                            },
-                            "additionalProperties": {
-                                "type": "object",
-                                "additionalProperties": {
-                                    "type": "string"
-                                },
-                                "description": "Map of custom properties of API"
-                            },
-                            "businessInformation": {
-                                "allOf": [
-                                    {
-                                        "$ref": "#/components/schemas/APIBusinessInformation"
-                                    }
-                                ]
-                            },
-                            "createdTime": {
-                                "type": "string",
-                                "format": "date-time",
-                                "example": "2017-02-20T13:57:16.229Z"
-                            },
-                            "lastUpdatedTime": {
-                                "type": "string",
-                                "format": "date-time",
-                                "example": "2017-02-20T13:57:16.229Z"
-                            },
-                            "endpointConfig": {
-                                "$ref": "#/components/schemas/APIEndpointConfigHttp"
-                            },
-                            "endpointImplementationType": {
-                                "type": "string",
-                                "example": "INLINE",
-                                "enum": [
-                                    "INLINE",
-                                    "ENDPOINT"
-                                ],
-                                "default": "ENDPOINT"
-                            },
-                            "operations": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/APIOperations"
-                                },
-                                "example": [
-                                    {
-                                        "target": "/order/{orderId}",
-                                        "verb": "POST",
-                                        "authType": "Application & Application User",
-                                        "throttlingPolicy": "Unlimited"
-                                    },
-                                    {
-                                        "target": "/menu",
-                                        "verb": "GET",
-                                        "authType": "Application & Application User",
-                                        "throttlingPolicy": "Unlimited"
-                                    }
-                                ]
-                            },
-                            "threatProtectionPolicies": {
-                                "properties": {
-                                    "list": {
-                                        "type": "array",
-                                        "items": {
-                                            "properties": {
-                                                "policyId": {
-                                                    "type": "string"
-                                                },
-                                                "priority": {
-                                                    "type": "integer"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "categories": {
-                                "description": "API categories\n",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "example": []
-                            },
-                            "keyManagers": {
-                                "description": "API Key Managers\n",
-                                "type": "object",
-                                "readOnly": true
+                            "apiId": {
+                                "description": "**API ID** consisting of the **UUID** of the API. The combination of the provider of the API, name of the API and the version is also accepted as a valid API I. Should be formatted as **provider-name-version**.",
+                                "type": "string"
                             }
                         }
                     }
+                ]
+            },
+            "APITransportEnum": {
+                "description": "Supported transports for the API (http and/or https).\n",
+                "type": "string",
+                "enum": [
+                    "http",
+                    "https"
+                ]
+            },
+            "GatewayEnvironmentsEnum": {
+                "description": "List of gateway environments the API is available\n",
+                "type": "string",
+                "enum": [
+                    "Production and Sandbox"
                 ]
             },
             "APIOperations": {
@@ -588,22 +364,6 @@
                     "technicalOwnerEmail": {
                         "type": "string",
                         "example": "technicalowner@wso2.com"
-                    }
-                }
-            },
-            "APIList": {
-                "title": "API List",
-                "properties": {
-                    "count": {
-                        "type": "integer",
-                        "description": "Number of APIs returned.\n",
-                        "example": 1
-                    },
-                    "list": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/APIInfo"
-                        }
                     }
                 }
             },
@@ -819,6 +579,13 @@
                     },
                     "endpointUrl": {
                         "type": "string"
+                    },
+                    "additionalProperties": {
+                        "description": "Paramètres additionnels libres. Cf swagger WSO2 publisher-v1.yaml : definitions.API.properties.additionalProperties.",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
                     }
                 }
             },

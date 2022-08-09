@@ -1,20 +1,33 @@
 package org.rudi.microservice.kalim.service.helper.apim;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.net.ssl.SSLException;
+
 import org.apache.commons.collections.ListUtils;
-import org.rudi.facet.apimaccess.bean.API;
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.bean.APIDescription;
-import org.rudi.facet.apimaccess.bean.APIInfo;
-import org.rudi.facet.apimaccess.bean.APIList;
+import org.rudi.facet.apimaccess.bean.APILifecycleStatusAction;
+import org.rudi.facet.apimaccess.bean.APILifecycleStatusState;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.generator.OpenApiTemplates;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Connector;
+import org.rudi.facet.kaccess.bean.ConnectorConnectorParameters;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.MediaFile;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -23,60 +36,28 @@ import org.rudi.facet.providers.bean.NodeProvider;
 import org.rudi.facet.providers.bean.Provider;
 import org.rudi.facet.providers.helper.ProviderHelper;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 
-import javax.net.ssl.SSLException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 @Component
 @SuppressWarnings({ "java:S107" })
 @Slf4j
+@RequiredArgsConstructor
 public class APIManagerHelper {
 
+	private static final String GENERATE_CLIENT_KEYS_ERROR = "Erreur lors de la génération des clientKeys pour le rudi ou anonymous";
 	private final APIsService apIsService;
 	private final ApplicationService applicationService;
 	private final ProviderHelper providerHelper;
 	private final MetadataDetailsHelper metadataDetailsHelper;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final OpenApiTemplates openApiTemplates;
-
-
-	private final String rudiUsername;
-	private final String rudiPassword;
-	private final String anonymousUsername;
-	private final String anonymousPassword;
-
-	public APIManagerHelper(APIsService apIsService,
-			ApplicationService applicationService,
-			ProviderHelper providerHelper,
-			MetadataDetailsHelper metadataDetailsHelper,
-			CustomClientRegistrationRepository customClientRegistrationRepository,
-			OpenApiTemplates openApiTemplates,
-			@Value("${apimanager.oauth2.client.rudi.username}") String rudiUsername,
-			@Value("${apimanager.oauth2.client.rudi.password}") String rudiPassword,
-			@Value("${apimanager.oauth2.client.anonymous.username}") String anonymousUsername,
-			@Value("${apimanager.oauth2.client.anonymous.password}") String anonymousPassword) {
-
-		this.apIsService = apIsService;
-		this.applicationService = applicationService;
-		this.providerHelper = providerHelper;
-		this.metadataDetailsHelper = metadataDetailsHelper;
-		this.customClientRegistrationRepository = customClientRegistrationRepository;
-		this.openApiTemplates = openApiTemplates;
-
-		this.rudiUsername = rudiUsername;
-		this.rudiPassword = rudiPassword;
-		this.anonymousUsername = anonymousUsername;
-		this.anonymousPassword = anonymousPassword;
-	}
+	private final APIManagerProperties apiManagerProperties;
 
 	/**
 	 * Création des APIs liées aux métadonnées
@@ -90,9 +71,9 @@ public class APIManagerHelper {
 
 		try {
 			// création des clientKeys pour les users rudi et anonymous
-			checkClientRegistration();
+			checkRudiAndAnonymousClientRegistrations();
 		} catch (Exception e) {
-			throw new APIManagerException("Erreur lors de la génération des clientKeys pour le rudi ou anonymous", e);
+			throw new APIManagerException(GENERATE_CLIENT_KEYS_ERROR, e);
 		}
 
 		final List<Media> medias = getValidMedias(metadata);
@@ -116,9 +97,9 @@ public class APIManagerHelper {
 
 		// On s'assure que la registration est OK quand on va faire des modifs dans WSO2
 		try {
-			checkClientRegistration();
+			checkRudiAndAnonymousClientRegistrations();
 		} catch (Exception e) {
-			throw new APIManagerException("Erreur lors de la génération des clientKeys pour le rudi ou anonymous", e);
+			throw new APIManagerException(GENERATE_CLIENT_KEYS_ERROR, e);
 		}
 
 		// On récupère les média valides dans les JDDs
@@ -141,9 +122,8 @@ public class APIManagerHelper {
 		}
 
 		// Archivage des APIs
-		final var restricted = metadataDetailsHelper.isRestricted(metadata);
 		for (Media mediaDeleted : deleted) {
-			archiveApiForMedia(restricted, mediaDeleted, integrationRequest);
+			archiveApiForMedia(mediaDeleted, integrationRequest);
 		}
 	}
 
@@ -152,36 +132,41 @@ public class APIManagerHelper {
 	 * En réalité on tag les APIs a "désactivée" pour les ré-activer + tard si besoin est
 	 *
 	 * @param integrationRequest demande d'intégration
-	 * @param restricted true si le JDD supprimé par la demande d'intégration est restreint
 	 * @throws APIManagerException erreur lors de la suppression des APIs
 	 */
-	public void archiveAllAPI(IntegrationRequestEntity integrationRequest, boolean restricted) throws APIManagerException {
-		processAllAPI(integrationRequest, apIsService::archiveAPI);
-		processAllAPI(integrationRequest, apiId -> deleteAllSubscriptions(apiId, restricted));
+	public void archiveAllAPI(IntegrationRequestEntity integrationRequest) throws APIManagerException {
+		// Certaines API sont peut-être déjà archivées, on n'archive donc que celles qui sont au statut PUBLISHED
+		processAllAPI(integrationRequest, apIsService::archiveAPI, apiSearchCriteria -> apiSearchCriteria.status(APILifecycleStatusState.PUBLISHED));
 	}
 
 	/**
 	 * Suppression totale des APIs d'un JDD (et de toutes les souscriptions à cette API)
-	 * En réalité on tag les APIs a "désactivée" pour les ré-activer + tard si besoin est
 	 *
 	 * @param integrationRequest demande d'intégration
 	 * @throws APIManagerException erreur lors de la suppression des APIs
 	 */
 	public void deleteAllAPI(IntegrationRequestEntity integrationRequest) throws APIManagerException {
+		processAllAPI(integrationRequest, this::retireAPIToDeleteAllSubscriptions);
 		processAllAPI(integrationRequest, apIsService::deleteAPI);
 	}
 
 	private void processAllAPI(IntegrationRequestEntity integrationRequest, ApiIdProcessor processor) throws APIManagerException {
+		processAllAPI(integrationRequest, processor, UnaryOperator.identity());
+	}
+
+	private void processAllAPI(IntegrationRequestEntity integrationRequest, ApiIdProcessor processor, @Nonnull UnaryOperator<APISearchCriteria> criteriaProcessor) throws APIManagerException {
 
 		try {
 			// création des clientKeys pour les users rudi et anonymous
-			checkClientRegistration();
+			checkRudiAndAnonymousClientRegistrations();
 		} catch (Exception e) {
-			throw new APIManagerException("Erreur lors de la génération des clientKeys pour le rudi ou anonymous", e);
+			throw new APIManagerException(GENERATE_CLIENT_KEYS_ERROR, e);
 		}
 
-		// Recherche des API à l'aide du global ID du JDD
-		List<APIInfo> apiInfoList = searchApiInfosByDatasetUUid(integrationRequest);
+		// Recherche des API à l'aide du global ID du
+		final var apiSearchCriteria = buildApiSearchCriteriaFrom(integrationRequest);
+		final var processedApiSearchCriteria = criteriaProcessor.apply(apiSearchCriteria);
+		final var apiInfoList = searchApiInfosByDatasetUUid(processedApiSearchCriteria);
 
 		// Suppression de toutes ces APIs
 		for (APIInfo apiInfo : apiInfoList) {
@@ -195,6 +180,16 @@ public class APIManagerHelper {
 	}
 
 	/**
+	 * Passe l'API au statut "RETIRED", ce qui supprime automatiquement toutes ses souscriptions.
+	 * Seule alternative possible à {@link org.rudi.facet.apimaccess.service.ApplicationService#deleteAllSubscriptionsWithoutRetiringAPI(String)}
+	 * lorsque l'API contient des souscriptions qui n'appartiennent pas seulement à rudi ou anonymous.
+	 */
+	public void retireAPIToDeleteAllSubscriptions(String apiId) throws APIManagerException {
+		apIsService.updateAPILifecycleStatus(apiId, APILifecycleStatusAction.DEPRECATE);
+		apIsService.updateAPILifecycleStatus(apiId, APILifecycleStatusAction.RETIRE);
+	}
+
+	/**
 	 * Génère les paramètres de l'API à sauvegarder
 	 *
 	 * @param globalId     global id médadonnées
@@ -203,9 +198,9 @@ public class APIManagerHelper {
 	 * @param media        media associé à l'api
 	 * @return APIDescription
 	 */
-	private APIDescription buildAPIDescriptionByMetadataIntegration(UUID globalId, NodeProvider nodeProvider, Provider provider, Media media) {
-		Connector connector = media.getConnector();
-		URI uri = URI.create(connector.getUrl());
+	APIDescription buildAPIDescriptionByMetadataIntegration(UUID globalId, NodeProvider nodeProvider, Provider provider, Media media) {
+		val connector = media.getConnector();
+		val uri = URI.create(connector.getUrl());
 		return new APIDescription()
 				.globalId(globalId)
 				.providerUuid(provider.getUuid())
@@ -214,7 +209,17 @@ public class APIManagerHelper {
 				.interfaceContract(connector.getInterfaceContract())
 				.mediaUuid(media.getMediaId())
 				.mediaType(((MediaFile) media).getFileType().getValue())
-				.name(buildAPIName(media));
+				.name(buildAPIName(media))
+				.additionalProperties(buildAdditionalProperties(connector));
+	}
+
+	private Map<String, String> buildAdditionalProperties(@Nonnull Connector connector) {
+		final var connectorParameters = connector.getConnectorParameters();
+		if (connectorParameters != null) {
+			return connectorParameters.stream()
+					.collect(Collectors.toMap(ConnectorConnectorParameters::getKey, ConnectorConnectorParameters::getValue));
+		}
+		return null;
 	}
 
 	/**
@@ -246,55 +251,30 @@ public class APIManagerHelper {
 	 *
 	 * @throws SSLException Erreur lors de la création des clientKeys
 	 */
-	private void checkClientRegistration() throws SSLException, BuildClientRegistrationException {
-		if (customClientRegistrationRepository.findByRegistrationId(rudiUsername).block() == null) {
-			customClientRegistrationRepository.addClientRegistration(rudiUsername, rudiPassword);
-		}
-		if (customClientRegistrationRepository.findByRegistrationId(anonymousUsername).block() == null) {
-			customClientRegistrationRepository.addClientRegistration(anonymousUsername, anonymousPassword);
-		}
+	private void checkRudiAndAnonymousClientRegistrations() throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
+		checkClientRegistration(apiManagerProperties.getRudiUsername(), apiManagerProperties.getRudiPassword());
+		checkClientRegistration(apiManagerProperties.getAnonymousUsername(), apiManagerProperties.getAnonymousPassword());
 	}
 
-	/**
-	 * Recherche d'APIs WOS2 à l'aide de l'UUID du média (on attend 1 résultat normalement)
-	 * @param media le média qui définit le nom de l'API
-	 * @param integrationRequest la requête d'intégration pour trouver le provider pour trouver l'API
-	 * @return une liste contenant les infos des APIs correspondantes
-	 * @throws APIManagerException levée en cas d'erreur d'appel à WSO2
-	 */
-	private List<APIInfo> searchApiInfosByMediaUuid(Media media, IntegrationRequestEntity integrationRequest) throws APIManagerException {
-
-		// Récupération des infos sur le fournisseur de données
-		Provider provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
-
-		// recherche de l'API grâce à l'UUID média et au fournisseur
-		APISearchCriteria apiSearchCriteria = new APISearchCriteria()
-				.mediaUuid(media.getMediaId())
-				.providerUuid(provider.getUuid())
-				.providerCode(provider.getCode());
-
-		APIList apis = apIsService.searchAPI(apiSearchCriteria);
-		return apis.getList();
+	private void checkClientRegistration(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
+		customClientRegistrationRepository.findRegistrationOrRegister(username, password);
 	}
 
-	/**
-	 * Recherche d'infos des APIs WOS2 à l'aide de l'UUID du JDD lié
-	 * @param integrationRequest la requête d'intégration pour trouver le provider pour trouver l'API
-	 * @return une liste contenant les infos des APIs correspondantes
-	 * @throws APIManagerException levée en cas d'erreur d'appel à WSO2
-	 */
-	private List<APIInfo> searchApiInfosByDatasetUUid(IntegrationRequestEntity integrationRequest) throws APIManagerException {
-
-		// Recherche du fournisseur de données
+	private APISearchCriteria buildApiSearchCriteriaFrom(IntegrationRequestEntity integrationRequest) {
 		val provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
-
-		// recherche des API liées aux métadonnées
-		val apiSearchCriteria = new APISearchCriteria()
+		return new APISearchCriteria()
 				.globalId(integrationRequest.getGlobalId())
 				.providerUuid(provider.getUuid())
 				.providerCode(provider.getCode());
+	}
 
-		APIList apis = apIsService.searchAPI(apiSearchCriteria);
+	/**
+	 * Recherche d'infos des APIs WSO2 à l'aide d'un critère de recherche
+	 * @return une liste contenant les infos des APIs correspondantes
+	 * @throws APIManagerException levée en cas d'erreur d'appel à WSO2
+	 */
+	private List<org.wso2.carbon.apimgt.rest.api.publisher.APIInfo> searchApiInfosByDatasetUUid(final APISearchCriteria apiSearchCriteria) throws APIManagerException {
+		final var apis = apIsService.searchAPI(apiSearchCriteria);
 		return apis.getList();
 	}
 
@@ -318,10 +298,7 @@ public class APIManagerHelper {
 
 		// Souscription à l'APi par RUDI pour pouvoir l'utiliser
 		try {
-			applicationService.subscribeAPIToDefaultUserApplication(api.getId(), rudiUsername);
-			if (!metadataDetailsHelper.isRestricted(metadata)) {
-				applicationService.subscribeAPIToDefaultUserApplication(api.getId(), anonymousUsername);
-			}
+			applicationService.createDefaultSubscriptions(api.getId(), metadataDetailsHelper.isRestricted(metadata));
 		} catch (APIManagerException e) {
 			apIsService.deleteAPI(api.getId());
 			throw e;
@@ -348,25 +325,17 @@ public class APIManagerHelper {
 		apIsService.updateAPIByName(apiDescription);
 	}
 
-	private void archiveApiForMedia(boolean restricted, Media media, IntegrationRequestEntity integrationRequest) throws APIManagerException {
+	private void archiveApiForMedia(Media media, IntegrationRequestEntity integrationRequest) throws APIManagerException {
 		// Récupération des infos du fournisseur
-		NodeProvider nodeProvider = providerHelper.getNodeProviderByUUID(integrationRequest.getNodeProviderId());
-		Provider provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
+		val nodeProvider = providerHelper.getNodeProviderByUUID(integrationRequest.getNodeProviderId());
+		val provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
 
 		// Construction de la nouvelle description de l'API puis suppression chez WSO2
-		APIDescription apiDescription = buildAPIDescriptionByMetadataIntegration(integrationRequest.getGlobalId(), nodeProvider, provider, media);
-		final var api = apIsService.archiveAPIByName(apiDescription);
+		val apiDescription = buildAPIDescriptionByMetadataIntegration(integrationRequest.getGlobalId(), nodeProvider, provider, media);
+		apIsService.archiveAPIByName(apiDescription);
 
 		// Suppression des souscriptions à l'API
-		deleteAllSubscriptions(api.getId(), restricted);
-
-	}
-
-	private void deleteAllSubscriptions(String apiId, boolean restricted) throws APIManagerException {
-		applicationService.unsubscribeAPIToDefaultUserApplication(apiId, rudiUsername);
-		if (!restricted) {
-			applicationService.unsubscribeAPIToDefaultUserApplication(apiId, anonymousUsername);
-		}
+		// Ce n'est plus nécessaire car lorsque l'API est archivée (BLOCKED), les clients ne peuvent plus appeler l'API
 	}
 
 	/**

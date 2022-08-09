@@ -9,14 +9,15 @@
         </label>
     </div>
     <div *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl">
-        <nav ngxNavbarDynamicExpand class="header-nav rudi-header-container navbar-expand pr-0" aria-label="navbar-desktop">
-    <div class="header-logo-container">
-        <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
-            <img class="header-logo" src="../../../assets/images/logo_bleu_orange.svg"
-                 alt="Logo bleu orange beta de rennes metropole">
-        </a>
-    </div>
-            <ngx-navbar-collapse class="justify-content-end navbar-menu-items header-container-lg not-clickable" id="main-nav">
+        <nav ngxNavbarDynamicExpand class="header-nav rudi-header-container navbar-expand pr-0"
+             aria-label="navbar-desktop">
+            <div class="header-logo-container">
+                <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
+                    <mat-icon class="header-logo" aria-hidden="false" aria-label="Logo bleu orange beta de rennes metropole" svgIcon="logo-bleu-orange"></mat-icon>
+                </a>
+            </div>
+            <ngx-navbar-collapse class="justify-content-end navbar-menu-items header-container-lg not-clickable"
+                                 id="main-nav">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 mr-2">
                     <li class="nav-item">
                         <a class="nav-link text-uppercase" href="{{'rudidatarennes.beta'|getBackendProperty|async}}"
@@ -36,10 +37,10 @@
                            [routerLinkActive]="'active'"><span>{{'header.reutilisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank" rel="noopener noreferrer"
-                           [routerLinkActive]="'active'">
+                        <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc" rel="noopener noreferrer" target="_blank">
                             <em class="fa fa-external-link fa-1x mr-2  icon-hide-mobile"></em>
-                            <span>{{'header.documentation'| translate}}</span></a>
+                            <span>{{'header.documentation'| translate}}</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-uppercase" href="{{'rudidatarennes.forum'|getBackendProperty|async}}"
@@ -47,7 +48,8 @@
                            [routerLinkActive]="'active'"><span>{{'header.forum'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.index'|getBackendProperty|async}}" target="_blank"
+                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
+                           target="_blank"
                            rel="noopener noreferrer" [routerLinkActive]="'active'">
                             <em class="fa fa-external-link fa-1x mr-2  icon-hide-mobile"></em>
                             <span>{{'header.blogProjet'| translate}}</span></a>
@@ -62,8 +64,12 @@
                             <span>{{'header.monCompte'| translate}}</span>
                         </button>
                         <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
-                            <button mat-menu-item (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
-                            <button mat-menu-item (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.receivedLinkedDatasets'| translate}}</button>
+                            <button mat-menu-item
+                                    (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
+                            <button mat-menu-item
+                                    (click)="handleClickGoToReuse()">{{'header.accountMenu.myReuses'| translate}}</button>
+                            <button mat-menu-item
+                                    (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.receivedLinkedDatasets'| translate}}</button>
                         </mat-menu>
                     </li>
                 </ul>
@@ -98,8 +104,12 @@
                     <div class="notification-connected"></div>
                 </button>
                 <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
-                    <button mat-menu-item (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
-                    <button mat-menu-item (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.receivedLinkedDatasets'| translate}}</button>
+                    <button mat-menu-item
+                            (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
+                    <button mat-menu-item
+                            (click)="handleClickGoToReuse()">{{'header.accountMenu.myReuses'| translate}}</button>
+                    <button mat-menu-item
+                            (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.receivedLinkedDatasets'| translate}}</button>
                 </mat-menu>
                 <!-- button menu burger -->
                 <button
@@ -138,7 +148,8 @@
                             class="ul-items-mobile">{{'header.reutilisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank" rel="noopener noreferrer"
+                        <a class="nav-link" href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"
+                           rel="noopener noreferrer"
                            [routerLinkActive]="'active-item'"><span
                             class="ul-items-mobile">{{'header.documentation'| translate}}</span></a>
                     </li>

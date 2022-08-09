@@ -1,16 +1,18 @@
 import {Injectable} from '@angular/core';
-import {ProjectPublicCible, ProjektMetierService} from './projekt-metier.service';
+import {ProjektMetierService} from './projekt-metier.service';
 import {RadioListItem} from '../../shared/radio-list/radio-list-item';
 import {forkJoin, iif, Observable, of} from 'rxjs';
 import {catchError, mapTo, switchMap, tap} from 'rxjs/operators';
 import {
     Confidentiality,
     LinkedDataset,
-    NewDatasetRequest, OwnerType,
+    NewDatasetRequest,
+    OwnerType,
     Project,
     ProjectStatus,
     ProjectType,
     Support,
+    TargetAudience,
     TerritorialScale
 } from '../../projekt/projekt-model';
 import {TranslateService} from '@ngx-translate/core';
@@ -75,7 +77,7 @@ const REUSE_STATUS: ProjectStatus = 'VALIDATED';
  */
 export interface FormProjectDependencies {
     confidentialities: Confidentiality[];
-    projectPublicCible: ProjectPublicCible[];
+    projectPublicCible: TargetAudience[];
     territorialScales: TerritorialScale[];
     supports: Support[];
     projectTypes: ProjectType[];
@@ -88,7 +90,7 @@ export interface FormProjectDependencies {
  */
 export interface FormReutilisationDependencies {
     projectTypes: ProjectType[];
-    projectPublicCible: ProjectPublicCible[];
+    projectPublicCible: TargetAudience[];
     user: User;
     organizations: Organization[];
 }
@@ -284,7 +286,8 @@ export class ProjectSubmissionService {
             owner_uuid: ownerType === OwnerType.Organization ? step2FormGroup.get('organizationUuid').value : user.uuid,
             contact_email: step2FormGroup.get('contactEmail').value,
             owner_type: ownerType,
-            object_type: 'Project'
+            object_type: 'Project',
+            target_audiences: step1FormGroup.get('publicCible').value === '' ? null : step1FormGroup.get('publicCible').value
         };
     }
 
@@ -302,6 +305,7 @@ export class ProjectSubmissionService {
         toUpdate.detailed_territorial_scale = updated.detailed_territorial_scale;
         toUpdate.confidentiality = updated.confidentiality;
         toUpdate.desired_supports = updated.desired_supports;
+        toUpdate.target_audiences = updated.target_audiences;
         toUpdate.type = updated.type;
         toUpdate.contact_email = updated.contact_email;
     }

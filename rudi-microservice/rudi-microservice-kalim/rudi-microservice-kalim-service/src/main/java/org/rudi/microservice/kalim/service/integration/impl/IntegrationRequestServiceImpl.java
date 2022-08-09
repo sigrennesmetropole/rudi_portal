@@ -4,8 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
+import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.providers.bean.NodeProvider;
 import org.rudi.facet.providers.helper.ProviderHelper;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
@@ -64,6 +70,7 @@ public class IntegrationRequestServiceImpl implements IntegrationRequestService 
 	private final PostIntegrationRequestTreatmentHandler postIntegrationRequestHandler;
 	private final PutIntegrationRequestTreatmentHandler putIntegrationRequestHandler;
 	private final DeleteIntegrationRequestTreatmentHandler deleteIntegrationRequestHandler;
+	private final DatasetService datasetService;
 
 	@Override
 	public Page<IntegrationRequest> searchIntegrationRequests(IntegrationRequestSearchCriteria searchCriteria,
@@ -75,12 +82,31 @@ public class IntegrationRequestServiceImpl implements IntegrationRequestService 
 	@Override
 	@Transactional // readOnly = false
 	public IntegrationRequest createIntegrationRequest(Metadata metadata, Method method)
-			throws IllegalAccessException, IntegrationException {
+			throws AppServiceUnauthorizedException, IntegrationException {
 		final NodeProvider nodeProvider = kalimProviderHelper.getAuthenticatedNodeProvider();
-		if (nodeProvider == null) {
-			throw new IllegalAccessException("Invalid node provider authentication");
-		}
+		checkAuthenticatedNodeProviderIsNotNull(nodeProvider);
 		return createIntegrationRequest(metadata, method, nodeProvider, false);
+	}
+
+	private void checkAuthenticatedNodeProviderIsNotNull(NodeProvider authenticatedNodeProvider) throws AppServiceUnauthorizedException {
+		if (authenticatedNodeProvider == null) {
+			throw new AppServiceUnauthorizedException("Invalid node provider authentication");
+		}
+	}
+
+	@Override
+	public IntegrationRequest createDeleteIntegrationRequestFromGlobalId(UUID globalId) throws DataverseAPIException, AppServiceException, IntegrationException {
+		final var nodeProvider = kalimProviderHelper.getAuthenticatedNodeProvider();
+		checkAuthenticatedNodeProviderIsNotNull(nodeProvider);
+
+		final Metadata metadata;
+		try {
+			metadata = datasetService.getDataset(globalId);
+		} catch (DatasetNotFoundException e) {
+			throw new AppServiceNotFoundException(Metadata.class, globalId);
+		}
+
+		return createIntegrationRequest(metadata, Method.DELETE, nodeProvider, false);
 	}
 
 	@Override

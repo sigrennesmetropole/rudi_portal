@@ -1,0 +1,28 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.project-container {
+    padding-top: 115px;
+    height: calc(100% - 170px);
+}
+
+.project-header {
+    display: block;
+    margin-left: 80px;
+    margin-bottom: 2em;
+}
+
+.detail-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.onglet-wrapper {
+    flex: 2;
+}
+
+.aside-wrapper {
+    flex: 1;
+}

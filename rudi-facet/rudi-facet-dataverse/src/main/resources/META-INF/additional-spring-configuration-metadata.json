@@ -3,7 +3,7 @@
 		{
 			"name": "dataverse.api.token",
 			"type": "java.lang.String",
-			"description": "Token used to call Dataverse API."
+			"description": "Token used to call Dataverse API. It is retrieved from Dataverse UI > Dataverse Admin menu > API Token tab."
 		},
 		{
 			"name": "dataverse.api.url",

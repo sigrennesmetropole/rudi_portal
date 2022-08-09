@@ -2,8 +2,8 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {RadioListItem} from '../../../shared/radio-list/radio-list-item';
 import {FormProjectDependencies, ProjectSubmissionService} from '../../../core/services/project-submission.service';
-import {Confidentiality, OwnerType, Project, ProjectAllOf, Support, TerritorialScale} from '../../../projekt/projekt-model';
-import {ProjectPublicCible, ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {Confidentiality, OwnerType, Project, Support, TargetAudience, TerritorialScale} from '../../../projekt/projekt-model';
+import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
 import {FiltersService} from '../../../core/services/filters.service';
 import {ReuseProjectCommonComponent} from '../../components/reuse-project-common/reuse-project-common.component';
 import {MatHorizontalStepper} from '@angular/material/stepper';
@@ -31,7 +31,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
     @ViewChild(MatHorizontalStepper)
     public stepper: MatHorizontalStepper;
 
-    public publicCible: ProjectPublicCible[];
+    public publicCible: TargetAudience[];
     public territorialScales: TerritorialScale[];
 
     public suggestions: RadioListItem[];

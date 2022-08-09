@@ -1,1 +1,11 @@
 @import "src/app/styles/common-style";
+
+.filter-child {
+    height: 20em;
+    position: relative;
+}
+
+.filter-child-form {
+    height: 17em;
+    overflow: auto;
+}

@@ -59,7 +59,7 @@ public class JwtAuthenticationProvider extends AbstractDetailServiceImpl impleme
 		try {
 			// récupération du client id + client secret de l'utilisateur qui se connecte (inutile de le faire pour les users rudi et anonymous)
 			if (!login.equals(anonymousUsername)) {
-				customClientRegistrationRepository.addClientRegistration(login, password);
+				customClientRegistrationRepository.register(login, password);
 			}
 		} catch (Exception e) {
 			log.error(String.format(

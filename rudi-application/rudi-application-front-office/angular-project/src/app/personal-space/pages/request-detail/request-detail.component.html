@@ -11,14 +11,15 @@
 
                 <div class="d-flex justify-content-center">
                     <span class="icon-header-title">
-                      <mat-icon class="large-icon-size" aria-hidden="false" aria-label="" svgIcon="restricted-dataset"></mat-icon>
+                      <mat-icon class="large-icon-size" aria-hidden="false" aria-label=""
+                                svgIcon="restricted-dataset"></mat-icon>
                     </span><span>&nbsp;</span>
                     <span class="header-title">{{dependencies?.datasetTitle}}</span>
                 </div>
             </div>
         </div>
 
-        <app-tabs>
+        <app-tabs *ngIf="task">
             <app-tab [label]="'personalSpace.requestDetail.tabs.demand' | translate" [icon]="'key_icon_circle'">
                 <ng-template>
                     <app-task-detail></app-task-detail>
@@ -29,8 +30,13 @@
                     <app-project-detail></app-project-detail>
                 </ng-template>
             </app-tab>
-            <app-banner-button>{{'personalSpace.requestDetail.action.accept'|translate}}</app-banner-button>
-            <app-banner-button>{{'personalSpace.requestDetail.action.decline'|translate}}</app-banner-button>
+            <app-tab [label]="'personalSpace.requestDetail.tabs.history' | translate" [icon]="'historique'">
+                <ng-template>
+                    <app-linked-dataset-history></app-linked-dataset-history>
+                </ng-template>
+            </app-tab>
+            <app-banner-button *ngFor="let action of task.actions"
+                               (click)="openPopinForAction(action)">{{action.label}}</app-banner-button>
             <ng-container appTabsLayout>
                 <div class="detail-wrapper">
                     <div class="onglet-wrapper">

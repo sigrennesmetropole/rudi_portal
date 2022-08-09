@@ -1,0 +1,43 @@
+<div>
+    <mat-card class="card-api">
+        <span class="identification-title">{{'personalSpace.projectApi.identificationKey' | translate}}</span>
+        <p class="explanation-text">{{'personalSpace.projectApi.explainationText' | translate}}
+            <a [href]="rudiDocLink"> {{'personalSpace.projectApi.explainationTextLink' | translate}} </a></p>
+
+        <!-- Acces key -->
+        <form class="form-container" *ngIf="!hideIdentificationCard">
+            <span class="title-keys">{{'personalSpace.projectApi.acces' | translate}}</span>
+            <app-password [label]="getLabel()" [hidePassword]="hidePassword"
+                          (passwordEmitter)="handlePasswordChanged($event)">
+            </app-password>
+            <app-error-box text="Le mot de passe que vous avez saisi n'est pas valide.
+            Veuillez re-saisir le mot de passe."
+                           *ngIf="hasError" class="mb-3 error-box">
+            </app-error-box>
+            <button mat-raised-button class="action-button"
+                    (click)="getApiKeys()">{{'personalSpace.projectApi.consult' | translate}}</button>
+        </form>
+
+        <!-- Identification key -->
+        <form class="form-container" *ngIf="hideIdentificationCard">
+            <!-- Consumer Key-->
+            <div class="consumer-field-wrapper">
+                <span class="title-keys">{{'personalSpace.projectApi.consumerKey' | translate}}</span>
+                <p>{{'personalSpace.projectApi.textConsumerKey' | translate}}</p>
+                <div class="app-copied-style">
+                    <app-copied-button [toCopy]="keys?.consumerKey" [isMasked]="false"></app-copied-button>
+                </div>
+            </div>
+
+            <!-- Consumer Secret-->
+            <div class="consumer-field-wrapper">
+                <span class="title-keys">{{'personalSpace.projectApi.consumerSecret' | translate}}</span>
+                <p>{{'personalSpace.projectApi.textConsumerSecret' | translate}}</p>
+                <div class="app-copied-style">
+                    <app-copied-button [toCopy]="keys?.consumerSecret" [isMasked]="true"></app-copied-button>
+                </div>
+            </div>
+        </form>
+        <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="loading"></app-loader>
+    </mat-card>
+</div>

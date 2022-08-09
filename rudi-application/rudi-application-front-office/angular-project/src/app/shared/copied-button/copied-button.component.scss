@@ -1,0 +1,51 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+mat-icon {
+    right: 0.2em;
+    position: absolute;
+    top: 6px;
+}
+
+.input-and-icon {
+    display: flex;
+    justify-content: space-between;
+}
+
+.fake-input {
+    max-width: calc(100% - 3em);
+    text-overflow: ellipsis;
+    text-align: left;
+    pointer-events: none;
+    font-family: OpenSans;
+    font-size: 15px;
+}
+
+.main-container {
+    cursor: pointer;
+    position: relative;
+}
+
+.floating-icon-visibility {
+    cursor: pointer;
+    color: $primary-text-light;
+    right: 2em;
+}
+
+.btn-action {
+    width: 100%;
+    position: relative;
+    border: solid 1px $blocks-and-menus-outline;
+    background-color: $banner-solid-color;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $input-hover-background;
+        outline: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}

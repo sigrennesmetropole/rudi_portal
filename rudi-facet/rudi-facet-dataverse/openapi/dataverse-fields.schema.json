@@ -1,0 +1,183 @@
+{
+	"$id": "https://guides.dataverse.org/en/latest/api/native-api.html#metadatablocks",
+	"title": "Dataverse Fields",
+	"description": "Champs contenus dans ce block.",
+	"type": "array",
+	"items": {
+		"oneOf": [
+			{
+				"$ref": "#/definitions/SinglePrimitiveField"
+			},
+			{
+				"$ref": "#/definitions/MultiplePrimitiveField"
+			},
+			{
+				"$ref": "#/definitions/SingleCompoundField"
+			},
+			{
+				"$ref": "#/definitions/MultipleCompoundField"
+			}
+		]
+	},
+	"patternProperties": {
+		".+": {
+			"type": "object",
+			"$ref": "#/definitions/MetadataBlock",
+			"description": "Block (autre que \"citation\" ou \"rudi\") contenant des champs personnalisés."
+		}
+	},
+	"definitions": {
+		"Field": {
+			"properties": {
+				"typeName": {
+					"description": "Nom du champ.",
+					"type": "string"
+				}
+			}
+		},
+		"PrimitiveField": {
+			"description": "Champ simple (ne contenant pas d'autres champs).",
+			"allOf": [
+				{
+					"$ref": "#/definitions/Field"
+				},
+				{
+					"properties": {
+						"typeClass": {
+							"type": "string",
+							"enum": [
+								"primitive",
+								"controlledVocabulary"
+							],
+							"description": "Champ simple (ne contenant pas d'autres champs)."
+						}
+					}
+				}
+			]
+		},
+		"SinglePrimitiveField": {
+			"description": "Champ ne pouvant contenir qu'une seule valeur primitive.",
+			"allOf": [
+				{
+					"$ref": "#/definitions/PrimitiveField"
+				},
+				{
+					"properties": {
+						"multiple": {
+							"type": "boolean",
+							"enum": [
+								false
+							],
+							"description": "Indique que ce champ ne peut recevoir qu'une seule valeur primitive."
+						},
+						"value": {
+							"description": "Valeur unique du champ.",
+							"type": [
+								"string"
+							]
+						}
+					}
+				}
+			]
+		},
+		"MultiplePrimitiveField": {
+			"description": "Champ pouvant contenir plusieurs valeurs primitives.",
+			"allOf": [
+				{
+					"$ref": "#/definitions/PrimitiveField"
+				},
+				{
+					"properties": {
+						"multiple": {
+							"type": "boolean",
+							"enum": [
+								true
+							],
+							"description": "Indique que ce champ peut contenir plusieurs valeurs primitives."
+						},
+						"value": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			]
+		},
+		"CompoundField": {
+			"description": "Champ composé, c'est-à-dire, contenant d'autres champs non composés.",
+			"allOf": [
+				{
+					"$ref": "#/definitions/Field"
+				},
+				{
+					"properties": {
+						"typeClass": {
+							"type": "string",
+							"enum": [
+								"compound"
+							],
+							"description": "Champ composé, c'est-à-dire, contenant d'autres champs non composés."
+						}
+					}
+				}
+			]
+		},
+		"SingleCompoundField": {
+			"allOf": [
+				{
+					"$ref": "#/definitions/CompoundField"
+				},
+				{
+					"properties": {
+						"multiple": {
+							"type": "boolean",
+							"enum": [
+								false
+							]
+						},
+						"value": {
+							"type": "object",
+							"patternProperties": {
+								".+": {
+									"type": "object",
+									"$ref": "#/definitions/PrimitiveField"
+								}
+							}
+						}
+					}
+				}
+			]
+		},
+		"MultipleCompoundField": {
+			"allOf": [
+				{
+					"$ref": "#/definitions/CompoundField"
+				},
+				{
+					"properties": {
+						"multiple": {
+							"type": "boolean",
+							"enum": [
+								true
+							]
+						},
+						"value": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"patternProperties": {
+									".+": {
+										"type": "object",
+										"$ref": "#/definitions/PrimitiveField"
+									}
+								}
+							}
+						}
+					}
+				}
+			]
+		}
+	}
+}

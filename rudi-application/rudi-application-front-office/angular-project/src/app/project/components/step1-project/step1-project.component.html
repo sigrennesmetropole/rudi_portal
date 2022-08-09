@@ -97,7 +97,7 @@
             <mat-select multiple placeholder="{{'project.firstStepForm.publicCiblePlaceholder'|translate}}"
                         formControlName="publicCible">
                 <mat-option *ngFor="let cible of publicCible" [value]="cible">
-                    {{ cible.viewValue }}
+                    {{ cible.label }}
                 </mat-option>
             </mat-select>
         </mat-form-field>

@@ -1,16 +1,20 @@
 package org.rudi.facet.apimaccess.service;
 
-import org.rudi.common.core.DocumentContent;
-import org.rudi.facet.apimaccess.bean.Application;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscription;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptionSearchCriteria;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptions;
-import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
-import org.rudi.facet.apimaccess.bean.Applications;
-import org.rudi.facet.apimaccess.exception.APIManagerException;
-
 import java.io.IOException;
 import java.util.UUID;
+
+import org.rudi.common.core.DocumentContent;
+import org.rudi.facet.apimaccess.bean.Application;
+import org.rudi.facet.apimaccess.bean.ApplicationKey;
+import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
+import org.rudi.facet.apimaccess.bean.Applications;
+import org.rudi.facet.apimaccess.bean.DevPortalSubscriptionSearchCriteria;
+import org.rudi.facet.apimaccess.bean.EndpointKeyType;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APISubscriptionException;
+import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
+import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
 
 public interface ApplicationService {
 
@@ -35,6 +39,12 @@ public interface ApplicationService {
     Application getApplication(String applicationId, String username) throws APIManagerException;
 
     /**
+     * Créer l'application RUDI (avec ses clés PRODUCTION ET SANDBOX) par défaut pour l'utilisateur
+     * ou la récupère si elle existe déjà.
+     */
+    Application getOrCreateDefaultApplication(String username) throws ApplicationOperationException;
+
+    /**
      * Recherche des applications
      *
      * @param applicationSearchCriteria     Critères de recherche
@@ -47,12 +57,12 @@ public interface ApplicationService {
     /**
      * Recherche de la liste des applications et API souscrits par ces applications
      *
-     * @param applicationAPISubscriptionSearchCriteria          Critères de recherches
+     * @param devPortalSubscriptionSearchCriteria          Critères de recherches
      * @param username                                          username de l'utilisateur
      * @return                                                  ApplicationAPISubscriptions
      * @throws APIManagerException                              Erreur lors de la recherche
      */
-    ApplicationAPISubscriptions searchApplicationAPISubscriptions(ApplicationAPISubscriptionSearchCriteria applicationAPISubscriptionSearchCriteria, String username)
+    SubscriptionList searchApplicationAPISubscriptions(DevPortalSubscriptionSearchCriteria devPortalSubscriptionSearchCriteria, String username)
             throws APIManagerException;
 
     /**
@@ -60,28 +70,33 @@ public interface ApplicationService {
      *
      * @param applicationAPISubscription            paramètres de la souscription
      * @param username                              username de l'utilisateur
-     * @return                                      ApplicationAPISubscription
+     * @return                                      Subscription
      * @throws APIManagerException                  Erreur lors de la souscription
      */
-    ApplicationAPISubscription subscribeAPI(ApplicationAPISubscription applicationAPISubscription, String username) throws APIManagerException;
+    Subscription subscribeAPI(Subscription applicationAPISubscription, String username) throws APIManagerException;
 
     /**
      * Souscription de l'application par défaut de l'admin à une API
      * @param apiId                     Identifiant de l'API
      * @param username                  username de l'utilisateur
-     * @return                          ApplicationAPISubscription
+     * @return                          Subscription
      * @throws APIManagerException      Erreur lors de la souscription
      */
-    ApplicationAPISubscription subscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
+    Subscription subscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
 
     /**
-     * Suppression de la souscription de l'application par défaut de l'admin à une API
-     * @param apiId                     Identifiant de l'API
-     * @param username                  username de l'utilisateur
-     * @return                          ApplicationAPISubscription
-     * @throws APIManagerException      Erreur lors de la suppression de la souscription
+     * Ajoute les souscriptions par défaut sur une API
      */
-    void unsubscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
+    void createDefaultSubscriptions(String apiId, boolean isRestricted) throws APISubscriptionException, ApplicationOperationException;
+
+    /**
+     * Suppression de toutes les souscriptions à une application (en vue d'une suppression de l'API par exemple)
+     * sans modifier le statut de l'API (contrairement à org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper#retireAPIToDeleteAllSubscriptions)
+     *
+     * @param apiId Identifiant de l'API
+     * @throws APIManagerException Erreur lors de la suppression de la souscription
+     */
+    void deleteAllSubscriptionsWithoutRetiringAPI(String apiId) throws APIManagerException;
 
     boolean hasSubscribeAPIToDefaultUserApplication(String apiId, String username) throws APIManagerException;
 
@@ -99,20 +114,20 @@ public interface ApplicationService {
      * Récupérer la souscription
      * @param subscriptionId            Identifiant de la souscription
      * @param username                  username de l'utilisateur
-     * @return                          ApplicationAPISubscription
+     * @return                          Subscription
      * @throws APIManagerException      Erreur lors de la récupération de la souscription
      */
-    ApplicationAPISubscription getSubscriptionAPI(String subscriptionId, String username) throws APIManagerException;
+    Subscription getSubscriptionAPI(String subscriptionId, String username) throws APIManagerException;
 
     /**
      * Mise à jour d'une souscription
      *
      * @param applicationAPISubscription        Paramètres de la souscription
      * @param username                          username de l'utilisateur
-     * @return                                  ApplicationAPISubscription
+     * @return                                  Subscription
      * @throws APIManagerException              Erreur lors de la mise à jour
      */
-    ApplicationAPISubscription updateSubscriptionAPI(ApplicationAPISubscription applicationAPISubscription, String username) throws APIManagerException;
+    Subscription updateSubscriptionAPI(Subscription applicationAPISubscription, String username) throws APIManagerException;
 
     /**
      * Se désabonner à une souscription
@@ -159,4 +174,5 @@ public interface ApplicationService {
      */
     boolean hasApi(UUID globalId, UUID mediaId) throws APIManagerException;
 
+	ApplicationKey getApplicationKey(String applicationId, String username, EndpointKeyType keyType) throws ApplicationOperationException;
 }

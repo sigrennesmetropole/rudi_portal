@@ -323,6 +323,15 @@
                     },
                     {
                         "in": "query",
+                        "name": "password",
+                        "description": "Mot-de-passe (en clair) de l'utilisateur",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
                         "name": "lastname",
                         "description": "Tout ou partie du nom de famille de l'utilisateur",
                         "required": false,

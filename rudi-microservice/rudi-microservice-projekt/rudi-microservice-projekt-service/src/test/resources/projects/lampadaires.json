@@ -26,9 +26,28 @@
 		"order": 1
 	},
 	"target_audiences": [
-		"Enfants",
-		"Ados",
-		"Seniors"
+		{
+			"uuid": "d7d4be47-de61-46fe-a171-7ae06942bc6c",
+			"code": "enfants",
+			"label": "Enfants",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		},{
+			"uuid": "7349cd24-b627-463d-bece-cc04df6ce2e0",
+			"code": "ados",
+			"label": "Ados",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		},{
+			"uuid": "43422bc7-0d08-4d90-a66f-035cf9240dce",
+			"code": "seniors",
+			"label": "Seniors",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		}
 	],
 	"territorial_scale": {
 		"uuid": "88cbe712-4a61-460d-b0f7-4ecd97b18608",
@@ -60,5 +79,6 @@
 	},
 	"owner_uuid": "ca4a5ae2-c88f-415f-8c56-762bc7c2fd97",
 	"contact_email": "mm@test.fr",
-	"owner_type": "USER"
+	"owner_type": "USER",
+	"is_a_reuse": false
 }

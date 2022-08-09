@@ -6,8 +6,10 @@ package org.rudi.microservice.projekt.service.workflow;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ProcessEngine;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.facet.bpmn.helper.form.ActionId;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.helper.workflow.BpmnHelper;
+import org.rudi.facet.bpmn.service.FormService;
 import org.rudi.facet.bpmn.service.InitializationService;
 import org.rudi.facet.bpmn.service.impl.AbstractTaskServiceImpl;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
@@ -25,22 +27,27 @@ import java.util.Map;
 
 /**
  * @author FNI18300
- *
  */
 @Service
 @Slf4j
 public class LinkedDatasetTaskServiceImpl extends
 		AbstractTaskServiceImpl<LinkedDatasetEntity, LinkedDataset, LinkedDatasetDao, LinkedDatasetWorkflowHelper, LinkedDatasetAssigmentHelper> {
 
+	public static final String PROCESS_DEFINITION_ID = "linked-dataset-process";
+	private static final ActionId VALIDATED_ACTION = new ActionId(PROCESS_DEFINITION_ID, "UserTask_1", "validated");
+	private static final ActionId CANCELED_ACTION = new ActionId(PROCESS_DEFINITION_ID, "UserTask_1", "canceled");
+
 	private final ProjectCustomDao projectCustomDao;
+	private final FormService formService;
 
 	public LinkedDatasetTaskServiceImpl(ProcessEngine processEngine, FormHelper formHelper, BpmnHelper bpmnHelper,
 			UtilContextHelper utilContextHelper, InitializationService initializationService,
 			LinkedDatasetDao assetDescriptionDao, LinkedDatasetWorkflowHelper assetDescriptionHelper,
-			LinkedDatasetAssigmentHelper assigmentHelper, ProjectCustomDao projectCustomDao) {
+			LinkedDatasetAssigmentHelper assigmentHelper, ProjectCustomDao projectCustomDao, FormService formService) {
 		super(processEngine, formHelper, bpmnHelper, utilContextHelper, initializationService, assetDescriptionDao,
 				assetDescriptionHelper, assigmentHelper);
 		this.projectCustomDao = projectCustomDao;
+		this.formService = formService;
 	}
 
 	@Override
@@ -55,13 +62,19 @@ public class LinkedDatasetTaskServiceImpl extends
 
 	@Override
 	public String getProcessDefinitionKey() {
-		return "linked-dataset-process";
+		return PROCESS_DEFINITION_ID;
 	}
 
 	@PostConstruct
 	@Override
 	public void loadBpmn() throws IOException {
 		super.loadBpmn();
+		createOrUpdateProcessFormDefinitionForActions();
+	}
+
+	private void createOrUpdateProcessFormDefinitionForActions() throws IOException {
+		formService.createOrUpdateProcessFormDefinitionForAction(VALIDATED_ACTION);
+		formService.createOrUpdateProcessFormDefinitionForAction(CANCELED_ACTION);
 	}
 
 }

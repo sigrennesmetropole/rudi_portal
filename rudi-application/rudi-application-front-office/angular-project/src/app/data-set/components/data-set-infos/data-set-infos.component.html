@@ -193,7 +193,11 @@
                         {{'common.fichier'|translate}} {{getMediaFileExtension(media)}}
                     </mat-panel-title>
                     <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeSeries(media)" class="rudi-panel-source-title">
-                        <span>{{'common.streaming'|translate}} ({{(i + 1) - totalMediaTypeFile}})</span>
+                        <span>{{'common.streaming'|translate}} ({{getMediaIndexSeries(i)}})</span>
+                    </mat-panel-title>
+<!--                    Titre pour les medias de type Service-->
+                    <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeService(media)" class="rudi-panel-source-title">
+                        <span>{{'metaData.service'|translate}} {{getInterfaceContract(media)}}</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
@@ -267,7 +271,6 @@
                         </button>
                     </div>
                 </ng-container>
-
                 <!--Media de type Series -->
                 <ng-container *ngIf="metaDataFunctions.isMediaTypeSeries(media)">
                     <table class="table rudi-panel-table" aria-describedby="medias-table-header">
@@ -295,6 +298,42 @@
                         <tr *ngIf="getMediaSerie(media).total_size">
                             <th scope="row">{{'metaData.tailleTotale'|translate}}</th>
                             <td>{{getMediaSerie(media).total_size}} {{'common.bytes'|translate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+                <!-- Media de type Service -->
+                <ng-container *ngIf="metaDataFunctions.isMediaTypeService(media)">
+                    <table class="table rudi-panel-table" aria-describedby="medias-table-header">
+                        <tbody class="rudi-panel-tbody-border mat-header-row">
+                        <tr>
+                            <th scope="row">
+                                <div class="text-and-icon">
+                                    <span>{{'metaData.url'|translate}}</span>
+                                    <mat-icon color="primary" class="clickable-icon" (click)="goApiDocumentationService()"
+                                              [title]="'metaData.url-api-documentation' | translate">
+                                        help
+                                    </mat-icon>
+                                </div>
+                            </th>
+                            <!-- CSS bootstrap grid system obligatoire pour la gestion du cas particulier -->
+                            <td class="row align-items-center ml-0 mr-0">
+                                <div class="col-10 p-0" [title]="getUrlApiMetadata(media)">
+                                    <span>{{ getUrlApiMetadata(media) }}</span>
+                                </div>
+                                <div class="col-2 p-0">
+                                    <button mat-button color="primary" class="no-outline-focus" (click)="copyUrlApiMetadataToClipboard(media)"
+                                            [title]="'metaData.copy-url-explanation' | translate">
+                                        <mat-icon *ngIf="!isUrlCopiedToClipboard(media)">file_copy</mat-icon>
+                                        <mat-icon *ngIf="isUrlCopiedToClipboard(media)">done_all</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                            <!-- EOF grid system cas particulier -->
+                        </tr>
+                        <tr *ngIf="getMediaService(media)?.api_documentation_url">
+                            <th scope="row">{{'metaData.documentation'|translate}}</th>
+                            <td><a [href]="getMediaService(media)?.api_documentation_url" target="_blank">{{getMediaService(media)?.api_documentation_url}}</a></td>
                         </tr>
                         </tbody>
                     </table>

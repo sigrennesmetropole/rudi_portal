@@ -79,10 +79,6 @@ body { margin: 0; font-family: OpenSans, sans-serif; }
     margin-bottom: 11px;
 }
 
-.cdk-overlay-container {
-    z-index: 1 !important;
-}
-
 //overide the mat table margin css
 .th.mat-header-cell:first-of-type, td.mat-cell:first-of-type{
     padding: 0px !important;

@@ -11,6 +11,7 @@ import org.rudi.microservice.konsult.facade.controller.api.DatasetsApi;
 import org.rudi.microservice.konsult.service.metadata.MetadataService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -60,6 +61,19 @@ public class DatasetController implements DatasetsApi {
 	public ResponseEntity<Resource> downloadMetadataMedia(UUID globalId, UUID mediaId) throws Exception {
 		final DocumentContent documentContent = metadataService.downloadMetadataMedia(globalId, mediaId);
 		return controllerHelper.downloadableResponseEntity(documentContent);
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'ANONYMOUS', 'USER')")
+	public ResponseEntity<Boolean> hasSubscribeToDataset(UUID globalId) throws Exception {
+		return ResponseEntity.ok(metadataService.hasSubscribeToDataset(globalId));
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'ANONYMOUS', 'USER')")
+	public ResponseEntity<Void> subscribeToDataset(UUID globalId) throws Exception {
+		metadataService.subscribeToDataset(globalId);
+		return ResponseEntity.noContent().build();
 	}
 
 	@Override

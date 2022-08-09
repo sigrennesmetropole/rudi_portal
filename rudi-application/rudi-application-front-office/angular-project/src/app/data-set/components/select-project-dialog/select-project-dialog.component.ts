@@ -5,11 +5,12 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {UserService} from '../../../core/services/user.service';
 import {LinkedDataset, Project} from '../../../projekt/projekt-model';
-import {map, switchMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
 import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';
 import {Metadata} from '../../../api-kaccess';
 import {MatSelectChange} from '@angular/material/select';
+import {filterEach} from '../../../shared/utils/rxjs-pipes';
 
 /**
  * Les données que peuvent accepter la Dialog
@@ -97,17 +98,16 @@ export class SelectProjectDialogComponent implements OnInit {
 
         // On charge pour récupérer les projets de l'user connected
         this.isLoading = true;
-        this.userService.getConnectedUserOrEmpty().pipe(
-            switchMap((me) => {
-                return this.projektMetierService.getMyProjects(me.uuid);
-            }),
-        ).subscribe(myProjects => {
-            this.isLoading = false;
-            this.myProjects = myProjects;
-        }, e => {
-            this.isLoading = false;
-            console.error('Cannot retrieve my projects', e);
-        });
+        this.projektMetierService.getMyAndOrganizationsProjectsWithoutPagination().pipe(
+            filterEach(myProject => !myProject.is_a_reuse),
+        )
+            .subscribe(myProjects => {
+                this.isLoading = false;
+                this.myProjects = myProjects;
+            }, e => {
+                this.isLoading = false;
+                console.error('Cannot retrieve my projects', e);
+            });
     }
 
     /**

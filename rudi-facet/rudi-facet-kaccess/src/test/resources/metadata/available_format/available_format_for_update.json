@@ -13,6 +13,10 @@
 		"checksum": {
 			"algo": "MD5",
 			"hash": "SHA-256"
+		},
+		"media_dates": {
+			"created": "2021-04-01T01:10:48.970Z",
+			"updated": "2022-08-15T12:00:00.970Z"
 		}
 	}
 ]

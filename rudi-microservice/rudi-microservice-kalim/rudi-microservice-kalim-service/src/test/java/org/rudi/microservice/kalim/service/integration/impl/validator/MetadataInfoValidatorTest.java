@@ -17,14 +17,14 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class MetadataInfoValidatorTest {
+class MetadataInfoValidatorTest {
 
 	@InjectMocks
 	private MetadataInfoValidator metadataInfoValidator;
 
 	@Test
 	@DisplayName("Test de la validation d'un object MetadataMetadataInfo vide")
-	public void testValidateMetadataInfoEmptyValue() {
+	void testValidateMetadataInfoEmptyValue() {
 		Metadata metadata = new Metadata().metadataInfo(null);
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				metadataInfoValidator.validateMetadata(metadata);
@@ -40,7 +40,7 @@ public class MetadataInfoValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation d'un object MetadataMetadataInfo avec une version d'api invalide")
-	public void testValidateMetadataInfoWithUnknownApiVersion() {
+	void testValidateMetadataInfoWithUnknownApiVersion() {
 		final String metadataVersion = "2.1.0";
 		final MetadataMetadataInfo metadataMetadataInfo = new MetadataMetadataInfo().apiVersion(metadataVersion);
 
@@ -55,7 +55,7 @@ public class MetadataInfoValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation d'un object MetadataMetadataInfo valide")
-	public void testValidateMetadataInfoWithNoErrors() {
+	void testValidateMetadataInfoWithNoErrors() {
 		final String metadataVersion = ConstantMetadata.CURRENT_METADATA_VERSION;
 		final MetadataMetadataInfo metadataMetadataInfo = new MetadataMetadataInfo().apiVersion(metadataVersion);
 

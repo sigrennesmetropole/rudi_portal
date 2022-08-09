@@ -1,98 +1,25 @@
 <div class="project-container">
     <!--  Card Description -->
     <div class="card-description-keyword">
-        <mat-card class="project-card project-card-description">
-            <mat-card-title
-                class="card-label">{{'personalSpace.project.project'|translate}}
-            </mat-card-title>
-            <app-loader [active]="loading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
-            <mat-card-content class="mb-3 mt-3" *ngIf="!loading && dependencies.project">
-                <p class="project-detail-label pb-1">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.projectTitle'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">{{dependencies.project.title}}</mat-label>
-                </p>
+        <app-loader [active]="loading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
+        <mat-card class="project-card project-card-description" *ngIf="!loading">
+            <app-project-main-informations [project]="dependencies.project"
+                                           [isProject]="true"></app-project-main-informations>
+            <!-- Tableau des autres demandes -->
+            <app-acces-details-table1
+                [otherIndicators]="dependencies?.otherIndicators"
+                [otherLinkedDatasets]="dependencies?.otherLinkedDatasets">
 
-                <p class="project-detail-label pb-1">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.description'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                        {{dependencies.project.description}}
-                    </mat-label>
-                </p>
+            </app-acces-details-table1>
 
-                <div class="project-detail-label pb-3">
-                    <mat-label class="project-detail-title d-flex">
-                        {{'personalSpace.project.periodRealization'|translate}}
-                    </mat-label>
-                    <div class="periode-container">
-                        <div>
-                            <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                                {{'personalSpace.project.beginDate'|translate}}
-                            </mat-label>
-                            <mat-label
-                                class="mb-3 mt-3 project-detail_subtitle">{{getProjectDateDebut()}}</mat-label>
-                        </div>
-                        <div>
-                            <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                                {{'personalSpace.project.endDate'|translate}}
-                            </mat-label>
-                            <mat-label class="mb-3 mt-3 project-detail_subtitle">{{getProjectDateFin()}}</mat-label>
-                        </div>
-                    </div>
-                </div>
+            <!-- Tableau des demandes de nouvelle données -->
+            <app-acces-details-table2
+                [newDatasetRequests]="dependencies?.newDatasetRequests"></app-acces-details-table2>
 
-                <p class="project-detail-label pb-1">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.targetAudience'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                        {{ null | replaceIfNullPipe}}
-                    </mat-label>
-                </p>
-                <p class="project-detail-label pb-1">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.scale'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                        {{dependencies.project.territorial_scale?.label | replaceIfNullPipe}}
-                    </mat-label>
-                </p>
+            <!-- Tableau des jeu de données ouverts réutilisés -->
+            <app-acces-details-table3
+                [openLinkedDatasetAccessRequests]="dependencies?.linkedDatasetsOpened"></app-acces-details-table3>
 
-                <p class="project-detail-label pb-1">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.territorialScale'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                        {{dependencies.project.detailed_territorial_scale | replaceIfNullPipe}}
-                    </mat-label>
-                </p>
-                <p class="project-detail-label pb-1">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.desiredSupport'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                        {{getDesiredSupports()}}
-                    </mat-label>
-                </p>
-
-                <p class="project-detail-label">
-                    <mat-label
-                        class="project-detail-title d-flex">{{'personalSpace.project.confidentiality'|translate}}</mat-label>
-                    <mat-label class="mb-3 mt-3 project-detail_subtitle">
-                        {{dependencies.project.confidentiality?.label}}
-                    </mat-label>
-                </p>
-
-                <!-- Tableau des autres demandes -->
-                <app-acces-details-table1
-                    [otherIndicators]="dependencies?.otherIndicators"
-                    [otherLinkedDatasets]="dependencies?.otherLinkedDatasets">
-
-                </app-acces-details-table1>
-
-                <!-- Tableau des demandes de nouvelle données -->
-                <app-acces-details-table2 [newDatasetRequests]="dependencies?.newDatasetRequests"></app-acces-details-table2>
-
-                <!-- Tableau des jeu de données ouverts réutilisés -->
-                <app-acces-details-table3 [openLinkedDatasetAccessRequests]="dependencies?.linkedDatasetsOpened"></app-acces-details-table3>
-            </mat-card-content>
         </mat-card>
     </div>
 </div>

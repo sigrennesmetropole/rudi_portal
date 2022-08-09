@@ -10,6 +10,7 @@ import {MatIconRegistry} from '@angular/material/icon';
 export interface Table2Data {
     date: string;
     titre: string;
+    statut: string;
 }
 
 @Component({
@@ -19,7 +20,7 @@ export interface Table2Data {
 })
 export class AccesDetailsTable2Component implements OnInit, AfterViewInit {
     jdds: Table2Data[] = [];
-    displayedColumns: string[] = ['date', 'titre'];
+    displayedColumns: string[] = ['date', 'titre', 'statut'];
     dataSource: MatTableDataSource<Table2Data> = new MatTableDataSource(this.jdds);
 
     @Input()
@@ -28,7 +29,8 @@ export class AccesDetailsTable2Component implements OnInit, AfterViewInit {
             this.jdds = value.map((request: NewDatasetRequest) => {
                 return {
                     titre: request.title,
-                    date: moment(request.updated_date).format('DD/MM/YYYY')
+                    date: moment(request.updated_date).format('DD/MM/YYYY'),
+                    statut: request.functional_status,
                 };
             });
 

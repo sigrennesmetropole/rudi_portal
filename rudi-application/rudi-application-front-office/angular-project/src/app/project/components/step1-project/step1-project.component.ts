@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {RadioListItem} from '../../../shared/radio-list/radio-list-item';
-import {ProjectPublicCible} from '../../../core/services/projekt-metier.service';
-import {TerritorialScale, ProjectType, Support} from '../../../projekt/projekt-model';
+import {ProjectType, Support, TargetAudience, TerritorialScale} from '../../../projekt/projekt-model';
 
 @Component({
     selector: 'app-step1-project',
@@ -30,7 +29,7 @@ export class Step1ProjectComponent {
     public projectType: ProjectType[];
 
     @Input()
-    public publicCible: ProjectPublicCible[];
+    public publicCible: TargetAudience[];
 
     @Output()
     public imageModified: EventEmitter<Blob> = new EventEmitter<Blob>();

@@ -1,0 +1,71 @@
+<app-search-count
+    [searchIsRunning]="searchIsRunning"
+    [count]="total"
+    [noResultMessage]="'personalSpace.myReuses.noResult' | translate"
+    [hyperLink]="'personalSpace.myReuses.here' | translate"
+    [hasLink]="true"
+    [routerLink]="'/projets'">
+</app-search-count>
+<app-loader [active]="searchIsRunning" [allPage]="true" [isLight]="true" [noText]="true"></app-loader>
+<!-- On utilise hidden à la place de *ngIf pour éviter des bugs avec mat-table : https://stackoverflow.com/a/56127490/1655155 -->
+<div [hidden]="!(projectList?.length)">
+
+    <!-- Wrapper du tableau et du loader -->
+    <div class="table-and-loader-container">
+        <!-- le tableau -->
+        <table mat-table
+               [dataSource]='projectList | paginate: { itemsPerPage: ITEMS_PER_PAGE, currentPage: page, totalItems: total}'
+               matSort matSortActive="updatedDate" matSortDirection="desc" (matSortChange)="sortTable($event)">
+
+            <ng-container matColumnDef="updatedDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">{{'personalSpace.myReuses.updatedDate'|translate}}</th>
+                <td mat-cell *matCellDef="let project"> {{project.updatedDate | date: 'dd/MM/YYYY'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">{{'personalSpace.myReuses.title'|translate}}</th>
+                <td mat-cell *matCellDef="let project" class="dataset-title"> {{project.projectTitle}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="confidentiality">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">{{'personalSpace.myReuses.confidentiality'|translate}}</th>
+                <td mat-cell *matCellDef="let project"> {{project.confidentiality}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="functionalStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">{{'personalSpace.myReuses.status'|translate}}</th>
+                <td mat-cell *matCellDef="let project"> {{project.status}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numberOfDataset">
+                <th mat-header-cell *matHeaderCellDef scope="col">
+                    {{'personalSpace.myReuses.numberOfDataset'|translate}}
+                </th>
+                <td mat-cell *matCellDef="let project"> {{project.numberOfDatasets}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let project; columns: displayedColumns;"
+                [routerLink]="['..', 'my-project-details', project.uuid]">
+            </tr>
+        </table>
+        <!-- le loader du tableau -->
+        <div class="table-loader" *ngIf="triIsRunning">
+            <app-loader [allPage]="false" [noText]="true" [active]="true" [isTransparent]="true"></app-loader>
+        </div>
+    </div>
+
+
+    <pagination-controls
+        (pageChange)="handlePageChange($event)"
+        [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
+        class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
+        [ngClass]="paginationControlsNgClass"
+        [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
+        [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate">
+    </pagination-controls>
+</div>

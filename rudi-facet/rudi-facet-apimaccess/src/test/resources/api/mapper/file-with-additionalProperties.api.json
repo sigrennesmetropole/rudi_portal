@@ -1,0 +1,43 @@
+{
+	"accessControl": "NONE",
+	"visibility": "PUBLIC",
+	"endpointImplementationType": "ENDPOINT",
+	"policies": [
+		null
+	],
+	"transport": [
+		"http",
+		"https"
+	],
+	"type": "HTTP",
+	"version": "1.0.0",
+	"subscriptionAvailability": "CURRENT_TENANT",
+	"isDefaultVersion": true,
+	"endpointConfig": {
+		"endpoint_type": "http",
+		"sandbox_endpoints": {
+			"url": "https:\/\/data.rennesmetropole.fr\/explore\/dataset\/ca-2020-rennes-metropole\/download\/?format=csv&timezone=Europe\/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+		},
+		"production_endpoints": {
+			"url": "https:\/\/data.rennesmetropole.fr\/explore\/dataset\/ca-2020-rennes-metropole\/download\/?format=csv&timezone=Europe\/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+		}
+	},
+	"name": "0faf1661-37d8-4194-b806-b5de4f3121b6_dwnl",
+	"context": "\/datasets\/0faf1661-37d8-4194-b806-b5de4f3121b6\/dwnl",
+	"gatewayEnvironments": [
+		"Production and Sandbox"
+	],
+	"additionalProperties": {
+		"provider_uuid": "5596b5b2-b227-4c74-a9a1-719e7c1008c7",
+		"interface_contract": "dwnl",
+		"extension": "csv",
+		"media_uuid": "0faf1661-37d8-4194-b806-b5de4f3121b6",
+		"global_id": "69784084-fdd1-4c28-aac7-306332ff53bb",
+		"provider_code": "NODE_STUB",
+		"paramètre%201": "valeur 1",
+		"paramètre%202": "valeur 2"
+	},
+	"categories": [
+		"RUDI"
+	]
+}

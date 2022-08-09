@@ -3,19 +3,23 @@
  */
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.service.TaskQueryService;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
 import org.rudi.microservice.projekt.core.bean.workflow.ProjektTaskSearchCriteria;
 import org.rudi.microservice.projekt.facade.controller.api.TasksApi;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author FNI18300
@@ -35,10 +39,10 @@ public class TasksController implements TasksApi {
 		ProjektTaskSearchCriteria searchCriteria = ProjektTaskSearchCriteria.builder().title(title)
 				.description(description).processDefinitionKeys(processDefinitionKeys)
 				.functionalStatus(fonctionalStatus).projectStatus(projectStatus).status(status)
-				.asAdmin(Boolean.TRUE.equals(asAdmin)).datasetProducerUuid(datasetProducerUuid)
-				.projectUuid(projectUuid).build();
-
-		return ResponseEntity.ok(taskQueryService.searchTasks(searchCriteria));
+				.asAdmin(Boolean.TRUE.equals(asAdmin)).datasetProducerUuid(datasetProducerUuid).projectUuid(projectUuid)
+				.build();
+		Page<Task> tasks = taskQueryService.searchTasks(searchCriteria, Pageable.unpaged());
+		return ResponseEntity.ok(tasks.getContent());
 	}
 
 	@Override

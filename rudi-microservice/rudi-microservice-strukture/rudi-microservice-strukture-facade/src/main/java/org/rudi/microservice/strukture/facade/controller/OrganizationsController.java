@@ -5,6 +5,8 @@ import lombok.val;
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.helper.exceptions.CreateUserException;
 import org.rudi.microservice.strukture.core.bean.Organization;
 import org.rudi.microservice.strukture.core.bean.OrganizationMember;
 import org.rudi.microservice.strukture.core.bean.OrganizationSearchCriteria;
@@ -27,7 +29,7 @@ public class OrganizationsController implements OrganizationsApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR', 'MODULE_KALIM')")
-	public ResponseEntity<Organization> createOrganization(Organization organization) {
+	public ResponseEntity<Organization> createOrganization(Organization organization) throws CreateUserException {
 		return ResponseEntity.ok(organizationService.createOrganization(organization));
 	}
 
@@ -41,6 +43,12 @@ public class OrganizationsController implements OrganizationsApi {
 	@Override
 	public ResponseEntity<Organization> getOrganization(UUID uuid) throws AppServiceNotFoundException {
 		return ResponseEntity.ok(organizationService.getOrganization(uuid));
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR', 'USER')")
+	public ResponseEntity<User> getOrganizationUserFromOrganizationUuid(UUID organizationUuid) throws Exception {
+		return ResponseEntity.ok(organizationService.getOrganizationUserFromOrganizationUuid(organizationUuid));
 	}
 
 	@Override

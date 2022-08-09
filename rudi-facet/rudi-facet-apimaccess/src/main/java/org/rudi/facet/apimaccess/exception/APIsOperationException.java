@@ -1,6 +1,6 @@
 package org.rudi.facet.apimaccess.exception;
 
-import org.rudi.facet.apimaccess.bean.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 
 public class APIsOperationException extends APIManagerException {

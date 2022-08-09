@@ -57,7 +57,7 @@
       <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
       <bpmn:script>newDatasetRequestWorkflowContext.info(&quot;Update status pending/in progress&quot;);
-newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;PENDING&quot;, &quot;IN_PROGRESS&quot;, &quot;Demande en cours d'étude animateur&quot;);
+newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;PENDING&quot;, &quot;IN_PROGRESS&quot;, &quot;En cours&quot;);
 var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/new-dataset-request/pending-subject.txt&quot;, &quot;file:templates/emails/new-dataset-request/pending-body.html&quot;);
 newDatasetRequestWorkflowContext.sendEMailToRole(context,execution,localEmailData,&quot;MODERATOR&quot;);
       </bpmn:script>
@@ -68,7 +68,7 @@ newDatasetRequestWorkflowContext.sendEMailToRole(context,execution,localEmailDat
       <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
       <bpmn:script>newDatasetRequestWorkflowContext.info(&quot;Update status validé&quot;);
-newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;PENDING&quot;, &quot;VALIDATED&quot;, &quot;Demande en attente de clôture&quot;);
+newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;PENDING&quot;, &quot;VALIDATED&quot;, &quot;acceptée&quot;);
 var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/new-dataset-request/validated-subject.txt&quot;, &quot;file:templates/emails/new-dataset-request/validated-body.html&quot;);
 newDatasetRequestWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);
       </bpmn:script>
@@ -78,7 +78,7 @@ newDatasetRequestWorkflowContext.sendEMailToInitiator(context,execution,localEma
       <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
       <bpmn:script>newDatasetRequestWorkflowContext.info(&quot;Update status refusé&quot;);
-newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;COMPLETED&quot;, &quot;REFUSED&quot;, &quot;Demande refusée&quot;);
+newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;COMPLETED&quot;, &quot;REFUSED&quot;, &quot;refusée&quot;);
 var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/new-dataset-request/refused-subject.txt&quot;, &quot;file:templates/emails/new-dataset-request/refused-body.html&quot;);
 newDatasetRequestWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);
       </bpmn:script>
@@ -90,7 +90,7 @@ newDatasetRequestWorkflowContext.sendEMailToInitiator(context,execution,localEma
       <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
       <bpmn:script>newDatasetRequestWorkflowContext.info(&quot;Update status cloturé&quot;);
-newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;COMPLETED&quot;, &quot;VALIDATED&quot;, &quot;Demande clôturée&quot;);
+newDatasetRequestWorkflowContext.updateStatus(context, execution, &quot;COMPLETED&quot;, &quot;VALIDATED&quot;, &quot;clôturée&quot;);
 var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/new-dataset-request/close-subject.txt&quot;, &quot;file:templates/emails/new-dataset-request/close-body.html&quot;);
 newDatasetRequestWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);
       </bpmn:script>

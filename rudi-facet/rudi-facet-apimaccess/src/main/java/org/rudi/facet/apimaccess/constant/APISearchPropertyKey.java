@@ -15,4 +15,5 @@ public class APISearchPropertyKey {
     public static final String MEDIA_UUID = "media_uuid";
     public static final String INTERFACE_CONTRACT = "interface_contract";
     public static final String EXTENSION = "extension";
+    public static final String STATUS = "status"; // cf param "query" de l'API "/apis" dans publisher-v1.yaml
 }

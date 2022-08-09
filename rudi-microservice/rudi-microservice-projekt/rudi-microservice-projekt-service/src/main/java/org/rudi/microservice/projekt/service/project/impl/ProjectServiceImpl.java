@@ -4,13 +4,18 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.rudi.common.core.DocumentContent;
+import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.helper.ResourceHelper;
+import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.kmedia.bean.MediaOrigin;
 import org.rudi.facet.kmedia.service.MediaService;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
@@ -67,6 +72,9 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ResourceLoader resourceLoader;
 	private final NewDatasetRequestMapper datasetRequestMapper;
 	private final NewDatasetRequestDao datasetRequestDao;
+	private final UtilContextHelper utilContextHelper;
+	private final OrganizationHelper organizationHelper;
+	private final ACLHelper aclHelper;
 
 	@Override
 	@Transactional // readOnly = false
@@ -296,5 +304,37 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Indicators computeIndicators(ComputeIndicatorsSearchCriteria searchCriteria) {
 		return projectCustomDao.computeProjectInfos(searchCriteria);
+	}
+
+	@Override
+	public Integer getNumberOfRequests(UUID projectUuid) throws AppServiceNotFoundException {
+		getRequiredProjectEntity(projectUuid);
+		return projectCustomDao.getNumberOfLinkedDatasets(projectUuid) + projectCustomDao.getNumberOfNewRequests(projectUuid);
+	}
+
+	@Override
+	public Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException {
+		//get user uuid
+		UUID userUuid = null;
+		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
+		if (authenticatedUser != null) {
+			userUuid = aclHelper.getUserByLogin(authenticatedUser.getLogin()).getUuid();
+		}
+		//get user organization uuids
+		if (userUuid == null) {
+			return Page.empty();
+		}
+
+		List<UUID> organizationsUuid = organizationHelper.getMyOrganizationsUuids(userUuid);
+
+		if (organizationsUuid != null) {
+			//Add userUuid to this list before to searchProjects
+			organizationsUuid.add(userUuid);
+		}
+
+		searchCriteria.setOwnerUuids(organizationsUuid);
+
+		//call searchProjects
+		return this.searchProjects(searchCriteria, pageable);
 	}
 }

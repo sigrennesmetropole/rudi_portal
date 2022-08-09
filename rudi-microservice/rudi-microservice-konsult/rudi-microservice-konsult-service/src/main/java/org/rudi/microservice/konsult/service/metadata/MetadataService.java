@@ -2,12 +2,15 @@ package org.rudi.microservice.konsult.service.metadata;
 
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataFacets;
 import org.rudi.facet.kaccess.bean.MetadataList;
+import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +42,7 @@ public interface MetadataService {
 	 * @return Metadata
 	 * @throws AppServiceException Erreur lors de la récupération des métadonnées
 	 */
+	@Nonnull
 	Metadata getMetadataById(UUID globalId) throws AppServiceException;
 
 	/**
@@ -50,6 +54,18 @@ public interface MetadataService {
 	 * @throws AppServiceException Erreur lors de la récupération des données
 	 */
 	DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException;
+
+	/**
+	 * @return true si l'utilisateur connecté a souscrit à tous les médias (API du point de vue Developer Portal)
+	 * du jeu de données
+	 */
+	boolean hasSubscribeToDataset(UUID globalId) throws ClientKeyNotFoundException, APIManagerException;
+
+	/**
+	 * Souscrit à un jeu de données, ce qui signifie que l'utilisateur connecté va souscrire à tous les médias
+	 * (API du point de vue Developer Portal).
+	 */
+	void subscribeToDataset(UUID globalId) throws APIManagerException, AppServiceException;
 
 	/**
 	 * Permet de savoir si l'utilisateur connecté a souscrit à l'api

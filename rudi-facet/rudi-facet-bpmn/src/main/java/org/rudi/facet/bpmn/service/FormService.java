@@ -3,20 +3,21 @@
  */
 package org.rudi.facet.bpmn.service;
 
-import java.util.UUID;
-
 import org.rudi.bpmn.core.bean.FormDefinition;
 import org.rudi.bpmn.core.bean.ProcessFormDefinition;
 import org.rudi.bpmn.core.bean.SectionDefinition;
 import org.rudi.facet.bpmn.bean.form.FormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.SectionDefinitionSearchCriteria;
+import org.rudi.facet.bpmn.helper.form.ActionId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.util.UUID;
+
 /**
  * @author FNI18300
- *
  */
 public interface FormService {
 
@@ -53,4 +54,10 @@ public interface FormService {
 	Page<ProcessFormDefinition> searchProcessFormDefinitions(ProcessFormDefinitionSearchCriteria searchCriteria,
 			Pageable pageable);
 
+	/**
+	 * Crée ou met à jour le formulaire lié à une action dont la définition se trouve dans le fichier JSON :
+	 *
+	 * <pre>bpmn/form/`processDefinitionId`__`userTaskId`__`actionName`.json</pre>
+	 */
+	void createOrUpdateProcessFormDefinitionForAction(ActionId actionId) throws IOException;
 }

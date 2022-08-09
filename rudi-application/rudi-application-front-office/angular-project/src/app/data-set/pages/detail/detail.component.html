@@ -16,8 +16,11 @@
                                            organizationType="producer"></app-organization-logo>
                 </div>
                 <div class="header-ressource">
-                    <span class="producer-name">{{metadata?.producer?.organization_name}}</span>
-                    <h2 class="blue-theme">{{metadata?.resource_title}}</h2>
+                    <div class="producer-name">{{metadata?.producer?.organization_name}}</div>
+                    <div class="resource-description">
+                        <mat-icon class="d-inline-flex" [svgIcon]="restrictedDatasetIcon" *ngIf="isRestricted"></mat-icon>
+                        <span class="blue-theme resource-title">{{metadata?.resource_title}}</span>
+                    </div>
                 </div>
             </div>
             <!-- Fin Icon et titre de la ressource -->
@@ -28,7 +31,7 @@
                     <button class="button button-info" disabled
                             mat-raised-button routerLink="/information">
                         <mat-icon [ngClass]="mediaSize.isSm ? 'icon-information-sm' : 'icon-information'"
-                                  svgIcon="icon-info">error_outline
+                                  svgIcon="icon-info">
                         </mat-icon>
                         <span
                             [ngClass]="{'banner-icon-libelle': mediaSize.isSm}">{{'metaData.informations'|translate}}</span>
@@ -82,7 +85,8 @@
                     </button>
 
                     <!-- Demander l'accès à un JDD restreint -->
-                    <button mat-raised-button  class="button ml-3" *ngIf="isRestricted" (click)="handleClickRequestAccess()">
+                    <button mat-raised-button class="button ml-3" *ngIf="isRestricted"
+                            (click)="handleClickRequestAccess()">
                         <mat-icon class="key-icon" svgIcon="key_icon_circle"></mat-icon>
                         <span>{{'metaData.restrictedDatasetRequest'|translate}}</span>
                     </button>
@@ -152,22 +156,22 @@
                         <mat-card class="card-file metadata-card">
                             <div class="card-producer-file-sm-title">
                                 <ng-container
-                                    *ngIf="availableFormat(mediaDataType.Series) && !availableFormat(mediaDataType.File)">
+                                    *ngIf="isAvailableFormat(mediaDataType.Series) && !isAvailableFormat(mediaDataType.File)">
                                     <mat-icon class="icon-file">timeline</mat-icon>
-                                    <label class="card-label-title pl-3">{{'metaData.tempsReel'|translate}}</label>
+                                    <label class="card-label-title pl-3">{{'metaData.series'|translate}}</label>
                                 </ng-container>
 
                                 <ng-container
-                                    *ngIf="availableFormat(mediaDataType.File) && !availableFormat(mediaDataType.Series)">
+                                    *ngIf="isAvailableFormat(mediaDataType.File) && !isAvailableFormat(mediaDataType.Series)">
                                     <mat-icon class="icon-file">description</mat-icon>
-                                    <label class="card-label-title pl-3">{{'metaData.fichier'|translate}}</label>
+                                    <label class="card-label-title pl-3">{{'metaData.file'|translate}}</label>
                                 </ng-container>
                                 <ng-container
-                                    *ngIf="availableFormat(mediaDataType.File) && availableFormat(mediaDataType.Series)">
+                                    *ngIf="isAvailableFormat(mediaDataType.File) && isAvailableFormat(mediaDataType.Series)">
                                     <mat-icon class="icon-file">description</mat-icon>
                                     <label
-                                        class="card-label-title pl-3">{{'metaData.fichier'|translate}} {{'common.et'|translate}}
-                                        {{'metaData.tempsReel'|translate}}</label>
+                                        class="card-label-title pl-3">{{'metaData.file'|translate}} {{'common.et'|translate}}
+                                        {{'metaData.series'|translate}}</label>
                                 </ng-container>
                                 <span class="file_status">{{metadata.storage_status}}</span>
                             </div>
@@ -279,23 +283,9 @@
                      class="card-producer-file">
                     <mat-card class="card-file metadata-card pb-4">
                         <div class="card-producer-file-title">
-                            <ng-container
-                                *ngIf="availableFormat(mediaDataType.Series) && !availableFormat(mediaDataType.File)">
-                                <mat-icon class="icon-file">timeline</mat-icon>
-                                <label class="card-label-title pl-3">{{'metaData.tempsReel'|translate}}</label>
-                            </ng-container>
-
-                            <ng-container
-                                *ngIf="availableFormat(mediaDataType.File) && !availableFormat(mediaDataType.Series)">
+                            <ng-container *ngIf="mediasTitle">
                                 <mat-icon class="icon-file">description</mat-icon>
-                                <label class="card-label-title pl-3">{{'metaData.fichier'|translate}}</label>
-                            </ng-container>
-                            <ng-container
-                                *ngIf="availableFormat(mediaDataType.File) && availableFormat(mediaDataType.Series)">
-                                <mat-icon class="icon-file">description</mat-icon>
-                                <label
-                                    class="card-label-title pl-3">{{'metaData.fichier'|translate}} {{'common.et'|translate}}
-                                    {{'metaData.tempsReel'|translate}}</label>
+                                <label class="card-label-title pl-3"> {{mediasTitle}} </label>
                             </ng-container>
                             <span class="file_status">{{metadata.storage_status}}</span>
                         </div>
@@ -392,17 +382,23 @@
                     </mat-card>
 
                     <!-- Autres Jeux de données sur le même thème -->
-                    <mat-card *ngIf="otherDatasets?.length > 0" class="card-datasets card-other-datasets metadata-card rudi-card-border pb-4">
+                    <mat-card *ngIf="otherDatasets?.length > 0"
+                              class="card-datasets card-other-datasets metadata-card rudi-card-border pb-4">
                         <mat-card-title>
                             <h2 class="card-label">{{'metaData.otherDatasets'|translate}} ({{totalOtherDatasets}})</h2>
                         </mat-card-title>
-                        <!-- à factoriser avec project/detail -->
-                        <app-data-set-card-item *ngFor="let dataset of otherDatasets"
-                                                [dataset]="dataset"
-                                                [divider]="true">
-                        </app-data-set-card-item>
+                        <app-dataset-infos class="dataset-card-infos"
+                                           *ngFor="let element of otherDatasets" [showLogo]="true"
+                                           [organizationName]="element?.producer.organization_name"
+                                           [organizationId]="element?.producer.organization_id"
+                                           [isRestricted]="element?.access_condition?.confidentiality?.restricted_access"
+                                           [resourceTitle]="element?.resource_title"
+                                           [divider]="true"
+                                           [goToDetails]="true"
+                                           [currentJddId]="element.global_id"></app-dataset-infos>
                         <div class="see-more">
-                            <a *ngIf="hasManyOtherDatasets()" class="nav-link" (click)="filterOnTheSameThemeAndGoToCatalog()">
+                            <a *ngIf="hasManyOtherDatasets()" class="nav-link"
+                               (click)="filterOnTheSameThemeAndGoToCatalog()">
                                 <span>{{'metaData.seeMoreDatasets' | translate}}</span>
                             </a>
                         </div>

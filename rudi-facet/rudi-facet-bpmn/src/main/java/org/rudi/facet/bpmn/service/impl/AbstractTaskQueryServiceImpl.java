@@ -3,7 +3,6 @@
  */
 package org.rudi.facet.bpmn.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AccessLevel;
@@ -98,7 +100,8 @@ public abstract class AbstractTaskQueryServiceImpl<S extends TaskSearchCriteria>
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Task> searchTasks(S taskSearchCriteria) throws InvalidDataException, FormDefinitionException {
+	public Page<Task> searchTasks(S taskSearchCriteria, Pageable pageable)
+			throws InvalidDataException, FormDefinitionException {
 		List<Task> results = null;
 		org.activiti.engine.TaskService taskService = processEngine.getTaskService();
 		TaskQuery taskQuery = taskService.createTaskQuery();
@@ -106,7 +109,15 @@ public abstract class AbstractTaskQueryServiceImpl<S extends TaskSearchCriteria>
 		applyCommonCriteria(taskQuery, taskSearchCriteria);
 		applyExtentedCriteria(taskQuery, taskSearchCriteria);
 		bpmnHelper.applySortCriteria(taskQuery);
-		List<org.activiti.engine.task.Task> tasks = taskQuery.list();
+		List<org.activiti.engine.task.Task> tasks = null;
+		long totalCount = 0;
+		if (pageable.isUnpaged()) {
+			tasks = taskQuery.list();
+			totalCount = tasks.size();
+		} else {
+			totalCount = taskQuery.count();
+			tasks = taskQuery.listPage((int) pageable.getOffset(), pageable.getPageSize());
+		}
 		if (CollectionUtils.isNotEmpty(tasks)) {
 			results = new ArrayList<>(tasks.size());
 			for (org.activiti.engine.task.Task originalTask : tasks) {
@@ -118,7 +129,7 @@ public abstract class AbstractTaskQueryServiceImpl<S extends TaskSearchCriteria>
 		} else {
 			results = new ArrayList<>();
 		}
-		return results;
+		return new PageImpl<>(results, pageable, totalCount);
 	}
 
 	protected Task convertTask(org.activiti.engine.task.Task task)
@@ -142,13 +153,7 @@ public abstract class AbstractTaskQueryServiceImpl<S extends TaskSearchCriteria>
 
 	protected AssetDescriptionEntity loadAndUpdateAssetDescription(Class<? extends AssetDescriptionEntity> assetClass,
 			UUID uuid) throws InvalidDataException {
-		AssetDescriptionEntity assetDescription = lookupDao(assetClass).findByUuid(uuid);
-		if (assetDescription != null) {
-			assetDescription.setUpdatedDate(LocalDateTime.now());
-			assetDescription.setUpdator(getCurrentLogin());
-			lookupDao(assetClass).save(assetClass.cast(assetDescription));
-		}
-		return assetDescription;
+		return lookupDao(assetClass).findByUuid(uuid);
 	}
 
 	/**

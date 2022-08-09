@@ -10,15 +10,16 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.application.ApplicationOperationAPI;
 import org.rudi.facet.apimaccess.api.subscription.SubscriptionOperationAPI;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscription;
 import org.rudi.facet.apimaccess.bean.ApplicationInfo;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.helper.search.QueryBuilder;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,19 +37,21 @@ class ApplicationServiceImplTest {
 	private QueryBuilder queryBuilder;
 	@Mock
 	private SubscriptionOperationAPI subscriptionOperationAPI;
+	@Mock
+	private APIManagerProperties apiManagerProperties;
 
 	private static final String DEFAULT_SUBSCRIPTION_POLICY = "Unlimited";
 	private static final String ANONYMOUS_SUBSCRIPTION_POLICY = "Bronze";
 	private static final String ANONYMOUS_USERNAME = "anonymous";
 
 	@Captor
-	private ArgumentCaptor<ApplicationAPISubscription> applicationAPISubscriptionCaptor;
+	private ArgumentCaptor<Subscription> applicationAPISubscriptionCaptor;
 
 	@BeforeEach
 	void setUp() {
 		ReflectionTestUtils.setField(applicationService, "defaultSubscriptionPolicy", DEFAULT_SUBSCRIPTION_POLICY);
 		ReflectionTestUtils.setField(applicationService, "anonymousSubscriptionPolicy", ANONYMOUS_SUBSCRIPTION_POLICY);
-		ReflectionTestUtils.setField(applicationService, "anonymousUsername", ANONYMOUS_USERNAME);
+		when(apiManagerProperties.getAnonymousUsername()).thenReturn(ANONYMOUS_USERNAME);
 	}
 
 	@DisplayName("RUDI-413")

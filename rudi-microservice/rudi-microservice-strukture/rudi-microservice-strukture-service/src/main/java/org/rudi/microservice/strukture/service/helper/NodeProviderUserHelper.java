@@ -8,6 +8,7 @@ import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.acl.helper.exceptions.CreateUserException;
 import org.rudi.microservice.strukture.storage.entity.provider.NodeProviderEntity;
 import org.rudi.microservice.strukture.storage.entity.provider.ProviderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class NodeProviderUserHelper {
 	@Autowired
 	private ACLHelper aclHelper;
 
-	public void updateAssociatedUser(ProviderEntity provider, NodeProviderEntity nodeProvider) {
+	public void updateAssociatedUser(ProviderEntity provider, NodeProviderEntity nodeProvider) throws CreateUserException {
 		User user = aclHelper.getUserByLogin(nodeProvider.getUuid().toString());
 		if (user == null) {
 			List<Role> roles = aclHelper.searchRoles();

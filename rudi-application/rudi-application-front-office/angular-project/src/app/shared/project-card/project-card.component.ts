@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
 import {ProjectCatalogItem} from '../../project/model/project-catalog-item';
 import {Router} from '@angular/router';
-import {OwnerType, Project} from '../../projekt/projekt-model';
 
 @Component({
     selector: 'app-project-card',
@@ -38,10 +37,10 @@ export class ProjectCardComponent implements OnInit {
         }
     }
 
-    get projectManager(): string {
-        if (this.projectCatalogItem != null && this.projectCatalogItem.project.owner_type === OwnerType.User
-            && this.projectCatalogItem.manager != null) {
-            return this.projectCatalogItem.manager.name;
+    get projectOwnerInfo(): string {
+        if (this.projectCatalogItem != null ) {
+            // ownerInfo n'est plus nullable, il renvoie [Utilisateur inconnu] si user not found (RUDI-2408)
+            return this.projectCatalogItem?.ownerInfo?.name;
         }
         return '';
     }

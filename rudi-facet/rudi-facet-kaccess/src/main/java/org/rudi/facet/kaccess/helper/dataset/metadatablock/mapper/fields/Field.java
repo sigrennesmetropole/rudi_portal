@@ -4,18 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.NotNull;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.bean.FieldTypeClass;
-import org.rudi.facet.dataverse.fields.FieldSpec;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,17 +33,12 @@ import java.util.stream.Collectors;
  * }
  * }</pre>
  */
-abstract class Field extends DatasetMetadataBlockElementField {
+abstract class Field {
 
-	@Nullable
-	Field get(FieldSpec valueFieldSpec) {
-		if (getTypeClass() == FieldTypeClass.COMPOUND && !isMultiple()) {
-			final HashMap<?, ?> valueFields = (HashMap<?, ?>) getValue();
-			final Object valueField = valueFields.get(valueFieldSpec.getName());
-			return createFieldFrom(valueField);
-		}
-		throw new NotImplementedException(String.format("Field extraction not implemented for field : %s.%s", getTypeName(), valueFieldSpec.getName()));
-	}
+	public abstract String getTypeName();
+	public abstract FieldTypeClass getTypeClass();
+	public abstract Boolean getMultiple();
+	public abstract Object getValue();
 
 	@Nullable
 	static Field createFieldFrom(Object valueFieldObject) {
@@ -81,26 +78,62 @@ abstract class Field extends DatasetMetadataBlockElementField {
 	}
 
 	@Nullable
+	UUID getValueAsUUID() {
+		final Object jsonValue = getValue();
+		return jsonValue == null ? null : UUID.fromString(jsonValue.toString());
+	}
+
+	@Nullable
 	Boolean getValueAsBoolean() {
-		final String jsonValue = getValueAsString();
+		final var jsonValue = getValueAsString();
 		return jsonValue == null ? null : Boolean.valueOf(jsonValue);
 	}
 
 	@Nullable
 	BigDecimal getValueAsBigDecimal() {
-		final String jsonValue = getValueAsString();
+		final var jsonValue = getValueAsString();
 		return jsonValue == null ? null : new BigDecimal(jsonValue);
+	}
+
+	Long getValueAsLong() {
+		return getValueWith(Long::valueOf);
 	}
 
 	@Nullable
 	<T> T getValueAs(Class<T> targetType, ObjectMapper objectMapper) throws DataverseMappingException {
-		final JavaType javaType = objectMapper.getTypeFactory().constructType(targetType);
+		final var javaType = objectMapper.getTypeFactory().constructType(targetType);
 		return getValueAs(javaType, objectMapper);
 	}
 
 	@Nullable
+	<T> List<T> getValueAsListOf(Class<T> targetType, ObjectMapper objectMapper) throws DataverseMappingException {
+		final var javaType = objectMapper.getTypeFactory().constructParametricType(List.class, targetType);
+		return getValueAs(javaType, objectMapper);
+	}
+
+	@Nullable
+	MapOfFields getValueAsMapOfFields() {
+		final Object value = getValue();
+		if (value == null) {
+			return null;
+		}
+		final var valueAsMap = (Map<String, Object>) value;
+		return MapOfFields.from(valueAsMap);
+	}
+
+	@Nonnull
+	MultipleFieldValue getValueAsMultipleFieldValue() {
+		final Object value = getValue();
+		if (value == null) {
+			return MultipleFieldValue.empty();
+		}
+		final var valueAsListOfMaps = (List<Map<String, Object>>) value;
+		return MultipleFieldValue.from(valueAsListOfMaps);
+	}
+
+	@Nullable
 	private <T> T getValueAs(JavaType javaType, ObjectMapper objectMapper) throws DataverseMappingException {
-		final String jsonValue = getValueAsString();
+		final var jsonValue = getValueAsString();
 		if (jsonValue == null) {
 			return null;
 		}
@@ -111,11 +144,24 @@ abstract class Field extends DatasetMetadataBlockElementField {
 		}
 	}
 
-	@NotNull <E> E getValueWith(Function<String, E> valueOf) {
-		final String valueAsString = getValueAsString();
+	@Nonnull <E extends Enum<E>> E getValueAsEnumWith(Function<String, E> valueOf) {
+		final var valueAsString = getValueAsString();
 		if (valueAsString == null) {
 			throw new IllegalArgumentException("Unexpected null value for Enum in field : " + getTypeName());
 		}
 		return valueOf.apply(valueAsString);
+	}
+
+	@Nullable <E> E getValueWith(Function<String, E> valueOf) {
+		final var valueAsString = getValueAsString();
+		if (valueAsString == null) {
+			return null;
+		}
+		return valueOf.apply(valueAsString);
+	}
+
+	@Nullable
+	OffsetDateTime getValueAsOffsetDateTime(DateTimeMapper dateTimeMapper) {
+		return getValueWith(dateTimeMapper::fromDataverseTimestamp);
 	}
 }

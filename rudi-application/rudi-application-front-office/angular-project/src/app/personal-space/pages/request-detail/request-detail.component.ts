@@ -1,13 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {BreakpointObserverService} from '../../../core/services/breakpoint-observer.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {injectDependencies} from '../../../shared/utils/task-utils';
-import {LinkedDatasetTaskDependencyFetchers, LinkedDatasetTaskService} from '../../../core/services/linked-dataset-task.service';
-import {Moment} from 'moment';
+import {
+    LinkedDatasetDependencies,
+    LinkedDatasetTask,
+    LinkedDatasetTaskDependencyFetchers,
+    LinkedDatasetTaskService,
+    ProjektTaskSearchCriteria
+} from '../../../core/services/linked-dataset-task.service';
 import * as moment from 'moment';
+import {Moment} from 'moment';
+import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {MatDialog} from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {SnackBarService} from '../../../core/services/snack-bar.service';
+import {TaskDetailComponent} from '../../../shared/task-detail/task-detail.component';
+import {LinkedDataset} from '../../../projekt/projekt-model';
 
 /**
  * les dépendances de la page globale : détail de la demande
@@ -24,18 +34,24 @@ export interface RequestDetailDependencies {
     templateUrl: './request-detail.component.html',
     styleUrls: ['./request-detail.component.scss']
 })
-export class RequestDetailComponent implements OnInit {
+export class RequestDetailComponent
+    extends TaskDetailComponent<LinkedDataset, LinkedDatasetDependencies, LinkedDatasetTask, ProjektTaskSearchCriteria>
+    implements OnInit {
 
     headingLoading: boolean;
     dependencies: RequestDetailDependencies;
 
     constructor(private readonly route: ActivatedRoute,
                 private readonly router: Router,
-                private readonly breakpointObserverService: BreakpointObserverService,
-                private readonly linkedDatasetTaskService: LinkedDatasetTaskService,
+                taskWithDependenciesService: LinkedDatasetTaskService,
                 private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers,
-                private readonly iconRegistry: MatIconRegistry,
-                private readonly sanitizer: DomSanitizer) {
+                iconRegistry: MatIconRegistry,
+                sanitizer: DomSanitizer,
+                dialog: MatDialog,
+                translateService: TranslateService,
+                snackBarService: SnackBarService,
+    ) {
+        super(dialog, translateService, snackBarService, taskWithDependenciesService);
         iconRegistry.addSvgIcon(
             'request',
             sanitizer.bypassSecurityTrustResourceUrl('assets/icons/key_icon_circle.svg'));
@@ -59,7 +75,8 @@ export class RequestDetailComponent implements OnInit {
     set taskId(idTask: string) {
         if (idTask) {
             this.headingLoading = true;
-            this.linkedDatasetTaskService.getTask(idTask).pipe(
+            this.taskWithDependenciesService.getTask(idTask).pipe(
+                tap(taskWithDependencies => this.taskWithDependencies = taskWithDependencies),
                 injectDependencies({
                     dataset: this.linkedDatasetDependencyFetchers.dataset,
                     project: this.linkedDatasetDependencyFetchers.project,
@@ -87,4 +104,9 @@ export class RequestDetailComponent implements OnInit {
             });
         }
     }
+
+    protected goBackToList(): Promise<boolean> {
+        return this.router.navigate(['/personal-space/received-access-requests']);
+    }
+
 }

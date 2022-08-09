@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AccessConditionValidatorTest {
+class AccessConditionValidatorTest {
 
 	@InjectMocks
 	private AccessConditionValidator accessConditionValidator;
@@ -31,7 +31,7 @@ public class AccessConditionValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation d'un objet AccessCondition vide")
-	public void testValidateAccessConditionWithEmptyValue() {
+	void testValidateAccessConditionWithEmptyValue() {
 		Metadata metadata = new Metadata().accessCondition(null);
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				accessConditionValidator.validateMetadata(metadata);
@@ -47,7 +47,7 @@ public class AccessConditionValidatorTest {
 
 	@Test
 	@DisplayName("Test pour s'assurer de la validation de la licence d'un objet AccessCondition")
-	public void testValidateAccessConditionWithCheckingLicence() {
+	void testValidateAccessConditionWithCheckingLicence() {
 		MetadataAccessCondition accessCondition = new MetadataAccessCondition().licence(new Licence());
 		when(licenceValidator.validate(accessCondition.getLicence())).thenReturn(Collections.emptySet());
 

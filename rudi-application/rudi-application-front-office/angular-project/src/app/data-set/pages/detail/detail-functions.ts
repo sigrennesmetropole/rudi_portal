@@ -62,6 +62,10 @@ export class DetailFunctions {
         return media && media.media_type === MediaTypeEnum.Series;
     }
 
+    isMediaTypeService(media: Media): boolean {
+        return media && media.media_type === MediaTypeEnum.Service;
+    }
+
     isLicenceTypeStandard(licence: Licence): boolean {
         return licence && licence.licence_type === LicenceTypeEnum.Standard;
     }

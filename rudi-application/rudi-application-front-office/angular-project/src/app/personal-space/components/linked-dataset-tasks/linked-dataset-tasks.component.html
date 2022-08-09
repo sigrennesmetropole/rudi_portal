@@ -1,4 +1,3 @@
-
 <app-loader
     [active]="searchIsRunning">
 </app-loader>
@@ -12,7 +11,7 @@
 <!-- On utilise hidden à la place de *ngIf pour éviter des bugs avec mat-table : https://stackoverflow.com/a/56127490/1655155 -->
 <div [hidden]="!(requestsToStudy?.length)">
 
-    <table mat-table [dataSource]="dataSource" matSort matSortActive="receivedDate" matSortDirection="desc">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="receivedDate" matSortDirection="desc" class="cursor">
 
         <ng-container matColumnDef="receivedDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">{{'personalSpace.receivedAccessRequests.receivedDate'|translate}}</th>
@@ -46,6 +45,6 @@
         <tr mat-row *matRowDef="let request; columns: requestsToStudyDisplayedColumns;" [routerLink]="['..', 'request-detail', request.taskId]"></tr>
     </table>
 
-    <mat-paginator [pageSize]="10"></mat-paginator>
+    <app-paginator [pageSize]="10"></app-paginator>
 
 </div>

@@ -24,7 +24,7 @@ class InternalFieldSpec extends ChildFieldSpec {
 	}
 
 	@Override
-	protected Class<?> getType() {
+	public Class<?> getType() {
 		return null;
 	}
 
@@ -39,7 +39,8 @@ class InternalFieldSpec extends ChildFieldSpec {
 	}
 
 	@Override
-	@Nullable String getDescription() {
+	@Nullable
+	public String getDescription() {
 		return null;
 	}
 

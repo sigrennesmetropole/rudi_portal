@@ -3,6 +3,7 @@ package org.rudi.facet.dataverse.fields.generators;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.FieldSpec;
+import org.rudi.facet.dataverse.utils.MessageUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -20,7 +21,11 @@ public class FieldGenerator {
 		final boolean multiple = spec.isMultiple();
 		checkArgs(multiple, value);
 		if (isEmpty(value)) {
-			return null;
+			if (spec.isRequired()) {
+				throw new NullPointerException(MessageUtils.buildErrorMessageRequiredMandatoryAttributes(spec));
+			} else {
+				return null;
+			}
 		}
 		return new DatasetMetadataBlockElementField()
 				.typeName(spec.getName())
@@ -52,6 +57,9 @@ public class FieldGenerator {
 				throw new IllegalArgumentException(
 						String.format("Field is not multiple but %d arguments were supplied", values.size()));
 			}
+		}
+		if (isMultiple && value != null && !(value instanceof List)) {
+			throw new IllegalArgumentException(String.format("Field is multiple but value is instance of %s instead of List", value.getClass()));
 		}
 	}
 

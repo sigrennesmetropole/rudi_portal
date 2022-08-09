@@ -190,7 +190,8 @@
 				"type": "object",
 				"required": [
 					"name",
-					"openingDate"
+					"openingDate",
+					"password"
 				],
 				"allOf": [
 					{
@@ -201,6 +202,10 @@
 							"name": {
 								"description": "Nom",
 								"type": "string"
+							},
+							"password": {
+								"type": "string",
+								"description": "Mot de passe de l'utilisateur ROBOT associé à l'organisation"
 							},
 							"openingDate": {
 								"type": "string",

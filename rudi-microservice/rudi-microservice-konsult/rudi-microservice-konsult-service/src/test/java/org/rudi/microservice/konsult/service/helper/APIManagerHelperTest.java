@@ -1,5 +1,12 @@
 package org.rudi.microservice.konsult.service.helper;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +20,6 @@ import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.helper.ACLHelper;
-import org.rudi.facet.apimaccess.bean.API;
-import org.rudi.facet.apimaccess.bean.APIInfo;
-import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
@@ -34,13 +38,9 @@ import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelp
 import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -224,7 +224,7 @@ class APIManagerHelperTest {
 
 		assertThatThrownBy(() -> apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isInstanceOf(AccessDeniedMetadataMediaException.class)
-				.hasMessage("L'utilisateur mpokora ne peut pas accéder au média media_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80 du jeu de données global_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b");
+				.hasMessage("L'utilisateur mpokora ne peut pas accéder au média media_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b du jeu de données global_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80");
 	}
 
 	@Test
@@ -237,7 +237,7 @@ class APIManagerHelperTest {
 		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
 				.as("Une exception est lancée si on ne retrouve pas les infos sur l'API")
 				.isInstanceOf(APINotFoundException.class)
-				.hasMessage("Aucune API ne correspond aux informations globalId = null et mediaId = ac27b14c-4b9e-4ee1-9436-0d603dd05137")
+				.hasMessage("Aucune API ne correspond à l'information mediaId = ac27b14c-4b9e-4ee1-9436-0d603dd05137")
 				;
 	}
 

@@ -3,14 +3,7 @@
  */
 package org.rudi.microservice.projekt.service.helper.linkeddataset;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-
-import javax.script.ScriptContext;
-
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +20,7 @@ import org.rudi.facet.kaccess.bean.Organization;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.organization.bean.OrganizationMember;
 import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.service.helper.AbstractProjektWorkflowContext;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
@@ -36,7 +30,12 @@ import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.script.ScriptContext;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author FNI18300
@@ -144,6 +143,15 @@ public class LinkedDatasetWorkflowContext
 				.findProjectByLinkedDatasetUuid(eMailDataModel.getAssetDescription().getUuid());
 		if (projectEntity != null) {
 			eMailDataModel.addData("project", projectEntity);
+		}
+
+		try {
+			org.rudi.facet.organization.bean.Organization producer = organizationHelper.getOrganization(eMailDataModel.getAssetDescription().getDatasetOrganisationUuid());
+			if(producer != null) {
+				eMailDataModel.addData("producer", producer);
+			}
+		} catch (GetOrganizationException goe) {
+			log.error("Error when retrieving producer infos", goe);
 		}
 	}
 

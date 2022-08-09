@@ -41,5 +41,22 @@
             "licence_type": "STANDARD",
             "licence_label": "licence_Apache-2.0"
         }
-    }
+    },
+    "available_formats": [
+        {
+            "media_type": "FILE",
+            "media_id": "d1e74afb-58aa-4b63-94ee-02688f2b91bc",
+            "media_caption": "On est obligé de mettre au moins un média pour respecter le swagger",
+            "connector": {
+                "url": "www.connector1.org",
+                "interface_contract": "interface contrat 1"
+            },
+            "file_type": "text/csv",
+            "file_size": 50,
+            "checksum": {
+                "algo": "MD5",
+                "hash": "SHA-256"
+            }
+        }
+    ]
 }

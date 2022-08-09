@@ -17,6 +17,15 @@ export class SearchCountComponent implements OnInit {
     @Input()
     noResultMessage: string;
 
+    @Input()
+    hasLink = false;
+
+    @Input()
+    routerLink: string;
+
+    @Input()
+    hyperLink: string;
+
     constructor(
         private readonly translateService: TranslateService,
     ) {

@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-<title>TODO</title>
-<style type="text/css">
-body {font-family: Montserrat; font-size:12px; color:#004680;}
-a {font-weight: bold;color:#004680;}
-a:hover { color:#004680; }
-</style>
-</head>
-<body style="font-family:Montserrat;font-size:12px;	color:#004680;">
-TODO
-</body>
+    <head>
+        <title>TODO</title>
+        <style type="text/css">
+            body {font-family: Montserrat; font-size:12px; color:#004680;}
+            a {font-weight: bold;color:#004680;}
+            a:hover { color:#004680; }
+        </style>
+    </head>
+    <body style="font-family:Montserrat;font-size:12px;	color:#004680;">
+        <div>
+            <p>Bonjour, </p>
+            <p>
+                Le producteur de données ${producer.getName()} a refusé votre demande d'accès au jeu de données
+                ${asset.description} pour cette raison : ${messageToProjectOwner}. <p>
+            <p>
+                Vous pouvez contacter l'équipe Rudi afin d'échanger sur la procédure à suivre pour reformuler une demande en cliquant
+                <a href="https://rudi.datarennes.fr/portail-beta-contact/">ici</a>.
+            </p>
+            <p>
+                A très bientôt, <br>
+                L'équipe RUDI <br>
+                <a href="${urlServer}">${urlServer}</a>
+            </p>
+        </div>
+    </body>
 </html>

@@ -1,14 +1,14 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
-
-
 import {MapComponent} from './components/map/map.component';
 import {ProducerNamesFilterFormComponent} from './components/filter-forms/producer-names-filter-form/producer-names-filter-form.component';
 import {DataSetInfosComponent} from './components/data-set-infos/data-set-infos.component';
 import {OrderFilterFormComponent} from './components/filter-forms/order-filter-form/order-filter-form.component';
 import {DatesFilterFormComponent} from './components/filter-forms/dates-filter-form/dates-filter-form.component';
-import {RestrictedAccessFilterFormComponent} from './components/filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
+import {
+    RestrictedAccessFilterFormComponent
+} from './components/filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
 import {DetailComponent} from './pages/detail/detail.component';
 import {OrderComponent} from './components/order/order.component';
 import {ThemesFilterFormComponent} from './components/filter-forms/themes-filter-form/themes-filter-form.component';
@@ -22,10 +22,11 @@ import {ListComponent} from './pages/list/list.component';
 import {DataSetRoutingModule} from './data-set-routing.module';
 import {CoreModule} from '../core/core.module';
 import {ListContainerComponent} from './components/list-container/list-container.component';
-import {DataSetCardItemComponent} from './components/data-set-card-item/data-set-card-item.component';
 import {GetBackendPropertyPipe} from '../shared/get-backend-property.pipe';
-import { SelectProjectDialogComponent } from './components/select-project-dialog/select-project-dialog.component';
-import {SuccessRestrictedRequestDialogComponent} from './components/success-restricted-request-dialog/success-restricted-request-dialog.component';
+import {SelectProjectDialogComponent} from './components/select-project-dialog/select-project-dialog.component';
+import {
+    SuccessRestrictedRequestDialogComponent
+} from './components/success-restricted-request-dialog/success-restricted-request-dialog.component';
 
 
 @NgModule({
@@ -48,10 +49,8 @@ import {SuccessRestrictedRequestDialogComponent} from './components/success-rest
             SearchBoxComponent,
             ThemesFilterFormComponent,
             ListContainerComponent,
-            DataSetCardItemComponent,
             SelectProjectDialogComponent,
             SuccessRestrictedRequestDialogComponent
-
         ],
     imports: [
         CommonModule,
@@ -60,8 +59,7 @@ import {SuccessRestrictedRequestDialogComponent} from './components/success-rest
         DataSetRoutingModule
     ],
     exports: [
-        ListContainerComponent,
-        DataSetCardItemComponent
+        ListContainerComponent
     ],
     entryComponents: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

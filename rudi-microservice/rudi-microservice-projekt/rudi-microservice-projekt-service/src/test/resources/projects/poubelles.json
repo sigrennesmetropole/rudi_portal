@@ -25,8 +25,21 @@
 		"order": 2
 	},
 	"target_audiences": [
-		"Éboueurs",
-		"Poubellologues"
+		{
+			"uuid": "0081fc3b-f11c-448a-99b4-57cc994ca1b2",
+			"code": "eboueurs",
+			"label": "Eboueurs",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		},{
+			"uuid": "193e5179-bde1-47a5-8e41-f3f453ceee9d",
+			"code": "poubellologues",
+			"label": "Poubellologues",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		}
 	],
 	"territorial_scale": {
 		"uuid": "192c952a-c06e-425a-865e-57d9f9fd378d",

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
 		"org.rudi.common.storage", "org.rudi.facet.acl", "org.rudi.facet.dataverse", "org.rudi.facet.kmedia",
 		"org.rudi.microservice.strukture.facade", "org.rudi.microservice.strukture.service",
-		"org.rudi.microservice.strukture.storage" })
+		"org.rudi.microservice.strukture.storage", "org.rudi.facet.projekt.helper" })
 @EnableEurekaClient
 @PropertySource(value = { "classpath:strukture/strukture-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {

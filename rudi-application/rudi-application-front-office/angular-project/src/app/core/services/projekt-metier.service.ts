@@ -11,46 +11,40 @@ import {
     ProjectSearchCriteria,
     ProjectType,
     Support,
+    TargetAudience,
     TerritorialScale
 } from '../../projekt/projekt-model/';
-import {ProjektService} from '../../projekt/projekt-api';
+import {OwnerInfo, ProjektService} from '../../projekt/projekt-api';
 import {KindOfData} from '../../api-kmedia';
 import {Base64EncodedLogo, ImageLogoService} from './image-logo.service';
-import {map, mapTo, switchMap} from 'rxjs/operators';
+import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
 import {PageResultUtils} from '../../shared/utils/page-result-utils';
 import {Metadata} from '../../api-kaccess';
 import {KonsultMetierService} from './konsult-metier.service';
 import {DataRequestItem} from '../../project/model/data-request-item';
 import {RequestDetails} from '../../shared/models/request-details';
-
-import {UserInfo} from '../../project/model/user-info';
+import {DateTimeUtils} from '../../shared/utils/date-time-utils';
+import {ErrorWithCause} from '../../shared/models/error-with-cause';
 
 const {firstElementOrThrow} = PageResultUtils;
 
-export type Order = 'title' | '-title' | 'updatedDate' | '-updatedDate';
+export type Order = 'title' | '-title' | 'updatedDate' | '-updatedDate' | 'code' | '-code';
 export const ORDERS: Order[] = ['title', '-title', 'updatedDate', '-updatedDate'];
 export const DEFAULT_ORDER: Order = 'title';
 
-export interface ProjectPublicCible {
-    id: string;
-    viewValue?: string;
-}
-
-export const PUBLIC_CIBLE = [
-    {id: '0', viewValue: 'Cible1'},
-    {id: '1', viewValue: 'Cible2'},
-    {id: '2', viewValue: 'Cible3'},
-    {id: '3', viewValue: 'Cible4'}
-];
-
 const DEFAULT_LINKED_DATASET_STATUS: LinkedDatasetStatus = 'VALIDATED';
 const RESTRICTED_LINKED_DATASET_STATUS: LinkedDatasetStatus = 'DRAFT';
+export const DEFAULT_TARGET_AUDIENCE_ORDER: Order = 'code';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProjektMetierService {
-    publicCible: ProjectPublicCible[] = PUBLIC_CIBLE;
+
+    /**
+     * Chaîne de caractère utilisée pour un utilisateur inconnu dans RUDI
+     */
+    static UNKOWN_USER_INFO_NAME = '[Utilisateur inconnu]';
 
     constructor(
         private readonly projektService: ProjektService,
@@ -84,6 +78,22 @@ export class ProjektMetierService {
                 offset,
                 owner_uuids: [userUuid],
             }));
+    }
+
+    /**
+     * Récupération des projets de l'utilisateur fourni
+     * @param myUserUuid uuid de l'utilisateur
+     */
+    getMyAndOrganizationsProjects(offset?: number, limit?: number, order?: string): Observable<PagedProjectList> {
+        return this.projektService.getMyProjects(offset, limit, order);
+    }
+
+    /**
+     * Récupération des projets de l'utilisateur connecté et ceux de son(ses) organisation(s) sans pagination
+     */
+    getMyAndOrganizationsProjectsWithoutPagination(): Observable<Project[]> {
+        return PageResultUtils.fetchAllElementsUsing(offset =>
+            this.getMyAndOrganizationsProjects(offset));
     }
 
     /**
@@ -167,10 +177,12 @@ export class ProjektMetierService {
     }
 
     /**
-     * Function to get public cible list
+     * Appel API : récupération de tous les publics cible (plusieurs appels back au besoin)
      */
-    searchProjectPublicCible(): Observable<ProjectPublicCible[]> {
-        return of(this.publicCible);
+    searchProjectPublicCible(): Observable<TargetAudience[]> {
+        return PageResultUtils.fetchAllElementsUsing(offset =>
+            this.projektService.searchTargetAudiences(null, offset, DEFAULT_TARGET_AUDIENCE_ORDER)
+        );
     }
 
     /**
@@ -209,7 +221,7 @@ export class ProjektMetierService {
                 comment: requestDetails?.comment,
                 linked_dataset_status: requestDetails ? RESTRICTED_LINKED_DATASET_STATUS : DEFAULT_LINKED_DATASET_STATUS,
                 object_type: 'LinkedDataset',
-                end_date: requestDetails && requestDetails.endDate ? requestDetails.endDate.toISOString(false) : null
+                end_date: DateTimeUtils.extractLocalDateTimeToISOString(requestDetails?.endDate)
             };
             return this.projektService.linkProjectToDataset(projectUuid, linkedDataset);
         });
@@ -275,6 +287,14 @@ export class ProjektMetierService {
      */
     getLinkedDatasets(uuid: string): Observable<LinkedDataset[]> {
         return this.projektService.getLinkedDatasets(uuid);
+    }
+
+    /**
+     * Récupération des demandes d'accès aux JDDs ouverts ou restreints validés pour un projet
+     * @param uuid l'UUID d'un projet JDD qui contient les liens
+     */
+    getValidatedLinkedDatasets(uuid: string): Observable<LinkedDataset[]> {
+        return this.projektService.getLinkedDatasets(uuid, 'VALIDATED');
     }
 
     /**
@@ -390,20 +410,34 @@ export class ProjektMetierService {
         return forkJoin(observables).pipe(mapTo(true));
     }
 
-    getUsersInfos(usersUuids: string[]): Observable<UserInfo[]> {
-        const ownersInfo$ = usersUuids.map(ownerUuid => this.projektService.getOwnerInfo(OwnerType.User, ownerUuid).pipe(
-            map(ownerInfo => ({
-                uuid: ownerUuid,
-                ...ownerInfo,
-            } as UserInfo))
-        ));
-        return forkJoin(ownersInfo$).pipe(
-            map(ownersInfos =>
-                ownersInfos.reduce((userInfos, userInfo) => {
-                    userInfos.push(userInfo);
-                    return userInfos;
-                }, [] as UserInfo[])
-            )
+    /**
+     * Récupère le nombre de total de jeu de données attachés au projet
+     * @param projectUuid l'uuid du projet
+     */
+    getNumberOfRequests(projectUuid: string): Observable<number> {
+        return this.projektService.getNumberOfRequests(projectUuid);
+    }
+
+    /**
+     * Récupère les informations sur le porteur de projet :
+     * - Si projet utilisateur : renvoi du nom utilisateur
+     * - Si projet organisation : renvoi du nom de l'organisation
+     *
+     * Si on ne trouve pas d'informations on renvoie un OwnerInfo sans nom
+     *
+     * @param ownerType quel est le type du porteur de projet
+     * @param ownerUuid l'uuid du porteur de projet, soit un UUID d'organisation soit un UUID d'utilisateur
+     */
+    getOwnerInfo(ownerType: OwnerType, ownerUuid: string): Observable<OwnerInfo> {
+        return this.projektService.getOwnerInfo(ownerType, ownerUuid).pipe(
+            catchError((error) => {
+                const errorString = 'Le porteur de projet de type : ' +  ownerType +
+                    ' et d\'uuid : ' + ownerUuid + ' n\'existe pas ou plus dans RUDI';
+                const errorWithCause = new ErrorWithCause(errorString, error);
+                console.error(errorWithCause);
+                // si exception renvoyée par le back, on injecte [Utilisateur inconnu] dans la dépendance
+                return of({name: ProjektMetierService.UNKOWN_USER_INFO_NAME} as OwnerInfo);
+            })
         );
     }
 }

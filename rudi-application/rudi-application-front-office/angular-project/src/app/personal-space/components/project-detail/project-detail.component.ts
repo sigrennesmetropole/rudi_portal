@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Project} from '../../../projekt/projekt-model';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
-import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
@@ -10,22 +9,15 @@ import {TranslateService} from '@ngx-translate/core';
 import {PageTitleService} from '../../../core/services/page-title.service';
 import {Base64EncodedLogo} from '../../../core/services/image-logo.service';
 import {Observable} from 'rxjs';
-import {
-    Indicators,
-    NewDatasetRequest,
-    Task
-} from '../../../projekt/projekt-api';
+import {Indicators, NewDatasetRequest, Task} from '../../../projekt/projekt-api';
 import {TaskMetierService} from '../../../core/services/task-metier.service';
-import {injectDependencies} from '../../../shared/utils/task-utils';
 import {
     LinkedDatasetTaskDependencyFetchers,
     LinkedDatasetTaskService,
     OpenLinkedDatasetAccessRequest
 } from '../../../core/services/linked-dataset-task.service';
-import {map, switchMap, tap} from 'rxjs/operators';
-import * as moment from 'moment';
-
-const ICON_INFO = '../assets/icons/icon_info_default_color.svg';
+import {map, switchMap} from 'rxjs/operators';
+import {injectDependencies} from '../../../shared/utils/dependencies-utils';
 
 /**
  * Les dépendances qu'on doit afficher dans cet onglet
@@ -79,7 +71,6 @@ export class ProjectDetailComponent implements OnInit {
     dependencies: ProjectDependencies;
 
     constructor(
-        private readonly matIconRegistry: MatIconRegistry,
         private readonly domSanitizer: DomSanitizer,
         private readonly breakpointObserverService: BreakpointObserverService,
         private readonly route: ActivatedRoute,
@@ -93,10 +84,6 @@ export class ProjectDetailComponent implements OnInit {
         private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers
     ) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
-        this.matIconRegistry.addSvgIcon(
-            'icon-info',
-            this.domSanitizer.bypassSecurityTrustResourceUrl(ICON_INFO)
-        );
     }
 
     ngOnInit(): void {
@@ -130,19 +117,17 @@ export class ProjectDetailComponent implements OnInit {
      * @private
      */
     private loadProjectDependencies(taskUuid: string): Observable<ProjectDependencies> {
-        // TODO RUDI-2273 bug chargement infini à corriger autrement qu'en décalant les injectDependencies
         return this.linkedDatasetTaskService.getTask(taskUuid).pipe(
             injectDependencies({
                 dataset: this.linkedDatasetDependencyFetchers.dataset,
-                project: this.linkedDatasetDependencyFetchers.project,
+                project: this.linkedDatasetDependencyFetchers.project
             }),
             injectDependencies({
                 otherLinkedDatasets: this.linkedDatasetDependencyFetchers.otherLinkedDatasets,
-                otherIndicators: this.linkedDatasetDependencyFetchers.otherIndicators
-            }),
-            injectDependencies({
+                otherIndicators: this.linkedDatasetDependencyFetchers.otherIndicators,
                 newDatasetRequests: this.linkedDatasetDependencyFetchers.newDatasetRequests,
-                projectLogo: this.linkedDatasetDependencyFetchers.projectLogo
+                projectLogo: this.linkedDatasetDependencyFetchers.projectLogo,
+                linkedDatasetsOpened: this.linkedDatasetDependencyFetchers.linkedDatasetsOpened,
             }),
             map(({task, asset, dependencies}) => {
                 return {
@@ -155,45 +140,5 @@ export class ProjectDetailComponent implements OnInit {
                 };
             })
         );
-    }
-
-    /**
-     * permet de récupérer la une date d'un champ de l'objet projet au format MM/YYYY
-     * @param fieldName le nom du champ date de l'objet project
-     * @private
-     */
-    private getProjectDate(fieldName: string): string {
-        if (this.dependencies && this.dependencies.project && this.dependencies.project[fieldName] != null) {
-            return moment(this.dependencies.project[fieldName]).format('MM/YYYY');
-        }
-
-        return '-';
-    }
-
-    /**
-     * Récupère la date de début du projet au format MM/YYYY
-     */
-    public getProjectDateDebut(): string {
-        return this.getProjectDate('expected_completion_start_date');
-    }
-
-    /**
-     * Récupère la date de fin du projet au format MM/YYYY
-     */
-    public getProjectDateFin(): string {
-        return this.getProjectDate('expected_completion_end_date');
-    }
-
-    /**
-     * Récupération d'une chaîne de caractère représentant les niveaux d'accompagnements souhaités
-     */
-    public getDesiredSupports(): string {
-        if (this.dependencies && this.dependencies.project && this.dependencies.project.desired_supports
-            && this.dependencies.project.desired_supports.length > 0) {
-            const labels = this.dependencies.project.desired_supports.map(support => support.label);
-            return labels.join(', ');
-        }
-
-        return '-';
     }
 }

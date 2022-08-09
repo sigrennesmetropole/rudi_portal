@@ -1,0 +1,23 @@
+{
+	"$id": "https://guides.dataverse.org/en/latest/api/native-api.html",
+	"title": "Dataverse Dataset",
+	"properties": {
+		"datasetVersion": {
+			"type": "object",
+			"$ref": "#/definitions/DatasetVersion"
+		}
+	},
+	"definitions": {
+		"DatasetVersion": {
+			"properties": {
+				"metadataBlocks": {
+					"type": "object",
+					"$ref": "#/definitions/MetadataBlocks"
+				}
+			}
+		},
+		"MetadataBlocks": {
+			"$ref": "dataverse-metadatablocks.schema.json"
+		}
+	}
+}

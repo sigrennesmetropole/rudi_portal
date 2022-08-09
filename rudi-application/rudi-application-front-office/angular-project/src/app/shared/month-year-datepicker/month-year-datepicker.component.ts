@@ -2,9 +2,9 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import * as moment from 'moment';
 import {Moment} from 'moment';
 import {MatDatepicker} from '@angular/material/datepicker';
-import * as moment from 'moment';
 
 /**
  * Format MM/YYYY appliqué au DatePicker
@@ -70,42 +70,36 @@ export class MonthYearDatepickerComponent implements OnInit {
     @ViewChild('datepicker')
     public datepickerPopup: MatDatepicker<Moment>;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
-        // on souhaite que la valeur du Control soit toujours au premier jour du mois si on donne une valeur au component
         const value: Moment = this.formGroup.get(this.controlName).value;
-        if (value && value.date() !== 1) {
-            const normalized: Moment = moment().year(value.year()).month(value.month()).date(1);
-            this.formGroup.get(this.controlName).setValue(normalized);
+        if (value) {
+            this.ctrlValue = value;
         }
     }
 
-    /**
-     * Méthode appelée sur seléction de l'année dans le Datepicker
-     * @param normalizedYear la valeur Moment de la date choisie
-     */
-    chosenYearHandler(normalizedYear: Moment): void {
-        const ctrlValue = moment();
-
-        // On se met au 1er jour du 1er mois de l'année choisi
-        ctrlValue.year(normalizedYear.year()).date(1);
-        this.formGroup.get(this.controlName).setValue(ctrlValue);
-        this.formGroup.get(this.controlName).markAsDirty();
+    private set ctrlValue(date: Moment) {
+        // on souhaite que la valeur du Control soit toujours au premier jour du mois si on donne une valeur au component
+        const normalized: Moment = date.startOf('month');
+        const control = this.formGroup.get(this.controlName);
+        control.setValue(normalized);
+        control.markAsDirty();
     }
 
     /**
-     * Méthode appelée sur selection du mois dans le Datepicker
-     * @param normalizedMonth la valeur Moment de la date choisie
+     * Méthode appelée sur sélection de l'année dans le Datepicker
+     * @param date la valeur Moment de la date choisie
      */
-    chosenMonthHandler(normalizedMonth: Moment): void {
-        const ctrlValue = moment();
+    chosenYearHandler(date: Moment): void {
+        const currentMonth = moment().month();
+        this.ctrlValue = date.month(currentMonth);
+    }
 
-        // On se met au 1er jour du mois de l'année choisi
-        ctrlValue.year(normalizedMonth.year()).month(normalizedMonth.month()).date(1);
-        this.formGroup.get(this.controlName).setValue(ctrlValue);
-        this.formGroup.get(this.controlName).markAsDirty();
+    /**
+     * Méthode appelée sur sélection du mois dans le Datepicker
+     * @param date la valeur Moment de la date choisie
+     */
+    chosenMonthHandler(date: Moment): void {
+        this.ctrlValue = date;
 
         // On ferme le picker pour empêcher la saisie au jour
         this.datepickerPopup.close();

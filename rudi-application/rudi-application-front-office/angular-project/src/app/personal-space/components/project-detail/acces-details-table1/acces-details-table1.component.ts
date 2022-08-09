@@ -77,6 +77,19 @@ export class AccesDetailsTable1Component implements OnInit, AfterViewInit {
         return true;
     }
 
+    isOneToOne(): boolean {
+        return this._otherIndicators.x === 1 && this._otherIndicators.n === 1;
+    }
+    isOneToMany(): boolean {
+        return this._otherIndicators.x === 1 && this._otherIndicators.n > 1;
+    }
+    isManyToOne(): boolean {
+        return this._otherIndicators.x > 1 && this._otherIndicators.n === 1;
+    }
+    isManyToMany(): boolean {
+        return this._otherIndicators.x > 1 && this._otherIndicators.n > 1;
+    }
+
     ngAfterViewInit() {
         this.dataSource.sort = this.sort;
     }

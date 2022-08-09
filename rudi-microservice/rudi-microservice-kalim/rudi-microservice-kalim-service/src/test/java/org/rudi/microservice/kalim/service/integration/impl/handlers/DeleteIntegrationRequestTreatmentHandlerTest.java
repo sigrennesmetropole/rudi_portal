@@ -79,7 +79,7 @@ class DeleteIntegrationRequestTreatmentHandlerTest {
 		verifyNoMoreInteractions(datasetService);
 
 		// API is archived
-		verify(apiManagerHelper).archiveAllAPI(integrationRequest, false);
+		verify(apiManagerHelper).archiveAllAPI(integrationRequest);
 	}
 
 	private Metadata buildMetadataToDelete() {
@@ -114,7 +114,7 @@ class DeleteIntegrationRequestTreatmentHandlerTest {
 		verify(datasetService).archiveDataset(metadataToDelete.getDataverseDoi());
 
 		// API is archived
-		verify(apiManagerHelper).archiveAllAPI(integrationRequest, false);
+		verify(apiManagerHelper).archiveAllAPI(integrationRequest);
 	}
 
 }

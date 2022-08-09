@@ -268,7 +268,7 @@
             "title": "Précision sur la demande",
             "description": "Pour accéder à ce jeu de données, des informations supplémentaires peuvent vous être demandées.",
             "comment": "Commentaire",
-            "commentHint": "Vous avez la possibilité d'ajouter un commentaire sur le jeu de données sélectionné, notamment si certaines de ses caractéristiques ne vous conviennent pas tout à fait ou que vous souhaitez apporter des précisions sur son utilisation.",
+            "commentHint": "Vous avez la possibilité d'ajouter un commentaire sur le jeu de données sélectionné, notamment si certaines de ses caractéristiques ne vous conviennent pas tout à fait ou que vous souhaitez apporter des précisions sur son utilisation. 3000 signes maximum sont autorisés",
             "date": "Date de fin d'accès souhaitée",
             "dateHint": "Cette date correspond à la date jusqu'à laquelle vous souhaitez utiliser ce jeu de données dans le cadre de ce projet",
             "dateError": "la date de fin d'accès est obligatoire"
@@ -297,6 +297,7 @@
         "monCompte": "Mon compte",
         "accountMenu": {
             "myAccount": "Mon compte",
+            "myReuses": "Mes réutilisations",
             "receivedLinkedDatasets": "Demandes d'accès reçues"
         }
     },
@@ -385,7 +386,9 @@
         "emailError": "Cette information est obligatoire. Assurez-vous qu'elle respecte ce format : exemple@domaine.com",
         "bytes": "octets",
         "loaderDescription": "Chargement...",
-        "requiredInformation": "Informations obligatoires à renseigner."
+        "requiredInformation": "Informations obligatoires à renseigner.",
+        "requiredInformationError": "Cette information est obligatoire.",
+        "errorMissingFieldAccount": "Un champ obligatoire n'est pas rempli."
     },
     "strengthPassword": {
         "lowerLetters": "Au moins une minuscule",
@@ -505,11 +508,10 @@
     "accountInfo": {
         "nom": "Nom",
         "prenom": "Prénom",
-        "nomAssociation": "Nom d'association",
         "adresseEmail": "Adresse Email",
-        "adressePostal": "Adresse Postale",
-        "numeroTelephone": "Numéro de Téléphone",
-        "role": "Rôle"
+        "myOrganizations": "Mes organisations",
+        "contactUs": "Vous souhaitez créer, modifier ou être rattaché à une organisation ? Contactez-nous en cliquant sur le bouton \"Nous contacter\" ci-dessous",
+        "moreInfo": "Plus d'informations sur les organisations sont disponibles sur"
     },
     "metaData": {
         "description": "Description",
@@ -562,9 +564,11 @@
         "themes": "Thèmes :",
         "themeEtMotCle": "Thème et mots-clés",
         "autre": "autre",
-        "fichier": "Fichier",
+        "file": "Fichier",
+        "service": "API",
         "streaming": "Streaming",
-        "tempsReel": "Temps réel",
+        "documentation": "Documentation",
+        "series": "Temps réel",
         "TypeLicence": "Type de licence",
         "jeuDonneeSimilaire": "Jeux de données similaires",
         "projetMemeTheme": "Projets sur le même thème",
@@ -997,6 +1001,28 @@
             "status": "Statut",
             "endDate": "Fin d’accès"
         },
+        "myProjects": {
+            "title1": "Mes réutilisations",
+            "title2": "d’accès reçues",
+            "tab1": "Mes projets",
+            "tab2": "Mes réutilisations",
+            "noResult": "Vous n'avez pas de nouvelle demande. Vous pouvez consulter l'historique de vos demandes dans l'onglet \"Toutes les demandes\".",
+            "receivedDate": "Reçue le",
+            "datasetTitle": "Titre du jeu de données",
+            "ownerName": "Porteur de projet",
+            "status": "Statut",
+            "endDate": "Fin d’accès",
+            "unknown": "inconnu"
+        },
+        "myReuses": {
+            "updatedDate": "Date de mise à jour",
+            "title": "Titre de la réutilisation",
+            "confidentiality": "Confidentialité",
+            "status": "Statut du projet",
+            "numberOfDataset": "Jeux de données",
+            "noResult": "Vous n'avez pas encore créé de projet ou réutilisation dans Rudi. Les formulaires de création de projet ou de réutilisation sont accessibles en cliquant ",
+            "here": " ici"
+        },
         "project": {
             "project": "Projet",
             "projectTitle": "Titre du projet",
@@ -1008,9 +1034,27 @@
             "scale": "Echelle",
             "territorialScale": "Territoire concerné",
             "desiredSupport": "Accompagnement souhaité",
-            "confidentiality": "Confidentialité du projet",
+            "confidentiality": "Confidentialité",
+            "re-use": "Type de réutilisation",
+            "infosProject": "Informations du projet",
+            "basicInfos": {
+                "projectType": "Type de réutilisation",
+                "creationDate": "Date de création",
+                "updatedDate": "Mise à jour"
+            },
+            "tabs": {
+                "api": "API",
+                "datasets": "Jeux de données",
+                "information": "Information"
+            },
+            "heading": {
+                "projectStatusPrefix": "Projet ⠂"
+            },
             "details": {
                 "othersFromOtherProducers": "+ {x} autres demandes formulées auprès de {n} producteurs",
+                "otherFromOtherProducer": "+ {x} autre demande formulée auprès de {n} producteur",
+                "othersFromOtherProducer": "+ {x} autres demandes formulées auprès de {n} producteur",
+                "otherFromOtherProducers": "+ {x} autre demande formulée auprès de {n} producteurs",
                 "otherDetails": "Autres demandes d’accès reçues",
                 "receive": "Reçue le",
                 "title": "Titre du jeu de données",
@@ -1036,12 +1080,43 @@
             },
             "tabs": {
                 "demand": "Demande",
-                "project": "Projet"
-            },
-            "action": {
-                "accept": "Accepter",
-                "decline": "Refuser"
+                "project": "Projet",
+                "history": "Historique"
             }
+        },
+        "projectApi": {
+            "identificationKey": "Clés d'identification",
+            "explainationText": "Vous trouverez ici vos clés d'identification nécessaires pour requêter des jeux de données en vous authentifiant. De plus amples informations sont disponibles sur ",
+            "explainationTextLink": "doc.rudi.bzh.",
+            "acces": "Accès",
+            "textOwner": "Saisissez le mot de passe de votre compte pour consulter vos clés d’identification (Consumer Key et Consumer Secret).",
+            "textUser": "Saisissez le mot de passe de votre organisation pour consulter vos clés d’identification (Consumer Key et Consumer Secret).",
+            "consult": "Consulter",
+            "password": "Mot de passe",
+            "required": "Champ obligatoire",
+            "consumerKey": "Consumer Key",
+            "consumerSecret": "Consumer Secret",
+            "textConsumerKey": "Votre Consumer Key est le login à renseigner pour vous authentifier lorsque vous requêtez des API.",
+            "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API."
+        },
+        "projectDatasets": {
+            "subscribe": "Souscrire",
+            "errorInitialization": "Erreur lors du chargement des données nécessaires à l'onglet."
+        },
+        "dialogDatasets": {
+            "title": "Souscrire",
+            "description": "Veuillez sélectionner le ou les jeux de données auxquels vous souhaitez souscrire. Plus d'informations sont disponibles sur ",
+            "table-title": "Jeux de données",
+            "link": " doc.rudi.bzh.",
+            "text-owner": "Saisissez le mot de passe de votre compte.",
+            "text-user": "Saisissez le mot de passe de votre organisation."
         }
+    },
+    "task": {
+        "success": "Tâche traitée avec succès.",
+        "error": "Impossible de traiter la tâche, une erreur technique est survenue. Veuillez contacter un administrateur."
+    },
+    "workInProgress": {
+        "text": "En cours de construction..."
     }
 }

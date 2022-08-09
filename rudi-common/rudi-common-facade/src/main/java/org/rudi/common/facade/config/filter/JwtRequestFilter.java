@@ -3,6 +3,15 @@
  */
 package org.rudi.common.facade.config.filter;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -13,14 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Filtre pour les tokens JWT
@@ -119,7 +120,7 @@ public class JwtRequestFilter extends BearerTokenFilter {
 			}
 			// Pour tout autre cas on considère que le token est invalide donc que l'auteur est unauthorized
 			else {
-				LOGGER.warn("Le token n'est pas un token JWT valide");
+				LOGGER.warn("Le token n'est pas un token JWT valide. Veuillez consulter les logs DEBUG précédents de AbstractJwtTokenUtil pour plus d'informations sur la cause de l'erreur.");
 				setTokenIsInvalid(response);
 			}
 		}

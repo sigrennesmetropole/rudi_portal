@@ -23,6 +23,12 @@ export class LoaderComponent implements OnInit {
     @Input() isLight = false;
 
     /**
+     * Indique si le background du loader est transparent
+     * défaut : NON on choisit une couleur light ou dark
+     */
+    @Input() isTransparent = false;
+
+    /**
      * Indique si le loader doit prendre toute la page
      * ou non, défaut oui
      * @type {boolean}
@@ -72,7 +78,13 @@ export class LoaderComponent implements OnInit {
      * @return {boolean}
      */
     public getCssClass(): string {
-        return this.isLight ? 'light' : 'dark';
+        if (this.isLight && !this.isTransparent) {
+            return 'light';
+        } else if (!this.isLight && !this.isTransparent) {
+            return 'dark';
+        }
+
+        return 'transparent';
     }
 
     /**

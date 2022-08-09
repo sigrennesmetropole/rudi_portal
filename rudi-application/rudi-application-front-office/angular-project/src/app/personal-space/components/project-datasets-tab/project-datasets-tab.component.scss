@@ -1,0 +1,14 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.main-container {
+    padding: 2em;
+}
+
+.subscribe-button {
+    @include card-main-button;
+    width: 20em;
+}
+.div-container{
+    margin-bottom: 56px;
+}

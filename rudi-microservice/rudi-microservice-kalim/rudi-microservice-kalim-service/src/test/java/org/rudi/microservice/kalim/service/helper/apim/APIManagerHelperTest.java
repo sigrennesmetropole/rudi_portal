@@ -2,11 +2,7 @@ package org.rudi.microservice.kalim.service.helper.apim;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.rudi.facet.apimaccess.bean.API;
-import org.rudi.facet.apimaccess.bean.APIInfo;
-import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscription;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
@@ -19,6 +15,10 @@ import org.rudi.microservice.kalim.service.KalimSpringBootTest;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
@@ -82,8 +83,8 @@ class APIManagerHelperTest {
 	 * Mock la souscription de l'API dans WSO2
 	 * @return l'API sensée être créée
 	 */
-	private ApplicationAPISubscription subscribeToMockedApiWsO2() {
-		return new ApplicationAPISubscription();
+	private Subscription subscribeToMockedApiWsO2() {
+		return new Subscription();
 	}
 
 	/**
@@ -141,7 +142,7 @@ class APIManagerHelperTest {
 		verify(apIsService, atLeast(1)).createOrUnarchiveAPI(any());
 
 		// On veut vérifier que l'action de souscription à l'API est bien demandée dans WSO2
-		verify(applicationService, atLeast(1)).subscribeAPIToDefaultUserApplication(any(), any());
+		verify(applicationService, atLeast(1)).createDefaultSubscriptions(any(), anyBoolean());
 	}
 
 	@Test

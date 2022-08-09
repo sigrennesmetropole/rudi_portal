@@ -1,7 +1,6 @@
 package org.rudi.microservice.projekt.service.project.impl.fields;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -13,7 +12,6 @@ import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.microservice.projekt.storage.dao.support.SupportDao;
 import org.rudi.microservice.projekt.storage.entity.SupportEntity;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
-import org.rudi.microservice.projekt.storage.entity.project.ProjectStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +22,7 @@ import lombok.val;
 @RequiredArgsConstructor
 class DesiredSupportsProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldProcessor {
 	private final SupportDao supportDao;
+	private final DesiredSupportsEntityReplacer desiredSupportsEntityReplacer = new DesiredSupportsEntityReplacer();
 
 	@Override
 	public void process(@Nullable ProjectEntity project, ProjectEntity existingProject) throws AppServiceException {
@@ -31,34 +30,50 @@ class DesiredSupportsProcessor implements CreateProjectFieldProcessor, UpdatePro
 			return;
 		}
 
-		final Set<SupportEntity> desiredSupports = project.getDesiredSupports();
-		if (project.getProjectStatus() == ProjectStatus.DRAFT && CollectionUtils.isEmpty(desiredSupports)) {
-			throw new MissingParameterException("desired_supports manquant");
-		} else if (CollectionUtils.isEmpty(desiredSupports)) {
-			return;
+		// Les types de support sont obligatoires pour les projets qui ne sont pas des réutilisations
+		if (CollectionUtils.isEmpty(project.getDesiredSupports())) {
+			if (project.isAReuse()) {
+				return;
+			} else {
+				throw new MissingParameterException("desired_supports manquant");
+			}
 		}
 
-		final Set<SupportEntity> existingDesiredSupports = new HashSet<>(desiredSupports.size());
-		for (final SupportEntity desiredSupport : desiredSupports) {
-			final var existingSupport = getExistingSupport(desiredSupport);
-			existingDesiredSupports.add(existingSupport);
-		}
-
-		// Si on est en update (existingProject != nul) alors c'est lui qu'on modifie sinon c'est l'autre (création)
-		Objects.requireNonNullElse(existingProject, project).setDesiredSupports(existingDesiredSupports);
+		desiredSupportsEntityReplacer.replaceTransientEntitiesWithPersistentEntities(project, existingProject);
 	}
 
-	private SupportEntity getExistingSupport(SupportEntity support)
-			throws MissingParameterException, AppServiceNotFoundException {
-		val uuid = support.getUuid();
-		if (uuid == null) {
-			throw new MissingParameterException("support.uuid manquant");
+	private class DesiredSupportsEntityReplacer extends TransientEntitiesReplacer<Set<SupportEntity>> {
+
+		private DesiredSupportsEntityReplacer() {
+			super(ProjectEntity::getDesiredSupports, ProjectEntity::setDesiredSupports);
 		}
 
-		try {
-			return supportDao.findByUUID(uuid);
-		} catch (EmptyResultDataAccessException e) {
-			throw new AppServiceNotFoundException(support, e);
+		@Nullable
+		@Override
+		protected Set<SupportEntity> getPersistentEntities(@Nullable Set<SupportEntity> desiredSupports) throws AppServiceException {
+			if (desiredSupports == null) {
+				return null;
+			}
+			final Set<SupportEntity> existingDesiredSupports = new HashSet<>(desiredSupports.size());
+			for (final SupportEntity desiredSupport : desiredSupports) {
+				final var existingSupport = getExistingSupport(desiredSupport);
+				existingDesiredSupports.add(existingSupport);
+			}
+			return existingDesiredSupports;
+		}
+
+		private SupportEntity getExistingSupport(SupportEntity support)
+				throws MissingParameterException, AppServiceNotFoundException {
+			val uuid = support.getUuid();
+			if (uuid == null) {
+				throw new MissingParameterException("support.uuid manquant");
+			}
+
+			try {
+				return supportDao.findByUUID(uuid);
+			} catch (EmptyResultDataAccessException e) {
+				throw new AppServiceNotFoundException(support, e);
+			}
 		}
 	}
 

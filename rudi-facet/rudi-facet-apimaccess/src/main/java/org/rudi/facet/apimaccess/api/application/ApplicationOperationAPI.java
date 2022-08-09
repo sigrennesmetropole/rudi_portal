@@ -1,10 +1,17 @@
 package org.rudi.facet.apimaccess.api.application;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
-import org.rudi.facet.apimaccess.api.ManagerAPIProperties;
 import org.rudi.facet.apimaccess.api.MonoUtils;
 import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationKey;
@@ -18,12 +25,13 @@ import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.bean.EndpointKeyType;
 import org.rudi.facet.apimaccess.bean.OauthGrantType;
 import org.rudi.facet.apimaccess.exception.APIEndpointException;
+import org.rudi.facet.apimaccess.exception.APIManagerHttpException;
+import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.rudi.facet.apimaccess.exception.ApplicationKeysNotFoundException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationTokenGenerationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -36,14 +44,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_WEBCLIENT;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.APPLICATION_ID;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.KEYMAPPING_ID;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT;
@@ -51,8 +51,12 @@ import static org.rudi.facet.apimaccess.constant.QueryParameterKey.OFFSET;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.QUERY;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.SORT_BY;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.SORT_ORDER;
-import static org.rudi.facet.apimaccess.service.impl.APIsServiceImpl.getInterfaceContractFromContext;
+import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.getInterfaceContractFromContext;
 
+/**
+ * @see <a href="https://apim.docs.wso2.com/en/3.2.0/develop/product-apis/devportal-apis/devportal-v1/devportal-v1/#tag/Applications/paths/~1applications/get">Documentation WSO2 : Application</a>
+ * @see <a href="https://apim.docs.wso2.com/en/3.2.0/develop/product-apis/devportal-apis/devportal-v1/devportal-v1/#tag/Application-Keys">Documentation WSO2 : Application-Keys</a>
+ */
 @Component
 public class ApplicationOperationAPI extends AbstractManagerAPI {
 
@@ -68,11 +72,12 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 	private final String temporaryDirectory;
 
 	ApplicationOperationAPI(
-			@Qualifier(API_MACCESS_WEBCLIENT) WebClient webClient,
-			ManagerAPIProperties managerAPIProperties,
+			WebClient.Builder apimWebClientBuilder,
+			APIManagerHttpExceptionFactory apiManagerHttpExceptionFactory,
+			APIManagerProperties apiManagerProperties,
 			@Value("${temporary.directory:${java.io.tmpdir}}") String temporaryDirectory
 	) {
-		super(webClient, managerAPIProperties);
+		super(apimWebClientBuilder, apiManagerHttpExceptionFactory, apiManagerProperties);
 		this.temporaryDirectory = temporaryDirectory;
 	}
 
@@ -114,10 +119,10 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 		MonoUtils.blockOrThrow(mono, e -> new ApplicationOperationException(applicationId, username, e));
 	}
 
-	public void generateKeysApplication(String applicationId, String username) throws ApplicationOperationException {
+	public void generateApplicationKey(String applicationId, String username, EndpointKeyType keyType) throws ApplicationOperationException {
 		ApplicationKeyGenerateRequest applicationKeyGenerateRequest = new ApplicationKeyGenerateRequest()
 				.keyManager("Resident Key Manager")
-				.keyType(EndpointKeyType.PRODUCTION)
+				.keyType(keyType)
 				.scopes(Collections.singletonList(ApplicationScope.DEFAULT))
 				.grantTypesToBeSupported(Arrays.asList(OauthGrantType.URN_IETF_PARAMS_OAUTH_GRANT_TYPE_JWT_BEARER, OauthGrantType.PASSWORD, OauthGrantType.CLIENT_CREDENTIALS, OauthGrantType.REFRESH_TOKEN))
 				.validityTime("3600");
@@ -168,19 +173,11 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 		ApplicationToken applicationToken = generateApplicationToken(applicationId, applicationKey.getKeyMappingId(), applicationTokenGenerateRequest, username);
 
 		final var apiAccessUrl = buildAPIAccessUrl(context, version);
-		ClientResponse response = webClient.get()
+		final var mono = webClient.get()
 				.uri(apiAccessUrl)
 				.headers(httpHeaders -> httpHeaders.setBearerAuth(applicationToken.getAccessToken()))
-				.exchange()
-				.block();
-
-		if (response == null) {
-			throw new APIEndpointException(apiAccessUrl);
-		}
-
-		if (response.statusCode().isError()) {
-			throw new APIEndpointException(apiAccessUrl, response.statusCode());
-		}
+				.exchange();
+		final ClientResponse response = MonoUtils.blockOrCatchAndThrow(mono, APIManagerHttpException.class, e -> new APIEndpointException(apiAccessUrl, e.getStatusCode()));
 
 		Flux<DataBuffer> dataBufferFlux = response.bodyToFlux(DataBuffer.class);
 		HttpHeaders httpHeaders = response.headers().asHttpHeaders();

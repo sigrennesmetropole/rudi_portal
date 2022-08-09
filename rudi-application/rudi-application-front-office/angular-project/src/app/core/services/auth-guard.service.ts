@@ -1,15 +1,8 @@
 import {Injectable} from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    CanActivateChild,
-    Router,
-    RouterStateSnapshot,
-    UrlTree
-} from "@angular/router";
-import {Observable, of} from "rxjs";
-import {AuthenticationService} from "./authentication.service";
-import {LogService} from "./log.service";
+import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {Observable, of} from 'rxjs';
+import {AuthenticationService} from './authentication.service';
+import {LogService} from './log.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserService} from './user.service';
 

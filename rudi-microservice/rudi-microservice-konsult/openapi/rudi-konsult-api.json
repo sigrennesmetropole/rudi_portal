@@ -96,11 +96,127 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/encryption-key": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération de la clé publique pour chiffrer les médias d'un jeu de données",
+				"description": "Récupération de la clé publique pour chiffrer les médias d'un jeu de données",
+				"operationId": "getEncryptionKey",
+				"responses": {
+					"200": {
+						"description": "Le fichier correspondant à la clé publique",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/apim/has-enabled-api": {
+			"put": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Permet de savoir si les accès aux API ont déjà été activé",
+				"description": "Renvoie vrai si les accès aux APIs ont déjà été réalisés, il suffit ensuite de récupérer les clés pour consommer les APIs",
+				"operationId": "hasEnabledApi",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Credentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiError"
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/apim/enable-api": {
+			"put": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Permet d'activer les accès aux APIs pour l'user fourni",
+				"description": "Va créer les accès pour l'user ou l'organisation (en fonction de ce qui est fourni) pour pouvoir consommer les APIs des JDDs à travers RUDI avec des clés d'API WSO2",
+				"operationId": "enableApi",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Credentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Accès aux APIs créés avec succès"
+					}
+				}
+			}
+		},
+		"/apim/keys": {
+			"put": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Permet de récupérer les clés de consommations des APIs des JDDs pour un projet",
+				"description": "Renvoie le consumer key et le consumer secret pour consommer les APIs des JDDs du projet",
+				"operationId": "getKeys",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "type",
+						"description": "type de clé que l'on souhaite récupérer",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ApiKeysType"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Credentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiKeys"
 								}
 							}
 						}
@@ -163,14 +279,7 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiError"
-								}
-							}
-						}
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -200,14 +309,7 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiError"
-								}
-							}
-						}
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -222,14 +324,7 @@
 				"operationId": "getMetadataById",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "globalId",
-						"description": "Identifiant du jeu de données",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"format": "uuid"
-						}
+						"$ref": "#/components/parameters/GlobalIdPathParam"
 					}
 				],
 				"responses": {
@@ -244,14 +339,7 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiError"
-								}
-							}
-						}
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -266,14 +354,7 @@
 				"operationId": "getMetadatasWithSameTheme",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "globalId",
-						"description": "Identifiant du jeu de données",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"format": "uuid"
-						}
+						"$ref": "#/components/parameters/GlobalIdPathParam"
 					},
 					{
 						"in": "query",
@@ -300,14 +381,7 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiError"
-								}
-							}
-						}
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -322,14 +396,7 @@
 				"operationId": "getNumberOfDatasetsOnTheSameTheme",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "globalId",
-						"description": "Identifiant du jeu de données",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"format": "uuid"
-						}
+						"$ref": "#/components/parameters/GlobalIdPathParam"
 					}
 				],
 				"responses": {
@@ -344,7 +411,37 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/has-subscribe": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Permet de savoir si l'utilisateur a souscrit au jeu de données",
+				"description": "Retourne true si l'utilisateur a souscrit au jeu de données",
+				"operationId": "hasSubscribeToDataset",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/GlobalIdPathParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne true si l'utilisateur a souscrit au jeu de données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Erreur lorsque l'utilisateur n'a pas souscrit au jeu de données",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -352,6 +449,48 @@
 								}
 							}
 						}
+					},
+					"480": {
+						"$ref": "#/components/responses/UnknownClientKeyError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/subscribe": {
+			"post": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Souscrit au jeu de données",
+				"description": "L'utilisateur souscrit au jeu de données",
+				"operationId": "subscribeToDataset",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/GlobalIdPathParam"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "L'utilisateur a souscrit au jeu de données avec succès"
+					},
+					"403": {
+						"description": "Erreur lorsque l'utilisateur n'est pas autorisé à souscrire au jeu de données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiForbiddenError"
+								}
+							}
+						}
+					},
+					"480": {
+						"$ref": "#/components/responses/UnknownClientKeyError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -366,14 +505,7 @@
                 "operationId": "hasSubscribeToMetadataMedia",
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "globalId",
-                        "description": "Identifiant du jeu de données",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
+						"$ref": "#/components/parameters/GlobalIdPathParam"
                     },
                     {
                         "in": "path",
@@ -408,24 +540,10 @@
                         }
                     },
                     "480": {
-                        "description": "Erreur lorsque les clés de l'utilisateur sont inconnus",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
+						"$ref": "#/components/responses/UnknownClientKeyError"
                     },
                     "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
+						"$ref": "#/components/responses/InternalServerError"
                     }
                 }
             }
@@ -440,14 +558,7 @@
 				"operationId": "downloadMetadataMedia",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "globalId",
-						"description": "Identifiant du jeu de données",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"format": "uuid"
-						}
+						"$ref": "#/components/parameters/GlobalIdPathParam"
 					},
 					{
 						"in": "path",
@@ -473,14 +584,7 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiError"
-								}
-							}
-						}
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -539,14 +643,7 @@
 						}
 					},
 					"500": {
-						"description": "Internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiError"
-								}
-							}
-						}
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}
@@ -660,6 +757,16 @@
 					}
 				}
 			},
+			"GlobalIdPathParam": {
+				"in": "path",
+				"name": "globalId",
+				"description": "Identifiant du jeu de données",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
 			"GlobalIdParam": {
 				"in": "query",
 				"name": "globalId",
@@ -674,6 +781,28 @@
 				}
 			}
 		},
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"UnknownClientKeyError": {
+				"description": "Erreur lorsque les clés de l'utilisateur sont inconnues",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			}
+		},
 		"schemas": {
 			"ApiError": {
 				"type": "object",
@@ -684,6 +813,28 @@
 					"label": {
 						"type": "string"
 					}
+				}
+			},
+			"ApiForbiddenError": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/ApiError"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string"
+							},
+							"label": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"example": {
+					"code": "403 FORBIDDEN",
+					"label": "Cannot subscribe because user robert.palmer has not been granted access to restricted dataset b9887e0f-db4e-47f0-87cd-e2f7f8d80689"
 				}
 			},
 			"AppInfo": {
@@ -731,8 +882,44 @@
 							},
 							"apidocumentation": {
 								"type": "string"
+							},
+							"apiDocumentationService": {
+								"type": "string"
+							},
+							"docRudiBzh": {
+								"type": "string"
 							}
 						}
+					}
+				}
+			},
+			"ApiKeysType": {
+				"description": "Type de clés APIs à récupérer",
+				"type": "string",
+				"enum": [
+					"SANDBOX",
+					"PRODUCTION"
+				]
+			},
+			"Credentials": {
+				"type": "object",
+				"properties": {
+					"login": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				}
+			},
+			"ApiKeys": {
+				"type": "object",
+				"properties": {
+					"consumerKey": {
+						"type": "string"
+					},
+					"consumerSecret": {
+						"type": "string"
 					}
 				}
 			}

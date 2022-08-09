@@ -105,7 +105,7 @@ class APIManagerHelperUnmockedAPIManagerTest {
 				.isEqualToComparingFieldByField(api1);
 		assertThat(apIsService.getAPI(api2.getId())).as("La 2e API a été archivée")
 				.isEqualToIgnoringGivenFields(api2, "lifeCycleStatus", "lastUpdatedTime")
-				.hasFieldOrPropertyWithValue("lifeCycleStatus", APILifecycleStatusState.BLOCKED);
+				.hasFieldOrPropertyWithValue("lifeCycleStatus", APILifecycleStatusState.BLOCKED.getValue());
 
 
 		// 3. Modifier le JDD pour recréer le 2e média => la 2e API est désarchivée (aucun changement sur la 1ère)

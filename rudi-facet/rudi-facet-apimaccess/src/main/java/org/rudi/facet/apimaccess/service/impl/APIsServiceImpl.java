@@ -1,20 +1,18 @@
 package org.rudi.facet.apimaccess.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
+import org.rudi.facet.apimaccess.api.admin.AdminOperationAPI;
 import org.rudi.facet.apimaccess.api.apis.APIsOperationAPI;
 import org.rudi.facet.apimaccess.api.policy.ThrottlingPolicyOperationAPI;
-import org.rudi.facet.apimaccess.bean.API;
 import org.rudi.facet.apimaccess.bean.APIDescription;
-import org.rudi.facet.apimaccess.bean.APIEndpointConfig;
-import org.rudi.facet.apimaccess.bean.APIEndpointConfigHttp;
-import org.rudi.facet.apimaccess.bean.APIEndpointType;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusAction;
-import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
-import org.rudi.facet.apimaccess.bean.LimitingPolicies;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.PolicyLevel;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
@@ -22,6 +20,7 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APINotFoundException;
 import org.rudi.facet.apimaccess.exception.APIsOperationException;
 import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
+import org.rudi.facet.apimaccess.exception.AdminOperationException;
 import org.rudi.facet.apimaccess.exception.ThrottlingPolicyOperationException;
 import org.rudi.facet.apimaccess.exception.UpdateAPILifecycleStatusException;
 import org.rudi.facet.apimaccess.helper.generator.OpenApiGenerator;
@@ -30,40 +29,33 @@ import org.rudi.facet.apimaccess.service.APIsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.InvalidMediaTypeException;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.wso2.carbon.apimgt.rest.api.admin.APICategory;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.EXTENSION;
-import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.GLOBAL_ID;
-import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.INTERFACE_CONTRACT;
-import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.MEDIA_UUID;
-import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.PROVIDER_CODE;
-import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.PROVIDER_UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.DEFAULT_API_VERSION;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
+import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.buildAPIContext;
 
 @Service
 @RequiredArgsConstructor
 public class APIsServiceImpl implements APIsService {
 
-	private static final String CONTEXT_SEPARATOR = "/";
 	private static final Logger LOGGER = LoggerFactory.getLogger(APIsServiceImpl.class);
 
 	private final APIsOperationAPI apIsOperationAPI;
+	private final AdminOperationAPI adminOperationAPI;
 	private final ThrottlingPolicyOperationAPI throttlingPolicyOperationAPI;
 	private final OpenApiGenerator openApiGenerator;
 	private final QueryBuilder queryBuilder;
+	private final APIDescriptionMapper apiDescriptionMapper;
 
 	@Value("${apimanager.api.store.api.categories:RudiData}")
 	private String[] apiCategories;
+	private boolean apiCategoriesCreated = false;
 
 	/**
 	 * Création d'une API
@@ -77,9 +69,9 @@ public class APIsServiceImpl implements APIsService {
 		}
 		setAPIDefaultValues(apiDescription);
 
-		API api = buildAPIToSave(apiDescription);
+		final var api = buildAPIToSave(apiDescription);
 		// création de l'api
-		API apiResult = apIsOperationAPI.createAPI(api);
+		final var apiResult = apIsOperationAPI.createAPI(api);
 
 		// mise à jour de la définition openapi de l'api
 		apIsOperationAPI.updateAPIOpenapiDefinition(openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
@@ -135,9 +127,7 @@ public class APIsServiceImpl implements APIsService {
 	}
 
 	@Override
-	public void deleteAPI(String apiId) throws UpdateAPILifecycleStatusException, APIsOperationWithIdException {
-		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.DEPRECATE);
-		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.RETIRE);
+	public void deleteAPI(String apiId) throws APIsOperationWithIdException {
 		apIsOperationAPI.deleteAPI(apiId);
 	}
 
@@ -201,77 +191,42 @@ public class APIsServiceImpl implements APIsService {
 		}
 	}
 
-	private API buildAPIToSave(APIDescription apiDescription) throws ThrottlingPolicyOperationException {
+	API buildAPIToSave(APIDescription apiDescription) throws ThrottlingPolicyOperationException, AdminOperationException {
 		// get actual subscription policies (pour le moment on récupère toutes les subscriptions policies)
 		final var searchCriteria = new SearchCriteria().offset(0);
 		final var policyLevel = PolicyLevel.SUBSCRIPTION;
-		LimitingPolicies limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(searchCriteria, policyLevel);
+		final var limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(searchCriteria, policyLevel);
 		if (limitingPolicies == null || limitingPolicies.getCount() == 0) {
 			throw new ThrottlingPolicyOperationException(searchCriteria, policyLevel);
 		}
 
-		MediaType mediaType;
-		try {
-			mediaType = MediaType.parseMediaType(apiDescription.getMediaType());
-		} catch (InvalidMediaTypeException e) {
-			throw new IllegalArgumentException("Le media type est invalide : " + apiDescription.getMediaType(), e);
-		}
+		checkApiCategories();
 
-		return new API()
-				.name(apiDescription.getName())
-				.endpointConfig(new APIEndpointConfigHttp()
-						.endpointType(APIEndpointType.HTTP)
-						.productionEndpoints(new APIEndpointConfig().url(apiDescription.getEndpointUrl()))
-						.sandboxEndpoints(new APIEndpointConfig().url(apiDescription.getEndpointUrl())))
-				.policies(limitingPolicies.getList().stream().map(LimitingPolicy::getName).collect(Collectors.toList()))
-				.categories(Arrays.asList(apiCategories))
-				.context(buildAPIContext(apiDescription))
-				.isDefaultVersion(true)
-				.transport(Arrays.asList(API.TransportEnum.HTTP, API.TransportEnum.HTTPS))
-				.gatewayEnvironments(Collections.singletonList(API.GatewayEnvironmentsEnum.PRODUCTION_AND_SANDBOX))
-				.version(StringUtils.isNotEmpty(apiDescription.getVersion()) ? apiDescription.getVersion() : DEFAULT_API_VERSION)
-				.additionalProperties(Map.of(
-						PROVIDER_UUID, apiDescription.getProviderUuid().toString(),
-						PROVIDER_CODE, apiDescription.getProviderCode(),
-						GLOBAL_ID, apiDescription.getGlobalId().toString(),
-						MEDIA_UUID, apiDescription.getMediaUuid().toString(),
-						INTERFACE_CONTRACT, apiDescription.getInterfaceContract(),
-						EXTENSION, mediaType.getSubtype())
-				);
+		return apiDescriptionMapper.map(apiDescription, limitingPolicies, apiCategories);
+	}
+
+	private void checkApiCategories() throws AdminOperationException {
+		if (!apiCategoriesCreated) {
+			final var apiCategoriesNamesToCreate = List.of(apiCategories);
+			final var existingApiCategories = adminOperationAPI.getApiCategories();
+			final var existingCategoriesNames = existingApiCategories.getList().stream()
+					.map(APICategory::getName)
+					.collect(Collectors.toList());
+
+			for (final String apiCategoryNameToCreate : apiCategoriesNamesToCreate) {
+				if (!existingCategoriesNames.contains(apiCategoryNameToCreate)) {
+					adminOperationAPI.createApiCategory(new APICategory()
+							.name(apiCategoryNameToCreate));
+				}
+			}
+
+			apiCategoriesCreated = true;
+		}
 	}
 
 	private void buildAPIToSave(APIDescription apiDescription, API api) {
 
-		MediaType mediaType;
-		try {
-			mediaType = MediaType.parseMediaType(apiDescription.getMediaType());
-		} catch (InvalidMediaTypeException e) {
-			throw new IllegalArgumentException("Le media type est invalide : " + apiDescription.getMediaType(), e);
-		}
-
-		api
-				.name(apiDescription.getName())
-				.endpointConfig(new APIEndpointConfigHttp()
-						.endpointType(APIEndpointType.HTTP)
-						.productionEndpoints(new APIEndpointConfig().url(apiDescription.getEndpointUrl()))
-						.sandboxEndpoints(new APIEndpointConfig().url(apiDescription.getEndpointUrl())))
-				.context(buildAPIContext(apiDescription))
-				.additionalProperties(Map.of(
-						PROVIDER_UUID, apiDescription.getProviderUuid().toString(),
-						PROVIDER_CODE, apiDescription.getProviderCode(),
-						GLOBAL_ID, apiDescription.getGlobalId().toString(),
-						MEDIA_UUID, apiDescription.getMediaUuid().toString(),
-						INTERFACE_CONTRACT, apiDescription.getInterfaceContract(),
-						EXTENSION, mediaType.getSubtype())
-				);
-	}
-
-	private String buildAPIContext(APIDescription apiDescription) {
-		return CONTEXT_SEPARATOR + "datasets" + CONTEXT_SEPARATOR + apiDescription.getMediaUuid() + CONTEXT_SEPARATOR + apiDescription.getInterfaceContract();
-	}
-
-	public static String getInterfaceContractFromContext(String context) {
-		return StringUtils.substringAfterLast(context, CONTEXT_SEPARATOR);
+		apiDescriptionMapper.map(apiDescription, api);
 	}
 
 }

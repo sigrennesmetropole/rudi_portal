@@ -1,0 +1,21 @@
+<!-- Contrôles de la pagination visuelle -->
+<!-- TODO il reste des règles CSS pour que l'illusion soit parfaite -->
+<pagination-controls
+    *ngIf="length > pageSize"
+    (pageChange)="handlePageChange($event)"
+    [maxSize]="maxSize"
+    [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
+    [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate"
+    class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
+    [ngClass]="paginationControlsNgClass">
+</pagination-controls>
+
+<!-- On ne sait pas initialiser le pagination-controls autrement qu'en utilisant son pipe "paginate" -->
+<!-- Il semblerait que son service "PaginationService" ne soit pas accessible en tant qu'API publique -->
+<ng-container
+    *ngFor="let data of [] | paginate: {
+              itemsPerPage: pageSize,
+              currentPage: pageIndex + 1,
+              totalItems: length
+            }"
+></ng-container>

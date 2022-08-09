@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.ACCESS_CONDITION;
 
 @Component
-public class AccessConditionFieldsMapper extends FieldsMapper<MetadataAccessCondition> {
+class AccessConditionFieldsMapper extends SingleValuedFieldsMapper<MetadataAccessCondition> {
 
 	public AccessConditionFieldsMapper(FieldGenerator fieldGenerator, AccessConditionPrimiviteFieldsMapper primiviteFieldsMapper, AccessConditionCompoundFieldsMapper compoundFieldsMapper) {
 		super(fieldGenerator, ACCESS_CONDITION, primiviteFieldsMapper, compoundFieldsMapper);

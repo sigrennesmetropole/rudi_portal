@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -98,4 +99,15 @@ public class OrganizationHelper {
 		return MonoUtils.blockOrThrow(mono, CreateOrganizationException.class);
 	}
 
+	public List<UUID> getMyOrganizationsUuids(UUID userUuid) throws GetOrganizationException {
+		final var mono = struktureWebClient.get()
+				.uri(uriBuilder -> uriBuilder.path(organizationProperties.getOrganizationsPath())
+						.queryParam("user_uuid", userUuid).build())
+				.retrieve().bodyToMono(PagedOrganizationList.class);
+		return extractUuidFromPageList(MonoUtils.blockOrThrow(mono, GetOrganizationException.class));
+	}
+
+	private List<UUID> extractUuidFromPageList(PagedOrganizationList page) {
+		return page.getElements().stream().map(Organization::getUuid).collect(Collectors.toList());
+	}
 }

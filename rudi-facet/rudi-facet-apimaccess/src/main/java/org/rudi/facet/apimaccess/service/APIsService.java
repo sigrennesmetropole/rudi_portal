@@ -1,16 +1,16 @@
 package org.rudi.facet.apimaccess.service;
 
-import org.rudi.facet.apimaccess.bean.API;
+import java.util.List;
+
 import org.rudi.facet.apimaccess.bean.APIDescription;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusAction;
-import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APIsOperationException;
-
-import java.util.List;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 public interface APIsService {
 
@@ -70,7 +70,9 @@ public interface APIsService {
     void unarchiveAPI(String apiId) throws APIManagerException;
 
     /**
-     * Suppression définitive d'une API
+     * Suppression définitive d'une API.
+     * Possible seulement si toutes les souscriptions ont été supprimées,
+     * par exemple via {@link org.rudi.facet.apimaccess.service.ApplicationService#deleteAllSubscriptionsWithoutRetiringAPI(String)}.
      *
      * @param apiId identifiant de l'API
      * @throws APIManagerException Erreur lors du changement de statut
@@ -88,9 +90,10 @@ public interface APIsService {
 
     /**
      * Recherche des API
-     * @param apiSearchCriteria     Critères de recherche
-     * @return                      APIList
-     * @throws APIManagerException  Erreur lors de la recherche
+     *
+     * @param apiSearchCriteria Critères de recherche
+     * @return APIList
+     * @throws APIManagerException Erreur lors de la recherche
      */
     APIList searchAPI(APISearchCriteria apiSearchCriteria) throws APIsOperationException;
 

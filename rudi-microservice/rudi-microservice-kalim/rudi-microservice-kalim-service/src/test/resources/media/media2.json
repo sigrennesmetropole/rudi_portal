@@ -1,6 +1,6 @@
 {
 	"media_type": "FILE",
-	"media_id": "b6ddce4e-bf2d-4d9a-bee5-999d780dfa5d",
+	"media_id": "345b5098-74d7-42f4-8247-71c140c95f81",
 	"connector": {
 		"url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=json",
 		"interface_contract": "dwnl"

@@ -1,7 +1,11 @@
 package org.rudi.microservice.strukture.service.organization;
 
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.helper.exceptions.CreateUserException;
 import org.rudi.microservice.strukture.core.bean.Organization;
 import org.rudi.microservice.strukture.core.bean.OrganizationMember;
 import org.rudi.microservice.strukture.core.bean.OrganizationSearchCriteria;
@@ -14,9 +18,11 @@ import java.util.UUID;
 
 public interface OrganizationService {
 
-	Organization createOrganization(Organization organization);
+	Organization createOrganization(Organization organization) throws CreateUserException;
 
 	Organization getOrganization(UUID uuid) throws AppServiceNotFoundException;
+
+	User getOrganizationUserFromOrganizationUuid(UUID organizationUuid) throws AppServiceNotFoundException, AppServiceUnauthorizedException, AppServiceForbiddenException;
 
 	void updateOrganization(Organization organization) throws AppServiceException;
 

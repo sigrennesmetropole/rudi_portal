@@ -1,8 +1,14 @@
 package org.rudi.facet.dataverse.fields;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,13 +68,41 @@ class FieldSpecFromJavaFieldTest {
 		assertThat(field.getSortableField().getName()).isEqualTo("root_string_field_s");
 	}
 
+	@ParameterizedTest(name = "Field {0} is required ? {1}")
+	@CsvSource({
+			"nonRequiredField, false",
+			"requiredFieldThroughSchemaAnnotation, true",
+			"requiredFieldThroughNotNullAnnotation, true",
+	})
+	void isRequired_notAnnotated(final String javaFieldName, final boolean expectedRequiredValue) {
+		final var field = ROOT.newChildFromJavaField(javaFieldName);
+		assertThat(field).hasFieldOrPropertyWithValue("required", expectedRequiredValue);
+	}
+
+	@SuppressWarnings("unused") // used to generate FieldSpec
+	@Getter
+	@Setter
 	private static class SampleObject {
-		@SuppressWarnings("unused") // used to generate FieldSpec
 		@JsonProperty("string_field")
 		private String stringField;
 
-		@SuppressWarnings("unused") // used to generate FieldSpec
 		@JsonProperty("list_field")
 		private List<String> listField;
+
+		private String nonRequiredField;
+
+		private String requiredFieldThroughSchemaAnnotation;
+
+		@Schema(required = true)
+		public String getRequiredFieldThroughSchemaAnnotation() {
+			return requiredFieldThroughSchemaAnnotation;
+		}
+
+		private String requiredFieldThroughNotNullAnnotation;
+
+		@NotNull
+		public String getRequiredFieldThroughNotNullAnnotation() {
+			return requiredFieldThroughNotNullAnnotation;
+		}
 	}
 }

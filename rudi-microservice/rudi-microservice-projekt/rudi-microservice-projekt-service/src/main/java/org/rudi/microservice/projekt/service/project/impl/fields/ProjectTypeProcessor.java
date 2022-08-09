@@ -1,7 +1,5 @@
 package org.rudi.microservice.projekt.service.project.impl.fields;
 
-import java.util.Objects;
-
 import javax.annotation.Nullable;
 
 import org.rudi.common.service.exception.AppServiceException;
@@ -20,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class ProjectTypeProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldProcessor {
 	private final ProjectTypeDao projectTypeDao;
+	private final ProjectTypeEntityReplacer projectTypeEntityReplacer = new ProjectTypeEntityReplacer();
 
 	@Override
 	public void process(@Nullable ProjectEntity project, ProjectEntity existingProject) throws AppServiceException {
@@ -27,13 +26,25 @@ class ProjectTypeProcessor implements CreateProjectFieldProcessor, UpdateProject
 			return;
 		}
 
-		final ProjectTypeEntity transientProjectType = project.getType();
-
-		if (project.getProjectStatus() == ProjectStatus.VALIDATED && transientProjectType == null) {
+		if (project.getProjectStatus() == ProjectStatus.VALIDATED && project.getType() == null) {
 			throw new MissingParameterException("type manquant");
 		}
 
-		if (transientProjectType != null) {
+		projectTypeEntityReplacer.replaceTransientEntitiesWithPersistentEntities(project, existingProject);
+	}
+
+	private class ProjectTypeEntityReplacer extends TransientEntitiesReplacer<ProjectTypeEntity> {
+
+		private ProjectTypeEntityReplacer() {
+			super(ProjectEntity::getType, ProjectEntity::setType);
+		}
+
+		@Nullable
+		@Override
+		protected ProjectTypeEntity getPersistentEntities(@Nullable ProjectTypeEntity transientProjectType) throws AppServiceException {
+			if (transientProjectType == null) {
+				return null;
+			}
 
 			final var uuid = transientProjectType.getUuid();
 			if (uuid == null) {
@@ -47,10 +58,8 @@ class ProjectTypeProcessor implements CreateProjectFieldProcessor, UpdateProject
 				throw new AppServiceNotFoundException(transientProjectType, e);
 			}
 
-			// Si on est en update (existingProject != nul) alors c'est lui qu'on modifie sinon c'est l'autre (création)
-			Objects.requireNonNullElse(existingProject, project).setType(existingProjectType);
+			return existingProjectType;
 		}
-
 	}
 
 }

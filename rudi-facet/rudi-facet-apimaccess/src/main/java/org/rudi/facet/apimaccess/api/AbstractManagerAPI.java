@@ -1,54 +1,69 @@
 package org.rudi.facet.apimaccess.api;
 
+import java.net.URI;
+import java.util.Map;
+import java.util.function.Function;
+
+import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
+import org.rudi.facet.apimaccess.helper.rest.WebClientHelper;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.function.Function;
-
 public abstract class AbstractManagerAPI {
 
     protected final WebClient webClient;
-    private final ManagerAPIProperties managerAPIProperties;
+    protected final APIManagerProperties apiManagerProperties;
 
-    public AbstractManagerAPI(
-            WebClient webClient,
-            ManagerAPIProperties managerAPIProperties
+    /**
+     * Constructeur avec WebClient construisant les exceptions à partir d'une {@link APIManagerHttpExceptionFactory}.
+     */
+    protected AbstractManagerAPI(
+            WebClient.Builder webClientBuilder,
+            APIManagerHttpExceptionFactory exceptionFactory,
+            APIManagerProperties apiManagerProperties
     ) {
-        this.webClient = webClient;
-        this.managerAPIProperties = managerAPIProperties;
+        this.webClient = buildWebClient(webClientBuilder, exceptionFactory);
+        this.apiManagerProperties = apiManagerProperties;
+    }
+
+    private static WebClient buildWebClient(WebClient.Builder webClientBuilder, APIManagerHttpExceptionFactory exceptionFactory) {
+        return webClientBuilder
+                .filter(WebClientHelper.createFilterFrom(exceptionFactory))
+                .build();
     }
 
     public String getServerUrl() {
-        return managerAPIProperties.getServerUrl();
+        return apiManagerProperties.getServerUrl();
     }
 
     public String getServerGatewayUrl() {
-        return managerAPIProperties.getServerGatewayUrl();
+        return apiManagerProperties.getServerGatewayUrl();
     }
 
-    public String getPublisherContext() {
-        return managerAPIProperties.getPublisherContext();
+    protected String getAdminContext() {
+        return apiManagerProperties.getAdminContext();
+    }
+    protected String getPublisherContext() {
+        return apiManagerProperties.getPublisherContext();
     }
 
     public String getStoreContext() {
-        return managerAPIProperties.getStoreContext();
+        return apiManagerProperties.getStoreContext();
     }
 
     public String getAdminRegistrationId() {
-        return managerAPIProperties.getAdminRegistrationId();
+        return apiManagerProperties.getAdminRegistrationId();
     }
 
     public String getAdminUsername() {
-        return managerAPIProperties.getAdminUsername();
+        return apiManagerProperties.getAdminUsername();
     }
 
     public String getAdminPassword() {
-        return managerAPIProperties.getAdminPassword();
+        return apiManagerProperties.getAdminPassword();
     }
 
     public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId, String uri) {
@@ -89,11 +104,15 @@ public abstract class AbstractManagerAPI {
         return populateRequestWithRegistrationId(httpMethod, getAdminRegistrationId(), uri, uriVariables);
     }
 
-    public String buildPublisherURIPath(String queryPath) {
+    protected String buildAdminURIPath(String queryPath) {
+        return buildURIPath(getServerUrl(), getAdminContext(), queryPath);
+    }
+
+    protected String buildPublisherURIPath(String queryPath) {
         return buildURIPath(getServerUrl(), getPublisherContext(), queryPath);
     }
 
-    public String buildDevPortalURIPath(String queryPath) {
+    protected String buildDevPortalURIPath(String queryPath) {
         return buildURIPath(getServerUrl(), getStoreContext(), queryPath);
     }
 

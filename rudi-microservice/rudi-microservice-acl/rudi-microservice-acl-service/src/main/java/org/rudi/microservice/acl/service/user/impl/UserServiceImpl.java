@@ -3,13 +3,25 @@
  */
 package org.rudi.microservice.acl.service.user.impl;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+import javax.net.ssl.SSLException;
+import javax.validation.Valid;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.common.service.util.PageableUtil;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.ClientKey;
@@ -40,15 +52,8 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.net.ssl.SSLException;
-import javax.validation.Valid;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service de gestion des utilisateurs RUDI
@@ -117,12 +122,25 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private CustomClientRegistrationRepository customClientRegistrationRepository;
 
+	@Autowired
+	private PageableUtil pageableUtil;
+
+	@Autowired
+	private NonDaoUserSearchCriteriaMapper nonDaoUserSearchCriteriaMapper;
+
 	@Override
 	public Page<User> searchUsers(UserSearchCriteria searchCriteria, Pageable pageable) {
 		if (searchCriteria != null) {
-			return userMapper.entitiesToDto(userCustomDao.searchUsers(searchCriteria, pageable), pageable);
+			final var pagedUserEntities = userCustomDao.searchUsers(searchCriteria, pageable);
+			final var filteredPagedUserEntities = applyNonDaoCriteria(searchCriteria, pagedUserEntities);
+			return userMapper.entitiesToDto(filteredPagedUserEntities, pageable);
 		}
 		return null;
+	}
+
+	private Page<UserEntity> applyNonDaoCriteria(UserSearchCriteria searchCriteria, Page<UserEntity> pagedUserEntities) {
+		final var predicate = nonDaoUserSearchCriteriaMapper.searchCriteriaToPredicate(searchCriteria);
+		return pageableUtil.filter(pagedUserEntities, predicate);
 	}
 
 	@Override
@@ -321,23 +339,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException {
+	@Nullable
+	public ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
 		ClientKey clientKey = null;
 		if (StringUtils.isEmpty(login)) {
 			throw new IllegalArgumentException(LOGIN_USER_MISSING_MESSAGE);
 		}
-		ClientRegistration clientRegistration = customClientRegistrationRepository.findByRegistrationId(login).block();
+		ClientRegistration clientRegistration = customClientRegistrationRepository.findByUsername(login);
+
+		// si c'est l'utilisateur anonymous, on crée son client id et client secret
+		if (clientRegistration == null && login.equals(anonymousUsername)) {
+			clientRegistration = customClientRegistrationRepository.register(anonymousUsername,
+					anonymousPassword);
+		}
+
 		if (clientRegistration != null) {
 			clientKey = new ClientKey().clientId(clientRegistration.getClientId())
 					.clientSecret(clientRegistration.getClientSecret());
 		}
-		// si c'est l'utilisateur anonymous, on crée son client id et client secret
-		else if (login.equals(anonymousUsername)) {
-			clientRegistration = customClientRegistrationRepository.addClientRegistration(anonymousUsername,
-					anonymousPassword);
-			clientKey = new ClientKey().clientId(clientRegistration.getClientId())
-					.clientSecret(clientRegistration.getClientSecret());
-		}
+
+		// TODO Doit-on ajouter un message d'erreur pour indiquer d'activer les API pour pouvoir télécharger des médias ?
 
 		return clientKey;
 	}

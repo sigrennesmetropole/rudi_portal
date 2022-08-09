@@ -1,6 +1,7 @@
 package org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
@@ -8,11 +9,13 @@ import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.dataverse.utils.MessageUtils;
 
+import javax.annotation.Nullable;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public abstract class AbstractMetadataBlockElementMapper<T> implements MetadataBlockElementMapper<T> {
@@ -78,23 +81,30 @@ public abstract class AbstractMetadataBlockElementMapper<T> implements MetadataB
 	}
 
 	protected OffsetDateTime getOffsetDateTimeFieldValue(DatasetMetadataBlockElementField dateTimeField) {
-		OffsetDateTime offsetDateTime = null;
-
-		if (dateTimeField != null && dateTimeField.getValue() != null) {
-
-			offsetDateTime = dateTimeMapper.fromDataverseTimestamp(dateTimeField.getValue().toString());
-		}
-		return offsetDateTime;
+		return getFieldValue(dateTimeField, field -> dateTimeMapper.fromDataverseTimestamp(field.getValue().toString()));
 	}
 
 	protected Integer getIntegerFieldValue(DatasetMetadataBlockElementField integerField) {
-		Integer integerValue = null;
-
-		if (integerField != null && integerField.getValue() != null) {
-
-			String stringValue = getPrimitiveFieldValue(integerField);
-			integerValue = (stringValue == null) ? null : Integer.valueOf(stringValue);
-		}
-		return integerValue;
+		return getFieldValue(integerField, field -> {
+			val stringValue = getPrimitiveFieldValue(field);
+			return (stringValue == null) ? null : Integer.valueOf(stringValue);
+		});
 	}
+
+	protected Long getLongFieldValue(DatasetMetadataBlockElementField longField) {
+		return getFieldValue(longField, field -> {
+			val stringValue = getPrimitiveFieldValue(field);
+			return (stringValue == null) ? null : Long.valueOf(stringValue);
+		});
+	}
+
+	@Nullable
+	private <V> V getFieldValue(DatasetMetadataBlockElementField field, Function<DatasetMetadataBlockElementField, V> valueExtractor) {
+		if (field != null && field.getValue() != null) {
+			return valueExtractor.apply(field);
+		} else {
+			return null;
+		}
+	}
+
 }

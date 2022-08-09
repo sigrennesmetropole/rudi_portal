@@ -5,7 +5,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.kaccess.bean.Connector;
+import org.rudi.facet.kaccess.bean.Contact;
+import org.rudi.facet.kaccess.bean.DictionaryEntry;
+import org.rudi.facet.kaccess.bean.HashAlgorithm;
+import org.rudi.facet.kaccess.bean.Language;
+import org.rudi.facet.kaccess.bean.Licence;
+import org.rudi.facet.kaccess.bean.LicenceStandard;
+import org.rudi.facet.kaccess.bean.Media;
+import org.rudi.facet.kaccess.bean.MediaFile;
+import org.rudi.facet.kaccess.bean.MediaFileAllOfChecksum;
+import org.rudi.facet.kaccess.bean.MediaType;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.bean.MetadataAccessCondition;
 import org.rudi.facet.kaccess.bean.MetadataMetadataInfo;
 import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
@@ -16,6 +28,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,10 +69,42 @@ class MetadataWithSameThemeFinderTest {
 				.published(OffsetDateTime.now())
 				.updated(OffsetDateTime.now());
 		metadata.globalId(UUID.randomUUID())
+				.synopsis(Collections.singletonList(new DictionaryEntry()
+						.lang(Language.FR_FR)
+						.text("Synopsis obligatoire.")
+				))
 				.datasetDates(dates)
 				.storageStatus(Metadata.StorageStatusEnum.ONLINE)
 				.metadataInfo(new MetadataMetadataInfo()
-						.metadataDates(dates));
+						.apiVersion("1.2.0")
+						.metadataDates(dates))
+				.availableFormats(Collections.singletonList(new MediaFile()
+						.fileType(MediaType.TEXT_CSV)
+						.fileSize(50L)
+						.checksum(new MediaFileAllOfChecksum()
+								.algo(HashAlgorithm.MD5)
+								.hash("SHA-256")
+						)
+						.mediaType(Media.MediaTypeEnum.FILE)
+						.mediaId(UUID.randomUUID())
+						.mediaCaption("On est obligé de mettre au moins un média pour respecter le swagger")
+						.connector(new Connector()
+								.url("www.connector1.org")
+								.interfaceContract("interface contrat 1")
+						)
+				))
+				.contacts(Collections.singletonList(new Contact()
+						.contactId(UUID.randomUUID())
+						.contactName("Nom du contact obligatoire")
+						.email("contact_test@rudi.fr")
+				))
+				.accessCondition(new MetadataAccessCondition()
+						.licence(new LicenceStandard()
+								.licenceLabel("licence_Apache-2.0")
+								.licenceType(Licence.LicenceTypeEnum.STANDARD)
+						)
+				)
+		;
 	}
 
 	private void deleteDataset(String doi) throws DataverseAPIException {

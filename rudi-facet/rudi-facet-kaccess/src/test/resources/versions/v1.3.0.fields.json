@@ -1,0 +1,1048 @@
+[
+	{
+		"typeName": "rudi_global_id",
+		"typeClass": "primitive",
+		"multiple": false,
+		"value": "f382ec4f-034b-411d-aab7-5b97a15eb92e"
+	},
+	{
+		"typeName": "rudi_local_id",
+		"typeClass": "primitive",
+		"multiple": false,
+		"value": "f382ec4f-034b-411d-aab7-5b97a15eb92e"
+	},
+	{
+		"typeName": "rudi_doi",
+		"typeClass": "primitive",
+		"multiple": false,
+		"value": "10.5072/FK2/JV9LCO"
+	},
+	{
+		"typeName": "rudi_resource_title",
+		"typeClass": "primitive",
+		"multiple": false,
+		"value": "Recensement des exploitations agricoles avec production de biogaz test unitaire du 2021-04-22T15:26:31.911992100"
+	},
+	{
+		"typeName": "rudi_abstract",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_abstract_language": {
+					"typeName": "rudi_abstract_language",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr-FR"
+				},
+				"rudi_abstract_text": {
+					"typeName": "rudi_abstract_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Résumé court en français"
+				}
+			},
+			{
+				"rudi_abstract_language": {
+					"typeName": "rudi_abstract_language",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "en-US"
+				},
+				"rudi_abstract_text": {
+					"typeName": "rudi_abstract_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "English short description"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_summary",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_summary_language": {
+					"typeName": "rudi_summary_language",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr-FR"
+				},
+				"rudi_summary_text": {
+					"typeName": "rudi_summary_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Exploitations agricoles avec production de biogaz \n texte sur plusieurs lignes"
+				}
+			},
+			{
+				"rudi_summary_language": {
+					"typeName": "rudi_summary_language",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "en-US"
+				},
+				"rudi_summary_text": {
+					"typeName": "rudi_summary_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "dictionnary entry"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_theme",
+		"typeClass": "primitive",
+		"multiple": false,
+		"value": "environment"
+	},
+	{
+		"typeName": "rudi_keywords",
+		"typeClass": "primitive",
+		"multiple": true,
+		"value": [
+			"biogaz",
+			"agriculture"
+		]
+	},
+	{
+		"typeName": "rudi_resource_language",
+		"typeClass": "primitive",
+		"multiple": true,
+		"value": [
+			"fr-FR",
+			"en-US"
+		]
+	},
+	{
+		"typeName": "rudi_temporal_spread",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_temporal_spread_start_date": {
+				"typeName": "rudi_temporal_spread_start_date",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1609687845000000000"
+			},
+			"rudi_temporal_spread_end_date": {
+				"typeName": "rudi_temporal_spread_end_date",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1650641160000000000"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_dataset_size",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_dataset_size_number_of_fields": {
+				"typeName": "rudi_dataset_size_number_of_fields",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "15"
+			},
+			"rudi_dataset_size_numbers_of_records": {
+				"typeName": "rudi_dataset_size_numbers_of_records",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "50"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_storage_status",
+		"typeClass": "primitive",
+		"multiple": false,
+		"value": "online"
+	},
+	{
+		"typeName": "rudi_access_condition",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_access_condition_confidentiality_restricted_access": {
+				"typeName": "rudi_access_condition_confidentiality_restricted_access",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "true"
+			},
+			"rudi_access_condition_licence_licence_label": {
+				"typeName": "rudi_access_condition_licence_licence_label",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "SkosConcept.concept_code"
+			},
+			"rudi_access_condition_licence_licence_type": {
+				"typeName": "rudi_access_condition_licence_licence_type",
+				"typeClass": "controlledVocabulary",
+				"multiple": false,
+				"value": "STANDARD"
+			},
+			"rudi_access_condition_confidentiality_gdpr_sensitive": {
+				"typeName": "rudi_access_condition_confidentiality_gdpr_sensitive",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "true"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_access_condition_usage_constraint",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_access_condition_usage_constraint_lang": {
+					"typeName": "rudi_access_condition_usage_constraint_lang",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr"
+				},
+				"rudi_access_condition_usage_constraint_text": {
+					"typeName": "rudi_access_condition_usage_constraint_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_access_condition_bibliographical_reference",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_access_condition_bibliographical_reference_text": {
+					"typeName": "rudi_access_condition_bibliographical_reference_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "abeilles"
+				},
+				"rudi_access_condition_bibliographical_reference_lang": {
+					"typeName": "rudi_access_condition_bibliographical_reference_lang",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr-FR"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_access_condition_mandatory_mention",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_access_condition_mandatory_mention_lang": {
+					"typeName": "rudi_access_condition_mandatory_mention_lang",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr-FR"
+				},
+				"rudi_access_condition_mandatory_mention_text": {
+					"typeName": "rudi_access_condition_mandatory_mention_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Source: Région Bretagne"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_access_condition_access_constraint",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_access_condition_access_constraint_text": {
+					"typeName": "rudi_access_condition_access_constraint_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "abeilles"
+				},
+				"rudi_access_condition_access_constraint_lang": {
+					"typeName": "rudi_access_condition_access_constraint_lang",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr-FR"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_access_condition_other_constraints",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_access_condition_other_constraints_lang": {
+					"typeName": "rudi_access_condition_other_constraints_lang",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "fr"
+				},
+				"rudi_access_condition_other_constraints_text": {
+					"typeName": "rudi_access_condition_other_constraints_text",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Pas de restriction d'accès public"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_contact",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_contact_id": {
+					"typeName": "rudi_contact_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "d1c4b0d9-d97f-41a8-860f-43a253370b4f"
+				},
+				"rudi_contact_email": {
+					"typeName": "rudi_contact_email",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "dupont@onu.org"
+				},
+				"rudi_contact_name": {
+					"typeName": "rudi_contact_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Dupont Pierre"
+				},
+				"rudi_contact_organization_name": {
+					"typeName": "rudi_contact_organization_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Association Nature"
+				},
+				"rudi_contact_role": {
+					"typeName": "rudi_contact_role",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "manager"
+				},
+				"rudi_contact_summary": {
+					"typeName": "rudi_contact_summary",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Cette personne est le manager"
+				}
+			},
+			{
+				"rudi_contact_id": {
+					"typeName": "rudi_contact_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "4a46ffa1-6f42-49f0-ae3c-2534d7aa71cd"
+				},
+				"rudi_contact_email": {
+					"typeName": "rudi_contact_email",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "rudi@onu.org"
+				},
+				"rudi_contact_name": {
+					"typeName": "rudi_contact_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "rudi contact for test"
+				},
+				"rudi_contact_organization_name": {
+					"typeName": "rudi_contact_organization_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "rudi corp"
+				},
+				"rudi_contact_role": {
+					"typeName": "rudi_contact_role",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "admmin"
+				},
+				"rudi_contact_summary": {
+					"typeName": "rudi_contact_summary",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Cette personne est l'admin"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_dataset_dates",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_dataset_dates_created": {
+				"typeName": "rudi_dataset_dates_created",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1612137600000000000"
+			},
+			"rudi_dataset_dates_validated": {
+				"typeName": "rudi_dataset_dates_validated",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1612224000000000000"
+			},
+			"rudi_dataset_dates_published": {
+				"typeName": "rudi_dataset_dates_published",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1612310400000000000"
+			},
+			"rudi_dataset_dates_updated": {
+				"typeName": "rudi_dataset_dates_updated",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1615532400000000000"
+			},
+			"rudi_dataset_dates_expires": {
+				"typeName": "rudi_dataset_dates_expires",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1619568000000000000"
+			},
+			"rudi_dataset_dates_deleted": {
+				"typeName": "rudi_dataset_dates_deleted",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1619654400000000000"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_geography",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_geography_projection": {
+				"typeName": "rudi_geography_projection",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "EPSG:4326"
+			},
+			"rudi_geography_bounding_box_north_latitude": {
+				"typeName": "rudi_geography_bounding_box_north_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "71"
+			},
+			"rudi_geography_geographic_distribution": {
+				"typeName": "rudi_geography_geographic_distribution",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "{\"type\":\"Polygon\",\"coordinates\":[[[18,71],[10.1,71],[10.1,42],[18,42],[18,71]]]}"
+			},
+			"rudi_geography_bounding_box_west_longitude": {
+				"typeName": "rudi_geography_bounding_box_west_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "18"
+			},
+			"rudi_geography_bounding_box_east_longitude": {
+				"typeName": "rudi_geography_bounding_box_east_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "10.1"
+			},
+			"rudi_geography_bounding_box_south_latitude": {
+				"typeName": "rudi_geography_bounding_box_south_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "42"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_media",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_media_type": {
+					"typeName": "rudi_media_type",
+					"typeClass": "controlledVocabulary",
+					"multiple": false,
+					"value": "FILE"
+				},
+				"rudi_mediafile_size": {
+					"typeName": "rudi_mediafile_size",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "50"
+				},
+				"rudi_media_connector_url": {
+					"typeName": "rudi_media_connector_url",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+				},
+				"rudi_mediafile_checksum_algo": {
+					"typeName": "rudi_mediafile_checksum_algo",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "MD5"
+				},
+				"rudi_mediafile_encoding": {
+					"typeName": "rudi_mediafile_encoding",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "UTF-8"
+				},
+				"rudi_mediafile_type": {
+					"typeName": "rudi_mediafile_type",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "text/csv"
+				},
+				"rudi_mediafile_checksum_hash": {
+					"typeName": "rudi_mediafile_checksum_hash",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "SHA-256"
+				},
+				"rudi_mediafile_structure": {
+					"typeName": "rudi_mediafile_structure",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+				},
+				"rudi_media_connector_interface_contract": {
+					"typeName": "rudi_media_connector_interface_contract",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "dwnl"
+				},
+				"rudi_media_connector_connector_parameters": {
+					"typeName": "rudi_media_connector_connector_parameters",
+					"typeClass": "primitive",
+					"multiple": true,
+					"value": [
+						"{\"key\":\"mime_type\",\"value\":\"text/csv\",\"type\":\"STRING\"}"
+					]
+				},
+				"rudi_media_id": {
+					"typeName": "rudi_media_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "958b8a63-8302-4aa6-ae28-42cb5a1ee192"
+				},
+				"rudi_media_name": {
+					"typeName": "rudi_media_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "file.csv"
+				},
+				"rudi_media_caption": {
+					"typeName": "rudi_media_caption",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Média de type FILE"
+				},
+				"rudi_media_visual": {
+					"typeName": "rudi_media_visual",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https://cdn-icons-png.flaticon.com/512/180/180855.png"
+				},
+				"rudi_media_media_dates_created": {
+					"typeName": "rudi_media_media_dates_created",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612137600000000000"
+				},
+				"rudi_media_media_dates_validated": {
+					"typeName": "rudi_media_media_dates_validated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612224000000000000"
+				},
+				"rudi_media_media_dates_published": {
+					"typeName": "rudi_media_media_dates_published",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612310400000000000"
+				},
+				"rudi_media_media_dates_updated": {
+					"typeName": "rudi_media_media_dates_updated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1615532400000000000"
+				},
+				"rudi_media_media_dates_expires": {
+					"typeName": "rudi_media_media_dates_expires",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619568000000000000"
+				},
+				"rudi_media_media_dates_deleted": {
+					"typeName": "rudi_media_media_dates_deleted",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619654400000000000"
+				}
+			},
+			{
+				"rudi_media_type": {
+					"typeName": "rudi_media_type",
+					"typeClass": "controlledVocabulary",
+					"multiple": false,
+					"value": "SERIES"
+				},
+				"rudi_media_connector_url": {
+					"typeName": "rudi_media_connector_url",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "www.connector2.org"
+				},
+				"rudi_mediaseries_current_number_of_records": {
+					"typeName": "rudi_mediaseries_current_number_of_records",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "20"
+				},
+				"rudi_mediaseries_period": {
+					"typeName": "rudi_mediaseries_period",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "10"
+				},
+				"rudi_mediaseries_total_number_of_records": {
+					"typeName": "rudi_mediaseries_total_number_of_records",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "80"
+				},
+				"rudi_media_connector_interface_contract": {
+					"typeName": "rudi_media_connector_interface_contract",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "interface contrat 2"
+				},
+				"rudi_media_connector_connector_parameters": {
+					"typeName": "rudi_media_connector_connector_parameters",
+					"typeClass": "primitive",
+					"multiple": true,
+					"value": [
+						"{\"key\":\"mime_type\",\"value\":\"audio/mpeg\",\"type\":\"STRING\"}"
+					]
+				},
+				"rudi_media_id": {
+					"typeName": "rudi_media_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0"
+				},
+				"rudi_media_name": {
+					"typeName": "rudi_media_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "series"
+				},
+				"rudi_media_caption": {
+					"typeName": "rudi_media_caption",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Média de type SERIES"
+				},
+				"rudi_media_visual": {
+					"typeName": "rudi_media_visual",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/54fbf860-1d0d-46e7-a22a-74edb3053c67/d6qj64q-f30328aa-5b8c-4ec4-979a-dea8d78c5498.png"
+				},
+				"rudi_media_media_dates_created": {
+					"typeName": "rudi_media_media_dates_created",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612137600000000000"
+				},
+				"rudi_media_media_dates_validated": {
+					"typeName": "rudi_media_media_dates_validated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612224000000000000"
+				},
+				"rudi_media_media_dates_published": {
+					"typeName": "rudi_media_media_dates_published",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612310400000000000"
+				},
+				"rudi_media_media_dates_updated": {
+					"typeName": "rudi_media_media_dates_updated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1615532400000000000"
+				},
+				"rudi_media_media_dates_expires": {
+					"typeName": "rudi_media_media_dates_expires",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619568000000000000"
+				},
+				"rudi_media_media_dates_deleted": {
+					"typeName": "rudi_media_media_dates_deleted",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619654400000000000"
+				},
+				"rudi_mediaseries_latency": {
+					"typeName": "rudi_mediaseries_latency",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "100"
+				},
+				"rudi_mediaseries_total_size": {
+					"typeName": "rudi_mediaseries_total_size",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "500"
+				},
+				"rudi_mediaseries_current_size": {
+					"typeName": "rudi_mediaseries_current_size",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "328"
+				}
+			},
+			{
+				"rudi_media_type": {
+					"typeName": "rudi_media_type",
+					"typeClass": "controlledVocabulary",
+					"multiple": false,
+					"value": "SERVICE"
+				},
+				"rudi_media_connector_url": {
+					"typeName": "rudi_media_connector_url",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+				},
+				"rudi_media_connector_interface_contract": {
+					"typeName": "rudi_media_connector_interface_contract",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "wfs"
+				},
+				"rudi_media_connector_connector_parameters": {
+					"typeName": "rudi_media_connector_connector_parameters",
+					"typeClass": "primitive",
+					"multiple": true,
+					"value": [
+						"{\"key\":\"mime_type\",\"value\":\"application/vnd.api+json\",\"type\":\"STRING\"}",
+						"{\"key\":\"encrypted\",\"value\":\"false\",\"type\":\"BOOLEAN\"}"
+					]
+				},
+				"rudi_media_id": {
+					"typeName": "rudi_media_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "4186de52-764f-4de3-89ea-1f37566b715e"
+				},
+				"rudi_media_name": {
+					"typeName": "rudi_media_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "service"
+				},
+				"rudi_media_caption": {
+					"typeName": "rudi_media_caption",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Média de type SERVICE"
+				},
+				"rudi_media_visual": {
+					"typeName": "rudi_media_visual",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https://cdn-icons-png.flaticon.com/512/950/950299.png"
+				},
+				"rudi_media_media_dates_created": {
+					"typeName": "rudi_media_media_dates_created",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612137600000000000"
+				},
+				"rudi_media_media_dates_validated": {
+					"typeName": "rudi_media_media_dates_validated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612224000000000000"
+				},
+				"rudi_media_media_dates_published": {
+					"typeName": "rudi_media_media_dates_published",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612310400000000000"
+				},
+				"rudi_media_media_dates_updated": {
+					"typeName": "rudi_media_media_dates_updated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1615532400000000000"
+				},
+				"rudi_media_media_dates_expires": {
+					"typeName": "rudi_media_media_dates_expires",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619568000000000000"
+				},
+				"rudi_media_media_dates_deleted": {
+					"typeName": "rudi_media_media_dates_deleted",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619654400000000000"
+				},
+				"rudi_mediaservice_api_documentation_url": {
+					"typeName": "rudi_mediaservice_api_documentation_url",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https:\/\/docs.microsoft.com\/fr-fr\/exchange\/client-developer\/web-service-reference\/url-ex15websvcsotherref"
+				}
+			}
+		]
+	},
+	{
+		"typeName": "rudi_metadata_info",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_metadata_info_dates_validated": {
+				"typeName": "rudi_metadata_info_dates_validated",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1614643200000000000"
+			},
+			"rudi_metadata_info_dates_created": {
+				"typeName": "rudi_metadata_info_dates_created",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1614556800000000000"
+			},
+			"rudi_metadata_info_dates_published": {
+				"typeName": "rudi_metadata_info_dates_published",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1614729600000000000"
+			},
+			"rudi_metadata_info_dates_updated": {
+				"typeName": "rudi_metadata_info_dates_updated",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1615446000000000000"
+			},
+			"rudi_metadata_info_dates_expires": {
+				"typeName": "rudi_metadata_info_dates_expires",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1619568000000000000"
+			},
+			"rudi_metadata_info_dates_deleted": {
+				"typeName": "rudi_metadata_info_dates_deleted",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1616371200000000000"
+			},
+			"rudi_metadata_info_provider_organization_name": {
+				"typeName": "rudi_metadata_info_provider_organization_name",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "Fournisseur rudi name"
+			},
+			"rudi_metadata_info_api_version": {
+				"typeName": "rudi_metadata_info_api_version",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1.3.0"
+			},
+			"rudi_metadata_info_provider_organization_id": {
+				"typeName": "rudi_metadata_info_provider_organization_id",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "1b988e5d-3c5d-4bcb-84f9-8a6702d5d7c0"
+			},
+			"rudi_metadata_info_provider_organization_address": {
+				"typeName": "rudi_metadata_info_provider_organization_address",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "4 rue de la pomme"
+			},
+			"rudi_metadata_info_provider_organization_coordinates_latitude": {
+				"typeName": "rudi_metadata_info_provider_organization_coordinates_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "70"
+			},
+			"rudi_metadata_info_provider_organization_coordinates_longitude": {
+				"typeName": "rudi_metadata_info_provider_organization_coordinates_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "20"
+			},
+			"rudi_metadata_info_provider_organization_caption": {
+				"typeName": "rudi_metadata_info_provider_organization_caption",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "Fournisseur rudi caption"
+			},
+			"rudi_metadata_info_provider_organization_summary": {
+				"typeName": "rudi_metadata_info_provider_organization_summary",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "Fournisseur rudi summary"
+			},
+			"rudi_metadata_info_metadata_source": {
+				"typeName": "rudi_metadata_info_metadata_source",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "https:\/\/data.explore.star.fr\/explore\/dataset\/mkt-partenaires-garages-td"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_producer",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_producer_organization_name": {
+				"typeName": "rudi_producer_organization_name",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "Producteur rudi"
+			},
+			"rudi_producer_organization_address": {
+				"typeName": "rudi_producer_organization_address",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "2 rue de rudi"
+			},
+			"rudi_producer_organization_id": {
+				"typeName": "rudi_producer_organization_id",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "acdccf43-566b-4134-b39e-ddf46c801242"
+			},
+			"rudi_producer_organization_coordinates_latitude": {
+				"typeName": "rudi_producer_organization_coordinates_latitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "71"
+			},
+			"rudi_producer_organization_coordinates_longitude": {
+				"typeName": "rudi_producer_organization_coordinates_longitude",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "18"
+			},
+			"rudi_producer_organization_caption": {
+				"typeName": "rudi_producer_organization_caption",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "Producteur rudi"
+			},
+			"rudi_producer_organization_summary": {
+				"typeName": "rudi_producer_organization_summary",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "Producteur rudi"
+			}
+		}
+	},
+	{
+		"typeName": "rudi_metadata_info_contact",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_metadata_info_contact_name": {
+					"typeName": "rudi_metadata_info_contact_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Contact metadata 1"
+				},
+				"rudi_metadata_info_contact_organization_name": {
+					"typeName": "rudi_metadata_info_contact_organization_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "organisation metadata 1"
+				},
+				"rudi_metadata_info_contact_email": {
+					"typeName": "rudi_metadata_info_contact_email",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "rudiMetadata@onu.org"
+				},
+				"rudi_metadata_info_contact_id": {
+					"typeName": "rudi_metadata_info_contact_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "3b031485-5a9b-436c-abcc-053710f17994"
+				},
+				"rudi_metadata_info_contact_role": {
+					"typeName": "rudi_metadata_info_contact_role",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "communication 1"
+				},
+				"rudi_metadata_info_contact_contact_summary": {
+					"typeName": "rudi_metadata_info_contact_contact_summary",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Cette personne est un bon communicant"
+				}
+			},
+			{
+				"rudi_metadata_info_contact_name": {
+					"typeName": "rudi_metadata_info_contact_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Contact metadata 2"
+				},
+				"rudi_metadata_info_contact_organization_name": {
+					"typeName": "rudi_metadata_info_contact_organization_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "organisation metadata 2"
+				},
+				"rudi_metadata_info_contact_email": {
+					"typeName": "rudi_metadata_info_contact_email",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "contactMetadata@asso.org"
+				},
+				"rudi_metadata_info_contact_id": {
+					"typeName": "rudi_metadata_info_contact_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "c9475458-ccdd-4db5-9be7-96ee2ce46528"
+				},
+				"rudi_metadata_info_contact_role": {
+					"typeName": "rudi_metadata_info_contact_role",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "communication 2"
+				},
+				"rudi_metadata_info_contact_contact_summary": {
+					"typeName": "rudi_metadata_info_contact_contact_summary",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Cette personne est aussi un bon communicant"
+				}
+			}
+		]
+	}
+]

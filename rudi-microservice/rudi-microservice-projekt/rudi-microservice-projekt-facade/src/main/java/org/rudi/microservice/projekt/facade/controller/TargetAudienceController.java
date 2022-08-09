@@ -1,0 +1,60 @@
+package org.rudi.microservice.projekt.facade.controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.rudi.common.facade.util.UtilPageable;
+import org.rudi.microservice.projekt.core.bean.PagedTargetAudienceList;
+import org.rudi.microservice.projekt.core.bean.TargetAudience;
+import org.rudi.microservice.projekt.core.bean.TargetAudienceSearchCriteria;
+import org.rudi.microservice.projekt.facade.controller.api.TargetAudienceApi;
+import org.rudi.microservice.projekt.service.targetaudience.TargetAudienceService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+@RestController
+@RequiredArgsConstructor
+public class TargetAudienceController implements TargetAudienceApi {
+	private final TargetAudienceService targetAudienceService;
+	private final UtilPageable utilPageable;
+
+	@Override
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	public ResponseEntity<TargetAudience> createTargetAudience(TargetAudience targetAudience) throws Exception {
+		val created = targetAudienceService.createTargetAudience(targetAudience);
+		return ResponseEntity.ok(created);
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	public ResponseEntity<Void> deleteTargetAudience(UUID uuid) throws Exception {
+		targetAudienceService.deleteTargetAudience(uuid);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<TargetAudience> getTargetAudience(UUID uuid) throws Exception {
+		return ResponseEntity.ok(targetAudienceService.getTargetAudience(uuid));
+	}
+
+	@Override
+	public ResponseEntity<PagedTargetAudienceList> searchTargetAudiences(Integer limit, Integer offset, String order) throws Exception {
+		val searchCriteria = new TargetAudienceSearchCriteria();
+		val pageable = utilPageable.getPageable(offset, limit, order);
+		val page = targetAudienceService.searchTargetAudiences(searchCriteria, pageable);
+
+		return ResponseEntity.ok(new PagedTargetAudienceList()
+				.total(page.getTotalElements())
+				.elements(page.toList())
+		);
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	public ResponseEntity<Void> updateTargetAudience(TargetAudience targetAudience) throws Exception {
+		targetAudienceService.updateTargetAudience(targetAudience);
+		return ResponseEntity.noContent().build();
+	}
+}

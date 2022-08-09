@@ -3,10 +3,8 @@
  */
 package org.rudi.facet.bpmn.helper.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.ExclusiveGateway;
 import org.activiti.bpmn.model.FlowElement;
@@ -15,23 +13,37 @@ import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.VariableInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.rudi.bpmn.core.bean.Action;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity;
 import org.rudi.facet.bpmn.exception.InvalidDataException;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.service.TaskConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author FNI18300
@@ -39,9 +51,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class BpmnHelper {
 
 	public static final String DEFAULT_ACTION = "default";
+	private static final Logger LOGGER = LoggerFactory.getLogger(BpmnHelper.class);
 
 	@Value("${rudi.bpmn.role.name}")
 	private String adminRoleName;
@@ -54,6 +68,10 @@ public class BpmnHelper {
 
 	@Autowired
 	private FormHelper formHelper;
+
+	@Autowired
+	private final ApplicationContext applicationContext;
+
 
 	/**
 	 * Retourne la tâche activiti par son id
@@ -196,7 +214,6 @@ public class BpmnHelper {
 						e);
 			}
 		}
-
 		return result;
 	}
 
@@ -396,4 +413,147 @@ public class BpmnHelper {
 		return action;
 	}
 
+	public List<String> recomputeCandidateUsers(Task task) {
+		List<String> result = new ArrayList<>();
+		UserTask userTask = lookupUserTask(task);
+		// Liste de script à executer pour recalculer les users
+		List<String> candidateUsers = userTask.getCandidateUsers();
+		for(String candidateUser  : candidateUsers) {
+			try {
+				result.addAll(executeCandidateUser(candidateUser, task));
+			} catch (InvocationTargetException | IllegalAccessException exception) {
+				LOGGER.error("Exeception thrown during scriplet execution", exception);
+			}
+		}
+		return result;
+	}
+
+	private List<String> executeCandidateUser(String candidateUser, Task task) throws InvocationTargetException, IllegalAccessException {
+		String inputWithoutBrackets = removeBrackets(candidateUser);
+		String objectName = extractObject(inputWithoutBrackets);
+		String methodName = extractMethod(candidateUser);
+		String[] parametersFromScriptlet = extractParameters(candidateUser);
+		Object bean = applicationContext.getBean(objectName);
+		Method[] methods = bean.getClass().getDeclaredMethods();
+		Method targetMethod = lookupMethod(methods, methodName, parametersFromScriptlet.length);
+		ExecutionEntity executionEntity = lookupExecution(task);
+		Object[] parametersConverted = convertParameters(executionEntity, targetMethod.getParameters(), parametersFromScriptlet);
+		Object result  = targetMethod.invoke(bean, parametersConverted);
+		return convertResult(result);
+	}
+
+	private Object[] convertParameters(ExecutionEntity entity, Parameter[] trueTypes, String[] valuesGot) {
+		List<Object> arguments = new ArrayList<>();
+		arguments.add(null);
+ 		arguments.add(entity);
+		if (ArrayUtils.isNotEmpty(valuesGot)) {
+			for (int i = 2; i < valuesGot.length; i++) {
+				if(trueTypes[i].getType().equals(String.class)) {
+					arguments.add(removeDoubleQuotes(valuesGot[i]));
+				} else if(trueTypes[i].getType().equals(int.class) || trueTypes[i].getType().equals(Integer.class)) {
+					arguments.add(Integer.valueOf(valuesGot[i].trim()));
+				} else if(trueTypes[i].getType().equals(long.class) || trueTypes[i].getType().equals(Long.class)) {
+					arguments.add(Long.valueOf(valuesGot[i]));
+				} else if( trueTypes[i].getType().equals(float.class) || trueTypes[i].getType().equals(Float.class)) {
+					arguments.add(Float.valueOf(valuesGot[i]));
+				} else if( trueTypes[i].getType().equals(double.class) || trueTypes[i].getType().equals(Double.class)) {
+					arguments.add(Double.valueOf(valuesGot[i]));
+				} else if( trueTypes[i].getType().equals(boolean.class) || trueTypes[i].getType().equals(Boolean.class)) {
+					arguments.add(Boolean.valueOf(valuesGot[i]));
+				} else {
+					LOGGER.error("Type of paramater not allowed", trueTypes[i].getType().toString());
+					arguments.add(null);
+				}
+			}
+		}
+		return arguments.toArray();
+	}
+
+	private String removeDoubleQuotes(String input) {
+		return input.replace("\"", "");
+	}
+
+	private Method lookupMethod(Method[] methods, String methodName, int numberOfParam) {
+		for(Method method : methods) {
+			if(method.getName().equals(methodName) && method.getParameterCount() == numberOfParam) {
+				return method;
+			}
+		}
+		return null;
+	}
+
+	private String extractObject(String input) {
+		return input.substring(0, input.indexOf("."));
+	}
+
+	private String extractMethod(String input) {
+		String result = null;
+		input = removeBrackets(input);
+		int index1 = input.indexOf('.');
+		int index2 = input.indexOf('(');
+		if (index1 >= 0 && index2 > index1) {
+			result = input.substring(index1 + 1, index2);
+		}
+		return result;
+	}
+
+	private String[] extractParameters(String input) {
+		input = removeBrackets(input);
+		int index1 = input.indexOf('(');
+		int index2 = input.indexOf(')');
+		if (index1 >= 0 && index2 > index1) {
+			input = input.substring(index1 + 1, index2);
+			return input.split(",");
+		} else {
+			return new String[0];
+		}
+	}
+
+	private String removeBrackets(String input) {
+		if (input.startsWith("${")) {
+			input = input.substring(2, input.length() - 1);
+		}
+		return input;
+	}
+
+	private List<String> convertResult(Object input) {
+		if(input instanceof List) {
+			return (List<String>) input;
+		}
+		List<String> result = new ArrayList<>();
+		result.add((String) input);
+		return result;
+	}
+
+	public boolean isCandidateUser(String taskId, String login) {
+		org.activiti.engine.TaskService taskService = processEngine.getTaskService();
+		return taskService.getIdentityLinksForTask(taskId)
+				.stream().filter(element -> element.getType().equals("USER"))
+				.map(IdentityLink::getUserId)
+				.collect(Collectors.toList())
+				.contains(login);
+	}
+
+	/**
+	 * @param task
+	 */
+	private ExecutionEntity lookupExecution(Task task) {
+		ExecutionEntityImpl executionEntity = new ExecutionEntityImpl();
+		executionEntity.setActive(true);
+		executionEntity.setDeleted(true);
+		executionEntity.setProcessInstance(executionEntity);
+		executionEntity.setTenantId(task.getTenantId());
+		executionEntity.setParentId(task.getParentTaskId());
+		executionEntity.setProcessDefinitionId(task.getProcessDefinitionId());
+		executionEntity.setProcessDefinitionName(lookupProcessInstance(task).getProcessDefinitionName());
+		executionEntity.setProcessDefinitionKey(lookupProcessInstance(task).getProcessDefinitionKey());
+		executionEntity
+				.setProcessDefinitionVersion(lookupProcessInstance(task).getProcessDefinitionVersion());
+		executionEntity.setBusinessKey(lookupProcessInstanceBusinessKey(task));
+		executionEntity.setStartTime(task.getCreateTime());
+		executionEntity.setDescription(task.getDescription());
+		executionEntity.setVariables(task.getProcessVariables());
+		executionEntity.setVariablesLocal(task.getTaskLocalVariables());
+		return executionEntity;
+	}
 }

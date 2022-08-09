@@ -907,6 +907,42 @@
 				}
 			}
 		},
+		"/projects/my-projects": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche de projets",
+				"description": "Recherche de projets",
+				"operationId": "getMyProjects",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedProjectList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
 		"/projects/{uuid}": {
 			"put": {
 				"tags": [
@@ -1891,6 +1927,50 @@
 				}
 			}
 		},
+		"/projects/{projectUuid}/numberOfDataset": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Nombre de jdd d'un projet",
+				"description": "Retourne le nombre total de jdds rattachés au projet (restreint + ouvert + nouvelle demande).",
+				"operationId": "getNumberOfRequests",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne le nombre de jdds rattachés en integer",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "integer"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/supports": {
 			"post": {
 				"tags": [
@@ -2345,6 +2425,225 @@
 				}
 			}
 		},
+		"/target-audience": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un nouveau public cible",
+				"description": "Crée un public cible",
+				"operationId": "createTargetAudience",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/TargetAudience"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Public cible créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/TargetAudience"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche de public cible",
+				"description": "Recherche de public cible",
+				"operationId": "searchTargetAudiences",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedTargetAudienceList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un public cible",
+				"description": "Modifie un public cible",
+				"operationId": "updateTargetAudience",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/TargetAudience"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Public cible modifié avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+		}
+		},
+		"/target-audience/{uuid}": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un public cible",
+				"description": "Récupère un public cible donné via son UUID",
+				"operationId": "getTargetAudience",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/TargetAudience"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime un public cible",
+				"description": "Supprime un public cible via son UUID",
+				"operationId": "deleteTargetAudience",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Public cible supprimé avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
 		"/owner-info/{ownerType}/{ownerUuid}": {
 			"get": {
 				"tags": [
@@ -2364,13 +2663,7 @@
 						}
 					},
 					{
-						"name": "ownerUuid",
-						"in": "path",
-						"description": "UUID du porteur de projet",
-						"required": true,
-						"schema": {
-							"$ref": "rudi-projekt-model.json#/components/schemas/OwnerUuid"
-						}
+						"$ref": "#/components/parameters/OwnerUuidParam"
 					}
 				],
 				"responses": {
@@ -2383,6 +2676,133 @@
 								}
 							}
 						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/owner-info/{ownerUuid}/dataset-access/{datasetUuid}": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Vérifie si le porteur de projet a accès au jeu de données indiqué",
+				"description": "Un porteur de projet peut être un utilisateur ou une organisation.",
+				"operationId": "checkOwnerHasAccessToDataset",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/OwnerUuidParam"
+					},
+					{
+						"name": "datasetUuid",
+						"in": "path",
+						"description": "UUID du jeu de données dont on cherche à vérifier si l'accès est autorisé",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "b9887e0f-db4e-47f0-87cd-e2f7f8d80689"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "true si le porteur de projet a accès au jeu de données.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean",
+									"example": true
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/notify/organization/{organizationUuid}/member/{userUuid}": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Notifier l'ajout d'un nouvel utilisateur dans une organisation",
+				"description": "Notifier l'ajout d'un nouvel utilisateur dans une organisation pour lui donner les droits sur les tâches liées",
+				"operationId": "handleAddOrganizationMember",
+				"parameters": [
+					{
+						"name": "organizationUuid",
+						"in": "path",
+						"description": "UUID de l'organisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "UUID de l'utilisateur ajouté",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"task"
+				],
+				"summary": "Notifier la suppression d'un utilisateur dans une organisation",
+				"description": "Notifier la suppression d'un utilisateur dans une organisation pour supprimer ses droits sur les tâches liées",
+				"operationId": "handleRemoveOrganizationMember",
+				"parameters": [
+					{
+						"name": "organizationUuid",
+						"in": "path",
+						"description": "UUID de l'organisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "UUID de l'utilisateur supprimé",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
 					},
 					"500": {
 						"description": "Internal server error",
@@ -3961,11 +4381,28 @@
 				"schema": {
 					"type": "string"
 				}
+			},
+			"OwnerUuidParam": {
+				"name": "ownerUuid",
+				"in": "path",
+				"description": "UUID du porteur de projet",
+				"required": true,
+				"schema": {
+					"$ref": "rudi-projekt-model.json#/components/schemas/OwnerUuid"
+				},
+				"example": "39a9d56e-1c99-47b5-9367-7aef7f4c075f"
 			}
 		},
 		"responses": {
 			"InternalServerError": {
-				"description": "Internal server error"
+				"description": "Internal server error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
 			},
 			"BadRequestError": {
 				"description": "Bad Request Error",

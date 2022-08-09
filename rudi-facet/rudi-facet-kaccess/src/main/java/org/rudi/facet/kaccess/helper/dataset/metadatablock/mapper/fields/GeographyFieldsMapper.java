@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.GEOGRAPHY;
 
 @Component
-public class GeographyFieldsMapper extends FieldsMapper<MetadataGeography> {
+class GeographyFieldsMapper extends SingleValuedFieldsMapper<MetadataGeography> {
 
 	public GeographyFieldsMapper(FieldGenerator fieldGenerator, GeographyPrimitiveFieldsMapper primitiveFieldsMapper) {
 		super(fieldGenerator, GEOGRAPHY, primitiveFieldsMapper);

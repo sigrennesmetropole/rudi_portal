@@ -3,13 +3,6 @@
  */
 package org.rudi.facet.bpmn.dao.form.impl;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.facet.bpmn.bean.form.SectionDefinitionSearchCriteria;
@@ -20,6 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
 
 /**
  * @author FNI18300
@@ -48,7 +47,7 @@ public class SectionDefinitionCustomDaoImpl
 			Root<SectionDefinitionEntity> root, List<Predicate> predicates) {
 		if (searchCriteria != null) {
 			if (StringUtils.isNotEmpty(searchCriteria.getName())) {
-				buildPredicateStringCriteria(searchCriteria.getName(), NAME_PROPERTY, builder, root);
+				predicates.add(buildPredicateStringCriteria(searchCriteria.getName(), NAME_PROPERTY, builder, root));
 			}
 		}
 	}

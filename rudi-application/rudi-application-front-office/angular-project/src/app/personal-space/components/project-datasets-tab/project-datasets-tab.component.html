@@ -1,0 +1,18 @@
+<div>
+    <mat-card class="main-container">
+        <div class="div-container">
+            <div *ngIf="!loading && !initializationError">
+                <button mat-raised-button class="subscribe-button" (click)="handleClickSubscribe()">
+                    <mat-icon>lock_open</mat-icon>
+                    {{ 'personalSpace.projectDatasets.subscribe' | translate}}
+                </button>
+            </div>
+            <app-error-box *ngIf="initializationError"
+                           [text]="'personalSpace.projectDatasets.errorInitialization' | translate"></app-error-box>
+            <div *ngIf="loading">
+                <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="loading"></app-loader>
+            </div>
+        </div>
+        <app-work-in-progress></app-work-in-progress>
+    </mat-card>
+</div>

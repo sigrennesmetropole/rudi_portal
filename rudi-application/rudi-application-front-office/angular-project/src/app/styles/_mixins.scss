@@ -90,3 +90,20 @@
     height: $size;
     width: $size;
 }
+
+@mixin block-with-margin-top($margin-top) {
+    display: inline-block; /* to activate margin-top */
+    width: 100%;
+    margin-top: $margin-top;
+}
+
+@mixin encircled($size: 1.7em, $border-width: 1px) {
+    border: solid $border-width;
+    border-radius: 100%;
+    height: $size;
+    width: $size;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

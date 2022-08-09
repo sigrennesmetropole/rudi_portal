@@ -7,33 +7,34 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.rudi.facet.apimaccess.api.application.ApplicationOperationAPI;
-import org.rudi.facet.apimaccess.bean.API;
 import org.rudi.facet.apimaccess.bean.APIDescription;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusAction;
-import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
 import org.rudi.facet.apimaccess.bean.Application;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscription;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptionSearchCriteria;
-import org.rudi.facet.apimaccess.bean.ApplicationAPISubscriptions;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
+import org.rudi.facet.apimaccess.bean.DevPortalSubscriptionSearchCriteria;
 import org.rudi.facet.apimaccess.bean.InterfaceContract;
 import org.rudi.facet.apimaccess.bean.LimitingPolicies;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.APIManagerHttpException;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApimaccessSpringBootTest;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.apimaccess.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
+import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
 
 import java.util.List;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ApimaccessSpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -47,9 +48,6 @@ class ApiManagerServiceTest {
 
 	@Autowired
 	private ApplicationService applicationService;
-
-	@Autowired
-	private ApplicationOperationAPI applicationOperationAPI;
 
 	@Value("${apimanager.oauth2.client.admin.registration.id}")
 	private String adminRegistrationId;
@@ -100,7 +98,7 @@ class ApiManagerServiceTest {
 				.providerUuid(apiDescription.getProviderUuid())
 				.providerCode(apiDescription.getProviderCode())
 				.globalId(apiDescription.getGlobalId());
-		APIList apiList = apIsService.searchAPI(apiSearchCriteria);
+		final var apiList = apIsService.searchAPI(apiSearchCriteria);
 		Assertions.assertEquals(1, apiList.getCount());
 
 		// récupération des subscription policies d'une api
@@ -125,8 +123,6 @@ class ApiManagerServiceTest {
 				.description("application de test")
 				.throttlingPolicy(applicationPolicy.getName()), adminRegistrationId);
 
-		applicationOperationAPI.generateKeysApplication(application.getApplicationId(), adminRegistrationId);
-
 		// récupération d'une application
 		Application applicationGet = applicationService.getApplication(application.getApplicationId(), adminRegistrationId);
 		Assertions.assertNotNull(applicationGet);
@@ -136,13 +132,13 @@ class ApiManagerServiceTest {
 		Assertions.assertTrue(applications.getCount() > 0);
 
 		// création d'une souscription
-		ApplicationAPISubscription applicationAPISubscription = applicationService.subscribeAPI(new ApplicationAPISubscription()
+		Subscription applicationAPISubscription = applicationService.subscribeAPI(new Subscription()
 				.apiId(api.getId())
 				.applicationId(application.getApplicationId())
 				.throttlingPolicy(subscriptionLimitingPolicy.getName()), adminRegistrationId);
 
 		// Recherche des souscriptions pour l'application
-		ApplicationAPISubscriptions applicationAPISubscriptions = applicationService.searchApplicationAPISubscriptions(new ApplicationAPISubscriptionSearchCriteria()
+		SubscriptionList applicationAPISubscriptions = applicationService.searchApplicationAPISubscriptions(new DevPortalSubscriptionSearchCriteria()
 				.limit(10).offset(0).applicationId(application.getApplicationId()), adminRegistrationId);
 		Assertions.assertEquals(1, applicationAPISubscriptions.getCount());
 		Assertions.assertEquals(api.getId(), applicationAPISubscriptions.getList().get(0).getApiId());
@@ -150,7 +146,7 @@ class ApiManagerServiceTest {
 
 		// supprimer la souscription et test pour s'assurer qu'elle n'existe plus
 		applicationService.unsubscribeAPI(applicationAPISubscription.getSubscriptionId(), adminRegistrationId);
-		ApplicationAPISubscriptions applicationAPISubscriptionsAfterRemove = applicationService.searchApplicationAPISubscriptions(new ApplicationAPISubscriptionSearchCriteria()
+		SubscriptionList applicationAPISubscriptionsAfterRemove = applicationService.searchApplicationAPISubscriptions(new DevPortalSubscriptionSearchCriteria()
 				.limit(10).offset(0).applicationId(application.getApplicationId()), adminRegistrationId);
 		Assertions.assertEquals(0, applicationAPISubscriptionsAfterRemove.getCount());
 	}
@@ -161,17 +157,38 @@ class ApiManagerServiceTest {
 		if (!StringUtils.isEmpty(application.getApplicationId())) {
 			applicationService.deleteApplication(application.getApplicationId(), adminRegistrationId);
 
-			org.assertj.core.api.Assertions.assertThatExceptionOfType(APIManagerException.class)
-					.isThrownBy(() -> applicationService.getApplication(application.getApplicationId(), adminRegistrationId))
-					.withCauseInstanceOf(org.springframework.web.reactive.function.client.WebClientResponseException.NotFound.class)
-					.withRootCauseInstanceOf(org.springframework.web.reactive.function.client.WebClientResponseException.NotFound.class);
+			try {
+				applicationService.getApplication(application.getApplicationId(), adminRegistrationId);
+			} catch (Exception e) {
+				assertThat(e)
+						.isInstanceOf(APIManagerException.class)
+						.hasCauseInstanceOf(APIManagerHttpException.class)
+						.hasRootCauseInstanceOf(APIManagerHttpException.class)
+				;
+				final var cause = e.getCause();
+				assertThat(cause)
+						.hasMessageContaining("404")
+						.hasMessageContainingAll("Requested application with Id", "not found")
+				;
+			}
 		}
 		if (!StringUtils.isEmpty(api.getId())) {
 			apIsService.deleteAPI(api.getId());
 
-			org.assertj.core.api.Assertions.assertThatExceptionOfType(Exception.class)
-					.isThrownBy(() -> apIsService.getAPI(api.getId()))
-					.withCauseInstanceOf(org.springframework.web.reactive.function.client.WebClientResponseException.NotFound.class);
+			try {
+				apIsService.getAPI(api.getId());
+			} catch (Exception e) {
+				assertThat(e)
+						.isInstanceOf(APIManagerException.class)
+						.hasCauseInstanceOf(APIManagerHttpException.class)
+						.hasRootCauseInstanceOf(APIManagerHttpException.class)
+				;
+				final var cause = e.getCause();
+				assertThat(cause)
+						.hasMessageContaining("404")
+						.hasMessageContainingAll("Requested API with Id", "not found")
+				;
+			}
 		}
 	}
 }

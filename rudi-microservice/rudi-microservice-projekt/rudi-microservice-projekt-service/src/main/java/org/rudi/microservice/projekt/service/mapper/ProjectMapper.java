@@ -39,6 +39,7 @@ public interface ProjectMapper extends AssetDescriptionMapper<ProjectEntity, Pro
 	@Mapping(target = "creationDate", ignore = true)
 	@Mapping(target = "updatedDate", ignore = true)
 	@Mapping(target = "assignee", ignore = true)
+	@Mapping(target = "targetAudiences", ignore = true)
 	void dtoToEntity(Project dto, @MappingTarget ProjectEntity entity);
 
 	@Override

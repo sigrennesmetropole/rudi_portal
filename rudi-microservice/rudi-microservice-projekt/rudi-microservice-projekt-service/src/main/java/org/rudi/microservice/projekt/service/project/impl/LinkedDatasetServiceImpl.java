@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -28,8 +29,6 @@ import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetE
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -62,12 +61,15 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 		// on rajoute aussi le producerUuid par la même
 		try {
 			var metadata = datasetService.getDataset(linkedDataset.getDatasetUuid());
-			var confidentiality = metadataDetailsHelper.isRestricted(metadata) ?
-					DatasetConfidentiality.RESTRICTED
-					: DatasetConfidentiality.OPENED;
+
+			final var datasetIsRestricted = metadataDetailsHelper.isRestricted(metadata);
+			// On interdit l'ajout d'un jdd restreint à une réutilisation
+			if (project.isAReuse() && datasetIsRestricted) {
+				throw new AppServiceException("Cannot associate restricted dataset to a project which is a reuse");
+			}
 
 			linkedDatasetEntity.setDescription(metadata.getResourceTitle());
-			linkedDatasetEntity.setDatasetConfidentiality(confidentiality);
+			linkedDatasetEntity.setDatasetConfidentiality(datasetIsRestricted ? DatasetConfidentiality.RESTRICTED : DatasetConfidentiality.OPENED);
 			if(metadata.getProducer() != null) {
 				linkedDatasetEntity.setDatasetOrganisationUuid(metadata.getProducer().getOrganizationId());
 			}
@@ -165,5 +167,9 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 			throw new AppServiceNotFoundException(ProjectEntity.class, projectUuid);
 		}
 		return project;
+	}
+	// JDD ouvert ou pas ? Permet de verifier à terme si un projet est une réutilisation ou pas
+	private boolean isRestrictedLinkedDataset(DatasetConfidentiality confidentiality) {
+		return confidentiality == DatasetConfidentiality.RESTRICTED;
 	}
 }

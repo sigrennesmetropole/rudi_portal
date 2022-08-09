@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 
 /**
@@ -258,8 +259,9 @@ class TaskServiceTest {
 		assertNotNull(t1bis.getAsset());
 		assertEquals("titi", t1bis.getAsset().getDescription());
 
-		List<Task> ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().a("toto").build());
-		int tsCount = ts.size();
+		Page<Task> ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().a("toto").build(),
+				Pageable.unpaged());
+		long tsCount = ts.getTotalElements();
 
 		// doCallRealMethod().when(javaMailSender).createMimeMessage();
 		doNothing().when(javaMailSender).send((MimeMessage) any());
@@ -268,9 +270,9 @@ class TaskServiceTest {
 		Task t2 = test1TaskService.startTask(t1);
 		assertNotNull(t2);
 
-		ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().a("toto").build());
+		ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().a("toto").build(), PageRequest.of(0, 10));
 		assertNotNull(ts);
-		assertEquals(ts.size(), tsCount + 1);
+		assertEquals(ts.getTotalElements(), tsCount + 1);
 
 		Task t3 = ts.stream().sorted(Comparator.comparing(Task::getCreationDate).reversed()).findFirst().orElse(null);
 
@@ -288,26 +290,29 @@ class TaskServiceTest {
 		Task t23 = test2TaskService.startTask(t22);
 		assertNotNull(t23);
 
-		ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().a("toto").build());
+		ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().a("toto").build(), Pageable.unpaged());
 		assertNotNull(ts);
-		assertEquals(ts.size(), tsCount + 2);
+		assertEquals(ts.getTotalElements(), tsCount + 2);
 
 		ts = taskQueryService.searchTasks(
-				TestTaskSearchCriteria.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build());
+				TestTaskSearchCriteria.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build(),
+				Pageable.unpaged());
 		assertNotNull(ts);
-		assertEquals(ts.size(), tsCount + 2);
+		assertEquals(ts.getTotalElements(), tsCount + 2);
 
-		ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().description("%es%").build());
+		ts = taskQueryService.searchTasks(TestTaskSearchCriteria.builder().description("%es%").build(),
+				Pageable.unpaged());
 		assertNotNull(ts);
-		assertEquals(ts.size(), tsCount + 1);
+		assertEquals(ts.getTotalElements(), tsCount + 1);
 
 		Action a = t4.getActions().get(0);
 		test1TaskService.doIt(t4.getId(), a.getName());
 
 		ts = taskQueryService.searchTasks(
-				TestTaskSearchCriteria.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build());
+				TestTaskSearchCriteria.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build(),
+				Pageable.unpaged());
 		assertNotNull(ts);
-		assertEquals(ts.size(), tsCount + 1);
+		assertEquals(ts.getTotalElements(), tsCount + 1);
 
 	}
 

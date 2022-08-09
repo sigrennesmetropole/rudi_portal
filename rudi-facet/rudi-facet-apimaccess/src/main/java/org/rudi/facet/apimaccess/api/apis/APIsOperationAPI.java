@@ -1,33 +1,32 @@
 package org.rudi.facet.apimaccess.api.apis;
 
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
-import org.rudi.facet.apimaccess.api.ManagerAPIProperties;
 import org.rudi.facet.apimaccess.api.MonoUtils;
-import org.rudi.facet.apimaccess.bean.API;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusAction;
-import org.rudi.facet.apimaccess.bean.APIList;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.OpenAPIVersion;
 import org.rudi.facet.apimaccess.exception.APIsOperationException;
 import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
+import org.rudi.facet.apimaccess.exception.PublisherHttpExceptionFactory;
 import org.rudi.facet.apimaccess.exception.UpdateAPILifecycleStatusException;
 import org.rudi.facet.apimaccess.exception.UpdateAPIOpenapiDefinitionException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_WEBCLIENT;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.ACTION;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.API_DEFINITION;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.API_ID;
@@ -46,10 +45,11 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 	private static final String API_UPDATE_LIFECYCLE_STATUS_PATH = API_PATH + "/change-lifecycle";
 
 	APIsOperationAPI(
-			@Qualifier(API_MACCESS_WEBCLIENT) WebClient webClient,
-			ManagerAPIProperties managerAPIProperties
+			PublisherHttpExceptionFactory publisherHttpExceptionFactory,
+			WebClient.Builder apimWebClientBuilder,
+			APIManagerProperties APIManagerProperties
 	) {
-		super(webClient, managerAPIProperties);
+		super(apimWebClientBuilder, publisherHttpExceptionFactory, APIManagerProperties);
 	}
 
 	public List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIsOperationWithIdException {
@@ -109,6 +109,9 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 		MonoUtils.blockOrThrow(mono, e -> new UpdateAPIOpenapiDefinitionException(apiId, apiDefinition, e));
 	}
 
+	/**
+	 * @see <a href="https://apim.docs.wso2.com/en/3.2.0/develop/product-apis/publisher-apis/publisher-v1/publisher-v1/#tag/API-Lifecycle/paths/~1apis~1change-lifecycle/post">Documentation WSO2</a>
+	 */
 	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws UpdateAPILifecycleStatusException {
 		final Mono<APIWorkflowResponse> mono = populateRequestWithAdminRegistrationId(HttpMethod.POST, buildPublisherURIPath(API_UPDATE_LIFECYCLE_STATUS_PATH),
 				uriBuilder -> uriBuilder

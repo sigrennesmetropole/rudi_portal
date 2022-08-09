@@ -3,6 +3,7 @@ package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 import org.rudi.facet.kaccess.bean.GeoJsonObject;
 import org.rudi.facet.kaccess.bean.MetadataGeography;
 import org.rudi.facet.kaccess.bean.MetadataGeographyBoundingBox;
@@ -23,8 +24,8 @@ import static org.rudi.facet.kaccess.constant.RudiMetadataField.GEOGRAPHY_PROJEC
 @Component
 class GeographyPrimitiveFieldsMapper extends PrimitiveFieldsMapper<MetadataGeography> {
 
-	GeographyPrimitiveFieldsMapper(FieldGenerator fieldGenerator, ObjectMapper objectMapper) {
-		super(fieldGenerator, objectMapper);
+	GeographyPrimitiveFieldsMapper(FieldGenerator fieldGenerator, ObjectMapper objectMapper, DateTimeMapper dateTimeMapper) {
+		super(fieldGenerator, objectMapper, dateTimeMapper);
 	}
 
 	@Override
@@ -45,20 +46,20 @@ class GeographyPrimitiveFieldsMapper extends PrimitiveFieldsMapper<MetadataGeogr
 
 	@Nonnull
 	@Override
-	public MetadataGeography fieldToMetadata(@Nonnull Field geographyField) throws DataverseMappingException {
+	public MetadataGeography fieldsToMetadata(@Nonnull MapOfFields fields) throws DataverseMappingException {
 		final MetadataGeography metadataGeography = new MetadataGeography()
 				.boundingBox(new MetadataGeographyBoundingBox()
-						.eastLongitude(requireNonNull(geographyField.get(GEOGRAPHY_BOUNDING_BOX_EAST_LONGITUDE)).getValueAsBigDecimal())
-						.westLongitude(requireNonNull(geographyField.get(GEOGRAPHY_BOUNDING_BOX_WEST_LONGITUDE)).getValueAsBigDecimal())
-						.northLatitude(requireNonNull(geographyField.get(GEOGRAPHY_BOUNDING_BOX_NORTH_LATITUDE)).getValueAsBigDecimal())
-						.southLatitude(requireNonNull(geographyField.get(GEOGRAPHY_BOUNDING_BOX_SOUTH_LATITUDE)).getValueAsBigDecimal()));
+						.eastLongitude(requireNonNull(fields.get(GEOGRAPHY_BOUNDING_BOX_EAST_LONGITUDE)).getValueAsBigDecimal())
+						.westLongitude(requireNonNull(fields.get(GEOGRAPHY_BOUNDING_BOX_WEST_LONGITUDE)).getValueAsBigDecimal())
+						.northLatitude(requireNonNull(fields.get(GEOGRAPHY_BOUNDING_BOX_NORTH_LATITUDE)).getValueAsBigDecimal())
+						.southLatitude(requireNonNull(fields.get(GEOGRAPHY_BOUNDING_BOX_SOUTH_LATITUDE)).getValueAsBigDecimal()));
 
-		final Field distributionField = geographyField.get(GEOGRAPHY_GEOGRAPHIC_DISTRIBUTION);
+		final Field distributionField = fields.get(GEOGRAPHY_GEOGRAPHIC_DISTRIBUTION);
 		if (distributionField != null) {
 			metadataGeography.geographicDistribution(distributionField.getValueAs(GeoJsonObject.class, objectMapper));
 		}
 
-		final Field projectionField = geographyField.get(GEOGRAPHY_PROJECTION);
+		final Field projectionField = fields.get(GEOGRAPHY_PROJECTION);
 		if (projectionField != null) {
 			metadataGeography.projection(projectionField.getValueAsString());
 		}

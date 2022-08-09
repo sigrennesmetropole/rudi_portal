@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.core.json.DefaultJackson2ObjectMapperBuilder;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.providers.bean.NodeProvider;
 import org.rudi.facet.providers.helper.ProviderHelper;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
@@ -64,6 +65,8 @@ class IntegrationRequestServiceImplTest {
 	@Mock
 	private DeleteIntegrationRequestTreatmentHandler deleteHandler;
 	@Mock
+	private DatasetService datasetService;
+	@Mock
 	private ProviderHelper providerHelper;
 	@Mock
 	private KalimProviderHelper kalimProviderHelper;
@@ -79,7 +82,8 @@ class IntegrationRequestServiceImplTest {
 				integrationRequestMapper, reportErrorMapper,
 				integrationRequestDao, integrationRequestCustomDao,
 				kalimProviderHelper, providerHelper, null,
-				postHandler, putHandler, deleteHandler
+				postHandler, putHandler, deleteHandler,
+				datasetService
 		);
 	}
 

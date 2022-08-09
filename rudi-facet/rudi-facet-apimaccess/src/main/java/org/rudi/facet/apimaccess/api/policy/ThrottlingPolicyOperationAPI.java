@@ -1,14 +1,14 @@
 package org.rudi.facet.apimaccess.api.policy;
 
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
-import org.rudi.facet.apimaccess.api.ManagerAPIProperties;
 import org.rudi.facet.apimaccess.api.MonoUtils;
 import org.rudi.facet.apimaccess.bean.LimitingPolicies;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.PolicyLevel;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
+import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.rudi.facet.apimaccess.exception.ThrottlingPolicyOperationException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_WEBCLIENT;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.OFFSET;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.POLICY_LEVEL;
@@ -29,10 +28,11 @@ public class ThrottlingPolicyOperationAPI extends AbstractManagerAPI {
 	private static final String POLICY_GET_PATH = POLICY_LIST_PATH + "/{policyName}";
 
 	ThrottlingPolicyOperationAPI(
-			@Qualifier(API_MACCESS_WEBCLIENT) WebClient webClient,
-			ManagerAPIProperties managerAPIProperties
+			WebClient.Builder apimWebClientBuilder,
+			APIManagerHttpExceptionFactory apiManagerHttpExceptionFactory,
+			APIManagerProperties apiManagerProperties
 	) {
-		super(webClient, managerAPIProperties);
+		super(apimWebClientBuilder, apiManagerHttpExceptionFactory, apiManagerProperties);
 	}
 
 	public LimitingPolicies searchLimitingPoliciesByPublisher(SearchCriteria searchCriteria, PolicyLevel policyLevel) throws ThrottlingPolicyOperationException {

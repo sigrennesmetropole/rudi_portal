@@ -10,7 +10,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  */
 @SpringBootApplication(scanBasePackages = { "org.rudi.common.service", "org.rudi.common.storage",
 		"org.rudi.facet.acl", "org.rudi.facet.dataverse", "org.rudi.facet.kmedia", "org.rudi.microservice.strukture.service",
-		"org.rudi.microservice.strukture.storage" })
+		"org.rudi.microservice.strukture.storage", "org.rudi.facet.projekt.helper" })
 public class SpringBootTestApplication {
 
 	@Bean

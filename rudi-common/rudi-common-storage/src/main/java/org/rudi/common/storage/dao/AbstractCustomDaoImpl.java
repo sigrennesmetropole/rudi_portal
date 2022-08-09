@@ -31,8 +31,6 @@ import lombok.val;
 @RequiredArgsConstructor
 public class AbstractCustomDaoImpl<E, C> {
 
-	protected static final String FIELD_UUID = "uuid";
-
 	protected final EntityManager entityManager;
 	protected final Class<E> entitiesClass;
 
@@ -208,8 +206,12 @@ public class AbstractCustomDaoImpl<E, C> {
 				.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
 		val typedQuery = entityManager.createQuery(searchQuery);
-		val projectEntities = typedQuery.setFirstResult((int) pageable.getOffset())
-				.setMaxResults(pageable.getPageSize()).getResultList();
+		if (pageable.isPaged()) {
+			typedQuery
+					.setFirstResult((int) pageable.getOffset())
+					.setMaxResults(pageable.getPageSize());
+		}
+		val projectEntities = typedQuery.getResultList();
 		return new PageImpl<>(projectEntities, pageable, totalCount.intValue());
 	}
 

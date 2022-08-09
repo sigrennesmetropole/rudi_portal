@@ -139,7 +139,7 @@ export class LoginComponent implements OnInit {
      * Quand l'utilisateur click sur le lien du message d'erreur après que son compte ait été bloqué
      */
     handleClickToResetPassword(): void {
-        this.router.navigate(['reset-password']).then(r => r);
+        this.router.navigate(['/login/forgot-password']).then(r => r);
     }
 
     /**

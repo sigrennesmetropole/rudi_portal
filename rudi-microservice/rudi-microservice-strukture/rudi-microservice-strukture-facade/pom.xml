@@ -172,6 +172,7 @@
 					</typeMappings>
 					<importMappings>
 						<importMapping>KindOfData=org.rudi.facet.kmedia.bean.KindOfData</importMapping>
+						<importMapping>User=org.rudi.facet.acl.bean.User</importMapping>
 					</importMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>

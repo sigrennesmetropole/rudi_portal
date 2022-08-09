@@ -3,15 +3,17 @@
  */
 package org.rudi.facet.bpmn.service.impl;
 
-import java.util.Iterator;
-import java.util.UUID;
-
+import lombok.AllArgsConstructor;
+import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.SetUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.FormDefinition;
 import org.rudi.bpmn.core.bean.FormSectionDefinition;
 import org.rudi.bpmn.core.bean.ProcessFormDefinition;
 import org.rudi.bpmn.core.bean.SectionDefinition;
+import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.facet.bpmn.bean.form.FormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.SectionDefinitionSearchCriteria;
@@ -25,21 +27,30 @@ import org.rudi.facet.bpmn.entity.form.FormDefinitionEntity;
 import org.rudi.facet.bpmn.entity.form.FormSectionDefinitionEntity;
 import org.rudi.facet.bpmn.entity.form.ProcessFormDefinitionEntity;
 import org.rudi.facet.bpmn.entity.form.SectionDefinitionEntity;
+import org.rudi.facet.bpmn.helper.form.ActionId;
 import org.rudi.facet.bpmn.mapper.form.FormDefinitionMapper;
 import org.rudi.facet.bpmn.mapper.form.FormSectionDefinitionMapper;
 import org.rudi.facet.bpmn.mapper.form.ProcessFormDefinitionMapper;
 import org.rudi.facet.bpmn.mapper.form.SectionDefinitionMapper;
 import org.rudi.facet.bpmn.service.FormService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.AllArgsConstructor;
+import javax.annotation.Nonnull;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeSet;
+import java.util.UUID;
 
 /**
  * @author FNI18300
- *
  */
 @Service
 @AllArgsConstructor
@@ -66,6 +77,12 @@ public class FormServiceImpl implements FormService {
 
 	private final ProcessFormDefinitionMapper processFormDefinitionMapper;
 
+	private final ResourceHelper resourceHelper;
+
+	private final SectionAdaptor sectionAdaptor = this.new SectionAdaptor();
+	private final FormAdaptor formAdaptor = this.new FormAdaptor();
+	private final ProcessFormAdaptor processFormAdaptor = this.new ProcessFormAdaptor();
+
 	@Override
 	@Transactional(readOnly = false)
 	public SectionDefinition createSectionDefinition(SectionDefinition section) {
@@ -84,6 +101,10 @@ public class FormServiceImpl implements FormService {
 		sectionDefinitionMapper.dtoToEntity(section, entity);
 		sectionDefintionDao.save(entity);
 		return sectionDefinitionMapper.entityToDto(entity);
+	}
+
+	private SectionDefinition createOrUpdateSectionDefinition(SectionDefinition section) {
+		return sectionAdaptor.createOrUpdateElement(section);
 	}
 
 	@Override
@@ -179,6 +200,10 @@ public class FormServiceImpl implements FormService {
 		return formDefinitionMapper.entityToDto(entity);
 	}
 
+	private FormDefinition createOrUpdateFormDefinition(FormDefinition form) {
+		return formAdaptor.createOrUpdateElement(form);
+	}
+
 	@Override
 	@Transactional(readOnly = false)
 	public FormDefinition addSectionDefinition(UUID formUuid, UUID sectionUuid, boolean readOnly, Integer position) {
@@ -269,6 +294,10 @@ public class FormServiceImpl implements FormService {
 		return processFormDefinitionMapper.entityToDto(entity);
 	}
 
+	private ProcessFormDefinition createOrUpdateProcessFormDefinition(ProcessFormDefinition processFormDefinition) {
+		return processFormAdaptor.createOrUpdateElement(processFormDefinition);
+	}
+
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteProcessFormDefinition(UUID processFormUuid) {
@@ -303,4 +332,193 @@ public class FormServiceImpl implements FormService {
 		return entity;
 	}
 
+	@Override
+	@Transactional // readOnly = false
+	public void createOrUpdateProcessFormDefinitionForAction(ActionId actionId) throws IOException {
+		val sectionName = getSectionNameForAction(actionId);
+		val section = createOrUpdateSectionDefinition(new SectionDefinition()
+				.name(sectionName)
+				.label(sectionName)
+				.definition(getJsonForSectionDefinition("bpmn/form/" + sectionName + ".json")));
+		val form = createOrUpdateFormDefinition(new FormDefinition()
+				.name(sectionName + "__form")
+				.addFormSectionDefinitionsItem(new FormSectionDefinition()
+						.order(1)
+						.readOnly(false)
+						.sectionDefinition(section)));
+		final var processForm = new ProcessFormDefinition()
+				.processDefinitionId(actionId.processDefinitionId)
+				.userTaskId(actionId.userTaskId)
+				.actionName(actionId.actionName)
+				.formDefinition(form);
+		createOrUpdateProcessFormDefinition(processForm);
+	}
+
+	private String getSectionNameForAction(ActionId actionId) {
+		return actionId.processDefinitionId + "__" + actionId.userTaskId + "__" + actionId.actionName;
+	}
+
+	@Nonnull
+	private String getJsonForSectionDefinition(String filename) throws IOException {
+		final var resource = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(filename);
+		if (!resource.exists()) {
+			throw new FileNotFoundException("JSON resource for section definition does not exist : " + filename);
+		}
+		return IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+	}
+
+	interface AbstractFormElementAdaptor<T, C> {
+
+		void validate(T element);
+
+		C buildSearchCriteriaToFindExisting(T element);
+
+		Page<T> search(C criteria, Pageable pageable);
+
+		void beforeUpdate(T existingElement, T element);
+
+		T create(T element);
+
+		T update(T element);
+
+		default T createOrUpdateElement(T element) {
+			validate(element);
+
+			val criteria = buildSearchCriteriaToFindExisting(element);
+			val pageable = PageRequest.of(0, 1);
+			val existingElements = search(criteria, pageable);
+			val elementDoesNotExist = existingElements.getTotalElements() == 0;
+			if (elementDoesNotExist) {
+				return create(element);
+			} else {
+				val existingElement = existingElements.getContent().get(0);
+				beforeUpdate(existingElement, element);
+				return update(element);
+			}
+		}
+
+	}
+
+	private class SectionAdaptor implements AbstractFormElementAdaptor<SectionDefinition, SectionDefinitionSearchCriteria> {
+		@Override
+		public void validate(SectionDefinition element) {
+			validateSection(element);
+		}
+
+		@Override
+		public SectionDefinitionSearchCriteria buildSearchCriteriaToFindExisting(SectionDefinition element) {
+			final var criteria = new SectionDefinitionSearchCriteria();
+			criteria.setName(element.getName());
+			return criteria;
+		}
+
+		@Override
+		public Page<SectionDefinition> search(SectionDefinitionSearchCriteria criteria, Pageable pageable) {
+			return searchSectionDefinitions(criteria, pageable);
+		}
+
+		@Override
+		public void beforeUpdate(SectionDefinition existingElement, SectionDefinition element) {
+			element.setUuid(existingElement.getUuid());
+		}
+
+		@Override
+		public SectionDefinition create(SectionDefinition element) {
+			return createSectionDefinition(element);
+		}
+
+		@Override
+		public SectionDefinition update(SectionDefinition element) {
+			return updateSectionDefinition(element);
+		}
+	}
+
+
+	private class FormAdaptor implements AbstractFormElementAdaptor<FormDefinition, FormDefinitionSearchCriteria> {
+
+		private final Comparator<SectionDefinition> sectionComparator = Comparator.comparing(SectionDefinition::getUuid);
+		private final Comparator<FormSectionDefinition> formSectionComparator = Comparator.comparing(FormSectionDefinition::getSectionDefinition, sectionComparator);
+
+		@Override
+		public void validate(FormDefinition element) {
+			validateForm(element);
+		}
+
+		@Override
+		public FormDefinitionSearchCriteria buildSearchCriteriaToFindExisting(FormDefinition form) {
+			final var criteria = new FormDefinitionSearchCriteria();
+			criteria.setFormName(form.getName());
+			return criteria;
+		}
+
+		@Override
+		public Page<FormDefinition> search(FormDefinitionSearchCriteria criteria, Pageable pageable) {
+			return searchFormDefinitions(criteria, pageable);
+		}
+
+		@Override
+		public void beforeUpdate(FormDefinition existingElement, FormDefinition element) {
+			element.setUuid(existingElement.getUuid());
+			syncFormSectionDefinitions(existingElement, element);
+		}
+
+		private void syncFormSectionDefinitions(FormDefinition existingElement, FormDefinition element) {
+			final var existingFormSections = new TreeSet<>(formSectionComparator);
+			existingFormSections.addAll(existingElement.getFormSectionDefinitions());
+
+			final var updatedFormSections = new TreeSet<>(formSectionComparator);
+			updatedFormSections.addAll(element.getFormSectionDefinitions());
+
+			final var modifiedFormSections = SetUtils.intersection(existingFormSections, updatedFormSections);
+			final var newFormSections = SetUtils.difference(updatedFormSections, existingFormSections);
+			element.setFormSectionDefinitions(new ArrayList<>(SetUtils.union(modifiedFormSections, newFormSections)));
+		}
+
+		@Override
+		public FormDefinition create(FormDefinition element) {
+			return createFormDefinition(element);
+		}
+
+		@Override
+		public FormDefinition update(FormDefinition element) {
+			return updateFormDefinition(element);
+		}
+	}
+
+
+	private class ProcessFormAdaptor implements AbstractFormElementAdaptor<ProcessFormDefinition, ProcessFormDefinitionSearchCriteria> {
+		@Override
+		public void validate(ProcessFormDefinition element) {
+			validateProcessForm(element);
+		}
+
+		@Override
+		public ProcessFormDefinitionSearchCriteria buildSearchCriteriaToFindExisting(ProcessFormDefinition processForm) {
+			final var criteria = new ProcessFormDefinitionSearchCriteria();
+			criteria.setProcessDefinitionId(processForm.getProcessDefinitionId());
+			criteria.setUserTaskId(processForm.getUserTaskId());
+			criteria.setActionName(processForm.getActionName());
+			return criteria;
+		}
+
+		@Override
+		public Page<ProcessFormDefinition> search(ProcessFormDefinitionSearchCriteria criteria, Pageable pageable) {
+			return searchProcessFormDefinitions(criteria, pageable);
+		}
+
+		@Override
+		public void beforeUpdate(ProcessFormDefinition existingElement, ProcessFormDefinition element) {
+			element.setUuid(existingElement.getUuid());
+		}
+
+		@Override
+		public ProcessFormDefinition create(ProcessFormDefinition element) {
+			return createProcessFormDefinition(element);
+		}
+
+		@Override
+		public ProcessFormDefinition update(ProcessFormDefinition element) {
+			return updateProcessFormDefinition(element);
+		}
+	}
 }

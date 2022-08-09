@@ -1,5 +1,10 @@
 package org.rudi.microservice.kalim.service.integration;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.UUID;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +16,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
+import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -25,19 +33,16 @@ import org.rudi.microservice.kalim.core.bean.Method;
 import org.rudi.microservice.kalim.core.bean.ProgressStatus;
 import org.rudi.microservice.kalim.core.exception.IntegrationException;
 import org.rudi.microservice.kalim.service.KalimSpringBootTest;
+import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.helper.provider.KalimProviderHelper;
 import org.rudi.microservice.kalim.service.integration.impl.handlers.PostIntegrationRequestTreatmentHandler;
 import org.rudi.microservice.kalim.service.integration.impl.handlers.PutIntegrationRequestTreatmentHandler;
+import org.rudi.microservice.kalim.service.mapper.IntegrationRequestMapper;
 import org.rudi.microservice.kalim.storage.dao.integration.IntegrationRequestDao;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 import static org.rudi.microservice.kalim.service.KalimTestConfigurer.initMetadata;
@@ -79,6 +84,12 @@ class IntegrationRequestServiceTest {
 
 	@Autowired
 	private PutIntegrationRequestTreatmentHandler putHandler;
+
+	@Autowired
+	private APIManagerHelper apiManagerHelper;
+
+	@Autowired
+	private IntegrationRequestMapper integrationRequestMapper;
 
 	@BeforeAll
 	static void beforeAll() throws IOException {
@@ -127,7 +138,7 @@ class IntegrationRequestServiceTest {
 	@Test
 	@Order(1)
 	@Disabled("Contrôle désactivé par la RUDI-1459")
-	void testCreateIntegrationRequestFromAnotherProvider() throws IntegrationException, IllegalAccessException, DataverseAPIException {
+	void testCreateIntegrationRequestFromAnotherProvider() throws IntegrationException, AppServiceException, DataverseAPIException {
 
 		final NodeProvider anotherNodeProvider = initNodeProvider();
 		when(mockedKalimProviderHelper.getAuthenticatedNodeProvider()).thenReturn(anotherNodeProvider);
@@ -148,7 +159,7 @@ class IntegrationRequestServiceTest {
 
 	@Test
 	@Order(2)
-	void testCreateIntegrationRequest() throws IntegrationException, IllegalAccessException, DataverseAPIException {
+	void testCreateIntegrationRequest() throws IntegrationException, AppServiceException, DataverseAPIException {
 
 		IntegrationRequest integrationRequestResult = integrationRequestService.createIntegrationRequest(metadata,
 				Method.POST);
@@ -167,7 +178,7 @@ class IntegrationRequestServiceTest {
 	@Test
 	@Order(3)
 	@Disabled("Contrôle désactivé par la RUDI-1459")
-	void testUpdateIntegrationRequestFromAnotherProvider() throws IntegrationException, IllegalAccessException, DataverseAPIException {
+	void testUpdateIntegrationRequestFromAnotherProvider() throws IntegrationException, AppServiceException, DataverseAPIException {
 
 		final NodeProvider anotherNodeProvider = initNodeProvider();
 		when(mockedKalimProviderHelper.getAuthenticatedNodeProvider()).thenReturn(anotherNodeProvider);
@@ -192,7 +203,7 @@ class IntegrationRequestServiceTest {
 	@Test
 	@Order(4)
 	@Disabled("Contrôle désactivé par la RUDI-1459")
-	void testUpdateIntegrationRequestFromAnotherProviderThanTheCreator() throws IntegrationException, IllegalAccessException, DataverseAPIException, IOException {
+	void testUpdateIntegrationRequestFromAnotherProviderThanTheCreator() throws IntegrationException, AppServiceException, DataverseAPIException, IOException {
 
 		final NodeProvider anotherNodeProvider = initNodeProvider();
 		final Metadata metadataToUpdate = initMetadata();
@@ -217,7 +228,7 @@ class IntegrationRequestServiceTest {
 
 	@Test
 	@Order(5)
-	void testUpdateIntegrationRequest() throws IntegrationException, IllegalAccessException, DataverseAPIException {
+	void testUpdateIntegrationRequest() throws IntegrationException, AppServiceException, DataverseAPIException {
 
 		for (Media media : metadata.getAvailableFormats()) {
 			media.getConnector().setUrl(media.getConnector().getUrl() + "/test");
@@ -238,7 +249,7 @@ class IntegrationRequestServiceTest {
 	@Test
 	@Order(6)
 	@Disabled("Contrôle désactivé par la RUDI-1459")
-	void testDeleteIntegrationRequestFromAnotherProvider() throws IntegrationException, IllegalAccessException, DataverseAPIException {
+	void testDeleteIntegrationRequestFromAnotherProvider() throws IntegrationException, AppServiceException, DataverseAPIException {
 
 		final NodeProvider anotherNodeProvider = initNodeProvider();
 		when(mockedKalimProviderHelper.getAuthenticatedNodeProvider()).thenReturn(anotherNodeProvider);
@@ -257,18 +268,29 @@ class IntegrationRequestServiceTest {
 
 	@Test
 	@Order(7)
-	void testDeleteIntegrationRequest() throws IntegrationException, IllegalAccessException, DataverseAPIException {
+	void testDeleteIntegrationRequest() throws IntegrationException, AppServiceException, DataverseAPIException, APIManagerException {
+		try {
 
-		IntegrationRequest integrationRequestResult = integrationRequestService.createIntegrationRequest(metadata, Method.DELETE);
-		Assertions.assertNotNull(integrationRequestResult);
+			IntegrationRequest integrationRequestResult = integrationRequestService.createIntegrationRequest(metadata, Method.DELETE);
+			Assertions.assertNotNull(integrationRequestResult);
 
-		when(datasetService.getDataset((UUID) Mockito.any())).thenReturn(metadata);
-		when(datasetService.archiveDataset(Mockito.any())).thenReturn("");
+			when(datasetService.getDataset((UUID) Mockito.any())).thenReturn(metadata);
+			when(datasetService.archiveDataset(Mockito.any())).thenReturn("");
 
-		integrationRequestService.handleIntegrationRequest(integrationRequestResult.getUuid());
-		IntegrationRequestEntity integrationRequest = integrationRequestdao.findByUuid(integrationRequestResult.getUuid());
-		Assertions.assertEquals(ProgressStatus.INTEGRATION_HANDLED, integrationRequest.getProgressStatus());
-		Assertions.assertEquals(IntegrationStatus.OK, integrationRequest.getIntegrationStatus());
+			integrationRequestService.handleIntegrationRequest(integrationRequestResult.getUuid());
+			IntegrationRequestEntity integrationRequest = integrationRequestdao.findByUuid(integrationRequestResult.getUuid());
+			Assertions.assertEquals(ProgressStatus.INTEGRATION_HANDLED, integrationRequest.getProgressStatus());
+			Assertions.assertEquals(IntegrationStatus.OK, integrationRequest.getIntegrationStatus());
+
+		} finally {
+			deleteAllAPI();
+		}
+	}
+
+	private void deleteAllAPI() throws IntegrationException, AppServiceUnauthorizedException, APIManagerException {
+		final var integrationRequest = integrationRequestService.createIntegrationRequest(metadata, Method.POST);
+		final var integrationRequestEntity = integrationRequestMapper.dtoToEntity(integrationRequest);
+		apiManagerHelper.deleteAllAPI(integrationRequestEntity);
 	}
 
 }

@@ -40,3 +40,27 @@
 .first-row{
     width: 20%;
 }
+.fake-btn-status {
+    background-color: $banner-solid-color;
+    border-radius: 14px;
+    white-space: nowrap;
+    padding: 5px 18px;
+    font-size: 13px;
+    border: none;
+    height: 2.5em;
+    margin-top: 20px;
+}
+.second-row {
+    width: 50%;
+}
+.table-header:last-child {
+    display: flex;
+    justify-content: center;
+    height: inherit;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    height: inherit;
+    height: 5em;
+}

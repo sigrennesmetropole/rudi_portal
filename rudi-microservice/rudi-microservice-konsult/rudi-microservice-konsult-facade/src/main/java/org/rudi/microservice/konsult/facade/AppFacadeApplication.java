@@ -16,11 +16,12 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.common.storage",
 		"org.rudi.microservice.konsult.facade",
 		"org.rudi.microservice.konsult.service",
+		"org.rudi.facet.acl",
+		"org.rudi.facet.apimaccess",
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kaccess",
-		"org.rudi.facet.apimaccess"
-,
-		"org.rudi.facet.acl" })
+		"org.rudi.facet.projekt",
+})
 @EnableEurekaClient
 @PropertySource(value = { "classpath:konsult/konsult-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {

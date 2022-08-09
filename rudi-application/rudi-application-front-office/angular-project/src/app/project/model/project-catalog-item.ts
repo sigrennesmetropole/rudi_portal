@@ -1,6 +1,5 @@
-import {Project} from '../../projekt/projekt-model';
+import {OwnerInfo, Project} from '../../projekt/projekt-model';
 import {Base64EncodedLogo} from '../../core/services/image-logo.service';
-import {UserInfo} from './user-info';
 
 /**
  * Représente l'objet métier visuel du catalogue des projets
@@ -19,7 +18,7 @@ export class ProjectCatalogItem {
     /**
      * Les informations sur le gestionnaire du projet
      */
-    manager: UserInfo;
+    ownerInfo: OwnerInfo;
 
     /**
      * Une chaîne base64 du logo du projet

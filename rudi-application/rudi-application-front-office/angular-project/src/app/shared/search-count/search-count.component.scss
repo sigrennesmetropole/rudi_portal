@@ -12,3 +12,12 @@
     letter-spacing: normal;
     color: $secondary-text;
 }
+
+.link {
+    color: $focus;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

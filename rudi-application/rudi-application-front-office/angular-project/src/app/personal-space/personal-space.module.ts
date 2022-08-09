@@ -2,7 +2,7 @@ import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {PersonalSpaceRoutingModule} from './personal-space-routing.module';
-import {MyAccountComponent} from'./pages/my-account/my-account.component';
+import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {LinkedDatasetTasksComponent} from './components/linked-dataset-tasks/linked-dataset-tasks.component';
 import {MatTableModule} from '@angular/material/table';
 import {ReceivedAccessRequestsComponent} from './pages/received-access-requests/received-access-requests.component';
@@ -17,6 +17,17 @@ import {AccesDetailsTable1Component} from './components/project-detail/acces-det
 import { RequestDetailComponent } from './pages/request-detail/request-detail.component';
 import { TaskDetailComponent } from './components/task-detail/task-detail.component';
 import { ProjectOwnerDetailComponent } from './components/project-owner-detail/project-owner-detail.component';
+import { MyProjectsComponent } from './pages/projects/my-projects.component';
+import { ReusesComponent } from './components/reuses/reuses.component';
+import { MyProjectDetailsComponent } from './pages/my-project-details/my-project-details.component';
+import { ProjectBasicDetailsComponent } from './components/project-basic-details/project-basic-details.component';
+import { ProjectApiTabComponent } from './components/project-api-tab/project-api-tab.component';
+import { ProjectDatasetsTabComponent } from './components/project-datasets-tab/project-datasets-tab.component';
+import { DialogSubscribeDatasetsComponent } from './components/dialog-subscribe-datasets/dialog-subscribe-datasets.component';
+import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
+import { LinkedDatasetHistoryComponent } from './components/linked-dataset-history/linked-dataset-history.component';
+import { MyLinkedDatasetsComponent } from './components/my-linked-datasets/my-linked-datasets.component';
+import { ProjectInformationComponent } from './components/project-information/project-information.component';
 
 @NgModule({
     declarations: [
@@ -29,7 +40,19 @@ import { ProjectOwnerDetailComponent } from './components/project-owner-detail/p
         AccesDetailsTable2Component,
         AccesDetailsTable3Component,
         TaskDetailComponent,
-        ProjectOwnerDetailComponent
+        ProjectOwnerDetailComponent,
+        MyProjectsComponent,
+        ReusesComponent,
+        ProjectOwnerDetailComponent,
+        MyProjectDetailsComponent,
+        ProjectBasicDetailsComponent,
+        ProjectApiTabComponent,
+        ProjectDatasetsTabComponent,
+        DialogSubscribeDatasetsComponent,
+        ProjectTasksComponent,
+        LinkedDatasetHistoryComponent,
+        MyLinkedDatasetsComponent,
+        ProjectInformationComponent,
     ],
     imports: [
         CommonModule,

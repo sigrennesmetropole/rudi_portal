@@ -1,0 +1,10 @@
+<div class="project-heading-container">
+    <div class="image-container">
+        <img [src]="logo" alt="Project logo" mat-card-image>
+    </div>
+    <div class="main-container">
+        <p class="owner-description">{{ownerDescription | replaceIfNullPipe}}</p>
+        <h2 class="blue-theme">{{projectTitle | replaceIfNullPipe}}</h2>
+        <div class="fake-btn">{{'personalSpace.project.heading.projectStatusPrefix' | translate}}{{status | replaceIfNullPipe}}</div>
+    </div>
+</div>

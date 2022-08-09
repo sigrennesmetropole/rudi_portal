@@ -6,6 +6,7 @@ import {
     Media,
     MediaFile,
     MediaSeries,
+    MediaService,
     Metadata,
     MetadataAccessCondition
 } from '../../../api-kaccess';
@@ -23,11 +24,10 @@ import {DetailFunctions} from '../../pages/detail/detail-functions';
 import {MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {Level} from '../../../shared/notification-template/notification-template.component';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
-import LicenceTypeEnum = Licence.LicenceTypeEnum;
-import MediaTypeEnum = Media.MediaTypeEnum;
 import {GetBackendPropertyPipe} from '../../../shared/get-backend-property.pipe';
 import {Clipboard} from '@angular/cdk/clipboard';
-import {retry} from 'rxjs/operators';
+import LicenceTypeEnum = Licence.LicenceTypeEnum;
+import MediaTypeEnum = Media.MediaTypeEnum;
 
 @Component({
     selector: 'app-data-sets-infos',
@@ -43,6 +43,8 @@ export class DataSetInfosComponent implements OnInit {
     @Input() downloadableMedias: Media[];
 
     totalMediaTypeFile: number;
+    totalMediaTypeService: number;
+    totalMediaTypeSeries: number;
     licenceLabel;
     conceptUri;
     // Indique si on affiche le loader pendant le téléchargement du Media
@@ -54,7 +56,7 @@ export class DataSetInfosComponent implements OnInit {
     panelOpenStateProvider: boolean;
     expanded: boolean;
     kindOfData: KindOfData;
-
+    mapMediaIndexSeries: Map<number, number> = new Map<number, number>();
     /**
      * La map d'association : Média -> est-ce que j'ai copié son URL dans le presse papier ?
      */
@@ -78,8 +80,7 @@ export class DataSetInfosComponent implements OnInit {
 
         this.metadata.available_formats.sort(this.mediasSortedFunction);
 
-        // Permet de determiner le nombre total de media de type FILE
-        this.totalMediaTypeFile = this.metadata.available_formats.filter(media => this.metaDataFunctions.isMediaTypeFile(media)).length;
+        this.buildMapMediaIndex(this.mapMediaIndexSeries, this.metaDataFunctions.isMediaTypeSeries);
     }
 
     /**
@@ -115,6 +116,9 @@ export class DataSetInfosComponent implements OnInit {
      */
     getMediaSerie(item: Media): MediaSeries {
         return item as MediaSeries;
+    }
+    getMediaService(item: Media): MediaService {
+        return item as MediaService;
     }
 
     /**
@@ -250,11 +254,22 @@ export class DataSetInfosComponent implements OnInit {
     }
 
     /**
+     * Sur clic du bouton "?" pour un média de type service on ouvre un nouvel onglet vers la documentation des media_service
+     */
+    goApiDocumentationService(): void {
+        this.getBackendPropertyPipe.transform('rudidatarennes.apiDocumentationService').subscribe(
+            (urlApi: string) => {
+                window.open(urlApi, '_blank');
+            }
+        );
+    }
+
+    /**
      * Récupère l'URL d'accès au JDD en dehors de RUDI
      * @param media média concerné par le JDD
      */
     getUrlApiMetadata(media: Media): string {
-        return window.location.host + '/medias/' + media.media_id + '/dwnl/1.0.0';
+        return window.location.host + '/medias/' + media.media_id + '/' + media?.connector?.interface_contract + '/1.0.0';
     }
 
     /**
@@ -280,5 +295,35 @@ export class DataSetInfosComponent implements OnInit {
      */
     public isDwnlFormat(media: Media) : boolean {
         return this.getMediaFile(media)?.connector.interface_contract.toUpperCase() === this.DWNL_FORMAT;
+    }
+
+    /**
+     * @return interface_contract with parenthesis
+     */
+    getInterfaceContract(media: Media): string {
+        return ' (' + media.connector?.interface_contract + ')';
+    }
+
+    getMediaIndexSeries(index: number): number {
+        return this.getMediaIndexByType(index, this.mapMediaIndexSeries);
+    }
+    /**
+     * Get le rang d'un media par rapport aux autres medias du même type
+     * @param currentIndex
+     */
+    getMediaIndexByType(currentIndex: number, mapMediaIndexByType: Map<number, number>): number {
+        return mapMediaIndexByType.get(currentIndex);
+    }
+
+    buildMapMediaIndex(mapMedia: Map<number, number>, filterFunction: (media: Media) => boolean): void {
+        let currentIndexMedia = 1;
+        if (this.metadata?.available_formats) {
+            this.metadata.available_formats.forEach((media: Media, index: number) => {
+                if (filterFunction(media)) {
+                    mapMedia.set(index, currentIndexMedia);
+                    currentIndexMedia += 1;
+                }
+            });
+        }
     }
 }

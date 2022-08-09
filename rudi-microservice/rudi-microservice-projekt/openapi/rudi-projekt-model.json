@@ -182,10 +182,10 @@
 								"$ref": "#/components/schemas/Organization"
 							},
 							"target_audiences": {
-								"description": "Mots-clés du projet (codes SKOS)",
+								"description": "Publics cibles du projet",
 								"type": "array",
 								"items": {
-									"type": "string"
+									"$ref": "#/components/schemas/TargetAudience"
 								}
 							},
 							"territorial_scale": {
@@ -230,6 +230,11 @@
 									"$ref": "#/components/schemas/NewDatasetRequest"
 								},
 								"minItems": 0
+							},
+							"is_a_reuse": {
+								"description": "true si le projet est en fait une réutilisation",
+								"type": "boolean",
+								"readOnly": true
 							}
 						}
 					}
@@ -329,10 +334,10 @@
 								}
 							},
 							"target_audiences": {
-								"description": "Mots-clés du projet (codes SKOS)",
+								"description": "Public cible du projet",
 								"type": "array",
 								"items": {
-									"type": "string"
+									"$ref": "#/components/schemas/TargetAudience"
 								}
 							},
 							"dataset_uuids": {
@@ -462,6 +467,15 @@
 					}
 				]
 			},
+			"TargetAudienceSearchCriteria": {
+				"description": "Critère de recherche d'un public cible",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
+			},
 			"SupportSearchCriteria": {
 				"description": "Critère de recherche d'un type d’accompagnement",
 				"type": "object",
@@ -483,6 +497,25 @@
 							"comment": {
 								"description": "Cherche un texte présent dans le commentaire",
 								"type": "string"
+							},
+							"datasetUuid": {
+								"description": "UUID du jeu de données lié",
+								"type": "string",
+								"format": "uuid",
+								"example": "b9887e0f-db4e-47f0-87cd-e2f7f8d80689"
+							},
+							"projectOwnerUuid": {
+								"description": "UUID du porteur de projet",
+								"type": "string",
+								"format": "uuid",
+								"example": "39a9d56e-1c99-47b5-9367-7aef7f4c075f"
+							},
+							"status": {
+								"$ref": "#/components/schemas/LinkedDatasetStatus"
+							},
+							"checkEndDate": {
+								"description": "Vérifie que la date de fin de la demande n'est pas renseignée ou qu'elle n'est pas encore atteinte",
+								"type": "boolean"
 							}
 						}
 					}
@@ -620,6 +653,26 @@
 					}
 				]
 			},
+			"PagedTargetAudienceList": {
+				"description": "Liste paginée de public cible",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Public cible de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/TargetAudience"
+								}
+							}
+						}
+					}
+				]
+			},
 			"PagedSupportList": {
 				"description": "Liste paginée de types d’accompagnement",
 				"type": "object",
@@ -698,6 +751,15 @@
 			},
 			"TerritorialScale": {
 				"description": "Échelle du territoire",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					}
+				]
+			},
+			"TargetAudience": {
+				"description": "Public cible",
 				"type": "object",
 				"allOf": [
 					{

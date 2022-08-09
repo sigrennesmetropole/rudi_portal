@@ -20,15 +20,15 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework" level="DEBUG" additivity="true">
+        <Logger name="org.springframework" level="INFO" additivity="true">
             <appender-ref ref="fileLogger" level="INFO" />
-            <appender-ref ref="console" level="DEBUG" />
+            <appender-ref ref="console" level="INFO" />
         </Logger>
-        <Logger name="org.rudi.microservice.konsult" level="DEBUG" additivity="true">
-            <appender-ref ref="fileLogger" level="DEBUG" />
-            <appender-ref ref="console" level="DEBUG" />
+        <Logger name="org.rudi.microservice.konsult" level="INFO" additivity="true">
+            <appender-ref ref="fileLogger" level="INFO" />
+            <appender-ref ref="console" level="INFO" />
         </Logger>        
-        <Root level="DEBUG" additivity="false">
+        <Root level="INFO" additivity="false">
             <appender-ref ref="console" />
         </Root>
     </Loggers>

@@ -1,132 +1,118 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
-import org.rudi.facet.apimaccess.api.MonoUtils;
-import org.rudi.facet.apimaccess.exception.APIManagerHttpException;
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
+import org.rudi.facet.apimaccess.api.registration.ClientRegistrationResponse;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
-import java.util.List;
+
+import java.util.Objects;
 
 import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_CACHE_CLIENT_REGISTRATION;
 
 @Component
+@Slf4j
 public class CustomClientRegistrationRepository implements ReactiveClientRegistrationRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomClientRegistrationRepository.class);
+	private final Cache<String, ClientRegistration> cache;
+	private final APIManagerProperties properties;
+	private final ClientRegistererForRudiAndAnonymous clientRegistererForRudiAndAnonymous;
+	private final ClientRegistererForUsers clientRegistererForUsers;
 
-    private final String registrationUri;
-    private final String tokenUri;
-    private final String[] defaultScopes;
+	@SuppressWarnings("java:S107")
+	public CustomClientRegistrationRepository(
+			@Qualifier(API_MACCESS_CACHE_CLIENT_REGISTRATION) Cache<String, ClientRegistration> cache,
+			APIManagerProperties properties,
+			ClientRegistererForAdmin clientRegistererForAdmin,
+			ClientRegistererForRudiAndAnonymous clientRegistererForRudiAndAnonymous,
+			ClientRegistererForUsers clientRegistererForUsers
+	) {
+		this.cache = cache;
+		this.properties = properties;
+		this.clientRegistererForRudiAndAnonymous = clientRegistererForRudiAndAnonymous;
+		this.clientRegistererForUsers = clientRegistererForUsers;
 
-    private final Cache<String, ClientRegistration> cache;
-
-    @SuppressWarnings("java:S107")
-    public CustomClientRegistrationRepository(@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
-                                              @Value("${apimanager.oauth2.client.registration.uri}") String registrationUri,
-                                              @Value("${apimanager.oauth2.client.admin.registration.id}") String adminRegistrationId,
-                                              @Value("${apimanager.oauth2.client.admin.registration.scopes}") String[] adminScopes,
-                                              @Value("${apimanager.oauth2.client.admin.registration.client-id}") String adminClientId,
-                                              @Value("${apimanager.oauth2.client.admin.registration.client-secret}") String adminClientSecret,
-                                              @Value("${apimanager.oauth2.client.default.registration.scopes}") String[] defaultScopes,
-                                              @Qualifier(API_MACCESS_CACHE_CLIENT_REGISTRATION) Cache<String, ClientRegistration> cache) {
-        this.tokenUri = tokenUri;
-        this.registrationUri = registrationUri;
-        this.defaultScopes = defaultScopes;
-
-        this.cache = cache;
-
-        ClientRegistration adminClientRegistration = ClientRegistration.withRegistrationId(adminRegistrationId)
-                .tokenUri(tokenUri)
-                .clientId(adminClientId)
-                .clientSecret(adminClientSecret)
-                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
-                .scope(adminScopes)
-                .build();
-        this.cache.put(adminRegistrationId, adminClientRegistration);
-    }
-
-    @Override
-    public Mono<ClientRegistration> findByRegistrationId(String registrationId) {
-        try {
-            ClientRegistration clientRegistration = cache.get(registrationId);
-            return Mono.justOrEmpty(clientRegistration);
-        } catch (CacheLoadingException e) {
-            LOGGER.error("Erreur lors de la récupération des clés de connexion à WSO2", e);
-            return Mono.empty();
-        }
-    }
-
-    public ClientRegistration addClientRegistration(String username, String password) throws SSLException, BuildClientRegistrationException {
-        ClientRegistration clientRegistration = buildClientRegistration(username, password);
-        cache.put(username, clientRegistration);
-        return clientRegistration;
-    }
-
-    public void addClientRegistration(String registrationId, ClientAccessKey clientAccessKey) {
-        if (clientAccessKey != null) {
-            cache.put(registrationId, buildClientRegistration(registrationId, clientAccessKey));
-        }
-    }
-
-	private ClientRegistration buildClientRegistration(String username, String password) throws SSLException, BuildClientRegistrationException {
-		final var clientAccessPayload = ClientAccessPayload.builder()
-				.callbackUrl("www.google.lk")
-				.clientName(username)
-				.owner(username)
-				.grantType(StringUtils.join(List.of(AuthorizationGrantType.PASSWORD.getValue(), AuthorizationGrantType.CLIENT_CREDENTIALS.getValue(), AuthorizationGrantType.REFRESH_TOKEN.getValue()), " "))
-				.saasApp(true)
-				.build();
-
-		final var sslContext = SslContextBuilder
-				.forClient()
-				.trustManager(InsecureTrustManagerFactory.INSTANCE)
-				.build();
-		final var httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
-
-		final var webClient = WebClient.builder()
-				.clientConnector(new ReactorClientHttpConnector(httpClient))
-				.filter(APIManagerHttpException.errorHandlingFilter())
-				.build();
-		final var mono = webClient
-				.post()
-				.uri(registrationUri)
-				.headers(httpHeaders -> httpHeaders.setBasicAuth(username, password))
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(Mono.just(clientAccessPayload), ClientAccessPayload.class)
-				.exchange()
-				.flatMap((ClientResponse clientResponse) ->
-						clientResponse.bodyToMono(ClientAccessKey.class).map(clientAccessKey ->
-								buildClientRegistration(username, clientAccessKey)
-						));
-		return MonoUtils.blockOrThrow(mono, e -> new BuildClientRegistrationException(username, e));
+		this.addClientRegistration(clientRegistererForAdmin.buildClientRegistration());
 	}
 
-    private ClientRegistration buildClientRegistration(String registrationId, ClientAccessKey clientAccessKey) {
-        return ClientRegistration.withRegistrationId(registrationId)
-                .tokenUri(tokenUri)
-                .clientId(clientAccessKey.getClientId())
-                .clientSecret(clientAccessKey.getClientSecret())
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope(defaultScopes)
-                .build();
-    }
+	private void addClientRegistration(ClientRegistration clientRegistration) {
+		this.cache.put(clientRegistration.getRegistrationId(), clientRegistration);
+	}
+
+	@Override
+	public Mono<ClientRegistration> findByRegistrationId(String registrationId) {
+		try {
+			return Mono.justOrEmpty(cache.get(registrationId));
+		} catch (CacheLoadingException e) {
+			log.error("Erreur lors de la récupération des clés de connexion à WSO2", e);
+			return Mono.empty();
+		}
+	}
+
+	@Nullable
+	public ClientRegistration findByUsername(String username) {
+		final var registrationId = ClientRegisterer.getRegistrationId(username);
+		return findByRegistrationId(registrationId).block();
+	}
+
+	@Nullable
+	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException {
+		final var cachedRegistration = findByUsername(username);
+		if (cachedRegistration != null) {
+			return cachedRegistration;
+		}
+
+		final var clientRegisterer = getClientRegistererFor(username);
+		try {
+			final var remoteRegistration = clientRegisterer.getRegistration(username, password);
+			cache.put(username, remoteRegistration);
+			return remoteRegistration;
+		} catch (GetClientRegistrationException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Renvoie l'enregistrement client s'il existe dans le cache, sinon réalise l'enregistrement
+	 */
+	@Nonnull
+	public ClientRegistration findRegistrationOrRegister(String username, String password) throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
+		return Objects.requireNonNullElse(findByUsername(username), register(username, password));
+	}
+
+	public ClientRegistration register(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
+		final var clientRegisterer = getClientRegistererFor(username);
+		final var clientRegistration = clientRegisterer.register(username, password);
+		addClientRegistration(clientRegistration);
+		return clientRegistration;
+	}
+
+	public void addClientRegistration(String username, ClientRegistrationResponse clientAccessKey) {
+		if (clientAccessKey != null) {
+			final var clientRegisterer = getClientRegistererFor(username);
+			final var registrationId = ClientRegisterer.getRegistrationId(username);
+			final var clientRegistration = clientRegisterer.buildClientRegistration(registrationId, clientAccessKey);
+			addClientRegistration(clientRegistration);
+		}
+	}
+
+	private ClientRegisterer<? extends ClientRegistrationResponse> getClientRegistererFor(String username) {
+		if (properties.isAdminOrAnonymous(username)) {
+			return clientRegistererForRudiAndAnonymous;
+		} else {
+			return clientRegistererForUsers;
+		}
+	}
+
 }

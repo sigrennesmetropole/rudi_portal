@@ -1,15 +1,16 @@
 package org.rudi.facet.dataverse.fields;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Pattern;
-
-import org.jetbrains.annotations.Nullable;
+import lombok.Getter;
 import org.rudi.facet.dataverse.bean.FieldTypeClass;
 
-import lombok.Getter;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Spécifications d'un champ Dataverse
@@ -23,6 +24,8 @@ public abstract class FieldSpec {
 	private Boolean directSortable;
 	@Getter(lazy = true)
 	private final FieldSpec sortableField = initSortableField();
+
+	private final Map<FieldSpec, FieldSpec> parentCache = new HashMap<>();
 
 	/**
 	 * @return l'index crée dans le dataverse si l'attribut est de type multiple, dataverse utilise nom + _ss, sinon il utilise nom + _s
@@ -91,7 +94,7 @@ public abstract class FieldSpec {
 	/**
 	 * @return le type Java du champ
 	 */
-	protected abstract Class<?> getType();
+	public abstract Class<?> getType();
 
 	/**
 	 * @return le type du champ dans Dataverse
@@ -104,7 +107,7 @@ public abstract class FieldSpec {
 	public abstract Class<?> getValueType();
 
 	@Nullable
-	abstract String getDescription();
+	public abstract String getDescription();
 
 	public boolean isMultiple() {
 		return List.class.isAssignableFrom(getType());
@@ -189,4 +192,7 @@ public abstract class FieldSpec {
 		}
 	}
 
+	public boolean isRequired() {
+		return false;
+	}
 }

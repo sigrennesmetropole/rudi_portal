@@ -10,6 +10,7 @@ import {AccountValidationComponent} from './account-validation.component';
 import {AccountInfoComponent} from './pages/account-info/account-info.component';
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
+import {OnlyAnonymousGuardService} from '../core/services/only-anonymous-guard.service';
 
 const routes: Routes = [
     {
@@ -39,7 +40,7 @@ const routes: Routes = [
         // Path forgot-password
         path: 'forgot-password',
         component: ForgotPasswordComponent,
-        canActivate: [AuthGuard]
+        canActivate: [OnlyAnonymousGuardService]
     },
     {
         // Path reset-password

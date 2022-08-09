@@ -1,0 +1,21 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Projekt Rudi",
+		"version": "0.0.1",
+		"title": "rudi-projekt-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {},
+	"components": {
+		"schemas": {
+		}
+	}
+}

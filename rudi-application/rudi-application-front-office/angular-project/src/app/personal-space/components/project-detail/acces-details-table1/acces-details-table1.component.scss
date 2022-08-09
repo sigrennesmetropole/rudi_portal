@@ -17,12 +17,14 @@
 }
 
 .fake-btn-status {
-    border-radius: 14px;
     background-color: $banner-solid-color;
-    text-align: center;
+    border-radius: 14px;
+    white-space: nowrap;
+    padding: 5px 18px;
+    font-size: 13px;
     border: none;
-    padding: 0.5em;
-    margin: 0.5em;
+    height: 2.5em;
+    margin-top: 20px;
 }
 
 .svg-style {
@@ -65,6 +67,12 @@
     display: flex;
     justify-content: center;
     height: inherit;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    height: inherit;
+    height: 5em;
 }
 
 .other-requests-from-others {

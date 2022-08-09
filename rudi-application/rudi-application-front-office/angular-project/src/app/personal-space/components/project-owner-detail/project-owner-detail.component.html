@@ -9,7 +9,8 @@
             <div>
                 <span class=""> {{dependencies?.ownerName}} </span>
             </div>
-            <app-contact-button [email]="dependencies?.ownerEmail"></app-contact-button>
+            <app-contact-button [email]="dependencies?.ownerEmail"
+                                *ngIf="dependencies?.ownerName !== inconnu"></app-contact-button>
         </mat-card-content>
     </mat-card>
 </div>

@@ -1,6 +1,5 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.rudi.bpmn.core.bean.Form;
@@ -26,11 +25,10 @@ import org.rudi.microservice.projekt.facade.controller.api.ProjectsApi;
 import org.rudi.microservice.projekt.service.project.LinkedDatasetService;
 import org.rudi.microservice.projekt.service.project.ProjectService;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -208,7 +206,8 @@ public class ProjectController implements ProjectsApi {
 
 	@Override
 	public ResponseEntity<Task> unclaimProjectTask(String taskId) throws Exception {
-		return ResponseEntity.ok(projectTaskService.claimTask(taskId));
+		projectTaskService.unclaimTask(taskId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Override
@@ -216,13 +215,27 @@ public class ProjectController implements ProjectsApi {
 		return ResponseEntity.ok(projectTaskService.updateTask(task));
 	}
 
-	public ResponseEntity<Indicators> computeIndicators(@Parameter(description = "UUID du projet",required=true) @PathVariable("project-uuid") UUID projectUuid
-			,@Parameter(description = "UUID du producteur de données dont on ne veut pas les infos sur les demandes d'accès") @Valid @RequestParam(value = "excluded-producer-uuid", required = false) UUID excludedProducerUuid
-	) throws Exception {
+	public ResponseEntity<Indicators> computeIndicators(UUID projectUuid,UUID excludedProducerUuid) throws Exception {
 		ComputeIndicatorsSearchCriteria searchCriteria = new ComputeIndicatorsSearchCriteria();
 		searchCriteria.setProjectUuid(projectUuid);
 		searchCriteria.setExcludedProducerUuid(excludedProducerUuid);
 		Indicators indicators = projectService.computeIndicators(searchCriteria);
 		return ResponseEntity.ok(indicators);
+	}
+	@Override
+	public ResponseEntity<Integer> getNumberOfRequests(UUID projectUuid) throws Exception {
+		return ResponseEntity.ok(projectService.getNumberOfRequests(projectUuid));
+	}
+
+	@Override
+	public ResponseEntity<PagedProjectList> getMyProjects(Integer offset,Integer limit, String order) throws Exception {
+
+		ProjectSearchCriteria searchCriteria = new ProjectSearchCriteria();
+		searchCriteria.setOffset(offset);
+		searchCriteria.setLimit(limit);
+
+		Pageable pageable = utilPageable.getPageable(offset, limit, order);
+		val page = projectService.getMyProjects(searchCriteria, pageable);
+		return ResponseEntity.ok(new PagedProjectList().total(page.getTotalElements()).elements(page.getContent()));
 	}
 }

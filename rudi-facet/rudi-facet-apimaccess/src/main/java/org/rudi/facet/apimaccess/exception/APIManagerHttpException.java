@@ -1,34 +1,25 @@
 package org.rudi.facet.apimaccess.exception;
 
+import javax.annotation.Nullable;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
-import reactor.core.publisher.Mono;
 
+import lombok.Getter;
+
+@Getter
 public class APIManagerHttpException extends APIManagerException {
-	public APIManagerHttpException(HttpStatus statusCode, String errorBody) {
+	private final HttpStatus statusCode;
+
+	public APIManagerHttpException(HttpStatus statusCode, @Nullable String errorBody) {
 		super(getMessage(statusCode, errorBody));
+		this.statusCode = statusCode;
 	}
 
-	private static String getMessage(HttpStatus statusCode, String errorBody) {
+	private static String getMessage(HttpStatus statusCode, @Nullable String errorBody) {
 		return String.format(
-				"HTTP %s received from API Manager with body : %s",
+				"HTTP %s received from API Manager %s",
 				statusCode,
-				errorBody);
+				errorBody != null ? String.format("with body : %s", errorBody) : "without body");
 	}
 
-	public static ExchangeFilterFunction errorHandlingFilter() {
-		return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-			if (clientResponse.statusCode().isError()) {
-				return APIManagerHttpException.errorFrom(clientResponse);
-			} else {
-				return Mono.just(clientResponse);
-			}
-		});
-	}
-
-	private static Mono<ClientResponse> errorFrom(ClientResponse clientResponse) {
-		return clientResponse.bodyToMono(String.class)
-				.flatMap(errorBody -> Mono.error(new APIManagerHttpException(clientResponse.statusCode(), errorBody)));
-	}
 }

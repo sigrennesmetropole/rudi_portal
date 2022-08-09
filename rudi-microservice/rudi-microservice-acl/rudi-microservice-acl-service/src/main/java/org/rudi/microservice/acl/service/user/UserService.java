@@ -4,6 +4,7 @@
 package org.rudi.microservice.acl.service.user;
 
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.ClientKey;
 import org.rudi.microservice.acl.core.bean.User;
@@ -11,6 +12,7 @@ import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
 import javax.validation.Valid;
 import java.util.List;
@@ -142,7 +144,8 @@ public interface UserService {
 	 * @return ClientKey
 	 * @throws SSLException Erreur lors de la récupération des clés
 	 */
-	ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException;
+	@Nullable
+	ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException;
 
 	/**
 	 * Enregistre une authentification avec ou sans succès

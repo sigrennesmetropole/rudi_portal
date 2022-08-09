@@ -61,7 +61,7 @@ public class JsonAssert<A> extends AbstractStringAssert<JsonAssert<A>> {
 	private void isEqualToJsonString(String expectedJsonString) throws JSONException {
 		try {
 			// On utilise cette librairie qui est moins stricte que la comparaison brute entre deux chaînes JSON
-			JSONAssert.assertEquals(expectedJsonString, actual, JSONCompareMode.LENIENT);
+			JSONAssert.assertEquals(expectedJsonString, actual, JSONCompareMode.NON_EXTENSIBLE);
 		} catch (final AssertionError e) {
 			// On relance l'assertion AssertJ pour avoir un message d'erreur complet de JSONAssert tout en gardant le diff expected/actual au format JSON
 			as(e.getLocalizedMessage())

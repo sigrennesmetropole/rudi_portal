@@ -26,7 +26,7 @@ const routes: Routes = [
     {
         path: 'detail/:uuid',
         component: DetailComponent,
-        canActivate: [AuthGuardService, UserGuardService]
+        canActivate: [AuthGuardService]
     }
 ];
 

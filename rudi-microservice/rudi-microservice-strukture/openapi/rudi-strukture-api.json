@@ -1798,6 +1798,43 @@
 					}
 				}
 			}
+		},
+		"/organizations/{organizationUuid}/user": {
+			"get": {
+				"tags": [
+					"organization"
+				],
+				"summary": "Récupère l'utilisateur correspondant à une organisation.",
+				"description": "Récupère l'utilisateur correspondant à une organisation. La correspondance se fait entre le login de l'utilisateur et l'UUID de l'organisation.",
+				"operationId": "getOrganizationUserFromOrganizationUuid",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationUuid",
+						"description": "L'UUID de l'organisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "L'utilisateur correspondant à l'organisation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "../../../rudi-facet/rudi-facet-acl/openapi/rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
 		}
 	},
 	"components": {

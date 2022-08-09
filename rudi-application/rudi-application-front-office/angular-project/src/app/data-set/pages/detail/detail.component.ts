@@ -39,6 +39,8 @@ import {
 } from '../../components/success-restricted-request-dialog/success-restricted-request-dialog.component';
 import {SimpleSkosConcept} from '../../../kos/kos-api';
 import * as moment from 'moment';
+import {IconRegistryService} from '../../../core/services/icon-registry.service';
+import {ALL_TYPES} from '../../../shared/models/title-icon-type';
 import MediaTypeEnum = Media.MediaTypeEnum;
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
 
@@ -73,6 +75,7 @@ export class DetailComponent implements OnInit {
     // Pour filtrer à partir du même thème
     themeCode: string;
     totalOtherDatasets: number;
+    mediasTitle: string; // Bloc titre des médias
 
     /**
      * Permet de suivre la valeur du JDD récupéré. Nous devons passer par un Observable car le chargement
@@ -84,6 +87,7 @@ export class DetailComponent implements OnInit {
     private metadataLoaded: BehaviorSubject<Metadata> = new BehaviorSubject<Metadata>(null);
 
     constructor(
+        iconRegistryService: IconRegistryService,
         private matIconRegistry: MatIconRegistry,
         private domSanitizer: DomSanitizer,
         private readonly fb: FormBuilder,
@@ -116,10 +120,12 @@ export class DetailComponent implements OnInit {
             'key_icon_circle',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/key_icon_circle.svg')
         );
+        iconRegistryService.addAllSvgIcons(ALL_TYPES);
 
     }
 
     private _metadata: Metadata | undefined;
+    restrictedDatasetIcon = 'key_icon_88_secondary-color';
 
     get metadata(): Metadata | undefined {
         return this._metadata;
@@ -151,7 +157,6 @@ export class DetailComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         // Flow d'initialisation de la page
         this.route.params.pipe(
             tap(() => {
@@ -208,6 +213,7 @@ export class DetailComponent implements OnInit {
         ).subscribe({
             next: () => {
                 this.isLoading = false;
+                this.mediasTitle = this.buildTitleDatasetCard(); // Quand on a les dépendances, on construit le titre
             },
             complete: () => {
                 this.isLoading = false;
@@ -264,12 +270,35 @@ export class DetailComponent implements OnInit {
      * Fonction permettant de verifier si available_formats n'est pas vide et affiche le media_type
      * @param mediaData
      */
-    availableFormat(mediaData: string): boolean {
+    isAvailableFormat(mediaData: string): boolean {
         const result = this.metadata.available_formats.filter(element =>
             element.media_type === mediaData
         );
         return result.length > 0;
+    }
 
+    /**
+     * Fonction permettant de construire la chaine de caractère correspondant au titre selon les média_type
+     */
+    buildTitleDatasetCard(): string {
+        if (this.metadata.available_formats.length === 0) {
+            return null;
+        }
+        let arrayTemporary: string[] = [];
+        if (this.isAvailableFormat(this.mediaDataType.File)) {
+            arrayTemporary.push(this.translateService.instant('metaData.file'));
+        }
+        if (this.isAvailableFormat(this.mediaDataType.Series)) {
+            arrayTemporary.push(this.translateService.instant('metaData.series'));
+        }
+        if (this.isAvailableFormat(this.mediaDataType.Service)) {
+            arrayTemporary.push(this.translateService.instant('metaData.service'));
+        }
+        if (arrayTemporary.length === 1) { // 1 seul element ? rien à faire comme formatage
+            return arrayTemporary[0];
+        }
+        let lastElement = arrayTemporary.pop();
+        return arrayTemporary.join(', ') + ' ' + this.translateService.instant('common.et') + ' ' + lastElement;
     }
 
     /**

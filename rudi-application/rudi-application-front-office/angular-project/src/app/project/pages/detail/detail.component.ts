@@ -1,20 +1,36 @@
 import {Component, OnInit} from '@angular/core';
-import {Metadata} from '../../../api-kaccess';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
-import {EMPTY} from 'rxjs';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
-import {OwnerType, Project, ProjectAllOf} from '../../../projekt/projekt-model';
-import {Base64EncodedLogo} from '../../../core/services/image-logo.service';
-import {catchError} from 'rxjs/operators';
+import {Project} from '../../../projekt/projekt-model';
+import {map} from 'rxjs/operators';
 import {AclService} from '../../../acl/acl-api';
-import {User} from '../../../acl/acl-model';
 import {TranslateService} from '@ngx-translate/core';
 import {PageTitleService} from '../../../core/services/page-title.service';
+import {OwnerInfo, ProjektService} from '../../../projekt/projekt-api';
+import {Observable} from 'rxjs';
+import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {
+    LinkedDatasetMetadatas,
+    ProjectDependenciesFetchers,
+    ProjectDependenciesService,
+} from '../../../core/services/project-dependencies.service';
+import {Base64EncodedLogo} from '../../../core/services/image-logo.service';
 
-const ICON_INFO = '../assets/icons/icon_info_default_color.svg';
+const ICON_INFO = '../assets/icons/icon_tab_infos.svg';
+const PROJECT_LOGO = '/assets/images/logo_projet_par_defaut.png';
+
+/**
+ * les dépendances attendues pour un projet
+ */
+interface Dependencies {
+    validatedLinks?: LinkedDatasetMetadatas[];
+    project: Project;
+    ownerInfo: OwnerInfo;
+    logo: string;
+}
 
 @Component({
     selector: 'app-detail',
@@ -25,20 +41,25 @@ export class DetailComponent implements OnInit {
     project: Project;
     mediaSize: MediaSize;
     formatsMenuActive = false;
-    projectLogo: Base64EncodedLogo = '/assets/images/logo_projet_par_defaut.png';
-    managerUser: User;
-    linkedDatasets: Metadata[];
+    loading = false;
+    projectLogo: Base64EncodedLogo = '';
+    linkedDatasets: LinkedDatasetMetadatas[] = [];
+    userIdentity: string;
+    isKnownUser: boolean;
 
     constructor(
         private readonly matIconRegistry: MatIconRegistry,
         private readonly domSanitizer: DomSanitizer,
         private readonly breakpointObserverService: BreakpointObserverService,
         private readonly route: ActivatedRoute,
+        private readonly projektService: ProjektService,
         private readonly projektMetierService: ProjektMetierService,
         private readonly router: Router,
         private readonly aclService: AclService,
         private readonly translateService: TranslateService,
         private readonly pageTitleService: PageTitleService,
+        private readonly projectDependenciesService: ProjectDependenciesService,
+        private readonly projectDependenciesFetchers: ProjectDependenciesFetchers
     ) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
         this.matIconRegistry.addSvgIcon(
@@ -47,44 +68,75 @@ export class DetailComponent implements OnInit {
         );
     }
 
-    get userIdentity(): string | undefined {
-        if (!this.managerUser) {
-            return undefined;
-        }
-        return `${this.managerUser.firstname} ${this.managerUser.lastname}`;
+    ngOnInit(): void {
+        this.route.params.subscribe(params => {
+            this.projectUuid = params.uuid;
+        });
     }
 
     set projectUuid(projectUuid: string) {
         if (projectUuid) {
-            this.projektMetierService.getProject(projectUuid).pipe(
-                catchError(() => {
+            this.loading = true;
+            this.loadProjectDependencies(projectUuid).subscribe({
+                next: (datasetDependencies: Dependencies) => {
+                    this.project = datasetDependencies.project;
+                    // le ownerInfo n'est plus nullable, si inconnu il renvoie la chaine [Utilisateur inconnu]
+                    this.userIdentity = datasetDependencies.ownerInfo?.name;
+                    // Si inconnu on n'affiche pas d'adresse dans le bouton de contact
+                    this.isKnownUser = this.userIdentity !== ProjektMetierService.UNKOWN_USER_INFO_NAME;
+                    this.linkedDatasets = datasetDependencies.validatedLinks;
+                    this.pageTitleService.setPageTitle(datasetDependencies.project.title, 'Détail');
+                    if (datasetDependencies.logo) {
+                        this.projectLogo = datasetDependencies.logo;
+                    } else {
+                        this.projectLogo = PROJECT_LOGO;
+                    }
+                },
+                error: (e) => {
+                    console.error(e);
                     this.router.navigate(['/projets']);
-                    return EMPTY;
-                })
-            ).subscribe(project => {
-                this.project = project;
-                if (project.owner_type === OwnerType.User) {
-                    this.aclService.getUserInfo(project.owner_uuid).subscribe(user => this.managerUser = user);
+                    // Si on a une erreur
+                    this.loading = false;
+                },
+                complete: () => {
+                    // Une fois qu'on a toutes les dépendances, on enlève le loader
+                    this.loading = false;
                 }
-                this.projektMetierService.getMetadataLinked(this.project.uuid)
-                    .subscribe(linkedDatasets => this.linkedDatasets = linkedDatasets);
-                this.pageTitleService.setPageTitle(project.title, 'Détail');
             });
-            this.projektMetierService.getProjectLogo(projectUuid).pipe(
-                catchError(() => EMPTY) // la console remonte déjà l'erreur HTTP
-            ).subscribe(projectLogo => this.projectLogo = projectLogo);
         }
+    }
+
+    /**
+     * Méthode qui charge le projet et ses dependencies
+     * @param projectUuid , uuid du projet
+     * @private
+     */
+    private loadProjectDependencies(projectUuid: string): Observable<Dependencies> {
+        return this.projectDependenciesService.getProject(projectUuid).pipe(
+            injectDependencies({
+                linkedDatasetMetadatas: this.projectDependenciesFetchers.validatedLinkedDatasetsMetadatas
+            }),
+            injectDependencies({
+                logo: this.projectDependenciesFetchers.logo
+            }),
+            injectDependencies({
+                ownerInfo: this.projectDependenciesFetchers.ownerInfo
+            }),
+            map(({project, dependencies}) => {
+                return {
+                    validatedLinks: dependencies.linkedDatasetMetadatas,
+                    ownerInfo: dependencies.ownerInfo,
+                    logo: dependencies.logo,
+                    project
+                };
+            })
+        );
     }
 
     get projectType(): string {
         return this.project?.type?.label || this.translateService.instant('project.detail.defaultType');
     }
 
-    ngOnInit(): void {
-        this.route.params.subscribe(params => {
-            this.projectUuid = params.uuid;
-        });
-    }
 
     onClickAccessUrl(): void {
         window.open(this.project.access_url, '_blank');

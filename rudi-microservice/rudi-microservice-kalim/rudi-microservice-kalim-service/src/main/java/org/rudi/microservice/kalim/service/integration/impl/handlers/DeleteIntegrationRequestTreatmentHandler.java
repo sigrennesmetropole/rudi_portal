@@ -56,15 +56,13 @@ public class DeleteIntegrationRequestTreatmentHandler extends IntegrationRequest
 	void treat(IntegrationRequestEntity integrationRequest) throws DataverseAPIException, APIManagerException {
 		final UUID globalId = integrationRequest.getGlobalId();
 
-		var restricted = false;
 		try {
 			final var metadataToDelete = datasetService.getDataset(globalId);
-			restricted = metadataDetailsHelper.isRestricted(metadataToDelete);
 			datasetService.archiveDataset(metadataToDelete.getDataverseDoi());
 		} catch (final DatasetNotFoundException e) {
 			log.info("Dataset {} to delete was not found", globalId);
 		}
 
-		apiManagerHelper.archiveAllAPI(integrationRequest, restricted);
+		apiManagerHelper.archiveAllAPI(integrationRequest);
 	}
 }

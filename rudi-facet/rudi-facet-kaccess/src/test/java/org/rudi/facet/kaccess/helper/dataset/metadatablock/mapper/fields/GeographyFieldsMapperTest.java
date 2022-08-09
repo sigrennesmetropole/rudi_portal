@@ -22,13 +22,13 @@ class GeographyFieldsMapperTest {
 
 	private final JsonResourceReader jsonResourceReader = new JsonResourceReader();
 	private final FieldGenerator fieldGenerator = new FieldGenerator();
-	private final GeographyPrimitiveFieldsMapper geographyPrimitiveFieldsMapper = new GeographyPrimitiveFieldsMapper(fieldGenerator, jsonResourceReader.getObjectMapper());
+	private final GeographyPrimitiveFieldsMapper geographyPrimitiveFieldsMapper = new GeographyPrimitiveFieldsMapper(fieldGenerator, jsonResourceReader.getObjectMapper(), null);
 	private final GeographyFieldsMapper geographyFieldsMapper = new GeographyFieldsMapper(fieldGenerator, geographyPrimitiveFieldsMapper);
 
 	@ParameterizedTest
 	@ValueSource(strings = {
 			"geography",
-			"geography-minimum",
+			"geography-minimum-metadataToFields",
 			"geography-empty-properties",
 			"geography-non-empty-properties"
 	})
@@ -53,7 +53,7 @@ class GeographyFieldsMapperTest {
 	@ParameterizedTest
 	@ValueSource(strings = {
 			"geography",
-			"geography-minimum",
+			"geography-minimum-fieldsToMetadata",
 			"geography-non-empty-properties"
 	})
 	void fieldsToMetadata(final String filesBaseName) throws IOException, JSONException, DataverseMappingException {

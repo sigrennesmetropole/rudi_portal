@@ -1,0 +1,17 @@
+<ng-container [formGroup]="formGroup">
+    <label for="input">
+        <span class="title">{{label}}<span *ngIf="required" class="required-symbol">*</span></span>
+        <br/>
+        <span class="description">{{help}}</span>
+    </label>
+    <mat-form-field appearance="outline">
+        <input autocomplete="off" [formControlName]="formControlName"
+               id="input"
+               matInput
+               type="text"
+               (keydown.control.enter)="submit.emit()">
+        <mat-error>
+            <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.requiredInformationError'|translate}}
+        </mat-error>
+    </mat-form-field>
+</ng-container>

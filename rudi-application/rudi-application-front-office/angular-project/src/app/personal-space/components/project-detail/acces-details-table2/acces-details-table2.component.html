@@ -1,4 +1,4 @@
-<div class="table-jdd">
+<div class="table-jdd" [hidden]="jdds.length==0">
     <hr>
     <span class="table-title-style" [translate]="'personalSpace.project.details.new-data'"> </span>
 
@@ -14,12 +14,23 @@
 
     <!-- Title Column -->
     <ng-container matColumnDef="titre">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header second-row">
             <mat-icon class="svg-style" svgIcon="nouvelles_donnees"></mat-icon>
             {{'personalSpace.project.details.name'|translate}}
         </th>
         <td mat-cell *matCellDef="let element" class="titre-jdd"> {{element.titre}} </td>
     </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="statut">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">
+            {{'personalSpace.project.details.status'|translate}}
+        </th>
+        <td mat-cell *matCellDef="let element" class="center">
+            <button class="fake-btn-status">{{element.statut}}</button>
+        </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>

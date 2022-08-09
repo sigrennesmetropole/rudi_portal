@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +31,7 @@ public class UtilContextHelper {
 	 * @return connectedUser
 	 * @see #setAuthenticatedUser(AuthenticatedUser)
 	 */
+	@Nullable
 	public AuthenticatedUser getAuthenticatedUser() {
 
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();

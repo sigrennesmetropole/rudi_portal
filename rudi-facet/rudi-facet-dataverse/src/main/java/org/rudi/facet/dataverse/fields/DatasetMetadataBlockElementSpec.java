@@ -1,19 +1,18 @@
 package org.rudi.facet.dataverse.fields;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DatasetMetadataBlockElementSpec {
@@ -22,6 +21,7 @@ public class DatasetMetadataBlockElementSpec {
 	private final FieldSpec root;
 	private final Map<FieldSpec, List<FieldSpec>> level1Fields = new HashMap<>();
 	private final Map<FieldSpec, FieldSpec> parentCache = new HashMap<>();
+	private final Map<FieldSpec, FieldSpec> level1ParentCache = new HashMap<>();
 
 	/**
 	 * @param fieldSpec           Level 1 Field Specification to add
@@ -91,14 +91,32 @@ public class DatasetMetadataBlockElementSpec {
 	}
 
 	/**
-	 * Return the parent of a child
+	 * Return the parent of a child.
+	 * For instance METADATA_INFO_DATES is parent of METADATA_INFO_DATES_CREATED and METADATA_INFO is parent of METADATA_INFO_DATES.
 	 * 
 	 * @param child
 	 * @return the parent
 	 */
 	@Nullable
 	public FieldSpec getParentOf(FieldSpec child) {
+		return getParentOf(child, level1ParentCache, FieldSpec::getChildren);
+	}
+
+	/**
+	 * Return the level 1 field parent of a child.
+	 * Level 1 field is a direct child of the root field.
+	 * For instance METADATA_INFO is parent of METADATA_INFO_DATES_CREATED.
+	 */
+	@Nullable
+	public FieldSpec getLevel1ParentOf(FieldSpec child) {
+		return getParentOf(child, level1ParentCache, this::getChildrenOf);
+	}
+
+	private FieldSpec getParentOf(FieldSpec child, Map<FieldSpec, FieldSpec> parentCache, Function<FieldSpec, Collection<FieldSpec>> childrenFinder) {
 		return parentCache.computeIfAbsent(child,
-				k -> stream().filter(level1Field -> level1Field.getChildren().contains(child)).findAny().orElse(null));
+				k -> stream()
+						.filter(level1Field -> childrenFinder.apply(level1Field).contains(child))
+						.findAny()
+						.orElse(null));
 	}
 }

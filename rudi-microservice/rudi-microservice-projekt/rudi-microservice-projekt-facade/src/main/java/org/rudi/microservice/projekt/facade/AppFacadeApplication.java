@@ -27,7 +27,8 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.microservice.projekt.core",
 		"org.rudi.microservice.projekt.facade",
 		"org.rudi.microservice.projekt.service",
-		"org.rudi.microservice.projekt.storage"
+		"org.rudi.microservice.projekt.storage",
+		"org.rudi.facet.projekt.helper"
 })
 @EnableEurekaClient
 @PropertySource(value = { "classpath:projekt/projekt-common.properties" })

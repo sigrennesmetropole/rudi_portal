@@ -1,0 +1,17 @@
+<form [formGroup]="formGroup" *ngIf="workflowForm">
+
+    <ng-container *ngFor="let section of workflowForm.sections">
+
+        <ng-container *ngFor="let field of section.fields">
+
+            <app-workflow-field-template [formGroup]="formGroup"
+                                         [section]="section"
+                                         [field]="field"
+                                         (submit)="submit()">
+            </app-workflow-field-template>
+
+        </ng-container>
+
+    </ng-container>
+
+</form>

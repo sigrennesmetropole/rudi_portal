@@ -1,6 +1,7 @@
 package org.rudi.microservice.kalim.service.integration.impl.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -23,6 +24,7 @@ import org.rudi.microservice.kalim.service.integration.impl.validator.DatasetCre
 import org.rudi.microservice.kalim.service.integration.impl.validator.MetadataInfoProviderIsAuthenticatedValidator;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
@@ -39,6 +41,9 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 	protected final MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator;
 	protected final DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator;
 	private final OrganizationHelper organizationHelper;
+	@Getter
+	@Value("${default.organization.password:12345678Mm$}")
+	private String defaultOrganizationPassword;
 
 	protected AbstractIntegrationRequestTreatmentHandlerWithValidation(DatasetService datasetService, APIManagerHelper apiManagerHelper, ObjectMapper objectMapper, List<AbstractMetadataValidator<?>> metadataValidators, Error500Builder error500Builder, MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator, DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator, OrganizationHelper organizationHelper) {
 		super(datasetService, apiManagerHelper, error500Builder);
@@ -82,6 +87,7 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 					.uuid(organizationId)
 					.name(metadataOrganization.getOrganizationName())
 					.openingDate(LocalDateTime.now())
+					.password(defaultOrganizationPassword) //Password identique pour toutes les organisations des JDDs
 			);
 		}
 	}

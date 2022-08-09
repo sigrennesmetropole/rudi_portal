@@ -22,6 +22,7 @@
 		<module>rudi-facet-generator-text</module>
 		<module>rudi-facet-email</module>
 		<module>rudi-facet-bpmn</module>
+		<module>rudi-facet-crypto</module>
 		
 		<module>rudi-facet-oauth2</module>
 		
@@ -33,7 +34,8 @@
 		<module>rudi-facet-strukture</module>
 		<module>rudi-facet-acl</module>
 		<module>rudi-facet-kos</module>
-		
+		<module>rudi-facet-projekt</module>
+
 	</modules>
 
 </project>

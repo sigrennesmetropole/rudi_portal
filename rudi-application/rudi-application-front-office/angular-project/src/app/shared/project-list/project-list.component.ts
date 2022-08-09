@@ -3,7 +3,6 @@ import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/se
 import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
 import {ProjectListService} from '../../core/services/project-list.service';
 import {DEFAULT_ORDER, Order} from '../../core/services/projekt-metier.service';
-import {TranslateService} from '@ngx-translate/core';
 
 const FIRST_PAGE = 1;
 
@@ -38,7 +37,6 @@ export class ProjectListComponent implements OnInit {
     constructor(
         private readonly projectListService: ProjectListService,
         private readonly breakpointObserver: BreakpointObserverService,
-        private readonly translateService: TranslateService,
     ) {
     }
 

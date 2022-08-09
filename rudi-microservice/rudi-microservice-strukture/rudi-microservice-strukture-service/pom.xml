@@ -104,6 +104,12 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.rudi</groupId>
+			<artifactId>rudi-facet-projekt</artifactId>
+			<version>0.3.0</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {injectDependencies} from '../../../shared/utils/task-utils';
 import {map} from 'rxjs/operators';
 import {RequestToPrint} from '../linked-dataset-tasks/linked-dataset-tasks.component';
 import {Level} from '../../../shared/notification-template/notification-template.component';
@@ -11,6 +10,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LinkedDatasetTaskDependencyFetchers, LinkedDatasetTaskService} from '../../../core/services/linked-dataset-task.service';
+import {injectDependencies} from '../../../shared/utils/dependencies-utils';
 
 @Component({
     selector: 'app-task-detail',

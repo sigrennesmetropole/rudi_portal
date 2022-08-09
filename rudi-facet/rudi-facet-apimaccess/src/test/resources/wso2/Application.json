@@ -1,0 +1,9 @@
+{
+	"client_id": "YP0RXvSKIk_p_ACr1xtVVwK8OlQa",
+	"client_secret": "J3Q8thhadJ6ijuAzdMY10r4HKxAa",
+	"client_secret_expires_at": null,
+	"redirect_uris": [
+		""
+	],
+	"client_name": "robert.palmer"
+}

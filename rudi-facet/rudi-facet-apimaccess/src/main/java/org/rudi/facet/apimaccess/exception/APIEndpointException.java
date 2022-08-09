@@ -20,7 +20,7 @@ import org.springframework.http.HttpStatus;
  * 			<li>Aller dans la section Endpoints</li>
  * 			<li>Vérifier si l'URL renseignée dans le champ <code>Production Endpoint</code> fonctionne bien avec n'importe quel navigateur</li>
  * 			<li>Si la même erreur apparaît que celle observée par l'application RUDI alors WSO2 n'est pas en cause. L'URL fournie par le nœud fournisseur n'est pas/plus valide.</li>
- * 			<li>Si l'URL fonctionne bien alors les API WSO2 sont dans un état incohérent qu'on peut débloquer en exécutant le script re-publish-all-apis.sh directement sur la machine hébergeant WSO2 (cf HTTP 404 corrigée par la RUDI-1938).
+ * 			<li>Si l'URL fonctionne bien alors les API WSO2 sont dans un état incohérent qu'on peut débloquer en exécutant le script re-deploy-all-apis.sh directement sur la machine hébergeant WSO2 (cf HTTP 404 corrigée par la RUDI-1938).
  * 			Ce script va en fait faire basculer temporairement chaque API vers un autre état et la débloquer</li>
  *     </ul>
  *     </li>
@@ -33,7 +33,7 @@ public class APIEndpointException extends APIManagerException {
 
 	public APIEndpointException(String apiAccessUrl, HttpStatus httpStatus) {
 		super(String.format(
-				"HTTP %s reçu du endpoint de l'API %s. Si l'erreur HTTP renvoyée par WSO2 n'est pas reproduite en interrogeant directement le endpoint alors WSO2 est la cause du problème. Il peut être nécessaire d'exécuter le script re-publish-all-apis.sh sur la machine hébergeant WSO2 (cf RUDI-1938).",
+				"HTTP %s reçu du endpoint de l'API %s. Si l'erreur HTTP renvoyée par WSO2 n'est pas reproduite en interrogeant directement le endpoint alors WSO2 est la cause du problème. Il peut être nécessaire d'exécuter le script re-deploy-all-apis.sh sur la machine hébergeant WSO2 (cf RUDI-1938).",
 				httpStatus,
 				apiAccessUrl));
 	}

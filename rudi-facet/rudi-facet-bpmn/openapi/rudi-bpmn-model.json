@@ -64,7 +64,8 @@
 					"STRING",
 					"BOOLEAN",
 					"DATE",
-					"LIST"
+					"LIST",
+					"TEXT"
 				]
 			},
 			"ValidatorType": {
@@ -194,6 +195,9 @@
 						"type": "string"
 					},
 					"userTaskId": {
+						"type": "string"
+					},
+					"actionName": {
 						"type": "string"
 					},
 					"formDefinition": {

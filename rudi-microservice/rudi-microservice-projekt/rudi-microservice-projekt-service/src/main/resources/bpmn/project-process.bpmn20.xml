@@ -51,14 +51,14 @@
       <bpmn:documentation id="Documentation_4"><![CDATA[Positionne le workflow dans l'état IN_PROGRESS / PENDING]]></bpmn:documentation>
       <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
-      <bpmn:script>projectWorkflowContext.info("Update status pending"); projectWorkflowContext.updateStatus(context, execution, "PENDING", "IN_PROGRESS", "Demande en attente de traitement"); projectWorkflowContext.startSubProcess(execution); var type = projectWorkflowContext.computeType(context,execution); context.setAttribute("type", type, javax.script.ScriptContext.ENGINE_SCOPE); execution.setVariable("type", type);</bpmn:script>
+      <bpmn:script>projectWorkflowContext.info("Update status pending"); projectWorkflowContext.updateStatus(context, execution, "PENDING", "IN_PROGRESS", "En cours"); projectWorkflowContext.startSubProcess(execution); var type = projectWorkflowContext.computeType(context,execution); context.setAttribute("type", type, javax.script.ScriptContext.ENGINE_SCOPE); execution.setVariable("type", type);</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn:scriptTask id="ScriptTask_3" name="Projet annulé" scriptFormat="javascript">
       <bpmn:documentation id="Documentation_7"><![CDATA[Positionne le workflow dans l'état "abandonné" (Canceled)]]></bpmn:documentation>
       <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
-      <bpmn:script>projectWorkflowContext.info("Update status canceled"); projectWorkflowContext.updateStatus(context, execution, "CANCELLED", "CANCELLED", "Demande abandonnée");</bpmn:script>
+      <bpmn:script>projectWorkflowContext.info("Update status canceled"); projectWorkflowContext.updateStatus(context, execution, "CANCELLED", "CANCELLED", "retiré");</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_6" sourceRef="InclusiveGateway_4" targetRef="ScriptTask_2"/>
     <bpmn:sequenceFlow id="SequenceFlow_12" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_3"/>
@@ -91,14 +91,14 @@
       <bpmn:documentation id="Documentation_27"><![CDATA[Positionne le workflow dans l'état VALIDATED / PENDING]]></bpmn:documentation>
       <bpmn:incoming>SequenceFlow_18</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
-      <bpmn:script>projectWorkflowContext.info("Update status complete"); projectWorkflowContext.updateStatus(context, execution, "PENDING", "VALIDATED", "Réutilisation validée");</bpmn:script>
+      <bpmn:script>projectWorkflowContext.info("Update status complete"); projectWorkflowContext.updateStatus(context, execution, "PENDING", "VALIDATED", "réutilisation");</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_9" sourceRef="ScriptTask_6" targetRef="UserTask_2"/>
     <bpmn:scriptTask id="ScriptTask_7" name="Projet en cours" scriptFormat="javascript">
       <bpmn:documentation id="Documentation_41"><![CDATA[Positionne le workflow dans l'état IN_PROGRESS / PENDING]]></bpmn:documentation>
       <bpmn:incoming>SequenceFlow_20</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
-      <bpmn:script>projectWorkflowContext.info("Update status complete"); projectWorkflowContext.updateStatus(context, execution, "PENDING", "IN_PROGRESS", "Projet soumis");</bpmn:script>
+      <bpmn:script>projectWorkflowContext.info("Update status complete"); projectWorkflowContext.updateStatus(context, execution, "PENDING", "IN_PROGRESS", "En cours");</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_11" sourceRef="ScriptTask_7" targetRef="UserTask_1"/>
     <bpmn:userTask id="UserTask_3" name="Traitement du projet annulé" implementation="##unspecified">

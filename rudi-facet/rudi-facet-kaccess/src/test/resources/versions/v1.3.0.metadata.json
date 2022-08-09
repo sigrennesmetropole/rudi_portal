@@ -1,0 +1,299 @@
+{
+  "global_id": "f382ec4f-034b-411d-aab7-5b97a15eb92e",
+  "local_id": "f382ec4f-034b-411d-aab7-5b97a15eb92e",
+  "doi": "10.5072/FK2/JV9LCO",
+  "dataverse_doi": "doi:10.5072/FK2/JV9LCO",
+  "resource_title": "Recensement des exploitations agricoles avec production de biogaz test unitaire du 2021-04-22T15:26:31.911992100",
+  "synopsis": [
+    {
+      "lang": "fr-FR",
+      "text": "Résumé court en français"
+    },
+    {
+      "lang": "en-US",
+      "text": "English short description"
+    }
+  ],
+  "summary": [
+    {
+      "lang": "fr-FR",
+      "text": "Exploitations agricoles avec production de biogaz \n texte sur plusieurs lignes"
+    },
+    {
+      "lang": "en-US",
+      "text": "dictionnary entry"
+    }
+  ],
+  "theme": "environment",
+  "keywords": [
+    "biogaz",
+    "agriculture"
+  ],
+  "producer": {
+    "organization_id": "acdccf43-566b-4134-b39e-ddf46c801242",
+    "organization_name": "Producteur rudi",
+    "organization_address": "2 rue de rudi",
+    "organization_coordinates": {
+      "latitude": 71,
+      "longitude": 18
+    },
+    "organization_caption": "Producteur rudi",
+    "organization_summary": "Producteur rudi"
+  },
+  "contacts": [
+    {
+      "contact_id": "d1c4b0d9-d97f-41a8-860f-43a253370b4f",
+      "organization_name": "Association Nature",
+      "contact_name": "Dupont Pierre",
+      "role": "manager",
+      "contact_summary": "Cette personne est le manager",
+      "email": "dupont@onu.org"
+    },
+    {
+      "contact_id": "4a46ffa1-6f42-49f0-ae3c-2534d7aa71cd",
+      "organization_name": "rudi corp",
+      "contact_name": "rudi contact for test",
+      "role": "admmin",
+      "contact_summary": "Cette personne est l'admin",
+      "email": "rudi@onu.org"
+    }
+  ],
+  "available_formats": [
+    {
+      "media_type": "FILE",
+      "media_name": "file.csv",
+      "media_caption": "Média de type FILE",
+      "media_visual": "https://cdn-icons-png.flaticon.com/512/180/180855.png",
+      "media_dates": {
+        "created": "2021-02-01T00:00:00Z",
+        "validated": "2021-02-02T00:00:00Z",
+        "published": "2021-02-03T00:00:00Z",
+        "updated": "2021-03-12T07:00:00Z",
+        "expires": "2021-04-28T00:00:00Z",
+        "deleted": "2021-04-29T00:00:00Z"
+      },
+      "media_id": "958b8a63-8302-4aa6-ae28-42cb5a1ee192",
+      "connector": {
+        "url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+        "interface_contract": "dwnl",
+        "connector_parameters": [
+          {
+            "key": "mime_type",
+            "value": "text/csv",
+            "type": "STRING"
+          }
+        ]
+      },
+      "file_structure": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+      "file_size": 50,
+      "file_type": "text/csv",
+      "file_encoding": "UTF-8",
+      "checksum": {
+        "algo": "MD5",
+        "hash": "SHA-256"
+      }
+    },
+    {
+      "media_type": "SERIES",
+      "media_name": "series",
+      "media_caption": "Média de type SERIES",
+      "media_visual": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/54fbf860-1d0d-46e7-a22a-74edb3053c67/d6qj64q-f30328aa-5b8c-4ec4-979a-dea8d78c5498.png",
+      "media_dates": {
+        "created": "2021-02-01T00:00:00Z",
+        "validated": "2021-02-02T00:00:00Z",
+        "published": "2021-02-03T00:00:00Z",
+        "updated": "2021-03-12T07:00:00Z",
+        "expires": "2021-04-28T00:00:00Z",
+        "deleted": "2021-04-29T00:00:00Z"
+      },
+      "media_id": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0",
+      "connector": {
+        "url": "www.connector2.org",
+        "interface_contract": "interface contrat 2",
+        "connector_parameters": [
+          {
+            "key": "mime_type",
+            "value": "audio/mpeg",
+            "type": "STRING"
+          }
+        ]
+      },
+      "latency": 100,
+      "period": 10,
+      "current_number_of_records": 20,
+      "current_size": 328,
+      "total_number_of_records": 80,
+      "total_size": 500
+    },
+    {
+      "media_type": "SERVICE",
+      "media_name": "service",
+      "media_caption": "Média de type SERVICE",
+      "media_visual": "https://cdn-icons-png.flaticon.com/512/950/950299.png",
+      "media_dates": {
+        "created": "2021-02-01T00:00:00Z",
+        "validated": "2021-02-02T00:00:00Z",
+        "published": "2021-02-03T00:00:00Z",
+        "updated": "2021-03-12T07:00:00Z",
+        "expires": "2021-04-28T00:00:00Z",
+        "deleted": "2021-04-29T00:00:00Z"
+      },
+      "media_id": "4186de52-764f-4de3-89ea-1f37566b715e",
+      "connector": {
+        "url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+        "interface_contract": "wfs",
+        "connector_parameters": [
+          {
+            "key": "mime_type",
+            "value": "application/vnd.api+json",
+            "type": "STRING"
+          },
+          {
+            "key": "encrypted",
+            "value": "false",
+            "type": "BOOLEAN"
+          }
+        ]
+      },
+      "api_documentation_url": "https://docs.microsoft.com/fr-fr/exchange/client-developer/web-service-reference/url-ex15websvcsotherref"
+    }
+  ],
+  "resource_languages": [
+    "fr-FR",
+    "en-US"
+  ],
+  "temporal_spread": {
+    "start_date": "2021-01-03T15:30:45Z",
+    "end_date": "2022-04-22T15:26:00Z"
+  },
+  "geography": {
+    "bounding_box": {
+      "north_latitude": 71,
+      "south_latitude": 42,
+      "west_longitude": 18,
+      "east_longitude": 10.1
+    },
+    "geographic_distribution": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            18,
+            71
+          ],
+          [
+            10.1,
+            71
+          ],
+          [
+            10.1,
+            42
+          ],
+          [
+            18,
+            42
+          ],
+          [
+            18,
+            71
+          ]
+        ]
+      ]
+    },
+    "projection": "EPSG:4326"
+  },
+  "dataset_size": {
+    "numbers_of_records": 50,
+    "number_of_fields": 15
+  },
+  "dataset_dates": {
+    "created": "2021-02-01T00:00:00Z",
+    "validated": "2021-02-02T00:00:00Z",
+    "published": "2021-02-03T00:00:00Z",
+    "updated": "2021-03-12T07:00:00Z",
+    "expires": "2021-04-28T00:00:00Z",
+    "deleted": "2021-04-29T00:00:00Z"
+  },
+  "storage_status": "online",
+  "access_condition": {
+    "confidentiality": {
+      "restricted_access": true,
+      "gdpr_sensitive": true
+    },
+    "licence": {
+      "licence_type": "STANDARD",
+      "licence_label": "SkosConcept.concept_code"
+    },
+    "usage_constraint": [
+      {
+        "lang": "fr",
+        "text": "Usage libre sous réserve des mentions obligatoires sur tout document de diffusion"
+      }
+    ],
+    "bibliographical_reference": [
+      {
+        "lang": "fr-FR",
+        "text": "abeilles"
+      }
+    ],
+    "mandatory_mention": [
+      {
+        "lang": "fr-FR",
+        "text": "Source: Région Bretagne"
+      }
+    ],
+    "access_constraint": [
+      {
+        "lang": "fr-FR",
+        "text": "abeilles"
+      }
+    ],
+    "other_constraints": [
+      {
+        "lang": "fr",
+        "text": "Pas de restriction d'accès public"
+      }
+    ]
+  },
+  "metadata_info": {
+    "api_version": "1.3.0",
+    "metadata_dates": {
+      "created": "2021-03-01T00:00:00Z",
+      "validated": "2021-03-02T00:00:00Z",
+      "published": "2021-03-03T00:00:00Z",
+      "updated": "2021-03-11T07:00:00Z",
+      "expires": "2021-04-28T00:00:00Z",
+      "deleted": "2021-03-22T00:00:00Z"
+    },
+    "metadata_provider": {
+      "organization_id": "1b988e5d-3c5d-4bcb-84f9-8a6702d5d7c0",
+      "organization_name": "Fournisseur rudi name",
+      "organization_address": "4 rue de la pomme",
+      "organization_coordinates": {
+        "latitude": 70,
+        "longitude": 20
+      },
+      "organization_caption": "Fournisseur rudi caption",
+      "organization_summary": "Fournisseur rudi summary"
+    },
+    "metadata_contacts": [
+      {
+        "contact_id": "3b031485-5a9b-436c-abcc-053710f17994",
+        "organization_name": "organisation metadata 1",
+        "contact_name": "Contact metadata 1",
+        "role": "communication 1",
+        "contact_summary": "Cette personne est un bon communicant",
+        "email": "rudiMetadata@onu.org"
+      },
+      {
+        "contact_id": "c9475458-ccdd-4db5-9be7-96ee2ce46528",
+        "organization_name": "organisation metadata 2",
+        "contact_name": "Contact metadata 2",
+        "role": "communication 2",
+        "contact_summary": "Cette personne est aussi un bon communicant",
+        "email": "contactMetadata@asso.org"
+      }
+    ],
+    "metadata_source": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td"
+  }
+}

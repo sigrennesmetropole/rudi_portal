@@ -8,6 +8,8 @@
 		"forum": "https://rudi.datarennes.fr/portail-beta-forum/",
 		"mentionsLegales": "https://rudi.datarennes.fr/mentions-legales/",
 		"wiki": "https://rudi.datarennes.fr/yeswiki/?PagePrincipale",
-		"apidocumentation": "https://sigrennesmetropole.github.io/rudi_documentation/api/authentification/"
+		"apidocumentation": "https://sigrennesmetropole.github.io/rudi_documentation/api/authentification/",
+		"apiDocumentationService": "https://sigrennesmetropole.github.io/rudi_documentation/",
+		"docRudiBzh": "https://doc.rudi.bzh/"
 	}
 }

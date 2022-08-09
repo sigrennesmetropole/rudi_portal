@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
-import {ProjectPublicCible, ProjektMetierService} from '../../../core/services/projekt-metier.service';
-import {OwnerType, Project} from '../../../projekt/projekt-model';
+import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {OwnerType, Project, TargetAudience} from '../../../projekt/projekt-model';
 import {UserService} from '../../../core/services/user.service';
 import {KonsultMetierService} from '../../../core/services/konsult-metier.service';
 import {Metadata} from '../../../api-kaccess';
@@ -27,7 +27,7 @@ export class ReuseDeclarationComponent extends ReuseProjectCommonComponent imple
     @ViewChild(MatHorizontalStepper)
     public stepper: MatHorizontalStepper;
 
-    public publicCibe: ProjectPublicCible[];
+    public publicCibe: TargetAudience[];
     user: User;
 
     constructor(

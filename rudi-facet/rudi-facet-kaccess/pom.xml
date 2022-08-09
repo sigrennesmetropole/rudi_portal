@@ -122,6 +122,35 @@
 							</configOptions>
 						</configuration>
 					</execution>
+					<execution>
+						<id>generate-proxi-models</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<modelPackage>org.rudi.facet.kaccess.bean</modelPackage>
+							<inputSpec>${resource-directory}/openapi/RUDI-PRODUCER.yml</inputSpec>
+							<typeMappings>
+								<typeMapping>URI=String</typeMapping>
+								<typeMapping>Date=java.time.OffsetDateTime</typeMapping>
+							</typeMappings>
+							<generatorName>spring</generatorName>
+							<library>spring-mvc</library>
+							<generateModelTests>false</generateModelTests>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApis>false</generateApis>
+							<generateModels>true</generateModels>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<verbose>false</verbose>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<dateLibrary>java8</dateLibrary>
+								<performBeanValidation>true</performBeanValidation>
+							</configOptions>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>

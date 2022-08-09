@@ -18,6 +18,7 @@ import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.MEDIA_UUID
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.NAME;
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.PROVIDER_CODE;
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.PROVIDER_UUID;
+import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.STATUS;
 import static org.rudi.facet.apimaccess.constant.APISearchPropertyKey.VERSION;
 
 @Component
@@ -37,6 +38,7 @@ public class QueryBuilder {
 		criteriaMap.put(EXTENSION, apiSearchCriteria.getExtension());
 		criteriaMap.put(MEDIA_UUID, apiSearchCriteria.getMediaUuid());
 		criteriaMap.put(INTERFACE_CONTRACT, apiSearchCriteria.getInterfaceContract());
+		criteriaMap.put(STATUS, apiSearchCriteria.getStatus());
 
 		return criteriaMap.toQuery();
 	}

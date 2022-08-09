@@ -18,7 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.rudi.common.storage.entity.SkosConceptCodeColumn;
 import org.rudi.facet.bpmn.entity.workflow.AbstractAssetDescriptionEntity;
 import org.rudi.microservice.projekt.core.common.SchemaConstants;
@@ -26,6 +28,7 @@ import org.rudi.microservice.projekt.storage.entity.ConfidentialityEntity;
 import org.rudi.microservice.projekt.storage.entity.OwnerType;
 import org.rudi.microservice.projekt.storage.entity.ProjectTypeEntity;
 import org.rudi.microservice.projekt.storage.entity.SupportEntity;
+import org.rudi.microservice.projekt.storage.entity.TargetAudienceEntity;
 import org.rudi.microservice.projekt.storage.entity.TerritorialScaleEntity;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.newdatasetrequest.NewDatasetRequestEntity;
@@ -41,9 +44,10 @@ import lombok.ToString;
 @Table(name = "project", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"desiredSupports", "linkedDatasets", "datasetRequests"})
 public class ProjectEntity extends AbstractAssetDescriptionEntity {
 
+	public static final String FIELD_OWNER_UUID = "ownerUuid";
 	private static final long serialVersionUID = -6508639499690690560L;
 
 	/**
@@ -102,10 +106,9 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 	/**
 	 * Public cible
 	 */
-	@ElementCollection
-	@CollectionTable(name = "project_audience", schema = SchemaConstants.DATA_SCHEMA, joinColumns = @JoinColumn(name = "project_fk"))
-	@Column(name = SkosConceptCodeColumn.NAME, length = SkosConceptCodeColumn.LENGTH)
-	private Set<String> targetAudiences = new HashSet<>();
+	@ManyToMany
+	@JoinTable(name = "project_audience", schema = SchemaConstants.DATA_SCHEMA, joinColumns = @JoinColumn(name = "project_fk"), inverseJoinColumns = @JoinColumn(name = "target_audience_fk"))
+	private Set<TargetAudienceEntity> targetAudiences = new HashSet<>();
 
 	/**
 	 * Échelle du territoire
@@ -164,14 +167,14 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 	 * Liste des datasets liés (ou demandés à être lié pour jdd restreint) au projet
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "project_fk")
+	@JoinColumn(name = LinkedDatasetEntity.PROJECT_FK)
 	private Set<LinkedDatasetEntity> linkedDatasets = new HashSet<>();
 
 	/**
 	 * Liste des demandes de nouvelles données associées
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "project_fk")
+	@JoinColumn(name = LinkedDatasetEntity.PROJECT_FK)
 	private Set<NewDatasetRequestEntity> datasetRequests = new HashSet<>();
 
 	@Override
@@ -188,6 +191,22 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 			return false;
 		}
 		return super.equals(obj);
+	}
+
+	/**
+	 * @return <code>true</code> si le projet est en fait une réutilisation
+	 */
+	@Transient
+	public boolean isAReuse() {
+		// Les types d’accompagnement souhaités sont obligatoires pour un projet
+		// On considère donc que s'ils sont vides, alors le projet est une réutilisation
+		return CollectionUtils.isEmpty(getDesiredSupports());
+	}
+
+	// Utilisé par le mapper MapStruct ProjectMapper
+	@Transient
+	public boolean getIsAReuse() {
+		return isAReuse();
 	}
 
 }

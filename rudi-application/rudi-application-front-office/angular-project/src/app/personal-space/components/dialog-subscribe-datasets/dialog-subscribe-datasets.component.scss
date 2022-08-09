@@ -1,0 +1,113 @@
+@import "../../../styles/common-style";
+@import "../../../styles/variables-rudi";
+
+#dialog-content {
+    max-width: 768px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.mat-dialog-container {
+    padding: 66px 40px 66px 40px;
+    overflow-x: hidden;
+    max-height: 92vh;
+}
+
+.mat-dialog-content {
+    display: block;
+    margin: 0 -24px;
+    padding: 0 59px;
+    max-height: 65vh;
+    overflow: inherit;
+    -webkit-overflow-scrolling: touch;
+}
+
+::ng-deep {
+    .icon-close {
+        float: right;
+        margin: -63px 0 0 96%;
+
+        svg {
+            height: 36px;
+            width: 36px;
+            fill: black;
+            opacity: 0.54;
+            border: solid 1px grey;
+            border-radius: 20px;
+            padding: 5px;
+        }
+
+        svg:hover {
+            opacity: 1;
+            background-color: $focus;
+            fill: white;
+        }
+    }
+
+    .dialog-footer-button {
+        padding: 0 37px 51px 25px;
+    }
+
+    .dialog-cancel {
+        background-color: $secondary-color;
+        border: solid 1px $blocks-and-menus-outline;;
+        color: $primary-text-light;
+        width: 160px;
+        height: 42px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+
+        &:hover {
+            background-color: $focus;
+            color: $secondary-color;
+        }
+    }
+
+
+    .dialog-validate {
+        background-color: $primary-color;
+        color: $secondary-color;
+        width: 160px;
+        height: 42px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+
+        &:hover {
+            background-color: $focus;
+            color: $secondary-color;
+        }
+    }
+
+    .dialog-footer-button {
+        margin-top: 1em;
+    }
+
+    .mat-header-cell {
+        font-weight: 600 !important;
+        color: black;
+    }
+}
+
+table {
+    width: 100%;
+}
+
+.blue-theme {
+    color: #004680;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.text-alignement {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.fake-div {
+    height: 40px;
+}
+
+.info-subscribe {
+    text-align: center;
+}

@@ -1,0 +1,51 @@
+@import "src/app/styles/common-style";
+
+::ng-deep .ngx-pagination {
+    margin-left: -6px !important;
+    font-size: 14px;
+
+    .pagination-previous,
+    .pagination-next {
+        color: $primary-text-light !important;
+        font-weight: normal !important;
+        font-stretch: normal;
+        white-space: nowrap;
+    }
+
+    .pagination-previous {
+        text-align: left;
+        width: 7.7em; // la largeur reste fixe, même lorsque le texte passe en gras
+        margin-right: 1em;
+    }
+
+    .pagination-next {
+        text-align: right;
+        width: 6.5em; // la largeur reste fixe, même lorsque le texte passe en gras
+        margin-left: 1em;
+    }
+
+    .current {
+        padding: 0.1875rem 0.625rem;
+        background: $primary-color !important;
+        color: #fefefe;
+        cursor: default;
+        border-radius: 3px;
+        text-decoration: none;
+    }
+
+    a, button {
+        color: $primary-color !important;
+        font-weight: 600 !important;
+    }
+
+    &-sm {
+
+        a,
+        .current,
+        .disabled {
+            padding: 0.1875rem 0.425rem;
+        }
+
+    }
+
+}

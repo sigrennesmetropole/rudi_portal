@@ -1,12 +1,21 @@
 package org.rudi.microservice.projekt.storage.dao.project.impl;
 
-import lombok.val;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.common.storage.dao.PredicateListBuilder;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
+import org.rudi.microservice.projekt.storage.entity.DatasetConfidentiality;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.newdatasetrequest.NewDatasetRequestEntity;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
@@ -17,20 +26,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import lombok.val;
 
 @Repository
 public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, ProjectSearchCriteria>
 		implements ProjectCustomDao {
 
 	private static final String FIELD_PROJECT_STATUS = "projectStatus";
-	private static final String FIELD_OWNER_UUID = "ownerUuid";
+	private static final String FIELD_OWNER_UUID = ProjectEntity.FIELD_OWNER_UUID;
 	private static final String FIELD_KEYWORDS = "keywords";
 	private static final String FIELD_TARGET_AUDIENCES = "targetAudiences";
 	private static final String FIELD_LINKED_DATASETS = "linkedDatasets";
@@ -38,6 +41,7 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 	private static final String FIELD_DATASET_UUID = "datasetUuid";
 	private static final String FIELD_UUID = "uuid";
 	private static final String FIELD_PRODUCER_UUID = "datasetOrganisationUuid";
+	private static final String FIELD_DATASET_CONFIDENTIALITY = "datasetConfidentiality";
 
 	public ProjectCustomDaoImpl(EntityManager entityManager) {
 		super(entityManager, ProjectEntity.class);
@@ -105,10 +109,12 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 		List<Predicate> predicates = new ArrayList<>();
 		predicates.add(builder.equal(countRoot.get(FIELD_UUID), searchCriteria.getProjectUuid()));
 		final Join<ProjectEntity, LinkedDatasetEntity> join = countRoot.join(FIELD_LINKED_DATASETS);
+		//Seulement les jdds restreints demandés sont à récuperer, les jdds ouverts n'étant pas des demandes au sen fonctionnel
+		predicates.add(builder.equal(join.get(FIELD_DATASET_CONFIDENTIALITY), DatasetConfidentiality.RESTRICTED));
 		if(searchCriteria.getExcludedProducerUuid() != null) {
 			predicates.add(builder.notEqual(join.get(FIELD_PRODUCER_UUID), searchCriteria.getExcludedProducerUuid()));
 		}
-		countQuery.where(builder.and(predicates.toArray(new Predicate[0])));
+		countQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
 		countQuery.select(builder.countDistinct(join));
 		Long numberOfRequest = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -119,5 +125,30 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 		results.setNumberOfRequest(numberOfRequest.intValue());
 		results.setNumberOfProducer(numberOfProducer.intValue());
 		return results;
+	}
+
+	@Override
+	public Integer getNumberOfLinkedDatasets(UUID projectUuid){ //etendre en 2 méthodes
+		return queryLauncher(projectUuid, FIELD_LINKED_DATASETS).intValue();
+	}
+
+	@Override
+	public Integer getNumberOfNewRequests(UUID projectUuid){ //etendre en 2 méthodes
+		return queryLauncher(projectUuid, FIELD_DATASET_REQUESTS).intValue();
+	}
+
+	private<T> Long queryLauncher(UUID projectUuid, String fieldToJoin) {
+		val builder = entityManager.getCriteriaBuilder();
+		val countQuery = builder.createQuery(Long.class);
+		val countRoot = countQuery.from(entitiesClass);
+		//Parametrer avec la classe
+		final Join<ProjectEntity, T> join = countRoot.join(fieldToJoin);
+
+		List<Predicate> predicates = new ArrayList<>();
+		predicates.add(builder.equal(countRoot.get(FIELD_UUID), projectUuid));
+		countQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
+
+		countQuery.select(builder.countDistinct(join));
+		return entityManager.createQuery(countQuery).getSingleResult();
 	}
 }

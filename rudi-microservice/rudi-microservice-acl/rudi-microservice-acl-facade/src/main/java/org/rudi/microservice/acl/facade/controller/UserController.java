@@ -14,36 +14,35 @@ import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.core.bean.UserType;
 import org.rudi.microservice.acl.facade.controller.api.UsersApi;
 import org.rudi.microservice.acl.service.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Controleur pour la gestion des utilisateurs RUDI
- * 
+ *
  * @author MCY12700
  *
  */
 @RestController
+@RequiredArgsConstructor
 public class UserController implements UsersApi {
 
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private UtilPageable utilPageable;
+	private final UserService userService;
+	private final UtilPageable utilPageable;
 
 	@Override
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE')")
-	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String lastname,
+	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String password, @Valid String lastname,
 			@Valid String firstname, @Valid String company, @Valid UserType type, @Valid List<UUID> roleUuids,
-			@Valid Integer offset, @Valid Integer limit, @Valid String order) throws Exception {
+			@Valid Integer offset, @Valid Integer limit, @Valid String order) {
 
-		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().login(login).firstname(firstname)
-				.lastname(lastname).company(company).type(type).roleUuids(roleUuids).build();
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().login(login).password(password)
+				.firstname(firstname).lastname(lastname).company(company).type(type).roleUuids(roleUuids).build();
 
 		Pageable pageable = utilPageable.getPageable(offset, limit, order);
 
@@ -69,7 +68,7 @@ public class UserController implements UsersApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE')")
 	public ResponseEntity<User> createUser(@Valid User user) throws Exception {
 		return ResponseEntity.ok(userService.createUser(user));
 	}

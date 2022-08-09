@@ -4,13 +4,13 @@ import {ALL_TYPES} from '../../../shared/models/title-icon-type';
 import {Router} from '@angular/router';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {Level} from '../../../shared/notification-template/notification-template.component';
-import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {TranslateService} from '@ngx-translate/core';
-import {injectDependenciesEach} from '../../../shared/utils/task-utils';
 import {mapEach} from '../../../shared/utils/ObservableUtils';
 import {LinkedDatasetTaskDependencyFetchers, LinkedDatasetTaskService} from '../../../core/services/linked-dataset-task.service';
+import {injectDependenciesEach} from '../../../shared/utils/dependencies-utils';
+import {PaginatorComponent} from '../../../shared/paginator/paginator.component';
 
 export interface RequestToStudy {
     taskId: string;
@@ -43,6 +43,7 @@ export interface RequestToPrint {
     /** Date au format ISO. Exemple : "2022-04-13T17:09:00+02:00" */
     endDate?: Date;
 }
+
 @Component({
     selector: 'app-linked-dataset-tasks',
     templateUrl: './linked-dataset-tasks.component.html',
@@ -54,7 +55,8 @@ export class LinkedDatasetTasksComponent implements OnInit {
     requestsToStudyDisplayedColumns: string[] = ['receivedDate', 'datasetTitle', 'ownerName', 'status', 'endDate'];
     restrictedDatasetIcon = 'key_icon_88_secondary-color';
     dataSource: MatTableDataSource<RequestToStudy>;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    @ViewChild(PaginatorComponent) paginator: PaginatorComponent;
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(
@@ -99,7 +101,7 @@ export class LinkedDatasetTasksComponent implements OnInit {
                 taskId: task.id,
                 receivedDate: new Date(task.updatedDate),
                 datasetTitle: dependencies.dataset.resource_title,
-                ownerName: dependencies.ownerInfo.name,
+                ownerName: dependencies.ownerInfo?.name,
                 status: task.functionalStatus,
                 endDate: asset.end_date ? new Date(asset.end_date) : undefined,
             } as RequestToStudy)),
@@ -116,4 +118,5 @@ export class LinkedDatasetTasksComponent implements OnInit {
             this.searchIsRunning = false;
         });
     }
+
 }

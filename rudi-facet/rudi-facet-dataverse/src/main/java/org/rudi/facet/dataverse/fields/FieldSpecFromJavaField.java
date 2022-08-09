@@ -8,19 +8,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 class FieldSpecFromJavaField extends ChildFieldSpec {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldSpecFromJavaField.class);
 
 	@Nonnull
 	private final Field javaField;
+
+	private Boolean required;
 
 	private FieldSpecFromJavaField(@Nonnull FieldSpec parent, @Nonnull Field javaField) {
 		super(parent);
@@ -49,7 +56,7 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 	@Nullable
 	@Override
 	public String getLocalName() {
-		final JsonProperty jsonProperty = javaField.getAnnotation(JsonProperty.class);
+		final var jsonProperty = javaField.getAnnotation(JsonProperty.class);
 		if (jsonProperty != null && StringUtils.isNotEmpty(jsonProperty.value())) {
 			return jsonProperty.value();
 		} else {
@@ -73,7 +80,7 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 	}
 
 	private static Type getListItemType(@Nonnull Field javaField) {
-		final ParameterizedType parameterizedType = (ParameterizedType) javaField.getGenericType();
+		final var parameterizedType = (ParameterizedType) javaField.getGenericType();
 		return parameterizedType.getActualTypeArguments()[0];
 	}
 
@@ -83,9 +90,9 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 		final Class<?> javaFieldDeclaringClass = javaField.getDeclaringClass();
 		try {
 			for (PropertyDescriptor pd : Introspector.getBeanInfo(javaFieldDeclaringClass).getPropertyDescriptors()) {
-				final Method getter = pd.getReadMethod();
+				final var getter = pd.getReadMethod();
 				if (getter != null && pd.getName().equals(javaField.getName())) {
-					final Schema schema = getter.getAnnotation(Schema.class);
+					final var schema = getter.getAnnotation(Schema.class);
 					if (schema != null && StringUtils.isNotEmpty(schema.description())) {
 						return schema.description();
 					} else {
@@ -109,6 +116,62 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 	@Override
 	public int hashCode() {
 		return super.hashCode();
+	}
+
+	@Override
+	public boolean isRequired() {
+		if (required == null) {
+			required = isRequiredField(javaField);
+		}
+		return required;
+	}
+
+	private static boolean isRequiredField(Field javaField) {
+		final Method getter = getGetter(javaField);
+		if (getter != null) {
+			final Boolean isRequiredThroughGetter = isRequiredFieldOrMethod(getter);
+			if (isRequiredThroughGetter != null) {
+				return isRequiredThroughGetter;
+			}
+		}
+
+		final Boolean isRequiredThroughField = isRequiredFieldOrMethod(javaField);
+		if (isRequiredThroughField != null) {
+			return isRequiredThroughField;
+		}
+
+		return false;
+	}
+
+	@Nullable
+	private static Boolean isRequiredFieldOrMethod(AccessibleObject fieldOrMethod) {
+		final var notNull = fieldOrMethod.getAnnotation(NotNull.class);
+		if (notNull != null) {
+			return true;
+		}
+
+		final var schema = fieldOrMethod.getAnnotation(Schema.class);
+		if (schema != null) {
+			return schema.required();
+		}
+
+		return null;
+	}
+
+	@Nullable
+	private static Method getGetter(Field javaField) {
+		final Class<?> javaFieldClass = javaField.getDeclaringClass();
+		try {
+			final var propertyDescriptors = Introspector.getBeanInfo(javaFieldClass).getPropertyDescriptors();
+			return Arrays.stream(propertyDescriptors)
+					.filter(propertyDescriptor -> propertyDescriptor.getName().equals(javaField.getName()))
+					.map(PropertyDescriptor::getReadMethod)
+					.filter(Objects::nonNull)
+					.findFirst()
+					.orElse(null);
+		} catch (IntrospectionException e) {
+			throw new RuntimeException("Cannot find getters for class " + javaFieldClass, e);
+		}
 	}
 }
 

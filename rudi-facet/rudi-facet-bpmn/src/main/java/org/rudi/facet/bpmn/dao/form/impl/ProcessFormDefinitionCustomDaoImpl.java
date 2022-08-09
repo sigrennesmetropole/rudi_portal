@@ -3,13 +3,6 @@
  */
 package org.rudi.facet.bpmn.dao.form.impl;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
@@ -21,6 +14,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
+
 /**
  * @author FNI18300
  *
@@ -30,6 +29,7 @@ public class ProcessFormDefinitionCustomDaoImpl
 		extends AbstractCustomDaoImpl<ProcessFormDefinitionEntity, ProcessFormDefinitionSearchCriteria>
 		implements ProcessFormDefinitionCustomDao {
 
+	private static final String UUID_PROPERTY = "uuid";
 	private static final String PROCESS_DEFINITION_ID_PROPERTY = "processDefinitionId";
 	private static final String USER_TASK_ID_PROPERTY = "userTaskId";
 	private static final String ACTION_NAME_PROPERTY = "actionName";
@@ -70,7 +70,7 @@ public class ProcessFormDefinitionCustomDaoImpl
 
 	private void buildPredicateActionName(ProcessFormDefinitionSearchCriteria searchCriteria, CriteriaBuilder builder,
 			Root<ProcessFormDefinitionEntity> root, List<Predicate> predicates) {
-		Predicate p = builder.equal(root.get(ACTION_NAME_PROPERTY), searchCriteria.getUserTaskId());
+		Predicate p = builder.equal(root.get(ACTION_NAME_PROPERTY), searchCriteria.getActionName());
 		if (!searchCriteria.isAcceptFlexActionName()) {
 			predicates.add(p);
 		} else {
@@ -83,6 +83,10 @@ public class ProcessFormDefinitionCustomDaoImpl
 	protected void addPredicates(ProcessFormDefinitionSearchCriteria searchCriteria, CriteriaBuilder builder,
 			Root<ProcessFormDefinitionEntity> root, List<Predicate> predicates) {
 		if (searchCriteria != null) {
+			if (searchCriteria.getUuid() != null) {
+				predicates.add(builder.equal(root.get(UUID_PROPERTY),
+						searchCriteria.getUuid()));
+			}
 			if (StringUtils.isNotEmpty(searchCriteria.getProcessDefinitionId())) {
 				predicates.add(builder.equal(root.get(PROCESS_DEFINITION_ID_PROPERTY),
 						searchCriteria.getProcessDefinitionId()));

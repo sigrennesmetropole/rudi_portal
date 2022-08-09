@@ -1,9 +1,5 @@
 package org.rudi.microservice.projekt.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -48,6 +44,9 @@ import org.springframework.data.domain.PageRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 /**
  * Class de test de la couche service
@@ -186,8 +185,11 @@ class ProjectServiceTest {
 		project.setDesiredSupports(Collections.emptyList());
 		createEntities(project);
 
-		assertThatThrownBy(() -> projectService.createProject(project)).isInstanceOf(MissingParameterException.class)
-				.hasMessage("desired_supports manquant");
+		mockAuthenticatedUserToCreateProject(project);
+
+		final Project createdProject = projectService.createProject(project);
+		// On peut créer un projet initialement sans desireSupports
+		assertThat(createdProject.getDesiredSupports()).isEmpty();
 	}
 
 	@Test
@@ -380,20 +382,6 @@ class ProjectServiceTest {
 		val pageable = PageRequest.of(0, 2);
 		final Page<Project> projects = projectService.searchProjects(
 				new ProjectSearchCriteria().keywords(Arrays.asList("comptage", "lampadaires")), pageable);
-
-		assertThat(projects).as("On retrouve uniquement le project attendu").extracting("title")
-				.containsExactly(PROJET_LAMPADAIRES.getTitle());
-	}
-
-	@Test
-	void searchProjectTargetAudience() throws IOException, AppServiceException {
-
-		createProject(PROJET_LAMPADAIRES);
-		createProject(PROJET_POUBELLES);
-
-		val pageable = PageRequest.of(0, 2);
-		final Page<Project> projects = projectService.searchProjects(
-				new ProjectSearchCriteria().targetAudiences(Arrays.asList("Enfants", "Ados", "Seniors")), pageable);
 
 		assertThat(projects).as("On retrouve uniquement le project attendu").extracting("title")
 				.containsExactly(PROJET_LAMPADAIRES.getTitle());

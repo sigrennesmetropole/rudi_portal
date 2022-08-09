@@ -1,6 +1,5 @@
 {
 	"global_id": "091944f4-c6ab-43e8-920d-b9c1dd78d889",
-	"dataverse_doi": null,
 	"resource_title": "JDD producer keolis star avec thème agriculture",
 	"synopsis": [
 		{
@@ -120,5 +119,22 @@
 				"email": "contact@rudi.fr"
 			}
 		]
-	}
+	},
+	"available_formats": [
+		{
+			"media_type": "FILE",
+			"media_id": "d1e74afb-58aa-4b63-94ee-02688f2b91bc",
+			"media_caption": "On est obligé de mettre au moins un média pour respecter le swagger",
+			"connector": {
+				"url": "www.connector1.org",
+				"interface_contract": "interface contrat 1"
+			},
+			"file_type": "text/csv",
+			"file_size": 50,
+			"checksum": {
+				"algo": "MD5",
+				"hash": "SHA-256"
+			}
+		}
+	]
 }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {EMPTY, forkJoin, Observable, of} from 'rxjs';
-import {AclService, User} from '../../acl/acl-api';
+import {EMPTY, Observable, of} from 'rxjs';
+import {AclService, AddressType, EmailAddress, User} from '../../acl/acl-api';
 import {AuthenticationService} from './authentication.service';
 import {map, switchMap, take} from 'rxjs/operators';
 import {AuthenticationState} from './authentication/authentication-method';
@@ -62,4 +62,23 @@ export class UserService {
         );
     }
 
+    /**
+     * Fonction permettant de retrouver l'email de l'utilisateur dans sa liste d'adresses
+     * @param user
+     * @return email, null si indetermoinable
+     */
+    lookupEMailAddress(user: User): string {
+        let result: string = null;
+        let emailAddresses: EmailAddress[];
+        if (user?.addresses.length !== 0) {
+            emailAddresses = user.addresses
+                .filter(address => address.type === AddressType.Email)
+                .map(address => address as EmailAddress);
+            result = emailAddresses[0]?.email ?? null;
+        }
+        if (result === null && user?.login.includes('@')) {
+            return user.login;
+        }
+        return result;
+    }
 }

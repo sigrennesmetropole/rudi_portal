@@ -1,0 +1,46 @@
+{
+	"media_type": "FILE",
+	"media_id": "0faf1661-37d8-4194-b806-b5de4f3121b6",
+	"file_type": "text/csv",
+	"file_size": 48,
+	"file_encoding": "UTF-8",
+	"file_structure": "https://fr.geoconcept.com/solution-mobile-planning-interventions",
+	"checksum": {
+		"algo": "MD5",
+		"hash": "bc4711a0-6c95-4f0f-b84d-534186ae8a89"
+	},
+	"connector": {
+		"interface_contract": "dwnl",
+		"url": "https://data.rennesmetropole.fr/explore/dataset/ca-2020-rennes-metropole/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+		"connector_parameters": [
+			{
+				"key": "paramètre 1",
+				"value": "valeur 1",
+				"type": "LONG",
+				"usage": "Intégrer la valeur de ce paramètre pour une visibilité max",
+				"accepted_values": [
+					{
+						"cle": "valeur 1",
+						"cle2": 15
+					}
+				]
+			},
+			{
+				"key": "paramètre 2",
+				"value": "valeur 2",
+				"type": "BOOLEAN",
+				"usage": "La tester avant toute opération de connexion",
+				"accepted_values": [
+					{
+						"champ 1": "YES",
+						"cle2": true,
+						"propriteQuelconque": {
+							"champ1": "Tester si on peut mettre n'importe quel objet",
+							"field": true
+						}
+					}
+				]
+			}
+		]
+	}
+}

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
@@ -33,19 +34,19 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.Getter;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.ROLE_UUIDS_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_PASSWORD_PARAMETER;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
  *
  * @author FNI18300
- *
  */
 @Component
 public class ACLHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
-
-	private static final String USER_LOGIN_PARAMETER = "login";
 
 	private static final String LIMIT_PARAMETER = "limit";
 
@@ -53,7 +54,7 @@ public class ACLHelper {
 
 	private static final String CODE_PARAMETER = "code";
 
-	private static final String ROLE_UUIDS_PARAMETER = "role-uuids";
+
 
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.search.url:/acl/v1/roles}")
@@ -95,9 +96,6 @@ public class ACLHelper {
 
 	/**
 	 * Accède au service µProviders pour trouver un provider par son uuid
-	 * 
-	 * @param providerUuid
-	 * @return le provider
 	 */
 	public void deleteUserByUUID(UUID userUuid) {
 		if (userUuid == null) {
@@ -112,24 +110,57 @@ public class ACLHelper {
 
 	/**
 	 * Accède au service µProviders pour trouver un provider par l'uuid d'un de ses noeuds
-	 * 
-	 * @param nodeProviderUUId
+	 *
 	 * @return le provider correspondant
 	 */
+	@Nullable
 	public User getUserByLogin(String login) {
-		User result = null;
 		if (login == null) {
 			throw new IllegalArgumentException("login required");
 		}
 
-		UserPageResult pageResult = loadBalancedWebClient.get().uri(buildUsersSearchURL(login, null, 1)).retrieve()
-				.bodyToMono(UserPageResult.class).block();
-		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
-			result = pageResult.getElements().get(0);
-		}
-		return result;
+		final var criteria = UserSearchCriteria.builder()
+				.login(login)
+				.build();
+		return getUser(criteria);
 	}
 
+	/**
+	 * Accède au service ACL pour trouver un utilisateur par son login et son mot-de-passe
+	 *
+	 * @return l'utilisateur correspondant, null sinon
+	 */
+	@Nullable
+	public User getUserByLoginAndPassword(String login, String password) {
+		if (login == null) {
+			throw new IllegalArgumentException("login required");
+		}
+		if (password == null) {
+			throw new IllegalArgumentException("password required");
+		}
+
+		final var criteria = UserSearchCriteria.builder()
+				.login(login)
+				.password(password)
+				.build();
+		return getUser(criteria);
+	}
+
+	/**
+	 * @return l'utilisateur correspondant aux critères, null sinon
+	 */
+	@Nullable
+	private User getUser(UserSearchCriteria criteria) {
+		UserPageResult pageResult = loadBalancedWebClient.get().uri(buildUsersSearchURL(criteria, 1)).retrieve()
+				.bodyToMono(UserPageResult.class).block();
+		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
+			return pageResult.getElements().get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Nullable
 	public ClientKey getClientKeyByLogin(String login) {
 		return loadBalancedWebClient.get().uri(buildClientKeyGetURL(), Map.of(USER_LOGIN_PARAMETER, login)).retrieve()
 				.bodyToMono(ClientKey.class).block();
@@ -159,8 +190,7 @@ public class ACLHelper {
 
 	/**
 	 * Accède au service µProviders pour trouver un provider par l'uuid d'un de ses noeuds
-	 * 
-	 * @param nodeProviderUUId
+	 *
 	 * @return le provider correspondant
 	 */
 	public List<Role> searchRoles() {
@@ -171,7 +201,7 @@ public class ACLHelper {
 
 	/**
 	 * Retourne la liste des utilisateurs associé à un rôle dont le code est passé en paramètre
-	 * 
+	 *
 	 * @param roleCode
 	 * @return
 	 */
@@ -181,9 +211,11 @@ public class ACLHelper {
 		Role[] roles = loadBalancedWebClient.get().uri(buildRolesSearchURL(roleCode)).retrieve()
 				.bodyToMono(Role[].class).block();
 		if (ArrayUtils.isNotEmpty(roles)) {
+			final var criteria = UserSearchCriteria.builder()
+					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList()))
+					.build();
 			UserPageResult pageResult = loadBalancedWebClient
-					.get().uri(buildUsersSearchURL(null,
-							Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList()), 1))
+					.get().uri(buildUsersSearchURL(criteria, 1))
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {
 				result.addAll(pageResult.getElements());
@@ -204,23 +236,35 @@ public class ACLHelper {
 		return urlBuilder.toString();
 	}
 
-	protected String buildUsersSearchURL(String login, List<UUID> roleUuids, int limit) {
-		StringBuilder urlBuilder = new StringBuilder();
+	protected String buildUsersSearchURL(@Nonnull UserSearchCriteria criteria, int limit) {
+		final var urlBuilder = new StringBuilder();
 		urlBuilder.append(getAclServiceURL()).append(getUsersEndpointSearchURL());
-		boolean and = false;
+		var and = false;
+
 		if (limit > 0) {
 			and = andOrWhat(urlBuilder, and);
 			urlBuilder.append(LIMIT_PARAMETER).append('=').append(1);
 		}
+
+		final var login = criteria.getLogin();
 		if (StringUtils.isNotEmpty(login)) {
 			and = andOrWhat(urlBuilder, and);
 			urlBuilder.append(USER_LOGIN_PARAMETER).append('=').append(login);
 		}
+
+		final var password = criteria.getPassword();
+		if (StringUtils.isNotEmpty(password)) {
+			and = andOrWhat(urlBuilder, and);
+			urlBuilder.append(USER_PASSWORD_PARAMETER).append('=').append(password);
+		}
+
+		final var roleUuids = criteria.getRoleUuids();
 		if (CollectionUtils.isNotEmpty(roleUuids)) {
 			andOrWhat(urlBuilder, and);
 			urlBuilder.append(ROLE_UUIDS_PARAMETER).append('=')
 					.append(roleUuids.stream().map(UUID::toString).collect(Collectors.joining(",")));
 		}
+
 		return urlBuilder.toString();
 	}
 

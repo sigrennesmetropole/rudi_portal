@@ -3,8 +3,7 @@
  */
 package org.rudi.microservice.projekt.facade.controller;
 
-import javax.validation.Valid;
-
+import lombok.RequiredArgsConstructor;
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.service.TaskService;
@@ -14,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
+import javax.validation.Valid;
 
 /**
  * @author FNI18300
@@ -54,7 +53,8 @@ public class NewDatasetRequestController implements NewDatasetRequestApi {
 
 	@Override
 	public ResponseEntity<Task> unclaimNewDatasetRequestTask(String taskId) throws Exception {
-		return ResponseEntity.ok(newDatasetRequestTaskService.claimTask(taskId));
+		newDatasetRequestTaskService.unclaimTask(taskId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Override

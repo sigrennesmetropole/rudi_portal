@@ -1,23 +1,19 @@
 <!-- On ajoute ce contexte de sidenav pour éviter trop de régressions suite à la refonte du front -->
 <mat-sidenav-container>
     <mat-sidenav-content class="sidebar-content-pd">
+        <app-loader [active]="loading"></app-loader>
         <div *ngIf="project" [ngClass]="{'project-container-sm': mediaSize.isSm  || mediaSize.isMd,
             'project-container-lg':  mediaSize.isLg, 'project-container-xl': mediaSize.isXl, 'project-container-xxl': mediaSize.isXxl}"
              class="project-container pl-0 pr-0 container-fluid">
-
             <!-- Icon et titre de la ressource -->
             <div class="project-header ml">
-                <div class="header-img">
-                    <img [src]="projectLogo" alt="Project logo" mat-card-image>
-                </div>
-                <div class="header-ressource">
-                    <div class="user-identity">{{userIdentity}}</div>
-                    <h2 class="blue-theme">{{project.title}}</h2>
-                </div>
+                <app-project-heading [logo]="projectLogo" [ownerDescription]="userIdentity"
+                                     [projectTitle]="project.title"
+                                     [status]="project.functional_status"></app-project-heading>
             </div>
             <!-- Fin Icon et titre de la ressource -->
 
-            <!-- Bandeau -->
+            <!-- Bandeau-->
             <div class="bandeau">
                 <mat-toolbar class="bandeau-card">
                     <button class="button button-info" disabled mat-raised-button>
@@ -38,7 +34,6 @@
                 </mat-toolbar>
             </div>
             <!-- Fin Bandeau -->
-
             <!-- Card Description et Colonne de droite -->
             <div class="row mt-3 px-80 card-description-keyword-row">
 
@@ -47,11 +42,8 @@
                     'col-8':  mediaSize.isSm  || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
                      class="card-description-keyword">
                     <mat-card class="project-card project-card-description">
-                        <mat-card-title
-                            class="card-label">{{'project.detail.description'|translate}}</mat-card-title>
-                        <mat-card-content class="mb-3 mt-3">
-                            <span>{{project.description}}</span>
-                        </mat-card-content>
+
+                        <app-project-main-informations [project]="project"></app-project-main-informations>
 
                     </mat-card>
 
@@ -71,7 +63,7 @@
 
                         <div *ngIf="userIdentity" class="contact">
                             <label class="card-label">{{userIdentity}}</label><br/>
-                            <app-contact-button [email]="project.contact_email"></app-contact-button>
+                            <app-contact-button [email]="project.contact_email" *ngIf="isKnownUser"></app-contact-button>
                         </div>
 
                         <div class="mt-4 mr-auto">
@@ -97,10 +89,16 @@
                             <h2 class="card-label">{{'project.detail.datasets'|translate}}
                                 ({{linkedDatasets?.length || 0}})</h2>
                         </mat-card-title>
-                        <app-data-set-card-item *ngFor="let dataset of linkedDatasets"
-                                                [dataset]="dataset"
-                                                [divider]="false">
-                        </app-data-set-card-item>
+                        <app-dataset-infos class="dataset-card-infos"
+                                           *ngFor="let element of linkedDatasets" [showLogo]="true"
+                                           [organizationName]="element?.dataset.producer.organization_name"
+                                           [organizationId]="element?.dataset.producer.organization_id"
+                                           [isRestricted]="element?.dataset.access_condition?.confidentiality?.restricted_access"
+                                           [resourceTitle]="element?.dataset.resource_title"
+                                           [divider]="true"
+                                           [goToDetails]="true"
+                                           [currentJddId]="element?.dataset.global_id"></app-dataset-infos>
+
                     </mat-card>
                 </div>
             </div>
