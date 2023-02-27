@@ -3,7 +3,7 @@
 ## Présentation
 
 Ce répertoire regroupe le code du portail Rudi dans sa version stable.
-Le portail Rudi est accessible à l'adresse : https://rudi.bzh
+Le portail Rudi est accessible à l'adresse : https://rudi.bzh/catalogue ou https://rudi.bzh/projets
 
 La documentation générale sur le projet Rudi est disponible à cette
 adresse : https://rudi.datarennes.fr/yeswiki/?PagePrincipale.
