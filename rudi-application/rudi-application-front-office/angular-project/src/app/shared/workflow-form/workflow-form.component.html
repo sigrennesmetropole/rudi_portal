@@ -2,16 +2,38 @@
 
     <ng-container *ngFor="let section of workflowForm.sections">
 
-        <ng-container *ngFor="let field of section.fields">
+        <div class="help-title" *ngIf="isSectionOnlyHelp(section)">
+            <span>{{section.help}}</span>
+        </div>
 
-            <app-workflow-field-template [formGroup]="formGroup"
-                                         [section]="section"
-                                         [field]="field"
-                                         (submit)="submit()">
-            </app-workflow-field-template>
+        <label class="section-title-container" *ngIf="isSectionDisplayed(section)">
+            <span class="title">{{section.label}}</span>
+            <span class="description" *ngIf="section.help != null">{{section.help}}</span>
+        </label>
 
+        <ng-container *ngIf="!isSectionDisplayed(section)">
+            <ng-container *ngTemplateOutlet="fields"></ng-container>
         </ng-container>
 
+        <ng-container *ngIf="isSectionDisplayed(section)">
+            <mat-card class="section-card">
+                <ng-container *ngTemplateOutlet="fields"></ng-container>
+            </mat-card>
+        </ng-container>
+
+        <ng-template #fields>
+            <ng-container *ngFor="let field of section.fields">
+
+                <app-workflow-field-template [formGroup]="formGroup"
+                                             [section]="section"
+                                             [worflowFormReadOnly]="worflowFormReadOnly"
+                                             [field]="field"
+                                             [properties]="properties"
+                                             (submit)="submit()">
+                </app-workflow-field-template>
+
+            </ng-container>
+        </ng-template>
     </ng-container>
 
 </form>

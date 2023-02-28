@@ -300,9 +300,9 @@
 						"content": {
 							"application/octet-stream": {
 								"schema": {
-                  					"type": "string",
-                  					"format": "binary"
-                				}
+									"type": "string",
+									"format": "binary"
+								}
 							}
 						}
 					},
@@ -318,14 +318,406 @@
 					}
 				}
 			}
+		},
+		"/matching/{dataset-uuid}/{login}": {
+			"post": {
+				"tags": [
+					"matching"
+				],
+				"summary": "Soumission d'une demande d'appariement",
+				"description": "Soumission des informations nécessaires à l'appariement",
+				"operationId": "createMatchingToken",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MatchingFields"
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/DatasetUUIDParam"
+					},
+					{
+						"$ref": "#/components/parameters/LoginParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MatchingDescription"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
 		}
 	},
 	"components": {
+		"parameters": {
+			"DatasetUUIDParam": {
+				"in": "path",
+				"name": "dataset-uuid",
+				"description": "L'uuid d'un dataset",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"LoginParam": {
+				"in": "path",
+				"name": "login",
+				"description": "Le login de l'utilisateur ayant fait la demande",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error"
+			},
+			"BadRequestError": {
+				"description": "Bad Request Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Unauthorized": {
+				"description": "Unauthorized",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Forbidden": {
+				"description": "Forbidden",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotFound": {
+				"description": "Not found",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotAcceptable": {
+				"description": "Not Acceptable",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"RequestTimeout": {
+				"description": "Request Timeout",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"TooManyRequests": {
+				"description": "Too Many Requests",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"ServiceUnavailable": {
+				"description": "Service Unavailable"
+			}
+		},
 		"schemas": {
 			"RudiDate": {
 				"description": "Date in the ISO 8601 format",
 				"type": "string",
 				"format": "date-time"
+			},
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"Language": {
+				"description": "Lowercase ISO-639 language code followed by the uppercase 2 letter ISO 3166-1 alpha-2 country code, both joined by an hyphen-minus sign, or alternatively the lowercase ISO-639 language code alone",
+				"type": "string",
+				"pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+				"enum": [
+					"s-CZ",
+					"da-DK",
+					"de-CH",
+					"de-DE",
+					"en-GB",
+					"en-US",
+					"el-GR",
+					"es-ES",
+					"fr-FR",
+					"hu-HU",
+					"it-IT",
+					"no-NO",
+					"pl-PL",
+					"pt-PT",
+					"ro-RO",
+					"ru-RU",
+					"sk-SK",
+					"cs",
+					"da",
+					"de",
+					"en",
+					"el",
+					"es",
+					"fr",
+					"hu",
+					"it",
+					"no",
+					"pl",
+					"pt",
+					"ro",
+					"ru",
+					"sk"
+				]
+			},
+			"DictionaryEntry": {
+				"type": "object",
+				"required": [
+					"lang",
+					"text"
+				],
+				"properties": {
+					"lang": {
+						"$ref": "#/components/schemas/Language"
+					},
+					"text": {
+						"type": "string"
+					}
+				}
+			},
+			"MatchingFieldType": {
+				"description": "Type des champs d'appariement",
+				"type": "string",
+				"enum": [
+					"STRING",
+					"TEXT",
+					"BOOLEAN",
+					"LONG",
+					"DOUBLE",
+					"DATE",
+					"CHOICE_LIST",
+					"ADDRESS",
+					"ATTACHMENT"
+				]
+			},
+			"MatchingFielValidatorType": {
+				"description": "Type de validateur pour les champs d'appariement",
+				"type": "string",
+				"enum": [
+					"MAXLENGTH",
+					"POSITIVE",
+					"NEGATIVE",
+					"REGEXP"
+				]
+			},
+			"MatchingFieldValidator": {
+				"description": "TValidateur pour les champs d'appariement",
+				"type": "object",
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/MatchingFielValidatorType"
+					},
+					"attribute": {
+						"type": "string"
+					}
+				}
+			},
+			"MatchingFieldChoice": {
+				"description": "Liste à choix d'un champ d'appariement de type CHOICE_LIST",
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string",
+						"maxLength": 30
+					},
+					"labels": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						},
+						"minItems": 1
+					}
+				}
+			},
+			"MatchingFieldDefinition": {
+				"description": "Définition d'un champs d'appariement",
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string",
+						"description": "code du champs d'appariement",
+						"maxLength": 30
+					},
+					"labels": {
+						"type": "array",
+						"description": "libellé du champs d'appariement",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						},
+						"minItems": 1
+					},
+					"help": {
+						"type": "array",
+						"description": "aide du champs d'appariement",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						},
+						"minItems": 1
+					},
+					"type": {
+						"$ref": "#/components/schemas/MatchingFieldType"
+					},
+					"required": {
+						"type": "boolean",
+						"description": "Si le champs d'appariement est requis ou non"
+					},
+					"validators": {
+						"description": "Validateurs du champs d'appariement",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MatchingFieldValidator"
+						}
+					},
+					"choices": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MatchingFieldChoice"
+						}
+					}
+				}
+			},
+			"MatchingFormDefinition": {
+				"description": "Formulaire d'appariement",
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/MatchingFieldDefinition"
+				}
+			},
+			"MatchingField": {
+				"description": "Champ d'appariement",
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string",
+						"maxLength": 30
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			},
+			"MatchingFields": {
+				"description": "Ensemble des champs d'appariement collecté",
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/MatchingField"
+				}
+			},
+			"MatchingDescription": {
+				"description": "Résultat de l'appariement stocké par RUDI",
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "Le token identifiant l'appariement pour le fournisseur, le producteur et le citoyen pour une durée donnée"
+					},
+					"dataset_uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "L'uuid du jeu de données"
+					},
+					"producer_uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "L'uuid du producteur"
+					},
+					"provider_uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "L'uuid du fournisseur"
+					},
+					"expiration_date": {
+						"$ref": "#/components/schemas/RudiDate"
+					}
+				}
+			},
+			"ReadOnlyDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time",
+				"readOnly": true
 			}
 		}
 	}

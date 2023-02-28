@@ -1,0 +1,77 @@
+[
+	{
+		"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content",
+		"typeClass": "compound",
+		"multiple": false,
+		"value": {
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_matching_data": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_matching_data",
+				"typeClass": "primitive",
+				"multiple": true,
+				"value": [
+					"{\"code\":\"nom\",\"type\":\"STRING\",\"required\":false}"
+				]
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_selfdata_access": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_selfdata_access",
+				"typeClass": "controlledVocabulary",
+				"multiple": false,
+				"value": "API"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_storage_period_value": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_storage_period_value",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "5"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_storage_period_unit": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_storage_period_unit",
+				"typeClass": "controlledVocabulary",
+				"multiple": false,
+				"value": "MONTHS"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_treatment_period_value": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_treatment_period_value",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "6"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_treatment_period_unit": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_treatment_period_unit",
+				"typeClass": "controlledVocabulary",
+				"multiple": false,
+				"value": "YEARS"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_deletable_data": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_deletable_data",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "false"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_selfdata_categories": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_selfdata_categories",
+				"typeClass": "controlledVocabulary",
+				"multiple": true,
+				"value": [
+					"IDENTITY_DATA",
+					"PRIVATE_LIFE"
+				]
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_selfdata_held": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_selfdata_held",
+				"typeClass": "primitive",
+				"multiple": false,
+				"value": "selfdata_categories, deletion_reason"
+			},
+			"rudi_ext_metadata_ext_selfdata_ext_selfdata_content_deletion_reason": {
+				"typeName": "rudi_ext_metadata_ext_selfdata_ext_selfdata_content_deletion_reason",
+				"typeClass": "primitive",
+				"multiple": true,
+				"value": [
+					"Nécessaire pour votre suivi par votre médecin traitant",
+					"Nécessaire pour l'Etat pour le suivi de la progression du virus dans votre département"
+				]
+			}
+		}
+	}
+]

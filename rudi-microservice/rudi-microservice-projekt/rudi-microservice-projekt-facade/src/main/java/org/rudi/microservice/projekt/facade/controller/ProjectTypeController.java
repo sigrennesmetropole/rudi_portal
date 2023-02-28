@@ -1,7 +1,7 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.UUID;
+
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.PagedProjectTypeList;
@@ -14,7 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class ProjectTypeController implements TypesApi {
 	private final UtilPageable utilPageable;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<ProjectType> createProjectType(ProjectType projectType) throws AppServiceException {
 		val createdProjectType = projectTypeService.createProjectType(projectType);
 		val location = ServletUriComponentsBuilder
@@ -41,9 +45,9 @@ public class ProjectTypeController implements TypesApi {
 	}
 
 	@Override
-	public ResponseEntity<PagedProjectTypeList> searchProjectTypes(Integer limit, Integer offset) {
+	public ResponseEntity<PagedProjectTypeList> searchProjectTypes(Integer limit, Integer offset, String order) throws Exception {
 		val searchCriteria = new ProjectTypeSearchCriteria();
-		val pageable = utilPageable.getPageable(offset, limit, null);
+		val pageable = utilPageable.getPageable(offset, limit, order);
 		val page = projectTypeService.searchProjectTypes(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedProjectTypeList()
 				.total(page.getTotalElements())
@@ -51,7 +55,7 @@ public class ProjectTypeController implements TypesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Void> updateProjectType(UUID uuid, ProjectType projectType) throws AppServiceException {
 		projectType.setUuid(uuid);
 		projectTypeService.updateProjectType(projectType);
@@ -59,7 +63,7 @@ public class ProjectTypeController implements TypesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Void> deleteProjectType(UUID uuid) {
 		projectTypeService.deleteProjectType(uuid);
 		return ResponseEntity.noContent().build();

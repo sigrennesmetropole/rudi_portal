@@ -21,6 +21,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kaccess",
 		"org.rudi.facet.projekt",
+		"org.rudi.facet.selfdata",
 })
 @EnableEurekaClient
 @PropertySource(value = { "classpath:konsult/konsult-common.properties" })

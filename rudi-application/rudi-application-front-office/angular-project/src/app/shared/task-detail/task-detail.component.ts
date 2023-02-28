@@ -8,7 +8,8 @@ import {AssetDescription} from '../../api-bpmn';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {SnackBarService} from '../../core/services/snack-bar.service';
-import {TaskWithDependenciesService} from '../../core/services/task-with-dependencies-service';
+import {TaskWithDependenciesService} from '../../core/services/tasks/task-with-dependencies-service';
+import {TaskMetierService} from '../../core/services/tasks/task-metier.service';
 
 export abstract class TaskDetailComponent<A extends AssetDescription, D, T extends TaskWithDependencies<A, D>, C> {
     taskWithDependencies: T;
@@ -17,12 +18,30 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
         protected readonly dialog: MatDialog,
         protected readonly translateService: TranslateService,
         protected readonly snackBarService: SnackBarService,
-        protected readonly taskWithDependenciesService: TaskWithDependenciesService<T, C>,
+        protected readonly taskWithDependenciesService: TaskWithDependenciesService<T, C, A>,
+        protected readonly taskMetierService: TaskMetierService<A>,
     ) {
     }
 
     get task(): Task {
         return this.taskWithDependencies?.task;
+    }
+
+    get actions(): Action[] {
+        return this.sortAction().filter(action => !!action.label);
+    }
+
+    private sortAction(): Array<Action> {
+        return this.task?.actions.sort(function compare(a, b) {
+            // pour afficher le bouton valider avant le bouton rejeter
+            if (a.label < b.label) {
+                return -1;
+            }
+            if (a.label > b.label) {
+                return 1;
+            }
+            return 0;
+        });
     }
 
     openPopinForAction(action: Action): void {
@@ -43,7 +62,7 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
     protected abstract goBackToList(): Promise<boolean>;
 
     private doAction(action: Action, data: WorkflowPopinOutputData): void {
-        this.taskWithDependenciesService.doAction(action, data.task).subscribe({
+        this.taskMetierService.doAction(action, data.task).subscribe({
             complete: () => {
                 this.translateService.get('task.success').subscribe(message => {
                     this.snackBarService.openSnackBar({

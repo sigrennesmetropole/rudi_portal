@@ -549,6 +549,9 @@
             "APIDescription": {
                 "type": "object",
                 "description": "Objet contenant les paramètres requis pour la création/mise à jour d'une API",
+                "required": [
+                    "responseMediaType"
+                ],
                 "properties": {
                     "name": {
                         "type": "string"
@@ -574,8 +577,9 @@
                     "interfaceContract": {
                         "type": "string"
                     },
-                    "mediaType": {
-                        "type": "string"
+                    "responseMediaType": {
+                        "type": "string",
+                        "description": "Le type de média renvoyée par la réponse au sens OpenAPI."
                     },
                     "endpointUrl": {
                         "type": "string"
@@ -809,6 +813,17 @@
                     },
                     "keyType": {
                         "$ref": "#/components/schemas/EndpointKeyType"
+                    }
+                }
+            },
+            "Credentials": {
+                "type": "object",
+                "properties": {
+                    "login": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
                     }
                 }
             }

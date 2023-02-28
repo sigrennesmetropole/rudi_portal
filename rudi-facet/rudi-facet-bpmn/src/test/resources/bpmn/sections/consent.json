@@ -1,0 +1,10 @@
+{
+	"label": "Section matérialisée par une card côté front (car label spécifié)",
+	"fieldDefinitions": [
+		{
+			"name": "keepDataOnlyForProcessing",
+			"label": "Je consens à ce que mes données d'identification et documents associés soient stockés par Rudi. Ces données sont conservées uniquement le temps nécessaire au traitement de la démarche, conformément à <a href='https://rudi.datarennes.fr/politique-de-confidentialite/' style='font-weight: bold; text-decoration: underline; color: #004680;'>notre politique de confidentialité.</a>",
+			"type": "BOOLEAN"
+		}
+	]
+}

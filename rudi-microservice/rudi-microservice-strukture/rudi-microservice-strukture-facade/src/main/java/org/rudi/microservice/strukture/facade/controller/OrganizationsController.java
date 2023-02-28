@@ -1,7 +1,8 @@
 package org.rudi.microservice.strukture.facade.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.UUID;
+
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
@@ -17,8 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,13 +33,13 @@ public class OrganizationsController implements OrganizationsApi {
 	private final UtilPageable utilPageable;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR', 'MODULE_KALIM')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ", " + MODULE_KALIM + ")")
 	public ResponseEntity<Organization> createOrganization(Organization organization) throws CreateUserException {
 		return ResponseEntity.ok(organizationService.createOrganization(organization));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteOrganization(UUID uuid) throws AppServiceNotFoundException {
 		organizationService.deleteOrganization(uuid);
 		return ResponseEntity.noContent().build();
@@ -46,7 +51,7 @@ public class OrganizationsController implements OrganizationsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ", " + USER + ")")
 	public ResponseEntity<User> getOrganizationUserFromOrganizationUuid(UUID organizationUuid) throws Exception {
 		return ResponseEntity.ok(organizationService.getOrganizationUserFromOrganizationUuid(organizationUuid));
 	}
@@ -66,14 +71,14 @@ public class OrganizationsController implements OrganizationsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> updateOrganization(Organization organization) throws AppServiceException {
 		organizationService.updateOrganization(organization);
 		return ResponseEntity.noContent().build();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR', 'MODULE_KALIM')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ", " + MODULE_KALIM + ")")
 	public ResponseEntity<OrganizationMember> addOrganizationMember(UUID organizationUuid, OrganizationMember organizationMember) throws AppServiceException {
 		return ResponseEntity.ok(organizationService.addOrganizationMember(organizationUuid, organizationMember));
 	}
@@ -84,7 +89,7 @@ public class OrganizationsController implements OrganizationsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> removeOrganizationMember(UUID organizationUuid, UUID userUuid) throws Exception {
 		organizationService.removeOrganizationMembers(organizationUuid, userUuid);
 		return ResponseEntity.noContent().build();

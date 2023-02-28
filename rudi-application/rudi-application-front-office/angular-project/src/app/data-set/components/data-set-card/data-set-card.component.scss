@@ -152,12 +152,9 @@
         vertical-align: text-top;
     }
 
-    .triangle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 28px;
-        height: 28px;
+    .triangle-restricted {
+        @extend %triangle;
+        fill: $accent-color-svg;
     }
 
     .keywords-row button {
@@ -192,6 +189,46 @@
 
 }
 
+.selfdata {
+    background: $self-data-color;
+    border: solid 0.5px $self-data-border-color;
+
+    .self-data-icon {
+        width: 16px;
+        vertical-align: text-top;
+    }
+
+    .triangle-selfdata {
+        @extend %triangle;
+        fill:$accent-color-svg-self-data;
+    }
+
+    &:focus {
+
+        .data-set-card {
+
+            &-producer {
+                color: #323643;
+            }
+
+            &-title-margin {
+                color: #004680;
+            }
+
+            &-summary {
+                color: #323643;
+            }
+
+        }
+
+        .keywords-row button {
+            background: #e5f0fc;
+            color: #323643;
+        }
+
+    }
+}
+
 @mixin restricted-card-padding($padding) {
     margin-left: -$padding;
     margin-right: -$padding;
@@ -204,4 +241,11 @@
 
 .data-set-card-md.restricted {
     @include restricted-card-padding(40px);
+}
+%triangle{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
 }

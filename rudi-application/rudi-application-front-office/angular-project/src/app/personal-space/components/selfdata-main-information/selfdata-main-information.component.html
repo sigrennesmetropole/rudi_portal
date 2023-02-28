@@ -1,0 +1,45 @@
+<div class="card-description-keyword">
+    <app-card class="project-card project-card-description" [header]="true"
+              [title]="'metaData.selfdataInformationRequest.consultation.cardTitle' | translate">
+
+        <app-loader [active]="taskLoading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
+        <div *ngIf="!taskLoading">
+            <div class="vertical-space">
+                <label class="data-label" translate="metaData.selfdataInformationRequest.consultation.title"></label>
+                <br>
+                <span class="data-value">{{task.processDefinitionKey | processDefinitionKeyTranslate }}</span>
+            </div>
+            <div class="vertical-space">
+                <label class="data-label"
+                       translate="metaData.selfdataInformationRequest.consultation.datasetTilte"></label>
+                <br>
+                <span class="data-value"> {{task.datasetTitle}}</span>
+            </div>
+            <div class="vertical-space">
+                <label class="data-label"
+                       translate="metaData.selfdataInformationRequest.consultation.receivedDate"> </label> <br>
+                <span class="data-value"> {{task.receivedDate.format('DD/MM/YYYY')}} </span>
+            </div>
+            <div class="vertical-space">
+                <label class="data-label"
+                       translate="metaData.selfdataInformationRequest.consultation.expiredDate"> </label>
+                <br>
+                <span class="data-value">{{task.expiredDate.format('DD/MM/YYYY')}}</span>
+            </div>
+            <hr>
+
+            <!-- données pivots--->
+            <div>
+                <app-loader [active]="formLoading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
+                <div *ngIf="!formLoading">
+                    <div class="card-demand-label"
+                         translate="metaData.selfdataInformationRequest.consultation.specificDemand"
+                    ></div>
+                    <app-workflow-form [draftForm]="form"
+                                       [worflowFormReadOnly]="true"></app-workflow-form>
+                </div>
+            </div>
+        </div>
+    </app-card>
+</div>
+

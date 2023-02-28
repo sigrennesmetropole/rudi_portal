@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KOS_ADMINISTRATOR;
+
 @RestController
 public class SkosSchemeController implements SkosSchemesApi {
 
@@ -47,20 +50,20 @@ public class SkosSchemeController implements SkosSchemesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KOS_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KOS_ADMINISTRATOR + ")")
 	public ResponseEntity<SkosScheme> createSkosScheme(SkosScheme skosScheme) throws Exception {
 		return ResponseEntity.ok(skosSchemeService.createSkosScheme(skosScheme));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KOS_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KOS_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteSkosScheme(UUID uuid) throws Exception {
 		skosSchemeService.deleteSkosScheme(uuid);
 		return ResponseEntity.ok().build();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KOS_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KOS_ADMINISTRATOR + ")")
 	public ResponseEntity<SkosScheme> updateSkosScheme(SkosScheme skosScheme) throws Exception {
 		return ResponseEntity.ok(skosSchemeService.updateSkosScheme(skosScheme));
 	}
@@ -76,21 +79,21 @@ public class SkosSchemeController implements SkosSchemesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KOS_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KOS_ADMINISTRATOR + ")")
 	public ResponseEntity<SkosConcept> createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept,
 			Boolean asTopConcept) throws Exception {
 		return ResponseEntity.ok(skosSchemeService.createSkosConcept(skosSchemeUuid, skosConcept, asTopConcept));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KOS_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KOS_ADMINISTRATOR + ")")
 	public ResponseEntity<SkosConcept> updateSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept,
 			Boolean asTopConcept) throws Exception {
 		return ResponseEntity.ok(skosSchemeService.updateSkosConcept(skosSchemeUuid, skosConcept, asTopConcept));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KOS_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KOS_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteSkosConcept(UUID skosSchemeUuid, UUID skosConceptUuid) throws Exception {
 		skosSchemeService.deleteSkosConcept(skosSchemeUuid, skosConceptUuid);
 		return ResponseEntity.ok().build();

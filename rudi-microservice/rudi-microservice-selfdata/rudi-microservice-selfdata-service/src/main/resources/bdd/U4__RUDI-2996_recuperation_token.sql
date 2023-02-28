@@ -1,0 +1,1 @@
+DROP TABLE selfdata_data.selfdata_token_tuple;

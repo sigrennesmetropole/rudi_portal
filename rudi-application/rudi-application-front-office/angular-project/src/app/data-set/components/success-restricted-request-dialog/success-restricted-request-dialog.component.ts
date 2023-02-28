@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
+import {Router} from '@angular/router';
+import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';
+import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-success-restricted-request-dialog',
-  templateUrl: './success-restricted-request-dialog.component.html',
-  styleUrls: ['./success-restricted-request-dialog.component.scss']
+    selector: 'app-success-restricted-request-dialog',
+    templateUrl: './success-restricted-request-dialog.component.html',
+    styleUrls: ['./success-restricted-request-dialog.component.scss']
 })
-export class SuccessRestrictedRequestDialogComponent implements OnInit {
+export class SuccessRestrictedRequestDialogComponent {
 
     constructor(private matIconRegistry: MatIconRegistry,
-                private domSanitizer: DomSanitizer
+                private domSanitizer: DomSanitizer,
+                private router: Router,
+                public dialogRef: MatDialogRef<DialogClosedData<void>>,
     ) {
         this.matIconRegistry.addSvgIcon(
             'icon-close',
@@ -18,7 +23,19 @@ export class SuccessRestrictedRequestDialogComponent implements OnInit {
         );
     }
 
-  ngOnInit(): void {
-  }
+    goToMyReuses(): Promise<boolean>  {
+        this.handleClose();
+       return  this.router.navigate(['/personal-space/my-projects']);
+    }
+
+    /**
+     * Fermeture de la popin
+     */
+    handleClose(): void {
+        this.dialogRef.close({
+            data: null,
+            closeEvent: CloseEvent.VALIDATION
+        });
+    }
 
 }

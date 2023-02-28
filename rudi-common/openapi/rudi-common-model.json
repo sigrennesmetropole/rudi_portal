@@ -1,0 +1,91 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Rudi",
+		"version": "0.4",
+		"title": "rudi-common-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/",
+			"description": "Rudi API"
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AbstractLongIdDto": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					}
+				}
+			},
+			"AbstractLabelizedDto": {
+				"type": "object",
+				"required": [
+					"code"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string",
+								"maxLength": 30
+							},
+							"label": {
+								"type": "string",
+								"maxLength": 100
+							}
+						}
+					}
+				]
+			},
+			"AbstractStampedDto": {
+				"type": "object",
+				"required": [
+					"opening_date",
+					"order"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLabelizedDto"
+					},
+					{
+						"properties": {
+							"opening_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"closing_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"order": {
+								"type": "integer"
+							}
+						}
+					}
+				]
+			},
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			}
+		}
+	}
+}

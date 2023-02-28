@@ -1,0 +1,38 @@
+{
+	"available_formats": [
+		{
+			"media_type": "FILE",
+			"media_name": "file.csv",
+			"media_caption": "Média de type FILE",
+			"media_visual": "https://cdn-icons-png.flaticon.com/512/180/180855.png",
+			"media_dates": {
+				"created": "2021-02-01T00:00:00Z",
+				"validated": "2021-02-02T00:00:00Z",
+				"published": "2021-02-03T00:00:00Z",
+				"updated": "2021-03-12T07:00:00Z",
+				"expires": "2021-04-28T00:00:00Z",
+				"deleted": "2021-04-29T00:00:00Z"
+			},
+			"media_id": "958b8a63-8302-4aa6-ae28-42cb5a1ee192",
+			"connector": {
+				"url": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+				"interface_contract": "dwnl",
+				"connector_parameters": [
+					{
+						"key": "mime_type",
+						"value": "text/csv",
+						"type": "STRING"
+					}
+				]
+			},
+			"file_structure": "https://data.explore.star.fr/explore/dataset/mkt-partenaires-garages-td/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
+			"file_size": 50,
+			"file_type": "text/csv",
+			"file_encoding": "UTF-8",
+			"checksum": {
+				"algo": "MD5",
+				"hash": "SHA-256"
+			}
+		}
+	]
+}

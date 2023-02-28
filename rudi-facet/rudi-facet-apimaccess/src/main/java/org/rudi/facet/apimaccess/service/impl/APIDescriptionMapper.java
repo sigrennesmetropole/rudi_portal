@@ -44,7 +44,8 @@ class APIDescriptionMapper {
 				.isDefaultVersion(true)
 				.transport(Arrays.asList(APITransportEnum.HTTP.getValue(), APITransportEnum.HTTPS.getValue()))
 				.gatewayEnvironments(Collections.singletonList(GatewayEnvironmentsEnum.PRODUCTION_AND_SANDBOX.getValue()))
-				.version(StringUtils.isNotEmpty(apiDescription.getVersion()) ? apiDescription.getVersion() : DEFAULT_API_VERSION);
+				.version(StringUtils.isNotEmpty(apiDescription.getVersion()) ? apiDescription.getVersion() : DEFAULT_API_VERSION)
+				.scopes(Collections.emptyList()); // Pour éviter des NullPointerException côté WSO2
 		map(apiDescription, api);
 		return api;
 	}
@@ -61,14 +62,12 @@ class APIDescriptionMapper {
 	}
 
 	@Nonnull
-	private MediaType computeMediaType(APIDescription apiDescription) {
-		final MediaType mediaType;
+	private MediaType map(String mediaType) {
 		try {
-			mediaType = MediaType.parseMediaType(apiDescription.getMediaType());
+			return MediaType.parseMediaType(mediaType);
 		} catch (InvalidMediaTypeException e) {
-			throw new IllegalArgumentException("Le media type est invalide : " + apiDescription.getMediaType(), e);
+			throw new IllegalArgumentException("Le media type est invalide : " + mediaType, e);
 		}
-		return mediaType;
 	}
 
 	@Nonnull
@@ -78,8 +77,12 @@ class APIDescriptionMapper {
 				PROVIDER_CODE, apiDescription.getProviderCode(),
 				GLOBAL_ID, apiDescription.getGlobalId().toString(),
 				MEDIA_UUID, apiDescription.getMediaUuid().toString(),
-				INTERFACE_CONTRACT, apiDescription.getInterfaceContract(),
-				EXTENSION, computeMediaType(apiDescription).getSubtype()));
+				INTERFACE_CONTRACT, apiDescription.getInterfaceContract()));
+
+		final var responseMediaType = apiDescription.getResponseMediaType();
+		if (responseMediaType != null) {
+			additionalProperties.put(EXTENSION, map(responseMediaType).getSubtype());
+		}
 
 		if (apiDescription.getAdditionalProperties() != null) {
 			additionalProperties.putAll(apiDescription.getAdditionalProperties());

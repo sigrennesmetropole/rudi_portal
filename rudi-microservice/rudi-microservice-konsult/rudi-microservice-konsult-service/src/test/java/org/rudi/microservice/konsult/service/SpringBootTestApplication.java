@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kaccess",
 		"org.rudi.facet.projekt",
+		"org.rudi.facet.selfdata",
 })
 public class SpringBootTestApplication {
 }

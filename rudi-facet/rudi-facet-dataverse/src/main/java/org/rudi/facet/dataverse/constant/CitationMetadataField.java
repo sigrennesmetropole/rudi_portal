@@ -1,14 +1,15 @@
 package org.rudi.facet.dataverse.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.rudi.facet.dataverse.fields.DatasetMetadataBlockElementSpec;
 import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.dataverse.fields.FieldSpecNamingCase;
 import org.rudi.facet.dataverse.fields.RootFieldSpec;
 
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CitationMetadataField {
@@ -20,7 +21,7 @@ public class CitationMetadataField {
 	public static final FieldSpec ROOT = new RootFieldSpec(Dataset.class, "", FieldSpecNamingCase.CAMEL_CASE);
 
 	public static final FieldSpec TITLE = ROOT.newChildFromJavaField("title");
-	public static final FieldSpec SUBJECT = ROOT.newChildFromJavaField("subject").controlledVocabulary();
+	public static final FieldSpec SUBJECT = ROOT.newChildFromJavaField("subject");
 	public static final FieldSpec AUTHOR = ROOT.newChildFromJavaField("author");
 	public static final FieldSpec AUTHOR_NAME = AUTHOR.newChildFromJavaField(Author.class, "name");
 	public static final FieldSpec AUTHOR_IDENTIFIER = AUTHOR.newChildFromJavaField(Author.class, "identifier");

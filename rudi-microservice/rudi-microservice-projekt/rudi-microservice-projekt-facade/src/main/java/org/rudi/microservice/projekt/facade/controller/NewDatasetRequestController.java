@@ -3,17 +3,22 @@
  */
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.service.TaskService;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
+import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.facade.controller.api.NewDatasetRequestApi;
+import org.rudi.microservice.projekt.service.project.NewDatasetRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author FNI18300
@@ -24,6 +29,8 @@ import javax.validation.Valid;
 public class NewDatasetRequestController implements NewDatasetRequestApi {
 
 	private final TaskService<NewDatasetRequest> newDatasetRequestTaskService;
+
+	private final NewDatasetRequestService newDatasetRequestService;
 
 	@Override
 	public ResponseEntity<Task> claimNewDatasetRequestTask(String taskId) throws Exception {
@@ -62,4 +69,8 @@ public class NewDatasetRequestController implements NewDatasetRequestApi {
 		return ResponseEntity.ok(newDatasetRequestTaskService.updateTask(task));
 	}
 
+	@Override
+	public ResponseEntity<Project> findProjectByNewDatasetRequest(UUID newDatasetRequestUuid) throws Exception {
+			return ResponseEntity.ok(newDatasetRequestService.findProjectByNewDatasetRequest(newDatasetRequestUuid));
+		}
 }

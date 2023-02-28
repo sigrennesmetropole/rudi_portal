@@ -14,11 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_ACL_ADMINISTRATOR;
+
 /**
  * Controleur pour la gestion des roles des utilisateurs
- * 
- * @author MCY12700
  *
+ * @author MCY12700
  */
 @RestController
 public class RoleController implements RolesApi {
@@ -31,26 +34,26 @@ public class RoleController implements RolesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_ACL_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
 	public ResponseEntity<Role> createRole(@Valid Role role) throws Exception {
 		return ResponseEntity.ok(roleService.createRole(role));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_ACL_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteRole(UUID uuid) throws Exception {
 		roleService.deleteRole(uuid);
 		return ResponseEntity.ok().build();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_ACL_ADMINISTRATOR', 'MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ", " + MODULE + ")")
 	public ResponseEntity<Role> getRole(UUID uuid) throws Exception {
 		return ResponseEntity.ok(roleService.getRole(uuid));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_ACL_ADMINISTRATOR', 'MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ", " + MODULE + ")")
 	public ResponseEntity<List<Role>> searchRoles(@Valid String code, @Valid String label, @Valid Boolean active)
 			throws Exception {
 		RoleSearchCriteria searchCriteria = new RoleSearchCriteria();
@@ -61,7 +64,7 @@ public class RoleController implements RolesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_ACL_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
 	public ResponseEntity<Role> updateRole(@Valid Role role) throws Exception {
 		return ResponseEntity.ok(roleService.updateRole(role));
 	}

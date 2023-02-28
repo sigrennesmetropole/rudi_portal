@@ -1,9 +1,10 @@
 package org.rudi.microservice.konsult.facade.controller.api;
 
 import lombok.RequiredArgsConstructor;
+
+import org.rudi.facet.apimaccess.bean.Credentials;
 import org.rudi.microservice.konsult.core.bean.ApiKeys;
 import org.rudi.microservice.konsult.core.bean.ApiKeysType;
-import org.rudi.microservice.konsult.core.bean.Credentials;
 import org.rudi.microservice.konsult.service.apim.ApimService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

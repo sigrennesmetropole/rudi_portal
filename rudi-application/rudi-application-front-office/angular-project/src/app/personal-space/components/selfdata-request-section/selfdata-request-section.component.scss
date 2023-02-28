@@ -1,0 +1,94 @@
+@import "src/app/styles/common-style";
+
+.panel-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.44;
+    letter-spacing: normal;
+    font-family: OpenSans, sans-serif;
+}
+
+.panel-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--0-classic-blue);
+    font-family: OpenSans, sans-serif;
+    margin-top: 15px;
+}
+
+.panel-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--3-texte-gris-fonc);
+    font-family: OpenSans, sans-serif;
+}
+
+::ng-deep {
+    .mat-expansion-panel-body {
+        padding: 0 0 0 0 !important;
+    }
+
+    .mat-expansion-indicator {
+        width: 30px;
+        border: 1.6px solid $focus;
+        border-radius: 15px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $focus;
+
+        &::after {
+            color: $focus;
+        }
+    }
+
+    .mat-expansion-panel-header.mat-expanded {
+        height: 31px;
+    }
+}
+
+button, button.mat-raised-button {
+    font-weight: 600;
+    border-radius: 6px;
+    background-color: $primary-color;
+    color: $secondary-color;
+    font-family: OpenSans, sans-serif;
+    font-size: 14px;
+    height: 42px;
+}
+
+.button-active:hover {
+    background-color: $focus;
+    color: $secondary-color;
+    cursor: pointer;
+}
+
+.panel-content-margin {
+    margin: 25px 0 35px 0;
+}
+
+.label-status {
+    height: 42px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background-color: var(--background-s-lection-active-tableau);
+    margin: 0 1px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.86;
+    color: var(--0-classic-blue);
+    font-family: OpenSans, sans-serif;
+}
+
+.panel-demand-link-details {
+    height: 42px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.85;
+    padding: 8px 16px;
+    text-decoration: underline;
+    color: var(--0-classic-blue);
+    cursor: pointer;
+    font-family: OpenSans, sans-serif;
+}

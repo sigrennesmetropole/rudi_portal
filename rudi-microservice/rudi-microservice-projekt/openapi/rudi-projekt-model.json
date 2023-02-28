@@ -408,7 +408,7 @@
 				"description": "Type du JDD (Ouvert | Restreint)",
 				"type": "string",
 				"enum": [
-					"OPENED", "RESTRICTED"
+					"OPENED", "RESTRICTED","SELFDATA"
 				]
 			},
 			"ProjectTypeSearchCriteria": {
@@ -954,6 +954,50 @@
 				"description": "Date in the ISO 8601 format",
 				"type": "string",
 				"format": "date-time"
+			},
+			"FrontOfficeProperties": {
+				"type": "object",
+				"properties": {
+					"projekt": {
+						"type": "object",
+						"properties": {
+							"project-media": {
+								"type": "object",
+								"properties": {
+									"logo": {
+										"type": "object",
+										"properties": {
+											"extensions": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"spring": {
+						"type": "object",
+						"properties": {
+							"servlet": {
+								"type": "object",
+								"properties": {
+									"multipart": {
+										"type": "object",
+										"properties": {
+											"max-file-size": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}

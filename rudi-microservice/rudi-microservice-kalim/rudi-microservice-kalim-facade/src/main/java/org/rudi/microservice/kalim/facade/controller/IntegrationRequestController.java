@@ -1,5 +1,10 @@
 package org.rudi.microservice.kalim.facade.controller;
 
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequestPageResult;
@@ -14,9 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
 
 @RestController
 public class IntegrationRequestController implements IntegrationRequestApi {
@@ -28,7 +32,7 @@ public class IntegrationRequestController implements IntegrationRequestApi {
 	private UtilPageable utilPageable;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_KALIM_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KALIM_ADMINISTRATOR + ")")
 	public ResponseEntity<IntegrationRequestPageResult> searchIntegrationRequests(
 			@Valid IntegrationStatus integrationStatus, @Valid OffsetDateTime creationDateMin,
 			@Valid OffsetDateTime creationDateMax, @Valid OffsetDateTime treatmentDateMin,

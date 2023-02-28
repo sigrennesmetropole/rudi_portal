@@ -1,12 +1,13 @@
 <ng-container [formGroup]="formGroup">
-    <label for="input">
-        <span class="title">{{label}}<span *ngIf="required" class="required-symbol">*</span></span>
+    <label for="input-{{formControlName}}">
+        <span class="title">{{label}}<span *ngIf="required && !readonly" class="required-symbol">*</span></span>
         <br/>
-        <span class="description">{{help}}</span>
+        <span *ngIf="!readonly" class="description">{{help}}</span>
     </label>
     <mat-form-field appearance="outline">
         <input autocomplete="off" [formControlName]="formControlName"
-               id="input"
+               [readonly]="readonly"
+               id="input-{{formControlName}}"
                matInput
                type="text"
                (keydown.control.enter)="submit.emit()">

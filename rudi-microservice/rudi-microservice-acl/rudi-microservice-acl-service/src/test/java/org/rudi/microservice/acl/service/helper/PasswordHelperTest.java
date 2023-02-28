@@ -24,7 +24,13 @@ class PasswordHelperTest {
 
 		assertNotNull(passwordHelper);
 
-		System.out.println("fnisseron encrypted password = " + passwordHelper.encodePassword("projekt"));
+		String[] passwords = {
+				"mon-mot-de-passe-en-clair",
+		};
+
+		for (final String password : passwords) {
+			System.out.println(password + " => " + passwordHelper.encodePassword(password));
+		}
 	}
 
 }

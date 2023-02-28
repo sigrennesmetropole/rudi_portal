@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {OrganizationItem} from '../../model/organization-item';
 import {MatRadioChange} from '@angular/material/radio';
-import {OwnerType, ProjectAllOf} from '../../../projekt/projekt-model';
+import {OwnerType} from '../../../projekt/projekt-model';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {Level} from '../../../shared/notification-template/notification-template.component';
 import {forkJoin} from 'rxjs';

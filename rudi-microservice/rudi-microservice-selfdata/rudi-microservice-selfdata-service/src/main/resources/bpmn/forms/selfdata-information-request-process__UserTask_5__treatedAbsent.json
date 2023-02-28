@@ -1,0 +1,13 @@
+{
+	"sections": [
+		{
+			"name": "common-help"
+		},
+		{
+			"name": "treated-absent-help"
+		},
+		{
+			"name": "treated-selfdata-information-request"
+		}
+	]
+}

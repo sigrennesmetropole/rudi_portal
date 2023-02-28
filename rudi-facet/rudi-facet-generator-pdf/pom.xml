@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-facet</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>rudi-facet-generator-pdf</artifactId>
+	<description>
+		Facette pour la génération pdf et la signature
+	</description>
+	<packaging>jar</packaging>
+
+	<properties>
+		<surefire.plugin.version>2.22.2</surefire.plugin.version>
+		<resource-directory>${project.basedir}/src/main/resources
+		</resource-directory>
+		<resource-generation-directory>${project.basedir}/src/main/resources
+		</resource-generation-directory>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-generator</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>preflight</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>xmpbox</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ghost4j</groupId>
+			<artifactId>ghost4j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15to18</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.odfdom.converter.pdf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.odfdom.converter.core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.poi.xwpf.converter.pdf</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>

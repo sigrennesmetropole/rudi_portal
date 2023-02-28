@@ -133,6 +133,10 @@
 					"version": {
 						"type": "string"
 					},
+					"node_provider_id": {
+						"type": "string",
+						"format": "uuid"
+					},
 					"global_id": {
 						"type": "string",
 						"format": "uuid"

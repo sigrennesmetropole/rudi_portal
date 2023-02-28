@@ -1,0 +1,372 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Selfdata Rudi",
+		"version": "0.0.1",
+		"title": "rudi-selfdata-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Selfdata API",
+			"variables": {
+				"basePath": {
+					"default": "selfdata/v1"
+				}
+			}
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"SelfdataInformationRequestStatus": {
+				"description": "Statut des demandes d'informations sur des données personnelles",
+				"type": "string",
+				"enum": [
+					"DRAFT",
+					"IN_PROGRESS",
+					"VALIDATED",
+					"REJECTED",
+					"COMPLETED",
+					"CANCELLED"
+				]
+			},
+			"AssetDescription": {
+				"type": "object",
+				"properties": {
+					"object_type": {
+						"type": "string"
+					}
+				},
+				"discriminator": {
+					"propertyName": "object_type",
+					"mapping": {
+						"SelfdataInformationRequest": "#/components/schemas/SelfdataInformationRequest"
+					}
+				}
+			},
+			"SelfdataInformationRequest": {
+				"description": "Demande d'informations sur des données personnelles stockées dans un JDD",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AssetDescription"
+					},
+					{
+						"properties": {
+							"selfdata_information_request_status": {
+								"$ref": "#/components/schemas/SelfdataInformationRequestStatus"
+							},
+							"dataset_uuid": {
+								"description": "UUID du dataset",
+								"type": "string",
+								"format": "uuid",
+								"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+							},
+							"user_present": {
+								"description": "Pour une demande validée, indique si le user est présent ou pas dans le JDD",
+								"type": "boolean",
+								"example": true
+							}
+						}
+					}
+				]
+			},
+			"SelfdataDataset": {
+				"description": "JDD contenant des données personnelles, et pouvant avoir une demande \"Données personnelles\" par l'utilisateur courant",
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"processDefinitionKey": {
+						"type": "string"
+					},
+					"updatedDate": {
+						"$ref": "#/components/schemas/ReadOnlyDate"
+					},
+					"functionalStatus": {
+						"type": "string"
+					},
+					"datasetUuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"userPresent": {
+						"description": "Pour la dernière demande faite par le user sur ce JDD, si c'est une demande d'accès, indique si le user est présent ou non dans le JDD",
+						"type": "boolean"
+					}
+				}
+			},
+			"SearchCriteria": {
+				"description": "Critère de recherche",
+				"type": "object",
+				"properties": {
+					"offset": {
+						"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+						"type": "integer",
+						"format": "int32"
+					},
+					"limit": {
+						"description": "Le nombre de résultats à retourner par page",
+						"type": "integer",
+						"format": "int32"
+					},
+					"order": {
+						"description": "Le critère de tri des résultats",
+						"type": "string"
+					}
+				}
+			},
+			"SelfdataInformationRequestSearchCriteria": {
+				"description": "Critère de recherche de demandes d'informations sur des données personnelles dans un JDD",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"datasetUuid": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				]
+			},
+			"SelfdataDatasetSearchCriteria": {
+				"description": "Critère de recherche de JDDs contenant des données personnelles avec les dernières demandes de l'utilisateur connecté",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
+			},
+			"SelfdataTokenTupleCriteria": {
+				"description": "Critère de recherche d'un token dans la liste des token",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+						}
+					}
+				]
+			},
+			"PagedList": {
+				"description": "Liste paginée d'éléments",
+				"type": "object",
+				"required": [
+					"total",
+					"elements"
+				],
+				"properties": {
+					"total": {
+						"description": "Nombre total d'éléments pour cette recherche (peut être supérieur au nombre d'éléments de la page courante)",
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"PagedSelfdataInformationRequestList": {
+				"description": "Liste paginée de demandes d'informations sur des données personnelles dans un JDD",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "demandes d'informations de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SelfdataInformationRequest"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedSelfdataDatasetList": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SelfdataDataset"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ReadOnlyDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time",
+				"readOnly": true
+			},
+			"Attachment": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "../../../rudi-common/openapi/rudi-common-model.json#/components/schemas/AbstractLongIdDto"
+					}
+				]
+			},
+			"FrontOfficeProperties": {
+				"type": "object",
+				"properties": {
+					"spring": {
+						"type": "object",
+						"properties": {
+							"servlet": {
+								"type": "object",
+								"properties": {
+									"multipart": {
+										"type": "object",
+										"properties": {
+											"max-file-size": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"SelfdataTokenTuple": {
+				"description": "Token d'appariement des utilisateurs à des jdds",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "../../../rudi-common/openapi/rudi-common-model.json#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"token": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"dataset_uuid": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"user_uuid": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"node_provider_id": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				]
+			},
+			"MatchingField": {
+				"description": "Champ d'appariement",
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string",
+						"maxLength": 30
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			},
+			"MatchingFields": {
+				"description": "Ensemble des champs d'appariement collecté",
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/MatchingField"
+				}
+			},
+			"MatchingDescription": {
+				"description": "Résultat de l'appariement stocké par RUDI",
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "Le token identifiant l'appariement pour le fournisseur, le producteur et le citoyen pour une durée donnée"
+					},
+					"dataset_uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "L'uuid du jeu de données"
+					},
+					"producer_uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "L'uuid du producteur"
+					},
+					"provider_uuid": {
+						"type": "string",
+						"format": "uuid",
+						"description": "L'uuid du fournisseur"
+					},
+					"expiration_date": {
+						"$ref": "#/components/schemas/RudiDate"
+					}
+				}
+			},
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			},
+			"NodeProviderInfo": {
+				"description": "Une synthèse des informations du node provider",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"url": {
+						"description": "URL d'accès aux services du node provider",
+						"type": "string"
+					}
+				}
+			},
+			"MatchingData": {
+				"description": "Un couple clé valeur définissant une donnée pivot",
+				"type": "object",
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/FieldType"
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

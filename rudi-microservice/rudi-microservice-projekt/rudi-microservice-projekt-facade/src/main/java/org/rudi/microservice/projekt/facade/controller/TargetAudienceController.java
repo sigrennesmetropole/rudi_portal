@@ -1,7 +1,7 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.UUID;
+
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.projekt.core.bean.PagedTargetAudienceList;
 import org.rudi.microservice.projekt.core.bean.TargetAudience;
@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,14 +23,14 @@ public class TargetAudienceController implements TargetAudienceApi {
 	private final UtilPageable utilPageable;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
 	public ResponseEntity<TargetAudience> createTargetAudience(TargetAudience targetAudience) throws Exception {
 		val created = targetAudienceService.createTargetAudience(targetAudience);
 		return ResponseEntity.ok(created);
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteTargetAudience(UUID uuid) throws Exception {
 		targetAudienceService.deleteTargetAudience(uuid);
 		return ResponseEntity.noContent().build();
@@ -52,7 +54,7 @@ public class TargetAudienceController implements TargetAudienceApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
 	public ResponseEntity<Void> updateTargetAudience(TargetAudience targetAudience) throws Exception {
 		targetAudienceService.updateTargetAudience(targetAudience);
 		return ResponseEntity.noContent().build();

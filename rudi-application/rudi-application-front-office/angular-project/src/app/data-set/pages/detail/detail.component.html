@@ -7,22 +7,13 @@
              class="metadata-container pl-0 pr-0 container-fluid">
 
             <!-- Icon et titre de la ressource -->
-            <div class="header-metadata ml">
-                <div class="header-img">
-                    <app-organization-logo [ngClass]="{'metadata-theme-sm' : mediaSize.isSm,
-                                                        'metadata-theme-md' : mediaSize.isMd,
-                                                        'metadata-theme-lg' : mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
-                                           [organizationId]="metadata?.producer.organization_id"
-                                           organizationType="producer"></app-organization-logo>
-                </div>
-                <div class="header-ressource">
-                    <div class="producer-name">{{metadata?.producer?.organization_name}}</div>
-                    <div class="resource-description">
-                        <mat-icon class="d-inline-flex" [svgIcon]="restrictedDatasetIcon" *ngIf="isRestricted"></mat-icon>
-                        <span class="blue-theme resource-title">{{metadata?.resource_title}}</span>
-                    </div>
-                </div>
-            </div>
+            <app-dataset-heading
+                [organizationName]="metadata?.producer?.organization_name"
+                [resourceTitle]="metadata?.resource_title"
+                [organizationId]="metadata?.producer.organization_id"
+                [icon]="getDatasetTitleIcon()"
+            >
+            </app-dataset-heading>
             <!-- Fin Icon et titre de la ressource -->
 
             <!-- Bandeau -->
@@ -41,51 +32,61 @@
                         <span>Données</span>
                     </button>
                     <span class="spacer"></span>
-                    <button #clickMenuFormatTrigger="matMenuTrigger" *ngIf="downloadableMedias.length > 0"
-                            [matMenuTriggerFor]="formatMenu"
-                            class="button banner-btn-download"
-                            mat-raised-button
-                    >
-                        <mat-icon class="icon-syle icon-save mr-l">save_alt</mat-icon>
-                        <span [ngClass]="{'banner-icon-libelle': mediaSize.isSm}">Télécharger</span>
-                        <mat-menu #formatMenu="matMenu" role="menu" xPosition="after">
-                            <div (click)="$event.stopPropagation()" class="rudi-select-panel" fxLayout="column">
-                                <form [formGroup]="form">
-                                    <h4 class="menu-libelle"
-                                        tabindex="0">{{'availableFormats.formatsDisponibles'|translate}}</h4>
+                    <div *ngIf="!isSelfdata">
+                        <button #clickMenuFormatTrigger="matMenuTrigger" *ngIf="downloadableMedias.length > 0"
+                                [matMenuTriggerFor]="formatMenu"
+                                class="button banner-btn-download"
+                                mat-raised-button
+                        >
+                            <mat-icon class="icon-syle icon-save mr-l">save_alt</mat-icon>
+                            <span
+                                [ngClass]="{'banner-icon-libelle': mediaSize.isSm}">{{'availableFormats.telecharger'|translate}}</span>
+                            <mat-menu #formatMenu="matMenu" role="menu" xPosition="after">
+                                <div (click)="$event.stopPropagation()" class="rudi-select-panel" fxLayout="column">
+                                    <form [formGroup]="form">
+                                        <h4 class="menu-libelle"
+                                            tabindex="0">{{'availableFormats.formatsDisponibles'|translate}}</h4>
 
-                                    <mat-radio-group #radioGroup="matRadioGroup" (click)="$event.stopPropagation()"
-                                                     aria-label="Select an option"
-                                                     formControlName="options" fxLayout="column">
-                                        <mat-radio-button
-                                            *ngFor="let item of downloadableMedias; let i = index"
-                                            [checked]="i === 0"
-                                            [value]="item"
-                                            class="mb-2">
-                                            {{getMediaFileExtension(item)}}
-                                        </mat-radio-button>
-                                    </mat-radio-group>
+                                        <mat-radio-group #radioGroup="matRadioGroup" (click)="$event.stopPropagation()"
+                                                         aria-label="Select an option"
+                                                         formControlName="options" fxLayout="column">
+                                            <mat-radio-button
+                                                *ngFor="let item of downloadableMedias; let i = index"
+                                                [checked]="i === 0"
+                                                [value]="item"
+                                                class="mb-2">
+                                                {{getMediaFileExtension(item)}}
+                                            </mat-radio-button>
+                                        </mat-radio-group>
 
-                                    <button
-                                        (click)="onDownloadFormat()"
-                                        [ngClass]="{'btn-download-format':metadata.available_formats.length == null }"
-                                        class="button menu-btn-download"
-                                        mat-raised-button
-                                        tabindex="3"
-                                        type="submit"
-                                    >
-                                        {{'availableFormats.telecharger'|translate}}</button>
-                                </form>
+                                        <button
+                                            *ngIf="!isSelfdata"
+                                            (click)="onDownloadFormat()"
+                                            [ngClass]="{'btn-download-format':metadata.available_formats.length == null }"
+                                            class="button menu-btn-download"
+                                            mat-raised-button
+                                            tabindex="3"
+                                            type="submit"
+                                        >
+                                            {{'availableFormats.telecharger'|translate}}</button>
+                                    </form>
 
-                            </div>
-                        </mat-menu>
-                    </button>
-                    <button [hidden]="true" class="button ml-3" mat-raised-button routerLink="/partager">
-                        <mat-icon class="icon-syle">share</mat-icon>
+                                </div>
+                            </mat-menu>
+                        </button>
+                        <button [hidden]="true" class="button ml-3" mat-raised-button routerLink="/partager">
+                            <mat-icon class="icon-syle">share</mat-icon>
+                        </button>
+                    </div>
+                    <!-- Faire une demande d'information sur ses données personnelles detenues -->
+                    <button mat-raised-button class="button ml-3" *ngIf="isSelfdata"
+                            (click)="handleClickSelfdataInformationRequest()">
+                        <mat-icon class="key-icon" svgIcon="icone_donnees_personnelles"></mat-icon>
+                        <span>{{'metaData.selfdataInformationRequest.wholeTitle'|translate}}</span>
                     </button>
 
                     <!-- Demander l'accès à un JDD restreint -->
-                    <button mat-raised-button class="button ml-3" *ngIf="isRestricted"
+                    <button mat-raised-button class="button ml-3" *ngIf="!isSelfdata && isRestricted"
                             (click)="handleClickRequestAccess()">
                         <mat-icon class="key-icon" svgIcon="key_icon_circle"></mat-icon>
                         <span>{{'metaData.restrictedDatasetRequest'|translate}}</span>
@@ -427,7 +428,9 @@
                     <app-project-list [disableScrollOnPageChange]="true"
                                       [linkedDatasetsGlobalIds]="[metadata.global_id]"
                                       [maxResultsPerPage]="3"
-                                      [resultsPerRow]="3">
+                                      [resultsPerRow]="3"
+                                      [allPage]="false"
+                                      [isTransparent]="true">
                     </app-project-list>
                 </div>
 

@@ -166,13 +166,5 @@ public interface ApplicationService {
      */
 	String buildAPIAccessUrl(UUID globalId, UUID mediaId) throws APIManagerException;
 
-    /**
-     * Est-ce que pour les identifiants fournis du JDD, on a bien une API de créée
-     * @param globalId Identifiant des métadonnées
-     * @param mediaId Identifiant du média des métadonnées
-     * @return si oui ou non le JDD a une API
-     */
-    boolean hasApi(UUID globalId, UUID mediaId) throws APIManagerException;
-
 	ApplicationKey getApplicationKey(String applicationId, String username, EndpointKeyType keyType) throws ApplicationOperationException;
 }

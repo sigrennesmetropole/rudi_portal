@@ -1,15 +1,5 @@
 package org.rudi.facet.kaccess.helper.search.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.rudi.common.core.util.DateTimeUtils.toUTC;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.rudi.facet.dataverse.bean.SearchType;
-import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
-import org.rudi.facet.dataverse.model.search.SearchParams;
-import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
-
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
@@ -19,10 +9,15 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.rudi.facet.dataverse.bean.SearchType;
 import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 import org.rudi.facet.dataverse.model.search.SearchParams;
 import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.rudi.common.core.util.DateTimeUtils.toUTC;
 
 class SearchCriteriaMapperTest {
 
@@ -97,7 +92,7 @@ class SearchCriteriaMapperTest {
 		final SearchParams searchParams = searchCriteriaMapper
 				.datasetSearchCriteriaToSearchParams(datasetSearchCriteria, false);
 		assertThat(searchParams.getFilterQuery())
-				.containsExactly("rudi_access_condition_confidentiality_restricted_access:\"true\"");
+				.containsExactly("rudi_access_condition_confidentiality_gdpr_sensitive:\"false\"", "rudi_access_condition_confidentiality_restricted_access:\"true\"");
 	}
 
 	@Test

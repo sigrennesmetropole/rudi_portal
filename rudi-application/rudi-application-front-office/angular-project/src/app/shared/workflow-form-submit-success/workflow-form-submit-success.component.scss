@@ -1,0 +1,40 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+* {
+    font-family: OpenSans, sans-serif;
+}
+
+.subtitle {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: $primary-color;
+}
+
+.additional {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: $primary-color;
+
+}
+
+.link-text {
+    font-size: 16px;
+    color: $primary-color;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+button {
+    @extend .button;
+    @extend .mat-stroked-button;
+    @include button-blue;
+    margin-top: 2em;
+
+    &.mat-raised-button {
+        font-weight: bold;
+    }
+}
+

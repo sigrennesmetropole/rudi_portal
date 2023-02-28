@@ -1,20 +1,25 @@
 package org.rudi.microservice.konsult.service.metadata.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceForbiddenException;
-import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.exception.MissingParameterException;
-import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -26,7 +31,6 @@ import org.rudi.facet.kaccess.bean.MetadataList;
 import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
-import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.konsult.service.exception.APIManagerExternalServiceException;
 import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 import org.rudi.microservice.konsult.service.exception.DataverseExternalServiceException;
@@ -35,17 +39,15 @@ import org.rudi.microservice.konsult.service.exception.MetadataNotFoundException
 import org.rudi.microservice.konsult.service.exception.UnhandledMediaTypeException;
 import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.rudi.microservice.konsult.service.metadata.MetadataService;
+import org.rudi.microservice.konsult.service.metadata.impl.checker.AbstractAccessToDatasetChecker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -56,15 +58,15 @@ public class MetadataServiceImpl implements MetadataService {
 	private static final Integer DEFAULT_RESULTS_NUMBER = 100;
 	private final DatasetService datasetService;
 	private final ApplicationService applicationService;
+	private final APIsService apIsService;
 	private final ACLHelper aclHelper;
 	private final APIManagerHelper apiManagerHelper;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final MetadataWithSameThemeFinder metadataWithSameThemeFinder;
 	private final MetadataDetailsHelper metadataDetailsHelper;
-	private final ProjektHelper projektHelper;
-	private final UtilContextHelper utilContextHelper;
 	@Value("${apimanager.oauth2.client.anonymous.username}")
 	private String anonymousUsername;
+	private final List<AbstractAccessToDatasetChecker> accessToDatasetCheckerList;
 
 	@Override
 	public MetadataList searchMetadatas(DatasetSearchCriteria datasetSearchCriteria) throws DataverseAPIException {
@@ -100,7 +102,7 @@ public class MetadataServiceImpl implements MetadataService {
 
 	private void rewriteMediaUrls(Metadata metadata) throws APIManagerException {
 		for (final Media media : metadata.getAvailableFormats()) {
-			if (applicationService.hasApi(metadata.getGlobalId(), media.getMediaId())) {
+			if (apIsService.existsApi(metadata.getGlobalId(), media.getMediaId())) {
 				this.rewriteMediaUrl(metadata, media);
 			}
 		}
@@ -156,35 +158,12 @@ public class MetadataServiceImpl implements MetadataService {
 	@Override
 	public void subscribeToDataset(UUID globalId) throws APIManagerException, AppServiceException {
 		final var metadata = getMetadataById(globalId);
-		if (metadataDetailsHelper.isRestricted(metadata)) {
-			checkAuthenticatedUserHasAccessToDataset(globalId);
+		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
+			if (accessToDatasetChecker.hasToBeUse(metadata)) {
+				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId);
+			}
 		}
 		apiManagerHelper.subscribeToEachMediaOfDataset(globalId);
-	}
-
-	private void checkAuthenticatedUserHasAccessToDataset(UUID globalId) throws AppServiceUnauthorizedException, AppServiceForbiddenException {
-		val authenticatedUser = utilContextHelper.getAuthenticatedUser();
-		if (authenticatedUser == null) {
-			throw new AppServiceUnauthorizedException(
-					String.format("Cannot subscribe to restricted dataset %s without authentication",
-							globalId));
-		}
-
-		final var user = aclHelper.getUserByLogin(authenticatedUser.getLogin());
-		if (user == null) {
-			throw new AppServiceForbiddenException(
-					String.format("Cannot subscribe to restricted dataset %s because user %s does not exist",
-							globalId,
-							authenticatedUser.getLogin()));
-		}
-
-		final var ownerHasAccessToDataset = projektHelper.checkOwnerHasAccessToDataset(user.getUuid(), globalId);
-		if (!ownerHasAccessToDataset) {
-			throw new AppServiceForbiddenException(
-					String.format("Cannot subscribe because user %s has not been granted access to restricted dataset %s",
-							authenticatedUser.getLogin(),
-							globalId));
-		}
 	}
 
 	private Media getMetadataMediaById(Metadata metadata, UUID mediaId) throws MediaNotFoundException {

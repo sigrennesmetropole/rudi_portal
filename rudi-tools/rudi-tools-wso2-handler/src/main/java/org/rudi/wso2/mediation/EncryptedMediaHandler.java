@@ -22,7 +22,7 @@ import java.util.Base64;
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLHandshakeException;
 
-import org.apache.axis2.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.osgi.framework.FrameworkUtil;
 import org.rudi.facet.crypto.KeyGeneratorFromPem;
@@ -42,7 +42,7 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 	protected static final String PRIVATE_KEY_PATH_PROPERTY = "privateKeyURL";
 	private static final int READLIMIT = 128 * 1024;
 	private static final String MIME_TYPE_CRYPT_SUFFIXE = "+crypt";
-	private static final String MIME_TYPE_PROPERTY = "mime_type";
+	static final String MIME_TYPE_PROPERTY = "mime_type";
 	/**
 	 * Chemin (relatif au classpath) vers la clé privée par défaut
 	 */
@@ -81,7 +81,7 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 	}
 
 	private void decrypt(MessageContext messageContext) throws Exception {
-		replaceBody(messageContext, this::replaceBodyInputStream, this::computeNewContentType);
+		replaceBody(messageContext, this::replaceBodyInputStream, this::computeNewContentType, this::computeNewContentDisposition);
 	}
 
 	private InputStream replaceBodyInputStream(InputStream originalBody) throws IOException, GeneralSecurityException {
@@ -109,14 +109,15 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 		if (mimeType != null) {
 			return mimeType;
 		} else {
-			final var axis2MC = getAxis2MessageContext(messageContext);
-			final var contentType = axis2MC.getProperty(Constants.Configuration.CONTENT_TYPE);
-			if (contentType != null && contentType.toString().endsWith(MIME_TYPE_CRYPT_SUFFIXE)) {
-				final var contentTypeValue = contentType.toString();
-				return contentTypeValue.substring(0, contentTypeValue.length() - MIME_TYPE_CRYPT_SUFFIXE.length());
-			}
+			final var contentType = getContentType(messageContext);
+			return StringUtils.remove(contentType, MIME_TYPE_CRYPT_SUFFIXE);
 		}
-		return null;
+	}
+
+	@Nullable
+	private String computeNewContentDisposition(MessageContext messageContext) {
+		final var contentDisposition = getContentDisposition(messageContext);
+		return StringUtils.remove(contentDisposition, MIME_TYPE_CRYPT_SUFFIXE);
 	}
 
 	/**

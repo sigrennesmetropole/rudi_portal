@@ -1,7 +1,7 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
@@ -9,7 +9,8 @@ import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.kaccess.bean.Metadata;
 
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 
 /**
  * Une contrainte DataVerse oblige à ne définir qu'un seul niveau d'imbrication pour les champs de type compound.
@@ -27,7 +28,7 @@ import java.util.List;
 public abstract class AbstractFieldsMapper<T> {
 	protected final FieldGenerator fieldGenerator;
 	static final int DEFAULT_RANK = 0;
-	final FieldSpec parentOfPrimitiveFieldsSpec;
+	public final FieldSpec parentOfPrimitiveFieldsSpec;
 	final PrimitiveFieldsMapper<T> primitiveFieldsMapper;
 
 	/**

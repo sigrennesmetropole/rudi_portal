@@ -6,7 +6,7 @@
 	"globalId": "69784084-fdd1-4c28-aac7-306332ff53bb",
 	"mediaUuid": "0faf1661-37d8-4194-b806-b5de4f3121b6",
 	"interfaceContract": "dwnl",
-	"mediaType": "text/csv",
+	"responseMediaType": "text/csv",
 	"endpointUrl": "https://data.rennesmetropole.fr/explore/dataset/ca-2020-rennes-metropole/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
 	"additionalProperties": {
 		"paramètre 1": "valeur 1",

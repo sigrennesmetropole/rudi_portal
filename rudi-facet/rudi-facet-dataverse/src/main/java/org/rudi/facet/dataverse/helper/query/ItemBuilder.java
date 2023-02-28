@@ -1,14 +1,16 @@
 package org.rudi.facet.dataverse.helper.query;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.rudi.facet.dataverse.fields.FieldSpec;
-
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.lang3.StringUtils;
+import org.rudi.facet.dataverse.fields.FieldSpec;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 class ItemBuilder<T> {
@@ -75,6 +77,11 @@ class ItemBuilder<T> {
 	@Nonnull
 	private String buildFilterQueryForMissingField(FieldSpec fieldSpec) {
 		return "(*:* NOT " + fieldSpec.getName() + ":*)";
+	}
+
+	@Nonnull
+	static String buildFilterQueryForFieldWithoutValue(FieldSpec fieldSpec) {
+		return "(NOT " + fieldSpec.getName() + ":*)";
 	}
 
 	protected String valueToString() {

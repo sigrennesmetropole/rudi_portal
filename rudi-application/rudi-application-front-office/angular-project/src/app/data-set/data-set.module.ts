@@ -6,9 +6,6 @@ import {ProducerNamesFilterFormComponent} from './components/filter-forms/produc
 import {DataSetInfosComponent} from './components/data-set-infos/data-set-infos.component';
 import {OrderFilterFormComponent} from './components/filter-forms/order-filter-form/order-filter-form.component';
 import {DatesFilterFormComponent} from './components/filter-forms/dates-filter-form/dates-filter-form.component';
-import {
-    RestrictedAccessFilterFormComponent
-} from './components/filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
 import {DetailComponent} from './pages/detail/detail.component';
 import {OrderComponent} from './components/order/order.component';
 import {ThemesFilterFormComponent} from './components/filter-forms/themes-filter-form/themes-filter-form.component';
@@ -22,11 +19,18 @@ import {ListComponent} from './pages/list/list.component';
 import {DataSetRoutingModule} from './data-set-routing.module';
 import {CoreModule} from '../core/core.module';
 import {ListContainerComponent} from './components/list-container/list-container.component';
-import {GetBackendPropertyPipe} from '../shared/get-backend-property.pipe';
+import {GetBackendPropertyPipe} from '../shared/pipes/get-backend-property.pipe';
 import {SelectProjectDialogComponent} from './components/select-project-dialog/select-project-dialog.component';
 import {
     SuccessRestrictedRequestDialogComponent
 } from './components/success-restricted-request-dialog/success-restricted-request-dialog.component';
+import {AccessStatusFilterFormComponent} from './components/filter-forms/access-status-filter-form/access-status-filter-form.component';
+import {
+    SelfdataInformationRequestCreationComponent
+} from './pages/selfdata-information-request-creation/selfdata-information-request-creation.component';
+import {
+    SelfdataInformationRequestCreationSuccessComponent
+} from './pages/selfdata-information-request-creation-success/selfdata-information-request-creation-success.component';
 
 
 @NgModule({
@@ -45,12 +49,14 @@ import {
             OrderComponent,
             OrderFilterFormComponent,
             ProducerNamesFilterFormComponent,
-            RestrictedAccessFilterFormComponent,
+            AccessStatusFilterFormComponent,
             SearchBoxComponent,
             ThemesFilterFormComponent,
             ListContainerComponent,
             SelectProjectDialogComponent,
-            SuccessRestrictedRequestDialogComponent
+            SuccessRestrictedRequestDialogComponent,
+            SelfdataInformationRequestCreationComponent,
+            SelfdataInformationRequestCreationSuccessComponent
         ],
     imports: [
         CommonModule,

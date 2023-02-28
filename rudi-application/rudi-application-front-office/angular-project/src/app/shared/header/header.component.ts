@@ -1,7 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Location} from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
-import {UserService} from '../../core/services/user.service';
 import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../core/services/authentication.service';
@@ -9,6 +8,9 @@ import {AuthenticationState} from '../../core/services/authentication/authentica
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {PropertiesMetierService} from '../../core/services/properties-metier.service';
+import {Level} from '../notification-template/notification-template.component';
+import {SnackBarService} from '../../core/services/snack-bar.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-header',
@@ -43,11 +45,12 @@ export class HeaderComponent {
         public dialog: MatDialog,
         public router: Router,
         private readonly authenticationService: AuthenticationService,
-        public readonly utilisateurService: UserService,
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly iconRegistry: MatIconRegistry,
         private readonly sanitizer: DomSanitizer,
-        private readonly propertiesMetierService: PropertiesMetierService
+        private readonly propertiesMetierService: PropertiesMetierService,
+        private readonly snackBarService: SnackBarService,
+        private readonly translateService: TranslateService,
     ) {
         // Quand l'utilisateur connecté change (on se connecte ou autre)
         this.authenticationService.authenticationChanged$.subscribe((state) => {
@@ -106,5 +109,39 @@ export class HeaderComponent {
                 this.urlToDoc = link;
             }
         });
+    }
+
+    handleClickGoToMySelfdata(): Promise<boolean> {
+        return this.router.navigate(['/personal-space/selfdata-datasets']);
+    }
+
+    handleClickLogout(): void {
+        this.authenticationService.logout().subscribe({
+            next: () => {
+                AuthenticationService.clearTokens();
+                this.snackBarService.openSnackBar({
+                    message: this.translateService.instant('header.logOutSuccess'),
+                    level: Level.INFO,
+                    keepBeforeSecondRouteChange: true
+                });
+                this.goToCatalogues();
+            },
+            error: (err) => {
+                console.error(err);
+                this.snackBarService.openSnackBar({
+                    message: this.translateService.instant('header.logOutError'),
+                    level: Level.ERROR
+                });
+            }
+        });
+    }
+
+    private goToCatalogues(): void {
+        if (this.router.url === '/catalogue') {
+            location.reload();
+        } else {
+            this.router.navigate(['/catalogue']);
+        }
+        this.router.navigate(['/catalogue']);
     }
 }

@@ -1,0 +1,29 @@
+@import "../workflow-field/workflow-field.component";
+@import "../../styles/colors";
+
+:host(::ng-deep.mat-checkbox-layout) {
+    margin: 0;
+}
+
+::ng-deep mat-checkbox {
+    margin-top: -1px;
+}
+
+.checkbox-container {
+    // Copie du style de mat-form-field pour l'espacement
+    margin: 12px 0 31px;
+    display: flex;
+}
+
+.checkbox-area {
+    display: flex;
+    vertical-align: top;
+    width: 5%;
+}
+
+.label-area {
+    display: flex;
+    flex-direction: column;
+    vertical-align: top;
+    width: 95%;
+}

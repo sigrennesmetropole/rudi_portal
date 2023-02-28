@@ -148,7 +148,7 @@
             ]
         },
         {
-            "concept_code": "open-source-licence",
+            "concept_code": "public-domain-cc0",
             "concept_uri": "https://opensource.org/licenses",
             "concept_icon": "icon4",
             "concept_role": "role4",
@@ -186,7 +186,7 @@
                     ]
                 },
                 {
-                    "concept_code": "licence_Apache-2.0",
+                    "concept_code": "apache-2.0",
                     "concept_icon": "icon6",
                     "concept_role": "role6",
                     "concept_uri": "https://opensource.org/licenses/Apache-2.0",

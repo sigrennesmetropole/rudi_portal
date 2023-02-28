@@ -10,7 +10,8 @@
 
     <form [formGroup]="step2FormGroup">
         <label class="step-form-card-label" id="ownerTypeLabel">
-                        <span class="step-form-card-label-title">{{'project.stepper.submission.step2.ownerType.title' | translate}}
+                        <span
+                            class="step-form-card-label-title">{{'project.stepper.submission.step2.ownerType.title' | translate}}
                             <span class="required-symbol">*</span></span><br/>
             <span
                 class="step-form-card-label-description">{{'project.stepper.submission.step2.ownerType.description' | translate}}</span>
@@ -37,7 +38,7 @@
                             <input autocomplete="off" formControlName="lastname"
                                    id="lastname"
                                    matInput
-                                   placeholder="{{'project.stepper.submission.step2.ownerType.lastname'|translate}}"
+                                   placeholder="{{'project.stepper.common.noName'|translate}}"
                                    required type="text">
                         </mat-form-field>
 
@@ -49,7 +50,7 @@
                             <input autocomplete="off" formControlName="firstname"
                                    id="firstname"
                                    matInput
-                                   placeholder="{{'project.stepper.submission.step2.ownerType.firstname'|translate}}"
+                                   placeholder="{{'project.stepper.common.noName'|translate}}"
                                    required type="text">
                         </mat-form-field>
                     </div>
@@ -66,11 +67,14 @@
                     <p class="mat-radio-button-description">{{'project.stepper.common.step2.ownerType.organization.description' | translate}}</p>
 
                     <div *ngIf="step2FormGroup.get('ownerType').value === 'ORGANIZATION'">
-                        <label for="organization-name">{{'project.stepper.common.step2.ownerType.organization.name.label'|translate}}<span
-                            class="required-symbol">*</span></label><br/>
+                        <label
+                            for="organization-name">{{'project.stepper.common.step2.ownerType.organization.name.label'|translate}}
+                            <span
+                                class="required-symbol">*</span></label><br/>
                         <mat-form-field id="organization-name" appearance="outline" *ngIf="organizationItems?.length">
-                            <mat-select placeholder="{{'project.stepper.common.step2.ownerType.organization.name.placeholder'|translate}}"
-                                        formControlName="organizationUuid">
+                            <mat-select
+                                placeholder="{{'project.stepper.common.step2.ownerType.organization.name.placeholder'|translate}}"
+                                formControlName="organizationUuid">
                                 <mat-option *ngFor="let organization of organizationItems" [value]="organization.uuid">
                                     {{ organization.name }}
                                 </mat-option>

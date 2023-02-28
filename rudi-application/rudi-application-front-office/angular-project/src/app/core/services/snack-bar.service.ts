@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Data, Level, NotificationTemplateComponent} from '../../shared/notification-template/notification-template.component';
+import {TranslateService} from '@ngx-translate/core';
+import {switchMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +16,10 @@ export class SnackBarService {
      *  Constructeur
      * @param snackBar  Instanciation SnackBar Bar Material Design (notification en bas de page)
      */
-    constructor(private readonly snackBar: MatSnackBar) {
+    constructor(
+        private readonly snackBar: MatSnackBar,
+        private readonly translateService: TranslateService,
+    ) {
     }
 
     private static getPanelClass(data: string | Data): string | undefined {
@@ -41,5 +47,28 @@ export class SnackBarService {
             duration,
             panelClass: SnackBarService.getPanelClass(data)
         });
+    }
+
+    showError(i18nMessageKey: string, duration?: number): void {
+        this.translate(i18nMessageKey).subscribe(translatedMessage => {
+            const data: Data = {
+                level: Level.ERROR,
+                message: translatedMessage,
+            };
+            this.openSnackBar(data, duration);
+        });
+    }
+
+    // tslint:disable-next-line:no-any : Typage RxJS
+    private translate(i18nMessageKey: string): Observable<any> {
+        return this.translateService.get(i18nMessageKey).pipe(
+            switchMap(translatedMessage => {
+                if (translatedMessage === i18nMessageKey) {
+                    return this.translateService.get('error.technicalError');
+                } else {
+                    return of(translatedMessage);
+                }
+            })
+        );
     }
 }

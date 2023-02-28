@@ -3,7 +3,8 @@ package org.rudi.wso2.mediation;
 import java.util.Iterator;
 import java.util.function.Function;
 
-import org.apache.axis2.Constants;
+import javax.annotation.Nullable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
@@ -50,7 +51,7 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 	 * pour indiquer qu'on ne doit pas continuer le traitement par le(s) Handler(s). En cas d'erreurs, par exemple.
 	 */
 	private static final boolean ABORT = true;
-	private static final String DEFAULT_ERROR_MESSAGE_PREFIX = "Failed to handle response for API: ";
+	protected static final String DEFAULT_ERROR_MESSAGE_PREFIX = "Failed to handle response for API: ";
 	private APIManager fixedAPIManager;
 
 	/**
@@ -127,15 +128,26 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 		// Par défaut un handler ne traite pas la réponse
 	}
 
-	protected void replaceBody(MessageContext messageContext, BodyReplacer bodyReplacer, Function<MessageContext, String> contentTypeComputer) throws Exception {
-		// récupération du message Axis2 sous jacent
-		final var axis2MC = getAxis2MessageContext(messageContext);
+	protected void replaceBody(MessageContext messageContext, BodyReplacer bodyReplacer,
+			Function<MessageContext, String> contentTypeComputer,
+			@Nullable
+					Function<MessageContext, String> contentDispositionComputer
+	) throws Exception {
+
+		// On sauvegarde le Content-Type original
+		final var originalContentType = getContentType(messageContext);
 
 		// On force le Content-Type pour empêcher WSO2 d'interpréter le body comme du XML
 		setContentType(messageContext, BINARY_CONTENT_TYPE);
 
+		// récupération du message Axis2 sous jacent
+		final var axis2MC = getAxis2MessageContext(messageContext);
+
 		// construction du message
 		RelayUtils.buildMessage(axis2MC, true);
+
+		// On restaure le Content-Type original avant traitement par le contentTypeComputer
+		setContentType(messageContext, originalContentType);
 
 		// récupération de la réponse
 		// Remplacement du body
@@ -146,17 +158,39 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 		if (newContentType != null) {
 			setContentType(messageContext, newContentType);
 		}
+
+		// Remplacement du Content-Disposition
+		if (contentDispositionComputer != null) {
+			final var newContentDisposition = contentDispositionComputer.apply(messageContext);
+			if (newContentDisposition != null) {
+				setContentDisposition(messageContext, newContentDisposition);
+			}
+		}
 	}
 
 	protected org.apache.axis2.context.MessageContext getAxis2MessageContext(MessageContext messageContext) {
 		return ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 	}
 
-	protected void setContentType(MessageContext messageContext, final String mimeType) {
-		messageContext.setProperty(Constants.Configuration.CONTENT_TYPE, mimeType);
-
+	protected String getContentType(MessageContext messageContext) {
 		final var axis2MC = getAxis2MessageContext(messageContext);
-		axis2MC.setProperty(Constants.Configuration.CONTENT_TYPE, mimeType);
+		return Axis2MessageContextUtils.getContentType(axis2MC);
+	}
+
+	protected void setContentType(MessageContext messageContext, final String mimeType) {
+		final var axis2MC = getAxis2MessageContext(messageContext);
+		Axis2MessageContextUtils.setContentType(axis2MC, mimeType);
+	}
+
+	@Nullable
+	protected String getContentDisposition(MessageContext messageContext) {
+		final var axis2MC = getAxis2MessageContext(messageContext);
+		return Axis2MessageContextUtils.getContentDisposition(axis2MC);
+	}
+
+	protected void setContentDisposition(MessageContext messageContext, final String contentDisposition) {
+		final var axis2MC = getAxis2MessageContext(messageContext);
+		Axis2MessageContextUtils.setContentDisposition(axis2MC, contentDisposition);
 	}
 
 	protected String getErrorMessage(Exception e) {

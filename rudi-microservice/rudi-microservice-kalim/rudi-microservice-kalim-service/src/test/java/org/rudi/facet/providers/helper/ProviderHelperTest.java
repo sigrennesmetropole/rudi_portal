@@ -1,5 +1,12 @@
 package org.rudi.facet.providers.helper;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -18,13 +25,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,6 +45,7 @@ class ProviderHelperTest {
 				"/get",
 				"/{providerUuid}/nodes/{nodeUuid}",
 				providersServiceUrl,
+				UUID.fromString("5596b5b2-b227-4c74-a9a1-719e7c1008c7"),
 				WebClient.builder()
 		);
 	}

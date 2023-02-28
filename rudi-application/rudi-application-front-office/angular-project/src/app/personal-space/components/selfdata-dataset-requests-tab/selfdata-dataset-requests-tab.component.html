@@ -1,0 +1,46 @@
+<app-card>
+
+    <ng-container *ngIf="loading">
+        <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="loading"></app-loader>
+    </ng-container>
+    <ng-container *ngIf="!loading && !loadingError">
+        <!--- demande d'information --->
+        <app-selfdata-request-section [title]="'personalSpace.selfdataRequest.informationRequest.title'|translate"
+                                      [subTitle]="'personalSpace.selfdataRequest.informationRequest.subTitle'|translate"
+                                      [description]="'personalSpace.selfdataRequest.informationRequest.text'|translate"
+                                      [creationLabel]="'personalSpace.selfdataRequest.informationRequest.buttonLabel'|translate"
+                                      [hasRequest]="hasAccessRequest"
+                                      [functionalStatus]="accessRequestFunctionalStatus"
+                                      [disableButton]="false"
+                                      (createRequestClicked)="goToAccessRequestCreation()"
+                                      (requestDetailsClicked)="goToRequestDetails(lastRequests.access)"
+        ></app-selfdata-request-section>
+
+        <!--- demande de rectification --->
+        <app-selfdata-request-section [title]="'personalSpace.selfdataRequest.rectificationRequest.title'|translate"
+                                      [subTitle]="'personalSpace.selfdataRequest.rectificationRequest.subTitle'|translate"
+                                      [description]="'personalSpace.selfdataRequest.rectificationRequest.text'|translate"
+                                      [creationLabel]="'personalSpace.selfdataRequest.rectificationRequest.buttonLabel' |translate"
+                                      [hasRequest]="hasCorrectionRequest"
+                                      [functionalStatus]="correctionRequestFunctionalStatus"
+                                      [disableButton]="true"
+        >
+        </app-selfdata-request-section>
+
+        <!--- demande de suppression --->
+        <app-selfdata-request-section [title]="'personalSpace.selfdataRequest.deletionRequest.title'|translate"
+                                      [subTitle]="deletionSectionSubtitle | translate"
+                                      [description]="deletionSectionDescription | translate"
+                                      [creationLabel]="'personalSpace.selfdataRequest.deletionRequest.buttonLabel' |translate"
+                                      [hasRequest]="hasDeletionRequest"
+                                      [functionalStatus]="deletionRequestFunctionalStatus"
+                                      [isNotApplicable]="isMetadataNonApplicableForDeletion"
+                                      [nonApplicableReasons]="nonApplicableDeletionReasons"
+                                      [disableButton]="true"
+        >
+        </app-selfdata-request-section>
+    </ng-container>
+    <ng-container *ngIf="!loading && loadingError">
+        <app-error-box [text]="'personalSpace.selfdataRequest.errorLoading'|translate"></app-error-box>
+    </ng-container>
+</app-card>

@@ -1,22 +1,5 @@
 @import "../../styles/common-style";
-
-label {
-    margin-bottom: 0.7em;
-
-    .title {
-        font-family: OpenSans, sans-serif;
-        font-size: 16px;
-        color: $secondary-text;
-        line-height: 2;
-    }
-
-    .description {
-        font-family: OpenSans, sans-serif;
-        font-size: 14px;
-        color: $primary-text-light;
-    }
-
-}
+@import "../workflow-form/workflow-form.component";
 
 mat-label {
     margin: 0 0 5px 0;
@@ -29,14 +12,7 @@ mat-label {
     color: black;
 }
 
-mat-form-field {
-    margin: 12px 0 31px;
-    border-radius: 4px;
-    width: 100%;
-}
-
 mat-error {
-    padding-bottom: 4em;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;

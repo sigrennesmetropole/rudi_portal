@@ -29,8 +29,11 @@ public class SectionDefinitionEntity extends AbstractLongIdEntity {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@Column(name = "label", nullable = false, length = 150)
+	@Column(name = "label", length = 150)
 	private String label;
+
+	@Column(name = "help", length = 150)
+	private String help;
 
 	/**
 	 * Contient un flux json constitué par une liste de FieldDefinition

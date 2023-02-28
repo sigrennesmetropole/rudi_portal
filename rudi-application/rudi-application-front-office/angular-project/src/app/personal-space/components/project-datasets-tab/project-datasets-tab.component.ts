@@ -9,7 +9,7 @@ import {of} from 'rxjs';
 import {Project} from '../../../projekt/projekt-model';
 import {DialogSubscribeDatasetsService} from '../../../core/services/dialog-subscribe-datasets.service';
 import {switchMap, tap} from 'rxjs/operators';
-import {ApiAccessService} from '../../../core/services/api-access.service';
+import {KonsultApiAccessService} from '../../../core/services/api-access/konsult/konsult-api-access.service';
 
 @Component({
     selector: 'app-project-datasets-tab',
@@ -78,7 +78,7 @@ export class ProjectDatasetsTabComponent implements OnInit {
     }
 
     constructor(private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
-                private readonly apiAccessService: ApiAccessService,
+                private readonly apiAccessService: KonsultApiAccessService,
                 private readonly projectDependenciesService: ProjectDependenciesService,
                 private readonly projectDependenciesFetchers: ProjectDependenciesFetchers) {
     }

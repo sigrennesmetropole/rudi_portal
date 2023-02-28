@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-tools</artifactId>
-		<version>0.3.0</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>rudi-tools-nodestub</artifactId>
 	<name>rudi-tools-nodestub</name>
@@ -50,6 +50,11 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-facade</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-common-test</artifactId>
 		</dependency>
 
@@ -77,6 +82,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
 		<dependency>
@@ -175,6 +185,20 @@
 								<importMapping>Method=org.rudi.microservice.kalim.core.bean.Method</importMapping>
 								<importMapping>ApiError=org.rudi.microservice.kalim.core.bean.ApiError</importMapping>
 							</importMappings>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-datafactory-api-recette</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<modelPackage>org.rudi.tools.nodestub.datafactory.apirecette.bean</modelPackage>
+							<apiPackage>org.rudi.tools.nodestub.datafactory.apirecette.controller.api</apiPackage>
+							<inputSpec>${resource-directory}/openapi/datafactory/api-recette.json</inputSpec>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 							</configOptions>

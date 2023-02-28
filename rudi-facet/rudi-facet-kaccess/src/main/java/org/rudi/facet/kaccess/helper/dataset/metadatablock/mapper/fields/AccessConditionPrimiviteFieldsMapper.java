@@ -1,5 +1,10 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.NotImplementedException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
@@ -12,10 +17,6 @@ import org.rudi.facet.kaccess.bean.MetadataAccessCondition;
 import org.rudi.facet.kaccess.bean.MetadataAccessConditionConfidentiality;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
-
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.CUSTOM_LICENCE_URI;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.GDPR_SENSITIVE;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.LICENCE_LABEL;
@@ -24,8 +25,7 @@ import static org.rudi.facet.kaccess.constant.RudiMetadataField.RESTRICTED_ACCES
 
 @Component
 class AccessConditionPrimiviteFieldsMapper extends PrimitiveFieldsMapper<MetadataAccessCondition> {
-	// D'après le Swagger : "Default is open licence."
-	private static final String DEFAULT_SKOS_CODE = "open-source-licence";
+	private static final LicenceStandard.LicenceLabelEnum DEFAULT_SKOS_CODE = LicenceStandard.LicenceLabelEnum.PUBLIC_DOMAIN_CC0;
 
 	AccessConditionPrimiviteFieldsMapper(FieldGenerator fieldGenerator, ObjectMapper objectMapper, DateTimeMapper dateTimeMapper) {
 		super(fieldGenerator, objectMapper, dateTimeMapper);
@@ -71,7 +71,7 @@ class AccessConditionPrimiviteFieldsMapper extends PrimitiveFieldsMapper<Metadat
 		switch (licenceTypeEnum) {
 			case STANDARD:
 				licence = new LicenceStandard()
-						.licenceLabel(fields.get(LICENCE_LABEL).getValueAsString());
+						.licenceLabel(fields.get(LICENCE_LABEL).getValueAsEnumWith(LicenceStandard.LicenceLabelEnum::fromValue));
 				break;
 			case CUSTOM:
 				licence = new LicenceCustom()

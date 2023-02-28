@@ -52,10 +52,14 @@
 #   - Added MediaTypes '+crypt' for encrypted files
 #   - Added a new MIME type 'text/x-yaml' for .yaml / .yml files
 #
+# [1.4.0]
+#   - Added 'ext_metadata' to be able to extend the current metadata with
+#     additional sub-parts, in particular 'ext_selfdata' to describe a
+#     dataset that contains personal (GDPR) information.
 #•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 openapi: 3.0.0
 info:
-  version: 1.3.0
+  version: 1.4.0
   title: Public API for RUDI producer node
   description: "API pour l'accès aux données au niveau du nœud producteur RUDI"
   termsOfService: 'no'
@@ -441,6 +445,29 @@ components:
               description: URI of the initial metadata
               type: string
               format: uri
+        #—•—•—•—•—•—•—•—•—•—•—•—•—•
+        # EXTENDED METADATA
+        #——————————————————————————
+        'ext_metadata':
+          description: Extension of the metadata
+          type: object
+          properties:
+            'ext_selfdata':
+              description: Extension to deal with the declaration of "self-data". The format of the JSON object that describes the self-data is refenced bellow as "1.0.0self" and is described in an external OpenAPI document.
+              type: object
+              properties:
+                'ext_selfdata_connector':
+                  # Connector towards an encrypted media that contains the metadata extension as a JSON object in "1.0.0self" format.
+                  # This is stored on the Producer Node but not sent to the Portal.
+                  # A version of metadata that has such a field is referenced as "1.4.0int".
+                  # All "1.4.0int" metadata are set as readonly on the Producer Node UX.
+                  $ref: '#/components/schemas/Connector'
+                'ext_selfdata_content':
+                  # JSON object of the metadata in "1.0.0self" format that describes the self-data
+                  # This is sent to the Portal but not stored in the Producer Node.
+                  # A version of metadata that has such a field is referenced as "1.4.0ext".
+                  type: object
+                  $ref: './RUDI-PRODUCER-ext_selfdata_content.yml#/components/schemas/SelfdataContent'
 
     #---------------------------------------------------------------------------
     'Organization': # Organization
@@ -559,7 +586,18 @@ components:
             'licence_label':
               description: Value of the field SkosConcept.concept_code
               type: string
-              format: skosConceptCode
+              # format: skosConceptCode
+              enum:
+                [
+                  "apache-2.0",
+                  "cc-by-nd-4.0",
+                  "etalab-1.0",
+                  "etalab-2.0",
+                  "gpl-3.0",
+                  "mit",
+                  "odbl-1.0",
+                  "public-domain-cc0"
+                ]
 
       #---------------------------------------------------------------------------
     'LicenceCustom':

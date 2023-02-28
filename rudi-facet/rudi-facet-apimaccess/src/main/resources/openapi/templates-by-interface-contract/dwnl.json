@@ -21,7 +21,7 @@
                     "200": {
                         "description": "OK",
                         "content": {
-                            "${api.getMediaType()}": {
+                            "${api.getResponseMediaType()}": {
                                 "schema": {
                                     "type": "string",
                                     "format": "binary"

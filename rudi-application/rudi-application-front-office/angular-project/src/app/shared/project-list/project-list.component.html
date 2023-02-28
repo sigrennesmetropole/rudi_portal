@@ -1,8 +1,8 @@
-<div [ngClass]="{'project-card-full-height-sm': mediaSize.isSm || mediaSize.isMd }"
-     class="project-card-full-height">
-    <app-loader [active]="isLoading">
-    </app-loader>
+<app-loader [active]="isLoading" [allPage]="allPage" [isTransparent]="isTransparent">
+</app-loader>
 
+<div *ngIf="!isLoading" [ngClass]="{'project-card-full-height-sm': mediaSize.isSm || mediaSize.isMd }"
+     class="project-card-full-height">
     <div *ngIf="projectList && projectList.items.length > 0" class="content"
          [ngClass]="{'mb-4': projectList?.total <= maxResultsPerPage}">
         <div class="project-cards-container" fxLayout="row wrap">

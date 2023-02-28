@@ -3,18 +3,18 @@
  */
 package org.rudi.facet.bpmn.service;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.UUID;
+
 import org.rudi.bpmn.core.bean.FormDefinition;
 import org.rudi.bpmn.core.bean.ProcessFormDefinition;
 import org.rudi.bpmn.core.bean.SectionDefinition;
 import org.rudi.facet.bpmn.bean.form.FormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.SectionDefinitionSearchCriteria;
-import org.rudi.facet.bpmn.helper.form.ActionId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @author FNI18300
@@ -55,9 +55,13 @@ public interface FormService {
 			Pageable pageable);
 
 	/**
-	 * Crée ou met à jour le formulaire lié à une action dont la définition se trouve dans le fichier JSON :
+	 * Crée ou met à jour toutes les sections définies dans les fichiers JSON
+	 * <pre>bpmn/sections/`processDefinitionId`__`userTaskId`__`actionName`.json</pre>
+	 * <p>
+	 * Ainsi que tous les formulaires définis dans les fichiers JSON
+	 * <pre>bpmn/forms/`processDefinitionId`__`userTaskId`__`actionName`.json</pre>
 	 *
-	 * <pre>bpmn/form/`processDefinitionId`__`userTaskId`__`actionName`.json</pre>
+	 * @return toutes les formulaires créés ou mis à jour
 	 */
-	void createOrUpdateProcessFormDefinitionForAction(ActionId actionId) throws IOException;
+	Collection<ProcessFormDefinition> createOrUpdateAllSectionAndFormDefinitions() throws IOException;
 }

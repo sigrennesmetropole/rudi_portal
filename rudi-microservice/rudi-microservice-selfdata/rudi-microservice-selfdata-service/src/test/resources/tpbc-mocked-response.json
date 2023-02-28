@@ -1,0 +1,199 @@
+{
+	"legend": [
+		{
+			"lang": "fr-FR",
+			"text": "Catégorie de bac"
+		}
+	],
+	"type": "POINT",
+	"legendAxis": [
+		{
+			"lang": "fr-FR",
+			"text": "Poids collecté en kg"
+		}
+	],
+	"series": [
+		{
+			"legend": [
+				{
+					"lang": "fr-FR",
+					"text": "23/11/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "24/11/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "01/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "07/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "08/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "15/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "21/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "22/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "29/12/2021"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "04/01/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "05/01/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "18/01/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "19/01/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "01/02/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "09/02/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "15/02/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "16/02/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "23/02/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "01/03/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "15/03/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "23/03/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "12/04/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "13/04/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "21/04/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "27/09/2022"
+				},
+				{
+					"lang": "fr-FR",
+					"text": "28/09/2022"
+				}
+			]
+		}
+	],
+	"values": [
+		{
+			"legend": [
+				{
+					"lang": "fr-FR",
+					"text": "Bacs collecte sélective"
+				}
+			],
+			"values": [
+				5,
+				null,
+				null,
+				14,
+				null,
+				null,
+				2,
+				null,
+				null,
+				5,
+				null,
+				9,
+				null,
+				5,
+				null,
+				21,
+				null,
+				null,
+				8,
+				9,
+				null,
+				18,
+				null,
+				null,
+				28,
+				null
+			]
+		},
+		{
+			"legend": [
+				{
+					"lang": "fr-FR",
+					"text": "Bacs ordures ménagères"
+				}
+			],
+			"values": [
+				null,
+				12,
+				2,
+				null,
+				0,
+				3,
+				null,
+				4,
+				4,
+				null,
+				6,
+				null,
+				2,
+				null,
+				0,
+				null,
+				2,
+				0,
+				null,
+				null,
+				1,
+				null,
+				4,
+				5,
+				null,
+				8
+			]
+		}
+	]
+}

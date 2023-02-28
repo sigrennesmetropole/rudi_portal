@@ -8012,11 +8012,12 @@ definitions:
         example: 01234567-0123-0123-0123-012345678901
       type:
         type: string
+        # Dans le swagger original, on a toutes les valeurs en minuscules alors que l'API renvoie en majuscules
         enum:
-          - in
-          - out
-          - fault
-        example: in
+          - IN
+          - OUT
+          - FAULT
+        example: IN
 
   #-----------------------------------------------------
   # The Mediation resource

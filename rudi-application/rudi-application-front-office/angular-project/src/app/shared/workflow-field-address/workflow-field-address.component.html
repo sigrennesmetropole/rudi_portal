@@ -1,0 +1,37 @@
+<ng-container [formGroup]="formGroup">
+    <label for="input-{{userInputFormControlName}}">
+        <span class="title">{{label}}<span *ngIf="required && !readonly" class="required-symbol">*</span></span>
+        <br/>
+        <span *ngIf="!readonly" class="description">{{help}}</span>
+    </label>
+    <mat-form-field *ngIf="!readonly" appearance="outline">
+        <!-- Saisie manuelle de l'utilisateur -->
+        <input id="input-{{userInputFormControlName}}" type="text" [matAutocomplete]="auto" matInput
+               [formControlName]="userInputFormControlName"
+               [readonly]="readonly">
+        <!-- Liste des adresses correspondant à la saisie -->
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="formatAddress"
+                          (optionSelected)="setSelectedAddress($event.option.value)">
+            <mat-option *ngFor="let address of addressList$ | async" [value]="address">
+                {{address.label}}
+            </mat-option>
+        </mat-autocomplete>
+
+        <mat-error>
+            <ng-container *ngFor="let error of userInputFormControl?.errors | keyvalue">
+                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.validatorsErrors.' + error.key |translate}}<br/>
+            </ng-container>
+        </mat-error>
+
+        <!-- Stockage interne de l'adresse -->
+        <input id="input-{{formControlName}}" type="hidden" [formControlName]="formControlName">
+    </mat-form-field>
+    <app-loader [active]="adressLoading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
+    <mat-form-field *ngIf="readonly && !adressLoading" appearance="outline">
+        <!-- Input en mode ReadOnly -->
+        <input id="input-{{userInputFormControlName}}" type="text" matInput
+               [class.input-error]="hasError"
+               [formControlName]="userInputFormControlName"
+               [readonly]="readonly">
+    </mat-form-field>
+</ng-container>

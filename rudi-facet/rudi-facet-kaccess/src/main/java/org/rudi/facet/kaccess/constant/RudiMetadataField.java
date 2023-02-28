@@ -1,13 +1,12 @@
 package org.rudi.facet.kaccess.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import javax.annotation.Nonnull;
+
 import org.rudi.facet.dataverse.fields.DatasetMetadataBlockElementSpec;
 import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.dataverse.fields.FieldSpecNamingCase;
 import org.rudi.facet.dataverse.fields.RootFieldSpec;
 import org.rudi.facet.kaccess.bean.Connector;
-import org.rudi.facet.kaccess.bean.DictionaryEntry;
 import org.rudi.facet.kaccess.bean.LicenceCustom;
 import org.rudi.facet.kaccess.bean.LicenceStandard;
 import org.rudi.facet.kaccess.bean.MediaFile;
@@ -16,10 +15,8 @@ import org.rudi.facet.kaccess.bean.MediaService;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.Organization;
 
-import javax.annotation.Nonnull;
-
-import static org.rudi.facet.kaccess.constant.ConstantMetadata.LANG_FIELD_LOCAL_NAME;
-import static org.rudi.facet.kaccess.constant.ConstantMetadata.TEXT_FIELD_LOCAL_NAME;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RudiMetadataField {
@@ -41,19 +38,21 @@ public class RudiMetadataField {
 	 */
 	public static final FieldSpec DATAVERSE_DOI = ROOT.newChildFromJavaField("dataverseDoi");
 	public static final FieldSpec RESOURCE_TITLE = ROOT.newChildFromJavaField("resourceTitle")
-			.isSortable(false);
+			.isDirectSortable(false);
 
 	// abstract renommé en synopsis : l'identifiant rudi_abstract est conservé cause impact dataverse
 	public static final FieldSpec SYNOPSIS = ROOT.newChildFromJavaField("synopsis", "abstract");
-	public static final FieldSpec SYNOPSIS_LANGUAGE = SYNOPSIS.newChildFromJavaField("lang", "language");
+	public static final FieldSpec SYNOPSIS_LANGUAGE = SYNOPSIS.newChildFromJavaField("lang", "language")
+			.allowControlledVocabulary(false);
 	public static final FieldSpec SYNOPSIS_TEXT = SYNOPSIS.newChildFromJavaField("text");
 
 	public static final FieldSpec SUMMARY = ROOT.newChildFromJavaField("summary");
-	public static final FieldSpec SUMMARY_LANGUAGE = SUMMARY.newChildFromJavaField("lang", "language");
+	public static final FieldSpec SUMMARY_LANGUAGE = SUMMARY.newChildFromJavaField("lang", "language")
+			.allowControlledVocabulary(false);
 	public static final FieldSpec SUMMARY_TEXT = SUMMARY.newChildFromJavaField("text");
 
-	public static final FieldSpec THEME = ROOT.newChildFromJavaField("theme").isSortable(false);
-	public static final FieldSpec KEYWORDS = ROOT.newChildFromJavaField("keywords").isSortable(false);
+	public static final FieldSpec THEME = ROOT.newChildFromJavaField("theme").isDirectSortable(false);
+	public static final FieldSpec KEYWORDS = ROOT.newChildFromJavaField("keywords").isDirectSortable(false);
 
 	public static final FieldSpec CONTACT = ROOT.newChildFromJavaField("contacts", "contact");
 	public static final FieldSpec CONTACT_ID = CONTACT.newChildFromJavaField("contactId", "id");
@@ -66,12 +65,16 @@ public class RudiMetadataField {
 	public static final FieldSpec PRODUCER = ROOT.newChildFromJavaField("producer");
 	public static final FieldSpec PRODUCER_ORGANIZATION_ID = PRODUCER.newChildFromJavaField("organizationId");
 	public static final FieldSpec PRODUCER_ORGANIZATION_NAME = PRODUCER.newChildFromJavaField(ORGANIZATION_NAME)
-			.isSortable(true);
+			.isDirectSortable(false);
 	public static final FieldSpec PRODUCER_ORGANIZATION_ADDRESS = PRODUCER.newChildFromJavaField("organizationAddress");
 	public static final FieldSpec PRODUCER_ORGANIZATION_COORDINATES = PRODUCER.newChildFromJavaField("organizationCoordinates");
-	/** {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLatitude()} */
+	/**
+	 * {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLatitude()}
+	 */
 	public static final FieldSpec PRODUCER_ORGANIZATION_COORDINATES_LATITUDE = PRODUCER_ORGANIZATION_COORDINATES.newChildFromJavaField("latitude");
-	/** {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLongitude()} */
+	/**
+	 * {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLongitude()}
+	 */
 	public static final FieldSpec PRODUCER_ORGANIZATION_COORDINATES_LONGITUDE = PRODUCER_ORGANIZATION_COORDINATES.newChildFromJavaField("longitude");
 	public static final FieldSpec PRODUCER_ORGANIZATION_CAPTION = PRODUCER.newChildFromJavaField("organizationCaption");
 	public static final FieldSpec PRODUCER_ORGANIZATION_SUMMARY = PRODUCER.newChildFromJavaField("organizationSummary");
@@ -88,27 +91,31 @@ public class RudiMetadataField {
 	public static final String UPDATED = "updated";
 	public static final String EXPIRES = "expires";
 	public static final String DELETED = "deleted";
-	public static final FieldSpec MEDIA_DATES_CREATED = MEDIA_DATES.newChildFromJavaField(CREATED).isSortable(false);
-	public static final FieldSpec MEDIA_DATES_VALIDATED = MEDIA_DATES.newChildFromJavaField(VALIDATED).isSortable(false);
-	public static final FieldSpec MEDIA_DATES_PUBLISHED = MEDIA_DATES.newChildFromJavaField(PUBLISHED).isSortable(false);
+	public static final FieldSpec MEDIA_DATES_CREATED = MEDIA_DATES.newChildFromJavaField(CREATED).isDirectSortable(false);
+	public static final FieldSpec MEDIA_DATES_VALIDATED = MEDIA_DATES.newChildFromJavaField(VALIDATED).isDirectSortable(false);
+	public static final FieldSpec MEDIA_DATES_PUBLISHED = MEDIA_DATES.newChildFromJavaField(PUBLISHED).isDirectSortable(false);
 	public static final FieldSpec MEDIA_DATES_UPDATED = MEDIA_DATES.newChildFromJavaField(UPDATED)
-			.isSortable(false);
+			.isDirectSortable(false);
 	public static final FieldSpec MEDIA_DATES_EXPIRES = MEDIA_DATES.newChildFromJavaField(EXPIRES);
 	public static final FieldSpec MEDIA_DATES_DELETED = MEDIA_DATES.newChildFromJavaField(DELETED);
-	public static final FieldSpec MEDIA_TYPE = MEDIA.newChildFromJavaField("mediaType", "type").controlledVocabulary();
+	public static final FieldSpec MEDIA_TYPE = MEDIA.newChildFromJavaField("mediaType", "type");
 	public static final FieldSpec MEDIA_CONNECTOR = MEDIA.newChildFromJavaField("connector");
 	public static final FieldSpec MEDIA_CONNECTOR_URL = MEDIA_CONNECTOR.newChildFromJavaField("url");
 	public static final FieldSpec MEDIA_CONNECTOR_INTERFACE_CONTRACT = MEDIA_CONNECTOR.newChildFromJavaField("interfaceContract");
-	/** {@link Connector#getConnectorParameters()} */
+	/**
+	 * {@link Connector#getConnectorParameters()}
+	 */
 	public static final FieldSpec MEDIA_CONNECTOR_PARAMETERS = MEDIA_CONNECTOR.newChildFromJavaField("connectorParameters");
 
 	public static final FieldSpec FILE = ROOT.newChildFromJavaField(AVAILABLE_FORMATS, "mediafile");
 	public static final FieldSpec FILE_STRUCTURE = FILE.newChildFromJavaField(MediaFile.class, "fileStructure", "structure");
 	public static final FieldSpec FILE_SIZE = FILE.newChildFromJavaField(MediaFile.class, "fileSize", "size");
-	public static final FieldSpec FILE_TYPE = FILE.newChildFromJavaField(MediaFile.class, "fileType", "type");
+	public static final FieldSpec FILE_TYPE = FILE.newChildFromJavaField(MediaFile.class, "fileType", "type")
+			.allowControlledVocabulary(false);
 	public static final FieldSpec FILE_ENCODING = FILE.newChildFromJavaField(MediaFile.class, "fileEncoding", "encoding");
 	public static final FieldSpec FILE_CHECKSUM = FILE.newChildFromJavaField(MediaFile.class, "checksum", "checksum");
-	public static final FieldSpec FILE_CHECKSUM_ALGO = FILE_CHECKSUM.newChildFromJavaField("algo");
+	public static final FieldSpec FILE_CHECKSUM_ALGO = FILE_CHECKSUM.newChildFromJavaField("algo")
+			.allowControlledVocabulary(false);
 	public static final FieldSpec FILE_CHECKSUM_HASH = FILE_CHECKSUM.newChildFromJavaField("hash");
 
 	public static final FieldSpec SERIES = ROOT.newChildFromJavaField(AVAILABLE_FORMATS, "mediaseries");
@@ -122,7 +129,8 @@ public class RudiMetadataField {
 	public static final FieldSpec SERVICE = ROOT.newChildFromJavaField(AVAILABLE_FORMATS, "mediaservice");
 	public static final FieldSpec SERVICE_API_DOCUMENTATION_URL = SERVICE.newChildFromJavaField(MediaService.class, "apiDocumentationUrl");
 
-	public static final FieldSpec RESOURCE_LANGUAGES = ROOT.newChildFromJavaField("resourceLanguages", "resource_language");
+	public static final FieldSpec RESOURCE_LANGUAGES = ROOT.newChildFromJavaField("resourceLanguages", "resource_language")
+			.allowControlledVocabulary(false);
 
 	public static final FieldSpec TEMPORAL_SPREAD = ROOT.newChildFromJavaField("temporalSpread");
 	public static final FieldSpec TEMPORAL_SPREAD_START_DATE = TEMPORAL_SPREAD.newChildFromJavaField("startDate");
@@ -142,15 +150,16 @@ public class RudiMetadataField {
 	public static final FieldSpec DATASET_SIZE_NUMBER_OF_FIELDS = DATASET_SIZE.newChildFromJavaField("numberOfFields");
 
 	public static final FieldSpec DATASET_DATES = ROOT.newChildFromJavaField("datasetDates");
-	public static final FieldSpec DATASET_DATES_CREATED = DATASET_DATES.newChildFromJavaField(CREATED).isSortable(false);
-	public static final FieldSpec DATASET_DATES_VALIDATED = DATASET_DATES.newChildFromJavaField(VALIDATED).isSortable(false);
-	public static final FieldSpec DATASET_DATES_PUBLISHED = DATASET_DATES.newChildFromJavaField(PUBLISHED).isSortable(false);
+	public static final FieldSpec DATASET_DATES_CREATED = DATASET_DATES.newChildFromJavaField(CREATED).isDirectSortable(false);
+	public static final FieldSpec DATASET_DATES_VALIDATED = DATASET_DATES.newChildFromJavaField(VALIDATED).isDirectSortable(false);
+	public static final FieldSpec DATASET_DATES_PUBLISHED = DATASET_DATES.newChildFromJavaField(PUBLISHED).isDirectSortable(false);
 	public static final FieldSpec DATASET_DATES_UPDATED = DATASET_DATES.newChildFromJavaField(UPDATED)
-			.isSortable(false);
+			.isDirectSortable(false);
 	public static final FieldSpec DATASET_DATES_EXPIRES = DATASET_DATES.newChildFromJavaField(EXPIRES);
 	public static final FieldSpec DATASET_DATES_DELETED = DATASET_DATES.newChildFromJavaField(DELETED);
 
-	public static final FieldSpec STORAGE_STATUS = RudiMetadataField.ROOT.newChildFromJavaField("storageStatus");
+	public static final FieldSpec STORAGE_STATUS = RudiMetadataField.ROOT.newChildFromJavaField("storageStatus")
+			.allowControlledVocabulary(false);
 
 	public static final FieldSpec METADATA_INFO = ROOT.newChildFromJavaField("metadataInfo");
 	public static final FieldSpec METADATA_INFO_API_VERSION = METADATA_INFO.newChildFromJavaField("apiVersion");
@@ -167,11 +176,17 @@ public class RudiMetadataField {
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_ID = METADATA_INFO_PROVIDER.newChildFromJavaField("organizationId");
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_NAME = METADATA_INFO_PROVIDER.newChildFromJavaField(ORGANIZATION_NAME);
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_ADDRESS = METADATA_INFO_PROVIDER.newChildFromJavaField("organizationAddress");
-	/** {@link Organization#getOrganizationCoordinates()} */
+	/**
+	 * {@link Organization#getOrganizationCoordinates()}
+	 */
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_COORDINATES = METADATA_INFO_PROVIDER.newChildFromJavaField("organizationCoordinates", "organization_coordinates");
-	/** {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLatitude()} */
+	/**
+	 * {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLatitude()}
+	 */
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_COORDINATES_LATITUDE = METADATA_INFO_PROVIDER_ORGANIZATION_COORDINATES.newChildFromJavaField("latitude");
-	/** {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLongitude()} */
+	/**
+	 * {@link org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates#getLongitude()}
+	 */
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_COORDINATES_LONGITUDE = METADATA_INFO_PROVIDER_ORGANIZATION_COORDINATES.newChildFromJavaField("longitude");
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_CAPTION = METADATA_INFO_PROVIDER.newChildFromJavaField("organizationCaption", "organization_caption");
 	public static final FieldSpec METADATA_INFO_PROVIDER_ORGANIZATION_SUMMARY = METADATA_INFO_PROVIDER.newChildFromJavaField("organizationSummary", "organization_summary");
@@ -195,8 +210,9 @@ public class RudiMetadataField {
 
 	public static final FieldSpec LICENCE = ACCESS_CONDITION.newChildFromJavaField("licence");
 
-	public static final FieldSpec LICENCE_TYPE = LICENCE.newChildFromJavaField("licenceType").controlledVocabulary();
-	public static final FieldSpec LICENCE_LABEL = LICENCE.newChildFromJavaField(LicenceStandard.class, "licenceLabel");
+	public static final FieldSpec LICENCE_TYPE = LICENCE.newChildFromJavaField("licenceType");
+	public static final FieldSpec LICENCE_LABEL = LICENCE.newChildFromJavaField(LicenceStandard.class, "licenceLabel")
+			.allowControlledVocabulary(false);
 
 	public static final FieldSpec CUSTOM_LICENCE_URI = LICENCE.newChildFromJavaField(LicenceCustom.class, "customLicenceUri");
 	public static final FieldSpec CUSTOM_LICENCE_LABEL = LICENCE.newChildFromJavaField(LicenceCustom.class, "customLicenceLabel");
@@ -206,10 +222,28 @@ public class RudiMetadataField {
 	public static final FieldSpec MANDATORY_MENTION = ACCESS_CONDITION.newChildFromJavaField("mandatoryMention");
 	public static final FieldSpec ACCESS_CONSTRAINT = ACCESS_CONDITION.newChildFromJavaField("accessConstraint");
 	public static final FieldSpec OTHER_CONSTRAINTS = ACCESS_CONDITION.newChildFromJavaField("otherConstraints");
+	// Gestion des métadonnées selfData
+	public static final FieldSpec EXT_METADATA = ROOT.newChildFromJavaField("extMetadata");
+	public static final FieldSpec EXT_SELFDATA = EXT_METADATA.newChildFromJavaField("extSelfdata");
+	public static final FieldSpec EXT_SELFDATA_CONTENT = EXT_SELFDATA.newChildFromJavaField("extSelfdataContent");
+	public static final FieldSpec MATCHING_DATA = EXT_SELFDATA_CONTENT.newChildFromJavaField("matchingData");
+	public static final FieldSpec SELFDATA_ACCESS = EXT_SELFDATA_CONTENT.newChildFromJavaField("selfdataAccess");
+	public static final FieldSpec STORAGE_PERIOD = EXT_SELFDATA_CONTENT.newChildFromJavaField("storagePeriod");
+	public static final FieldSpec STORAGE_PERIOD_VALUE = STORAGE_PERIOD.newChildFromJavaField("value");
+	public static final FieldSpec STORAGE_PERIOD_UNIT = STORAGE_PERIOD.newChildFromJavaField("unit");
+	public static final FieldSpec SELFDATA_HELD = EXT_SELFDATA_CONTENT.newChildFromJavaField("selfdataHeld");
+	public static final FieldSpec SELFDATA_CATEGORIES = EXT_SELFDATA_CONTENT.newChildFromJavaField("selfdataCategories")
+			.allowControlledVocabulary(true);
+	public static final FieldSpec TREATMENT_PERIOD = EXT_SELFDATA_CONTENT.newChildFromJavaField("treatmentPeriod");
+	public static final FieldSpec TREATMENT_PERIOD_VALUE = TREATMENT_PERIOD.newChildFromJavaField("value");
+	public static final FieldSpec TREATMENT_PERIOD_UNIT = TREATMENT_PERIOD.newChildFromJavaField("unit");
+	public static final FieldSpec DELETABLE_DATA = EXT_SELFDATA_CONTENT.newChildFromJavaField("deletableData");
+	public static final FieldSpec DELETION_REASON = EXT_SELFDATA_CONTENT.newChildFromJavaField("deletionReason");
 
 	public static final DatasetMetadataBlockElementSpec RUDI_ELEMENT_SPEC = new DatasetMetadataBlockElementSpec(ROOT)
 			.add(GLOBAL_ID)
 			.add(LOCAL_ID)
+			.add(DOI)
 			.add(RESOURCE_TITLE)
 			.add(SYNOPSIS,
 					SYNOPSIS_LANGUAGE,
@@ -287,7 +321,6 @@ public class RudiMetadataField {
 					DATASET_DATES_UPDATED,
 					DATASET_DATES_EXPIRES,
 					DATASET_DATES_DELETED
-
 			)
 			.add(STORAGE_STATUS)
 			.add(METADATA_INFO,
@@ -332,14 +365,23 @@ public class RudiMetadataField {
 			.add(ACCESS_CONSTRAINT,
 					getDictionaryFieldSpecs(ACCESS_CONSTRAINT))
 			.add(OTHER_CONSTRAINTS,
-					getDictionaryFieldSpecs(OTHER_CONSTRAINTS));
+					getDictionaryFieldSpecs(OTHER_CONSTRAINTS))
+			.add(EXT_SELFDATA_CONTENT,
+					SELFDATA_ACCESS,
+					STORAGE_PERIOD_VALUE,
+					STORAGE_PERIOD_UNIT,
+					SELFDATA_HELD,
+					SELFDATA_CATEGORIES,
+					TREATMENT_PERIOD_VALUE,
+					TREATMENT_PERIOD_UNIT,
+					DELETABLE_DATA,
+					DELETION_REASON,
+					MATCHING_DATA);
+
 
 	@Nonnull
 	private static FieldSpec[] getDictionaryFieldSpecs(FieldSpec parentSpec) {
-		return new FieldSpec[]{
-				parentSpec.newChildFromJavaField(DictionaryEntry.class, LANG_FIELD_LOCAL_NAME),
-				parentSpec.newChildFromJavaField(DictionaryEntry.class, TEXT_FIELD_LOCAL_NAME)
-		};
+		return DictionaryEntryFieldSpecs.from(parentSpec).toArray();
 	}
 
 }

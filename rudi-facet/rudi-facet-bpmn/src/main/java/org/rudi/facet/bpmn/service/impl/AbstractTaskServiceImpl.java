@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.bpmn.service.impl;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 
 import org.activiti.bpmn.model.SequenceFlow;
@@ -60,7 +61,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
- * 
+ *
  * @param <E> l'entité
  * @param <D> le dto
  * @param <R> le dao
@@ -131,6 +132,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	}
 
 	@Override
+	@Nullable
 	public Form lookupDraftForm() throws FormDefinitionException {
 		return formHelper.lookupDraftForm(getProcessDefinitionKey());
 	}
@@ -202,7 +204,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * pour surcharge éventuelle
-	 * 
+	 *
 	 * @param assetDescriptionEntity
 	 */
 	protected void beforeStart(E assetDescriptionEntity) {
@@ -211,7 +213,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * pour surcharge éventuelle
-	 * 
+	 *
 	 * @param assetDescriptionEntity
 	 * @param processInstance
 	 */
@@ -409,10 +411,14 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	protected void updateDraftAssetData(D assetDescription, E assetDescriptionEntity)
 			throws FormDefinitionException, FormConvertException, InvalidDataException {
 		Map<String, Object> datas = formHelper.hydrateData(assetDescriptionEntity.getData());
-		Form orignalForm = formHelper.lookupDraftForm(assetDescriptionEntity.getProcessDefinitionKey());
+		Form orignalForm = lookupOriginalDraftForm(assetDescriptionEntity);
 		formHelper.copyFormData(assetDescription.getForm(), orignalForm);
 		formHelper.fillMap(orignalForm, datas);
 		assetDescriptionEntity.setData(formHelper.deshydrateData(datas));
+	}
+
+	protected Form lookupOriginalDraftForm(E assetDescriptionEntity) throws FormDefinitionException {
+		return formHelper.lookupDraftForm(assetDescriptionEntity.getProcessDefinitionKey());
 	}
 
 	protected void updateAssetCreation(E assetDescriptionEntity) {
@@ -478,7 +484,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * Mise à jour des données de formulaire
-	 * 
+	 *
 	 * @param task
 	 * @param originalTask
 	 * @param assetDescriptionEntity
@@ -505,7 +511,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * remplissage de la map des données à partir d'un formulaire (avec écrasement des données présentes)
-	 * 
+	 *
 	 * @param datas
 	 * @param form
 	 * @param originalTask
@@ -522,7 +528,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * Remplissage du formulaire principal à partir des données (celui des actions est fait dans la création de la task
-	 * 
+	 *
 	 * @param task
 	 * @param originalTask
 	 * @param assetDescriptionEntity
@@ -547,7 +553,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param assetDescriptionEntity
 	 * @return
 	 * @throws InvalidDataException
@@ -577,7 +583,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * Méthode pour ajouter des données dans les variables du processus
-	 * 
+	 *
 	 * @param variables
 	 * @param assetDescriptionEntity
 	 */
@@ -594,14 +600,14 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	@Transactional(readOnly = false)
 	public void onEvent(ActivitiEvent event) {
 		switch (event.getType()) {
-		case ENTITY_CREATED:
-			cacheEntiy(event);
-			break;
-		case TASK_ASSIGNED:
-			assign(event);
-			break;
-		default:
-			// NOTHING
+			case ENTITY_CREATED:
+				cacheEntiy(event);
+				break;
+			case TASK_ASSIGNED:
+				assign(event);
+				break;
+			default:
+				// NOTHING
 		}
 
 	}
@@ -713,7 +719,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * charge le fichier bpmn si il a changé
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	protected void loadBpmn() throws IOException {
@@ -733,8 +739,8 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 		} else {
 			try (InputStream bpmnStream = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(computeBpmnFilename());
-					InputStream lastProcessDefinitionStream = repositoryService.getResourceAsStream(
-							lastProcessDefinition.getDeploymentId(), lastProcessDefinition.getResourceName());) {
+				 InputStream lastProcessDefinitionStream = repositoryService.getResourceAsStream(
+						 lastProcessDefinition.getDeploymentId(), lastProcessDefinition.getResourceName());) {
 				String lastProcessDefinitionMd5 = DigestUtils.md5DigestAsHex(lastProcessDefinitionStream);
 				String bpmnMd5 = DigestUtils.md5DigestAsHex(bpmnStream);
 				if (!lastProcessDefinitionMd5.equals(bpmnMd5)) {
@@ -748,7 +754,7 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	/**
 	 * Charge le fichier de processus
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	protected void loadProcessDefinition() throws IOException {

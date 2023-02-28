@@ -1,14 +1,15 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.Nullable;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.FieldSpec;
 import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.kaccess.bean.Metadata;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Mapper pour un champ non multi valué (c'est-à-dire avec isMultiple à false)
@@ -48,13 +49,15 @@ abstract class SingleValuedFieldsMapper<T> extends AbstractFieldsMapper<T> {
 	public final void fieldsToMetadata(RootFields rudiRootFields, Metadata metadata) throws DataverseMappingException {
 		final var primitiveField = rudiRootFields.get(parentOfPrimitiveFieldsSpec);
 
-		final T childMetadata;
 		if (primitiveField == null) {
-			childMetadata = primitiveFieldsMapper.defaultMetadata();
+			final var defaultChildMetadata = primitiveFieldsMapper.defaultMetadata();
+			if (defaultChildMetadata != null) {
+				setMetadataElement(metadata, defaultChildMetadata);
+			}
 		} else {
-			childMetadata = primitiveFieldsMapper.fieldsToMetadata(primitiveField.getValueAsMapOfFields());
+			final var childMetadata = primitiveFieldsMapper.fieldsToMetadata(primitiveField.getValueAsMapOfFields());
+			setMetadataElement(metadata, childMetadata);
 		}
-		setMetadataElement(metadata, childMetadata);
 
 		if (compoundFieldsMapper != null && primitiveField != null) {
 			compoundFieldsMapper.fieldsToMetadata(rudiRootFields, metadata);

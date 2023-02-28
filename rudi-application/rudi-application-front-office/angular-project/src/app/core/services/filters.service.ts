@@ -6,7 +6,7 @@ import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE, OrderFilter} from './filters/order
 import {debounceTime} from 'rxjs/operators';
 import {SearchFilter} from './filters/search-filter';
 import {ThemesFilter} from './filters/themes-filter';
-import {RestrictedAccessFilter} from './filters/restricted-access-filter';
+import {AccessStatusFilter} from './filters/access-status-filter';
 import {DatesFilter} from './filters/dates-filter';
 
 const EMPTY_FILTERS: Filters = {
@@ -19,7 +19,7 @@ const EMPTY_FILTERS: Filters = {
         fin: ''
     },
     order: DEFAULT_ORDER_VALUE,
-    restrictedAccess: null,
+    accessStatus: null,
     globalIds: []
 };
 
@@ -37,7 +37,7 @@ export class FiltersService {
     readonly producerNamesFilter = new ProducerNamesFilter(this, this.filters);
     readonly datesFilter = new DatesFilter(this, this.filters);
     readonly orderFilter = new OrderFilter(this, this.filters);
-    readonly restrictedAccessFilter = new RestrictedAccessFilter(this, this.filters);
+    readonly accessStatusFilter = new AccessStatusFilter(this, this.filters);
     private readonly filtersBackups: Filters[] = [];
     private readonly childrenFilters = [
         this.searchFilter,
@@ -45,7 +45,7 @@ export class FiltersService {
         this.producerNamesFilter,
         this.datesFilter,
         this.orderFilter,
-        this.restrictedAccessFilter
+        this.accessStatusFilter
     ];
 
     get currentFilters(): Filters {
@@ -78,5 +78,4 @@ export class FiltersService {
         const previousFilters: Filters = this.filtersBackups.pop();
         this.filters.next(previousFilters);
     }
-
 }

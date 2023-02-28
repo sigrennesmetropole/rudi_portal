@@ -1,5 +1,9 @@
 package org.rudi.microservice.konsult.service.metadata.impl;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -17,10 +22,6 @@ import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.konsult.service.exception.APIManagerExternalServiceException;
 import org.rudi.microservice.konsult.service.exception.DataverseExternalServiceException;
 import org.rudi.microservice.konsult.service.exception.MetadataNotFoundException;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -35,6 +36,8 @@ class MetadataServiceImplTest {
 	private DatasetService datasetService;
 	@Mock
 	private ApplicationService applicationService;
+	@Mock
+	private APIsService apIsService;
 
 	@Test
 	void getMetadataByIdRewrittenMediaUrlOk() throws AppServiceException, DataverseAPIException, APIManagerException {
@@ -45,7 +48,7 @@ class MetadataServiceImplTest {
 				.globalId(UUID.randomUUID())
 				.availableFormats(Collections.singletonList(originalMedia));
 
-		when(applicationService.hasApi(any(), any())).thenReturn(true);
+		when(apIsService.existsApi(any(), any())).thenReturn(true);
 		when(datasetService.getDataset(originalMetadata.getGlobalId()))
 				.thenReturn(originalMetadata);
 		when(applicationService.buildAPIAccessUrl(originalMetadata.getGlobalId(), originalMedia.getMediaId()))
@@ -69,7 +72,7 @@ class MetadataServiceImplTest {
 				.globalId(UUID.randomUUID())
 				.availableFormats(Collections.singletonList(originalMedia));
 
-		when(applicationService.hasApi(any(), any())).thenReturn(true);
+		when(apIsService.existsApi(any(), any())).thenReturn(true);
 		when(datasetService.getDataset(originalMetadata.getGlobalId()))
 				.thenReturn(originalMetadata);
 		when(applicationService.buildAPIAccessUrl(originalMetadata.getGlobalId(), originalMedia.getMediaId()))
@@ -100,7 +103,7 @@ class MetadataServiceImplTest {
 				.thenReturn(originalMetadata);
 
 		// Et on fait en sorte que quand on lui cherche une API ben il retourne un truc vide
-		when(applicationService.hasApi(any(), any())).thenReturn(false);
+		when(apIsService.existsApi(any(), any())).thenReturn(false);
 
 		// On vérifie qu'on arrive bien à get les metadata
 		assertThat(service.getMetadataById(originalMetadata.getGlobalId())).isNotNull();
@@ -115,7 +118,7 @@ class MetadataServiceImplTest {
 				.globalId(UUID.randomUUID())
 				.availableFormats(Collections.singletonList(originalMedia));
 
-		when(applicationService.hasApi(any(), any())).thenReturn(true);
+		when(apIsService.existsApi(any(), any())).thenReturn(true);
 		when(datasetService.getDataset(originalMetadata.getGlobalId()))
 				.thenReturn(originalMetadata);
 		final APIManagerException apiManagerException = new APIManagerException("media not found");

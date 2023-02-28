@@ -1,5 +1,8 @@
 package org.rudi.microservice.projekt.service.project;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
@@ -13,9 +16,6 @@ import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author FNI18300

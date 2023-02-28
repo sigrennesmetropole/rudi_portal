@@ -10,7 +10,7 @@ CREATE USER template WITH
   NOCREATEDB
   NOCREATEROLE
   NOREPLICATION
-  PASSWORD 'project';
+  PASSWORD 'template';
 
 ALTER USER template SET search_path TO template_data, public;
 

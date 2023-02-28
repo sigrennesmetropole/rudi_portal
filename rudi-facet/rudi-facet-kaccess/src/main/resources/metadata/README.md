@@ -2,43 +2,14 @@ Doc de Dataverse : <https://guides.dataverse.org/en/5.1/admin/metadatacustomizat
 
 # Ajout de champs Dataverse
 
-1. On ouvre le fichier Excel [rudi.xlsx](rudi.xlsx).
-2. On ajoute chaque nouvelle propriété dans la section `#datasetField`. Le remplissage de certaines colonnes est décrit
-ci-après. On peut utiliser la classe TsvGenerator pour générer tous les champs et s'en servir pour faire des copier-coller dans la
-feuille Excel.
-3. Une fois les champs ajoutés on [exporte](#export-au-format-tsv-avec-excel) le tableau au format tsv.
-4. On uploade ensuite le fichier sur Dataverse.
-5. On propage les modifications pour Ansible
+1. On génére le fichier [rudi.tsv](rudi.tsv) avec maven
+2. On uploade ensuite le fichier sur Dataverse.
+3. On propage les modifications pour Ansible
 
-## Remplissages des colonnes
+# Génération du fichier rudi.tsv par maven
 
-### name
-
-Nom complet du champ envoyé à RUDI (cf [RudiMetadataField]).
-
-### description
-
-On reprend la description dans l'annotation `@Schema(description = ...)` du Bean généré par OpenAPI.
-
-### fieldType
-
-| Caractéristiques du champ | fieldType |
-|---------------------------|-----------|
-| Composé d'autres valeurs  | `none`    |
-|                           |           |
-|                           |           |
-
-# Export au format TSV avec Excel
-
-Pour cela on supprime d'abord le fichier [rudi.tsv](rudi.tsv). On exporte dans Excel avec les options suivantes :
-
-- Nom de fichier : rudi.tsv
-- Type : Texte (séparateur : tabulation) (*.txt)
-
-On ferme Excel. Enfin on renomme le fichier pour supprimer l'extension `.txt` ajouté par Excel.
-
-**Attention** : il faut bien supprimer les espaces superflus dans la section `#controlledVocabulary` sous peine de
-provoquer une erreur 500 lors de l'upload du fichier sur Dataverse.
+Lancer le Run Configuration "Mettre à jour rudi.tsv" qui lance le main de la
+classe [RudiTsvUpdator](../../java/org/rudi/facet/kaccess/helper/tsv/RudiTsvUpdator.java).
 
 # Upload du fichier sur Dataverse
 
@@ -67,11 +38,13 @@ Exemple pour le champ `rudi_media_type` :
 http://dv.open-dev.com:8095/api/admin/datasetfield/rudi_media_type
 ```
 
+On peut aussi vérifier que le catalogue et le détail s'affichent toujours bien.
+
 # Propagation des modifications pour Ansible
 
 L'ajout de champs modifie le fichier schema_dv_mdb_fields.xml de l'instance Dataverse.
 À chaque déploiement Ansible, ce fichier est écrasé.
-Il faut donc récupérer ce fichier depuis la machine et mettre à jour celui utilisé par Ansible : 
+Il faut donc récupérer ce fichier depuis la machine et mettre à jour celui utilisé par Ansible :
 [schema_dv_mdb_fields.xml](../../../../../../ansible/roles/dataverse/files/solr-data/collection1/conf/schema_dv_mdb_fields.xml)
 
 # Instances Dataverse
@@ -111,3 +84,8 @@ WHERE datasetfieldtype_id = 225;
 ```
 
 [RudiMetadataField]: ../../../main/java/org/rudi/facet/kaccess/constant/RudiMetadataField.java
+
+
+# Liens complémentaires
+
+[Documentation dataverse pour le réindexation](https://guides.dataverse.org/en/latest/admin/solr-search-index.html)

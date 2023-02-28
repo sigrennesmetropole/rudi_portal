@@ -29,10 +29,7 @@ export class Step3ProjectComponent implements OnInit {
     public createdProjectLink: string;
 
     @Output()
-    private openDatasetDialogOpened: EventEmitter<void> = new EventEmitter<void>();
-
-    @Output()
-    private restrictedAccessDatasetsDialogOpened: EventEmitter<void> = new EventEmitter<void>();
+    private datasetsDialogOpened: EventEmitter<void> = new EventEmitter<void>();
 
     @Output()
     private requestDatasetDialogOpened: EventEmitter<void> = new EventEmitter<void>();
@@ -48,13 +45,8 @@ export class Step3ProjectComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
-    public openDialogOpenDataset(): void {
-        this.openDatasetDialogOpened.emit();
-    }
-
-    public openDialogRestrictedAccessDatasets(): void {
-        this.restrictedAccessDatasetsDialogOpened.emit();
+    public openDialogDatasets(): void {
+        this.datasetsDialogOpened.emit();
     }
 
     public openDialogRequestDataset(): void {

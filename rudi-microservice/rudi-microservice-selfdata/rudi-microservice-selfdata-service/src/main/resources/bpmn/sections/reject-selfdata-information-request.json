@@ -1,0 +1,12 @@
+{
+	"help": "Vous pouvez refuser la demande si les informations renseignées (données pivots) sont erronées, incomplètes ou inexactes.",
+	"fieldDefinitions": [
+		{
+			"name": "messageToInitiator",
+			"label": "Message à l’attention du demandeur",
+			"help": "Renseigner un commentaire pour que le demandeur puisse corriger sa demande ou en reformuler une nouvelle.",
+			"type": "TEXT",
+			"required": true
+		}
+	]
+}

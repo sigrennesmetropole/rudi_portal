@@ -1,6 +1,14 @@
 package org.rudi.microservice.konsult.service.metadata.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
@@ -24,14 +32,7 @@ import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.konsult.service.KonsultSpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import lombok.RequiredArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @KonsultSpringBootTest
@@ -100,7 +101,7 @@ class MetadataWithSameThemeFinderTest {
 				))
 				.accessCondition(new MetadataAccessCondition()
 						.licence(new LicenceStandard()
-								.licenceLabel("licence_Apache-2.0")
+								.licenceLabel(LicenceStandard.LicenceLabelEnum.APACHE_2_0)
 								.licenceType(Licence.LicenceTypeEnum.STANDARD)
 						)
 				)

@@ -1,0 +1,53 @@
+{
+	"ext_metadata": {
+		"ext_selfdata": {
+			"ext_selfdata_content": {
+				"matching_data": [
+					{
+						"code": "nom",
+						"label": [
+							{
+								"lang": "fr",
+								"text": "Nom"
+							},
+							{
+								"lang": "en",
+								"text": "Firstname"
+							}
+						],
+						"help": [
+							{
+								"lang": "fr",
+								"text": "Saisir votre nom"
+							}
+						],
+						"type": "STRING",
+						"validators": [
+							{
+								"type": "REGEXP",
+								"attribute": "[A-z]*@[A-z]*"
+							}
+						],
+						"required": false
+					}
+				],
+				"selfdata_access": "API",
+				"storage_period": {
+					"value": 5,
+					"unit": "MONTHS"
+				},
+				"treatment_period": {
+					"value": 6,
+					"unit": "YEARS"
+				},
+				"deletable_data": false,
+				"selfdata_categories": ["IDENTITY_DATA", "PRIVATE_LIFE"],
+				"selfdata_held": "selfdata_categories, deletion_reason",
+				"deletion_reason": [
+					"Nécessaire pour votre suivi par votre médecin traitant",
+					"Nécessaire pour l'Etat pour le suivi de la progression du virus dans votre département"
+				]
+			}
+		}
+	}
+}

@@ -1,0 +1,51 @@
+<app-page>
+
+    <app-loader [active]="dataLoading" [allPage]="true" [noText]="true" [isLight]="false"></app-loader>
+
+    <app-dataset-heading *ngIf="metadata"
+                         [organizationName]="metadata?.producer?.organization_name"
+                         [resourceTitle]="metadata?.resource_title"
+                         [organizationId]="metadata?.producer?.organization_id"
+                         [icon]="'self-data-icon'"
+    >
+    </app-dataset-heading>
+
+    <div class="banner">
+        <app-tabs *ngIf="metadata">
+            <app-tab [label]="'personalSpace.selfdataDatasetRequestDetails.tabs.requests' | translate"
+                     [icon]="'icone_donnees_personnelles'">
+                <ng-template>
+                    <app-selfdata-dataset-requests-tab [loading]="dataLoading" [loadingError]="errorLoading"
+                                                       [lastRequests]="lastRequests"
+                                                       [metadata]="metadata"></app-selfdata-dataset-requests-tab>
+                </ng-template>
+            </app-tab>
+            <app-tab [label]="'personalSpace.selfdataDatasetRequestDetails.tabs.information' | translate"
+                     [icon]="'icon_tab_infos'">
+            </app-tab>
+            <app-tab [label]="'personalSpace.selfdataDatasetRequestDetails.tabs.data' | translate" *ngIf="hasDataTab()">
+                <ng-template>
+                    <app-selfdata-dataset-data-tab [isDataTabEmpty]="isDataTabEmpty"
+                                                   [metadata]="metadata"
+                                                   (subscriptionSuccedEmitter)="handleSubscriptionSuccedChanged($event)"></app-selfdata-dataset-data-tab>
+                </ng-template>
+            </app-tab>
+            <ng-container appTabsLayout>
+                <div class="detail-wrapper">
+                    <div class="onglet-wrapper">
+                        <ng-container appTabContent></ng-container>
+                    </div>
+                    <div class="aside-wrapper">
+                        <app-matching-data-card [isDataTabEmpty]="isDataTabEmpty"
+                                                [subscriptionSucced]="subscriptionSucced"
+                                                [matchingDataLoading]="matchingDataLoading"
+                                                [data]="matchingData">
+                        </app-matching-data-card>
+                        <app-selfdata-dataset-basic-details>
+                        </app-selfdata-dataset-basic-details>
+                    </div>
+                </div>
+            </ng-container>
+        </app-tabs>
+    </div>
+</app-page>

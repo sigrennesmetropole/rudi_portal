@@ -40,6 +40,16 @@ curl -vk -X POST -H "Authorization: Basic base64(client_key:client_secret)" -d "
 curl -vk -X GET -H "Authorization: Bearer <le token retourner par l'appel précédent>" "https://wso2.open-dev.com:8243/datasets/03140de1-625b-44c7-b84f-ff737c11248a/dwnl/1.0.0"
 ```
 
+### Comment le debugger ?
+
+Faire un `mvn package` sur ce module.
+
+Lancer [le script Ansible](../../ansible/roles/wso2/tasks/main.yml) qui déploie le JAR construit précédemment sur WSO2.
+Pour gagner du temps, on peut commenter toutes les autres tâches qui ne concerne pas la copie du JAR.
+
+Lancer le Debug distant du module, via IntelliJ avec le Run Configuration `Debug Handler sur wso2.open-dev.com:8888` (
+pour le WSO2 de dev).
+
 ## Voir aussi
 
 - [Documentation WSO2](https://apim.docs.wso2.com/en/3.2.0/develop/extending-api-manager/extending-gateway/writing-custom-handlers/#engaging-the-custom-handler)

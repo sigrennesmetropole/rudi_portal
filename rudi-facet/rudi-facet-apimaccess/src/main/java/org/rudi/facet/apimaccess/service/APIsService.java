@@ -1,6 +1,7 @@
 package org.rudi.facet.apimaccess.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.rudi.facet.apimaccess.bean.APIDescription;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusAction;
@@ -99,9 +100,19 @@ public interface APIsService {
 
     /**
      * Liste des subscription policies disponibles pour une API
-     * @param apiId                 Identifiant de l'API
-     * @return                      List de SubscriptionLimitingPolicy
-     * @throws APIManagerException  Erreur lors de la récupération de la liste des subscription policies
+     *
+     * @param apiId Identifiant de l'API
+     * @return List de SubscriptionLimitingPolicy
+     * @throws APIManagerException Erreur lors de la récupération de la liste des subscription policies
      */
     List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIManagerException;
+
+    /**
+     * Est-ce que pour les identifiants fournis du JDD, on a bien une API de créée
+     *
+     * @param globalId Identifiant des métadonnées
+     * @param mediaId  Identifiant du média des métadonnées
+     * @return si oui ou non le JDD a une API
+     */
+    boolean existsApi(UUID globalId, UUID mediaId) throws APIManagerException;
 }

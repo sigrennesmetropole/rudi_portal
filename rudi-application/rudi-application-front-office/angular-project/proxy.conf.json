@@ -1,51 +1,64 @@
 {
-  "/authenticate": {
-    "target": "http://localhost:8085/",
-    "secure": false,
-    "changeOrigin": true
-  },
-  "/anonymous": {
-    "target": "http://localhost:8085/",
-    "secure": false,
-    "changeOrigin": true
-  },
-  "/acl/v1": {
-    "target": "http://localhost:8082/acl/v1",
-    "secure": false,
-    "pathRewrite": {
-      "^/acl/v1": ""
+    "/authenticate": {
+        "target": "http://localhost:8085/",
+        "secure": false,
+        "changeOrigin": true
     },
-    "changeOrigin": true
-  },
-  "/konsult/v1": {
-    "target": "http://localhost:8082/konsult/v1",
-    "secure": false,
-    "pathRewrite": {
-      "^/konsult/v1": ""
+    "/refresh_token": {
+        "target": "http://localhost:8085/",
+        "secure": false,
+        "changeOrigin": true
     },
-    "changeOrigin": true
-  },
-  "/strukture/v1": {
-    "target": "http://localhost:8082/strukture/v1",
-    "secure": false,
-    "pathRewrite": {
-      "^/strukture/v1": ""
+    "/anonymous": {
+        "target": "http://localhost:8085/",
+        "secure": false,
+        "changeOrigin": true
     },
-    "changeOrigin": true
-  },
-  "/kos/v1": {
-    "target": "http://localhost:8082/kos/v1",
-    "secure": false,
-    "pathRewrite": {
-      "^/kos/v1": ""
+    "/acl/v1": {
+        "target": "http://localhost:8082/acl/v1",
+        "secure": false,
+        "pathRewrite": {
+            "^/acl/v1": ""
+        },
+        "changeOrigin": true
     },
-    "changeOrigin": true
-  },
+    "/konsult/v1": {
+        "target": "http://localhost:8082/konsult/v1",
+        "secure": false,
+        "pathRewrite": {
+            "^/konsult/v1": ""
+        },
+        "changeOrigin": true
+    },
+    "/strukture/v1": {
+        "target": "http://localhost:8082/strukture/v1",
+        "secure": false,
+        "pathRewrite": {
+            "^/strukture/v1": ""
+        },
+        "changeOrigin": true
+    },
+    "/kos/v1": {
+        "target": "http://localhost:8082/kos/v1",
+        "secure": false,
+        "pathRewrite": {
+            "^/kos/v1": ""
+        },
+        "changeOrigin": true
+    },
     "/projekt/v1": {
         "target": "http://localhost:8082/projekt/v1",
         "secure": false,
         "pathRewrite": {
             "^/projekt/v1": ""
+        },
+        "changeOrigin": true
+    },
+    "/selfdata/v1": {
+        "target": "http://localhost:8082/selfdata/v1",
+        "secure": false,
+        "pathRewrite": {
+            "^/selfdata/v1": ""
         },
         "changeOrigin": true
     }

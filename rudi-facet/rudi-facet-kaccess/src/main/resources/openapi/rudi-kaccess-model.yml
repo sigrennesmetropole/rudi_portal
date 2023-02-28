@@ -188,6 +188,9 @@ components:
         total:
           type: integer
           format: int64
+        offset:
+          type: integer
+          format: int64
         items:
           type: array
           items:
@@ -292,6 +295,9 @@ components:
           default: false
         restrictedAccess:
           description: Données ouvertes (false) ou restreintes (true)
+          type: boolean
+        gdprSensitive:
+          description: Données personnelles
           type: boolean
         doi:
           $ref: 'RUDI-PRODUCER.yml#/components/schemas/DOI'

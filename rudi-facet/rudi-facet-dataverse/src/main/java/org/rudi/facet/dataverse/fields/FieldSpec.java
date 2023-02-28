@@ -1,31 +1,30 @@
 package org.rudi.facet.dataverse.fields;
 
-import lombok.Getter;
-import org.rudi.facet.dataverse.bean.FieldTypeClass;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
+
+import org.rudi.facet.dataverse.bean.FieldTypeClass;
+
+import lombok.Getter;
 
 /**
  * Spécifications d'un champ Dataverse
  */
 public abstract class FieldSpec {
 	@Getter
-	final Collection<FieldSpec> children = new ArrayList<>();
+	final Collection<FieldSpec> directChildren = new ArrayList<>();
 	@Getter(lazy = true)
 	private final InternalFieldSpec index = getIndex(this);
 	private Object defaultValueIfMissing;
 	private Boolean directSortable;
 	@Getter(lazy = true)
 	private final FieldSpec sortableField = initSortableField();
-
-	private final Map<FieldSpec, FieldSpec> parentCache = new HashMap<>();
+	private Boolean forcedAllowControlledVocabulary;
 
 	/**
 	 * @return l'index crée dans le dataverse si l'attribut est de type multiple, dataverse utilise nom + _ss, sinon il utilise nom + _s
@@ -94,7 +93,7 @@ public abstract class FieldSpec {
 	/**
 	 * @return le type Java du champ
 	 */
-	public abstract Class<?> getType();
+	public abstract Class<?> getJavaType();
 
 	/**
 	 * @return le type du champ dans Dataverse
@@ -102,15 +101,19 @@ public abstract class FieldSpec {
 	public abstract FieldTypeClass getTypeClass();
 
 	/**
-	 * @return le type Java des valeurs que peut prendre ce champ
+	 * @return le type Java des valeurs que peut prendre ce champ.
+	 * Quand le champ n'est pas une liste, renvoie la même chose que {@link #getJavaType()}.
+	 * Quand le champ est une liste, renvoie le type des éléments de cette liste.
 	 */
-	public abstract Class<?> getValueType();
+	public Class<?> getValueType() {
+		return getJavaType();
+	}
 
 	@Nullable
 	public abstract String getDescription();
 
 	public boolean isMultiple() {
-		return List.class.isAssignableFrom(getType());
+		return List.class.isAssignableFrom(getJavaType());
 	}
 
 	@Override
@@ -175,7 +178,7 @@ public abstract class FieldSpec {
 	 *
 	 * @return this
 	 */
-	public FieldSpec isSortable(boolean directSortable) {
+	public FieldSpec isDirectSortable(boolean directSortable) {
 		this.directSortable = directSortable;
 		return this;
 	}
@@ -192,7 +195,19 @@ public abstract class FieldSpec {
 		}
 	}
 
+	/**
+	 * Cf javadoc champ required de la classe TsvDatasetFieldLine
+	 */
 	public boolean isRequired() {
 		return false;
+	}
+
+	public boolean allowControlledVocabulary() {
+		return forcedAllowControlledVocabulary != null ? forcedAllowControlledVocabulary : getValueType().isEnum();
+	}
+
+	public FieldSpec allowControlledVocabulary(boolean forcedAllowControlledVocabulary) {
+		this.forcedAllowControlledVocabulary = forcedAllowControlledVocabulary;
+		return this;
 	}
 }

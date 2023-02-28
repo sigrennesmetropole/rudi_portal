@@ -1,0 +1,21 @@
+@import "../../styles/common-style";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+
+.button-label {
+    font-family: OpenSans, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.86;
+    color: var(--0-classic-blue);
+}
+
+.icon {
+    width: 18px;
+    margin-right: 8px;
+}
+
+.button {
+    height: 42px;
+}

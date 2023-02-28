@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.rudi</groupId>
+		<artifactId>rudi-facet</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<artifactId>rudi-facet-bucket-s3</artifactId>
+	<description>Facet for bucket S3 access</description>
+
+	<properties>
+		<surefire.plugin.version>2.22.2</surefire.plugin.version>
+		<resource-directory>${project.basedir}</resource-directory>
+		<resource-generation-directory>${project.basedir}
+		</resource-generation-directory>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+		<!-- stockage dans minio -->
+		<dependency>
+			<groupId>org.apache.jclouds.api</groupId>
+			<artifactId>s3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds</groupId>
+			<artifactId>jclouds-blobstore</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds</groupId>
+			<artifactId>jclouds-allblobstore</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.driver</groupId>
+			<artifactId>jclouds-netty</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.driver</groupId>
+			<artifactId>jclouds-apachehc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.driver</groupId>
+			<artifactId>jclouds-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.plugin.version}</version>
+				<configuration>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

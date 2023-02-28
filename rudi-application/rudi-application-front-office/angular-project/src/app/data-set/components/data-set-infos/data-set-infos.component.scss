@@ -42,6 +42,7 @@
         letter-spacing: normal;
         color: #000000
     }
+
     .rudi-panel-table, .rudi-panel-tbody-border {
         border: hidden;
     }
@@ -82,8 +83,9 @@
 }
 
 ::ng-deep.mat-expansion-panel-body {
-    padding: 0 0 0 0!important;
+    padding: 0 0 0 0 !important;
 }
+
 .rudi-panel-body {
     font-size: 15px;
     color: $primary-text;
@@ -251,7 +253,7 @@ table td {
     font-style: normal;
     word-wrap: break-word;
     white-space: normal;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .rudi-panel-table-header {
@@ -339,3 +341,6 @@ table td {
     outline: none;
 }
 
+.margin-data-value {
+    margin-bottom: 17px;
+}

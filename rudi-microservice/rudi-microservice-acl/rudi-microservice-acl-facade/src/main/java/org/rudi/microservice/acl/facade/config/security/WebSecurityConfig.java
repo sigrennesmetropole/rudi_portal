@@ -1,5 +1,9 @@
 package org.rudi.microservice.acl.facade.config.security;
 
+import java.util.Arrays;
+
+import javax.servlet.Filter;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.rudi.common.facade.config.filter.JwtRequestFilter;
 import org.rudi.common.facade.config.filter.OAuth2RequestFilter;
@@ -34,9 +38,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.Filter;
-import java.util.Arrays;
-
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -44,6 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String ACTUATOR_URL = "/actuator/**";
 
 	private static final String AUTHENTICATE_URL = "/authenticate";
+
+	private static final String LOGOUT_URL = "/acl/v1/account/logout";
 
 	private static final String CHECK_CREDENTIAL_URL = "/check_credential";
 
@@ -155,7 +158,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public JwtRequestFilter createJwtRequestFilter() {
-		return new JwtRequestFilter(ArrayUtils.addAll(SB_PERMIT_ALL_URL, AUTHENTICATION_PERMIT_URL), utilContextHelper);
+		return new JwtRequestFilter(ArrayUtils.addAll(SB_PERMIT_ALL_URL, AUTHENTICATION_PERMIT_URL), LOGOUT_URL,
+				utilContextHelper);
 	}
 
 	@Bean

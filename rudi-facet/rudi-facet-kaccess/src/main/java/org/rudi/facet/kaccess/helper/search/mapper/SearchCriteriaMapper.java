@@ -1,7 +1,9 @@
 package org.rudi.facet.kaccess.helper.search.mapper;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.EnumSet;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -18,10 +20,10 @@ import org.rudi.facet.kaccess.constant.RudiMetadataField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
-import java.util.EnumSet;
-
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.DOI;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.GDPR_SENSITIVE;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.GLOBAL_ID;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.LOCAL_ID;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.RESTRICTED_ACCESS;
@@ -163,7 +165,13 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 
 		final Boolean restrictedAccess = datasetSearchCriteria.getRestrictedAccess();
 		if (restrictedAccess != null) {
+			fqFilter.add(GDPR_SENSITIVE, false);
 			fqFilter.add(RESTRICTED_ACCESS, restrictedAccess);
+		}
+		final Boolean gdprSensitive = datasetSearchCriteria.getGdprSensitive();
+		if (gdprSensitive != null) {
+			fqFilter.add(GDPR_SENSITIVE, gdprSensitive);
+			fqFilter.add(RESTRICTED_ACCESS, true);
 		}
 
 		final String doi = datasetSearchCriteria.getDoi();

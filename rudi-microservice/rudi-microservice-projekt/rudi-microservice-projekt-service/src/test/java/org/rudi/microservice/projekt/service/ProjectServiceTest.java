@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.core.security.Role;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceForbiddenException;
@@ -22,6 +23,7 @@ import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.acl.helper.RolesHelper;
 import org.rudi.facet.oauth2.config.WebClientConfig;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.microservice.projekt.core.bean.DatasetConfidentiality;
@@ -75,6 +77,8 @@ class ProjectServiceTest {
 	private UtilContextHelper utilContextHelper;
 	@MockBean
 	private ACLHelper aclHelper;
+	@MockBean
+	private RolesHelper rolesHelper;
 	@MockBean
 	private OrganizationHelper organizationHelper;
 
@@ -130,9 +134,8 @@ class ProjectServiceTest {
 
 		mockUnauthenticatedUser();
 
-		assertThatThrownBy(() -> projectService.createProject(projectToCreate))
-				.isInstanceOf(AppServiceUnauthorizedException.class)
-				.hasMessage("Cannot modify project list without authentication");
+		assertThatThrownBy(() -> projectService.createProject(projectToCreate)).isInstanceOf(
+				AppServiceUnauthorizedException.class).hasMessage("Cannot modify project list without authentication");
 	}
 
 	private void mockAuthenticatedUserToCreateProject(Project project) {
@@ -143,6 +146,17 @@ class ProjectServiceTest {
 		final User user = new User().login("mpokora").uuid(managerUserUuid);
 		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
 		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
+
+		final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
+		authenticatedUser.setLogin(user.getLogin());
+		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
+	}
+
+	private void mockAuthenticatedUserFromModerator(UUID moderatorUuid) {
+		final User user = new User().login("PresentMic").uuid(moderatorUuid);
+		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
+		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
+		when(rolesHelper.hasAnyRole(user, Role.MODERATOR)).thenReturn(true);
 
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin(user.getLogin());
@@ -193,7 +207,8 @@ class ProjectServiceTest {
 	}
 
 	@Test
-	@Disabled // FIXME ce test ne fonctionne que s'il n'est pas lancé avec maven
+	@Disabled
+		// FIXME ce test ne fonctionne que s'il n'est pas lancé avec maven
 	void createProjectWithoutConfidentiality() throws IOException, AppServiceException {
 		final Project project = jsonResourceReader.read(PROJET_LAMPADAIRES.getJsonPath(), Project.class);
 		project.setConfidentiality(null);
@@ -275,7 +290,8 @@ class ProjectServiceTest {
 		mockAuthenticatedUserToCreateProject(project);
 
 		// On vérifie que ça pète bien
-		assertThatThrownBy(() -> projectService.createProject(project)).isInstanceOf(AppServiceBadRequestException.class);
+		assertThatThrownBy(() -> projectService.createProject(project)).isInstanceOf(
+				AppServiceBadRequestException.class);
 	}
 
 	@Test
@@ -290,8 +306,8 @@ class ProjectServiceTest {
 
 		final Project createdProject = projectService.createProject(projectToCreate);
 
-		assertThat(createdProject.getUuid())
-				.as("Même si on indique un UUID à la création d'un projet, il n'est pas pris en compte mais regénéré")
+		assertThat(createdProject.getUuid()).as(
+						"Même si on indique un UUID à la création d'un projet, il n'est pas pris en compte mais regénéré")
 				.isNotEqualTo(forcedUuid);
 	}
 
@@ -306,10 +322,10 @@ class ProjectServiceTest {
 		final UUID otherManager = UUID.randomUUID();
 		mockAuthenticatedUserFromManager(otherManager);
 
-		assertThatThrownBy(() -> projectService.createProject(project))
-				.as("Je ne peux pas créer le projet pour quelqu'un d'autre")
-				.isInstanceOf(AppServiceForbiddenException.class)
-				.hasMessage("Authenticated user and project manager must be the same user");
+		assertThatThrownBy(() -> projectService.createProject(project)).as(
+						"Je ne peux pas créer le projet pour quelqu'un d'autre")
+				.isInstanceOf(AppServiceForbiddenException.class).hasMessage(
+						"Authenticated user must be moderator or must be the same user as existing project manager");
 	}
 
 	@Test
@@ -337,8 +353,8 @@ class ProjectServiceTest {
 		final Project project = createProject(PROJET_LAMPADAIRES);
 		project.setUuid(UUID.randomUUID());
 
-		assertThatThrownBy(() -> projectService.updateProject(project))
-				.as("On ne peut pas modifier un projet inexistant").isInstanceOf(AppServiceNotFoundException.class)
+		assertThatThrownBy(() -> projectService.updateProject(project)).as(
+						"On ne peut pas modifier un projet inexistant").isInstanceOf(AppServiceNotFoundException.class)
 				.hasMessage("project with UUID = \"%s\" not found", project.getUuid());
 	}
 
@@ -353,10 +369,27 @@ class ProjectServiceTest {
 		createEntities(project);
 		mockAuthenticatedUserFromManager(otherManager);
 
-		assertThatThrownBy(() -> projectService.updateProject(project))
-				.as("Je ne peux pas modifier le projet créé par quelqu'un d'autre")
-				.isInstanceOf(AppServiceForbiddenException.class)
-				.hasMessage("Authenticated user and existing project manager must be the same user");
+		assertThatThrownBy(() -> projectService.updateProject(project)).as(
+						"Je ne peux pas modifier le projet créé par quelqu'un d'autre")
+				.isInstanceOf(AppServiceForbiddenException.class).hasMessage(
+						"Authenticated user must be moderator or must be the same user as existing project manager");
+	}
+
+	@Test
+	@DisplayName("Je modifie le projet créé par quelqu'un d'autre en tant qu'animateur")
+	void updateSomeoneElseSProjectAsModerator() throws IOException, AppServiceException {
+		final Project project = createProject(PROJET_LAMPADAIRES);
+		project.setTitle("Projet de comptage des lampadaires revu et corrigé");
+
+		final UUID otherManager = UUID.randomUUID();
+		project.setOwnerUuid(otherManager);
+		createEntities(project);
+		mockAuthenticatedUserFromModerator(otherManager);
+
+		final Project updatedProject = projectService.updateProject(project);
+
+		assertThat(updatedProject).as("Aucun champ n'a été modifié à part le titre").usingRecursiveComparison()
+				.ignoringFields("datasetRequests", "creationDate", "updatedDate").isEqualTo(project);
 	}
 
 	@Test
@@ -366,8 +399,8 @@ class ProjectServiceTest {
 		createProject(PROJET_POUBELLES);
 
 		val pageable = PageRequest.of(0, 2);
-		final Page<Project> projects = projectService
-				.searchProjects(new ProjectSearchCriteria().themes(Arrays.asList("comptage", "lampadaires")), pageable);
+		final Page<Project> projects = projectService.searchProjects(
+				new ProjectSearchCriteria().themes(Arrays.asList("comptage", "lampadaires")), pageable);
 
 		assertThat(projects).as("On retrouve uniquement le project attendu").extracting("title")
 				.containsExactly(PROJET_LAMPADAIRES.getTitle());
@@ -426,14 +459,32 @@ class ProjectServiceTest {
 		final UUID otherManager = UUID.randomUUID();
 		mockAuthenticatedUserFromManager(otherManager);
 
-		assertThatThrownBy(() -> projectService.deleteProject(createdProject.getUuid()))
-				.as("Je ne peux pas supprimer le projet créé par quelqu'un d'autre")
-				.isInstanceOf(AppServiceForbiddenException.class)
-				.hasMessage("Authenticated user and existing project manager must be the same user");
+		assertThatThrownBy(() -> projectService.deleteProject(createdProject.getUuid())).as(
+						"Je ne peux pas supprimer le projet créé par quelqu'un d'autre")
+				.isInstanceOf(AppServiceForbiddenException.class).hasMessage(
+						"Authenticated user must be moderator or must be the same user as existing project manager");
 
 		final long totalElementsAfterDelete = countProjects();
 		assertThat(totalElementsAfterDelete).as("Aucun projet n'a été supprimé")
 				.isEqualTo(totalElementsBeforeCreate + 1);
+	}
+
+	@Test
+	@DisplayName("Je supprime le projet créé par quelqu'un d'autre en tant qu'animateur")
+	void deleteSomeoneElseSProjectAsModerator() throws IOException, AppServiceException {
+		final long totalElementsBeforeCreate = countProjects();
+
+		final Project createdProject = createProject(PROJET_LAMPADAIRES);
+		final long totalElementsAfterCreate = countProjects();
+		assertThat(totalElementsAfterCreate).as("Le projet est bien créé").isEqualTo(totalElementsBeforeCreate + 1);
+
+		final UUID otherManager = UUID.randomUUID();
+		mockAuthenticatedUserFromModerator(otherManager);
+
+		projectService.deleteProject(createdProject.getUuid());
+
+		final long totalElementsAfterDelete = countProjects();
+		assertThat(totalElementsAfterDelete).as("Le projet est bien supprimé").isEqualTo(totalElementsBeforeCreate);
 	}
 
 	private long countProjects() {

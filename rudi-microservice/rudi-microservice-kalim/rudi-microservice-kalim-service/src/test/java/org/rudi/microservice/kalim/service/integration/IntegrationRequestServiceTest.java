@@ -2,26 +2,31 @@ package org.rudi.microservice.kalim.service.integration;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.kaccess.bean.Connector;
 import org.rudi.facet.kaccess.bean.Media;
+import org.rudi.facet.kaccess.bean.MediaService;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.providers.bean.NodeProvider;
@@ -54,9 +59,7 @@ import static org.rudi.microservice.kalim.service.KalimTestConfigurer.initMetada
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IntegrationRequestServiceTest {
 
-	private static Metadata metadata;
-	private static Provider provider;
-	private static NodeProvider nodeProvider;
+	private Metadata metadata;
 
 	@MockBean
 	private KalimProviderHelper mockedKalimProviderHelper;
@@ -64,10 +67,11 @@ class IntegrationRequestServiceTest {
 	@MockBean
 	private ProviderHelper providerHelper;
 
+	@SuppressWarnings("unused") // Utilisé par PostIntegrationRequestTreatmentHandler
 	@MockBean
 	private OrganizationHelper organizationHelper;
 
-    @MockBean
+	@MockBean
 	private DatasetService datasetService;
 
 	@Autowired
@@ -91,15 +95,7 @@ class IntegrationRequestServiceTest {
 	@Autowired
 	private IntegrationRequestMapper integrationRequestMapper;
 
-	@BeforeAll
-	static void beforeAll() throws IOException {
-		metadata = initMetadata();
-		provider = initProvider();
-		nodeProvider = initNodeProvider();
-		setMetadataInfoProvider(nodeProvider, metadata);
-	}
-
-	private static void setMetadataInfoProvider(NodeProvider nodeProvider, Metadata metadata) {
+	private void setMetadataInfoProvider(NodeProvider nodeProvider, Metadata metadata) {
 		final var metadataProvider = metadata.getMetadataInfo().getMetadataProvider();
 		metadataProvider.setOrganizationId(nodeProvider.getUuid());
 	}
@@ -121,7 +117,12 @@ class IntegrationRequestServiceTest {
 	}
 
 	@BeforeEach
-	void setUp() {
+	void setUp() throws IOException {
+		metadata = initMetadata();
+		Provider provider = initProvider();
+		NodeProvider nodeProvider = initNodeProvider();
+		setMetadataInfoProvider(nodeProvider, metadata);
+
 		ReflectionTestUtils.setField(postHandler, "metadataValidators", Collections.emptyList());
 		ReflectionTestUtils.setField(putHandler, "metadataValidators", Collections.emptyList());
 
@@ -287,10 +288,54 @@ class IntegrationRequestServiceTest {
 		}
 	}
 
+	@ParameterizedTest(name = "Media service with interface_contract = {0}")
+	@CsvSource({
+			"wms",
+			"wfs",
+			"wmts",
+			"generic-data",
+			"temporal-bar-chart",
+	})
+	void testCreateIntegrationRequestMediaService(final String interfaceContract) throws IntegrationException, AppServiceException, DataverseAPIException, APIManagerException {
+		try {
+
+			metadata.availableFormats(Collections.singletonList(new MediaService()
+					.mediaType(Media.MediaTypeEnum.SERVICE)
+					.mediaId(UUID.randomUUID())
+					.connector(new Connector()
+							.interfaceContract(interfaceContract)
+							.url("https://data.explore.star.fr/explore/dataset/tco-metro-equipements-etat-tr/download/?format=json&timezone=Europe/Berlin&lang=fr")
+					)
+					.mediaDates(new ReferenceDates()
+							.created(OffsetDateTime.now())
+							.updated(OffsetDateTime.now())
+					)
+			));
+
+			final var doi = UUID.randomUUID().toString();
+			when(datasetService.createDataset(Mockito.any())).thenReturn(doi);
+			when(datasetService.getDataset(doi)).thenReturn(metadata);
+
+			IntegrationRequest integrationRequestResult = integrationRequestService.createIntegrationRequest(metadata, Method.POST);
+			Assertions.assertNotNull(integrationRequestResult);
+
+			integrationRequestService.handleIntegrationRequest(integrationRequestResult.getUuid());
+			IntegrationRequestEntity integrationRequest = integrationRequestdao.findByUuid(integrationRequestResult.getUuid());
+			Assertions.assertEquals(ProgressStatus.INTEGRATION_HANDLED, integrationRequest.getProgressStatus());
+			Assertions.assertEquals(IntegrationStatus.OK, integrationRequest.getIntegrationStatus());
+
+		} finally {
+			deleteAllAPI();
+		}
+	}
+
 	private void deleteAllAPI() throws IntegrationException, AppServiceUnauthorizedException, APIManagerException {
-		final var integrationRequest = integrationRequestService.createIntegrationRequest(metadata, Method.POST);
-		final var integrationRequestEntity = integrationRequestMapper.dtoToEntity(integrationRequest);
-		apiManagerHelper.deleteAllAPI(integrationRequestEntity);
+		if (metadata != null) {
+			final var integrationRequest = integrationRequestService.createIntegrationRequest(metadata, Method.POST);
+			final var integrationRequestEntity = integrationRequestMapper.dtoToEntity(integrationRequest);
+			apiManagerHelper.deleteAllAPI(integrationRequestEntity);
+			metadata = null;
+		}
 	}
 
 }

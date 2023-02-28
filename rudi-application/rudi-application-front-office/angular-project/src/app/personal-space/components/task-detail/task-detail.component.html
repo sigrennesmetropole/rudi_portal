@@ -5,18 +5,19 @@
         </mat-card-title>
         <app-loader [active]="loading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
         <mat-card-content *ngIf="!loading">
-            <div class="vertical-space">
+            <div class="vertical-space" *ngIf="!isNewRequest">
                 <label class="data-label">{{'personalSpace.requestDetail.datasetTitle'|translate}}</label> <br>
-                <span class="data-value">{{requestToPrint?.datasetTitle}}</span>
+                <span class="data-value">{{requestDisplayData?.datasetTitle}}</span>
             </div>
             <div class="vertical-space">
                 <label class="data-label">{{'personalSpace.requestDetail.requestDate'|translate}}</label> <br>
-                <span class="data-value">{{requestToPrint?.receivedDate.toLocaleDateString()}}</span>
+                <span class="data-value">{{requestDisplayData?.receivedDate?.toLocaleDateString()}}</span>
             </div>
-            <div class="vertical-space">
+            <div class="vertical-space" *ngIf="!isNewRequest">
                 <label class="data-label">{{'personalSpace.requestDetail.endDate'|translate}}</label> <br>
-                <span class="data-value">{{formatEndDate(requestToPrint?.endDate)}}</span> <!-- get date from RUDI-35 -->
+                <span class="data-value">{{formatEndDate(requestDisplayData?.endDate)}}</span>
             </div>
+
             <!-- Format et niveau non affiché ?
             <div class="vertical-space">
                 <label class="data-label">{{'personalSpace.requestDetail.format'|translate}}</label> <br>
@@ -26,9 +27,10 @@
                 <label class="data-label">{{'personalSpace.requestDetail.serviceLevel'|translate}}</label> <br>
                 <span class="data-value">Valeur</span>
             </div> -->
+
             <div class="vertical-space">
                 <label class="data-label">{{'personalSpace.requestDetail.comment'|translate}}</label> <br>
-                <span class="data-value">{{requestToPrint?.comment}}</span>
+                <span class="data-value">{{requestDisplayData?.comment}}</span>
             </div>
         </mat-card-content>
         <!--                    TODO : Non compris dans l'US-->

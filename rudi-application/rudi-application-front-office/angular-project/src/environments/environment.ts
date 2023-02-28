@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   name: 'dev',
-  logLevel: 'DEBUG'
+  logLevel: 'DEBUG',
+  tarteaucitronUrl: null
 };
 
 /*

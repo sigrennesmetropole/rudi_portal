@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.bpmn.config;
 
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.activiti.engine.cfg.AbstractProcessEngineConfigurator;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.activiti.engine.impl.history.HistoryLevel;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class ActivitiConfiguration extends AbstractProcessEngineConfigurator {
 	@Value("${rudi.bpmn.schema.update:true}")
 	private String dataSourceSchemaUpdate;
 
+	@Value("${rudi.bpmn.historc.level:full}")
+	private String historicLevel;
+
 	@Bean
 	public SpringProcessEngineConfiguration springProcessEngineConfiguration() {
 		SpringProcessEngineConfiguration configuration = new SpringProcessEngineConfiguration();
@@ -64,6 +68,9 @@ public class ActivitiConfiguration extends AbstractProcessEngineConfigurator {
 		processEngineConfiguration.setDatabaseSchemaUpdate(dataSourceSchemaUpdate);
 		if (StringUtils.isNotEmpty(dataSourceSchema)) {
 			processEngineConfiguration.setDatabaseSchema(dataSourceSchema);
+		}
+		if (StringUtils.isNotEmpty(historicLevel)) {
+			processEngineConfiguration.setHistoryLevel(HistoryLevel.getHistoryLevelForKey(historicLevel));
 		}
 	}
 

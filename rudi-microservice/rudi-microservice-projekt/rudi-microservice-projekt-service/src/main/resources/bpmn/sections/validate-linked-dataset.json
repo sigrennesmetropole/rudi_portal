@@ -1,0 +1,9 @@
+{
+	"fieldDefinitions": [
+		{
+			"name": "messageToProjectOwner",
+			"label": "Message à l’attention du porteur de projet",
+			"type": "TEXT"
+		}
+	]
+}

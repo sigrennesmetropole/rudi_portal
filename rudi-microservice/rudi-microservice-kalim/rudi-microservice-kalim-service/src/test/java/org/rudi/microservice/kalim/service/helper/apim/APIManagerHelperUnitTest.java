@@ -14,6 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.test.RudiAssertions;
 import org.rudi.facet.kaccess.bean.Media;
+import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.bean.MetadataAccessCondition;
+import org.rudi.facet.kaccess.bean.MetadataAccessConditionConfidentiality;
 import org.rudi.facet.providers.bean.NodeProvider;
 import org.rudi.facet.providers.bean.Provider;
 
@@ -43,17 +46,25 @@ class APIManagerHelperUnitTest {
 	@ParameterizedTest
 	@ValueSource(strings = {
 			"file",
-			"file-with-connector-parameters"
+			"file-with-connector-parameters",
+			"service-dwnl",
+			"selfdata",
 	})
 	void buildAPIDescriptionByMetadataIntegration(final String baseFileName) throws IOException, JSONException {
-		val globalId = UUID.fromString("69784084-fdd1-4c28-aac7-306332ff53bb");
+		Metadata dataset = new Metadata();
+		MetadataAccessCondition accessCondition = new MetadataAccessCondition();
+		MetadataAccessConditionConfidentiality confidentiality = new MetadataAccessConditionConfidentiality();
+		confidentiality.setGdprSensitive(baseFileName.contains("selfdata"));
+		accessCondition.setConfidentiality(confidentiality);
+		dataset.setAccessCondition(accessCondition);
+		dataset.setGlobalId(UUID.fromString("69784084-fdd1-4c28-aac7-306332ff53bb"));
 		val nodeProvider = new NodeProvider();
 		val provider = new Provider()
 				.uuid(UUID.fromString("5596b5b2-b227-4c74-a9a1-719e7c1008c7"))
 				.code("NODE_STUB");
 		val media = jsonResourceReader.read(getMediaPath(baseFileName), Media.class);
 
-		final var apiDescription = apiManagerHelper.buildAPIDescriptionByMetadataIntegration(globalId, nodeProvider, provider, media);
+		final var apiDescription = apiManagerHelper.buildAPIDescriptionByMetadataIntegration(dataset, nodeProvider, provider, media);
 
 		RudiAssertions.assertThat(apiDescription).isJsonEqualToContentOf(getAPIDescriptionPath(baseFileName));
 	}

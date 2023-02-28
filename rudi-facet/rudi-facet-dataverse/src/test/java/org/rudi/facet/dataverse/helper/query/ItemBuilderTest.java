@@ -13,7 +13,7 @@ class ItemBuilderTest {
 
 	private static final FieldSpec ROOT = new RootFieldSpec(SampleObject.class, "root", FieldSpecNamingCase.SNAKE_CASE);
 	private static final FieldSpec FIELD = ROOT.newChildFromJavaField("field")
-			.isSortable(false);
+			.isDirectSortable(false);
 
 	/**
 	 * RUDI-961

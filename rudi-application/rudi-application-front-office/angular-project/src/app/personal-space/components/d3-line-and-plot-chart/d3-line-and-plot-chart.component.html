@@ -1,0 +1,17 @@
+<div class="fake-scroll">
+    <div class="axe-y">
+        <span class="vertical-align">{{graphBar.legendYAxis}}</span>
+    </div>
+    <div class="chart-container" #chartContainer id="chartContainer">
+    </div>
+    <div class="graph-center">{{graphBar.legendXAxis}}</div>
+</div>
+<hr>
+<div>
+    <span class="legend"> {{'personalSpace.selfdataDatasets.graphic.legend' | translate}}</span>
+    <span *ngFor="let serie of graphBar.series">
+        <mat-icon *ngIf="!withLine" class="key-icon" [style.color]="serie.color" svgIcon="circle-fill"></mat-icon>
+        <mat-icon *ngIf="withLine" class="key-icon" [style.color]="serie.color" svgIcon="dash"></mat-icon>
+   <span class="serie-name"> {{ serie.name }} </span>
+</span>
+</div>

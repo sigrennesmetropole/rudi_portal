@@ -1,18 +1,21 @@
 package org.rudi.common.core;
 
-import lombok.Getter;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+
+import lombok.Builder;
+import lombok.Getter;
 
 public class DocumentContent {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DocumentContent.class);
@@ -29,11 +32,13 @@ public class DocumentContent {
 	private final long fileSize;
 	@Getter
 	private final File file;
+	@Getter
 	private final String url;
 	private InputStream fileStream;
 
 	/**
 	 * Constructeur pour DocumentContent
+	 * 
 	 * @param contentType exemple : {@link org.springframework.http.MediaType#IMAGE_PNG_VALUE MediaType.IMAGE_PNG_VALUE}
 	 */
 	public DocumentContent(String contentType, @Nonnull File file) {
@@ -50,6 +55,7 @@ public class DocumentContent {
 	/**
 	 * Constructeur pour DocumentContent
 	 */
+	@Builder(toBuilder = true)
 	public DocumentContent(String fileName, String contentType, long fileSize, InputStream fileStream) {
 		super();
 		this.fileName = fileName;
@@ -84,7 +90,8 @@ public class DocumentContent {
 		if (resource.isFile()) {
 			documentContent = new DocumentContent(fileName, mimeType, resource.getFile());
 		} else if (!asFile) {
-			documentContent = new DocumentContent(fileName, mimeType, resource.contentLength(), resource.getInputStream());
+			documentContent = new DocumentContent(fileName, mimeType, resource.contentLength(),
+					resource.getInputStream());
 		} else {
 			File tmpFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_EXTENSION);
 			FileUtils.copyInputStreamToFile(resource.getInputStream(), tmpFile);

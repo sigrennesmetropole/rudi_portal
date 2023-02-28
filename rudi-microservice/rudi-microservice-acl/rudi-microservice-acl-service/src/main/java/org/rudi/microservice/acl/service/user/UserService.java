@@ -56,6 +56,14 @@ public interface UserService {
 	User getUserInfo(UUID uuid);
 
 	/**
+	 * Retourne un utilisateur en fonction de son login, avec uniquement les propriétés minimales
+	 *
+	 * @param uuid
+	 * @return
+	 */
+	User getUserInfo(String login);
+
+	/**
 	 * Retourne l'utilisateur connecté
 	 * 
 	 * @return

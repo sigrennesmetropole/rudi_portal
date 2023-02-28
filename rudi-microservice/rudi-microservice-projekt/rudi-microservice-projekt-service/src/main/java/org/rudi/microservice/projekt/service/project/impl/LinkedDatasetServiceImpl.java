@@ -13,6 +13,7 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
@@ -62,15 +63,15 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 		try {
 			var metadata = datasetService.getDataset(linkedDataset.getDatasetUuid());
 
-			final var datasetIsRestricted = metadataDetailsHelper.isRestricted(metadata);
-			// On interdit l'ajout d'un jdd restreint à une réutilisation
-			if (project.isAReuse() && datasetIsRestricted) {
-				throw new AppServiceException("Cannot associate restricted dataset to a project which is a reuse");
+			final var accessConditionConfidentiality = getAccessConditionConfidentiality(metadata);
+			// On interdit l'ajout d'un jdd restreint et d'un jdd selfdata à une réutilisation
+			if (project.isAReuse() && accessConditionConfidentiality != DatasetConfidentiality.OPENED) {
+				throw new AppServiceException("Cannot associate selfdata or restricted dataset to a project which is a reuse");
 			}
 
 			linkedDatasetEntity.setDescription(metadata.getResourceTitle());
-			linkedDatasetEntity.setDatasetConfidentiality(datasetIsRestricted ? DatasetConfidentiality.RESTRICTED : DatasetConfidentiality.OPENED);
-			if(metadata.getProducer() != null) {
+			linkedDatasetEntity.setDatasetConfidentiality(accessConditionConfidentiality);
+			if (metadata.getProducer() != null) {
 				linkedDatasetEntity.setDatasetOrganisationUuid(metadata.getProducer().getOrganizationId());
 			}
 		} catch (DataverseAPIException dnfe) {
@@ -88,6 +89,17 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 		project.getLinkedDatasets().add(linkedDatasetEntity);
 		return linkedDatasetMapper.entityToDto(linkedDatasetEntity);
+	}
+
+	public DatasetConfidentiality getAccessConditionConfidentiality(Metadata metadata) {
+		if (metadataDetailsHelper.isSelfdata(metadata)) {
+			return DatasetConfidentiality.SELFDATA;
+		}
+		if (metadataDetailsHelper.isRestricted(metadata)) {
+			return DatasetConfidentiality.RESTRICTED;
+		}
+		return DatasetConfidentiality.OPENED;
+
 	}
 
 	@Override

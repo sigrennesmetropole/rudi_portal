@@ -1,7 +1,17 @@
-import {AfterViewInit, Component, ContentChild, ContentChildren, QueryList, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ComponentFactoryResolver,
+    ContentChild,
+    ContentChildren,
+    QueryList,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
 import {TabsLayoutDirective} from '../tabs-layout.directive';
 import {TabContentDirective} from '../tab-content.directive';
+import {WorkInProgressComponent} from '../work-in-progress/work-in-progress.component';
 
 @Component({
     selector: 'app-tabs',
@@ -34,6 +44,9 @@ export class TabsComponent implements AfterViewInit {
             .find((tab) => tab.active);
     }
 
+    constructor(private componentFactoryResolver: ComponentFactoryResolver,) {
+    }
+
     private static displayTabInto(tab: TabComponent, viewContainer: ViewContainerRef): void {
         viewContainer.clear();
         viewContainer.createEmbeddedView(tab.templateRef);
@@ -59,22 +72,33 @@ export class TabsComponent implements AfterViewInit {
     }
 
     private isSelectable(tabToSelect: TabComponent): boolean {
-        return tabToSelect !== this.selectedTab && !tabToSelect.disabled && !!tabToSelect.templateRef;
+        return tabToSelect !== this.selectedTab && !tabToSelect.disabled;
+    }
+
+    private get viewContainerRef(): ViewContainerRef {
+        if (this.customLayout) {
+            if (this.customLayoutTabContent) {
+                if (this.customLayoutTabContent.viewContainer) {
+                    return this.customLayoutTabContent.viewContainer;
+                }
+            } else {
+                throw new Error(`Cannot find <ng-container appTabContent> child element in <ng-container appTabsLayout>`);
+            }
+        }
+        return this.defaultLayoutTabContent;
     }
 
     private displayTab(tab: TabComponent): void {
         if (tab.templateRef) {
-            if (this.customLayout) {
-                if (this.customLayoutTabContent) {
-                    if (this.customLayoutTabContent.viewContainer) {
-                        TabsComponent.displayTabInto(tab, this.customLayoutTabContent.viewContainer);
-                    }
-                } else {
-                    throw new Error(`Cannot find <ng-container appTabContent> child element in <ng-container appTabsLayout>`);
-                }
-            } else {
-                TabsComponent.displayTabInto(tab, this.defaultLayoutTabContent);
-            }
+            TabsComponent.displayTabInto(tab, this.viewContainerRef);
+        } else { // On crée et affiche une instance de work-in-progress quand on n'a pas de composant spécifique à afficher
+            this.displayWorkInProgressIntoCurrentTab();
         }
+    }
+
+    private displayWorkInProgressIntoCurrentTab() {
+        this.viewContainerRef.clear();
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(WorkInProgressComponent);
+        this.viewContainerRef.createComponent<WorkInProgressComponent>(componentFactory);
     }
 }

@@ -70,6 +70,6 @@ export class AccountInfoComponent implements OnInit {
 
     // Formatter la liste des organisations
     getOrganizations(organizations: Organization[]): string {
-        return organizations.map(value => value.name).join(', ');
+        return organizations?.map(value => value.name).join(', ');
     }
 }

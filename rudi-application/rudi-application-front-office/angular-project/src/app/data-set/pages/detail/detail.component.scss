@@ -71,16 +71,10 @@
         margin-left: 80px;
     }
 
-    .metadata-card {
-        box-shadow: none;
-        border: solid 1.1px $blocks-and-menus-outline;
-        cursor: pointer;
-        padding: 17px 25px 0 30px;
 
-        .card-label {
-            font-size: 18px;
-            font-weight: 600;
-        }
+    .card-label {
+        font-size: 18px;
+        font-weight: 600;
     }
 
 
@@ -398,40 +392,6 @@
             }
         }
 
-        .header-metadata {
-            margin-left: 20px;
-        }
-
-        .header-img {
-            width: auto;
-            height: 70px;
-            padding: 5px;
-            align-items: center;
-            border-radius: 3.4px;
-            border: solid 0.9px $blocks-and-menus-outline;
-            margin-left: 0;
-        }
-
-        .producer-name {
-            font-size: 13px;
-        }
-
-        .header-ressource {
-            padding-left: 15px;
-            margin-right: 20px;
-        }
-
-        .header-ressource h2 {
-            font-size: 24px;
-            line-height: 1em;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            hyphens: auto;
-            min-height: 1.2em;
-            max-height: 5em;
-        }
-
         .date-range-update-maj {
             font-size: 13px;
             font-weight: normal;
@@ -593,15 +553,4 @@ img {
         line-height: normal;
         letter-spacing: normal;
     }
-}
-
-.resource-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin-left: 5px;
-    line-height: 1.2;
-}
-
-.resource-description {
-    max-width: 35em;
 }

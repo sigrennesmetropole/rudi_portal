@@ -4,6 +4,10 @@ import {Field, Section} from '../../api-bpmn';
 import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 import {Observable, of} from 'rxjs';
 import {WorkflowFieldTextComponent} from '../workflow-field-text/workflow-field-text.component';
+import {WorkflowFieldBooleanComponent} from '../workflow-field-boolean/workflow-field-boolean.component';
+import {WorkflowFieldAddressComponent} from '../workflow-field-address/workflow-field-address.component';
+import {WorkflowFieldAttachmentComponent} from '../workflow-field-attachment/workflow-field-attachment.component';
+import {WorkflowProperties} from '../workflow-form/workflow-properties';
 
 @Component({
     selector: 'app-workflow-field-template',
@@ -25,6 +29,12 @@ export class WorkflowFieldTemplateComponent implements OnInit {
 
     @Input()
     field: Field;
+
+    @Input()
+    properties: WorkflowProperties;
+
+    @Input()
+    worflowFormReadOnly: boolean;
 
     @Output()
     submit: EventEmitter<void> = new EventEmitter<void>();
@@ -50,8 +60,11 @@ export class WorkflowFieldTemplateComponent implements OnInit {
                 formGroup: this.formGroup,
                 section: this.section,
                 field: this.field,
+                properties: this.properties,
                 submit: this.submit,
+                worflowFormReadOnly: this.worflowFormReadOnly
             });
+            componentRef.instance.addOtherControls();
         });
     }
 
@@ -93,8 +106,16 @@ export class WorkflowFieldTemplateComponent implements OnInit {
     private getTypeFromAlreadyImportedModules(): Type<WorkflowFieldComponent> {
         const type = this.field.definition.type;
         switch (type) {
+            case 'STRING':
+                return WorkflowFieldComponent;
             case 'TEXT':
                 return WorkflowFieldTextComponent;
+            case 'BOOLEAN':
+                return WorkflowFieldBooleanComponent;
+            case 'ADDRESS':
+                return WorkflowFieldAddressComponent;
+            case 'ATTACHMENT':
+                return WorkflowFieldAttachmentComponent;
             default:
                 console.warn(`WorkFlow FieldType "${type}" not handled. Using default component : WorkflowFieldComponent`);
                 return WorkflowFieldComponent;

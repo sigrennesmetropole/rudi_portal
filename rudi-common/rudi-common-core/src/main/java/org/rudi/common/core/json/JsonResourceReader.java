@@ -1,17 +1,19 @@
 package org.rudi.common.core.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.MapType;
-import lombok.Getter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.stereotype.Component;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.MapType;
+import org.springframework.core.io.Resource;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.stereotype.Component;
+
+import lombok.Getter;
 
 /**
  * Simplifie le chargement et le parsing de fichier JSON (depuis le classpath) notamment pour les tests unitaires.
@@ -50,6 +52,16 @@ public class JsonResourceReader {
 		}
 		return objectMapper.readValue(resource, valueType);
 	}
+
+	/**
+	 * Équivalent de {@link #read(String, Class)} pour une ressource Spring
+	 *
+	 * @see #read(String, Class)
+	 */
+	public <T> T read(Resource resource, Class<T> valueType) throws IOException {
+		return objectMapper.readValue(resource.getInputStream(), valueType);
+	}
+
 
 	/**
 	 * @param path chemin du fichier JSON à parser (relatif au classpath)

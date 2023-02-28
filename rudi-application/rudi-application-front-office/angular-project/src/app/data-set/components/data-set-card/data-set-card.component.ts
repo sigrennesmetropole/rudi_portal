@@ -5,6 +5,7 @@ import {BreakpointObserverService, MediaSize, NgClassObject} from '../../../core
 import {Metadata} from '../../../api-kaccess';
 import {LanguageService} from '../../../i18n/language.service';
 import {Router} from '@angular/router';
+import {MetadataUtils} from '../../../shared/utils/metadata-utils';
 
 @Component({
     selector: 'app-data-set-card',
@@ -36,6 +37,14 @@ export class DataSetCardComponent implements OnInit {
             'top-right-triangle',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/top-right-triangle.svg')
         );
+        this.matIconRegistry.addSvgIcon(
+            'top-right-triangle-self-data',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/top-right-triangle-self-data.svg')
+        );
+        this.matIconRegistry.addSvgIcon(
+            'self-data-icon',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/self-data-icon.svg')
+        );
     }
 
     private _themePicto: string;
@@ -57,7 +66,8 @@ export class DataSetCardComponent implements OnInit {
         const ngClassFromMediaSize: NgClassObject = this.breakpointObserver.getNgClassFromMediaSize('data-set-card');
         return {
             ...ngClassFromMediaSize,
-            restricted: this.isRestricted
+            restricted: this.isRestricted,
+            selfdata: this.isSelfdata
         };
     }
 
@@ -72,7 +82,11 @@ export class DataSetCardComponent implements OnInit {
     }
 
     get isRestricted(): boolean {
-        return this.metadata.access_condition?.confidentiality?.restricted_access;
+        return MetadataUtils.isRestricted(this.metadata);
+    }
+
+    get isSelfdata(): boolean {
+        return MetadataUtils.isSelfdata(this.metadata);
     }
 
     ngOnInit(): void {

@@ -216,3 +216,16 @@ components:
         - compound
         - controlledVocabulary
 
+    FieldType:
+      type: string
+      description: 'See TSV configuration : https://guides.dataverse.org/en/latest/admin/metadatacustomization.html#fieldtype-definitions'
+      enum:
+        - none
+        - date
+        - email
+        - text
+        - textbox
+        - url
+        - int
+        - float
+

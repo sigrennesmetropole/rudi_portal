@@ -1,7 +1,7 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.UUID;
+
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.PagedSupportList;
@@ -14,7 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class SupportController implements SupportsApi {
 	private final UtilPageable utilPageable;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Support> createSupport(Support support) throws AppServiceException {
 		val createdSupport = supportService.createSupport(support);
 		val location = ServletUriComponentsBuilder
@@ -41,9 +45,10 @@ public class SupportController implements SupportsApi {
 	}
 
 	@Override
-	public ResponseEntity<PagedSupportList> searchSupports(Integer limit, Integer offset) {
+	public ResponseEntity<PagedSupportList> searchSupports(Integer limit, Integer offset, String order) throws Exception {
+
 		val searchCriteria = new SupportSearchCriteria();
-		val pageable = utilPageable.getPageable(offset, limit, null);
+		val pageable = utilPageable.getPageable(offset, limit, order);
 		val page = supportService.searchSupports(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedSupportList()
 				.total(page.getTotalElements())
@@ -51,7 +56,7 @@ public class SupportController implements SupportsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Void> updateSupport(UUID uuid, Support support) throws Exception {
 		support.setUuid(uuid);
 		supportService.updateSupport(support);
@@ -59,7 +64,7 @@ public class SupportController implements SupportsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Void> deleteSupport(UUID uuid) {
 		supportService.deleteSupport(uuid);
 		return ResponseEntity.noContent().build();

@@ -18,8 +18,8 @@ import {RequestDetails} from '../../../shared/models/request-details';
 import {Metadata} from '../../../api-kaccess';
 import {Observable} from 'rxjs';
 import {catchError, switchMap, tap} from 'rxjs/operators';
-import {RedirectService} from '../../../core/services/redirect.service';
 import {CloseEvent, DialogClosedData} from '../../../data-set/models/dialog-closed-data';
+import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
 
 @Component({
     selector: 'app-submission-project',
@@ -33,6 +33,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
 
     public publicCible: TargetAudience[];
     public territorialScales: TerritorialScale[];
+    public AccessStatusFiltersType = AccessStatusFiltersType;
 
     public suggestions: RadioListItem[];
     public supports: Support[];
@@ -59,8 +60,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
         private readonly snackBarService: SnackBarService,
         private readonly translateService: TranslateService,
         private readonly formBuilder: FormBuilder,
-        private readonly router: Router,
-        private readonly redirectService: RedirectService
+        private readonly router: Router
     ) {
         super(projektMetierService, filtersService, projectSubmissionService);
     }
@@ -113,8 +113,8 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
     /**
      * Ouverture de la popin d'ajout d'un JDD lié au projet puis ajout dans la liste
      */
-    openDialogAddLinkedDataset(restrictedAccessFilterValue: boolean): void {
-        super.openDialogSelectMetadata(restrictedAccessFilterValue);
+    openDialogAddLinkedDataset(): void {
+        super.openDialogSelectMetadata(undefined, [AccessStatusFiltersType.GdprSensitive]);
     }
 
     /**
@@ -269,6 +269,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
      * en restant sur cet écran
      */
     save(): void {
+
         // Recuperation de l'image projet
         let image: Blob;
         if (this.step1FormGroup.get('image').value != null) {
@@ -283,6 +284,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
                 this.mapRequestDetailsByDatasetUuid, image, this.updateImageAction).subscribe(
                 (created: Project) => {
                     this.onSaveOrCreateSuccess(image, created);
+                    this.projectSubmissionService.openDialogSuccess();
                 },
                 (e) => {
                     console.error(e);

@@ -1,0 +1,21 @@
+<app-page>
+    <app-page-title *ngIf="!searchUrlLoading"
+                    [title1]="'personalSpace.selfdataDatasets.title1'|translate"
+                    [title2]="'personalSpace.selfdataDatasets.title2'|translate"
+                    [title3]="'personalSpace.selfdataDatasets.explainationText'|translate"
+                    [title4]="'personalSpace.selfdataDatasets.linkText'|translate"
+                    [urlToDoc]="urlToDoc"
+                    class="d-flex justify-content-center w-100"></app-page-title>
+
+    <app-tabs>
+        <app-tab [label]="'personalSpace.selfdataDatasets.tab1'|translate"
+                 [icon]="'icone_donnees_personnelles'">
+            <ng-template>
+                <app-selfdata-datasets-table></app-selfdata-datasets-table>
+            </ng-template>
+        </app-tab>
+        <!--TODO: voir avec Elise pour l'icône consentement-->
+        <app-tab [label]="'personalSpace.selfdataDatasets.tab2'|translate">
+        </app-tab>
+    </app-tabs>
+</app-page>

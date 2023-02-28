@@ -1,0 +1,13 @@
+<mat-card [ngClass]="ngClass">
+    <div *ngIf="header">
+        <div class="d-flex" *ngIf="title && icon && subTitle">
+            <mat-icon class="mat-icon-card" aria-hidden="false" [svgIcon]="icon"></mat-icon>
+            <div>
+                <div class="card-title">{{title | translate}}</div>
+                <div class="card-sub-title">{{subTitle | translate}}</div>
+            </div>
+        </div>
+        <div class="card-title" *ngIf="title && !icon && !subTitle">{{title | translate}}</div>
+    </div>
+    <ng-content></ng-content>
+</mat-card>

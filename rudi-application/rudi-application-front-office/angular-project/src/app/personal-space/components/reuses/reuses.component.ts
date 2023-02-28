@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Order, ProjektMetierService} from '../../../core/services/projekt-metier.service';
 import {UserService} from '../../../core/services/user.service';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../../core/services/breakpoint-observer.service';
+import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {Sort} from '@angular/material/sort';
 import {ProjectDependenciesFetchers, ProjectDependenciesService} from '../../../core/services/project-dependencies.service';
 import {injectDependenciesEach} from '../../../shared/utils/dependencies-utils';
@@ -9,6 +9,8 @@ import {tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {PagedProjectList} from '../../../projekt/projekt-model';
 import {mapEach} from '../../../shared/utils/ObservableUtils';
+import {BackPaginationSort} from '../../../shared/back-pagination/back-pagination-sort';
+import {SortTableInterface} from '../../../shared/back-pagination/sort-table-interface';
 
 export interface ProjectSummary {
     uuid: string;
@@ -19,7 +21,6 @@ export interface ProjectSummary {
     numberOfDatasets: number;
 }
 
-const FIRST_PAGE = 1;
 const DEFAULT_SORT_ORDER: Order = '-updatedDate';
 
 @Component({
@@ -33,25 +34,18 @@ export class ReusesComponent implements OnInit {
 
     private _projectList: ProjectSummary[];
 
-    private currentPage = FIRST_PAGE;
-
     searchIsRunning = false;
 
-    triIsRunning = false;
+    sortIsRunning = false;
 
     total = 0;
-
-    currentSort: string;
-    currentSortAsc: boolean;
 
     @Input() ITEMS_PER_PAGE;
 
     mediaSize: MediaSize;
 
-    readonly maxPageDesktop = 9;
-
-    /** minimum = 5 */
-    readonly maxPageMobile = 5;
+    backPaginationSort = new BackPaginationSort();
+    page: number;
 
     constructor(private readonly projectMetierService: ProjektMetierService,
                 private readonly userService: UserService,
@@ -63,7 +57,8 @@ export class ReusesComponent implements OnInit {
 
     ngOnInit(): void {
         // Permet de trier par défaut les projets par ordre décroissant
-        this.loadProjects(1, DEFAULT_SORT_ORDER);
+        let defaultSortTable: SortTableInterface = {order: DEFAULT_SORT_ORDER, page: 1};
+        this.loadProjects(defaultSortTable);
     }
 
     get projectList(): ProjectSummary[] {
@@ -76,20 +71,19 @@ export class ReusesComponent implements OnInit {
 
     /**
      * charge une page de ITEMS_PER_PAGE éléments max
-     * @param numeroPage
-     * @param ordreTri
      * @private
      */
-    private loadProjects(numeroPage: number, ordreTri?: Order): void {
-        if(!this.triIsRunning ) {
+    loadProjects(sortTableInterface: SortTableInterface): void {
+        this.page = sortTableInterface?.page;
+        if (!this.sortIsRunning) {
             this.searchIsRunning = true;
         }
         // Observable de récupération des projets pipé sur la récupération du total d'éléments
         const observableMyProjects: Observable<PagedProjectList> = this.projectMetierService
-            .getMyAndOrganizationsProjects((numeroPage - 1) >= 0 ? (numeroPage - 1) * this.ITEMS_PER_PAGE : 0, this.ITEMS_PER_PAGE, ordreTri)
+            .getMyAndOrganizationsProjects((this.page - 1) >= 0 ? (this.page - 1) * this.ITEMS_PER_PAGE : 0, this.ITEMS_PER_PAGE, sortTableInterface.order)
             .pipe(
-                tap(({total, elements}) => {
-                    this.total = total;
+                tap((result) => {
+                    this.total = result.total;
                 })
             );
 
@@ -112,39 +106,14 @@ export class ReusesComponent implements OnInit {
                 next: projectResume => {
                     this.projectList = projectResume;
                     this.searchIsRunning = false;
-                    this.triIsRunning = false;
+                    this.sortIsRunning = false;
                 },
                 error: err => {
                     console.error(err);
                     this.searchIsRunning = false;
-                    this.triIsRunning = false;
+                    this.sortIsRunning = false;
                 }
             });
-    }
-
-    /**
-     * Fonction permettant la gestion la pagination
-     */
-    handlePageChange(page: number): void {
-        this.page = page;
-        this.load(this.currentSort, this.currentSortAsc, page);
-        window.scroll(0, 0);
-    }
-
-    get page(): number {
-        return this.currentPage;
-    }
-
-    set page(value: number) {
-        if (value < FIRST_PAGE) {
-            console.warn('Page number cannot be less than ' + FIRST_PAGE);
-            value = FIRST_PAGE;
-        }
-        this.currentPage = value;
-    }
-
-    get paginationControlsNgClass(): NgClassObject {
-        return this.breakpointObserver.getNgClassFromMediaSize('pagination-spacing');
     }
 
     /**
@@ -152,25 +121,11 @@ export class ReusesComponent implements OnInit {
      */
     sortTable(sort: Sort): void {
         if (!sort.active || sort.direction === '') {
-            this.currentSortAsc = null;
-            this.currentSort = null;
             return;
-        }
-
-        const isAsc = sort.direction === 'asc';
-        this.currentSortAsc = isAsc;
-        this.currentSort = sort.active;
-        this.triIsRunning = true;
-        this.load(this.currentSort, isAsc, this.currentPage);
-    }
-
-    private load(column: string, isAsc: boolean, page: number): void {
-        if (isAsc && column) {
-            this.loadProjects(page, column as Order);
-        } else if (!isAsc && column) {
-            this.loadProjects(page, ('-' + column) as Order);
         } else {
-            this.loadProjects(page);
+            this.sortIsRunning = true;
+            this.backPaginationSort.currentPage = this.page;
+            this.loadProjects(this.backPaginationSort.sortTable(sort));
         }
     }
 }

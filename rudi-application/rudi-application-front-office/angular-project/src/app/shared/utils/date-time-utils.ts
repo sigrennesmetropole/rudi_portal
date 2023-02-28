@@ -1,4 +1,5 @@
 import {Moment} from 'moment';
+import {Period} from '../../api-kaccess';
 
 const ISO_STRING_WITHOUT_OFFSET_LENGTH = '2020-01-01T00:00:00.000'.length;
 
@@ -16,5 +17,20 @@ export class DateTimeUtils {
             return undefined;
         }
         return date.toISOString(true).substring(0, ISO_STRING_WITHOUT_OFFSET_LENGTH);
+    }
+
+    /**
+     * Convertit une periode (value, unit) en mois
+     * @param period à convertir
+     */
+    static convertPeriodToMonths(period: Period): number {
+        switch (period.unit) {
+            case 'DAYS':
+                return Math.ceil(period.value / 30);
+            case 'YEARS':
+                return period.value * 12;
+            default:
+                return period.value;
+        }
     }
 }

@@ -6,6 +6,56 @@
     <app-loader
         [active]="isLoading">
     </app-loader>
+
+    <!-- Données personnelles -->
+    <mat-expansion-panel (closed)="panelOpenStateSelfData = false"
+                         (opened)="panelOpenStateSelfData = true"
+                         [hidden]="metadata.ext_metadata?.ext_selfdata?.ext_selfdata_content === null"
+                         class="rudi-expansion-panel">
+        <mat-expansion-panel-header [ngClass]="{'open': panelOpenStateSelfData}">
+            <mat-panel-title class="rudi-panel-title">
+                {{'donneesPersonnellesBox.donneesPersonnelles'|translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngIf="metadata?.ext_metadata?.ext_selfdata?.ext_selfdata_content">
+            <div class="rudi-panel-available">{{'donneesPersonnellesBox.listPivot' | translate}}</div>
+            <div class="margin-data-value">{{ getSelfDataPivot(metadata) | replaceIfNullPipe }}</div>
+
+            <div class="rudi-panel-available">{{'donneesPersonnellesBox.accessMode' | translate}}</div>
+            <div class="margin-data-value">{{ getSelfDataAccessMode(metadata) | replaceIfNullPipe }}</div>
+
+            <div class="rudi-panel-available">{{'donneesPersonnellesBox.selfdataCategories' | translate}}</div>
+            <div class="margin-data-value">{{ getSelfDataCategories(metadata) | replaceIfNullPipe }}</div>
+
+            <div class="rudi-panel-available">{{'donneesPersonnellesBox.heldData' | translate}}</div>
+            <div
+                class="margin-data-value">{{ metadata.ext_metadata.ext_selfdata.ext_selfdata_content.selfdata_held }}</div>
+
+            <div class="rudi-panel-available">{{ 'donneesPersonnellesBox.storagePeriod' | translate}}</div>
+            <div
+                class="margin-data-value">{{ getSelfDataPeriod(metadata.ext_metadata.ext_selfdata.ext_selfdata_content.storage_period) }}</div>
+            <div
+                class="rudi-panel-available">{{ 'donneesPersonnellesBox.treatmentPeriod' | translate}}</div>
+            <div
+                class="margin-data-value">{{ getSelfDataPeriod(metadata.ext_metadata.ext_selfdata.ext_selfdata_content.treatment_period) }}</div>
+            
+            <app-boolean-data-block
+                [booleanValue]="metadata.ext_metadata.ext_selfdata.ext_selfdata_content.deletable_data"
+                [libelle]="'donneesPersonnellesBox.erasableData' | translate"></app-boolean-data-block>
+            <div *ngIf="!metadata.ext_metadata.ext_selfdata.ext_selfdata_content.deletable_data">
+                <mat-error class="mt-2">{{ 'donneesPersonnellesBox.deletionReason' | translate }}</mat-error>
+                <ul>
+                    <li *ngFor="let deletionReason of
+                        metadata.ext_metadata.ext_selfdata.ext_selfdata_content.deletion_reason"
+                        class="mat-error mt-1">
+                        {{deletionReason}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- Conditions d'utilisation -->
     <mat-expansion-panel
         (closed)="panelOpenStateCond = false"
         (opened)="panelOpenStateCond = true"
@@ -17,6 +67,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="rudi-bloc-access-condition">
+
             <!-- Bloc condition d'utilisation -->
             <ng-container>
                 <!--bloc Licence  -->
@@ -190,13 +241,14 @@
             >
                 <mat-expansion-panel-header class="rudi-mat-expansion-panel-source" id="medias-table-header">
                     <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeFile(media)" class="rudi-panel-source-title">
-                        {{'common.fichier'|translate}} {{getMediaFileExtension(media)}}
+                        {{'common.fichier'|translate}} ({{getMediaFileExtension(media)}})
                     </mat-panel-title>
                     <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeSeries(media)" class="rudi-panel-source-title">
                         <span>{{'common.streaming'|translate}} ({{getMediaIndexSeries(i)}})</span>
                     </mat-panel-title>
-<!--                    Titre pour les medias de type Service-->
-                    <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeService(media)" class="rudi-panel-source-title">
+                    <!--                    Titre pour les medias de type Service-->
+                    <mat-panel-title *ngIf="metaDataFunctions.isMediaTypeService(media)"
+                                     class="rudi-panel-source-title">
                         <span>{{'metaData.service'|translate}} {{getInterfaceContract(media)}}</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -224,7 +276,8 @@
                         <tr *ngIf="getMediaFile(media).file_structure">
                             <th scope="row">{{'metaData.nomenclature'|translate}}</th>
                             <td tabindex="-1"><a href="{{getMediaFile(media).file_structure}}"
-                                                 class="text-underline" target="_blank" tabindex="-1">{{getMediaFile(media).file_structure}}</a></td>
+                                                 class="text-underline" target="_blank"
+                                                 tabindex="-1">{{getMediaFile(media).file_structure}}</a></td>
                         </tr>
                         <ng-container *ngIf="!isDwnlFormat(media)">
                             <tr *ngIf="getMediaFile(media).connector.interface_contract">
@@ -234,7 +287,8 @@
                             <tr *ngIf="getMediaFile(media).connector.url">
                                 <th scope="row">{{'metaData.urlAcces'|translate}}</th>
                                 <td tabindex="-1"><a href="{{getMediaFile(media).connector.url}}"
-                                                     target="_blank" tabindex="-1">{{getMediaFile(media).connector.url}}</a></td>
+                                                     target="_blank"
+                                                     tabindex="-1">{{getMediaFile(media).connector.url}}</a></td>
                             </tr>
                         </ng-container>
                         <tr>
@@ -253,7 +307,8 @@
                                     <span>{{ getUrlApiMetadata(media) }}</span>
                                 </div>
                                 <div class="col-2 p-0">
-                                    <button mat-button color="primary" class="no-outline-focus" (click)="copyUrlApiMetadataToClipboard(media)"
+                                    <button mat-button color="primary" class="no-outline-focus"
+                                            (click)="copyUrlApiMetadataToClipboard(media)"
                                             [title]="'metaData.copy-url-explanation' | translate">
                                         <mat-icon *ngIf="!isUrlCopiedToClipboard(media)">file_copy</mat-icon>
                                         <mat-icon *ngIf="isUrlCopiedToClipboard(media)">done_all</mat-icon>
@@ -310,7 +365,8 @@
                             <th scope="row">
                                 <div class="text-and-icon">
                                     <span>{{'metaData.url'|translate}}</span>
-                                    <mat-icon color="primary" class="clickable-icon" (click)="goApiDocumentationService()"
+                                    <mat-icon color="primary" class="clickable-icon"
+                                              (click)="goApiDocumentationService()"
                                               [title]="'metaData.url-api-documentation' | translate">
                                         help
                                     </mat-icon>
@@ -322,7 +378,8 @@
                                     <span>{{ getUrlApiMetadata(media) }}</span>
                                 </div>
                                 <div class="col-2 p-0">
-                                    <button mat-button color="primary" class="no-outline-focus" (click)="copyUrlApiMetadataToClipboard(media)"
+                                    <button mat-button color="primary" class="no-outline-focus"
+                                            (click)="copyUrlApiMetadataToClipboard(media)"
                                             [title]="'metaData.copy-url-explanation' | translate">
                                         <mat-icon *ngIf="!isUrlCopiedToClipboard(media)">file_copy</mat-icon>
                                         <mat-icon *ngIf="isUrlCopiedToClipboard(media)">done_all</mat-icon>
@@ -333,7 +390,8 @@
                         </tr>
                         <tr *ngIf="getMediaService(media)?.api_documentation_url">
                             <th scope="row">{{'metaData.documentation'|translate}}</th>
-                            <td><a [href]="getMediaService(media)?.api_documentation_url" target="_blank">{{getMediaService(media)?.api_documentation_url}}</a></td>
+                            <td><a [href]="getMediaService(media)?.api_documentation_url"
+                                   target="_blank">{{getMediaService(media)?.api_documentation_url}}</a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -356,7 +414,8 @@
         </mat-expansion-panel-header>
         <div class="d-flex rudi-panel-body panel-provider" [ngClass]="{'map-panel-mobile': mediaSize.isDeviceMobile}">
             <div class="d-flex align-items-start" [ngClass]="{'map-spacing-desktop mr-4': mediaSize.isDeviceDesktop}">
-                <div [ngClass]="{'map-container-desktop': mediaSize.isDeviceDesktop, 'map-container-mobile' : mediaSize.isDeviceMobile}">
+                <div
+                    [ngClass]="{'map-container-desktop': mediaSize.isDeviceDesktop, 'map-container-mobile' : mediaSize.isDeviceMobile}">
                     <app-map [metadata]="metadata"></app-map>
                 </div>
             </div>

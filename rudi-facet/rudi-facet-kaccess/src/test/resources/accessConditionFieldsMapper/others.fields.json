@@ -26,7 +26,7 @@
         "typeName": "rudi_access_condition_licence_licence_label",
         "typeClass": "primitive",
         "multiple": false,
-        "value": "SkosConcept.concept_code"
+        "value": "public-domain-cc0"
       }
     }
   },

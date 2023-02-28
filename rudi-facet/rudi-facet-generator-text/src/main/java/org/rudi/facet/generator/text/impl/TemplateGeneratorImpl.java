@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.rudi.common.core.DocumentContent;
+import org.rudi.facet.generator.TemporaryHelper;
 import org.rudi.facet.generator.exception.GenerationException;
 import org.rudi.facet.generator.exception.GenerationModelNotFoundException;
 import org.rudi.facet.generator.impl.AbstractGenerator;
@@ -42,14 +43,10 @@ public class TemplateGeneratorImpl extends AbstractGenerator<DocumentDataModel> 
 
 	private CompositeTemplateLoader compositeTemplateLoader = null;
 
-	/**
-	 * 
-	 * Constructeur pour GenerationConnectorImpl
-	 */
-	public TemplateGeneratorImpl() {
-		super();
+	public TemplateGeneratorImpl(TemporaryHelper temporaryHelper) {
+		super(temporaryHelper);
 	}
-
+	
 	@Override
 	public DocumentContent generateDocument(DocumentDataModel dataModel)
 			throws GenerationModelNotFoundException, GenerationException, IOException {
@@ -70,11 +67,11 @@ public class TemplateGeneratorImpl extends AbstractGenerator<DocumentDataModel> 
 			throws GenerationModelNotFoundException, GenerationException, IOException {
 		DocumentContent result = null;
 
-		if (getTemporaryDirectory() != null) {
-			ensureDirectoryFile(getTemporaryDirectory());
+		if (getTemporaryHelper().getTemporaryDirectory() != null) {
+			getTemporaryHelper().ensureDirectoryFile(getTemporaryHelper().getTemporaryDirectory());
 		}
 
-		File generateFile = createOutputFile();
+		File generateFile = getTemporaryHelper().createOutputFile();
 
 		String modele = dataModel.getModel();
 		Template template = initModeleFreeMarker(modele, dataModel.getLocale());

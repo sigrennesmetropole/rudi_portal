@@ -1,15 +1,23 @@
 <app-page>
-    <app-page-title [title1]="'personalSpace.receivedAccessRequests.title1'|translate"
+    <app-loader [allPage]="false" [isTransparent]="true" [noText]="true"
+                [active]="searchUrlLoading"></app-loader>
+    <app-page-title *ngIf="!searchUrlLoading"
+                    [title1]="'personalSpace.receivedAccessRequests.title1'|translate"
                     [title2]="'personalSpace.receivedAccessRequests.title2'|translate"
+                    [title3]="'personalSpace.receivedAccessRequests.explainationText'|translate"
+                    [title4]="'personalSpace.receivedAccessRequests.linkText'|translate"
+                    [urlToDoc]="urlToDoc"
                     class="d-flex justify-content-center w-100"></app-page-title>
 
     <app-tabs>
-        <app-tab [label]="'personalSpace.receivedAccessRequests.tab1'|translate">
+        <app-tab [label]="'personalSpace.receivedAccessRequests.tab1'|translate"
+                 [icon]="'icone_atraiter'">
             <ng-template>
-                <app-linked-dataset-tasks></app-linked-dataset-tasks>
+                <app-tasks [loading]="searchIsRunning" [requestsToStudy]="requestsToStudy"></app-tasks>
             </ng-template>
         </app-tab>
-        <app-tab [label]="'personalSpace.receivedAccessRequests.tab2'|translate">
+        <app-tab [label]="'personalSpace.receivedAccessRequests.tab2'|translate"
+                 [icon]="'icone_archives'">
             <ng-template>
                 <app-my-linked-datasets></app-my-linked-datasets>
             </ng-template>

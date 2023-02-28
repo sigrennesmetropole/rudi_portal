@@ -57,8 +57,17 @@
             <mat-hint class="title-hint">{{'project.firstStepForm.imageHint'|translate}}
             </mat-hint>
 
-            <div class="image-form-margin">
-                <app-uploader-template [formGroup]="step1FormGroup"></app-uploader-template>
+            <div class="image-form-margin" *ngIf="fileMaxSize && fileExtensions">
+                <app-uploader [fileFormControl]="step1FormGroup?.controls?.image"
+                              [adapter]="adapter"
+                              [enableCropper]="true"
+                              [fileMaxCount]="1"
+                              [fileMaxSize]="fileMaxSize.toMegabytes()"
+                              [fileExtensions]="fileExtensions"
+                              [imageText]="'project.imageUploader.ajouterImage'"
+                              [imageFormat]="'project.imageUploader.formatImage'">
+
+                </app-uploader>
             </div>
             <p class="stepper-mat-error" *ngIf="step1FormGroup.get('image').errors"></p>
         </ng-container>

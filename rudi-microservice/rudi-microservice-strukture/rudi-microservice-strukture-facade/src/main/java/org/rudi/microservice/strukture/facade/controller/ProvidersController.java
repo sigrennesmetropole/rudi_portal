@@ -1,6 +1,11 @@
 package org.rudi.microservice.strukture.facade.controller;
 
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.helper.ControllerHelper;
 import org.rudi.common.facade.util.UtilPageable;
@@ -21,10 +26,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +41,7 @@ public class ProvidersController implements ProvidersApi {
 	private final ControllerHelper controllerHelper;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
 	public ResponseEntity<ProviderPageResult> searchProviders(@Valid String code, @Valid String libelle,
 			@Valid LocalDateTime dateDebut, @Valid java.time.LocalDateTime dateFin, @Valid UUID nodeProviderUuid,
 			@Valid Boolean full, @Valid Integer offset, @Valid Integer limit, @Valid String order) {
@@ -58,39 +64,39 @@ public class ProvidersController implements ProvidersApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<AbstractAddress> createAddress(UUID providerUuid, @Valid AbstractAddress abstractAddress) {
 		return ResponseEntity.ok(providerService.createAddress(providerUuid, abstractAddress));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<NodeProvider> createNode(UUID providerUuid, @Valid NodeProvider nodeProvider) {
 		return ResponseEntity.ok(providerService.createNode(providerUuid, nodeProvider));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Provider> createProvider(@Valid Provider provider) {
 		return ResponseEntity.ok(providerService.createProvider(provider));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteAddress(UUID providerUuid, UUID addressUuid) {
 		providerService.deleteAddress(providerUuid, addressUuid);
 		return ResponseEntity.ok().build();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteNode(UUID providerUuid, UUID nodeUuid) {
 		providerService.deleteNode(providerUuid, nodeUuid);
 		return ResponseEntity.ok().build();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> deleteProvider(UUID providerUuid) {
 		providerService.deleteProvider(providerUuid);
 		return ResponseEntity.ok().build();
@@ -110,55 +116,55 @@ public class ProvidersController implements ProvidersApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
 	public ResponseEntity<AbstractAddress> getAddress(UUID providerUuid, UUID addressUuid) {
 		return ResponseEntity.ok(providerService.getAddress(providerUuid, addressUuid));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
 	public ResponseEntity<List<AbstractAddress>> getAddresses(UUID providerUuid) {
 		return ResponseEntity.ok(providerService.getAddresses(providerUuid));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
 	public ResponseEntity<NodeProvider> getNode(UUID providerUuid, UUID nodeUuid) {
 		return ResponseEntity.ok(providerService.getNode(providerUuid, nodeUuid));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
 	public ResponseEntity<List<NodeProvider>> getNodes(UUID providerUuid) {
 		return ResponseEntity.ok(providerService.getNodes(providerUuid));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
 	public ResponseEntity<Provider> getProvider(UUID providerUuid, Boolean full) throws Exception {
 		return ResponseEntity.ok(providerService.getProvider(providerUuid, full != null && full));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR','MODULE_KALIM')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE_KALIM + ")")
 	public ResponseEntity<NodeProvider> patchNode(UUID providerUuid, UUID nodeUuid, LocalDateTime lastHarvestingDate) {
 		return ResponseEntity.ok(providerService.patchNode(providerUuid, nodeUuid, lastHarvestingDate));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<AbstractAddress> updateAddress(UUID providerUuid, @Valid AbstractAddress abstractAddress) {
 		return ResponseEntity.ok(providerService.updateAddress(providerUuid, abstractAddress));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<NodeProvider> updateNode(UUID providerUuid, @Valid NodeProvider nodeProvider) {
 		return ResponseEntity.ok(providerService.updateNode(providerUuid, nodeProvider));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR','MODULE_STRUKTURE_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
 	public ResponseEntity<Provider> updateProvider(@Valid Provider provider) {
 		return ResponseEntity.ok(providerService.updateProvider(provider));
 	}

@@ -1,7 +1,6 @@
 <mat-icon svgIcon="icon-close" class="icon-close" [mat-dialog-close]="null" (click)="handleClose()"></mat-icon>
 <mat-dialog-content>
     <span class="dialog-title">{{action.label}}</span>
-    <p class="description"></p>
     <p class="step-required-information" *ngIf="hasRequiredFields">
         <span class="required-symbol">*</span>
         {{'common.requiredInformation' | translate}}
@@ -13,7 +12,8 @@
         <button class="buttons mat-stroked-button btn dialog-cancel" mat-stroked-button (click)="handleCancel()">
             <span>{{'popup.cancel'|translate}}</span>
         </button>
-        <button class="buttons mat-stroked-button btn dialog-validate" mat-stroked-button (click)="handleSubmit()">
+        <button class="buttons mat-stroked-button btn dialog-validate" mat-stroked-button
+                (click)="handleSubmit()">
             <span>{{action.label}}</span>
         </button>
     </mat-dialog-actions>

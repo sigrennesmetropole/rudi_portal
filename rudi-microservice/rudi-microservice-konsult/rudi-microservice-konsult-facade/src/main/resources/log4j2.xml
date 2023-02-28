@@ -20,11 +20,11 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework" level="INFO" additivity="true">
+        <Logger name="org.springframework" level="INFO" additivity="false">
             <appender-ref ref="fileLogger" level="INFO" />
             <appender-ref ref="console" level="INFO" />
         </Logger>
-        <Logger name="org.rudi.microservice.konsult" level="INFO" additivity="true">
+        <Logger name="org.rudi.microservice.konsult" level="INFO" additivity="false">
             <appender-ref ref="fileLogger" level="INFO" />
             <appender-ref ref="console" level="INFO" />
         </Logger>        

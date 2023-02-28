@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {EMPTY, Observable, of} from 'rxjs';
 import {AclService, AddressType, EmailAddress, User} from '../../acl/acl-api';
 import {AuthenticationService} from './authentication.service';
-import {map, switchMap, take} from 'rxjs/operators';
+import {catchError, map, mapTo, switchMap, take} from 'rxjs/operators';
 import {AuthenticationState} from './authentication/authentication-method';
+import {FormBuilder} from '@angular/forms';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,8 @@ export class UserService {
      * Constructeur
      */
     constructor(private readonly aclService: AclService,
-                private readonly authenticationService: AuthenticationService) {
+                private readonly authenticationService: AuthenticationService,
+                private formBuilder: FormBuilder) {
     }
 
     /**
@@ -36,7 +38,7 @@ export class UserService {
      * la méthode renvoie "undefined" en cas d'appel anonymous
      * @see getConnectedUserOrEmpty
      */
-    getConnectedUser(): Observable<User|undefined> {
+    getConnectedUser(): Observable<User | undefined> {
         return this.aclService.getMe().pipe(
             switchMap((user: User) => this.getUserAsKnownUser(user)),
             // getUserAsKnownUser est un observable qui ne se complète jamais, donc pipe take(1) pour complete()
@@ -80,5 +82,27 @@ export class UserService {
             return user.login;
         }
         return result;
+    }
+
+    /**
+     * Permet de savoir si le mot de passe de l'utilsiateur connecté fourni est bon
+     * @param password
+     */
+    isPasswordCorrectForConnectedUser(password: string): Observable<boolean> {
+
+        const loginForm = this.formBuilder.group({ login: [''], password: [''] });
+
+        return this.getConnectedUser().pipe(
+            switchMap((currentUser: User) => {
+                loginForm.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION).setValue(currentUser.login);
+                loginForm.get(AuthenticationService.FIELD_PASSWORD_AUTHENTICATION).setValue(password);
+                return this.authenticationService.authenticate(loginForm).pipe(mapTo(true));
+            }),
+            catchError(() => {
+                // l'erreur renvoyée par authenticate est le code HTTP donc on s'en fiche pour l'explication
+                console.error(new Error('Authentification échouée pendant la vérification du mot de passe de l\'utilisateur connecté'));
+                return of(false);
+            })
+        );
     }
 }

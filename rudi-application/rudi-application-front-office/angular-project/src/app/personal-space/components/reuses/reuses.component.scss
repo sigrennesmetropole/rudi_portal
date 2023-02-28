@@ -11,7 +11,7 @@
 }
 
 .table-loader {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     position: absolute;
     top: 0;
     width: 100%;
@@ -21,54 +21,53 @@
     align-items: center;
 }
 
-table {
-    width: 100%;
-    font-family: OpenSans, sans-serif;
-
-    * {
+::ng-deep {
+    table {
+        width: 100%;
         font-family: OpenSans, sans-serif;
-    }
 
-    tr {
-        height: unset;
+        * {
+            font-family: OpenSans, sans-serif;
+        }
 
-        &[ng-reflect-router-link] {
+        tr {
+            height: unset;
             cursor: pointer;
 
-            &:focus, &:active {
+            &:focus, &:active, &:hover {
                 background-color: $selected-table-row;
             }
         }
-    }
 
-    th {
-        font-weight: 600;
-        font-size: 13px;
-        color: $primary-text;
-        padding: 12px 24px;
+        th {
+            font-weight: 600;
+            font-size: 13px;
+            color: $primary-text;
+            padding: 12px 24px;
 
-        mat-icon {
-            @include mat-icon-size(18px);
-            margin-right: 5px;
+            mat-icon {
+                @include mat-icon-size(18px);
+                margin-right: 5px;
+            }
+
+        }
+
+        td {
+            padding: 24px 24px;
+            font-size: 15px;
+            line-height: 1.4;
+
+            &.dataset-title {
+                font-weight: bold;
+                color: var(--0-classic-blue);
+            }
+
+            &.owner-name {
+                font-weight: bold;
+            }
         }
 
     }
-
-    td {
-        padding: 24px 24px;
-        font-size: 15px;
-        line-height: 1.4;
-
-        &.dataset-title {
-            font-weight: bold;
-            color: var(--0-classic-blue);
-        }
-
-        &.owner-name {
-            font-weight: bold;
-        }
-    }
-
 }
 
 .status-chip {

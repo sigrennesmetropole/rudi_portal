@@ -54,18 +54,11 @@
             </tr>
         </table>
         <!-- le loader du tableau -->
-        <div class="table-loader" *ngIf="triIsRunning">
+        <div class="table-loader" *ngIf="sortIsRunning">
             <app-loader [allPage]="false" [noText]="true" [active]="true" [isTransparent]="true"></app-loader>
         </div>
     </div>
 
-
-    <pagination-controls
-        (pageChange)="handlePageChange($event)"
-        [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
-        class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
-        [ngClass]="paginationControlsNgClass"
-        [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
-        [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate">
-    </pagination-controls>
+    <app-back-pagination [backPaginationSort]="backPaginationSort"
+                         [total]="total" (loadData)="loadProjects($event)"></app-back-pagination>
 </div>

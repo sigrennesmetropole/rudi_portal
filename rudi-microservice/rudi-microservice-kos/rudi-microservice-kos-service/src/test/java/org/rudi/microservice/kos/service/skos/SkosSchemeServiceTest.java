@@ -1,5 +1,11 @@
 package org.rudi.microservice.kos.service.skos;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -27,12 +33,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -147,8 +147,8 @@ public class SkosSchemeServiceTest {
 				.build(), pageable);
 		assertTrue(CollectionUtils.isNotEmpty(simpleSkosConceptPage2.getContent()));
 		assertEquals(2, simpleSkosConceptPage2.getTotalElements());
-		assertTrue(simpleSkosConceptPage2.getContent().stream().anyMatch(simpleSkosConcept -> simpleSkosConcept.getConceptCode().equals("licence_Apache-2.0")));
-		assertTrue(simpleSkosConceptPage2.getContent().stream().anyMatch(simpleSkosConcept -> simpleSkosConcept.getConceptCode().equals("open-source-licence")));
+		assertTrue(simpleSkosConceptPage2.getContent().stream().anyMatch(simpleSkosConcept -> simpleSkosConcept.getConceptCode().equals("apache-2.0")));
+		assertTrue(simpleSkosConceptPage2.getContent().stream().anyMatch(simpleSkosConcept -> simpleSkosConcept.getConceptCode().equals("public-domain-cc0")));
 
 
 		Page<SimpleSkosConcept> simpleSkosConceptPage3 = skosConceptService.searchSkosConcepts(SkosConceptSearchCriteria.builder()
@@ -171,7 +171,7 @@ public class SkosSchemeServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<SimpleSkosConcept> simpleSkosConceptPage = skosConceptService.searchSkosConcepts(SkosConceptSearchCriteria.builder()
 				.lang(Language.EN_US)
-				.codes(Collections.singletonList("open-source-licence"))
+				.codes(Collections.singletonList("public-domain-cc0"))
 				.labels(Collections.singletonList(SkosConceptLabel.PREFERRED))
 				.codesScheme(Collections.singletonList("scheme-licence"))
 				.build(), pageable);
@@ -188,7 +188,7 @@ public class SkosSchemeServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<SimpleSkosConcept> simpleSkosConceptPage = skosConceptService.searchSkosConcepts(SkosConceptSearchCriteria.builder()
 				.lang(Language.IT_IT)
-				.codes(Collections.singletonList("open-source-licence"))
+				.codes(Collections.singletonList("public-domain-cc0"))
 				.labels(Collections.singletonList(SkosConceptLabel.PREFERRED))
 				.codesScheme(Collections.singletonList("scheme-licence"))
 				.build(), pageable);

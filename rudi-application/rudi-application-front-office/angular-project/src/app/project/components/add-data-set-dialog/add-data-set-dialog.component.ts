@@ -7,6 +7,7 @@ import {KonsultMetierService} from '../../../core/services/konsult-metier.servic
 import {Metadata} from '../../../api-kaccess';
 import {OrderValue} from '../../../core/services/filters/order-filter';
 import {AddDataSetDialogData} from './add-data-set-dialog-data';
+import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
 
 @Component({
     selector: 'app-add-data-set-dialog',
@@ -29,7 +30,8 @@ export class AddDataSetDialogComponent implements OnInit {
     ];
     maxResultPerPage = 6;
     private _selectedMetadata: Metadata;
-    public readonly restrictedAccessForcedValue: boolean;
+    public readonly accessStatusForcedValue: AccessStatusFiltersType;
+    public readonly accessStatusHiddenValues: AccessStatusFiltersType[];
 
     constructor(
         private matIconRegistry: MatIconRegistry,
@@ -44,7 +46,8 @@ export class AddDataSetDialogComponent implements OnInit {
             'icon-close',
             this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/icon-close.svg')
         );
-        this.restrictedAccessForcedValue = data.restrictedAccessForcedValue;
+        this.accessStatusForcedValue = data.accessStatusForcedValue;
+        this.accessStatusHiddenValues = data.accessStatusHiddenValues;
     }
 
     ngOnInit(): void {

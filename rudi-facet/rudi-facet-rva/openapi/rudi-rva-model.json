@@ -1,0 +1,222 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Facette RVA",
+		"description": "Facette RVA pour l'utilisation de l'API RVA",
+		"version": "0.0.1",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "https"
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"Address": {
+				"type": "object",
+				"properties": {
+					"zipcode": {
+						"type": "string"
+					},
+					"insee": {
+						"type": "string"
+					},
+					"idaddress": {
+						"type": "integer"
+					},
+					"idlane": {
+						"type": "integer"
+					},
+					"number": {
+						"type": "integer"
+					},
+					"extension": {
+						"type": "string"
+					},
+					"building": {
+						"type": "string"
+					},
+					"addr1": {
+						"type": "string"
+					},
+					"addr2": {
+						"type": "string"
+					},
+					"addr3": {
+						"type": "string"
+					},
+					"x": {
+						"type": "string"
+					},
+					"y": {
+						"type": "string"
+					}
+				}
+			},
+			"Commune": {
+				"type": "object",
+				"properties": {
+					"idCommune": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				}
+			},
+			"Section": {
+				"type": "object",
+				"properties": {
+					"idSection": {
+						"type": "string"
+					},
+					"codeCommune": {
+						"type": "string"
+					},
+					"codeSection": {
+						"type": "string"
+					}
+				}
+			},
+			"Parcelle": {
+				"type": "object",
+				"properties": {
+					"idParcelle": {
+						"type": "string"
+					},
+					"codeSection": {
+						"type": "string"
+					},
+					"typeProjection": {
+						"type": "string"
+					},
+					"numero": {
+						"type": "string"
+					},
+					"x": {
+						"type": "string"
+					},
+					"y": {
+						"type": "string"
+					},
+					"adresses": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Address"
+						}
+					}
+				}
+			},
+			"FullAddresses": {
+				"type": "object",
+				"properties": {
+					"addresses": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Address"
+						}
+					},
+					"lanes": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Address"
+						}
+					}
+				}
+			},
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string",
+						"description": "Error code"
+					},
+					"label": {
+						"type": "string",
+						"description": "Error label"
+					}
+				}
+			},
+			"MapItem": {
+				"properties": {
+					"firstname": {
+						"type": "string"
+					},
+					"lastname": {
+						"type": "string"
+					}
+				}
+			},
+			"Map": {
+				"description": "a (key, MapItem) map. `default`is an example key",
+				"properties": {
+					"default": {
+						"$ref": "#/components/schemas/MapItem"
+					}
+				},
+				"additionalProperties": {
+					"$ref": "#/components/schemas/MapItem"
+				}
+			},
+			"ApplicationConfig": {
+				"description": "Propriétés de l'application",
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string"
+					}
+				}
+			},
+			"FullAddressesResponse": {
+				"type": "object",
+				"properties": {
+					"rva": {
+						"type": "object",
+						"properties": {
+							"request": {
+								"type": "string"
+							},
+							"answer": {
+								"$ref": "#/components/schemas/FullAddressesAnswer"
+							}
+						}
+					}
+				}
+			},
+			"FullAddressesAnswer": {
+				"type": "object",
+				"properties": {
+					"addresses": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Address"
+						}
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					}
+				}
+			},
+			"Status": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

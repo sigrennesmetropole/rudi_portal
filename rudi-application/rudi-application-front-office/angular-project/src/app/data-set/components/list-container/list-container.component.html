@@ -8,19 +8,20 @@
     <app-banner
         (selectedDatesItemsChange)="selectedDatesItems = $event"
         (selectedProducerItemsChange)="selectedProducerItems = $event"
-        (selectedRestrictedAccessItemsChange)="selectedRestrictedAccessItems = $event"
+        (selectedAccessStatusItemsChange)="selectedAccessStatusItems = $event"
         (selectedThemeItemsChange)="selectedThemeItems = $event"
         [mediaSize]="mediaSize"
         [producerNames]="producerNames"
         [themes]="themes"
-        [restrictedAccessForcedValue]="restrictedAccessForcedValue"
+        [accessStatusForcedValue]="accessStatusForcedValue"
+        [accessStatusHiddenValues]="accessStatusHiddenValues"
     ></app-banner>
 
     <app-filters-items-list
         [selectedDatesItems]="selectedDatesItems"
         [selectedProducerItems]="selectedProducerItems"
         [hasSelectedItems]="hasSelectedItems"
-        [selectedRestrictedAccessItems]="restrictedAccessForcedValue === undefined ? selectedRestrictedAccessItems : []"
+        [selectedAccessStatusItems]="accessStatusForcedValue === undefined ? selectedAccessStatusItems : []"
         [selectedThemeItems]="selectedThemeItems"
     >
     </app-filters-items-list>

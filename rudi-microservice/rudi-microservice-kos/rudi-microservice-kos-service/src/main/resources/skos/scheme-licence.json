@@ -92,7 +92,7 @@
 			]
 		},
 		{
-			"concept_code": "open-source-licence",
+			"concept_code": "public-domain-cc0",
 			"openingDate": "2021-01-01T00:00:00.000Z",
 			"concept_role": "licence-hierarchy",
 			"concept_icon": "open-source",

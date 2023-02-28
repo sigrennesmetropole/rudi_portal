@@ -1,0 +1,1177 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API WFS WMS WMTS",
+		"version": "${api.getVersion()}",
+		"termsOfService": "https://docs.geoserver.org/stable/en/user/services/wms/reference.html, http://portal.opengeospatial.org/files/?artifact_id=1081&version=1&format=pdf, http://portal.opengeospatial.org/files/?artifact_id=14416 ",
+		"title": "${api.getName()}",
+		"contact": {
+			"email": "sgougeon@open-groupe.com"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {
+		"/*": {
+			"get": {
+				"tags": [
+					"wmts"
+				],
+				"summary": "WMTS",
+				"description": "WMTS",
+				"operationId": "getWmts",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "service",
+						"description": "Service name—Value is WMS",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "version",
+						"description": "Service version—Value is the current version number",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "request",
+						"description": "The requested operation",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/WMSRequestParameter"
+						}
+					},
+					{
+						"in": "query",
+						"name": "layers",
+						"description": "Layers to display on map. Value is a comma-separated list of layer names",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "styles",
+						"description": "Styles in which layers are to be rendered. Value is a comma-separated list of style names, or empty if default styling is required",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "crs",
+						"description": "The CRS Name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "srs",
+						"description": "The CRS Name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "bbox",
+						"description": "BBox with the form a1,b1,a2,b2,[crs] ",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "exceptions",
+						"description": "Format for reporting exceptions",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/WMSExceptionParameter"
+						}
+					},
+					{
+						"in": "query",
+						"name": "width",
+						"description": "Width of map output, in pixels.",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "height",
+						"description": "Height of map output, in pixels.",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "format",
+						"description": "Format for the map output.",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/WMSFormatParameter"
+						}
+					},
+					{
+						"in": "query",
+						"name": "transparent",
+						"description": "Whether the map background should be transparent",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "bgcolor",
+						"description": "Background color for the map image.",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "time",
+						"description": "Time value or range for map data",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"in": "query",
+						"name": "elevation",
+						"description": "Elevation of layer desired.",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "featureID",
+						"description": "The feature Id to get",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sld",
+						"description": "A URL referencing a StyledLayerDescriptor XML file which controls or enhances map layers and styling",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sld_body",
+						"description": "A URL-encoded StyledLayerDescriptor XML document which controls or enhances map layers and styling",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "query_layers",
+						"description": "Comma-separated list of one or more layers to query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "info_format",
+						"description": " Format for the feature information response",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/WMSInfoFormatParameter"
+						}
+					},
+					{
+						"in": "query",
+						"name": "feature_count",
+						"description": "Maximum number of features to return. Default is 1",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "x",
+						"description": "X ordinate of query point on map, in pixels. In version 1.1",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "i",
+						"description": "X ordinate of query point on map, in pixels. In version 1.3",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "y",
+						"description": "Y ordinate of query point on map, in pixels. In version 1.1",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "j",
+						"description": "Y ordinate of query point on map, in pixels. In version 1.3",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cql_filter",
+						"description": "CQL Filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Les données pour générer le rapport",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/DescribeLayer"
+										},
+										{
+											"$ref": "#/components/schemas/FeatureCollection"
+										}
+									]
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/png": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/png8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/jpg": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/vnd.jpeg-png": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/vnd.jpeg-png8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/gif": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/tiff": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/tiff8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/geotiff": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/geotiff8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/svg": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"application/pdf": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"rss": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"kml": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"kml2": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"application/openlayers": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"wmts"
+				],
+				"summary": "WMTS",
+				"description": "WMTS",
+				"operationId": "postWmts",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Les données pour générer le rapport",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/DescribeLayer"
+										},
+										{
+											"$ref": "#/components/schemas/FeatureCollection"
+										}
+									]
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/png": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/png8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/jpg": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/vnd.jpeg-png": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/vnd.jpeg-png8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/gif": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/tiff": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/tiff8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/geotiff": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/geotiff8": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"image/svg": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"application/pdf": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"rss": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"kml": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"kml2": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							},
+							"application/openlayers": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"WMSRequestParameter": {
+				"type": "string",
+				"description": "Operation name",
+				"enum": [
+					"GetCapabilities",
+					"GetMap",
+					"GetFeatureInfo",
+					"DescribeLayer",
+					"GetLegendGraphic",
+					"Exceptions"
+				]
+			},
+			"WMSExceptionParameter": {
+				"type": "string",
+				"description": "Exception format parameter",
+				"enum": [
+					"application/vnd.ogc.se_xml",
+					"application/vnd.ogc.se_inimage",
+					"application/vnd.ogc.se_blank",
+					"application/vnd.gs.wms_partial",
+					"application/json",
+					"text/javascript"
+				]
+			},
+			"WMSFormatParameter": {
+				"type": "string",
+				"enum": [
+					"image/png",
+					"image/png8",
+					"image/jpeg",
+					"image/vnd.jpeg-png",
+					"image/vnd.jpeg-png8",
+					"image/gif",
+					"image/tiff",
+					"image/tiff8",
+					"image/geotiff",
+					"image/geotiff8",
+					"image/svg",
+					"application/pdf",
+					"rss",
+					"kml",
+					"kmz",
+					"application/openlayers",
+					"application/json;type=utfgrid"
+				]
+			},
+			"WMSInfoFormatParameter": {
+				"type": "string",
+				"enum": [
+					"info_format=text/plain",
+					"application/vnd.ogc.gml",
+					"application/vnd.ogc.gml/3.1.1",
+					"text/html",
+					"application/json",
+					"text/javascript"
+				]
+			},
+			"WMSOutputFormatParameter": {
+				"type": "string",
+				"description": "Output format",
+				"enum": [
+					"application/vnd.ogc.wms_xml",
+					"text/xml",
+					"application/json",
+					"text/javascript"
+				]
+			},
+			"LayerDescription": {
+				"type": "object",
+				"description": "Layer Description",
+				"properties": {
+					"layerName": {
+						"type": "string"
+					},
+					"owsURL": {
+						"type": "string"
+					},
+					"owsType": {
+						"type": "string"
+					},
+					"typeName": {
+						"type": "string"
+					}
+				}
+			},
+			"DescribeLayer": {
+				"type": "object",
+				"description": "Layer Description",
+				"properties": {
+					"version": {
+						"type": "string"
+					},
+					"layerDescriptions": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/LayerDescription"
+						}
+					}
+				}
+			},
+			"GeoJsonObject": {
+				"description": "GeoJSon object\nThe coordinate reference system for all GeoJSON coordinates is a geographic coordinate reference system, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees. This is equivalent to the coordinate reference system identified by the Open Geospatial Consortium (OGC) URN An OPTIONAL third-position element SHALL be the height in meters above or below the WGS 84 reference ellipsoid. In the absence of elevation values, applications sensitive to height or depth SHOULD interpret positions as being at local ground or sea level.\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3"
+				},
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"Feature",
+							"FeatureCollection",
+							"Point",
+							"MultiPoint",
+							"LineString",
+							"MultiLineString",
+							"Polygon",
+							"MultiPolygon",
+							"GeometryCollection"
+						]
+					},
+					"bbox": {
+						"description": "A GeoJSON object MAY have a member named \"bbox\" to include information on the coordinate range for its Geometries, Features, or FeatureCollections. The value of the bbox member MUST be an array of length 2*n where n is the number of dimensions represented in the contained geometries, with all axes of the most southwesterly point followed by all axes of the more northeasterly point. The axes order of a bbox follows the axes order of geometries.\n",
+						"type": "array",
+						"items": {
+							"type": "number"
+						}
+					}
+				},
+				"required": [
+					"type"
+				],
+				"discriminator": {
+					"propertyName": "type"
+				}
+			},
+			"Geometry": {
+				"description": "Abstract type for all GeoJSon object except Feature and FeatureCollection\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeoJsonObject"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string",
+								"enum": [
+									"Point",
+									"MultiPoint",
+									"LineString",
+									"MultiLineString",
+									"Polygon",
+									"MultiPolygon",
+									"GeometryCollection"
+								]
+							}
+						},
+						"required": [
+							"type"
+						],
+						"discriminator": {
+							"propertyName": "type"
+						}
+					}
+				]
+			},
+			"GeometryElement": {
+				"description": "Abstract type for all GeoJSon 'Geometry' object the type of which is not 'GeometryCollection'\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Geometry"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string",
+								"enum": [
+									"Point",
+									"MultiPoint",
+									"LineString",
+									"MultiLineString",
+									"Polygon",
+									"MultiPolygon"
+								]
+							}
+						},
+						"required": [
+							"type"
+						],
+						"discriminator": {
+							"propertyName": "type"
+						}
+					}
+				]
+			},
+			"Feature": {
+				"description": "GeoJSon 'Feature' object",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.2"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeoJsonObject"
+					},
+					{
+						"type": "object",
+						"required": [
+							"geometry",
+							"properties"
+						],
+						"properties": {
+							"geometry": {
+								"allOf": [
+									{
+										"nullable": true
+									},
+									{
+										"$ref": "#/components/schemas/Geometry"
+									}
+								]
+							},
+							"properties": {
+								"type": "object",
+								"nullable": true
+							},
+							"style": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Style"
+								}
+							},
+							"id": {
+								"oneOf": [
+									{
+										"type": "number"
+									},
+									{
+										"type": "string"
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"FeatureCollection": {
+				"description": "GeoJSon 'FeatureCollection' object",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.3"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeoJsonObject"
+					},
+					{
+						"type": "object",
+						"required": [
+							"features"
+						],
+						"properties": {
+							"features": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Feature"
+								}
+							},
+							"style": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Style"
+								}
+							}
+						}
+					}
+				]
+			},
+			"Position": {
+				"description": "GeoJSon fundamental geometry construct.\nA position is an array of numbers. There MUST be two or more elements. The first two elements are longitude and latitude, or easting and northing, precisely in that order and using decimal numbers. Altitude or elevation MAY be included as an optional third element.\nImplementations SHOULD NOT extend positions beyond three elements because the semantics of extra elements are unspecified and ambiguous. Historically, some implementations have used a fourth element to carry a linear referencing measure (sometimes denoted as \"M\") or a numerical timestamp, but in most situations a parser will not be able to properly interpret these values. The interpretation and meaning of additional elements is beyond the scope of this specification, and additional elements MAY be ignored by parsers.\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.1"
+				},
+				"type": "array",
+				"minItems": 2,
+				"maxItems": 3,
+				"items": {
+					"type": "number"
+				}
+			},
+			"LineStringCoordinates": {
+				"description": "GeoJSon fundamental geometry construct, array of two or more positions.\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.4"
+				},
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/Position"
+				},
+				"minItems": 2
+			},
+			"LinearRing": {
+				"description": "A linear ring is a closed LineString with four or more positions.\nThe first and last positions are equivalent, and they MUST contain identical values; their representation SHOULD also be identical.\nA linear ring is the boundary of a surface or the boundary of a hole in a surface.\nA linear ring MUST follow the right-hand rule with respect to the area it bounds, i.e., exterior rings are counterclockwise, and holes are clockwise.\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+				},
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/Position"
+				},
+				"minItems": 4
+			},
+			"Point": {
+				"description": "GeoJSon geometry",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.2"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeometryElement"
+					},
+					{
+						"type": "object",
+						"required": [
+							"type",
+							"coordinates"
+						],
+						"properties": {
+							"type": {
+								"type": "string",
+								"enum": [
+									"Point"
+								]
+							},
+							"coordinates": {
+								"$ref": "#/components/schemas/Position"
+							}
+						}
+					}
+				]
+			},
+			"MultiPoint": {
+				"description": "GeoJSon geometry",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.3"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeometryElement"
+					},
+					{
+						"type": "object",
+						"required": [
+							"coordinates"
+						],
+						"properties": {
+							"coordinates": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Position"
+								}
+							}
+						}
+					}
+				]
+			},
+			"LineString": {
+				"description": "GeoJSon geometry",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.4"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeometryElement"
+					},
+					{
+						"type": "object",
+						"required": [
+							"coordinates"
+						],
+						"properties": {
+							"coordinates": {
+								"$ref": "#/components/schemas/LineStringCoordinates"
+							}
+						}
+					}
+				]
+			},
+			"MultiLineString": {
+				"description": "GeoJSon geometry",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.5"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeometryElement"
+					},
+					{
+						"type": "object",
+						"required": [
+							"coordinates"
+						],
+						"properties": {
+							"coordinates": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/LineStringCoordinates"
+								}
+							}
+						}
+					}
+				]
+			},
+			"Polygon": {
+				"description": "GeoJSon geometry",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeometryElement"
+					},
+					{
+						"type": "object",
+						"required": [
+							"coordinates"
+						],
+						"properties": {
+							"coordinates": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/LinearRing"
+								}
+							}
+						}
+					}
+				]
+			},
+			"MultiPolygon": {
+				"description": "GeoJSon geometry",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.7"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/GeometryElement"
+					},
+					{
+						"type": "object",
+						"required": [
+							"coordinates"
+						],
+						"properties": {
+							"coordinates": {
+								"type": "array",
+								"items": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/LinearRing"
+									}
+								}
+							}
+						}
+					}
+				]
+			},
+			"GeometryCollection": {
+				"type": "object",
+				"description": "GeoJSon geometry collection\nGeometryCollections composed of a single part or a number of parts of a single type SHOULD be avoided when that single part or a single object of multipart type (MultiPoint, MultiLineString, or MultiPolygon) could be used instead.\n",
+				"externalDocs": {
+					"url": "https://tools.ietf.org/html/rfc7946#section-3.1.8"
+				},
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Geometry"
+					},
+					{
+						"type": "object",
+						"required": [
+							"geometries"
+						],
+						"properties": {
+							"geometries": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/GeometryElement"
+								},
+								"minItems": 0
+							}
+						}
+					}
+				]
+			},
+			"Style": {
+				"type": "object",
+				"description": "GeoJSon feature style",
+				"properties": {
+					"color": {
+						"type": "string"
+					},
+					"fillColor": {
+						"type": "string"
+					},
+					"fillOpacity": {
+						"type": "number",
+						"format": "double"
+					},
+					"opacity": {
+						"type": "number",
+						"format": "double"
+					},
+					"iconColor": {
+						"type": "string"
+					},
+					"iconGlyph": {
+						"type": "string"
+					},
+					"iconShape": {
+						"type": "string"
+					},
+					"weight": {
+						"type": "number",
+						"format": "double"
+					},
+					"geometry": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"iconAnchor": {
+						"type": "array",
+						"items": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"dashArray": {
+						"type": "array",
+						"items": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"filtering": {
+						"type": "boolean"
+					}
+				}
+			},
+			"FeatureProperty": {
+				"type": "object",
+				"description": "GeoJSon feature property description",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"maxOccurs": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"minOccurs": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"nillable": {
+						"type": "boolean"
+					},
+					"type": {
+						"type": "string"
+					},
+					"localType": {
+						"type": "string"
+					}
+				}
+			},
+			"FeatureType": {
+				"type": "object",
+				"description": "GeoJSon feature type",
+				"properties": {
+					"typeName": {
+						"type": "string"
+					},
+					"properties": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/FeatureProperty"
+						}
+					}
+				}
+			},
+			"FeatureTypeDescription": {
+				"type": "object",
+				"description": "GeoJSon feature type description",
+				"properties": {
+					"elementFormDefault": {
+						"type": "string"
+					},
+					"targetNamespace": {
+						"type": "string"
+					},
+					"targetPrefix": {
+						"type": "string"
+					},
+					"featureTypes": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/FeatureType"
+						}
+					}
+				}
+			}
+		}
+	},
+	"x-wso2-production-endpoints": {
+		"urls": [
+			"${api.getEndpointUrl()}"
+		],
+		"type": "http"
+	},
+	"x-wso2-sandbox-endpoints": {
+		"urls": [
+			"${api.getEndpointUrl()}"
+		],
+		"type": "http"
+	},
+	"x-wso2-basePath": "${api_context}/${api.getVersion()}",
+	"x-wso2-response-cache": {
+		"enabled": false,
+		"cacheTimeoutInSeconds": 300
+	}
+}

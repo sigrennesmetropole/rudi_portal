@@ -1,7 +1,15 @@
 package org.rudi.facet.kaccess.service.dataset;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.json.JSONException;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +24,7 @@ import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlock;
 import org.rudi.facet.dataverse.utils.MessageUtils;
+import org.rudi.facet.kaccess.KaccessSpringBootTest;
 import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -25,19 +34,10 @@ import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.exceptions.DatasetAlreadyExists;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
-import org.rudi.facet.kaccess.KaccessSpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.rudi.common.core.util.DateTimeUtils.toUTC;
@@ -82,7 +82,7 @@ class DatasetServiceTest {
 	}
 
 	@Test
-	void testCreateDataset() throws DataverseAPIException, IOException {
+	void testCreateDataset() throws DataverseAPIException, IOException, JSONException {
 
 		final Metadata metadata = readMetadata("agri");
 		final String dataverseDoi = createDataset(metadata);
@@ -103,8 +103,7 @@ class DatasetServiceTest {
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(metadata.getKeywords(), metadataGetted.getKeywords()));
 		Assertions.assertEquals(metadata.getProducer(), metadataGetted.getProducer());
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(metadata.getContacts(), metadataGetted.getContacts()));
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(metadata.getAvailableFormats(),
-				metadataGetted.getAvailableFormats()));
+		RudiAssertions.assertThat(metadataGetted.getAvailableFormats()).isJsonEqualTo(metadata.getAvailableFormats());
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(metadata.getResourceLanguages(),
 				metadataGetted.getResourceLanguages()));
 		Assertions.assertEquals(metadata.getTemporalSpread(), metadataGetted.getTemporalSpread());

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {LogService} from './log.service';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {FormGroup} from '@angular/forms';
@@ -19,8 +19,14 @@ export const AUTHORIZATION_HEADER = 'Authorization';
  */
 export const X_TOKEN_HEADER = 'X-TOKEN';
 
-// TODO cmt
+/**
+ * La clé dans le storage qui va contenir le token d'autorisation
+ */
 export const SESSION_TOKEN = '_jwt';
+
+/**
+ * La clé dans le storage qui va contenir le token de refresh JWT
+ */
 export const X_TOKEN = '_xtoken';
 
 const AUTHENTICATION_STATE_SESSION_STORAGE_KEY = 'authenticationState';
@@ -29,6 +35,9 @@ const AUTHENTICATION_STATE_SESSION_STORAGE_KEY = 'authenticationState';
     providedIn: 'root'
 })
 export class AuthenticationService {
+
+    public static FIELD_LOGIN_AUTHENTICATION = 'login';
+    public static FIELD_PASSWORD_AUTHENTICATION = 'password';
 
     public static ERROR_ACCOUNT_NOT_ACTIVE = 'error_account_not_active_42';
     public static ERROR_SERVER_IS_NOT_ACTIVE = 'error_account_not_active_43';
@@ -45,7 +54,6 @@ export class AuthenticationService {
      */
     private isAuthenticated: BehaviorSubject<boolean>;
     public readonly isAuthenticated$: Observable<boolean>;
-    public readonly isAuthenticatedButNotAsAnonymou$: Observable<boolean>;
 
     /**
      * Evenement qui indique qu'une authentification a eu lieu
@@ -64,7 +72,6 @@ export class AuthenticationService {
     ) {
         this.isAuthenticated = new BehaviorSubject(this.isAuthenticatedWithToken());
         this.isAuthenticated$ = this.isAuthenticated.asObservable();
-        this.isAuthenticatedButNotAsAnonymou$ = of(false); // TODO à implémenter dans la RUDI-1345
     }
 
     /**
@@ -79,7 +86,7 @@ export class AuthenticationService {
      * @private
      */
     private static getToken(): string {
-        return sessionStorage.getItem(SESSION_TOKEN) as string;
+        return sessionStorage.getItem(SESSION_TOKEN);
     }
 
     /**
@@ -87,7 +94,7 @@ export class AuthenticationService {
      * @private
      */
     private static getXToken(): string {
-        return sessionStorage.getItem(X_TOKEN) as string;
+        return sessionStorage.getItem(X_TOKEN);
     }
 
     /**
@@ -135,8 +142,7 @@ export class AuthenticationService {
     getHeadersForRequestInjection(): { [name: string]: string | string[] } {
         const token = AuthenticationService.getToken();
         return token ? {
-            [AUTHORIZATION_HEADER]: token,
-            [X_TOKEN_HEADER]: AuthenticationService.getXToken()
+            [AUTHORIZATION_HEADER]: token
         } : {};
     }
 
@@ -144,7 +150,7 @@ export class AuthenticationService {
      * Récupération des tokens qui seront insérés pour une requête de refresh token
      */
     getHeadersForRefreshToken(): { [name: string]: string | string[] } {
-        return  {
+        return {
             [X_TOKEN_HEADER]: AuthenticationService.getXToken()
         };
     }
@@ -162,7 +168,12 @@ export class AuthenticationService {
      */
     authenticate(form: FormGroup): Observable<void> {
 
-        return this.accountService.isAccountCreatedNotValidated(form.get('login').value).pipe(
+        if (form == null || form.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION) == null
+            || form.get(AuthenticationService.FIELD_PASSWORD_AUTHENTICATION) == null) {
+            return throwError(new Error('paramètres manquant pour effectuer une authentification (formulaire nul ou incomplet)'));
+        }
+
+        return this.accountService.isAccountCreatedNotValidated(form.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION).value).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('error server is not active :', error.message);
                 throw new Error(AuthenticationService.ERROR_SERVER_IS_NOT_ACTIVE);
@@ -287,5 +298,12 @@ export class AuthenticationService {
         if (authorizationHeader || xtokenHeader) {
             this.clearAllAuthenticationErrors();
         }
+    }
+
+    /**
+     * Déconnexion de l'utilisateur
+     */
+    logout(): Observable<void> {
+        return this.accountService.accoutLogout(AuthenticationService.getXToken());
     }
 }

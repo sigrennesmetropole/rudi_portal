@@ -1,12 +1,12 @@
 package org.rudi.facet.dataverse.api.search.mapper;
 
-import org.rudi.facet.dataverse.fields.DatasetMetadataBlockElementSpec;
-import org.rudi.facet.dataverse.fields.FieldSpec;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.rudi.facet.dataverse.fields.DatasetMetadataBlockElementSpec;
+import org.rudi.facet.dataverse.fields.FieldSpec;
+import org.springframework.stereotype.Component;
 
 /**
  * @see <a href="https://github.com/IQSS/dataverse/issues/7863">GitHub Merge Request</a>
@@ -30,10 +30,10 @@ public class MetadatafieldsMapper {
 			return rootSpec + SEPARATOR + ALL_FIELDS;
 		}
 
-		final StringBuilder stringBuilder = new StringBuilder();
+		final var stringBuilder = new StringBuilder();
 		stringBuilder.append(rootSpec).append(SEPARATOR);
 
-		final FieldSpec parentSpec = blockElementSpec.getParentOf(fieldSpec);
+		final FieldSpec parentSpec = blockElementSpec.getDirectParentOf(fieldSpec);
 		if (parentSpec != null && parentSpec.isCompound()) {
 			stringBuilder.append(parentSpec.getName());
 		} else {

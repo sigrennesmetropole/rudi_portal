@@ -17,6 +17,9 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.AddressType;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.bean.EmailAddress;
@@ -34,6 +37,8 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.ROLE_UUIDS_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_PASSWORD_PARAMETER;
@@ -44,6 +49,7 @@ import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_PASSWORD_PARAMET
  * @author FNI18300
  */
 @Component
+@RequiredArgsConstructor
 public class ACLHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
@@ -79,6 +85,8 @@ public class ACLHelper {
 	@Autowired
 	@Qualifier("rudi_oauth2")
 	private WebClient loadBalancedWebClient;
+
+	private final UtilContextHelper utilContextHelper;
 
 	/**
 	 * Accède au service µACL pour trouver un utilisateur par son uuid
@@ -315,5 +323,28 @@ public class ACLHelper {
 		}
 		return true;
 	}
+
+	@Nonnull
+	public UUID getAuthenticatedUserUuid() throws AppServiceUnauthorizedException {
+		return getAuthenticatedUser().getUuid();
+	}
+
+	@Nonnull
+	public User getAuthenticatedUser() throws AppServiceUnauthorizedException {
+		val authenticatedUser = utilContextHelper.getAuthenticatedUser();
+		if (authenticatedUser == null) {
+			throw new AppServiceUnauthorizedException("No authenticated user");
+		}
+		return lookupUser(authenticatedUser);
+	}
+
+	private User lookupUser(AuthenticatedUser authenticatedUser) throws AppServiceUnauthorizedException {
+		val user = getUserByLogin(authenticatedUser.getLogin());
+		if (user == null) {
+			throw new AppServiceUnauthorizedException(String.format("Authenticated user with login \"%s\" user is unknown", authenticatedUser.getLogin()));
+		}
+		return user;
+	}
+
 
 }

@@ -35,7 +35,7 @@ class PublicKeyURLComparatorTest extends TestCase {
 			"http://rudi.open-dev.com/konsult/v1/encryption-key, https://rudi.open-dev.com/konsult/v1/encryption-key, true",
 			"https://rudi.open-dev.com/konsult/v1/encryption-key, file:rudi.open-dev.com/konsult/v1/encryption-key, true",
 			"https://rudi.open-dev.com/konsult/v1/encryption-key, rudi.open-dev.com/konsult/v1/encryption-key, true",
-			"rudi.open-dev.com/konsult/v1/encryption-key, 10.50.1.45/konsult/v1/encryption-key, true",
+			"rudi.open-dev.com/konsult/v1/encryption-key, ren1vml0158/konsult/v1/encryption-key, true",
 			"rudi.open-dev.com/konsult/v1/encryption-key, rudi.bzh/konsult/v1/encryption-key, false",
 			"rudi.open-dev.com/konsult/v1/encryption-key, rudi.open-dev.com/konsult/v2/encryption-key, false",
 			"rudi.open-dev.com/konsult/v1/encryption-key,, false",

@@ -1,13 +1,16 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.FieldSpec;
 
-import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 class MapOfFields {
@@ -26,6 +29,10 @@ class MapOfFields {
 			return new FieldFromDatasetMetadataBlockElementField(blockElementField);
 		}
 		return new ChildField((Map<String, Object>) object);
+	}
+
+	static MapOfFields empty() {
+		return from(Collections.emptyMap());
 	}
 
 	public boolean contains(FieldSpec fieldSpec) {

@@ -1,0 +1,194 @@
+# Source : https://app.swaggerhub.com/apis/PROJETRUDI/RUDI-PRODUCER-ext_selfdata_content/0.3.0
+openapi: 3.0.0
+info:
+  version: 0.4.0
+  title: Public API for RUDI producer node - SelfData content
+  description: >-
+    API pour l'accès aux données au niveau du nœud producteur RUDI pour la
+    partie SelfData dans la propriété ext_selfdata_content
+  termsOfService: 'no'
+  contact:
+    name: Projet RUDI
+    email: 'projet-rudi@open-groupe.com'
+  license:
+    name: EUPL 1.2
+    url: https://eupl.eu/1.2/fr
+paths: {}
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/PROJETRUDI/RUDI-PRODUCER-ext_selfdata_content/0.3.0
+components:
+  schemas:
+
+    SelfdataContent:
+      required:
+        - matching_data
+        - selfdata_access
+        - storage_period
+        - selfdata_held
+        - category
+        - treatment_period
+        - deletable_data
+      properties:
+        matching_data:
+          description: >
+            Liste des données pivot.
+            
+            Les données pivot sont les données nécessaires pour identifier un citoyen de manière unique et sure dans le jdd.
+            Dans le portail, lorsqu'un citoyen souhaite demander l'accès à ses données personnelles dans un jdd,
+            il doit saisir ses données pivot dans un formulaire.
+            La liste des données pivot permet de générer ce formulaire dans le portail.
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchingData'
+        selfdata_access:
+          description: >
+            Mode d'accès aux données personnelles.
+            
+            Dans Rudi, les données personnelles sont transmises de manière automatisé par API (CU déchets)
+            ou de manière manuelle en dehors de Rudi (CU Champs libres).
+          enum:
+            - API
+            - OUT
+        storage_period:
+          allOf:
+            - $ref: '#/components/schemas/Period' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+            - description: >
+                Durée de conservation des données personnelles chez le producteur.
+                
+                Le producteur a la possibilité de définir la durée de conservation des données personnelles dans sa base.
+                Cela donne une indication sur le volume de données disponibles
+        selfdata_held:
+          description: >
+            Liste des données détenues.
+            
+            Le producteur peut indiquer la liste des attributs de son jdd selfdata.
+          type: string
+          example: categories, deletion_reason
+        selfdata_categories:
+          description: >
+            Catégorie de données personnelles concernées qui sont dans l'ordre
+               État civil, identité, données d'identification, images…
+               Vie personnelle (habitudes de vie, situation familiale, etc.)
+               Informations d'ordre économique et financier (revenus, situation financière, situation fiscale, etc.)
+               Données de connexion (adress IP, logs, etc.)
+               Données de localisation (déplacements, données GPS, GSM, etc.)
+               Numéro de Sécurité Sociale (ou NIR)
+          type: array
+          items:
+            enum:
+              - IDENTITY_DATA
+              - PRIVATE_LIFE
+              - ECONOMIC_AND_FINANCIAL
+              - CONNECTION_DATA
+              - LOCATION_DATA
+              - NIR
+        treatment_period:
+          allOf:
+            - $ref: '#/components/schemas/Period' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+            - description: >
+                Durée de traitement des demandes RGPD.
+                
+                Le producteur indique sous combien de temps il traite les demandes d'accès, d'effacement, rectification.
+        deletable_data:
+          description: >
+            Données effaçables.
+            
+            Champ indiquant s'il est possible de faire une demande d'effacement sur ce jdd.
+          type: boolean
+        deletion_reason:
+          description: >
+            Motif de non effacement des données.
+            
+            Le producteur peut choisir un motif parmi une liste de motif
+            (cf. article 17 §3 de la CNIL : https://www.cnil.fr/fr/reglement-europeen-protection-donnees/chapitre3#Article17).
+          type: array
+          items:
+            type: string
+          example:
+            - Nécessaire pour votre suivi par votre médecin traitant
+            - Nécessaire pour l'Etat pour le suivi de la progression du virus dans votre département
+
+    MatchingData:
+      required:
+        - code
+      properties:
+        code:
+          description: Code de la donnée pivot.
+          type: string
+          maxLength: 30
+          example: email
+        label:
+          description: >
+            Libellé de la donnée pivot.
+            
+            Libellé du champ, visible dans le formulaire de saisie des données pivot.
+          type: array
+          items:
+            $ref: 'https://app.swaggerhub.com/apiproxy/registry/OlivierMartineau/RUDI-PRODUCER/1.4.0#/components/schemas/DictionaryEntry'
+        help:
+          description: Aide à la saisie du champ (affiché sous le libellé).
+          type: array
+          items:
+            $ref: 'https://app.swaggerhub.com/apiproxy/registry/OlivierMartineau/RUDI-PRODUCER/1.4.0#/components/schemas/DictionaryEntry'
+        type:
+          description: >
+            Type du champ.
+            
+            Le type du champ permet de générer le formulaire de saisie des données pivot.
+          enum:
+            - STRING
+            - TEXT
+            - BOOLEAN
+            - DATE
+            - LONG
+            - DOUBLE
+            - ADDRESS
+            - ATTACHMENT
+          default: STRING
+        validators:
+          description: >
+            Pour certaines données pivot, une validation peut être nécessaire.
+            Comme par exemple vérifier qu'un champ respecte bien une expression régulière (REGEX).
+          type: array
+          items:
+            $ref: '#/components/schemas/Validator'
+        required:
+          description: Champ obligatoire ?
+          type: boolean
+          default: false
+
+    Validator:
+      required:
+        - type
+      properties:
+        type:
+          description: Type de validateur
+          enum:
+            - REGEXP
+        attribute:
+          description: Pour préciser les paramètres du validateur, si nécessaire.
+          type: string
+          example: '[A-z]*@[A-z]*'
+      example:
+        type: REGEX
+        attribute: '[A-z]*@[A-z]*'
+
+    Period:
+      required:
+        - value
+        - units
+      properties:
+        value:
+          description: Valeur de la période.
+          type: integer
+        unit:
+          description: Unité utilisée pour la valeur de la période.
+          enum:
+            - DAYS
+            - MONTHS
+            - YEARS
+      example:
+        value: 6
+        unit: 'MONTHS'

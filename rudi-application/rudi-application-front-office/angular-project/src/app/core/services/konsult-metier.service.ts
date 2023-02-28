@@ -2,14 +2,22 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpResponse} from '@angular/common/http';
 import {KonsultService} from '../../api-konsult';
-import {Metadata, MetadataFacets, MetadataList} from '../../api-kaccess';
+import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from '../../api-kaccess';
 import {Filters} from '../../shared/models/filters';
 import {map} from 'rxjs/operators';
 import {PageResultUtils} from '../../shared/utils/page-result-utils';
 import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE} from './filters/order-filter';
+import {MetadataUtils} from '../../shared/utils/metadata-utils';
+import * as mime from 'mime';
+import * as customMimeDatabase from '../../../assets/mime-db/custom-mime-db.json';
+// @ts-ignore
+import * as Module from 'module';
 
 export const MAX_RESULTS_PER_PAGE = 36;
 export const MAX_RESULTS_PER_REQUEST = 100;
+
+const CRYPT_SUFFIX = '+crypt';
+const UNKNOWN_EXTENSION = 'Extension inconnue du système';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +26,12 @@ export class KonsultMetierService {
     constructor(
         private readonly konsultService: KonsultService
     ) {
+        KonsultMetierService.loadCustomMimeType();
+    }
+
+    private static loadCustomMimeType(): void {
+        // Le fichier JSON est chargé dans notre objet sous la propriété default et est de type Module
+        mime.define((customMimeDatabase as Module).default, true);
     }
 
     private static getFacetsValues(facets: MetadataFacets): string[] {
@@ -28,6 +42,7 @@ export class KonsultMetierService {
      * Recuperation de la liste de metadata depuis le server
      */
     searchMetadatas(filters?: Filters, offset?: number, limit?: number): Observable<MetadataList> {
+        const accessStatus = MetadataUtils.getAccessStatus(filters);
         return this.konsultService.searchMetadatas(
             filters.search,
             filters.themes,
@@ -35,7 +50,8 @@ export class KonsultMetierService {
             filters.producerNames,
             filters.dates.debut,
             filters.dates.fin,
-            filters.restrictedAccess,
+            accessStatus.restrictedAcces,
+            accessStatus.gdprSensitive,
             filters.globalIds,
             offset,
             limit,
@@ -65,7 +81,7 @@ export class KonsultMetierService {
                     fin: ''
                 },
                 order: DEFAULT_ORDER_VALUE,
-                restrictedAccess: null,
+                accessStatus: null,
                 globalIds
             }, offset, MAX_RESULTS_PER_REQUEST)
         );
@@ -104,5 +120,11 @@ export class KonsultMetierService {
 
     getNumberOfDatasetsOnTheSameTheme(globalId: string): Observable<number> {
         return this.konsultService.getNumberOfDatasetsOnTheSameTheme(globalId);
+    }
+
+    getMediaFileExtension(media: Media): string {
+        const mediaFile = media as MediaFile;
+        const originalFileType = mediaFile.file_type.replace(CRYPT_SUFFIX, '');
+        return mime.getExtension(originalFileType) ?? UNKNOWN_EXTENSION;
     }
 }

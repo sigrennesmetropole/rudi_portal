@@ -8,9 +8,14 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {OwnerType, Project} from '../../../projekt/projekt-model';
 import {LinkedDatasetMetadatas} from '../../../core/services/project-dependencies.service';
 import {TranslateService} from '@ngx-translate/core';
-import {ApiAccessService, SubscriptionRequestReport, SubscriptionRequestResult} from '../../../core/services/api-access.service';
 import {Metadata} from '../../../api-kaccess';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
+import {ErrorWithCause} from '../../../shared/models/error-with-cause';
+import {SnackBarService} from '../../../core/services/snack-bar.service';
+import {Level} from '../../../shared/notification-template/notification-template.component';
+import {KonsultApiAccessService} from '../../../core/services/api-access/konsult/konsult-api-access.service';
+import {SubscriptionRequestReport} from '../../../core/services/api-access/subscription-request-report';
+import {SubscriptionRequestResult} from '../../../core/services/api-access/subscription-request-result';
 
 /**
  * Les données que peuvent accepter la Dialog
@@ -44,6 +49,7 @@ export class DialogSubscribeDatasetsComponent implements OnInit {
     public project: Project;
     public infoMessage: string;
     public rudiDocLink: string;
+    public subscriptionErrorMessage: string = null;
     displayedColumns: string[] = ['checkbox', 'dataset'];
     linkedDatasetMetadatas: LinkedDatasetMetadatas[] = [];
     dataSource: MatTableDataSource<LinkedDatasetMetadatas>;
@@ -54,7 +60,8 @@ export class DialogSubscribeDatasetsComponent implements OnInit {
         private readonly domSanitizer: DomSanitizer,
         private readonly propertiesMetierService: PropertiesMetierService,
         private readonly translateService: TranslateService,
-        private readonly apiAccessService: ApiAccessService,
+        private readonly apiAccessService: KonsultApiAccessService,
+        private readonly snackBarService: SnackBarService,
         public dialogRef: MatDialogRef<DialogSubscribeDatasetsComponent, DialogClosedData<void>>,
         @Inject(MAT_DIALOG_DATA) public dialogData: DialogSubscribeDatasetsData) {
         this.matIconRegistry.addSvgIcon('icon-close', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/icon-close.svg'));
@@ -105,30 +112,40 @@ export class DialogSubscribeDatasetsComponent implements OnInit {
     }
 
     /**
-     * Lancement de la souscription aux jeux de données séléctionnés
+     * Lancement de la souscription au.x jeu.x de donnée.s séléctionné.s pour un projet
      */
     validate(): void {
         const metadatasSelected: Metadata[] = this.selection.selected.map((select: LinkedDatasetMetadatas) => select.dataset);
         this.loading = true;
         this.infoMessage = null;
-        this.apiAccessService.doSubscriptionProcessToDatasets(this.password, this.project, metadatasSelected).subscribe({
-            next: (report: SubscriptionRequestReport) => {
-                this.loading = false;
-                console.log('Rapport de souscription : ', report);
-                if (report.failed.length > 0) {
-                    report.failed.forEach((attempt: SubscriptionRequestResult) => {
-                        console.error(attempt.error);
-                    });
+        this.subscriptionErrorMessage = null;
+        this.apiAccessService.checkPasswordAndDoSubscriptions(metadatasSelected, this.password, this.project.owner_type, this.project.owner_uuid)
+            .subscribe({
+                next: (report: SubscriptionRequestReport) => {
+                    this.loading = false;
+                    console.log('Rapport de souscription : ', report);
+                    if (report.failed.length > 0) {
+                        report.failed.forEach((attempt: SubscriptionRequestResult) => {
+                            console.error(attempt.error);
+                        });
+                    }
+                    this.infoMessage = report.subscribed.length + ' souscription(s) réussie(s), '
+                        + report.ignored.length + ' souscription(s) ignorée(s), '
+                        + report.failed.length + ' souscription(s) échouée(s)';
+                },
+                error: (error: Error) => {
+                    this.loading = false;
+                    console.error(error);
+                    if (error instanceof ErrorWithCause) {
+                        this.subscriptionErrorMessage = error.functionalMessage;
+                    } else {
+                        this.snackBarService.openSnackBar({
+                            message: this.translateService.instant('error.technicalError'),
+                            level: Level.ERROR,
+                        });
+                    }
                 }
-                this.infoMessage = report.subscribed.length + ' souscription(s) réussie(s), '
-                    + report.ignored.length + ' souscription(s) ignorée(s), '
-                    + report.failed.length + ' souscription(s) échouée(s)';
-            },
-            error: (error) => {
-                this.loading = false;
-                console.error(error);
-            }
-        });
+            });
     }
 
     /**
@@ -151,9 +168,9 @@ export class DialogSubscribeDatasetsComponent implements OnInit {
      */
     getLabelPassword(): string {
         if (this.isOwnerTypeUser) {
-            return this.translateService.instant('personalSpace.dialogDatasets.text-owner');
+            return this.translateService.instant('personalSpace.dialogDatasets.textOwner');
         } else {
-            return this.translateService.instant('personalSpace.dialogDatasets.text-user');
+            return this.translateService.instant('personalSpace.dialogDatasets.textUser');
         }
     }
 }

@@ -12,7 +12,7 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {switchMap, takeUntil} from 'rxjs/operators';
 import {SimpleSkosConcept} from '../../../kos/kos-model';
 import {Item} from '../../components/filter-forms/array-filter-form.component';
-import {RestrictedAccessFilterItem} from '../../components/filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
+import {AccessStatusFilterItem} from '../../components/filter-forms/access-status-filter-form/access-status-filter-form.component';
 
 @Component({
     selector: 'app-list',
@@ -21,7 +21,7 @@ import {RestrictedAccessFilterItem} from '../../components/filter-forms/restrict
 })
 export class ListComponent implements OnInit, OnDestroy {
     @ViewChild('sidenav') sidenav: MatSidenav;
-    restrictedAccessForcedValue; // positionné à undefined en attendant le mode mobile de ../../components/list-container
+    accessStatusfilterForcedValue; // positionné à undefined en attendant le mode mobile de ../../components/list-container
 
     mediaSize: MediaSize;
     themes: SimpleSkosConcept[];
@@ -39,7 +39,7 @@ export class ListComponent implements OnInit, OnDestroy {
     selectedThemeItems: Item[] = [];
     selectedProducerItems: Item[] = [];
 
-    selectedRestrictedAccessItems: RestrictedAccessFilterItem[] = [];
+    selectedAccessStatusFilterItems: AccessStatusFilterItem[] = [];
     private isDestroyed$ = new Subject<void>();
 
     constructor(
@@ -49,7 +49,7 @@ export class ListComponent implements OnInit, OnDestroy {
         private readonly filtersService: FiltersService,
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly providersMetierService: ProvidersMetierService,
-        private readonly sidenavOpeningsService: SidenavOpeningsService
+        private readonly sidenavOpeningsService: SidenavOpeningsService,
     ) {
     }
 

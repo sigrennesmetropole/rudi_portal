@@ -4,10 +4,10 @@
         "/": "Catalogue",
         "/catalogue": "Catalogue",
         "/projets": "Réutilisations",
+        "/projets/soumettre-un-projet": "Projet",
         "/login": "Mon compte",
-        "/personal-space/received-access-requests": "Demandes d’accès reçues",
         "/personal-space": "Demandes d’accès reçues",
-        "/personal": "Demandes d’accès reçues"
+        "/personal-space/new-request-detail": "Demande de nouvelles données"
     },
     "project": {
         "confidentiality": {
@@ -29,7 +29,8 @@
             "genericUnauthorizedMessage": "Veuillez vous connecter ou vous inscrire pour accéder à cette page."
         },
         "datasetButton": {
-            "askNewData": "Demander de nouvelles données"
+            "askNewData": "Demander de nouvelles données",
+            "askData": "Ajouter un jeu de données"
         },
         "dialogEditNewDatasetRequest": {
             "descriptionHint": "Présentez votre besoin en données en essayant d'être le plus précis possible (attributs nécessaires, granularité temporelle / spatiale du jeu de données, période temporelle nécessaire, contexte d'utilisation du jeu de données, spécificités des traitements que vous souhaitez réaliser sur le jeu de données, ce jeu de données sera-t-il croisé avec un jeu de données existant, etc…).",
@@ -48,7 +49,7 @@
         },
         "imageUploader": {
             "ajouterImage": "Ajouter une image",
-            "formatImage": "au format png ou jpg. 1 Mo maximum."
+            "formatImage": "au format png ou jpg. {fileMaxSize} Mo maximum."
         },
         "firstStepForm": {
             "reuseDescription": "Décrivez votre réutilisation en saisissant les informations ci-dessous.",
@@ -66,6 +67,10 @@
             "accessUrl": "URL d'accès",
             "accessUrlHint": "Cette url est le chemin d'accès à votre réutilisation. Elle est accessible depuis le détail de votre réutilisation.",
             "errorFieldRequired": "Ce champ est obligatoire, veuillez le renseigner.",
+            "errorFieldMaxLength": {
+                "before": "Ce champ est limité à ",
+                "after": " signes."
+            },
             "errorPattern": "Veuillez renseigner l'url au bon format",
             "errorImage": "Veuiller vérifier le format ou la taille de l'image"
         },
@@ -87,7 +92,8 @@
                             }
                         }
                     }
-                }
+                },
+                "noName": "Non renseigné"
             },
             "reuse": {
                 "title": {
@@ -125,7 +131,7 @@
                     "label": "Jeux de données",
                     "title": "Jeux de données utilisés",
                     "description": "Les jeux de données à lister ici sont tous les jeux de données que vous avez utilisés pour réaliser votre réutilisation. Vous pouvez en sélectionner autant que vous le souhaitez. Si votre réutilisation, vous a amené à créer de nouveaux jeux de données, pensez à les publier dans le catalogue de données.",
-                    "requiredInformation": "Au moins un jeu de données doit être sélectionné pour déclarer une réutilisation.",
+                    "requiredInformation": "Au moins un jeu de données doit être sélectionné.",
                     "uuid": {
                         "title": "Uuid",
                         "description": "Le uuid est défini dans l'url de détail d'un jdd. Pour le récupérer, veuillez accéder à l'écran de détail du jdd concerné et copier le dernier élément de l'url. (Par exemple dans https://rudi.bzh/detail/111f22c3-c888-55ab-45f9-e11azer99b11 , le uuid est 111f22c3-c888-55ab-45f9-e11azer99b11)",
@@ -214,7 +220,7 @@
                 "step3": {
                     "label": "Jeux de données",
                     "title": "Jeux de données",
-                    "description": "Vous pouvez dès à présent ajouter des jeux de données, faire des demandes d'accès à des jeux de données non présents dans le catalogue. Les demandes une fois créées et le projet soumis sont transmises à l'animateur Rudi et aux producteurs de donnée pour étude. Vous serez informés de l'état d'avancement de vos demandes par la suite.",
+                    "description": "Indiquez ici les jeux de données utilisés pour la mise en oeuvre de votre projet. Dans le cas de données en accès restreint, les demandes seront transmises au producteur de données.",
                     "requiredInformation": "Informations obligatoires à renseigner",
                     "uuid": {
                         "title": "Uuid",
@@ -290,19 +296,23 @@
         "accueil": "Accueil",
         "reutilisations": "Réutilisations",
         "documentation": "Documentation",
-        "forum": "Forum",
         "blogProjet": "Blog du projet",
         "projets": "Projets",
         "contact": "Contact",
         "monCompte": "Mon compte",
+        "logIn": "Se connecter",
+        "logOut": "Se déconnecter",
+        "logOutSuccess": "Vous avez été correctement déconnecté. À bientôt sur Rudi !",
+        "logOutError": "Une erreur est survenue lors de la connexion, veuillez reessayer plustard.",
         "accountMenu": {
             "myAccount": "Mon compte",
             "myReuses": "Mes réutilisations",
-            "receivedLinkedDatasets": "Demandes d'accès reçues"
+            "receivedLinkedDatasets": "Demandes reçues",
+            "mySelfdata": "Mes données personnelles"
         }
     },
     "footer": {
-        "rudiCopyright": "© 2021 RUDI",
+        "rudiCopyright": "© {currentYear} RUDI",
         "accessibilte": "Accessibilité",
         "cgu": "CGU",
         "mentionLegale": "Mentions légales",
@@ -341,7 +351,6 @@
         "errorFooterAccountNotActif": "l'équipe technique de Rudi",
         "errorServerIsNotActive": "Une erreur s'est produite lors de la vérification de votre compte",
         "errorServerAuthent": "Erreur interne du serveur pendant l'authentification. Veuillez contacter un administrateur",
-        "error-server": "Erreur interne du serveur. Veuillez contacter un administrateur.",
         "errorLoginLocked": "Votre compte a été bloqué pendant 20 minutes suite à 10 essais infructueux d'authentification. Passé ce délai vous pourrez de nouveau vous authentifier. Vous avez oublié votre mot de passe ? Cliquez ",
         "errorLoginLockedFooter": "ici"
     },
@@ -358,7 +367,7 @@
     "error": {
         "authentificationFailed": "L’identifiant et/ou le mot de passe sont erronés.",
         "internalError": "Désolé, une erreur interne est survenue, veuillez réessayer ultérieurement !",
-        "technicalError": "Erreur interne du serveur. Veuillez contacter un administrateur."
+        "technicalError": "Le portail Rudi est momentanément indisponible. Veuillez nous excuser pour la gêne occasionnée. Si besoin, <a href=\"https://rudi.datarennes.fr/portail-beta-contact/\">contactez-nous</a>."
     },
     "common": {
         "modifier": "Modifier",
@@ -372,10 +381,10 @@
         "appliquer": "Appliquer",
         "et": "et",
         "echec": "Echec du téléchargement. Veuillez contacter un administrateur en cliquant",
-        "fileExtensionsError": "Veuiller ajouter au image au bon format (png ou jpg)",
-        "fileSizeError": "La taille de l'image est trop grande",
         "fileValidationError": {
-            "FILE_MAX_COUNT": "Nombre maximal de fichiers atteint"
+            "EXTENSIONS": "Veuillez ajouter au image au bon format.",
+            "FILE_MAX_COUNT": "Nombre maximal de fichiers atteint.",
+            "FILE_MAX_SIZE": "Taille maximale pour un fichier atteinte."
         },
         "source": "source",
         "disponible": "disponible",
@@ -388,7 +397,13 @@
         "loaderDescription": "Chargement...",
         "requiredInformation": "Informations obligatoires à renseigner.",
         "requiredInformationError": "Cette information est obligatoire.",
-        "errorMissingFieldAccount": "Un champ obligatoire n'est pas rempli."
+        "requiredCheckboxError": "Cette case obligatoire doit être cochée.",
+        "errorMissingFieldAccount": "Au moins un champ obligatoire n'est pas rempli.",
+        "validatorsErrors": {
+            "required": "Cette information est obligatoire.",
+            "requiredTrue": "Cette case obligatoire doit être cochée.",
+            "checkRvaAddressValidator": "Veuillez sélectionner une adresse dans la liste proposée."
+        }
     },
     "strengthPassword": {
         "lowerLetters": "Au moins une minuscule",
@@ -425,7 +440,7 @@
         "errorCreateAccount": "Erreur lors de la création du compte : ",
         "errorAutoLogin": "Erreur lors de l'authentification automatique après la création du compte : ",
         "errorServer": "Erreur interne du serveur, veuillez contacter un Administrateur.",
-        "errorMissingFieldAccount": "Un champ obligatoire n'était pas rempli",
+        "errorMissingFieldAccount": "Un champ obligatoire n'était pas rempli. Pour une adresse obligatoire, assurez-vous de sélectionner un élément dans la liste proposée",
         "errorLoginNotMail": "Le champ login n'est pas au format : adresse e-mail",
         "errorLoginAlreadyExists": "Le login renseigné est déjà associé à un compte utilisateur",
         "errorPasswordLength": "Le mot de passe renseigné ne respecte pas les contraintes de longueur",
@@ -474,6 +489,7 @@
             "statut": "Statut",
             "true": "Restreint",
             "false": "Ouvert",
+            "gdprSensitive": "Donnée personnelle",
             "all": "Tous"
         },
         "dateDebutCouvertureTemporelle": "Date de début de couverture temporelle",
@@ -489,6 +505,32 @@
         "-dataset_dates.updated": "Le plus récent",
         "producer.organization_name": "Nom de producteur de A à Z",
         "-producer.organization_name": "Nom de producteur de Z à A"
+    },
+    "donneesPersonnellesBox": {
+        "donneesPersonnelles": "Données personnelles",
+        "listPivot": "Données nécessaires à l'identification",
+        "accessMode": "Mode d'accès aux données personnelles",
+        "selfdataCategories": "Catégories de données personnelles",
+        "heldData": "Liste des variables contenues dans le jeu de données",
+        "storagePeriod": "Durée de conservation des données personnelles chez le producteur",
+        "treatmentPeriod": "Durée de traitement des demandes RGPD",
+        "erasableData": "Données effaçables",
+        "apiAccessMode": "Données consultables dans Rudi",
+        "outAccessMode": "Données consultables en dehors de Rudi",
+        "needsJustificatif": "(pièce justificative nécessaire)",
+        "deletionReason": "Il n'est pas possible de faire une demande d'effacement sur ce jeu de données pour le ou les motif(s) suivant(s) :",
+        "day": "jour",
+        "month": "mois",
+        "year": "an",
+        "days": "jours",
+        "months": "mois",
+        "years": "ans",
+        "IDENTITY_DATA": "Données d'identification (état civil, identité, identifiants de connexion, etc.)",
+        "PRIVATE_LIFE": "Vie personnelle (habitudes de vie, situation familiale, etc.)",
+        "ECONOMIC_AND_FINANCIAL": "Informations d'ordre économique et financier (revenus, situation financière, situation fiscale, etc.)",
+        "CONNECTION_DATA": "Données de connexion (adress IP, logs, etc.)",
+        "LOCATION_DATA": "Données de localisation (déplacements, données GPS, GSM, etc.)",
+        "NIR": "Numéro de Sécurité Sociale (ou NIR)"
     },
     "conditionsUtilisationBox": {
         "conditionsUtilisation": "Conditions d'utilisation",
@@ -527,7 +569,7 @@
         "informationsComplémentaires": "Informations complémentaires",
         "date": "Dates",
         "derniereMajDonnee": "Dernière mise à jour des données",
-        "derniereMajDonneeInfo": "Dernière mise à jours des informations",
+        "derniereMajDonneeInfo": "Dernière mise à jour des informations",
         "publication": "Publication",
         "creationJeuDonnée": "Création du jeu de données",
         "validationJeuDonnee": "Validation du jeu de données",
@@ -590,15 +632,71 @@
         "error-project-already-linked": "Le projet sélectionné possède déjà une demande d'accès vers ce jeu de données.",
         "restrictedDatasetRequestDialog": {
             "title": "Demande d'accès",
-            "description": "Une demande d’accès doit obligatoirement être réalisée dans le cadre d’un projet.",
+            "description": "Une demande d’accès doit obligatoirement être réalisée dans le cadre d’un projet. Vous n'avez pas encore créé de projet ?",
+            "description-2": "Cliquez-ici",
             "selectProject": "Sélectionner un projet existant",
             "chooseProject": "Choisir un projet",
             "ok": {
                 "title": "Votre demande d'accès a bien été envoyée.",
-                "description1": "Vous pouvez la modifier à tout moment,",
-                "description2": "dans votre projet depuis votre",
-                "description3": " espace personnel",
+                "description1": "La demande a bien été ajoutée au projet. Elle sera envoyée quand votre projet sera soumis. Vous pouvez soumettre votre projet depuis votre",
+                "description2": "espace personnel.",
                 "see": "Voir ma demande"
+            }
+        },
+        "selfdataInformationRequest": {
+            "wholeTitle": "Accéder à mes données",
+            "creation": {
+                "title1": "Demande",
+                "title2": "d'accès",
+                "subtitle": "Rudi vous permet de savoir si des données personnelles vous concernant sont présentes dans ce jeu de données. Pour cela, vous êtes invités à saisr des informations complémentaires pour vous identifier en toute sécurité. Une fois votre présence confirmée par le producteur de données, vous pourrez consulter vos données dans votre espace personnel.",
+                "requestTitle": "Vos informations d'identification",
+                "mandatoryInformation": "Informations obligatoires",
+                "cancel": "Annuler",
+                "send": "Envoyer",
+                "errorLoading": "Erreur lors du chargement du formulaire de demande d'information.",
+                "ok": {
+                    "title1": "Demande",
+                    "title2": "d'accès",
+                    "subtitle": "Votre demande a bien été envoyée.",
+                    "additionalInformation": "Elle sera traitée dans un délai maximal de {maximumDelay} mois à compter de la date d'envoi.",
+                    "description3": "Vous serez notifié par mail du traitement de votre demande. Vous pouvez également suivre le statut de son traitement à tout moment dans votre espace personnel.",
+                    "backToPersonalSpace": "Retour à mon espace personnel"
+                },
+                "deletionError": "Erreur lors de la suppression de la demande après une erreur de lancement du workflow",
+                "worflowError": "Une erreur a eu lieu lors du démarrage du workflow de la demande d'information",
+                "errorToUser": "Une erreur est survenue lors de la prise en compte des informations renseignées. Merci de renouveler votre demande. Si le problème persiste, veuillez contacter un administrateur Rudi.",
+                "error": {
+                    "errorUpload": "Erreur lors de l'upload de la pièce-jointe.",
+                    "errorLookupAttachment": "Le document est introuvable.",
+                    "errorDownload": "Erreur lors du téléchargement de la pièce-jointe."
+                }
+            },
+            "imageUploader": "Glisser-déposer un fichier ou cliquer ici pour l'ajouter.",
+            "formatImage": "{fileMaxSize} Mo maximum.",
+            "consultation": {
+                "cardTitle": "Description de la demande",
+                "pageTitle": "Demande de données personnelles",
+                "title": "Type de demande",
+                "datasetTilte": "Titre du jeu de données",
+                "receivedDate": "Date de la demande ",
+                "expiredDate": "Date d’expiration de la demande",
+                "expiredDateDemand": "Date d’expiration",
+                "specificDemand": " Informations spécifiques demandées",
+                "initiator": "Demandeur",
+                "accessDatas": "Demande d'accès ",
+                "selfdata": "Données personnelles",
+                "addressError": "Erreur de chargement d'adresse"
+            },
+            "viewing": {
+                "attachment": {
+                    "popin": {
+                        "title": "Consulter un document d'identification",
+                        "alert": "Vous vous apprêtez à consulter un document contenant des informations d'identification d'un utilisateur de Rudi.",
+                        "consentText": "Je certifie être habilité(e), dans le cadre de mes fonctions, à traiter ce type de document. Je m'engage à ne pas conserver le document ni les données qu'il contient pour d'autres finalités que le traitement de la présente demande.",
+                        "cancel": "Annuler",
+                        "download": "Confirmer"
+                    }
+                }
             }
         }
     },
@@ -990,16 +1088,21 @@
     },
     "personalSpace": {
         "receivedAccessRequests": {
-            "title1": "Demandes",
-            "title2": "d’accès reçues",
-            "tab1": "Demandes à étudier",
+            "title1": "Mes demandes",
+            "title2": "reçues",
+            "tab1": "À traiter",
             "tab2": "Toutes les demandes",
             "noResult": "Vous n'avez pas de nouvelle demande. Vous pouvez consulter l'historique de vos demandes dans l'onglet \"Toutes les demandes\".",
             "receivedDate": "Reçue le",
-            "datasetTitle": "Titre du jeu de données",
-            "ownerName": "Porteur de projet",
+            "description": "Description",
+            "ownerName": "Demandeur",
             "status": "Statut",
-            "endDate": "Fin d’accès"
+            "processDefinitionKey": "Type de la demande",
+            "access": "Accès",
+            "newRequest": "Nouvelles données",
+            "selfdata": "Données personnelles",
+            "explainationText": "Vous trouverez dans cet espace l'ensemble des demandes d'utilisateurs de Rudi concernant vos jeux de données : demande d'accès à des données restreintes, demande de nouvelles données, demande d'accès à des données personnelles... Cliquez sur une demande pour en consulter le détail.",
+            "linkText": "Cliquez ici pour en savoir plus."
         },
         "myProjects": {
             "title1": "Mes réutilisations",
@@ -1020,7 +1123,7 @@
             "confidentiality": "Confidentialité",
             "status": "Statut du projet",
             "numberOfDataset": "Jeux de données",
-            "noResult": "Vous n'avez pas encore créé de projet ou réutilisation dans Rudi. Les formulaires de création de projet ou de réutilisation sont accessibles en cliquant ",
+            "noResult": "Vous n'avez pas encore créé de projet ou de réutilisation dans Rudi. Les formulaires de création de projet ou de réutilisation sont accessibles en cliquant ",
             "here": " ici"
         },
         "project": {
@@ -1068,6 +1171,7 @@
         },
         "requestDetail": {
             "requestDate": "Demande d'accès reçue le",
+            "requestDateWithParam": "Demande d'accès reçue le {date}",
             "title": "Demande",
             "datasetTitle": "Titre du jeu de données",
             "endDate": "Date de fin d'accès",
@@ -1084,6 +1188,13 @@
                 "history": "Historique"
             }
         },
+        "selfdataDatasetRequestDetails": {
+            "tabs": {
+                "requests": "Demandes",
+                "information": "Informations",
+                "data": "Données"
+            }
+        },
         "projectApi": {
             "identificationKey": "Clés d'identification",
             "explainationText": "Vous trouverez ici vos clés d'identification nécessaires pour requêter des jeux de données en vous authentifiant. De plus amples informations sont disponibles sur ",
@@ -1097,19 +1208,80 @@
             "consumerKey": "Consumer Key",
             "consumerSecret": "Consumer Secret",
             "textConsumerKey": "Votre Consumer Key est le login à renseigner pour vous authentifier lorsque vous requêtez des API.",
-            "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API."
+            "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API.",
+            "errorPassword": "Le mot de passe que vous avez saisi n'est pas valide. Veuillez re-saisir le mot de passe."
         },
         "projectDatasets": {
             "subscribe": "Souscrire",
-            "errorInitialization": "Erreur lors du chargement des données nécessaires à l'onglet."
+            "errorInitialization": "Erreur lors du chargement des données nécessaires à l'onglet.",
+            "explainationText": "Vous trouverez ici vos données issues de votre demande d'accès. De plus amples informations sont disponibles sur "
         },
         "dialogDatasets": {
             "title": "Souscrire",
             "description": "Veuillez sélectionner le ou les jeux de données auxquels vous souhaitez souscrire. Plus d'informations sont disponibles sur ",
-            "table-title": "Jeux de données",
+            "tableTitle": "Jeux de données",
             "link": " doc.rudi.bzh.",
-            "text-owner": "Saisissez le mot de passe de votre compte.",
-            "text-user": "Saisissez le mot de passe de votre organisation."
+            "textOwner": "Saisissez le mot de passe de votre compte.",
+            "textUser": "Saisissez le mot de passe de votre organisation."
+        },
+        "selfdataDatasets": {
+            "title1": "Mes données",
+            "title2": "personnelles",
+            "tab1": "Données personnelles",
+            "tab2": "Consentements",
+            "noResult": "Aucun résultat.",
+            "data": "Jeu de données",
+            "lastDemand": "Dernière demande",
+            "date": "Date",
+            "status": "Statut",
+            "access": "Accès",
+            "newRequest": "Nouvelles données",
+            "selfdata": "Données personnelles",
+            "explainationText": "Rudi vous aide à exercer vos droits numériques sur vos données personnelles : droit à l'information, droit d'accès, droit de rectification... Cette page liste les jeux de données référencés dans Rudi qui sont susceptibles de contenir des informations vous concernant. Cliquez sur un jeu de données pour consulter les actions possibles.",
+            "linkText": "Cliquez ici pour en savoir plus.",
+            "resultText": "jeux de données contenant des données personnelles",
+            "graphic": {
+                "legend": "Légende : "
+            }
+        },
+        "subscription": {
+            "title": "Accès à vos données",
+            "subscription": "Souscription",
+            "validate": "Consulter",
+            "noData": "Aucune donnée disponible.",
+            "succes": "La souscription s'est bien passée.",
+            "label": "Pour des raisons de sécurité, merci de saisir votre mot de passe ci-dessous afin d'accéder à vos données personnelles."
+        },
+        "selfdataRequest": {
+            "errorLoading": "Erreur lors du chargement des demandes de l'utilisateur connecté",
+            "informationRequest": {
+                "title": "Demande d’accès",
+                "subTitle": "Comment accéder aux données me concernant ?",
+                "btnSeeRequestDetailsLabel": "Voir le détail de ma demande",
+                "text": "Rudi vous permet de savoir si des données personnelles vous concernant sont présentes dans ce jeu de données. Pour cela, vous pourrez être invité à saisir des informations complémentaires et/ou à transmettre des documents pour vous identifier en toute sécurité. Une fois votre présence confirmée par le producteur de données, vous pourrez consulter vos données dans votre espace personnel.",
+                "buttonLabel": "Accéder à mes données"
+            },
+            "rectificationRequest": {
+                "title": "Demande de rectification",
+                "subTitle": "Comment corriger des informations me concernant ?",
+                "text": "Votre situation a changé ou vous constatez une anomalie dans les informations vous concernant. Rudi vous permet de le signaler auprès du producteur pour demander la mise à jour de vos données.",
+                "buttonLabel": "Signaler un changement"
+            },
+            "deletionRequest": {
+                "title": "Demande d’effacement",
+                "subTitle": "Comment demander la suppression de mes données ?",
+                "buttonLabel": "Supprimer mes données",
+                "text": "Conformément au RGPD, vous disposez d&apos;un droit d&apos;effacement des données vous concernant contenues dans ce jeu de données. Rudi vous permet de transmettre facilement une demande d&apos;effacement au producteur de données.",
+                "noDeletableDataSubtitle": "Il n’est pas possible de faire une demande d'effacement sur ce jeu de données."
+            }
+        },
+        "selfdataRequestBasicDetails": {
+            "title": "Comprendre mes droits",
+            "description": "Au travers d'une démarche novatrice, Rudi vous permet d'exercer avec aisance vos droits relatifs aux données à caractère personnel. Ces droits découlent du règlement européen de la protection des données.",
+            "buttonLabel": "En savoir plus"
+        },
+        "matchingData": {
+            "title": "Informations personnelles"
         }
     },
     "task": {
@@ -1118,5 +1290,14 @@
     },
     "workInProgress": {
         "text": "En cours de construction..."
+    },
+    "uploader": {
+        "cropper": {
+            "crop": "Valider",
+            "cancel": "Annuler"
+        }
+    },
+    "businessException": {
+        "tooManyAddressesException": "Erreur lors de la recherche des adresses. Veuillez préciser votre adresse."
     }
 }

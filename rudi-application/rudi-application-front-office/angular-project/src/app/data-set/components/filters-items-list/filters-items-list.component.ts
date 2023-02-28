@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {RestrictedAccessFilterItem} from '../filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
 import {Item} from '../filter-forms/array-filter-form.component';
 import {DEBUT_NAME_PREFIX, FIN_NAME_PREFIX} from '../filter-forms/dates-filter-form/dates-filter-form.component';
 import {FiltersService} from '../../../core/services/filters.service';
+import {AccessStatusFilterItem} from '../filter-forms/access-status-filter-form/access-status-filter-form.component';
 
 @Component({
     selector: 'app-filters-items-list',
@@ -11,7 +11,7 @@ import {FiltersService} from '../../../core/services/filters.service';
 })
 export class FiltersItemsListComponent {
     @Input() selectedDatesItems: Item[];
-    @Input() selectedRestrictedAccessItems: RestrictedAccessFilterItem[];
+    @Input() selectedAccessStatusItems: AccessStatusFilterItem[];
     @Input() selectedProducerItems: Item[];
     @Input() selectedThemeItems: Item[];
     @Input() hasSelectedItems: boolean;
@@ -22,10 +22,10 @@ export class FiltersItemsListComponent {
     }
 
     /**
-     * Filter not null value in selectedRestrictedAccessItems
+     * Filter not null value in selectedAccessStatusItems
      */
-    get notNullSelectedRestrictedAccessItems(): RestrictedAccessFilterItem[] {
-        return this.selectedRestrictedAccessItems = this.selectedRestrictedAccessItems.filter(selectedValue => selectedValue.value != null);
+    get notNullSelectedAccessStatusItems(): AccessStatusFilterItem[] {
+        return this.selectedAccessStatusItems = this.selectedAccessStatusItems.filter(selectedValue => selectedValue.value != null);
     }
 
     /**
@@ -39,8 +39,8 @@ export class FiltersItemsListComponent {
             return this.selectedProducerItems.some(value => value.value !== null);
         } else if (this.selectedDatesItems.length > 0) {
             return this.selectedDatesItems.some(value => value.value !== null);
-        } else if (this.selectedRestrictedAccessItems.length > 0) {
-            return this.selectedRestrictedAccessItems.some(value => value.value !== null);
+        } else if (this.selectedAccessStatusItems.length > 0) {
+            return this.selectedAccessStatusItems.some(value => value.value !== null);
         }
         return false;
     }
@@ -67,7 +67,7 @@ export class FiltersItemsListComponent {
     }
 
     deleteRestrictedAccessFilter(): void {
-        this.filtersService.restrictedAccessFilter.clear();
+        this.filtersService.accessStatusFilter.clear();
     }
 
     private deleteDateDebutFilter(): void {

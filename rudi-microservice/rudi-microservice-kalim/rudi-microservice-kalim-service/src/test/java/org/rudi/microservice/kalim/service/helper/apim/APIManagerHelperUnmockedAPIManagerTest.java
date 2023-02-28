@@ -1,6 +1,14 @@
 package org.rudi.microservice.kalim.service.helper.apim;
 
-import lombok.val;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
@@ -19,14 +27,7 @@ import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequest
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import lombok.val;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -69,11 +70,13 @@ class APIManagerHelperUnmockedAPIManagerTest {
 	void updateAPI_unarchiveAPI() throws IOException, APIManagerException {
 
 		val media1 = jsonResourceReader.read("media/media1.json", Media.class);
+		media1.setMediaId(UUID.randomUUID());
 		val media2 = jsonResourceReader.read("media/media2.json", Media.class);
+		media2.setMediaId(UUID.randomUUID());
 
 		val nodeProvider = new NodeProvider();
 		val provider = new Provider()
-				.uuid(UUID.fromString("3519a0ff-0f3d-40be-a5ff-b51e3fda9881"))
+				.uuid(UUID.randomUUID())
 				.code("PROVIDER_TEST_APIM");
 		when(providerHelper.getNodeProviderByUUID(any())).thenReturn(nodeProvider);
 		when(providerHelper.getProviderByNodeProviderUUID(any())).thenReturn(provider);
@@ -81,7 +84,7 @@ class APIManagerHelperUnmockedAPIManagerTest {
 		// 1. Créer un JDD avec 2 média => 2 API créées dans WSO2
 		final IntegrationRequestEntity request = createRequestFrom(nodeProvider);
 		val metadataWith2Medias = new Metadata()
-				.globalId(UUID.fromString("a6f33ea1-1a16-4d12-8fe7-af49b0e9b9b7"))
+				.globalId(UUID.randomUUID())
 				.accessCondition(new MetadataAccessCondition())
 				.availableFormats(Arrays.asList(media1, media2));
 		requestsToTearDown.add(request);

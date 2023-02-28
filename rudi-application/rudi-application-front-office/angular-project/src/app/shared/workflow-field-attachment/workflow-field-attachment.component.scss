@@ -1,0 +1,79 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+
+
+.title-hint {
+    width: 608px;
+    height: 20px;
+    margin: 5px 32px 12px 0;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #71757e;
+}
+
+
+.label {
+    font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    color: $secondary-text;
+    line-height: 2
+}
+
+.required-symbol {
+    color: $error-color;
+}
+
+.attachment {
+    margin: 24px 0 0 0;
+    border-radius: 5px;
+    height: 76px;
+    padding-top: 13px;
+}
+
+.download-attachment-icon {
+    width: 36px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.attachment-icon {
+    width: 30px;
+    height: 50px;
+    margin-left: 10px;
+}
+
+.image-name {
+    font-family: OpenSans;
+    font-size: 16px;
+    line-height: 1.25;
+    text-align: left;
+    color: $primary-text;
+}
+
+.image-size {
+    font-family: OpenSans;
+    font-size: 12px;
+    line-height: 1.67;
+    text-align: left;
+    color: $primary-text;
+    padding-top: 5px;
+}
+
+.error-message {
+    color: $error-color;
+    font-size: 16px;
+    margin-top: 14px;
+}
+
+.error-fake-input {
+    border: 1px solid $error-color;
+}
+
+.fake-input {
+    border: 1px solid $fake-line;
+}

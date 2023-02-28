@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiAccessService} from '../../../core/services/api-access.service';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {ProjectDependenciesService} from '../../../core/services/project-dependencies.service';
 import {OwnerType, Project} from '../../../projekt/projekt-model';
 import {ActivatedRoute} from '@angular/router';
@@ -9,6 +8,8 @@ import {UserService} from '../../../core/services/user.service';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {TranslateService} from '@ngx-translate/core';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
+import {throwError} from 'rxjs';
+import {KonsultApiAccessService} from '../../../core/services/api-access/konsult/konsult-api-access.service';
 
 @Component({
     selector: 'app-project-api-tab',
@@ -20,7 +21,7 @@ export class ProjectApiTabComponent implements OnInit {
     private project: Project;
     public keys: ApiKeys;
     public loading: boolean;
-    public hasError: boolean;
+    public passwordError: boolean;
     public hidePassword = true;
     public hideIdentificationCard = false;
     public isOwnerTypeUser = false;
@@ -28,7 +29,7 @@ export class ProjectApiTabComponent implements OnInit {
     public rudiDocLink: string;
 
     constructor(private readonly route: ActivatedRoute,
-                private readonly apiAccessService: ApiAccessService,
+                private readonly apiAccessService: KonsultApiAccessService,
                 private readonly projectDependenciesService: ProjectDependenciesService,
                 private readonly propertiesMetierService: PropertiesMetierService,
                 private readonly utilisateurService: UserService,
@@ -67,18 +68,22 @@ export class ProjectApiTabComponent implements OnInit {
     getApiKeys(): void {
         this.keys = null;
         this.loading = true;
-        this.hasError = false;
-        this.apiAccessService.getConsumerKeys(this.password, this.project).subscribe({
+        this.passwordError = false;
+        this.utilisateurService.isPasswordCorrectForConnectedUser(this.password).pipe(
+            switchMap((isPasswordCorrect: boolean) => {
+                if (isPasswordCorrect) {
+                    return this.apiAccessService.getConsumerKeys(this.password, this.project.owner_type, this.project.owner_uuid);
+                }
+                this.passwordError = true;
+                return throwError('Mot de passe incorrect pour consulter les clés WSO2');
+            })
+        ).subscribe({
                 next: (keys: ApiKeys) => {
-                    this.hasError = false;
                     this.loading = false;
                     this.keys = keys;
                     this.hideIdentificationCard = true;
-                    this.keys.consumerKey;
-                    this.keys.consumerSecret;
                 },
                 error: (e) => {
-                    this.hasError = true;
                     this.loading = false;
                     this.hideIdentificationCard = false;
                     console.error(e);
@@ -89,10 +94,9 @@ export class ProjectApiTabComponent implements OnInit {
 
     /**
      * Méthode qui récupère le mot de passe entré par l'utilisateur
-     * @param $event
      */
-    handlePasswordChanged($event: string): void {
-        this.password = $event;
+    handlePasswordChanged(password: string): void {
+        this.password = password;
     }
 
     /**

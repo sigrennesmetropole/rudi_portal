@@ -1,17 +1,20 @@
 package org.rudi.facet.apimaccess.helper.generator;
 
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import lombok.RequiredArgsConstructor;
-import org.rudi.facet.apimaccess.bean.APIDescription;
-import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.rudi.facet.apimaccess.bean.APIDescription;
+import org.rudi.facet.dataset.bean.InterfaceContract;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +23,8 @@ public class OpenApiGenerator {
 	private final OpenApiTemplates openApiTemplates;
 
 	public String generate(APIDescription apiDescription, String apiContext) throws APIManagerException {
-		final Template template = getTemplate(apiDescription.getInterfaceContract());
+		final var interfaceContract = InterfaceContract.fromCode(apiDescription.getInterfaceContract());
+		final Template template = getTemplate(interfaceContract);
 
 		Map<String, Object> templateData = new HashMap<>();
 		templateData.put("api_context", apiContext);
@@ -29,7 +33,7 @@ public class OpenApiGenerator {
 		return generateTemplate(template, templateData);
 	}
 
-	private Template getTemplate(String interfaceContract) throws APIManagerException {
+	private Template getTemplate(InterfaceContract interfaceContract) throws APIManagerException {
 		try {
 			final Template template = openApiTemplates.findByInterfaceContract(interfaceContract);
 			if (template == null) {

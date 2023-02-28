@@ -1,5 +1,10 @@
 package org.rudi.microservice.kalim.service.helper.apim;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.facet.apimaccess.bean.APIWorkflowResponse;
@@ -19,11 +24,6 @@ import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -155,7 +155,7 @@ class APIManagerHelperTest {
 		when(apIsService.searchAPI(any())).thenReturn(createMockedApiList());
 
 		final var apiToArchive = new API()
-				.id("6fb4e5da-c497-4828-8855-589332fa0ede");
+				.id(UUID.randomUUID().toString());
 		when(apIsService.archiveAPIByName(any())).thenReturn(apiToArchive);
 
 		// On crée la nouvelle version du JDD

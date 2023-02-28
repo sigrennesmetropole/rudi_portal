@@ -124,6 +124,15 @@
 					}
 				}
 			},
+			"FullName": {
+				"description": "Informations basiques d'un utilisateur RUDI",
+				"type": "object",
+				"properties": {
+					"value": {
+						"type": "string"
+					}
+				}
+			},
 			"UserType": {
 				"description": "Type d'utilisateur (personne, robot)",
 				"type": "string",

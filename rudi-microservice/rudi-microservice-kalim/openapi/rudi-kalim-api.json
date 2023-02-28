@@ -567,9 +567,272 @@
 					}
 				}
 			}
+		},
+		"/admin/repair-resources": {
+			"post": {
+				"tags": [
+					"kalim"
+				],
+				"summary": "Répare les jeux de données",
+				"description": "Répare tous les jeux de données qui pourraient avoir des problèmes suite à des manipulations manuelles ou des migrations échouées.",
+				"operationId": "repairResources",
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"400": {
+						"description": "Bad Request Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "Not Acceptable",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"408": {
+						"description": "Request Timeout",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Too Many Requests",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "Service Unavailable",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/create-missing-apis": {
+			"post": {
+				"tags": [
+					"kalim"
+				],
+				"summary": "Recrée toutes les API WSO2 manquantes.",
+				"description": "À partir de tous les JDD actuellement connus, on crée toutes les API manquantes côté WSO2.",
+				"operationId": "createMissingApis",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "globalIds",
+						"required": false,
+						"description": "On traite uniquement les JDD spécifiés. Si absent, on traite tous les JDD.",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "APIs mises à jour avec succès. Veuillez consulter les logs serveur pour plus de détails."
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/admin/delete-all-apis": {
+			"post": {
+				"tags": [
+					"kalim"
+				],
+				"summary": "Supprime toutes les API WSO2.",
+				"description": "Supprime toutes les API WSO2. On peut les recréer avec /admin/create-missing-apis.",
+				"operationId": "deleteAllApis",
+				"responses": {
+					"204": {
+						"description": "Toutes les APIs WSO2 ont été supprimées avec succès. Veuillez consulter les logs serveur pour plus de détails."
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
 		}
 	},
 	"components": {
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"BadRequestError": {
+				"description": "Bad Request Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Unauthorized": {
+				"description": "Unauthorized",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Forbidden": {
+				"description": "Forbidden",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotAcceptable": {
+				"description": "Not Acceptable",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"RequestTimeout": {
+				"description": "Request Timeout",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"TooManyRequests": {
+				"description": "Too Many Requests",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"ServiceUnavailable": {
+				"description": "Service Unavailable"
+			}
+		},
 		"schemas": {
 			"ApiError": {
 				"type": "object",

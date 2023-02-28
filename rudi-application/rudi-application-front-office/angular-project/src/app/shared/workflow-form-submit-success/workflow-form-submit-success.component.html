@@ -1,0 +1,20 @@
+<app-loader [active]="cardIsLoading"></app-loader>
+<app-page>
+    <app-page-title [title1]="title1" [title2]="title2"></app-page-title>
+
+    <app-card [centered]="true" [text-center]="true" *ngIf="!cardIsLoading">
+        <div>
+            <p class="subtitle">{{ subTitle }}</p>
+            <p *ngIf="additonalInfo" class="additional">{{ additonalInfo }}</p>
+            <p class="step-description">
+                {{ descriptionBeforeLink }}
+            </p>
+            <div class="d-flex justify-content-center">
+                <button (click)="handleClickToBack()" mat-raised-button>
+                    <span>{{ buttonMessage }}</span>
+                </button>
+            </div>
+        </div>
+    </app-card>
+
+</app-page>

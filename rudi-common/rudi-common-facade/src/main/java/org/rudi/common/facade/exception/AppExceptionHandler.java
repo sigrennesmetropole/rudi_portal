@@ -2,9 +2,12 @@ package org.rudi.common.facade.exception;
 
 import javax.validation.ValidationException;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceExceptionsStatus;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.common.service.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,12 +18,13 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-import com.fasterxml.jackson.core.JsonParseException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import lombok.Data;
 import lombok.val;
@@ -29,13 +33,6 @@ import lombok.val;
 public class AppExceptionHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppExceptionHandler.class);
-
-	// TODO où déplacer cette classe ?
-	@Data
-	private static class ApiError {
-		private final String code;
-		private final String label;
-	}
 
 	@ExceptionHandler(org.rudi.common.service.exception.AppServiceException.class)
 	protected ResponseEntity<Object> handleExceptionService(final AppServiceException ex) {
@@ -63,6 +60,13 @@ public class AppExceptionHandler {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 
+	@ExceptionHandler(BusinessException.class)
+	protected ResponseEntity<Object> handleBusinessException (final BusinessException ex) {
+		LOGGER.error(ex.getMessage(), ex);
+		ApiError apiError = new ApiError(ex.getTranslateKey(), ex.getMessage());
+		return ResponseEntity.status(ex.getAppExceptionStatusCode().getCustomHttpStatusCode()).body(apiError);
+	}
+
 	@ExceptionHandler({ AccessDeniedException.class, AuthenticationCredentialsNotFoundException.class,
 			LockedException.class, BadCredentialsException.class })
 	protected ResponseEntity<Object> handleAccessDeniedException(final Exception ex, final WebRequest request) {
@@ -80,8 +84,17 @@ public class AppExceptionHandler {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
-	@ExceptionHandler({ ValidationException.class, JsonParseException.class, HttpMessageNotReadableException.class,
-			MethodArgumentNotValidException.class, IllegalArgumentException.class })
+	@ExceptionHandler({
+			ValidationException.class,
+			JsonParseException.class,
+			HttpMessageNotReadableException.class,
+			MethodArgumentNotValidException.class,
+			IllegalArgumentException.class,
+			HttpMediaTypeException.class,
+			FileSizeLimitExceededException.class,
+			MaxUploadSizeExceededException.class,
+			MissingRequestHeaderException.class,
+	})
 	protected ResponseEntity<Object> handleValidationException(final Exception ex, final WebRequest request) {
 		LOGGER.error("Ressource not valid");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildBody(ex, HttpStatus.BAD_REQUEST));

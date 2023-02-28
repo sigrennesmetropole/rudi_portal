@@ -12,7 +12,7 @@ import {UserService} from './user.service';
 export class AuthGuardService implements CanActivate, CanActivateChild {
 
     // Gestion d'un loader durant l'authentification
-    public loader: boolean = false;
+    public loader = false;
 
     constructor(
         public readonly authenticationService: AuthenticationService,
@@ -56,24 +56,12 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
      */
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        // On regarde si on est authentifié
-        if (this.authenticationService.isAuthenticatedWithToken()) {
-            // je regarde si mes tokens sont encore bon : je fais get me
-            return this.userService.getConnectedUser().pipe(
-                // ça marche : je peux accéder normalement à la page en restant authentifié
-                map(() => true),
-                // KO : j'ai pas accès à la page, j'ai perdu mon authent donc j'essaye de m'authent en anonymous
-                catchError(() => this.authenticateAnonymousAutomatically())
-            );
-        }
-        // Je suis dans l'état : j'ai pas réussi à m'authent en anonymous
-        else if (this.authenticationService.authenticationFailedForAnonymous()) {
-            return this.redirectToNotAuthorized();
-        }
-        // Je suis pas authentifié (tout court) authent automatique en mode anonymous
-        else {
-            return this.authenticateAnonymousAutomatically();
-        }
+        return this.userService.getConnectedUser().pipe(
+            // ça marche : je peux accéder normalement à la page en restant authentifié
+            map(() => true),
+            // KO : j'ai pas accès à la page, j'ai perdu mon authent donc j'essaye de m'authent en anonymous
+            catchError(() => this.authenticateAnonymousAutomatically())
+        );
     }
 
     /**

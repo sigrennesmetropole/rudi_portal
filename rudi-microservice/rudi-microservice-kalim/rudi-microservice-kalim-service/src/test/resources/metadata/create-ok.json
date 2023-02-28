@@ -88,7 +88,7 @@
 			"media_id": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0",
 			"connector": {
 				"url": "www.connector2.org",
-				"interface_contract": "dwnl"
+				"interface_contract": "interface contrat 2"
 			},
 			"latency": 100,
 			"period": 10,
@@ -99,10 +99,10 @@
 		},
 		{
 			"media_type": "SERIES",
-			"media_id": "1a3b81cf-7ca4-4055-b2c6-aa8971faadc0",
+			"media_id": "bc5ca861-34f6-468b-aa7d-5b3ed9ffdbd7",
 			"connector": {
 				"url": "www.connector2.org",
-				"interface_contract": "dwnl"
+				"interface_contract": "interface contrat 2"
 			},
 			"latency": 100,
 			"period": 10,
@@ -175,7 +175,7 @@
 		},
 		"licence": {
 			"licence_type": "STANDARD",
-			"licence_label": "open-source-licence"
+			"licence_label": "public-domain-cc0"
 		},
 		"usage_constraint": [
 			{

@@ -20,6 +20,7 @@ public enum IntegrationError {
 	ERR_105("ERR-105",
 			"Erreur inconnue: l’erreur na pas été reconnue, veuillez contacter l’administrateur Rudi afin d’analyser l’erreur."),
 	ERR_106("ERR-106", "La version de metadonnées %s n'est pas supportée. La version courante est %s."),
+	ERR_107("ERR-107", "Le jeu de données '%s' n'est pas un selfData."),
 
 	ERR_201("ERR-201", "Le type du champ '%s' nest pas le bon (format attendu : '%s' / format reçu : '%s'} )"),
 	ERR_202("ERR-202", "Le champ '%s' est manquant alors qu’il est obligatoire."),
@@ -32,7 +33,8 @@ public enum IntegrationError {
 					+ "'%s' / référentiel attendu : 'liste des valeurs attendue séparées par des virgules'"),
 	ERR_303("ERR-303", "La valeur saisie '%s' pour le champ '%s' ne correspond pas à %s"),
 	ERR_304("ERR-304", "La valeur saisie '%s' pour le champ '%s' est déjà utilisée"),
-
+	ERR_305("ERR-305", "Le jeu de données selfData est marqué comme ayant un accès API mais vous n'avez pas fourni exactement une API TPBC et une API GDATA"),
+	ERR_306("ERR-306", "Si le champs '%s' est à vrai alors le champs '%s' doit l'être aussi  "),
 	ERR_403("ERR-403", "Le nœud fournisseur authentifié n'est pas le créateur du jeu de données"),
 
 	ERR_500("ERR-500", "Une erreur technique est survenue. Veuillez contacter l'administrateur Rudi pour analyser l'erreur.");

@@ -1,1438 +1,1516 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "description": "API Public ACL Rudi",
-        "version": "0.0.1",
-        "title": "rudi-acl-api",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "email": "ca.marchand@rennesmetropole.fr"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        }
-    },
-    "servers": [
-        {
-            "url": "/{basePath}",
-            "description": "Rudi Acl API",
-            "variables": {
-                "basePath": {
-                    "default": "acl/v1"
-                }
-            }
-        }
-    ],
-    "tags": [
-        {
-            "name": "administration",
-            "description": "Services d'administration"
-        },
-        {
-            "name": "acl",
-            "description": "Services utilisateurs"
-        },
-        {
-            "name": "miscellaneous",
-            "description": "Services divers"
-        }
-    ],
-    "paths": {
-        "/application-information": {
-            "get": {
-                "tags": [
-                    "miscellaneous"
-                ],
-                "summary": "Récupération de la version applicative",
-                "description": "Récupération d'information sur la version de l'application",
-                "operationId": "getApplicationInformation",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AppInfo"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/healthCheck": {
-            "get": {
-                "tags": [
-                    "miscellaneous"
-                ],
-                "summary": "Test de vie de l'application'",
-                "description": "Test de vie de l'application",
-                "operationId": "checkHealth",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/account/{login}/is-created-not-validated": {
-        	"get": {
-        		 "tags": [
-                    "acl"
-                ],
-                "summary": "Indique si un compte en attente d'activation existe pour le login",
-                "description": "Indique si un compte en attente d'activation existe pour le login",
-                "operationId": "isCreatedNotValidated",
-               	"parameters": [
-               		{
-                        "in": "path",
-                        "name": "login",
-                        "description": "Le login du compte",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-               	],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-        	}
-        },
-        "/account": {
-            "post": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Création d'un compte utilisateur",
-                "description": "Permet à un utilisateur anonyme du site de créer un compte utilisateur",
-                "operationId": "requestAccountCreation",
-                "requestBody": {
-                    "description": "Informations pour la création du compte",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/Account"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Validation d'un compte utilisateur",
-                "description": "Valide une demande création de compte",
-                "operationId": "validateAccount",
-                "requestBody": {
-                    "description": "Informations pour la création du compte",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                             	"type": "string"   
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-        },
-        "/account/change-password": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Demande de réinitialisation de mot-de-passe",
-                "description": "Génère un token pour réinitialiser le mot-de-passe d'un compte et l'envoie par mail à l'utilisateur.",
-                "operationId": "requestPasswordChange",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "email",
-                        "description": "Email de l'utilisateur souhaitant changer de mot-de-passe",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Un token pour changer le mot-de-passe. Pour des raisons de sécurité, on envoie un token factice lorsque l'email n'est pas connu."
-                    },
-                    "500": {
-                        "description": "Erreur technique liée au serveur.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Modification du mot-de-passe d'un compte",
-                "description": "Modifie le mot-de-passe d'un compte à partir d'un token. Ce token est obtenu suite à une demande de changement de mot-de-passe. Envoie un mail de confirmation à l'utilisateur concerné",
-                "operationId": "validatePasswordChange",
-                "requestBody": {
-                    "description": "Informations pour la modification du mot-de-passe",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/PasswordChange"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "OK. Pour des raisons de sécurité, on répond toujours OK, même lorsque le token n'est pas connu."
-                    },
-                    "500": {
-                        "description": "Erreur technique liée au serveur.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/account/change-password/check-token": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Vérification du token",
-                "description": "Vérifie le token utilisé pour modifier le mot-de-passe d'un compte. Ce token est obtenu suite à une demande de changement de mot-de-passe.",
-                "operationId": "checkPasswordChangeToken",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "token",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Le token est valide."
-                    },
-                    "500": {
-                        "description": "Erreur technique liée au serveur.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Collection d'utilisateurs",
-                "description": "Retourne une liste d'utilisateurs'",
-                "operationId": "searchUsers",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "login",
-                        "description": "Tout ou partie du login de l'utilisateur",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "password",
-                        "description": "Mot-de-passe (en clair) de l'utilisateur",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "lastname",
-                        "description": "Tout ou partie du nom de famille de l'utilisateur",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "firstname",
-                        "description": "Tout ou partie du prénom de famille de l'utilisateur",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "company",
-                        "description": "Tout ou partie du prénom de la société de l'utilisateur",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "type",
-                        "description": "Type d 'utilisateur",
-                        "required": false,
-                        "schema": {
-                            "$ref": "rudi-acl-model.json#/components/schemas/UserType"
-                        }
-                    },
-                    {
-                    	"in": "query",
-                    	"name": "role-uuids",
-                    	"description": "UUIDS des roles",
-                    	"required": "false",
-                    	"schema": {
-                    		"type": "array",
-                    		"items": {
-                    			"type": "string",
-                    			"format": "uuid"
-                    		}
-                    	}
-                    },
-                    {
-                        "in": "query",
-                        "name": "offset",
-                        "description": "Index de début",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "description": "Nombre de résultats à retourner",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "order",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "description": "liste des tris à réaliser. Exemple :  login,lastname"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/UserPageResult"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Ajout d'un nouvel utilisateur",
-                "description": "Permet d'ajouter un nouvel utilisateur",
-                "operationId": "createUser",
-                "requestBody": {
-                    "description": "info utilisateur",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/User"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Mise à jour d'un utilisateur",
-                "description": "Mise à jour d'un utilisateur",
-                "operationId": "updateUser",
-                "requestBody": {
-                    "description": "info utilisateur",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/User"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{userUuid}": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Retourne un utilisateur",
-                "description": "Retourne un utilisateur",
-                "operationId": "getUser",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "uuid pour la récupération d'un élément",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Suppression d'un utilisateur",
-                "description": "Suppression d'un utilisateur",
-                "operationId": "deleteUser",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "info uuid",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user-info/{userUuid}": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Retourne un utilisateur avec les données minimales pour un affichage web",
-                "description": "Retourne un utilisateur avec les données minimales pour un affichage web",
-                "operationId": "getUserInfo",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "uuid pour la récupération d'un élément",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{userUuid}/addresses": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Collection d'adresses",
-                "description": "Retourne les adresses d'un utilisateur'",
-                "operationId": "getAddresses",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "Uuid de l''utilisateur",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Ajout d'une adresse",
-                "description": "Ajout d'une adresse",
-                "operationId": "createAddress",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "Uuid de l'utilisateur'",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "info address",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Mise à jour d'une adresse",
-                "description": "Mise à jour d'une adresse d'un utilisateur'",
-                "operationId": "updateAddress",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "Uuid de l'utilisateur'",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "info address",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{userUuid}/addresses/{addressUuid}": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Retourne une adresse",
-                "description": "Retourne une adresse d'un utilisateur'",
-                "operationId": "getAddress",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "uuid de l'utilisateur",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    },
-                    {
-                        "name": "addressUuid",
-                        "in": "path",
-                        "description": "uuid de l'adresse'",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Suppression d'une adresse",
-                "description": "Suppression d'une adresse d'un utilisateur'",
-                "operationId": "deleteAddress",
-                "parameters": [
-                    {
-                        "name": "userUuid",
-                        "in": "path",
-                        "description": "uuid de l'utilisateur'",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    },
-                    {
-                        "name": "addressUuid",
-                        "in": "path",
-                        "description": "uuid de l''adresse",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/me": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Retourne l'utilisateur connecté",
-                "description": "Retourne l'utilisateur connecté",
-                "operationId": "getMe",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{login}/client-key": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Client key de l'utlisateur",
-                "description": "Retourne le clientKey de l'utilisateur dont le login est précisé",
-                "operationId": "getClientKeyByLogin",
-                "parameters": [
-                    {
-                        "name": "login",
-                        "in": "path",
-                        "description": "Login de l'utilisateur'",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/ClientKey"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/roles": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Collection de roles d'utilisateurs",
-                "description": "Retourne une liste de roles d'utilisateurs",
-                "operationId": "searchRoles",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "code",
-                        "description": "Tout ou partie du code du rôle",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "label",
-                        "description": "Tout ou partie du label du rôle",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "active",
-                        "description": "Elements actif ou tous",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "rudi-acl-model.json#/components/schemas/Role"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Ajout d'un nouveau role d'utilisateurs",
-                "description": "Permet d'ajouter un nouveau role d'utilisateurs",
-                "operationId": "createRole",
-                "requestBody": {
-                    "description": "info role",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/Role"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/Role"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Mise à jour d'un role d'utilisateurs",
-                "description": "Mise à jour d'un role d'utilisateurs",
-                "operationId": "updateRole",
-                "requestBody": {
-                    "description": "info role",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/Role"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/Role"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/roles/{uuid}": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Retourne un role d'utilisateurs",
-                "description": "Retourne un role d'utilisateurs",
-                "operationId": "getRole",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "path",
-                        "description": "uuid role",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/Role"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Suppression d'un role d'utilisateurs",
-                "description": "Suppression d'un role d'utilisateurs",
-                "operationId": "deleteRole",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "path",
-                        "description": "uuid role",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/addressRoles": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Collection de roles d'adresses'",
-                "description": "Retourne une liste de roles d'adresses",
-                "operationId": "searchAddressRoles",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "active",
-                        "description": "Elements actif ou tous",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "type",
-                        "description": "Type du rôle",
-                        "required": false,
-                        "schema": {
-                            "$ref": "rudi-acl-model.json#/components/schemas/AddressType"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Ajout d'un nouveau role d'adresse",
-                "description": "Permet d'ajouter un nouveau role d'adresse",
-                "operationId": "createAddressRole",
-                "requestBody": {
-                    "description": "info role",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Mise à jour d'un role d'adresse",
-                "description": "Mise à jour d'un role d'adresse",
-                "operationId": "updateAddressRole",
-                "requestBody": {
-                    "description": "info role",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/addressRoles/{uuid}": {
-            "get": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Retourne un role d'adresse",
-                "description": "Retourne un role d'adresse",
-                "operationId": "getAddressRole",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "path",
-                        "description": "uuid role",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "acl"
-                ],
-                "summary": "Suppression d'un role d'adresse",
-                "description": "Suppression d'un role d'adresse",
-                "operationId": "deleteAddressRole",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "path",
-                        "description": "uuid role",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "ApiError": {
-                "type": "object",
-                "properties": {
-                    "code": {
-                        "type": "string"
-                    },
-                    "label": {
-                        "type": "string"
-                    }
-                }
-            },
-            "AppInfo": {
-                "type": "object",
-                "properties": {
-                    "version": {
-                        "type": "string",
-                        "description": "Numéro de version de l'application"
-                    },
-                    "comment": {
-                        "type": "string",
-                        "description": "Description de la version de l'application"
-                    }
-                }
-            }
-        }
-    }
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public ACL Rudi",
+		"version": "0.0.1",
+		"title": "rudi-acl-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Acl API",
+			"variables": {
+				"basePath": {
+					"default": "acl/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "acl",
+			"description": "Services utilisateurs"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/account/{login}/is-created-not-validated": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Indique si un compte en attente d'activation existe pour le login",
+				"description": "Indique si un compte en attente d'activation existe pour le login",
+				"operationId": "isCreatedNotValidated",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "login",
+						"description": "Le login du compte",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/account": {
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Création d'un compte utilisateur",
+				"description": "Permet à un utilisateur anonyme du site de créer un compte utilisateur",
+				"operationId": "requestAccountCreation",
+				"requestBody": {
+					"description": "Informations pour la création du compte",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/Account"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Validation d'un compte utilisateur",
+				"description": "Valide une demande création de compte",
+				"operationId": "validateAccount",
+				"requestBody": {
+					"description": "Informations pour la création du compte",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/account/change-password": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Demande de réinitialisation de mot-de-passe",
+				"description": "Génère un token pour réinitialiser le mot-de-passe d'un compte et l'envoie par mail à l'utilisateur.",
+				"operationId": "requestPasswordChange",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "email",
+						"description": "Email de l'utilisateur souhaitant changer de mot-de-passe",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Un token pour changer le mot-de-passe. Pour des raisons de sécurité, on envoie un token factice lorsque l'email n'est pas connu."
+					},
+					"500": {
+						"description": "Erreur technique liée au serveur.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Modification du mot-de-passe d'un compte",
+				"description": "Modifie le mot-de-passe d'un compte à partir d'un token. Ce token est obtenu suite à une demande de changement de mot-de-passe. Envoie un mail de confirmation à l'utilisateur concerné",
+				"operationId": "validatePasswordChange",
+				"requestBody": {
+					"description": "Informations pour la modification du mot-de-passe",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/PasswordChange"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "OK. Pour des raisons de sécurité, on répond toujours OK, même lorsque le token n'est pas connu."
+					},
+					"500": {
+						"description": "Erreur technique liée au serveur.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/account/change-password/check-token": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Vérification du token",
+				"description": "Vérifie le token utilisé pour modifier le mot-de-passe d'un compte. Ce token est obtenu suite à une demande de changement de mot-de-passe.",
+				"operationId": "checkPasswordChangeToken",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Le token est valide."
+					},
+					"500": {
+						"description": "Erreur technique liée au serveur.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/account/logout": {
+			"delete": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Déconexion d'un utilisateur",
+				"description": "Permet à un utilisateur de se déconnecter",
+				"operationId": "accountLogout",
+				"parameters": [
+					{
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"description": "Token a surpprimer pour confirmer la déconnexion"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Collection d'utilisateurs",
+				"description": "Retourne une liste d'utilisateurs'",
+				"operationId": "searchUsers",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "login",
+						"description": "Tout ou partie du login de l'utilisateur",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "password",
+						"description": "Mot-de-passe (en clair) de l'utilisateur",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lastname",
+						"description": "Tout ou partie du nom de famille de l'utilisateur",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "firstname",
+						"description": "Tout ou partie du prénom de famille de l'utilisateur",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "company",
+						"description": "Tout ou partie du prénom de la société de l'utilisateur",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "type",
+						"description": "Type d 'utilisateur",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-acl-model.json#/components/schemas/UserType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "role-uuids",
+						"description": "UUIDS des roles",
+						"required": "false",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"description": "Index de début",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"description": "Nombre de résultats à retourner",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"description": "liste des tris à réaliser. Exemple :  login,lastname"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/UserPageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Ajout d'un nouvel utilisateur",
+				"description": "Permet d'ajouter un nouvel utilisateur",
+				"operationId": "createUser",
+				"requestBody": {
+					"description": "info utilisateur",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Mise à jour d'un utilisateur",
+				"description": "Mise à jour d'un utilisateur",
+				"operationId": "updateUser",
+				"requestBody": {
+					"description": "info utilisateur",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{userUuid}": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne un utilisateur",
+				"description": "Retourne un utilisateur",
+				"operationId": "getUser",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "uuid pour la récupération d'un élément",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Suppression d'un utilisateur",
+				"description": "Suppression d'un utilisateur",
+				"operationId": "deleteUser",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "info uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user-info-uuid/{userUuid}": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne un utilisateur avec les données minimales pour un affichage web",
+				"description": "Retourne un utilisateur avec les données minimales pour un affichage web",
+				"operationId": "getUserInfo",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "uuid pour la récupération d'un élément",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user-info-login/{userLogin}": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne un utilisateur avec les données minimales pour un affichage web",
+				"description": "Retourne un utilisateur avec les données minimales pour un affichage web",
+				"operationId": "getUserInfoByLogin",
+				"parameters": [
+					{
+						"name": "userLogin",
+						"in": "path",
+						"required": true,
+						"description": "login pour la récupération d'un élément",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{userUuid}/addresses": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Collection d'adresses",
+				"description": "Retourne les adresses d'un utilisateur'",
+				"operationId": "getAddresses",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "Uuid de l''utilisateur",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Ajout d'une adresse",
+				"description": "Ajout d'une adresse",
+				"operationId": "createAddress",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "Uuid de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "info address",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Mise à jour d'une adresse",
+				"description": "Mise à jour d'une adresse d'un utilisateur'",
+				"operationId": "updateAddress",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "Uuid de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "info address",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{userUuid}/addresses/{addressUuid}": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne une adresse",
+				"description": "Retourne une adresse d'un utilisateur'",
+				"operationId": "getAddress",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "uuid de l'utilisateur",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "addressUuid",
+						"in": "path",
+						"description": "uuid de l'adresse'",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/AbstractAddress"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Suppression d'une adresse",
+				"description": "Suppression d'une adresse d'un utilisateur'",
+				"operationId": "deleteAddress",
+				"parameters": [
+					{
+						"name": "userUuid",
+						"in": "path",
+						"description": "uuid de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "addressUuid",
+						"in": "path",
+						"description": "uuid de l''adresse",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/me": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne l'utilisateur connecté",
+				"description": "Retourne l'utilisateur connecté",
+				"operationId": "getMe",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{login}/client-key": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Client key de l'utlisateur",
+				"description": "Retourne le clientKey de l'utilisateur dont le login est précisé",
+				"operationId": "getClientKeyByLogin",
+				"parameters": [
+					{
+						"name": "login",
+						"in": "path",
+						"description": "Login de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/ClientKey"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/roles": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Collection de roles d'utilisateurs",
+				"description": "Retourne une liste de roles d'utilisateurs",
+				"operationId": "searchRoles",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"description": "Tout ou partie du code du rôle",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "label",
+						"description": "Tout ou partie du label du rôle",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "active",
+						"description": "Elements actif ou tous",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-acl-model.json#/components/schemas/Role"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Ajout d'un nouveau role d'utilisateurs",
+				"description": "Permet d'ajouter un nouveau role d'utilisateurs",
+				"operationId": "createRole",
+				"requestBody": {
+					"description": "info role",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/Role"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/Role"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Mise à jour d'un role d'utilisateurs",
+				"description": "Mise à jour d'un role d'utilisateurs",
+				"operationId": "updateRole",
+				"requestBody": {
+					"description": "info role",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/Role"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/Role"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/roles/{uuid}": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne un role d'utilisateurs",
+				"description": "Retourne un role d'utilisateurs",
+				"operationId": "getRole",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "uuid role",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/Role"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Suppression d'un role d'utilisateurs",
+				"description": "Suppression d'un role d'utilisateurs",
+				"operationId": "deleteRole",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "uuid role",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/addressRoles": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Collection de roles d'adresses'",
+				"description": "Retourne une liste de roles d'adresses",
+				"operationId": "searchAddressRoles",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "active",
+						"description": "Elements actif ou tous",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "type",
+						"description": "Type du rôle",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-acl-model.json#/components/schemas/AddressType"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Ajout d'un nouveau role d'adresse",
+				"description": "Permet d'ajouter un nouveau role d'adresse",
+				"operationId": "createAddressRole",
+				"requestBody": {
+					"description": "info role",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Mise à jour d'un role d'adresse",
+				"description": "Mise à jour d'un role d'adresse",
+				"operationId": "updateAddressRole",
+				"requestBody": {
+					"description": "info role",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/addressRoles/{uuid}": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Retourne un role d'adresse",
+				"description": "Retourne un role d'adresse",
+				"operationId": "getAddressRole",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "uuid role",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-acl-model.json#/components/schemas/AddressRole"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Suppression d'un role d'adresse",
+				"description": "Suppression d'un role d'adresse",
+				"operationId": "deleteAddressRole",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "uuid role",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
 }

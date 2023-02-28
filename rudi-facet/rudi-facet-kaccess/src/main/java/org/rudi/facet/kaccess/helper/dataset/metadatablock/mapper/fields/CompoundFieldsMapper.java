@@ -1,7 +1,13 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.FieldSpec;
@@ -9,16 +15,11 @@ import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
 import org.rudi.facet.kaccess.bean.DictionaryEntry;
 import org.rudi.facet.kaccess.bean.Language;
 import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.constant.DictionaryEntryFieldSpecs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import static org.rudi.facet.kaccess.constant.ConstantMetadata.LANG_FIELD_LOCAL_NAME;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import static org.rudi.facet.kaccess.constant.ConstantMetadata.LANG_FIELD_SUFFIX;
-import static org.rudi.facet.kaccess.constant.ConstantMetadata.TEXT_FIELD_LOCAL_NAME;
 import static org.rudi.facet.kaccess.constant.ConstantMetadata.TEXT_FIELD_SUFFIX;
 
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -28,10 +29,11 @@ abstract class CompoundFieldsMapper<T> {
 
 	abstract void metadataToFields(T metadataElement, List<DatasetMetadataBlockElementField> fields);
 
-	@org.jetbrains.annotations.NotNull
+	@Nullable
 	DatasetMetadataBlockElementField createCompoundFieldFromEntries(FieldSpec fieldSpec, final List<DictionaryEntry> entries) {
-		final FieldSpec langFieldSpec = fieldSpec.newChildFromJavaField(LANG_FIELD_LOCAL_NAME);
-		final FieldSpec textFieldSpec = fieldSpec.newChildFromJavaField(TEXT_FIELD_LOCAL_NAME);
+		final var dictionaryEntryFieldSpecs = DictionaryEntryFieldSpecs.from(fieldSpec);
+		final FieldSpec langFieldSpec = dictionaryEntryFieldSpecs.lang;
+		final FieldSpec textFieldSpec = dictionaryEntryFieldSpecs.text;
 		final List<Map<String, Object>> fieldValues = new ArrayList<>();
 		for (final DictionaryEntry entry : entries) {
 			final Map<String, Object> fieldValue = new HashMap<>();
@@ -54,7 +56,10 @@ abstract class CompoundFieldsMapper<T> {
 
 	final void createField(FieldSpec spec, List<DictionaryEntry> entries, List<DatasetMetadataBlockElementField> fields) {
 		if (CollectionUtils.isNotEmpty(entries)) {
-			fields.add(createCompoundFieldFromEntries(spec, entries));
+			final var compoundFieldFromEntries = createCompoundFieldFromEntries(spec, entries);
+			if (compoundFieldFromEntries != null) {
+				fields.add(compoundFieldFromEntries);
+			}
 		}
 	}
 

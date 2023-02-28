@@ -1,14 +1,16 @@
 package org.rudi.facet.dataverse.helper.query;
 
-import org.apache.commons.lang3.StringUtils;
-import org.rudi.facet.dataverse.fields.FieldSpec;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.StringUtils;
+import org.rudi.facet.dataverse.fields.FieldSpec;
 
 public class FilterQuery extends ArrayList<String> {
 
@@ -45,12 +47,22 @@ public class FilterQuery extends ArrayList<String> {
 		return item.contains(AND) || item.contains(OR);
 	}
 
-	public <T> FilterQuery add(FieldSpec fieldSpec, @Nonnull T value) {
-		final ItemBuilder<?> itemBuilder = value instanceof Collection ? new CollectionItemBuilder<>((Collection<?>) value) : new ItemBuilder<>(value);
-		if (withExactMatch) {
-			itemBuilder.withExactMatch();
+	/**
+	 * @param value valeur recherchée, null si on recherche où le champ est sans valeur
+	 */
+	public <T> FilterQuery add(FieldSpec fieldSpec, @Nullable T value) {
+		final String filterQueryItem;
+		if (value == null) {
+			filterQueryItem = ItemBuilder.buildFilterQueryForFieldWithoutValue(fieldSpec);
+		} else {
+			final ItemBuilder<?> itemBuilder = value instanceof Collection ? new CollectionItemBuilder<>((Collection<?>) value) : new ItemBuilder<>(value);
+			if (withExactMatch) {
+				itemBuilder.withExactMatch();
+			}
+			filterQueryItem = itemBuilder.buildForField(fieldSpec);
 		}
-		add(itemBuilder.buildForField(fieldSpec));
+
+		add(filterQueryItem);
 		return this;
 	}
 

@@ -16,6 +16,7 @@ import {FormReutilisationDependencies, ProjectSubmissionService} from '../../../
 import {ReuseProjectCommonComponent} from '../../components/reuse-project-common/reuse-project-common.component';
 import {FiltersService} from '../../../core/services/filters.service';
 import {User} from '../../../acl/acl-model';
+import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
 
 @Component({
     selector: 'app-reuse-declaration',
@@ -100,7 +101,7 @@ export class ReuseDeclarationComponent extends ReuseProjectCommonComponent imple
     }
 
     openDialog(): void {
-        super.openDialogSelectMetadata();
+        super.openDialogSelectMetadata(AccessStatusFiltersType.Opened);
     }
 
     publish(): void {

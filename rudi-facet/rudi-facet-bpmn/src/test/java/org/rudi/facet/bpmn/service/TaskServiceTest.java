@@ -3,23 +3,21 @@
  */
 package org.rudi.facet.bpmn.service;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.rudi.bpmn.core.bean.Action;
@@ -31,9 +29,11 @@ import org.rudi.bpmn.core.bean.SectionDefinition;
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.common.core.DocumentContent;
+import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.common.test.RudiAssertions;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.BpmnSpringBootTest;
@@ -60,12 +60,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.annotation.Rollback;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 
 /**
  * @author FNI18300
  *
  */
 @BpmnSpringBootTest
+//@Sql(scripts = {
+//		"classpath:org.activiti.db.drop/activiti.h2.drop.engine.sql",
+//		"classpath:org.activiti.db.drop/activiti.h2.drop.history.sql",
+//}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Rollback(true)
 class TaskServiceTest {
 
 	@Autowired
@@ -100,6 +111,9 @@ class TaskServiceTest {
 
 	@Autowired
 	private Test2AssetDescriptionMapper test2AssetDescriptionMapper;
+
+	@Autowired
+	private JsonResourceReader jsonResourceReader;
 
 	@Test
 	void create_section() throws IOException {
@@ -383,5 +397,49 @@ class TaskServiceTest {
 		processFormDefinition1.setFormDefinition(formDefinition1);
 		processFormDefinition1.setUserTaskId(userTaskId);
 		return processFormDefinition1;
+	}
+
+	// Comme on ne sait pas comment exécuter le script de création qu'une seule fois pour toutes les classes de tests BPMN, on met tous les tests BPMN dans la même classe
+	@Test
+	void createOrUpdateAllSectionAndProcessFormDefinitions() throws IOException, JSONException {
+		final var processFormDefinitions = formService.createOrUpdateAllSectionAndFormDefinitions();
+		removeLineFeeds(processFormDefinitions);
+
+		// On fixe les UUID aléatoires
+		processFormDefinitions.forEach(this::removeAllUuids);
+
+		final var expectedProcessFormDefinitions = jsonResourceReader.readList("bpmn/expected/all-process-form-definitions.json", ProcessFormDefinition.class);
+		removeLineFeeds(expectedProcessFormDefinitions);
+
+		RudiAssertions.assertThat(processFormDefinitions)
+				.isJsonEqualTo(expectedProcessFormDefinitions);
+	}
+
+	private void removeLineFeeds(Collection<ProcessFormDefinition> expectedProcessFormDefinitions) {
+		for (final var expectedProcessFormDefinition : expectedProcessFormDefinitions) {
+			final var formDefinition = expectedProcessFormDefinition.getFormDefinition();
+			if (formDefinition != null) {
+				final var formSectionDefinitions = formDefinition.getFormSectionDefinitions();
+				if (formSectionDefinitions != null) {
+					for (final var formSectionDefinition : formSectionDefinitions) {
+						final var sectionDefinition = formSectionDefinition.getSectionDefinition();
+						if (sectionDefinition != null) {
+							final var replacedDefinition = sectionDefinition.getDefinition().replaceAll("\r?\n", StringUtils.EMPTY);
+							sectionDefinition.setDefinition(replacedDefinition);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void removeAllUuids(ProcessFormDefinition processFormDefinition) {
+		processFormDefinition.setUuid(null);
+		final var formDefinition = processFormDefinition.getFormDefinition();
+		formDefinition.setUuid(null);
+		formDefinition.getFormSectionDefinitions().forEach(formSectionDefinition -> {
+			formSectionDefinition.setUuid(null);
+			formSectionDefinition.getSectionDefinition().setUuid(null);
+		});
 	}
 }

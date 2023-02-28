@@ -1,16 +1,17 @@
 package org.rudi.facet.dataverse.fields;
 
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
+import lombok.Getter;
+import lombok.Setter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FieldSpecFromJavaFieldTest {
@@ -57,14 +58,14 @@ class FieldSpecFromJavaFieldTest {
 	@Test
 	void getSortableField_isSortable() {
 		final var field = ROOT.newChildFromJavaField("stringField")
-				.isSortable(true);
+				.isDirectSortable(true);
 		assertThat(field.getSortableField().getName()).isEqualTo("root_string_field");
 	}
 
 	@Test
 	void getSortableField_isNotSortable() {
 		final var field = ROOT.newChildFromJavaField("stringField")
-				.isSortable(false);
+				.isDirectSortable(false);
 		assertThat(field.getSortableField().getName()).isEqualTo("root_string_field_s");
 	}
 

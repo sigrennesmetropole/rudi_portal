@@ -1,2 +1,15 @@
 // Tous les styles sont définis dans le composant parent
 @import "../../pages/reuse-declaration/reuse-declaration.component";
+
+::ng-deep {
+    .icon-add-jdd {
+        margin: -12px 0 0 -8px;
+
+        svg {
+            fill: $secondary-color;
+            height: 22px;
+            width: 22px;
+            margin: 7px 0 0 -4px;
+        }
+    }
+}

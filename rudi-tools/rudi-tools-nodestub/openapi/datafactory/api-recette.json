@@ -1,0 +1,662 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "API PLATEFORME DATA - RENNES METROPOLE",
+		"description": "TDD Rennes Métropole",
+		"contact": {
+			"email": "apiteam@swagger.io"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		},
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi API",
+			"variables": {
+				"basePath": {
+					"default": "nodestub/datafactory/api-recette"
+				}
+			}
+		},
+		{
+			"url": "//api-recette.datafactory.rennesmetropole.fr/api/v1"
+		}
+	],
+	"tags": [
+		{
+			"name": "Données brutes LORA",
+			"description": "the capteurs API"
+		},
+		{
+			"name": "Déchets",
+			"description": "the gdata API"
+		}
+	],
+	"paths": {
+		"/api/v1/capteurs/trames/{clientId}": {
+			"get": {
+				"tags": [
+					"Données brutes LORA"
+				],
+				"summary": "Récupération des données brutes sur une plage de date spécifiée en paramètre",
+				"description": "TBD Rennes Métropole",
+				"operationId": "listData",
+				"parameters": [
+					{
+						"name": "clientId",
+						"in": "path",
+						"description": "Filtre par identifiant de propriétaire (clientId)",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "dateDebut",
+						"in": "query",
+						"description": "Date de début au format YYYY-MM-DD hh:mm:ss",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "dateFin",
+						"in": "query",
+						"description": "Date de fin au format YYYY-MM-DD hh:mm:ss",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "deveui",
+						"in": "query",
+						"description": "Filtre par identifiant de capteur (deveui)",
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "page",
+						"in": "header",
+						"description": "Numero de page (0..N)",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "size",
+						"in": "header",
+						"description": "Nombre de résultats par page.",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "timezone",
+						"in": "query",
+						"description": "Timezone pour les champs date.  Les IDs de Timezone sont definis  [Unicode CLDR project](https://github.com/unicode-org/cldr). La liste des IDs de timezone sont disponibles [timezone.xml](https://github.com/unicode-org/cldr/blob/master/common/bcp47/timezone.xml).",
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string",
+							"default": "Europe/Paris"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request cannot be fulfilled due to bad syntax",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {}
+					},
+					"404": {
+						"description": "The specified resource was not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "InternalServerError",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				},
+				"deprecated": false
+			}
+		},
+		"/api/v1/capteurs/{clientId}": {
+			"get": {
+				"tags": [
+					"Données brutes LORA"
+				],
+				"summary": "Récupération des identifiants des capteurs disponibles (deveui)",
+				"description": "TBD Rennes Métropole",
+				"operationId": "listDeveui",
+				"parameters": [
+					{
+						"name": "clientId",
+						"in": "path",
+						"description": "Filtre par identifiant de propriétaire (clientId)",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "dateDebut",
+						"in": "query",
+						"description": "Date de début au format YYYY-MM-DD hh:mm:ss",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "dateFin",
+						"in": "query",
+						"description": "Date de fin au format YYYY-MM-DD hh:mm:ss",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "page",
+						"in": "header",
+						"description": "Numero de page (0..N)",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "size",
+						"in": "header",
+						"description": "Nombre de résultats par page.",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "timezone",
+						"in": "query",
+						"description": "Timezone pour les champs date.  Les IDs de Timezone sont definis  [Unicode CLDR project](https://github.com/unicode-org/cldr). La liste des IDs de timezone sont disponibles [timezone.xml](https://github.com/unicode-org/cldr/blob/master/common/bcp47/timezone.xml).",
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string",
+							"default": "Europe/Paris"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request cannot be fulfilled due to bad syntax",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {}
+					},
+					"404": {
+						"description": "The specified resource was not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "InternalServerError",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				},
+				"deprecated": false
+			}
+		},
+		"/api/v1/gdata/{type}": {
+			"get": {
+				"tags": [
+					"Déchets"
+				],
+				"summary": "Récupération des informations sur la fréquence de collecte par catégorie de bac ou sur l’activité du producteur",
+				"description": "Récupération des informations sur la fréquence de collecte par catégorie de bac ou sur l’activité du producteur",
+				"operationId": "gdataTypeGet",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/X-SELFDATA-TOKEN"
+					},
+					{
+						"name": "type",
+						"in": "path",
+						"description": "Paramètre permettant de définir le type de retour voulu. (frequence ou activite)",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericDataObject"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "204",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericDataObject"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "400",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {}
+					},
+					"427": {
+						"description": "Adresse non eligible",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				},
+				"deprecated": false
+			}
+		},
+		"/api/v1/pesees": {
+			"get": {
+				"tags": [
+					"Déchets"
+				],
+				"summary": "Récupération des pesées des bacs de type graphique en barre",
+				"description": "Récupération avec filtrage temporel de type graphique en barre avec les pesées des bacs, agrégées par jour et par catégorie de bacs",
+				"operationId": "peseesGet",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/X-SELFDATA-TOKEN"
+					},
+					{
+						"name": "max-date",
+						"in": "query",
+						"description": "La date maximum",
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "min-date",
+						"in": "query",
+						"description": "La date minimale",
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BarChartData"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "Vide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {}
+					},
+					"427": {
+						"description": "Adresse non eligible",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"deprecated": false
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"X-SELFDATA-TOKEN": {
+				"name": "X-SELFDATA-TOKEN",
+				"in": "header",
+				"description": "Token généré suite à l'appariement selfdata.",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {
+			"BarChartData": {
+				"title": "BarChartData",
+				"type": "object",
+				"properties": {
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"legendYAxis": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"legendXAxis": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"series": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BarChartSeries"
+						}
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"POINT",
+							"LINE",
+							"BAR"
+						]
+					},
+					"values": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BarChartValues"
+						}
+					}
+				},
+				"description": "Données d'un graphique de type Barre"
+			},
+			"BarChartSeries": {
+				"title": "BarChartSeries",
+				"type": "object",
+				"properties": {
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					}
+				},
+				"description": "Serie d'un graphique de type Barre"
+			},
+			"BarChartValues": {
+				"title": "BarChartValues",
+				"type": "object",
+				"properties": {
+					"borderColour": {
+						"type": "string",
+						"description": "la couleur du trait de la barre ou de la ligne soit en #RRGGBBAA soit en nom"
+					},
+					"colour": {
+						"type": "string",
+						"description": "la couleur de la barre ou de l'aire sous la courbe soit en #RRGGBBAA soit en nom"
+					},
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"values": {
+						"type": "array",
+						"items": {
+							"type": "number",
+							"format": "double"
+						}
+					}
+				},
+				"description": "Valeurs d'une série d'un graphique en barre"
+			},
+			"DictionaryEntry": {
+				"title": "DictionaryEntry",
+				"required": [
+					"lang",
+					"text"
+				],
+				"type": "object",
+				"properties": {
+					"lang": {
+						"type": "string",
+						"enum": [
+							"s-CZ",
+							"da-DK",
+							"de-CH",
+							"de-DE",
+							"en-GB",
+							"en-US",
+							"el-GR",
+							"es-ES",
+							"fr-FR",
+							"hu-HU",
+							"it-IT",
+							"no-NO",
+							"pl-PL",
+							"pt-PT",
+							"ro-RO",
+							"ru-RU",
+							"sk-SK",
+							"cs",
+							"da",
+							"de",
+							"en",
+							"el",
+							"es",
+							"fr",
+							"hu",
+							"it",
+							"no",
+							"pl",
+							"pt",
+							"ro",
+							"ru",
+							"sk"
+						]
+					},
+					"text": {
+						"type": "string"
+					}
+				}
+			},
+			"Error": {
+				"title": "Error",
+				"required": [
+					"code",
+					"message"
+				],
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			},
+			"GenericData": {
+				"title": "GenericData",
+				"type": "object",
+				"properties": {
+					"label": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"STRING",
+							"TEXT",
+							"BOOLEAN",
+							"LONG",
+							"DOUBLE",
+							"DATE"
+						]
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"description": "Données d'une objet générique"
+			},
+			"GenericDataObject": {
+				"title": "GenericDataObject",
+				"type": "object",
+				"properties": {
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/GenericData"
+						}
+					},
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					}
+				},
+				"description": "Déonnées d'un objet générique"
+			}
+		}
+	}
+}

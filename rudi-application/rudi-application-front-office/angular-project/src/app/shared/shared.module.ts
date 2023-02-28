@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OrganizationLogoComponent} from './organization-logo/organization-logo.component';
-import {SplitPipe} from './split.pipe';
-import {TruncateTextPipe} from './truncate-text.pipe';
+import {SplitPipe} from './pipes/split.pipe';
+import {TruncateTextPipe} from './pipes/truncate-text.pipe';
 import {ErrorBoxComponent} from './error-box/error-box.component';
 import {LabelSeparatorComponent} from './label-separator/label-separator.component';
 import {AccountErrorBoxComponent} from './account-error-box/account-error-box.component';
@@ -18,9 +18,8 @@ import {PageTitleComponent} from './page-title/page-title.component';
 import {ProjectListComponent} from './project-list/project-list.component';
 import {ProjectCardComponent} from './project-card/project-card.component';
 import {ContactButtonComponent} from './contact-button/contact-button.component';
-import {ClipboardModule} from '@angular/cdk/clipboard';
 import {LoaderComponent} from './loader/loader.component';
-import {GetBackendPropertyPipe} from './get-backend-property.pipe';
+import {GetBackendPropertyPipe} from './pipes/get-backend-property.pipe';
 import {MonthYearDatepickerComponent} from './month-year-datepicker/month-year-datepicker.component';
 import {RadioListComponent} from './radio-list/radio-list.component';
 import {ResetPasswordErrorBoxComponent} from './reset-password-error-box/reset-password-error-box.component';
@@ -29,7 +28,7 @@ import {BannerComponent} from './banner/banner.component';
 import {TabComponent} from './tab/tab.component';
 import {SearchCountComponent} from './search-count/search-count.component';
 import {TabsComponent} from './tabs/tabs.component';
-import {ReplaceIfNullPipe} from './replace-if-null.pipe';
+import {ReplaceIfNullPipe} from './pipes/replace-if-null.pipe';
 import {TabsLayoutDirective} from './tabs-layout.directive';
 import {TabContentDirective} from './tab-content.directive';
 import {BannerButtonComponent} from './banner-button/banner-button.component';
@@ -45,6 +44,27 @@ import {ProjectHeadingComponent} from './project-heading/project-heading.compone
 import {DatasetsInfosComponent} from './dataset-infos/dataset-infos.component';
 import {WorkInProgressComponent} from './work-in-progress/work-in-progress.component';
 import {PaginatorComponent} from './paginator/paginator.component';
+import {BooleanDataBlockComponent} from './boolean-data-block/boolean-data-block.component';
+import {PageSubtitleComponent} from './page-subtitle/page-subtitle.component';
+import {WorkflowFieldBooleanComponent} from './workflow-field-boolean/workflow-field-boolean.component';
+import {WorkflowFormSubmitSuccessComponent} from './workflow-form-submit-success/workflow-form-submit-success.component';
+import {CardComponent} from './card/card.component';
+import {WorkflowFieldAddressComponent} from './workflow-field-address/workflow-field-address.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {ContactCardComponent} from './contact-card/contact-card.component';
+import {WorkflowFieldAttachmentComponent} from './workflow-field-attachment/workflow-field-attachment.component';
+import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
+import {UploaderComponent} from './uploader/uploader.component';
+import {ParseIntPipe} from './parse-int.pipe';
+import {FileSizePipe} from './file-size-pipe';
+import {ProcessDefinitionKeyTranslatePipe} from './pipes/process-definition-key-translate.pipe';
+import {CustomRouterlinkDirective} from './custom-routerlink-directive/custom-routerlink.directive';
+import {RequestDetailHeaderComponent} from './request-detail-header/request-detail-header.component';
+import {WorkflowFieldAttachmentPopinComponent} from './workflow-field-attachment-popin/workflow-field-attachment-popin.component';
+import {SelfdataProcessDefinitionKeyTranslatePipe} from './pipes/selfdata-process-definition-key-translate.pipe';
+import {BackPaginationComponent} from './back-pagination/back-pagination.component';
+import {DatasetHeadingComponent} from './dataset-heading/dataset-heading.component';
+import {DocumentationButtonComponent} from './documentation-button/documentation-button.component';
 
 @NgModule({
     declarations:
@@ -92,13 +112,34 @@ import {PaginatorComponent} from './paginator/paginator.component';
             DatasetsInfosComponent,
             WorkInProgressComponent,
             PaginatorComponent,
+            BooleanDataBlockComponent,
+            PageSubtitleComponent,
+            WorkflowFieldBooleanComponent,
+            WorkflowFormSubmitSuccessComponent,
+            CardComponent,
+            WorkflowFieldAddressComponent,
+            WorkflowFieldAttachmentComponent,
+            UploaderComponent,
+            ParseIntPipe,
+            WorkflowFieldAddressComponent,
+            ProcessDefinitionKeyTranslatePipe,
+            CustomRouterlinkDirective,
+            ContactCardComponent,
+            RequestDetailHeaderComponent,
+            WorkflowFieldAttachmentPopinComponent,
+            FileSizePipe,
+            SelfdataProcessDefinitionKeyTranslatePipe,
+            BackPaginationComponent,
+            DatasetHeadingComponent,
+            DocumentationButtonComponent
         ],
     imports: [
         CommonModule,
         ...MaterialModules,
         CoreModule,
         PopoverModule,
-        ClipboardModule
+        FilePickerModule,
+        MatAutocompleteModule
     ],
     exports: [
         MaterialModules,
@@ -120,6 +161,7 @@ import {PaginatorComponent} from './paginator/paginator.component';
         ProjectListComponent,
         PopoverComponent,
         PageTitleComponent,
+        PageSubtitleComponent,
         LoaderComponent,
         GetBackendPropertyPipe,
         MonthYearDatepickerComponent,
@@ -142,10 +184,24 @@ import {PaginatorComponent} from './paginator/paginator.component';
         DatasetsInfosComponent,
         WorkInProgressComponent,
         PaginatorComponent,
+        WorkflowFieldAddressComponent,
+        BooleanDataBlockComponent,
+        WorkflowFormSubmitSuccessComponent,
+        UploaderComponent,
+        ProcessDefinitionKeyTranslatePipe,
+        ContactCardComponent,
+        RequestDetailHeaderComponent,
+        CardComponent,
+        FileSizePipe,
+        SelfdataProcessDefinitionKeyTranslatePipe,
+        BackPaginationComponent,
+        DatasetHeadingComponent,
+        DocumentationButtonComponent
     ],
     entryComponents: [],
     providers: [
         {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'},
+        ProcessDefinitionKeyTranslatePipe
     ]
 })
 export class SharedModule {

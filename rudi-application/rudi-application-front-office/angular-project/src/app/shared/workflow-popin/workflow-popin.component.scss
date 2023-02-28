@@ -100,7 +100,6 @@
     .dialog-validate {
         background-color: $primary-color;
         color: $secondary-color;
-        width: 160px;
         height: 42px;
         border-radius: 6px;
         font-size: 14px;
@@ -118,8 +117,4 @@
 
     /*** Fin ***/
 
-}
-
-app-workflow-form {
-    @include block-with-margin-top(16px);
 }

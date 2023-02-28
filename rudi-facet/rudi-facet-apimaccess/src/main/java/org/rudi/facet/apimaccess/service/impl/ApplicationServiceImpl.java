@@ -270,18 +270,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		return applicationOperationAPI.buildAPIAccessUrl(apiInfo.getContext(), apiInfo.getVersion());
 	}
 
-	@Override
-	public boolean hasApi(UUID globalId, UUID mediaId) throws APIsOperationException {
-
-		// On regarde s'il y'a une API via une requête de recherche
-		final var apiList = apIsService.searchAPI(new APISearchCriteria()
-				.globalId(globalId)
-				.mediaUuid(mediaId));
-
-		// OK si taille retour pas 0
-		return apiList.getCount() != 0;
-	}
-
 	private APIInfo getApiInfo(UUID globalId, UUID mediaId) throws APIsOperationException, APINotFoundException {
 		val apiList = apIsService.searchAPI(new APISearchCriteria()
 				.globalId(globalId)

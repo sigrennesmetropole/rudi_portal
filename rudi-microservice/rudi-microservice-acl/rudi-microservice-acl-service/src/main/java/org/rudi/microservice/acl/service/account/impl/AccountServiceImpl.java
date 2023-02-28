@@ -1,5 +1,15 @@
 package org.rudi.microservice.acl.service.account.impl;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -39,15 +49,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Nonnull;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -172,7 +173,6 @@ public class AccountServiceImpl implements AccountService {
 		UserEntity user = createAccountUtilisateur(accountRegistration);
 		userDao.save(user);
 
-
 		try {
 			emailHelper.sendAccountCreationConfirmation(user, Locale.FRENCH);
 		} catch (Exception e) {
@@ -204,7 +204,8 @@ public class AccountServiceImpl implements AccountService {
 		// date du jour - accountRegistrationValidity
 		LocalDateTime reference = LocalDateTime.now().minus(Duration.ofMinutes(accountRegistrationValidity));
 		// recherche des toutes les accontRegistation plus ancienne que cette date
-		List<AccountRegistrationEntity> accountRegistrations = accountRegistrationDao.findByCreationDateBefore(reference);
+		List<AccountRegistrationEntity> accountRegistrations = accountRegistrationDao.findByCreationDateBefore(
+				reference);
 		// purge
 		if (CollectionUtils.isNotEmpty(accountRegistrations)) {
 			for (AccountRegistrationEntity accountRegistration : accountRegistrations) {
@@ -215,7 +216,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional // (readOnly = false)
-	public void checkPasswordChangeToken(UUID token) throws AppServiceNotFoundException, TokenExpiredException, MissingParameterException {
+	public void checkPasswordChangeToken(UUID token)
+			throws AppServiceNotFoundException, TokenExpiredException, MissingParameterException {
 		updatePasswordTokenHelper.checkTokenValidity(token);
 	}
 
@@ -276,7 +278,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public void requestPasswordChange(String email) {
 		User currentUser = emailHelper.lookupUserByEmail(email);
-		if(currentUser == null) {
+		if (currentUser == null) {
 			return;
 		}
 		ResetPasswordRequestEntity passwordEntity = new ResetPasswordRequestEntity();
@@ -295,12 +297,11 @@ public class AccountServiceImpl implements AccountService {
 	 */
 	@Transactional
 	public void deleteAllExpiredToken() {
-		resetPasswordRequestDao.findAll().forEach(
-				element -> {
-					if((LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - element.getCreationDate().toEpochSecond(ZoneOffset.UTC)) / HEURE_EN_SECONDE >= 1) {
-						resetPasswordRequestDao.delete(element);
-					}
-				}
-		);
+		resetPasswordRequestDao.findAll().forEach(element -> {
+			if ((LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - element.getCreationDate()
+					.toEpochSecond(ZoneOffset.UTC)) / HEURE_EN_SECONDE >= 1) {
+				resetPasswordRequestDao.delete(element);
+			}
+		});
 	}
 }

@@ -530,7 +530,7 @@ components:
               default: 'WGS 84 (EPSG:4326)'
               example:
                 'WGS 84 (EPSG:4326)'
-                # 'RGF93/Lambert-93 (EPSG:2154)'
+              # 'RGF93/Lambert-93 (EPSG:2154)'
               # 'RGF93/CC48 (EPSG:3948)'
               #TODO: 'Projection' thesaurus
 
@@ -551,9 +551,9 @@ components:
         #——————————————————————————
         'dataset_dates':
           allOf:
+            - $ref: '#/components/schemas/ReferenceDates'
             - description: Dates of the actions performed on the data (creation, publishing, update, deletion...)
               type: object
-            - $ref: '#/components/schemas/ReferenceDates'
 
         #——————————————————————————
         'storage_status':
@@ -659,9 +659,9 @@ components:
             #......................
             'metadata_provider':
               allOf:
+                - $ref: '#/components/schemas/Organization'
                 - description: Description of the organization that produced the metadata
                   type: object
-                - $ref: '#/components/schemas/Organization'
             #......................
             'metadata_contacts':
               description: Addresses to get further information on the metadata
@@ -672,7 +672,7 @@ components:
             'metadata_source':
               description: URI of the initial metadata
               type: string
-              format: URI
+              format: uri
 
     #---------------------------------------------------------------------------
     'Organization': # Organization
@@ -791,7 +791,7 @@ components:
             'licence_label':
               description: Value of the field SkosConcept.concept_code
               type: string
-              format: skosConceptCode
+              # format: skosConceptCode
 
       #---------------------------------------------------------------------------
     'LicenceCustom':
@@ -811,7 +811,7 @@ components:
             'custom_licence_uri':
               description: URL towards the custom licence
               type: string
-              format: URI
+              format: uri
 
     #---------------------------------------------------------------------------
     'Media':
@@ -843,12 +843,12 @@ components:
         'media_visual':
           description: Link towards a (low-fidelity) visualization of the Media
           type: string
-          format: URI
+          format: uri
         #——————————————————————————
         'media_dates':
           allOf:
-            - description: Time of the creation / last update of the Media
             - $ref: '#/components/schemas/ReferenceDates'
+            - description: Time of the creation / last update of the Media
         #——————————————————————————
         'connector':
           $ref: '#/components/schemas/Connector'
@@ -871,7 +871,7 @@ components:
               description:
                 Link towards the resource that describes the structure of the API
               type: string
-              format: URI
+              format: uri
 
     #---------------------------------------------------------------------------
     'MediaFile':
@@ -914,7 +914,7 @@ components:
                 Link towards the resource that describes the structure of the data
                 (language, norm, data structure, JSON schema, OpenAPI, etc.)
               type: string
-              format: URI
+              format: uri
               #'URI definition - https://tools.ietf.org/html/rfc2396'
             #——————————————————————————
             'file_encoding':
@@ -992,7 +992,7 @@ components:
         #——————————————————————————
         'url':
           type: string
-          format: URI
+          format: uri
         #——————————————————————————
         'interface_contract':
           description: Protocol to access the resource through the URL
@@ -1062,17 +1062,16 @@ components:
         #——————————————————————————
         'submission_date':
           allOf:
-            - description: >
-                Date when the integration request was submitted by the 
-                Producer node
-              type: string
             - $ref: '#/components/schemas/Date'
+            - description:
+                Date when the integration request was submitted by the Producer node
+              type: string
         #——————————————————————————
         'treatment_date':
           allOf:
+            - $ref: '#/components/schemas/Date'
             - description: Date when the integration request was processed by the Portal
               type: string
-            - $ref: '#/components/schemas/Date'
         #——————————————————————————
         'method':
           description: Method used by the Producer node for the integration request
@@ -1245,7 +1244,7 @@ components:
 
     #---------------------------------------------------------------------------
     'ReferenceDates':
-      description: 'Dates of the ac tions on the data'
+      description: 'Dates of the actions on the data'
       type: object
       required:
         - created
@@ -1410,10 +1409,10 @@ components:
         #——————————————————————————
         'of_scheme':
           allOf:
+            - $ref: '#/components/schemas/SkosScheme'
             - description: >
                 Reference to the constrained vocabulary, thesaurus or classification scheme
               type: object
-            - $ref: '#/components/schemas/SkosScheme'
         #——————————————————————————
         'concept_role':
           description: >
@@ -1494,7 +1493,40 @@ components:
       type: string
       pattern: '^[a-z]{2}(-[A-Z]{2})?$'
       enum:
-        ['cs', 'da', 'de', 'en', 'el', 'es', 'fr', 'hu', 'it', 'no', 'pl', 'pt', 'ro', 'ru', 'sk']
+        [
+          'cs-CZ',
+          'da-DK',
+          'de-CH',
+          'de-DE',
+          'en-GB',
+          'en-US',
+          'el-GR',
+          'es-ES',
+          'fr-FR',
+          'hu-HU',
+          'it-IT',
+          'no-NO',
+          'pl-PL',
+          'pt-PT',
+          'ro-RO',
+          'ru-RU',
+          'sk-SK',
+          'cs',
+          'da',
+          'de',
+          'en',
+          'el',
+          'es',
+          'fr',
+          'hu',
+          'it',
+          'no',
+          'pl',
+          'pt',
+          'ro',
+          'ru',
+          'sk',
+        ]
 
       # norm: https://www.rfc-editor.org/rfc/bcp/bcp47.txt
       # source for enum: https://app.swaggerhub.com/apis/nologo/thesaurus/1.0.0#/default/get_thesaurus_v1

@@ -3,12 +3,18 @@
  */
 package org.rudi.microservice.projekt.service.helper.linkeddataset;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+
+import javax.script.ScriptContext;
+
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Status;
-import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.bean.workflow.EMailData;
 import org.rudi.facet.bpmn.bean.workflow.EMailDataModel;
@@ -16,7 +22,6 @@ import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.email.EMailService;
 import org.rudi.facet.generator.text.impl.TemplateGeneratorImpl;
 import org.rudi.facet.kaccess.bean.Metadata;
-import org.rudi.facet.kaccess.bean.Organization;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.organization.bean.OrganizationMember;
 import org.rudi.facet.organization.helper.OrganizationHelper;
@@ -30,16 +35,10 @@ import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.script.ScriptContext;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
- *
  */
 @Component(value = "linkedDatasetWorkflowContext")
 @Transactional(readOnly = true)
@@ -90,11 +89,12 @@ public class LinkedDatasetWorkflowContext
 
 	/**
 	 * Retourne la liste des users candidats pour la tâche
-	 * 
+	 *
 	 * @param scriptContext   le context
 	 * @param executionEntity l'entité d'execution
 	 * @return la liste des users par leur identifiant sec-username
 	 */
+	@SuppressWarnings("unused") // Utilisé par linked-dataset-process.bpmn20.xml
 	public List<String> computePotentialProducersOwners(ScriptContext scriptContext, ExecutionEntity executionEntity,
 			String subject, String body) {
 		log.debug("computePotentialProducersOwners...");
@@ -111,15 +111,19 @@ public class LinkedDatasetWorkflowContext
 			Metadata metadata = null;
 			try { // Dataset exists ?
 				metadata = datasetService.getDataset(assetDescription.getDatasetUuid());
-				Organization organization = metadata.getProducer();
-				UUID uuid = organization.getOrganizationId();
+				final var organization = metadata.getProducer();
+				final var uuid = organization.getOrganizationId();
 				Collection<OrganizationMember> members = organizationHelper.getOrganizationMembers(uuid);
 				if (CollectionUtils.isNotEmpty(members)) {
 					assignees = new ArrayList<>();
 					for (OrganizationMember member : members) {
-						User user = getAclHelper().getUserByUUID(member.getUserUuid());
-						assignees.add(user.getLogin());
-						assigneeEmails.add(lookupEMailAddress(user));
+						final var user = getAclHelper().getUserByUUID(member.getUserUuid());
+						if (user != null) {
+							assignees.add(user.getLogin());
+							assigneeEmails.add(lookupEMailAddress(user));
+						} else {
+							log.warn("Member with user uuid \"{}\" does not exist as user in ACL", member.getUserUuid());
+						}
 					}
 				}
 				if (log.isInfoEnabled()) {
@@ -147,7 +151,7 @@ public class LinkedDatasetWorkflowContext
 
 		try {
 			org.rudi.facet.organization.bean.Organization producer = organizationHelper.getOrganization(eMailDataModel.getAssetDescription().getDatasetOrganisationUuid());
-			if(producer != null) {
+			if (producer != null) {
 				eMailDataModel.addData("producer", producer);
 			}
 		} catch (GetOrganizationException goe) {

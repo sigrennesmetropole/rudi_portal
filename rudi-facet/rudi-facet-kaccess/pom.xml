@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>0.3.0</version>
+		<version>1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -22,6 +22,13 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-core</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-dataset</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-common-test</artifactId>
@@ -133,6 +140,8 @@
 							<typeMappings>
 								<typeMapping>URI=String</typeMapping>
 								<typeMapping>Date=java.time.OffsetDateTime</typeMapping>
+								<!-- DictionaryEntry2 correspond au bean généré par la $ref : https://app.swaggerhub.com/apiproxy/registry/OlivierMartineau/RUDI-PRODUCER/1.4.0#/components/schemas/DictionaryEntry -->
+								<typeMapping>DictionaryEntry2=org.rudi.facet.kaccess.bean.DictionaryEntry</typeMapping>
 							</typeMappings>
 							<generatorName>spring</generatorName>
 							<library>spring-mvc</library>

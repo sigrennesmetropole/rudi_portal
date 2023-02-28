@@ -1,6 +1,14 @@
 package org.rudi.facet.providers.helper;
 
-import lombok.Getter;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.providers.bean.NodeProvider;
 import org.rudi.facet.providers.bean.Provider;
@@ -12,13 +20,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 /**
@@ -28,6 +31,7 @@ import static org.apache.commons.lang3.BooleanUtils.isTrue;
  *
  */
 @Component
+@Slf4j
 public class ProviderHelper {
 
 	private static final String NODE_PROVIDER_UUID_PARAMETER = "nodeProviderUuid";
@@ -41,16 +45,21 @@ public class ProviderHelper {
 	private final String providersEndpointPatchNodeUrl;
 	private final WebClient loadBalancedWebClient;
 
+	@Getter
+	private final UUID defaultProviderUuid;
+
 	public ProviderHelper(
 			@Value("${rudi.facet.providers.endpoint.search.url:/strukture/v1/providers}") String providersEndpointSearchURL,
 			@Value("${rudi.facet.providers.endpoint.get.url:/strukture/v1/providers}") String providersEndpointGetURL,
 			@Value("${rudi.facet.providers.endpoint.nodes.patch.url:/strukture/v1/providers/{providerUuid}/nodes/{nodeUuid}}") String providersEndpointPatchNodeUrl,
 			@Value("${rudi.facet.providers.service.url:lb://RUDI-STRUKTURE/}") String struktureServiceURL,
+			@Value("${rudi.facet.providers.default-provider-uuid:5596b5b2-b227-4c74-a9a1-719e7c1008c7}") UUID defaultProviderUuid,
 			@Qualifier("rudi_oauth2_builder") WebClient.Builder webClientBuilder
 	) {
 		this.providersEndpointSearchURL = providersEndpointSearchURL;
 		this.providersEndpointGetURL = providersEndpointGetURL;
 		this.providersEndpointPatchNodeUrl = providersEndpointPatchNodeUrl;
+		this.defaultProviderUuid = defaultProviderUuid;
 		this.loadBalancedWebClient = webClientBuilder.baseUrl(struktureServiceURL).build();
 	}
 
@@ -78,6 +87,7 @@ public class ProviderHelper {
 	 * @param nodeProviderUUId uuid du noeud recherché
 	 * @return le provider correspondant
 	 */
+	@Nullable
 	public Provider getProviderByNodeProviderUUID(UUID nodeProviderUUId) {
 		Provider result = null;
 		if (nodeProviderUUId == null) {
@@ -106,6 +116,7 @@ public class ProviderHelper {
 	 * @param nodeProviderUUId uuid du noeud recherché
 	 * @return le noeud correspondant
 	 */
+	@Nullable
 	public NodeProvider getNodeProviderByUUID(UUID nodeProviderUUId) {
 		NodeProvider result = null;
 		Provider provider = getProviderByNodeProviderUUID(nodeProviderUUId);

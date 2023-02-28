@@ -8,7 +8,7 @@
             <mat-icon *ngIf="copiedSuccess">done_all</mat-icon>
         </div>
     </button>
-    <mat-icon *ngIf="isMasked" matSuffix class="floating-icon-visibility"
+    <mat-icon *ngIf="masked" matSuffix class="floating-icon-visibility"
               (click)="hidePassword = !hidePassword">
         {{hidePassword ? 'visibility' : 'visibility_off'}}
     </mat-icon>

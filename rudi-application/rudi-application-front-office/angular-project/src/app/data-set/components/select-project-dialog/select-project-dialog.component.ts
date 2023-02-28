@@ -11,6 +11,7 @@ import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';
 import {Metadata} from '../../../api-kaccess';
 import {MatSelectChange} from '@angular/material/select';
 import {filterEach} from '../../../shared/utils/rxjs-pipes';
+import {Router} from '@angular/router';
 
 /**
  * Les données que peuvent accepter la Dialog
@@ -70,6 +71,7 @@ export class SelectProjectDialogComponent implements OnInit {
                 private readonly formBuilder: FormBuilder,
                 private readonly userService: UserService,
                 private readonly projektMetierService: ProjektMetierService,
+                private router: Router,
                 @Inject(MAT_DIALOG_DATA) public dialogData: SelectProjectDialogData,
     ) {
         this.matIconRegistry.addSvgIcon('icon-close', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/icon-close.svg'));
@@ -170,5 +172,13 @@ export class SelectProjectDialogComponent implements OnInit {
                 this.isProjectInvalid = true;
             }
         });
+    }
+
+    /**
+     * Au lcic sur le lien , l'utilisateur est renvoyé sur le formulaire "Soumettre un projet"
+     */
+    goToSubmitProject(): void {
+        this.router.navigate(['/projets/soumettre-un-projet']);
+        this.handleClose();
     }
 }

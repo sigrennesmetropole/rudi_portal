@@ -1,0 +1,133 @@
+[
+	{
+		"typeName": "rudi_media",
+		"typeClass": "compound",
+		"multiple": true,
+		"value": [
+			{
+				"rudi_mediafile_size": {
+					"typeName": "rudi_mediafile_size",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "50"
+				},
+				"rudi_media_connector_url": {
+					"typeName": "rudi_media_connector_url",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https:\/\/data.explore.star.fr\/explore\/dataset\/mkt-partenaires-garages-td\/download\/?format=csv&timezone=Europe\/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+				},
+				"rudi_media_name": {
+					"typeName": "rudi_media_name",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "file.csv"
+				},
+				"rudi_media_visual": {
+					"typeName": "rudi_media_visual",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https:\/\/cdn-icons-png.flaticon.com\/512\/180\/180855.png"
+				},
+				"rudi_media_media_dates_validated": {
+					"typeName": "rudi_media_media_dates_validated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612224000000000000"
+				},
+				"rudi_mediafile_type": {
+					"typeName": "rudi_mediafile_type",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "text\/csv"
+				},
+				"rudi_mediafile_structure": {
+					"typeName": "rudi_mediafile_structure",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "https:\/\/data.explore.star.fr\/explore\/dataset\/mkt-partenaires-garages-td\/download\/?format=csv&timezone=Europe\/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+				},
+				"rudi_media_media_dates_published": {
+					"typeName": "rudi_media_media_dates_published",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612310400000000000"
+				},
+				"rudi_media_connector_interface_contract": {
+					"typeName": "rudi_media_connector_interface_contract",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "dwnl"
+				},
+				"rudi_media_media_dates_created": {
+					"typeName": "rudi_media_media_dates_created",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1612137600000000000"
+				},
+				"rudi_media_type": {
+					"typeName": "rudi_media_type",
+					"typeClass": "controlledVocabulary",
+					"multiple": false,
+					"value": "FILE"
+				},
+				"rudi_media_media_dates_updated": {
+					"typeName": "rudi_media_media_dates_updated",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1615532400000000000"
+				},
+				"rudi_mediafile_checksum_algo": {
+					"typeName": "rudi_mediafile_checksum_algo",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "MD5"
+				},
+				"rudi_media_caption": {
+					"typeName": "rudi_media_caption",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "Média de type FILE"
+				},
+				"rudi_media_connector_connector_parameters": {
+					"typeName": "rudi_media_connector_connector_parameters",
+					"typeClass": "primitive",
+					"multiple": true,
+					"value": [
+						"{\"key\":\"mime_type\",\"value\":\"text\/csv\",\"type\":\"STRING\"}"
+					]
+				},
+				"rudi_mediafile_encoding": {
+					"typeName": "rudi_mediafile_encoding",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "UTF-8"
+				},
+				"rudi_mediafile_checksum_hash": {
+					"typeName": "rudi_mediafile_checksum_hash",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "SHA-256"
+				},
+				"rudi_media_media_dates_expires": {
+					"typeName": "rudi_media_media_dates_expires",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619568000000000000"
+				},
+				"rudi_media_media_dates_deleted": {
+					"typeName": "rudi_media_media_dates_deleted",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "1619654400000000000"
+				},
+				"rudi_media_id": {
+					"typeName": "rudi_media_id",
+					"typeClass": "primitive",
+					"multiple": false,
+					"value": "958b8a63-8302-4aa6-ae28-42cb5a1ee192"
+				}
+			}
+		]
+	}
+]

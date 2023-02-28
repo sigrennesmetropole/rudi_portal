@@ -1,21 +1,24 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {
+    DictionaryEntry2,
     Licence,
     LicenceCustom,
     LicenceStandard,
+    MatchingData,
     Media,
     MediaFile,
     MediaSeries,
     MediaService,
     Metadata,
-    MetadataAccessCondition
+    MetadataAccessCondition,
+    Period,
+    SelfdataContent,
 } from '../../../api-kaccess';
 import {HttpResponse} from '@angular/common/http';
 import {KonsultMetierService} from '../../../core/services/konsult-metier.service';
 import saveAs from 'file-saver';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
-import * as mime from 'mime';
 import {KindOfData} from '../../../api-kmedia';
 import {KosMetierService} from '../../../core/services/kos-metier.service';
 import {LanguageService} from '../../../i18n/language.service';
@@ -24,10 +27,15 @@ import {DetailFunctions} from '../../pages/detail/detail-functions';
 import {MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {Level} from '../../../shared/notification-template/notification-template.component';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
-import {GetBackendPropertyPipe} from '../../../shared/get-backend-property.pipe';
+import {GetBackendPropertyPipe} from '../../../shared/pipes/get-backend-property.pipe';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {MetadataUtils} from '../../../shared/utils/metadata-utils';
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
 import MediaTypeEnum = Media.MediaTypeEnum;
+import SelfdataAccessEnum = SelfdataContent.SelfdataAccessEnum;
+import SelfdataCatagoriesEnum = SelfdataContent.SelfdataCategoriesEnum;
+import UnitEnum = Period.UnitEnum;
+import TypeEnum = MatchingData.TypeEnum;
 
 @Component({
     selector: 'app-data-sets-infos',
@@ -36,7 +44,7 @@ import MediaTypeEnum = Media.MediaTypeEnum;
 })
 export class DataSetInfosComponent implements OnInit {
 
-    readonly DWNL_FORMAT = "DWNL";
+    readonly DWNL_FORMAT = 'DWNL';
 
     @Input() metadata: Metadata;
     @Input() mediaSize: MediaSize;
@@ -49,6 +57,7 @@ export class DataSetInfosComponent implements OnInit {
     conceptUri;
     // Indique si on affiche le loader pendant le téléchargement du Media
     public isLoading = false;
+    panelOpenStateSelfData: boolean;
     panelOpenStateCond: boolean;
     panelOpenStateDate: boolean;
     panelOpenStateStockage = false;
@@ -106,9 +115,8 @@ export class DataSetInfosComponent implements OnInit {
     /**
      * Fonction permettant de retourner l'extension du fichier
      */
-    getMediaFileExtension(item: Media): string {
-        const media = item as MediaFile;
-        return ' (' + mime.getExtension(media.file_type) + ')';
+    getMediaFileExtension(media: Media): string {
+        return this.konsultMetierService.getMediaFileExtension(media);
     }
 
     /**
@@ -117,6 +125,7 @@ export class DataSetInfosComponent implements OnInit {
     getMediaSerie(item: Media): MediaSeries {
         return item as MediaSeries;
     }
+
     getMediaService(item: Media): MediaService {
         return item as MediaService;
     }
@@ -204,7 +213,12 @@ export class DataSetInfosComponent implements OnInit {
      * @param media
      */
     canDownloadMedia(media: Media): boolean {
-        return this.downloadableMedias && this.downloadableMedias.some(downloadableMedia => downloadableMedia.media_id === media.media_id);
+        if (MetadataUtils.isSelfdata(this.metadata)) {
+            return false;
+        } else {
+            return this.downloadableMedias
+                && this.downloadableMedias.some(downloadableMedia => downloadableMedia.media_id === media.media_id);
+        }
     }
 
     /**
@@ -269,7 +283,13 @@ export class DataSetInfosComponent implements OnInit {
      * @param media média concerné par le JDD
      */
     getUrlApiMetadata(media: Media): string {
-        return window.location.host + '/medias/' + media.media_id + '/' + media?.connector?.interface_contract + '/1.0.0';
+        const interfaceContract = media?.connector?.interface_contract;
+        if (!interfaceContract) {
+            return undefined;
+        }
+        const isHandledByKonsult = interfaceContract === 'dwnl';
+        const urlPrefix = isHandledByKonsult ? '' : '/apm';
+        return window.location.host + urlPrefix + '/medias/' + media.media_id + '/' + interfaceContract + '/1.0.0';
     }
 
     /**
@@ -293,7 +313,7 @@ export class DataSetInfosComponent implements OnInit {
     /**
      * Verifie si un jdd est au format dwnl
      */
-    public isDwnlFormat(media: Media) : boolean {
+    public isDwnlFormat(media: Media): boolean {
         return this.getMediaFile(media)?.connector.interface_contract.toUpperCase() === this.DWNL_FORMAT;
     }
 
@@ -307,6 +327,7 @@ export class DataSetInfosComponent implements OnInit {
     getMediaIndexSeries(index: number): number {
         return this.getMediaIndexByType(index, this.mapMediaIndexSeries);
     }
+
     /**
      * Get le rang d'un media par rapport aux autres medias du même type
      * @param currentIndex
@@ -325,5 +346,121 @@ export class DataSetInfosComponent implements OnInit {
                 }
             });
         }
+    }
+
+    /**
+     * Construction et récupération de la chaîne de caractères de la liste des données pivots d'un jeu de données
+     * @param metadata les métadonnées contenant les infos sur le self data
+     */
+    getSelfDataPivot(metadata: Metadata): string {
+
+        if (metadata.ext_metadata == null || metadata.ext_metadata.ext_selfdata == null
+            || metadata.ext_metadata.ext_selfdata.ext_selfdata_content == null) {
+            return null;
+        }
+
+        const currentLanguage = this.translateService.currentLang;
+        let pivotLabels: string[] = [];
+        const matchingDatas = metadata.ext_metadata.ext_selfdata.ext_selfdata_content.matching_data;
+        if (matchingDatas && matchingDatas.length > 0) {
+            matchingDatas.forEach((matchingData: MatchingData) => {
+                const currentLangLabels = matchingData.label.filter((label: DictionaryEntry2) => label.lang === currentLanguage);
+                let labelsTxt = currentLangLabels.map((label: DictionaryEntry2) => label.text);
+
+                // Pièce justificative nécessaire si données d'appariement de type : pièce-jointe
+                if (matchingData.type === TypeEnum.Attachment) {
+                    labelsTxt = labelsTxt.map((labelTxt: string) => labelTxt + ' '
+                        + this.translateService.instant('donneesPersonnellesBox.needsJustificatif'));
+                }
+
+                pivotLabels = pivotLabels.concat(labelsTxt);
+            });
+        }
+
+        return pivotLabels.length === 0 ? null : pivotLabels.join(', ');
+    }
+
+    /**
+     * Construction et récupération de la chaîne de caractère décrivant le mode d'accès aux données self data
+     * @param metadata les métadonnées contenant les self data
+     */
+    getSelfDataAccessMode(metadata: Metadata): string {
+
+        if (metadata.ext_metadata == null || metadata.ext_metadata.ext_selfdata == null
+            || metadata.ext_metadata.ext_selfdata.ext_selfdata_content == null) {
+            return null;
+        }
+
+        const access = metadata.ext_metadata.ext_selfdata.ext_selfdata_content.selfdata_access;
+        if (access === SelfdataAccessEnum.Api) {
+            return this.translateService.instant('donneesPersonnellesBox.apiAccessMode');
+        } else if (access === SelfdataAccessEnum.Out) {
+            return this.translateService.instant('donneesPersonnellesBox.outAccessMode');
+        }
+
+        return null;
+    }
+
+    /**
+     * Traduction de l'objet Period en une chaîne de caractère lisible
+     * @param period élément à traduire et afficher
+     */
+    getSelfDataPeriod(period: Period): string {
+        let translateKey;
+        if (period && period.unit && period.value) {
+            switch (period.unit) {
+                case UnitEnum.Days:
+                    if (period.value > 1) {
+                        translateKey = 'donneesPersonnellesBox.days';
+                    } else {
+                        translateKey = 'donneesPersonnellesBox.day';
+                    }
+                    break;
+                case UnitEnum.Months:
+                    if (period.value > 1) {
+                        translateKey = 'donneesPersonnellesBox.months';
+                    } else {
+                        translateKey = 'donneesPersonnellesBox.month';
+                    }
+                    break;
+                case UnitEnum.Years:
+                    if (period.value > 1) {
+                        translateKey = 'donneesPersonnellesBox.years';
+                    } else {
+                        translateKey = 'donneesPersonnellesBox.year';
+                    }
+                    break;
+            }
+
+            return period.value + ' ' + this.translateService.instant(translateKey);
+        } else {
+            return null;
+        }
+    }
+
+    getSelfDataCategory(category: SelfdataCatagoriesEnum): string {
+        return this.translateService.instant('donneesPersonnellesBox.' + category);
+    }
+
+    getSelfDataCategories(metadata: Metadata): string {
+        if (metadata.ext_metadata == null || metadata.ext_metadata.ext_selfdata == null
+            || metadata.ext_metadata.ext_selfdata.ext_selfdata_content == null) {
+            return null;
+        }
+
+        const categories = metadata.ext_metadata.ext_selfdata.ext_selfdata_content.selfdata_categories;
+
+        let value = '';
+        if (categories && categories.length > 0) {
+            let index = 0;
+            categories.forEach(category => {
+                if (index > 0) {
+                    value += ', ';
+                }
+                value += this.getSelfDataCategory(category);
+                index++;
+            });
+        }
+        return value;
     }
 }

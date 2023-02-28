@@ -70,8 +70,7 @@
                                [createdProjectLink]="createdProjectLink"
                                [step3FormGroup]="step3FormGroup"
                                [datasetItems]="projectDatasetItems"
-                               (openDatasetDialogOpened)="openDialogAddLinkedDataset(false)"
-                               (restrictedAccessDatasetsDialogOpened)="openDialogAddLinkedDataset(true)"
+                               (datasetsDialogOpened)="openDialogAddLinkedDataset()"
                                (requestDatasetDialogOpened)="openDialogAskNewDatasetRequest()"
                                (itemRemoved)="handleItemRemoved($event)"
                                (itemEdited)="handleItemEdited($event)"
@@ -83,10 +82,13 @@
                     <span>{{ 'project.stepper.previous' | translate }}</span>
                 </button>
                 <span class="spacer"></span>
-                <button (click)="save()" class="button mat-stroked-button next-button mr-3"
+
+                <!-----Masquer le bouton "Enregistrer" RUDI-3197 ----->
+                <button *ngIf="false" (click)="save()" class="button mat-stroked-button next-button mr-3"
                         mat-raised-button matStepperNext>
                     <span>{{ 'project.stepper.submission.publish.enregistrer' | translate }}</span>
                 </button>
+
                 <button (click)="submit()" class="button mat-stroked-button next-button"
                         mat-raised-button matStepperNext [ngClass]="!isSubmit ? 'submit': 'next-button'">
                     <span>{{ 'project.stepper.submission.publish.submit' | translate }}</span>

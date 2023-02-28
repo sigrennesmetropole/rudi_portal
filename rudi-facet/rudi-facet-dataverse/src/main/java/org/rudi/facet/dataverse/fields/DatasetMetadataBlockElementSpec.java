@@ -1,10 +1,5 @@
 package org.rudi.facet.dataverse.fields;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,13 +9,19 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 @RequiredArgsConstructor
 public class DatasetMetadataBlockElementSpec {
 
 	@Getter
 	private final FieldSpec root;
 	private final Map<FieldSpec, List<FieldSpec>> level1Fields = new HashMap<>();
-	private final Map<FieldSpec, FieldSpec> parentCache = new HashMap<>();
 	private final Map<FieldSpec, FieldSpec> level1ParentCache = new HashMap<>();
 
 	/**
@@ -36,7 +37,7 @@ public class DatasetMetadataBlockElementSpec {
 		return this;
 	}
 
-	public Stream<FieldSpec> stream() {
+	public Stream<FieldSpec> streamLevel1Fields() {
 		return level1Fields.keySet().stream();
 	}
 
@@ -58,6 +59,17 @@ public class DatasetMetadataBlockElementSpec {
 	 */
 	public Stream<FieldSpec> streamChildrenOf(FieldSpec parent) {
 		return getChildrenOf(parent).stream();
+	}
+
+	public Stream<FieldSpec> streamAllFields() {
+		final var level1Fields = this.level1Fields.keySet();
+		var allFieldsStream = level1Fields.stream();
+
+		for (final var level1Field : level1Fields) {
+			allFieldsStream = Stream.concat(allFieldsStream, streamChildrenOf(level1Field));
+		}
+
+		return allFieldsStream;
 	}
 
 	/**
@@ -98,8 +110,8 @@ public class DatasetMetadataBlockElementSpec {
 	 * @return the parent
 	 */
 	@Nullable
-	public FieldSpec getParentOf(FieldSpec child) {
-		return getParentOf(child, level1ParentCache, FieldSpec::getChildren);
+	public FieldSpec getDirectParentOf(FieldSpec child) {
+		return getParentOf(child, level1ParentCache, FieldSpec::getDirectChildren);
 	}
 
 	/**
@@ -114,9 +126,13 @@ public class DatasetMetadataBlockElementSpec {
 
 	private FieldSpec getParentOf(FieldSpec child, Map<FieldSpec, FieldSpec> parentCache, Function<FieldSpec, Collection<FieldSpec>> childrenFinder) {
 		return parentCache.computeIfAbsent(child,
-				k -> stream()
+				k -> streamLevel1Fields()
 						.filter(level1Field -> childrenFinder.apply(level1Field).contains(child))
 						.findAny()
 						.orElse(null));
+	}
+
+	public boolean containsLevel1Field(FieldSpec fieldSpec) {
+		return level1Fields.containsKey(fieldSpec);
 	}
 }

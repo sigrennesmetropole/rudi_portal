@@ -1,4 +1,4 @@
-#### I - Intégration de la facette BPMN
+# I - Intégration de la facette BPMN
 
 La facette manipule les concepts suivants :
 
@@ -20,17 +20,15 @@ L'intégration de la facette BPMN nécessite les développements suivants :
 * Etendre la classe  _AbstractAssignmentHelper_  pour définir les modalités d'affectation des utilisateurs
 * Etendre la casses  _AbstactAssetDescriptionHelper_  pour spécialiser ce helper vis à vis du mapper créé
 
+# II - Design des processus
 
-#### II - Design des processus
-
-### II.1 - Créer un processus dans la base
+## II.1 - Créer un processus dans la base
 
 Le seul moyen de créer un nouveau processus ou une nouvelle version d'un processus est d'utiliser la méthode  _InitializationService.updateProcessDefinition_  en passant le fichier *.bpmn20.xml (Attention de bien respecter l'extension).
 
 Pour lister les processus déclarés (avec les différentes versions):  _InitializationService.searchProcessDefinitions_ 
 
-
-#### II.2 - Bien modéliser
+## II.2 - Bien modéliser
 
 Pour bien modéliser un processus, il est recommandé à chaque étape, de mettre à jour les données de l'Asset correspondant et notamment :
 * son état '_Activiti_'
@@ -38,7 +36,7 @@ Pour bien modéliser un processus, il est recommandé à chaque étape, de mettr
 * la date de mise à jour
 Des méthodes utilitaires sont disponibles pour cela (Cf. ci-dessous)
 
-#### II.3 - Interactions des processus avec l'Asset
+## II.3 - Interactions des processus avec l'Asset
 
 La classe WorkflowContext propose un certain nombre de méthodes utilitaires :
 
@@ -135,7 +133,7 @@ Les paramètres de la méthode sont :
 * Le sujet du courriell
 * Le corps du courriel
 
-#### III - Configuration des champs de formulaire d'une étape
+# III - Configuration des champs de formulaire d'une étape
 
 ![Gestion des formulaires](readme/FormDefinition.png)
 
@@ -154,24 +152,84 @@ Chaque section possède (_SectionDefintion_):
 
 Le flux json est constitué comme suit:
 
-```java
+```json
 {
-"fieldDefinitions": [
+	"fieldDefinitions": [
 		{
-		"name": <string>,
-		"label": <string>,
-		"type": ("STRING"|"BOOLEAN"|"LONG"|"DOUBLE"|"LIST"),
-		"readOnly": false|true,
-		"required": false|true,
-		"multiple": false|true,
-		"extendedType": "<flux json d'une liste d'objet avec code et label>",
-		"validators": [
-			{
-				"type": ("MAXLENGTH"|"POSITIVE"|"NEGATIVE"),
-				"attribute": ("<integer pour maxlength>"|null)
-			}
-		]
-	},...
-]
+			"name": <string>,
+			"label": <string>,
+			"type": (
+			"STRING"
+			|
+			"BOOLEAN"
+			|
+			"LONG"
+			|
+			"DOUBLE"
+			|
+			"LIST"
+			),
+			"readOnly": false
+			|
+			true,
+			"required": false
+			|
+			true,
+			"multiple": false
+			|
+			true,
+			"extendedType": "<flux json d'une liste d'objet avec code et label>",
+			"validators": [
+				{
+					"type": (
+					"MAXLENGTH"
+					|
+					"POSITIVE"
+					|
+					"NEGATIVE"
+					),
+					"attribute": (
+					"<integer pour maxlength>"
+					|
+					null)
+				}
+			]
+		},
+		...
+	]
 }
 ```
+
+## Initialisation automatique
+
+Pour associer automatiquement des formulaires à des étapes, il suffit d'ajouter les définitions JSON dans les dossiers
+suivants dans le classpath :
+
+- `bpmn/forms` : pour définir des formulaires qui utilisent les sections définies juste après
+- `bpmn/sections` : pour définir des sections
+
+Le nommage des fichiers de formulaires doit être composé des éléments suivants séparés par `__` :
+
+- processDefinitionId
+- userTaskId (`draft` dans le cas d'un formulaire draft)
+- actionName (optionnel)
+
+On peut spécifier un label pour une section si on souhaite qu'elle soit matérialisée par une bordure côté front.
+
+Exemple de définition avant la RUDI-2605 :
+
+- bpmn
+    - forms
+        - [linked-dataset-process__UserTask_1__canceled.json](src/test/resources/bpmn/forms/linked-dataset-process__UserTask_1__canceled.json)
+    - sections
+        - [linked-dataset-process__UserTask_1__canceled.json](src/test/resources/bpmn/sections/linked-dataset-process__UserTask_1__canceled.json)
+
+Exemple de définition après la RUDI-2605 :
+
+- bpmn
+    - forms
+        - [information-request-process__draft.json](src/test/resources/bpmn/forms/information-request-process__draft.json)
+    - sections
+        - [matching-data.json](src/test/resources/bpmn/sections/matching-data.json)
+        - [consent.json](src/test/resources/bpmn/sections/consent.json)
+        - [data-access.json](src/test/resources/bpmn/sections/data-access.json)

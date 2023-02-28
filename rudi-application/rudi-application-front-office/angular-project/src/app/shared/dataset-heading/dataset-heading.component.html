@@ -1,0 +1,17 @@
+<div class="header-metadata ml">
+    <div class="header-img">
+        <app-organization-logo [ngClass]="{'metadata-theme-sm' : mediaSize.isSm,
+                                            'metadata-theme-md' : mediaSize.isMd,
+                                            'metadata-theme-lg' : mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+                               [organizationId]="organizationId"
+                               organizationType="producer">
+        </app-organization-logo>
+    </div>
+    <div class="header-ressource">
+        <div class="producer-name">{{organizationName}}</div>
+        <div class="resource-description">
+            <mat-icon class="d-inline-flex dataset-icon" [svgIcon]="icon" *ngIf="icon != null && icon !== ''"></mat-icon>
+            <span class="blue-theme resource-title">{{resourceTitle}}</span>
+        </div>
+    </div>
+</div>

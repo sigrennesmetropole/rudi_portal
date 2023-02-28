@@ -1,7 +1,13 @@
 package org.rudi.microservice.kalim.service.scheduler.harvesting;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.VisibleForTesting;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -18,13 +24,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import static org.rudi.microservice.kalim.service.scheduler.harvesting.HarvestingConfiguration.OFFSET;
 import static org.rudi.microservice.kalim.service.scheduler.harvesting.HarvestingConfiguration.UPDATED_AFTER;
 
@@ -87,7 +88,7 @@ class HarvestingHelper {
 
 	private MetadataList metadataListWithoutNullFields(MetadataList metadataList) {
 		if (metadataList.getTotal() == null || metadataList.getItems() == null) {
-			return metadataList.total(0L).items(Collections.emptyList());
+			return metadataList.total(0L).offset(0L).items(Collections.emptyList());
 		} else {
 			return metadataList;
 		}

@@ -16,7 +16,18 @@ export abstract class FilterFormComponent<T, F extends Filter<T>, I extends Item
 
     @Input() ulClass?: string;
     @Input() formClass?: string;
+
+    /**
+     * Force une valeur pour ce filtre, pour éviter qu'on puisse le modifier.
+     */
     @Input() forcedValue?: T;
+
+    /**
+     * Valeurs qui ne doivent pas être visibles dans la sélection.
+     * Elles doivent être filtrées avec le prédicat {@link #filterItemsWithoutHiddenValuesPredicate} dans le ngOnInit du composant réel.
+     */
+    @Input() hiddenValues?: T[];
+
     readonly counter$: Observable<number>;
     @Output() submit = new EventEmitter<void>();
     @Output() selectedItemsChange = new EventEmitter<I[]>();
@@ -94,5 +105,13 @@ export abstract class FilterFormComponent<T, F extends Filter<T>, I extends Item
     get someItemsAreBeingSelected(): boolean {
         return !this.filter.isEmptyValue(this.getValueFromFormGroup());
     }
+
+    /**
+     * Prédicat pour filter les items qui ne sont pas cachés.
+     */
+    get filterItemsWithoutHiddenValuesPredicate(): FilterPredicate<I> {
+        return item => !this.hiddenValues || !this.hiddenValues.find(hiddenValue => hiddenValue === item.value);
+    }
 }
 
+type FilterPredicate<T> = (value: T, index: number, array: T[]) => unknown;

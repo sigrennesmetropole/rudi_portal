@@ -37,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
- *
  */
 @Component(value = "projectWorkflowContext")
 @Transactional(readOnly = true)
@@ -97,30 +96,20 @@ public class ProjectWorkflowContext
 	public String computeType(ScriptContext scriptContext, ExecutionEntity executionEntity) {
 		String result = REUSE_ROUTE;
 
-		// on parcourt les liens vers les jeux de données et si l'on trouve un jeu restreint ou une demande de nouveau jdd c'est un project sinon un
-		// réutilisation
+		// Une réutlisation est un projet qui n'a pas de desiredSupport (desiredSupportList.isEmpty())
+		// Un projet qui ne nécessite pas de support (desiredSupport selectionné == AUCUN) est un projet quand même
 		String processInstanceBusinessKey = executionEntity.getProcessInstanceBusinessKey();
 		if (processInstanceBusinessKey != null) {
 			UUID uuid = UUID.fromString(processInstanceBusinessKey);
 			ProjectEntity assetDescription = getAssetDescriptionDao().findByUuid(uuid);
-			if (assetDescription != null && CollectionUtils.isNotEmpty(assetDescription.getLinkedDatasets())) {
-				for (LinkedDatasetEntity linkedDataset : assetDescription.getLinkedDatasets()) {
-					if (linkedDataset.getDatasetConfidentiality() == DatasetConfidentiality.RESTRICTED) {
-						result = PROJECT_ROUTE;
-						break;
-					}
-				}
-			}
-			if (assetDescription != null && CollectionUtils.isNotEmpty(assetDescription.getDatasetRequests())) {
-				result = PROJECT_ROUTE;
-			}
+			return assetDescription.isAReuse() ? REUSE_ROUTE : PROJECT_ROUTE;
 		}
 		return result;
 	}
 
 	/**
 	 * Calcul des potentiels owners pour le gestionnaire de projet et le modérateur
-	 * 
+	 *
 	 * @param scriptContext
 	 * @param executionEntity
 	 * @return

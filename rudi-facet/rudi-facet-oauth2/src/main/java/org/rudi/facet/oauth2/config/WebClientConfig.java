@@ -19,13 +19,12 @@ import org.springframework.security.oauth2.client.web.server.AuthenticatedPrinci
 import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
 import lombok.Getter;
-import reactor.netty.http.client.HttpClient;
 
 /**
  * @author FNI18300
- *
  */
 public class WebClientConfig {
 

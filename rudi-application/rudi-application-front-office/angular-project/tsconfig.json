@@ -1,32 +1,33 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization": false,
-    "strict": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "outDir": "./dist/out-tsc",
+        "forceConsistentCasingInFileNames": true,
+        "strictPropertyInitialization": false,
+        "strict": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
     "skipLibCheck": true, // obligé depuis openlayer 6.6 car les standards typescript ont changé mais pas été propagé dans toutes les deps
-    "target": "es2015",
-    "module": "es2020",
-    "lib": [
-      "es2018",
-      "es2019",
-      "dom"
-    ]
-  },
-  "angularCompilerOptions": {
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
+        "target": "es2015",
+        "module": "es2020",
+        "lib": [
+            "es2018",
+            "es2019",
+            "dom"
+        ],
+        "resolveJsonModule": true
+    },
+    "angularCompilerOptions": {
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
     "strictTemplates": true,
-  }
+    }
 }

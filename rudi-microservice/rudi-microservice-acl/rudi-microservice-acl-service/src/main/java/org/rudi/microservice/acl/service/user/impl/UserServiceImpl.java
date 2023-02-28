@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.microservice.acl.service.user.impl;
 
@@ -154,6 +154,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User getUserInfo(String login) {
+		UserEntity user = userDao.findByLogin(login);
+		return userLightMapper.entityToDto(user);
+	}
+
+
+	@Override
 	public User getMe() {
 		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
 		if (authenticatedUser != null) {
@@ -228,7 +235,7 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * Validation d'un User
-	 * 
+	 *
 	 * @param entity
 	 */
 	private void validEntity(UserEntity entity) {

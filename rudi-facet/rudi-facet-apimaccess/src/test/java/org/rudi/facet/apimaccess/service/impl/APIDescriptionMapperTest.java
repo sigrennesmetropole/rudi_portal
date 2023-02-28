@@ -28,7 +28,8 @@ class APIDescriptionMapperTest {
 	@ParameterizedTest
 	@ValueSource(strings = {
 			"file",
-			"file-with-additionalProperties"
+			"file-with-additionalProperties",
+			"service-dwnl",
 	})
 	void buildAPIToSave(final String baseFileName) throws JSONException, IOException {
 		final var limitingPolicies = new LimitingPolicies()

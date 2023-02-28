@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.rudi.common.core.util.SecretKeyUtils;
-import org.springframework.beans.factory.annotation.Value;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -30,13 +27,15 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import org.rudi.common.core.util.SecretKeyUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
+ *
  */
 @Slf4j
 public abstract class AbstractJwtTokenUtil implements Serializable {
@@ -82,6 +81,9 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 	@Value("${security.jwt.apim.url.jwks:/oauth2/jwks}")
 	private String apimJwks;
 
+	@Value("${security.jwt.apim.algorithm:RS256}")
+	private String wso2TokenAlgorithm;
+
 	private final transient Map<String, Tokens> refreshTokens = new HashMap<>();
 
 	@Getter(value = AccessLevel.PROTECTED)
@@ -89,7 +91,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * récupération une propriété d'un token
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@SuppressWarnings("unchecked")
@@ -99,7 +101,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Retourne sujet associé au token
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	public String getSubjectFromToken(final String token) throws ParseException {
@@ -108,7 +110,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Retourne la date d'expiration du token
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	public Date getExpirationDateFromToken(final String token) throws ParseException {
@@ -130,7 +132,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Generation de nouveau token à partir du refresh token
-	 * 
+	 *
 	 * @param refreshToken
 	 * @return
 	 * @throws RefreshTokenExpiredException
@@ -214,7 +216,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Extraction du sujet
-	 * 
+	 *
 	 * @param token
 	 * @param claims
 	 */
@@ -235,7 +237,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Prépare la map contenant les claims
-	 * 
+	 *
 	 * @param connectedUser
 	 * @return
 	 * @throws JsonProcessingException
@@ -249,7 +251,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * https://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-rsa-signature
-	 * 
+	 *
 	 * @param token
 	 * @param jwt
 	 * @throws JOSEException
@@ -281,8 +283,8 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 			// Configure the JWT processor with a key selector to feed matching public
 			// RSA keys sourced from the JWK set URL
-			JWSKeySelector<SecurityContext> keySelector = new JWSVerificationKeySelector<>(JWSAlgorithm.HS256,
-					keySource);
+			JWSAlgorithm algorithm = JWSAlgorithm.parse(wso2TokenAlgorithm);
+			JWSKeySelector<SecurityContext> keySelector = new JWSVerificationKeySelector<>(algorithm, keySource);
 
 			jwtProcessor.setJWSKeySelector(keySelector);
 			try {
@@ -298,7 +300,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Generation d'un token de refresh pour un utilisateur un tokeb de refresh permet de redemander un token
-	 * 
+	 *
 	 * @throws JOSEException
 	 * @throws JsonProcessingException
 	 */
@@ -421,7 +423,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Détermine si le token est expiré
-	 * 
+	 *
 	 * @param claims
 	 * @return vrai si le token est expéré
 	 */
@@ -461,7 +463,6 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 			final int validity) throws JOSEException;
 
 	/**
-	 * 
 	 * @return la clef de signature
 	 */
 	protected String getSecretKey() {
@@ -473,7 +474,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * L'url du JWK de controle externe
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getJWKURL() {
@@ -482,7 +483,7 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	/**
 	 * Retoure si token parsé a été produit par le portail ou pas
-	 * 
+	 *
 	 * @param token
 	 * @return
 	 */
@@ -491,10 +492,18 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 	}
 
 	/**
-	 * 
 	 * @return le JWTId
 	 */
 	protected String getJWTId() {
 		return jwtId;
+	}
+
+	/**
+	 * Supprime le refreshToken en vue d'une déconnexion
+	 *
+	 * @param token le refreshToken à supprimer
+	 */
+	public void deleteRefreshToken(String token) {
+		refreshTokens.remove(token);
 	}
 }

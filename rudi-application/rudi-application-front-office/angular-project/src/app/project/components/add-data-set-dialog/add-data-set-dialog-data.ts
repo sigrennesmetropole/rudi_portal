@@ -1,3 +1,6 @@
+import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
+
 export interface AddDataSetDialogData {
-    restrictedAccessForcedValue: boolean;
+    accessStatusForcedValue: AccessStatusFiltersType;
+    accessStatusHiddenValues: AccessStatusFiltersType[];
 }

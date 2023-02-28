@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './home/home.component';
 import {AuthGuardService as AuthGuard} from './core/services/auth-guard.service';
 import {NotAuthorizedComponent} from './login/pages/not-authorized/not-authorized.component';
+import {UserGuardService} from './core/services/user-guard.service';
 
 const routes: Routes = [
 
@@ -28,7 +29,7 @@ const routes: Routes = [
         path: 'personal-space',
         loadChildren: () => import('./personal-space/personal-space.module')
             .then(m => m.PersonalSpaceModule),
-        canActivate: [AuthGuard]
+        canActivate: [UserGuardService]
     },
 
     {

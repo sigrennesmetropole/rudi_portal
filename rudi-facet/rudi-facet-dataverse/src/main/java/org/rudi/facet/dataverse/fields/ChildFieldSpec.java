@@ -1,12 +1,12 @@
 package org.rudi.facet.dataverse.fields;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.facet.dataverse.bean.FieldTypeClass;
 
 import lombok.Getter;
-
-import javax.annotation.Nonnull;
 
 public abstract class ChildFieldSpec extends FieldSpec {
 
@@ -15,7 +15,6 @@ public abstract class ChildFieldSpec extends FieldSpec {
 	@Nonnull
 	@Getter
 	private final FieldSpec parent;
-	private Boolean controlledVocabulary;
 
 	ChildFieldSpec(@Nonnull FieldSpec parent) {
 		this.parent = parent;
@@ -26,23 +25,11 @@ public abstract class ChildFieldSpec extends FieldSpec {
 	 */
 	public abstract String getLocalName();
 
-	/**
-	 * Par défaut on regarde si les types des valeurs est un Enum pour déterminer si le champ est contrôlé. Si on appelle cette méthode alors on indique
-	 * explicitement que de champ est de type CONTROLLEDVOCABULARY.
-	 *
-	 * @return this
-	 */
-	public ChildFieldSpec controlledVocabulary() {
-		controlledVocabulary = true;
-		return this;
-	}
-
 	@Override
 	public FieldTypeClass getTypeClass() {
-		// Pour le moment on n'utilise plus CONTROLLEDVOCABULARY (même pour les Enum) sauf si explicitement indiqué dans le code
-		if (Boolean.TRUE.equals(controlledVocabulary)) {
+		if (allowControlledVocabulary()) {
 			return FieldTypeClass.CONTROLLEDVOCABULARY;
-		} else if (CollectionUtils.isNotEmpty(getChildren())) {
+		} else if (CollectionUtils.isNotEmpty(getDirectChildren())) {
 			return FieldTypeClass.COMPOUND;
 		}
 		return FieldTypeClass.PRIMITIVE;

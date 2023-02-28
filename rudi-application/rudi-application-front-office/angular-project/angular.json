@@ -39,7 +39,8 @@
                             "src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/cropperjs/dist/cropper.js"
+                            "node_modules/cropperjs/dist/cropper.js",
+                            "src/assets/scripts/matomo.js"
                         ],
                         "allowedCommonJsDependencies": [
                             "file-saver",

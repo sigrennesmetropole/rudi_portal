@@ -1,0 +1,73 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.selfdata-container {
+    padding-top: 115px;
+    height: calc(100% - 170px);
+}
+
+.subtitle-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.subtitle-content {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-content {
+    width: 50%;
+    padding: 2em;
+}
+
+.information-request-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    display: block;
+    color: $primary-color;
+}
+
+.information-request-subtitle {
+    font-size: 14px;
+    color: $primary-text-light;
+    text-align: center;
+}
+
+.action-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.inside-action-section {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    width: 150px;
+
+    &.cancel-button {
+        color: $primary-text-light;
+    }
+
+    &.send-button {
+        @include button-blue;
+    }
+}

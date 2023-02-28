@@ -15,7 +15,7 @@ spring:
   profiles: ic
   cloud:
     config:
-      uri: http://10.50.1.45:8760    
+      uri: http://ren1vml0158:8760    
 
 ---
 spring:

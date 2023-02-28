@@ -1,5 +1,7 @@
 package org.rudi.microservice.kalim.service.integration.impl.validator;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,13 +16,11 @@ import org.rudi.facet.kos.helper.KOSHelper;
 import org.rudi.microservice.kalim.service.IntegrationError;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LicenceStandardValidatorTest {
+class LicenceStandardValidatorTest {
 
 	@InjectMocks
 	private LicenceStandardValidator licenceStandardValidator;
@@ -30,8 +30,8 @@ public class LicenceStandardValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation d'une licence standard avec un label vide")
-	public void testValidateLicenceStandardEmptyLabel() {
-		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel("");
+	void testValidateLicenceStandardEmptyLabel() {
+		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel(null);
 		licenceStandard.setLicenceType(Licence.LicenceTypeEnum.STANDARD);
 
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
@@ -48,12 +48,13 @@ public class LicenceStandardValidatorTest {
 	}
 
 	@Test
-	@DisplayName("Test de la validation d'une licence standard avec un label invalide")
-	public void testValidateLicenceStandardInvalidLabel() {
-		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel("licence-invalide");
+	@DisplayName("Test de la validation d'une licence standard avec un label inconnu de kos")
+	void testValidateLicenceStandardInvalidLabel() {
+		final var unknownLicenceLabel =  LicenceStandard.LicenceLabelEnum.CC_BY_ND_4_0;
+		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel(unknownLicenceLabel);
 		licenceStandard.setLicenceType(Licence.LicenceTypeEnum.STANDARD);
 
-		when(kosHelper.skosConceptLicenceExists(licenceStandard.getLicenceLabel())).thenReturn(false);
+		when(kosHelper.skosConceptLicenceExists(unknownLicenceLabel.toString())).thenReturn(false);
 
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				licenceStandardValidator.validate(licenceStandard);
@@ -73,15 +74,16 @@ public class LicenceStandardValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation d'une licence standard avec aucune erreur")
-	public void testValidateLicenceStandardNoErrors() {
-		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel("open-source-licence");
+	void testValidateLicenceStandardNoErrors() {
+		final var knownLicenceLabel =  LicenceStandard.LicenceLabelEnum.PUBLIC_DOMAIN_CC0;
+		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel(knownLicenceLabel);
 		licenceStandard.setLicenceType(Licence.LicenceTypeEnum.STANDARD);
 
-		when(kosHelper.skosConceptLicenceExists(licenceStandard.getLicenceLabel())).thenReturn(true);
+		when(kosHelper.skosConceptLicenceExists(knownLicenceLabel.toString())).thenReturn(true);
 
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				licenceStandardValidator.validate(licenceStandard);
 
-		assertThat(integrationRequestErrorEntities.size()).isEqualTo(0);
+		assertThat(integrationRequestErrorEntities).isEmpty();
 	}
 }

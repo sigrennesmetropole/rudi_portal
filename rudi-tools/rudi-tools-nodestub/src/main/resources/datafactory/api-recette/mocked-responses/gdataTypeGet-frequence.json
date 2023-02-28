@@ -1,0 +1,30 @@
+{
+	"legend": [
+		{
+			"lang": "fr-FR",
+			"text": "Fréquence de collecte par catégorie de bac"
+		}
+	],
+	"data": [
+		{
+			"label": [
+				{
+					"lang": "fr-FR",
+					"text": "Bacs ordures ménagères"
+				}
+			],
+			"type": "STRING",
+			"value": "1 fois par semaine"
+		},
+		{
+			"label": [
+				{
+					"lang": "fr-FR",
+					"text": "Bacs collecte sélective"
+				}
+			],
+			"type": "STRING",
+			"value": "1 fois toutes les 2 semaines"
+		}
+	]
+}

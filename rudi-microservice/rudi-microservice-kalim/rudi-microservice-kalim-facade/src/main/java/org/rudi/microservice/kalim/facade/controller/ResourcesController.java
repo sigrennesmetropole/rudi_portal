@@ -1,5 +1,7 @@
 package org.rudi.microservice.kalim.facade.controller;
 
+import java.util.UUID;
+
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -15,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
 
 @RestController
 public class ResourcesController implements ResourcesApi {
@@ -24,7 +29,7 @@ public class ResourcesController implements ResourcesApi {
 	private IntegrationRequestService integrationRequestService;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'PROVIDER', 'MODULE', 'MODULE_KALIM_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + PROVIDER + ", " + MODULE + ", " + MODULE_KALIM_ADMINISTRATOR + ")")
 	public ResponseEntity<UUID> createMetadata(Metadata metadata) {
 		try {
 			IntegrationRequest integrationRequest = integrationRequestService.createIntegrationRequest(metadata,
@@ -38,7 +43,7 @@ public class ResourcesController implements ResourcesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'PROVIDER', 'MODULE', 'MODULE_KALIM_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + PROVIDER + ", " + MODULE + ", " + MODULE_KALIM_ADMINISTRATOR + ")")
 	public ResponseEntity<UUID> updateMetadata(Metadata metadata) {
 		try {
 			IntegrationRequest integrationRequest = integrationRequestService.createIntegrationRequest(metadata,
@@ -53,7 +58,7 @@ public class ResourcesController implements ResourcesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'PROVIDER', 'MODULE', 'MODULE_KALIM_ADMINISTRATOR')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + PROVIDER + ", " + MODULE + ", " + MODULE_KALIM_ADMINISTRATOR + ")")
 	public ResponseEntity<UUID> deleteMetadata(UUID globalId) throws IntegrationException, DataverseAPIException, AppServiceException {
 		IntegrationRequest integrationRequest = integrationRequestService.createDeleteIntegrationRequestFromGlobalId(globalId);
 		return ResponseEntity.ok(integrationRequest.getUuid());

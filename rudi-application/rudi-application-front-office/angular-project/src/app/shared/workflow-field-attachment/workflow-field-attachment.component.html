@@ -1,0 +1,36 @@
+<ng-container [formGroup]="formGroup">
+    <div class="d-flex">
+        <mat-label class="label">{{label}}<span *ngIf="required && !readonly" class="required-symbol">*</span>
+        </mat-label>
+    </div>
+    <mat-hint *ngIf="!readonly" class="title-hint">{{help}}</mat-hint>
+    <app-uploader
+        *ngIf="!readonly"
+        [adapter]="attachmentAdapter"
+        [enableCropper]="false"
+        [fileMaxCount]="1"
+        [fileMaxSize]="properties.fileMaxSize.toMegabytes()"
+        [fileFormControl]="formControl"
+        imageText="metaData.selfdataInformationRequest.imageUploader"
+        imageFormat="metaData.selfdataInformationRequest.formatImage"
+        errorText="metaData.selfdataInformationRequest.creation.error.errorUpload"
+    ></app-uploader>
+    <app-loader [allPage]="false" [isLight]="true" [noText]="true"
+                [active]="attachmentLoading"></app-loader>
+    <div *ngIf="readonly && !attachmentLoading" class="row attachment"
+         [ngClass]="attachmentNotFound ? 'error-fake-input' : 'fake-input'">
+        <div class="col-1">
+            <mat-icon class="attachment-icon" svgIcon="attachment"></mat-icon>
+        </div>
+        <div class="col-10" *ngIf="!attachmentNotFound">
+            <div class="image-name"> {{attachment.name}}</div>
+            <div class="image-size">{{attachment.size | fileSize}}</div>
+        </div>
+        <div class="col-11 error-message" *ngIf="attachmentNotFound"
+             translate="metaData.selfdataInformationRequest.creation.error.errorLookupAttachment"></div>
+        <div class="col-1" *ngIf="!attachmentNotFound">
+            <mat-icon class="download-attachment-icon" svgIcon="bouton_telecharger"
+                      (click)="handleClickAttachment()"></mat-icon>
+        </div>
+    </div>
+</ng-container>

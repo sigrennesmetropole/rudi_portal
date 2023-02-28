@@ -14,11 +14,12 @@ import org.rudi.common.core.DocumentContent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 @Component
 @RequiredArgsConstructor
@@ -29,12 +30,14 @@ public class ResourceHelper {
 
 	private final ResourceLoader resourceLoader;
 
+	private final PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
+
 	@Value("${temporary.directory:${java.io.tmpdir}}")
 	private String temporaryDirectory;
 
 	/**
 	 * Exemple :
-	 * 
+	 *
 	 * <pre>
 	 * file:/etc/rudi/config/konsult/
 	 * </pre>
@@ -90,5 +93,11 @@ public class ResourceHelper {
 
 		// Fichier dans le classpath sinon
 		return resourceLoader.getResource(classpathLocation);
+	}
+
+	@Nonnull
+	public Resource[] getResourcesFromAdditionalLocationOrFromClasspath(String locationPattern) throws IOException {
+		return pathMatchingResourcePatternResolver.getResources(locationPattern);
+		// TODO faire également la recherche dans le additionalLocation et prendre en priorité les fichiers présents dans ce dossier par rapport au classpath
 	}
 }

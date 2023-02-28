@@ -5,3 +5,20 @@
 .search-box-title {
     font-family: Montserrat, sans-serif;
 }
+
+.subtitle-3 {
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center;
+    color: $primary-text;
+    width: 730px;
+}
+
+.subtitle-4 {
+    font-weight: 600;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+}

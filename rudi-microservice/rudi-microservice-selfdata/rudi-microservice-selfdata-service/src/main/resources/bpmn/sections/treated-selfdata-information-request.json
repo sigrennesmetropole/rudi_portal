@@ -1,0 +1,11 @@
+{
+	"fieldDefinitions": [
+		{
+			"name": "messageToInitiator",
+			"label": "Message à l’attention du demandeur",
+			"help": "Afin d'expliciter votre choix, nous vous permettons d'écrire au demandeur ci-dessous.",
+			"type": "TEXT",
+			"required": false
+		}
+	]
+}

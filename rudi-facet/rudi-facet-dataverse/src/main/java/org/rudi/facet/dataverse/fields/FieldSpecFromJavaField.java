@@ -1,14 +1,5 @@
 package org.rudi.facet.dataverse.fields;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -20,6 +11,16 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class FieldSpecFromJavaField extends ChildFieldSpec {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldSpecFromJavaField.class);
@@ -33,7 +34,7 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 		super(parent);
 		this.javaField = javaField;
 
-		parent.getChildren().add(this);
+		parent.getDirectChildren().add(this);
 	}
 
 	FieldSpecFromJavaField(@Nonnull FieldSpec parent, Class<?> javaFieldClass, @Nonnull String javaFieldName) {
@@ -65,13 +66,13 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getJavaType() {
 		return javaField.getType();
 	}
 
 	@Override
 	public Class<?> getValueType() {
-		final Class<?> type = getType();
+		final Class<?> type = getJavaType();
 		if (List.class.isAssignableFrom(type)) {
 			return (Class<?>) getListItemType(javaField);
 		} else {

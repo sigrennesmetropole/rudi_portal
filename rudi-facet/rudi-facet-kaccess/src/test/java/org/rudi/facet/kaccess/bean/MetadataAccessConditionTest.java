@@ -1,16 +1,17 @@
 package org.rudi.facet.kaccess.bean;
 
-import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.rudi.common.core.json.JsonResourceReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Set;
+
+import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.rudi.common.core.json.JsonResourceReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +26,7 @@ class MetadataAccessConditionTest {
 		final MetadataAccessCondition metadataAccessCondition = jsonResourceReader.read("metadata/accessCondition/min-standard_licence.json", MetadataAccessCondition.class);
 
 		assertThat(metadataAccessCondition)
-				.hasFieldOrPropertyWithValue("licence.licenceLabel", "SkosConcept.concept_code");
+				.hasFieldOrPropertyWithValue("licence.licenceLabel", LicenceStandard.LicenceLabelEnum.PUBLIC_DOMAIN_CC0);
 	}
 
 	@Test
@@ -44,7 +45,7 @@ class MetadataAccessConditionTest {
 		final MetadataAccessCondition metadataAccessCondition = jsonResourceReader.read("metadata/accessCondition/max-standard_licence.json", MetadataAccessCondition.class);
 
 		assertThat(metadataAccessCondition)
-				.hasFieldOrPropertyWithValue("licence.licenceLabel", "SkosConcept.concept_code");
+				.hasFieldOrPropertyWithValue("licence.licenceLabel", LicenceStandard.LicenceLabelEnum.PUBLIC_DOMAIN_CC0);
 	}
 
 	@Test

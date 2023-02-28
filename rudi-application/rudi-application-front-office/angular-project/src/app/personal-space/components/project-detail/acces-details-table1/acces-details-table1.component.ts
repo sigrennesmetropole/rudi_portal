@@ -77,15 +77,22 @@ export class AccesDetailsTable1Component implements OnInit, AfterViewInit {
         return true;
     }
 
+    hasOtherRequests(): boolean {
+        return this.jdds.length !== 0;
+    }
+
     isOneToOne(): boolean {
         return this._otherIndicators.x === 1 && this._otherIndicators.n === 1;
     }
+
     isOneToMany(): boolean {
         return this._otherIndicators.x === 1 && this._otherIndicators.n > 1;
     }
+
     isManyToOne(): boolean {
         return this._otherIndicators.x > 1 && this._otherIndicators.n === 1;
     }
+
     isManyToMany(): boolean {
         return this._otherIndicators.x > 1 && this._otherIndicators.n > 1;
     }

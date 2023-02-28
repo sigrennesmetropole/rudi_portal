@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Project} from '../../../projekt/projekt-model';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -10,14 +10,18 @@ import {PageTitleService} from '../../../core/services/page-title.service';
 import {Base64EncodedLogo} from '../../../core/services/image-logo.service';
 import {Observable} from 'rxjs';
 import {Indicators, NewDatasetRequest, Task} from '../../../projekt/projekt-api';
-import {TaskMetierService} from '../../../core/services/task-metier.service';
-import {
-    LinkedDatasetTaskDependencyFetchers,
-    LinkedDatasetTaskService,
-    OpenLinkedDatasetAccessRequest
-} from '../../../core/services/linked-dataset-task.service';
+
 import {map, switchMap} from 'rxjs/operators';
 import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {
+    LinkedDatasetTaskDependenciesService,
+    LinkedDatasetTaskDependencyFetchers,
+    OpenLinkedDatasetAccessRequest
+} from '../../../core/services/tasks/projekt/linked-dataset-task-dependencies.service';
+import {
+    NewDatasetRequestTaskDepenciesService,
+    NewDatasetRequestTaskDependencyFetchers
+} from '../../../core/services/tasks/projekt/new-dataset-request-task-depencies.service';
 
 /**
  * Les dépendances qu'on doit afficher dans cet onglet
@@ -70,6 +74,9 @@ export class ProjectDetailComponent implements OnInit {
 
     dependencies: ProjectDependencies;
 
+    @Input()
+    isNewRequest: boolean;
+
     constructor(
         private readonly domSanitizer: DomSanitizer,
         private readonly breakpointObserverService: BreakpointObserverService,
@@ -79,9 +86,10 @@ export class ProjectDetailComponent implements OnInit {
         private readonly aclService: AclService,
         private readonly translateService: TranslateService,
         private readonly pageTitleService: PageTitleService,
-        private readonly taskMetierService: TaskMetierService,
-        private readonly linkedDatasetTaskService: LinkedDatasetTaskService,
-        private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers
+        private readonly linkedDatasetTaskDependenciesService: LinkedDatasetTaskDependenciesService,
+        private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers,
+        private readonly newDatasetRequestTaskDepenciesService: NewDatasetRequestTaskDepenciesService,
+        private readonly newDatasetRequestTaskDependencyFetchers: NewDatasetRequestTaskDependencyFetchers
     ) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
     }
@@ -93,7 +101,11 @@ export class ProjectDetailComponent implements OnInit {
             switchMap((params: Params) => {
                 // Si ID on charge les dépendances de l'onglet
                 if (params.taskId) {
-                    return this.loadProjectDependencies(params.taskId);
+                    if (this.isNewRequest) {
+                        return this.loadProjectDependenciesForNewDatasetRequest(params.taskId);
+                    } else {
+                        return this.loadProjectDependenciesForLinkedDataset(params.taskId);
+                    }
                 }
                 // Sinon erreur on peut pas afficher l'onglet
                 throw Error('Erreur pas d\'UUID de tâche pour afficher l\'onglet');
@@ -113,11 +125,11 @@ export class ProjectDetailComponent implements OnInit {
 
     /**
      * Récupère les dépendances à afficher côté front pour le projet
-     * @param taskUuid l'uuid de la tâche à récupérer pour récupérer le projet et ses dépendances
+     * @param taskUuid l'uuid de la tâche à récupérer pour récupérer le projet et les dépendances d'un linkedDataset
      * @private
      */
-    private loadProjectDependencies(taskUuid: string): Observable<ProjectDependencies> {
-        return this.linkedDatasetTaskService.getTask(taskUuid).pipe(
+    private loadProjectDependenciesForLinkedDataset(taskUuid: string): Observable<ProjectDependencies> {
+        return this.linkedDatasetTaskDependenciesService.getTaskWithDependencies(taskUuid).pipe(
             injectDependencies({
                 dataset: this.linkedDatasetDependencyFetchers.dataset,
                 project: this.linkedDatasetDependencyFetchers.project
@@ -137,6 +149,24 @@ export class ProjectDetailComponent implements OnInit {
                     linkedDatasetsOpened: dependencies.linkedDatasetsOpened,
                     newDatasetRequests: dependencies.newDatasetRequests,
                     logo: dependencies.projectLogo
+                };
+            })
+        );
+    }
+
+    /**
+     * Récupère les dépendances à afficher côté front pour le projet
+     * @param taskUuid l'uuid de la tâche à récupérer pour récupérer le projet et les dépendances d'une newDatasetRequest
+     * @private
+     */
+    private loadProjectDependenciesForNewDatasetRequest(taskUuid: string): Observable<ProjectDependencies> {
+        return this.newDatasetRequestTaskDepenciesService.getTaskWithDependencies(taskUuid).pipe(
+            injectDependencies({
+                project: this.newDatasetRequestTaskDependencyFetchers.project
+            }),
+            map(({task, asset, dependencies}) => {
+                return {
+                    project: dependencies.project,
                 };
             })
         );

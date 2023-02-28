@@ -1,18 +1,18 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.NotImplementedException;
-import org.rudi.facet.dataverse.bean.FieldTypeClass;
-import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.rudi.facet.dataverse.bean.FieldTypeClass;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 
 class MissingOptionnalField extends Field {
 	public static final MissingOptionnalField INSTANCE = new MissingOptionnalField();
@@ -55,6 +55,12 @@ class MissingOptionnalField extends Field {
 
 	@Nullable
 	@Override
+	List<String> getValueAsStrings() {
+		return Collections.emptyList();
+	}
+
+	@Nullable
+	@Override
 	UUID getValueAsUUID() {
 		return null;
 	}
@@ -82,10 +88,10 @@ class MissingOptionnalField extends Field {
 		return null;
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	MapOfFields getValueAsMapOfFields() {
-		return null;
+		return MapOfFields.empty();
 	}
 
 	@Nonnull
@@ -94,10 +100,16 @@ class MissingOptionnalField extends Field {
 		return MultipleFieldValue.empty();
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
 	<E extends Enum<E>> E getValueAsEnumWith(Function<String, E> valueOf) {
-		throw new NotImplementedException();
+		return null;
+	}
+
+	@Nullable
+	@Override
+	<E extends Enum<E>> E getValueAsEnumWith(String valueAsString, Function<String, E> valueOf) {
+		return null;
 	}
 
 	@Nullable
@@ -110,5 +122,11 @@ class MissingOptionnalField extends Field {
 	@Override
 	OffsetDateTime getValueAsOffsetDateTime(DateTimeMapper dateTimeMapper) {
 		return null;
+	}
+
+	@Nullable
+	@Override
+	<T> List<T> getValueAsListOf(Class<T> targetType, ObjectMapper objectMapper) {
+		return Collections.emptyList();
 	}
 }

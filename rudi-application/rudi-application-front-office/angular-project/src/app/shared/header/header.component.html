@@ -13,7 +13,9 @@
              aria-label="navbar-desktop">
             <div class="header-logo-container">
                 <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
-                    <mat-icon class="header-logo" aria-hidden="false" aria-label="Logo bleu orange beta de rennes metropole" svgIcon="logo-bleu-orange"></mat-icon>
+                    <mat-icon class="header-logo" aria-hidden="false"
+                              aria-label="Logo bleu orange beta de rennes metropole"
+                              svgIcon="logo-bleu-orange"></mat-icon>
                 </a>
             </div>
             <ngx-navbar-collapse class="justify-content-end navbar-menu-items header-container-lg not-clickable"
@@ -37,15 +39,11 @@
                            [routerLinkActive]="'active'"><span>{{'header.reutilisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc" rel="noopener noreferrer" target="_blank">
+                        <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc"
+                           rel="noopener noreferrer" target="_blank">
                             <em class="fa fa-external-link fa-1x mr-2  icon-hide-mobile"></em>
                             <span>{{'header.documentation'| translate}}</span>
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.forum'|getBackendProperty|async}}"
-                           rel="noopener noreferrer"
-                           [routerLinkActive]="'active'"><span>{{'header.forum'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-uppercase" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
@@ -56,20 +54,24 @@
                     </li>
                     <li class="nav-item account-btn">
                         <button *ngIf="!isConnectedAsUser" mat-stroked-button (click)="handleClickGoLogin()">
-                            <em class="fa fa-user icon-hide-mobile fa-1x mr-2"></em>
-                            <span>{{'header.monCompte'| translate}}</span>
+                            <span>{{'header.logIn'| translate}}</span>
                         </button>
                         <button *ngIf="isConnectedAsUser" [matMenuTriggerFor]="accountMenu" mat-stroked-button>
-                            <em class="fa fa-user icon-hide-mobile fa-1x mr-2"></em>
+                            <img class="img-style" alt="{{'header.monCompte'| translate}}"
+                                 src="assets/images/mon_compte.png">
                             <span>{{'header.monCompte'| translate}}</span>
                         </button>
                         <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
-                            <button mat-menu-item
+                            <button class="title" mat-menu-item
                                     (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
-                            <button mat-menu-item
+                            <button class="title" mat-menu-item
                                     (click)="handleClickGoToReuse()">{{'header.accountMenu.myReuses'| translate}}</button>
-                            <button mat-menu-item
+                            <button class="title" mat-menu-item
+                                    (click)="handleClickGoToMySelfdata()">{{'header.accountMenu.mySelfdata'| translate}}</button>
+                            <button class="title" mat-menu-item
                                     (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.receivedLinkedDatasets'| translate}}</button>
+                            <hr class="hr">
+                            <button (click)="handleClickLogout()" class="title" mat-menu-item>{{'header.logOut'| translate}}</button>
                         </mat-menu>
                     </li>
                 </ul>
@@ -100,8 +102,7 @@
                     <mat-icon>account_circle</mat-icon>
                 </button>
                 <button *ngIf="isConnectedAsUser" [matMenuTriggerFor]="accountMenu" mat-stroked-button>
-                    <mat-icon>account_circle</mat-icon>
-                    <div class="notification-connected"></div>
+                    <img class="img-style" alt="mon_compte" src="assets/images/mon_compte.png">
                 </button>
                 <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
                     <button mat-menu-item
@@ -110,6 +111,8 @@
                             (click)="handleClickGoToReuse()">{{'header.accountMenu.myReuses'| translate}}</button>
                     <button mat-menu-item
                             (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.receivedLinkedDatasets'| translate}}</button>
+                    <hr class="hr">
+                    <button (click)="handleClickLogout()" class="title" mat-menu-item>{{'header.logOut'| translate}}</button>
                 </mat-menu>
                 <!-- button menu burger -->
                 <button
@@ -152,12 +155,6 @@
                            rel="noopener noreferrer"
                            [routerLinkActive]="'active-item'"><span
                             class="ul-items-mobile">{{'header.documentation'| translate}}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.forum'|getBackendProperty|async}}"
-                           rel="noopener noreferrer"
-                           [routerLinkActive]="'active-item'"><span
-                            class="ul-items-mobile">{{'header.forum'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{'rudidatarennes.index'|getBackendProperty|async}}"

@@ -1,15 +1,5 @@
 package org.rudi.facet.dataverse.fields.generators;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement;
-import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
-import org.rudi.facet.dataverse.fields.DatasetMetadataBlockElementSpec;
-import org.rudi.facet.dataverse.fields.FieldSpec;
-import org.rudi.facet.dataverse.fields.exceptions.MismatchedChildrenValuesCount;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +7,18 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.StringUtils;
+import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement;
+import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
+import org.rudi.facet.dataverse.fields.DatasetMetadataBlockElementSpec;
+import org.rudi.facet.dataverse.fields.FieldSpec;
+import org.rudi.facet.dataverse.fields.exceptions.MismatchedChildrenValuesCount;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class AbstractDatasetMetadataBlockElementGenerator {
@@ -28,7 +30,7 @@ public abstract class AbstractDatasetMetadataBlockElementGenerator {
 	public DatasetMetadataBlockElement generateBlockElement() {
 		final DatasetMetadataBlockElement block = new DatasetMetadataBlockElement()
 				.fields(new ArrayList<>());
-		blockElementSpec.stream()
+		blockElementSpec.streamLevel1Fields()
 				.map(this::generateField)
 				.filter(Objects::nonNull)
 				.forEach(block::addFieldsItem);

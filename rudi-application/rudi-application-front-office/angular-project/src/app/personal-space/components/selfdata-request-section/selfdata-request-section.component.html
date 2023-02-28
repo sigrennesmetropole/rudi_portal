@@ -1,0 +1,38 @@
+<!-- Données personnelles -->
+<mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+        <mat-panel-title class="panel-title">
+            {{title}}
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p class="panel-subtitle">{{subTitle}}</p>
+
+    <p *ngIf="!isNotApplicable" class="panel-description">{{description}}</p>
+    <div *ngIf="isNotApplicable">
+        <ul>
+            <li class="panel-description" *ngFor="let reason of nonApplicableReasons">{{reason}}
+            </li>
+        </ul>
+    </div>
+
+    <div *ngIf="!isNotApplicable" class="d-flex panel-content-margin">
+        <div *ngIf="!hasRequest">
+            <button mat-raised-button class="button" [disabled]="disableButton"
+                    [ngClass]="{'button-active': !disableButton}"
+                    (click)="handleClickButton()">
+                <span>{{creationLabel}}</span>
+            </button>
+        </div>
+        <div *ngIf="hasRequest" class="d-flex">
+            <div class=" label-status">
+                <span>{{functionalStatus}}</span>
+            </div>
+            <div *ngIf="false" class="panel-demand-link-details">
+                <a (click)="goToRequestDetails()"
+                   [translate]="'personalSpace.selfdataRequest.informationRequest.btnSeeRequestDetailsLabel'">
+                </a>.
+            </div>
+        </div>
+    </div>
+    <hr>
+</mat-expansion-panel>

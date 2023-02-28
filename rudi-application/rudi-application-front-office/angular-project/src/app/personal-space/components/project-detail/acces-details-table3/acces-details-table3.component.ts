@@ -2,8 +2,8 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {MatTableDataSource} from '@angular/material/table';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort} from '@angular/material/sort';
-import {OpenLinkedDatasetAccessRequest} from '../../../../core/services/linked-dataset-task.service';
 import * as moment from 'moment';
+import {OpenLinkedDatasetAccessRequest} from '../../../../core/services/tasks/projekt/linked-dataset-task-dependencies.service';
 
 export interface Table3Data {
     titre: string;

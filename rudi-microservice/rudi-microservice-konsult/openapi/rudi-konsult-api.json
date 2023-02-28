@@ -255,6 +255,9 @@
 						"$ref": "#/components/parameters/RestrictedAccessParam"
 					},
 					{
+						"$ref": "#/components/parameters/GdprSensitiveParam"
+					},
+					{
 						"$ref": "#/components/parameters/GlobalIdParam"
 					},
 					{
@@ -496,65 +499,65 @@
 			}
 		},
 		"/datasets/{globalId}/media/{mediaId}/has-subscribe": {
-            "get": {
-                "tags": [
-                    "konsult"
-                ],
-                "summary": "Permet de savoir si l'utilisateur a souscrit au média associé au jdd",
-                "description": "Retourne true si l'utilisateur a souscrit au média associé au jdd",
-                "operationId": "hasSubscribeToMetadataMedia",
-                "parameters": [
-                    {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Permet de savoir si l'utilisateur a souscrit au média associé au jdd",
+				"description": "Retourne true si l'utilisateur a souscrit au média associé au jdd",
+				"operationId": "hasSubscribeToMetadataMedia",
+				"parameters": [
+					{
 						"$ref": "#/components/parameters/GlobalIdPathParam"
-                    },
-                    {
-                        "in": "path",
-                        "name": "mediaId",
-                        "description": "Identifiant du media",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Retourne true si l'utilisateur a souscrit au média",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Erreur lorsque l'utilisateur n'a pas souscrit au jeux de données",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "480": {
+					},
+					{
+						"in": "path",
+						"name": "mediaId",
+						"description": "Identifiant du media",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne true si l'utilisateur a souscrit au média",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Erreur lorsque l'utilisateur n'a pas souscrit au jeux de données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"480": {
 						"$ref": "#/components/responses/UnknownClientKeyError"
-                    },
-                    "500": {
+					},
+					"500": {
 						"$ref": "#/components/responses/InternalServerError"
-                    }
-                }
-            }
-        },
-        "/datasets/{globalId}/media/{mediaId}/download": {
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/media/{mediaId}/download": {
 			"get": {
 				"tags": [
 					"konsult"
 				],
 				"summary": "Récupération des métadonné d'un jeu de données.",
-				"description": "Retourne les métadonnées du jeu de données dont l'identifiant est spécifié.",
+				"description": "Télécharge le media d'un jdd.",
 				"operationId": "downloadMetadataMedia",
 				"parameters": [
 					{
@@ -741,6 +744,15 @@
 				"in": "query",
 				"name": "restrictedAccess",
 				"description": "Données ouvertes (false) ou restreintes (true)",
+				"required": false,
+				"schema": {
+					"type": "boolean"
+				}
+			},
+			"GdprSensitiveParam": {
+				"in": "query",
+				"name": "gdprSensitive",
+				"description": "self data (true)",
 				"required": false,
 				"schema": {
 					"type": "boolean"

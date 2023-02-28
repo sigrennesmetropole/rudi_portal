@@ -4,21 +4,16 @@ import javax.net.ssl.SSLException;
 
 import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.facet.acl.helper.ACLHelper;
-import org.rudi.facet.apimaccess.api.APIManagerProperties;
-import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationKey;
+import org.rudi.facet.apimaccess.bean.Credentials;
 import org.rudi.facet.apimaccess.bean.EndpointKeyType;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.rudi.facet.apimaccess.exception.AdminOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
-import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
-import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
+import org.rudi.facet.apimaccess.helper.registration.RegistrationHelper;
 import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
-import org.rudi.facet.apimaccess.service.AdminService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.microservice.konsult.core.bean.ApiKeys;
 import org.rudi.microservice.konsult.core.bean.ApiKeysType;
-import org.rudi.microservice.konsult.core.bean.Credentials;
 import org.rudi.microservice.konsult.service.apim.ApimService;
 import org.springframework.stereotype.Service;
 
@@ -31,39 +26,26 @@ import lombok.extern.slf4j.Slf4j;
 public class ApimServiceImpl implements ApimService {
 
 	private final ApplicationService applicationService;
-	private final AdminService adminService;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final ACLHelper aclHelper;
+	private final RegistrationHelper registrationHelper;
 
 	@Override
 	public boolean hasEnabledApi(Credentials credentials) throws SSLException {
-		final var registration = customClientRegistrationRepository.findByUsernameAndPassword(credentials.getLogin(), credentials.getPassword());
-		return registration != null;
+		return registrationHelper.findRegistrationForUser(credentials.getLogin(), credentials.getPassword()) != null;
 	}
 
 	@Override
 	public void enableApi(Credentials credentials) throws APIManagerException, SSLException {
-		assignInternalSubscriberRole(credentials);
-		register(credentials);
-		getOrCreateApplicationForUser(credentials);
-	}
-
-	private void register(Credentials credentials) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
-		customClientRegistrationRepository.findRegistrationOrRegister(credentials.getLogin(), credentials.getPassword());
-	}
-
-	private void assignInternalSubscriberRole(Credentials credentials) throws AdminOperationException {
-		adminService.assignRoleToUser(APIManagerProperties.Roles.INTERNAL_SUBSCRIBER, credentials.getLogin());
-	}
-
-	private Application getOrCreateApplicationForUser(Credentials credentials) throws ApplicationOperationException {
-		return applicationService.getOrCreateDefaultApplication(credentials.getLogin());
+		registrationHelper.assignInternalSubscriberRole(credentials.getLogin(), credentials.getPassword());
+		registrationHelper.register(credentials.getLogin(), credentials.getPassword());
+		registrationHelper.getOrCreateApplicationForUser(credentials.getLogin());
 	}
 
 	@Override
 	public ApiKeys getKeys(ApiKeysType type, Credentials credentials) throws APIManagerException, AppServiceForbiddenException {
 		checkCredentials(credentials);
-		final var application = getOrCreateApplicationForUser(credentials);
+		final var application = registrationHelper.getOrCreateApplicationForUser(credentials.getLogin());
 		final var applicationKey = getApplicationKey(type, credentials.getLogin(), application.getApplicationId());
 		return new ApiKeys()
 				.consumerKey(applicationKey.getConsumerKey())

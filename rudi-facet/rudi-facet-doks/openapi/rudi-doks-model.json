@@ -1,0 +1,37 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Doks",
+		"version": "0.0.1",
+		"title": "rudi-doks-model",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {},
+	"components": {
+		"schemas": {
+			"DocumentMetadata": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"contentType": {
+						"description": "Le type MIME du fichier",
+						"type": "string"
+					},
+					"size": {
+						"description": "La taille en octets",
+						"type": "number"
+					}
+				}
+			}
+		}
+	}
+}

@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>0.3.0</version>
+		<version>1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -92,6 +92,12 @@
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 			<version>${jetbrains.annotations.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.rudi</groupId>
+			<artifactId>rudi-facet-dataset</artifactId>
+			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>
 

@@ -9,8 +9,17 @@ Suite à la création d'un nouveau microservice, mettre à jour les fichiers sui
 - [ ] docker/copy-rudi.sh
 - [ ] docker/config/gateway/gateway.yml
 - [ ] docker/docker-compose.yml
+- [ ] rudi-application/rudi-application-front-office/angular-project/package.json
+- [ ] rudi-common/rudi-common-core/src/main/java/org/rudi/common/core/security/QuotedRoleCodes.java
+- [ ] rudi-common/rudi-common-core/src/main/java/org/rudi/common/core/security/Role.java
+- [ ] rudi-common/rudi-common-core/src/main/java/org/rudi/common/core/security/RoleCodes.java
 - [ ] rudi-microservice/pom.xml
-- [ ] rudi-microservice/rudi-microservice-gateway/rudi-microservice-gateway-facade/src/main/resources/gateway/gateway.yml
+- [ ] 
+  rudi-microservice/rudi-microservice-gateway/rudi-microservice-gateway-facade/src/main/resources/gateway/gateway.yml
+  - Rajouter la ligne permettant de générer les fichiers swagger
+  - generate:[MICROSERVICE]-api
+  - generate:[MICROSERVICE]-model
+  - Ajouter les 2 lignes dans l'instruction generate:all
 
 Créer également ces fichiers :
 
@@ -23,7 +32,7 @@ Créer également ces fichiers :
 - [ ] rudi-microservice/rudi-microservice-acl/rudi-microservice-acl-service/src/main/resources/bdd/V*__microservice_<microservice>.sql avec :
   - [ ] un `user` dans `acl_data` avec les champs suivants :
     - uuid : Un UUID préalablement généré par un outil externe
-    - company : `RUDI`
+    - company : `rudi`
     - login = module.oauth2.client-id
     - firstname = login
     - lastname = login

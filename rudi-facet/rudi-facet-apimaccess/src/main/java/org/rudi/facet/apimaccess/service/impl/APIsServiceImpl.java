@@ -1,6 +1,7 @@
 package org.rudi.facet.apimaccess.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -228,5 +229,18 @@ public class APIsServiceImpl implements APIsService {
 
 		apiDescriptionMapper.map(apiDescription, api);
 	}
+
+	@Override
+	public boolean existsApi(UUID globalId, UUID mediaId) throws APIsOperationException {
+
+		// On regarde s'il y'a une API via une requête de recherche
+		final var apiList = searchAPI(new APISearchCriteria()
+				.globalId(globalId)
+				.mediaUuid(mediaId));
+
+		// OK si taille retour pas 0
+		return apiList.getCount() != 0;
+	}
+
 
 }

@@ -1,0 +1,33 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+
+.demand-resume {
+    margin-top: 20px;
+}
+
+.icon-header-title {
+    line-height: 68.2px;
+    margin-right: 1em;
+}
+
+.large-icon-size {
+    height: 27px;
+    width: 27px;
+    vertical-align: center;
+    fill: $accent-color;
+}
+
+.header-title {
+    @include card-header-title;
+}
+
+.status-chip {
+    border-radius: 14px;
+    background-color: var(--background-s-lection-active-tableau);
+    white-space: nowrap;
+    padding: 5px 18px;
+    font-size: 13px;
+    color: $primary-color;
+}

@@ -1,0 +1,49 @@
+@import "../../styles/colors";
+
+label {
+    margin-bottom: 0.7em;
+
+    .title {
+        font-family: OpenSans, sans-serif;
+        font-size: 16px;
+        color: $secondary-text;
+        line-height: 2;
+    }
+
+    .description {
+        font-family: OpenSans, sans-serif;
+        font-size: 14px;
+        color: $primary-text-light;
+    }
+}
+
+.help-title {
+    font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    color: $secondary-text;
+    line-height: 2;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.section-card {
+    border-style: solid;
+    border-width: 1px;
+    border-color: $blocks-and-menus-outline;
+    box-shadow: none;
+    padding-top: 19px;
+    padding-bottom: 0;
+    margin-bottom: 2em;
+}
+
+.section-title-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+}
+
+mat-form-field {
+    margin: 12px 0 31px;
+    border-radius: 4px;
+    width: 100%;
+}

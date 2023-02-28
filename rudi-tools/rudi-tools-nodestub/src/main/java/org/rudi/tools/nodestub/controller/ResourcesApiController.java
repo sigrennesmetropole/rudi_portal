@@ -1,8 +1,15 @@
 package org.rudi.tools.nodestub.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataList;
 import org.rudi.microservice.kalim.core.bean.Report;
@@ -13,13 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Nonnull;
-import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
@@ -75,6 +77,7 @@ public class ResourcesApiController implements ResourcesApi {
 		return ResponseEntity.ok(
 				new MetadataList()
 						.total((long) metadatas.size())
+						.offset((long) offset)
 						.items(metadatas)
 		);
 	}

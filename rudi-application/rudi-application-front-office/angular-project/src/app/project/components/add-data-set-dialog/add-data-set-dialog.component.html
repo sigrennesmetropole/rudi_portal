@@ -8,7 +8,8 @@
                         [title1]="'project.addDatasetPopup.title1'|translate"></app-page-title>
         <app-list-container [hidePagination]="true" [limit]="maxResultPerPage" [resultsPerRow]="3" [isSelectable]="true"
                             (dbSelectMetadata)="doubleSelect($event)  " (selectMetadata)="selectMetadata($event)"
-                            [restrictedAccessForcedValue]="restrictedAccessForcedValue" [orders]="orders"
+                            [accessStatusForcedValue]="accessStatusForcedValue"
+                            [accessStatusHiddenValues]="accessStatusHiddenValues" [orders]="orders"
                             [mediaSize]="mediaSize"></app-list-container>
 
         <mat-dialog-actions class="d-flex justify-content-between dialog-footer-button">

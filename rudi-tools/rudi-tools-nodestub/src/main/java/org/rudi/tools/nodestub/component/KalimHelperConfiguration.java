@@ -60,9 +60,8 @@ public class KalimHelperConfiguration {
 	}
 
 	@Bean
-	public ReactiveOAuth2AuthorizedClientService clientService(
-			ReactiveClientRegistrationRepository clientRegistrationRepository) {
-		return new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrationRepository);
+	public ReactiveOAuth2AuthorizedClientService clientService(ReactiveClientRegistrationRepository getRegistration) {
+		return new InMemoryReactiveOAuth2AuthorizedClientService(getRegistration);
 	}
 
 	@Bean
@@ -73,14 +72,13 @@ public class KalimHelperConfiguration {
 
 	@Bean
 	public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
-			ReactiveClientRegistrationRepository clientRegistrationRepository,
-			ReactiveOAuth2AuthorizedClientService clientService,
+			ReactiveClientRegistrationRepository getRegistration, ReactiveOAuth2AuthorizedClientService clientService,
 			ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
 		ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider = ReactiveOAuth2AuthorizedClientProviderBuilder
 				.builder().clientCredentials().build();
 
 		AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
-				clientRegistrationRepository, clientService);
+				getRegistration, clientService);
 
 		authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
 		return authorizedClientManager;

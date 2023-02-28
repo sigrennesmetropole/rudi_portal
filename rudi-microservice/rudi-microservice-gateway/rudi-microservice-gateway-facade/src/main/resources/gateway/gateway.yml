@@ -20,6 +20,10 @@ spring:
         uri: lb://RUDI-ACL/
         predicates:
           - Path=/authenticate
+      - id: acl_service_jwt_refresh
+        uri: lb://RUDI-ACL/
+        predicates:
+          - Path=/refresh_token
       - id: acl_service_oauth2
         uri: lb://RUDI-ACL/
         predicates:
@@ -44,6 +48,10 @@ spring:
         uri: lb://RUDI-STRUKTURE/
         predicates:
           - Path=/strukture/**
+      - id: selfdata_service
+        uri: lb://RUDI-SELFDATA/
+        predicates:
+          - Path=/selfdata/**
       - id: template_service
         uri: lb://RUDI-TEMPLATE/
         predicates:

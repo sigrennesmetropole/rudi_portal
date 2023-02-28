@@ -1,7 +1,10 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.common.core.DocumentContent;
@@ -32,9 +35,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +55,8 @@ public class ProjectController implements ProjectsApi {
 	private final TaskService<Project> projectTaskService;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<Project> createProject(Project project) throws Exception {
 		val createdProject = projectService.createProject(project);
 		val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
@@ -64,18 +73,16 @@ public class ProjectController implements ProjectsApi {
 	public ResponseEntity<PagedProjectList> searchProjects(@Valid List<UUID> datasetUuids,
 			@Valid List<UUID> linkedDatasetUuids, @Valid List<UUID> ownerUuids, @Valid List<ProjectStatus> status,
 			@Valid Integer offset, @Valid Integer limit, @Valid String order) throws Exception {
-		val searchCriteria = new ProjectSearchCriteria()
-				.datasetUuids(datasetUuids)
-				.linkedDatasetUuids(linkedDatasetUuids)
-				.ownerUuids(ownerUuids)
-				.status(status);
+		val searchCriteria = new ProjectSearchCriteria().datasetUuids(datasetUuids)
+				.linkedDatasetUuids(linkedDatasetUuids).ownerUuids(ownerUuids).status(status);
 		val pageable = utilPageable.getPageable(offset, limit, order);
 		val page = projectService.searchProjects(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedProjectList().total(page.getTotalElements()).elements(page.getContent()));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ", " + MODERATOR + ")")
 	public ResponseEntity<Void> updateProject(UUID uuid, Project project) throws AppServiceException {
 		project.setUuid(uuid);
 		projectService.updateProject(project);
@@ -83,7 +90,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ", " + MODERATOR + ")")
 	public ResponseEntity<Void> deleteProject(UUID uuid) throws AppServiceException {
 		projectService.deleteProject(uuid);
 		return ResponseEntity.noContent().build();
@@ -96,7 +104,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<Void> uploadProjectMediaByType(UUID projectUuid, KindOfData kindOfData, Resource body)
 			throws Exception {
 		projectService.uploadMedia(projectUuid, kindOfData, body);
@@ -104,7 +113,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<Void> deleteProjectMediaByType(UUID projectUuid, KindOfData kindOfData) throws Exception {
 		projectService.deleteMedia(projectUuid, kindOfData);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -117,7 +127,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<LinkedDataset> linkProjectToDataset(UUID projectUuid, LinkedDataset linkedDataset)
 			throws AppServiceNotFoundException, DataverseAPIException, AppServiceException {
 		return ResponseEntity.ok(linkedDatasetService.linkProjectToDataset(projectUuid, linkedDataset));
@@ -143,7 +154,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<NewDatasetRequest> createNewDatasetRequest(UUID projectUuid, NewDatasetRequest datasetRequest)
 			throws AppServiceNotFoundException, AppServiceException {
 		val createdRequest = projectService.createNewDatasetRequest(projectUuid, datasetRequest);
@@ -158,7 +170,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<Void> updateNewDatasetRequest(UUID projectUuid, NewDatasetRequest newDatasetRequest)
 			throws Exception {
 		projectService.updateNewDatasetRequest(projectUuid, newDatasetRequest);
@@ -172,7 +185,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT', 'PROJECT_MANAGER', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<Void> deleteNewDatasetRequest(UUID projectUuid, UUID requestUuid) throws Exception {
 		projectService.deleteNewDatasetRequest(projectUuid, requestUuid);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -215,20 +229,23 @@ public class ProjectController implements ProjectsApi {
 		return ResponseEntity.ok(projectTaskService.updateTask(task));
 	}
 
-	public ResponseEntity<Indicators> computeIndicators(UUID projectUuid,UUID excludedProducerUuid) throws Exception {
+	@Override
+	public ResponseEntity<Indicators> computeIndicators(UUID projectUuid, UUID excludedProducerUuid) throws Exception {
 		ComputeIndicatorsSearchCriteria searchCriteria = new ComputeIndicatorsSearchCriteria();
 		searchCriteria.setProjectUuid(projectUuid);
 		searchCriteria.setExcludedProducerUuid(excludedProducerUuid);
 		Indicators indicators = projectService.computeIndicators(searchCriteria);
 		return ResponseEntity.ok(indicators);
 	}
+
 	@Override
 	public ResponseEntity<Integer> getNumberOfRequests(UUID projectUuid) throws Exception {
 		return ResponseEntity.ok(projectService.getNumberOfRequests(projectUuid));
 	}
 
 	@Override
-	public ResponseEntity<PagedProjectList> getMyProjects(Integer offset,Integer limit, String order) throws Exception {
+	public ResponseEntity<PagedProjectList> getMyProjects(Integer offset, Integer limit, String order)
+			throws Exception {
 
 		ProjectSearchCriteria searchCriteria = new ProjectSearchCriteria();
 		searchCriteria.setOffset(offset);
@@ -238,4 +255,5 @@ public class ProjectController implements ProjectsApi {
 		val page = projectService.getMyProjects(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedProjectList().total(page.getTotalElements()).elements(page.getContent()));
 	}
+
 }

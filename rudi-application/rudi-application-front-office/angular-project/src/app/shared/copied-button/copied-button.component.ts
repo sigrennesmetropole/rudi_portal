@@ -24,7 +24,7 @@ export class CopiedButtonComponent implements OnInit {
     /**
      * affiche l'oeil de visibilité si true ( input de type paswd )
      */
-    @Input() isMasked: boolean;
+    @Input() masked: boolean;
 
 
     /**
@@ -36,7 +36,7 @@ export class CopiedButtonComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.hidePassword = this.isMasked;
+        this.hidePassword = this.masked;
     }
 
 

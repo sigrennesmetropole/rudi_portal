@@ -1,0 +1,52 @@
+<div>
+    <div *ngIf="!isDataTabEmpty">
+        <ng-container *ngIf="initLoader">
+            <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="initLoader"></app-loader>
+        </ng-container>
+        <ng-container *ngIf="!initLoader">
+            <app-card *ngIf="hideDataCard" [header]="true" [title]="'personalSpace.subscription.title'">
+                <p class="explanation-text">{{'personalSpace.projectDatasets.explainationText' | translate}}
+                    <a [href]="rudiDocLink"> {{'personalSpace.projectApi.explainationTextLink' | translate}} </a></p>
+                <!-- subscription-->
+                <form class="form-container">
+                    <div class="title-keys">{{'personalSpace.subscription.subscription'|translate}}</div>
+                    <app-password [label]="'personalSpace.subscription.label'|translate"
+                                  [hidePassword]="true"
+                                  (passwordEmitter)="handlePasswordChanged($event)"></app-password>
+                    <app-loader [allPage]="false" [isLight]="true" [noText]="true"
+                                [active]="loading"></app-loader>
+                    <app-error-box [text]="subscriptionErrorMessage"
+                                   *ngIf="subscriptionErrorMessage != null"></app-error-box>
+                    <button mat-raised-button class="action-button"
+                            (click)="validate()"
+                            [disabled]="isButtonValidateDisabled()">{{'personalSpace.subscription.validate'|translate}}                    </button>
+                </form>
+            </app-card>
+            <!-- data -->
+            <!-- si on veut afficher les cards et il y a des données à afficher, alors affichage-->
+            <div class="form-container" *ngIf="!hideDataCard">
+                <div>
+                    <app-card>
+                        <app-card *ngIf="gdataError != null">
+                            <app-error-box [text]="gdataError"></app-error-box>
+                        </app-card>
+                        <app-generic-data [isLoading]="gdataDataLoading"
+                                          [genericDataObject]="genericDataObject"
+                                          *ngIf="gdataError == null && genericDataObject != null"
+                        >
+                        </app-generic-data>
+                        <app-card *ngIf="tpbcError != null">
+                            <app-error-box [text]="tpbcError"></app-error-box>
+                        </app-card>
+                        <app-temporal-barchart-data [barChartData]="barChartData"
+                                                    [isLoading]="tpbcDataLoading"
+                                                    *ngIf="tpbcError == null && barChartData != null"
+                        >
+                        </app-temporal-barchart-data>
+                    </app-card>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <app-card *ngIf="isDataTabEmpty"><span> {{'personalSpace.subscription.noData'|translate}}</span></app-card>
+</div>

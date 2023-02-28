@@ -30,8 +30,8 @@ import java.util.Arrays;
 public class WebSecurityConfig {
 
 	private static final String[] SB_PERMIT_ALL_URL = {
-			// URL public
-			"/authenticate", "/authenticate/**", "/oauth/**", };
+			// URLs que la gateway laisse passer et les traitements de sécurité sont gérés plus bas dans les µservices
+			"/authenticate", "/authenticate/**", "/refresh_token", "/oauth/**"};
 
 	@Value("${application.role.administrateur.code}")
 	private String administrateurRoleCode;

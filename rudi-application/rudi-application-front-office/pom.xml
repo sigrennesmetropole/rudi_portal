@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-application</artifactId>
-		<version>0.3.0</version>
+		<version>1.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -16,6 +16,10 @@
 	<properties>
 		<angular.project.location>angular-project</angular.project.location>
 		<angular.project.nodeinstallation>node_installation</angular.project.nodeinstallation>
+		<jar.creation>false</jar.creation>
+		<sonar.language>ts</sonar.language>
+		<sonar.nodejs.executable>${env.CI_PROJECT_DIR}/rudi-application/rudi-application-front-office/${angular.project.nodeinstallation}/node/node</sonar.nodejs.executable>
+		<sonar.sources>${angular.project.location}</sonar.sources>
 	</properties>
 
 	<build>

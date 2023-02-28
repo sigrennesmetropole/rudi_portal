@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Licence, LicenceCustom, LicenceStandard, Media, MediaFile, Metadata} from '../../../api-kaccess';
+import {Licence, LicenceCustom, LicenceStandard, Media, Metadata} from '../../../api-kaccess';
 import {KonsultMetierService} from '../../../core/services/konsult-metier.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
@@ -8,7 +8,6 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatMenuTrigger} from '@angular/material/menu';
 import saveAs from 'file-saver';
 import {HttpResponse} from '@angular/common/http';
-import * as mime from 'mime';
 import {BehaviorSubject, combineLatest, from, Observable, of} from 'rxjs';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -41,6 +40,8 @@ import {SimpleSkosConcept} from '../../../kos/kos-api';
 import * as moment from 'moment';
 import {IconRegistryService} from '../../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../../../shared/models/title-icon-type';
+import {MetadataUtils} from '../../../shared/utils/metadata-utils';
+import {Form} from '../../../api-bpmn';
 import MediaTypeEnum = Media.MediaTypeEnum;
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
 
@@ -76,6 +77,8 @@ export class DetailComponent implements OnInit {
     themeCode: string;
     totalOtherDatasets: number;
     mediasTitle: string; // Bloc titre des médias
+    // TODO: lier ce form au formgroup
+    informationRequestForm: Form;
 
     /**
      * Permet de suivre la valeur du JDD récupéré. Nous devons passer par un Observable car le chargement
@@ -104,6 +107,7 @@ export class DetailComponent implements OnInit {
         private readonly projektMetierService: ProjektMetierService,
         private readonly authenticationService: AuthenticationService,
         private readonly router: Router,
+        private readonly activatedRoute: ActivatedRoute,
         private readonly propertiesMetierService: PropertiesMetierService,
         private readonly pageTitleService: PageTitleService,
         private readonly filtersService: FiltersService,
@@ -126,6 +130,7 @@ export class DetailComponent implements OnInit {
 
     private _metadata: Metadata | undefined;
     restrictedDatasetIcon = 'key_icon_88_secondary-color';
+    selfDataIcon = 'self-data-icon';
 
     get metadata(): Metadata | undefined {
         return this._metadata;
@@ -153,7 +158,11 @@ export class DetailComponent implements OnInit {
     }
 
     get isRestricted(): boolean {
-        return this.metadata?.access_condition?.confidentiality?.restricted_access;
+        return MetadataUtils.isRestricted(this.metadata);
+    }
+
+    get isSelfdata(): boolean {
+        return MetadataUtils.isSelfdata(this.metadata);
     }
 
     ngOnInit(): void {
@@ -311,11 +320,9 @@ export class DetailComponent implements OnInit {
 
     /**
      * Fonction permettant de retourner l'extension du fichier
-     * @param item
      */
-    getMediaFileExtension(item: Media): string {
-        const media = item as MediaFile;
-        return mime.getExtension(media.file_type);
+    getMediaFileExtension(media: Media): string {
+        return this.konsultMetierService.getMediaFileExtension(media);
     }
 
     /**
@@ -426,11 +433,13 @@ export class DetailComponent implements OnInit {
         );
         this._themePicto = themePicto;
     }
+
     clickDeclareReuse(): Observable<boolean> {
         return from(this.router.navigate(['/projets/declarer-une-reutilisation'], {
             queryParams: {linkedDataset: this.metadata.global_id}
         }));
     }
+
     private goToLoginPage(queryParams: Params): Observable<boolean> {
         const promise = this.router.navigate(['/login'], {
             queryParams
@@ -482,6 +491,27 @@ export class DetailComponent implements OnInit {
                 );
             }
         });
+    }
+
+    /**
+     * Action déclenchée au clic du bouton demande d'information
+     */
+    handleClickSelfdataInformationRequest(): void {
+        this.router.navigate(['selfdata-information-request-creation'], {relativeTo: this.activatedRoute});
+    }
+
+    /**
+     * Récupères l'icône à afficher à côté du titre du JDD
+     * Rien ne sera affiché si concerné
+     */
+    getDatasetTitleIcon(): string {
+        if (this.isRestricted) {
+            return this.restrictedDatasetIcon;
+        } else if (this.isSelfdata) {
+            return this.selfDataIcon;
+        }
+
+        return null;
     }
 
     /**

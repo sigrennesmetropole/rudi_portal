@@ -39,6 +39,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -153,31 +155,8 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 	}
 
 	public DocumentContent getAPIContent(String context, String version, String applicationId, String username) throws ApplicationOperationException, ApplicationKeysNotFoundException, APIEndpointException, IOException, ApplicationTokenGenerationException {
-		ApplicationKeys applicationKeys = getApplicationKeyList(applicationId, username);
-		if (applicationKeys.getCount() == 0) {
-			throw new ApplicationKeysNotFoundException(applicationId, username);
-		}
-		Optional<ApplicationKey> optionalApplicationKey = applicationKeys.getList()
-				.stream()
-				.filter(apk -> apk.getKeyType() == EndpointKeyType.PRODUCTION)
-				.findFirst();
-		if (optionalApplicationKey.isEmpty()) {
-			throw new ApplicationKeysNotFoundException(applicationId, username, EndpointKeyType.PRODUCTION);
-		}
 
-		ApplicationKey applicationKey = optionalApplicationKey.get();
-		ApplicationTokenGenerateRequest applicationTokenGenerateRequest = new ApplicationTokenGenerateRequest()
-				.consumerSecret(applicationKey.getConsumerSecret())
-				.validityPeriod(3600L)
-				.scopes(Collections.emptyList());
-		ApplicationToken applicationToken = generateApplicationToken(applicationId, applicationKey.getKeyMappingId(), applicationTokenGenerateRequest, username);
-
-		final var apiAccessUrl = buildAPIAccessUrl(context, version);
-		final var mono = webClient.get()
-				.uri(apiAccessUrl)
-				.headers(httpHeaders -> httpHeaders.setBearerAuth(applicationToken.getAccessToken()))
-				.exchange();
-		final ClientResponse response = MonoUtils.blockOrCatchAndThrow(mono, APIManagerHttpException.class, e -> new APIEndpointException(apiAccessUrl, e.getStatusCode()));
+		final var response = getAPIResponse(context, version, applicationId, username, new LinkedMultiValueMap<>());
 
 		Flux<DataBuffer> dataBufferFlux = response.bodyToFlux(DataBuffer.class);
 		HttpHeaders httpHeaders = response.headers().asHttpHeaders();
@@ -200,5 +179,37 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 		return new DocumentContent(fileName, contentType, tempFile);
 	}
 
+	public ClientResponse getAPIResponse(String context, String version, String applicationId,
+			String username, MultiValueMap<String, String> queryParams)
+			throws ApplicationOperationException, ApplicationKeysNotFoundException, APIEndpointException,
+			ApplicationTokenGenerationException {
 
+		ApplicationKeys applicationKeys = getApplicationKeyList(applicationId, username);
+		if (applicationKeys.getCount() == 0) {
+			throw new ApplicationKeysNotFoundException(applicationId, username);
+		}
+		Optional<ApplicationKey> optionalApplicationKey = applicationKeys.getList()
+				.stream()
+				.filter(apk -> apk.getKeyType() == EndpointKeyType.PRODUCTION)
+				.findFirst();
+		if (optionalApplicationKey.isEmpty()) {
+			throw new ApplicationKeysNotFoundException(applicationId, username, EndpointKeyType.PRODUCTION);
+		}
+
+		ApplicationKey applicationKey = optionalApplicationKey.get();
+		ApplicationTokenGenerateRequest applicationTokenGenerateRequest = new ApplicationTokenGenerateRequest()
+				.consumerSecret(applicationKey.getConsumerSecret())
+				.validityPeriod(3600L)
+				.scopes(Collections.emptyList());
+		ApplicationToken applicationToken = generateApplicationToken(applicationId, applicationKey.getKeyMappingId(),
+				applicationTokenGenerateRequest, username);
+
+		final var apiAccessUrl = buildAPIAccessUrl(context, version, queryParams);
+		final var mono = webClient.get()
+				.uri(apiAccessUrl)
+				.headers(httpHeaders -> httpHeaders.setBearerAuth(applicationToken.getAccessToken()))
+				.exchange();
+		return MonoUtils.blockOrCatchAndThrow(mono,
+				APIManagerHttpException.class, e -> new APIEndpointException(apiAccessUrl, e.getStatusCode()));
+	}
 }

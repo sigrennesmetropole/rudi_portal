@@ -1,0 +1,1548 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Selfdata Rudi",
+		"version": "0.0.1",
+		"title": "rudi-selfdata-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Selfdata API",
+			"variables": {
+				"basePath": {
+					"default": "selfdata/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "selfdata",
+			"description": "Services Selfdata"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		},
+		{
+			"name": "task",
+			"description": "Services de gestion de tâches"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/information-requests/draft-form": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement de formulaire draft s'il existe",
+				"description": "Chargement de formulaire draft s'il existe",
+				"operationId": "lookupSelfdataInformationRequestDraftForm ",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "datasetUuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "language",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/tasks": {
+			"post": {
+				"tags": [
+					"task"
+				],
+				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
+				"operationId": "createSelfdataInformationRequestDraft",
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-selfdata-model.json#/components/schemas/SelfdataInformationRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Mets à jour une tâche",
+				"description": "Mets à jour une tâche et l'asset associée",
+				"operationId": "updateSelfdataInformationRequestTask",
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/tasks/start": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Démarre la tâche",
+				"description": "Démarre la tâche",
+				"operationId": "startSelfdataInformationRequestTask",
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/tasks/{task-id}/claim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Claim d'une tâche",
+				"description": "Claim d'une tâche",
+				"operationId": "claimSelfdataInformationRequestTask",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/tasks/{task-id}/unclaim": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Unclaim d'une tâche",
+				"description": "Unclaim d'une tâche",
+				"operationId": "unclaimSelfdataInformationRequestTask",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/tasks/{task-id}/do-it/{action-name}": {
+			"put": {
+				"tags": [
+					"task"
+				],
+				"summary": "Fait avancer la tâche",
+				"description": "Fait avancer la tâche à partir d'une action",
+				"operationId": "doItSelfdataInformationRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "action-name",
+						"description": "Nom de l'action à réaliser",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/{uuid}": {
+			"delete": {
+				"tags": [
+					"task"
+				],
+				"summary": "Supprime une demande d'information",
+				"description": "Supprime une demande d'information",
+				"operationId": "deleteSelfdataInformationRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "uuid de la demande",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Demande d'information supprimée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/{task-id}/matching-data-form": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement de formulaire draft s'il existe et le remplir d'avec les saisies utilisateur (données pivots uniquement)",
+				"description": "Chargement de formulaire draft s'il existe et le remplir d'avec les données dans la colonne data d'un selfdataInformationRequest",
+				"operationId": "lookupFilledMatchingDataForm",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "task-id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/information-requests/{dataset-uuid}/matching-data": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement des données pivots uniquement",
+				"description": "Chargement des données pivots pour affichage récapitluatif",
+				"operationId": "getMySelfdataInformationRequestMatchingData",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "dataset-uuid",
+						"description": "UUID de la demande",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "rudi-selfdata-model.json#/components/schemas/MatchingData"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/information-requests/my-information-requests": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Recherche des demandes effectuées par l'utilisateur connecté",
+				"description": "Recherche des demandes effectuées par l'utilisateur connecté",
+				"operationId": "searchMySelfdataInformationRequests",
+				"parameters": [
+					{
+						"name": "criteria",
+						"in": "query",
+						"description": "critères de recherches",
+						"required": true,
+						"schema": {
+							"$ref": "rudi-selfdata-model.json#/components/schemas/SelfdataInformationRequestSearchCriteria"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-selfdata-model.json#/components/schemas/PagedSelfdataInformationRequestList"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/selfdata-datasets": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Recherche des JDDs selfdata avec la dernière demande effectuée par l'utilisateur connecté",
+				"description": "Recherche des JDDs selfdata avec la dernière demande effectuée par l'utilisateur connecté",
+				"operationId": "searchSelfdataDatasets",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-selfdata-model.json#/components/schemas/PagedSelfdataDatasetList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/selfdata-datasets/{uuid}/tpbc-data": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Téléchargement des données du JDD selfdata pour l'utilisateur connecté au format TPBC.",
+				"description": "Téléchargement des données du JDD selfdata pour l'utilisateur connecté au format TPBC.",
+				"operationId": "getTpbcData",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "UUID du JDD selfdata",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "minDate",
+						"in": "query",
+						"description": "Date de début pour la récupération des données",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "maxDate",
+						"in": "query",
+						"description": "Date de fin pour la récupération des données",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Le contenu au format TPBC",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-selfdata-tpbc.json#/components/schemas/BarChartData"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/selfdata-datasets/{uuid}/gdata-data": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Téléchargement des données du JDD selfdata pour l'utilisateur connecté au format GDATA.",
+				"description": "Téléchargement des données du JDD selfdata pour l'utilisateur connecté au format GDATA.",
+				"operationId": "getGdataData",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "UUID du JDD selfdata",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Le contenu au format GDATA",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-selfdata-gdata.json#/components/schemas/GenericDataObject"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/apim/enable-api": {
+			"put": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Permet d'activer les accès aux APIs pour l'user fourni",
+				"description": "Va créer les accès pour l'user ou l'organisation (en fonction de ce qui est fourni) pour pouvoir consommer les APIs des JDDs à travers RUDI avec des clés d'API WSO2",
+				"operationId": "enableApi",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-apimaccess/src/main/resources/openapi/rudi-apimaccess-model.json#/components/schemas/Credentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Accès aux APIs créés avec succès"
+					}
+				}
+			}
+		},
+		"/apim/has-enabled-api": {
+			"put": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Permet de savoir si les accès aux API ont déjà été activé",
+				"description": "Renvoie vrai si les accès aux APIs ont déjà été réalisés, il suffit ensuite de récupérer les clés pour consommer les APIs",
+				"operationId": "hasEnabledApi",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-apimaccess/src/main/resources/openapi/rudi-apimaccess-model.json#/components/schemas/Credentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/rva-address-manager/full-addresses": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Liste des addresses rva commençant par une query",
+				"description": "Liste des addresses rva commençant par une query",
+				"operationId": "getFullAddresses",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "query",
+						"description": "Debut de l'adresse",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./../../../rudi-facet/rudi-facet-rva/openapi/rudi-rva-model.json#/components/schemas/Address"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/rva-address-manager/address-by-id": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Retorune une adresse à partir de son id",
+				"description": "Retorune une adresse à partir de son id",
+				"operationId": "getAddressById",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "addressId",
+						"description": "id rva de l'adresse",
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-rva/openapi/rudi-rva-model.json#/components/schemas/Address"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/attachments": {
+			"post": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Ajout d'une pièce-jointe.",
+				"description": "Upload le contenu d'une pièce-jointe.",
+				"operationId": "uploadAttachment",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "L'UUID de la pièce-jointe créée.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"format": "uuid"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/attachments/{uuid}": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Recupère les informations principales d'un fichier.",
+				"description": "Recupère les informations principales d'un fichier. Il s'agit du nom et de la taille notamment",
+				"operationId": "getAttachmentMetadata",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "UUID de la pièce-jointe.",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Les informations basiques sur la pièce-jointe.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-doks/openapi/rudi-doks-model.json#/components/schemas/DocumentMetadata"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/attachments/{uuid}/content": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Télécharge le contenu d'une pièce-jointe.",
+				"description": "Télécharge le contenu d'une pièce-jointe.",
+				"operationId": "downloadAttachment",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "UUID de la pièce-jointe.",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Le contenu de la pièce-jointe.",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Supprime une pièce-jointe.",
+				"description": "Supprime une pièce-jointe.",
+				"operationId": "deleteAttachment",
+				"parameters": [
+					{
+						"name": "uuid",
+						"in": "path",
+						"description": "UUID de la pièce-jointe.",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "La pièce-jointe a été supprimée avec succès."
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/properties/front-office": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Propriétés de configuration du Front Office",
+				"description": "Toutes les propriétés sous forme de clé/valeur pour configurer l'application Front Office",
+				"operationId": "getFrontOfficeProperties",
+				"responses": {
+					"200": {
+						"description": "Propriétés au format JSON.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-selfdata-model.json#/components/schemas/FrontOfficeProperties"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/tasks": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Recherche des tâches",
+				"description": "Recherche des tâches",
+				"operationId": "searchTasks",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "title",
+						"description": "Titre de la tâche",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "description",
+						"description": "Description de la tâche",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "process-definition-keys",
+						"description": "Type du processus",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"description": "etat de la tâche",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Status"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "fonctional-status",
+						"description": "Etat fonctionnel",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "asAdmin",
+						"description": "En tant qu'admin",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/tasks/{task-id}": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Chargement d'une tâche",
+				"description": "Chargement d'une tâche",
+				"operationId": "getTask",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Task"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/matching/{dataset-uuid}/{login}": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Récupère le token selfdata",
+				"description": "Récupère le token selfdata utilisé par l'utilisateur via son login lors de son appariement avec le JDD donné.",
+				"operationId": "getMatchingToken",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "dataset-uuid",
+						"description": "UUID du JDD.",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "login",
+						"description": "Login de l'utilisateur.",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Le token selfdata.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"format": "uuid"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"404": {
+						"$ref": "#/components/responses/NotFound"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/matching/{userUuid}/check-my-matching/{datasetUuid}": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Vérifie si l'utilisateur connecté a le droit d'accéder (y souscrire, consulter les APIs) à ce JDD.",
+				"description": "Vérifie si l'utilisateur connecté a le droit de tenter une souscription à ce JDD, c'est à dire que sa demande d'information a été acceptée pour ce JDD.",
+				"operationId": "hasMatchingToDataset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userUuid",
+						"description": "uuid de l'utilisateur dont on veut vérifier l'autorisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "datasetUuid",
+						"description": "uuid du dataset (selfdata) auquel veut accéder l'utilisateur connecté",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "true si l'utilisateur a accès au JDD (sa demande a été validée par l'animateur).",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean",
+									"example": true
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"LimitParam": {
+				"in": "query",
+				"name": "limit",
+				"description": "Le nombre de résultats à retourner par page",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OffsetParam": {
+				"in": "query",
+				"name": "offset",
+				"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OrderParam": {
+				"in": "query",
+				"name": "order",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error"
+			},
+			"BadRequestError": {
+				"description": "Bad Request Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Unauthorized": {
+				"description": "Unauthorized",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Forbidden": {
+				"description": "Forbidden",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotAcceptable": {
+				"description": "Not Acceptable",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotFound": {
+				"description": "La ressource demandée est introuvable.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"RequestTimeout": {
+				"description": "Request Timeout",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"TooManyRequests": {
+				"description": "Too Many Requests",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"ServiceUnavailable": {
+				"description": "Service Unavailable"
+			}
+		},
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
+}

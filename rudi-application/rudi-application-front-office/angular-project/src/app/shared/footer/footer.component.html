@@ -8,7 +8,7 @@
         <div class="d-flex align-items-center w-15 justify-content-start">
             <a class="btn-nous-contacter" href="{{'rudidatarennes.contact' | getBackendProperty|async}}"
                rel="noopener noreferrer"
-                >{{'footer.nousContacter'|translate}}</a>
+            >{{'footer.nousContacter'|translate}}</a>
         </div>
         <div id="menu-footer"
              class="menu-footer font-weight-normal footer-menu-lg d-flex justify-content-end align-items-center w-85">
@@ -27,12 +27,13 @@
     <mat-toolbar-row class="toolbar-icon-group justify-content-between bandeau-bleu-footer" style="margin-top:59px">
         <div id="bandeau-bleu-footer" class="d-flex align-items-center w-15 justify-content-start">
             <span
-                class="rudi-label-lien">{{'footer.rudiCopyright'|translate}}</span>
+                class="rudi-label-lien"> {{'footer.rudiCopyright' | translate:{currentYear: currentYear} }}</span>
             <mat-divider [vertical]="true"></mat-divider>
             <span
                 class="rudi-label-lien">{{'footer.tousDroits'|translate}}</span>
             <mat-divider [vertical]="true"></mat-divider>
-            <span class="rudi-label-lien" *ngIf="appInfo !== undefined">{{'footer.version' | translate}} {{appInfo?.version}}</span>
+            <span class="rudi-label-lien"
+                  *ngIf="appInfo !== undefined">{{'footer.version' | translate}} {{appInfo?.version}}</span>
         </div>
         <div
             class="font-weight-normal footer-menu-lg d-flexjustify-content-end align-items-center w-85 pointer footer-social-link">
@@ -78,7 +79,8 @@
     <!-- Block Copyright -->
     <mat-toolbar-row class="toolbar-icon-group toolbar-row-copyright">
         <div class="d-flex align-items-center justify-content-center" style="margin-top: 60px;">
-            <span class="rudi-label-lien-mobile">{{'footer.rudiCopyright'|translate}}</span>
+            <span
+                class="rudi-label-lien-mobile">{{'footer.rudiCopyright' | translate:{currentYear: currentYear} }}</span>
             <span class="rudi-label-lien-mobile mx-0">|</span>
             <span class="rudi-label-lien-mobile">{{'footer.tousDroits'|translate}}</span>
             <span class="rudi-label-lien-mobile mx-0">|</span>

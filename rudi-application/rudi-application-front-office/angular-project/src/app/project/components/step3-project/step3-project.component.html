@@ -13,12 +13,11 @@
         <form [formGroup]="step3FormGroup">
 
             <div class="d-flex justify-content-center buttons-container">
+                <app-dataset-button [buttonTitle]="'project.datasetButton.askData'|translate"
+                                    (click)="openDialogDatasets()"></app-dataset-button>
+
                 <app-dataset-button [buttonTitle]="'project.datasetButton.askNewData'|translate"
                                     (click)=openDialogRequestDataset()></app-dataset-button>
-                <app-dataset-button [buttonTitle]="'project.stepper.submission.step3.uuid.add-restricted'|translate"
-                                    (click)="openDialogRestrictedAccessDatasets()"></app-dataset-button>
-                <app-dataset-button [buttonTitle]="'project.stepper.submission.step3.uuid.add-open'|translate"
-                                    (click)="openDialogOpenDataset()"></app-dataset-button>
             </div>
 
             <mat-error *ngIf="linkedDatasetsError"

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Metadata} from '../../../api-kaccess';
 import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
 import {FiltersService} from '../../../core/services/filters.service';
@@ -10,13 +10,15 @@ import {DataRequestItem} from '../../model/data-request-item';
 import {RequestDetails} from '../../../shared/models/request-details';
 import {OrganizationItem} from '../../model/organization-item';
 import {CloseEvent} from '../../../data-set/models/dialog-closed-data';
+import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
+import {MetadataUtils} from '../../../shared/utils/metadata-utils';
 
 @Component({
     selector: 'app-reuse-project-common',
     templateUrl: './reuse-project-common.component.html',
     styleUrls: ['./reuse-project-common.component.scss']
 })
-export class ReuseProjectCommonComponent implements OnInit {
+export class ReuseProjectCommonComponent {
 
     // Le type any est safe car on veut mapper n'importe quoi par une vue
     // tslint:disable-next-line:no-any
@@ -50,10 +52,6 @@ export class ReuseProjectCommonComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {
-
-    }
-
     /**
      * Retrait d'un JDD lié de la liste
      * @param item l'item visuel retiré de la liste
@@ -76,18 +74,18 @@ export class ReuseProjectCommonComponent implements OnInit {
     /**
      * Ouverture de la popin de saisie d'un JDD lié pour l'ajouter dans la liste
      */
-    public openDialogSelectMetadata(restrictedAccessFilterValue = false): void {
+    public openDialogSelectMetadata(restrictedAccessFilterValue?: AccessStatusFiltersType, restrictedAccessHiddenValues?: AccessStatusFiltersType[]): void {
         if (!this.dialogWasOpened) {
             this.filtersService.backupFilters();
             this.dialogWasOpened = true;
         }
 
-        this.projectSubmissionService.openDialogMetadata(restrictedAccessFilterValue).subscribe((metadata: Metadata) => {
+        this.projectSubmissionService.openDialogMetadata(restrictedAccessFilterValue, restrictedAccessHiddenValues).subscribe((metadata: Metadata) => {
             if (metadata != null) {
                 if (this.projectSubmissionService.isMetadataPresent(metadata.global_id, this.linkedDatasets)) {
                     return;
                 }
-                if (restrictedAccessFilterValue) {
+                if (MetadataUtils.isRestricted(metadata)) {
                     this.openSecondDialogRequestDetails(metadata);
                 } else {
                     this.selectMetadata(metadata);

@@ -34,7 +34,18 @@ class FilterQueryTest {
 		assertThat(filterQuery).containsExactly("root_field:false OR (*:* NOT root_field:*)");
 	}
 
+	/**
+	 * RUDI-928
+	 */
+	@Test
+	void addNullableFieldWithNullValue() {
+		final FilterQuery filterQuery = new FilterQuery();
+		filterQuery.add(FIELD, null);
+		assertThat(filterQuery).containsExactly("(NOT root_field:*)");
+	}
+
 	private static class SampleObject {
+		@SuppressWarnings("unused") // utilisé par la constante FIELD
 		private boolean field;
 	}
 }

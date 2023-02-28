@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.bpmn.helper.form;
 
@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,11 +38,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,7 +67,7 @@ public class FormHelper {
 
 	/**
 	 * Parse une définition de formulaire
-	 * 
+	 *
 	 * @param formDefinition
 	 * @return
 	 * @throws ParseException
@@ -90,7 +89,7 @@ public class FormHelper {
 
 	/**
 	 * Serialize une définition de formulaire
-	 * 
+	 *
 	 * @param form
 	 * @return
 	 * @throws IOException
@@ -110,10 +109,10 @@ public class FormHelper {
 
 	/**
 	 * Retourne le formulaire le plus adapté à la tâche
-	 * 
+	 *
 	 * Lors de la recherche on ramène tous les formulaires pour le workflow, la révision courante ou null, la tâche utilisateur ou null ce qui permet
 	 * d'avoir des formulaires génériques pour toutes les révisions ou pour toutes les tâches etc.
-	 * 
+	 *
 	 * @param input      la tâche
 	 * @param actionName nom de l'action
 	 * @return
@@ -154,7 +153,7 @@ public class FormHelper {
 	/**
 	 * Copie les données d'un formulaire source dans une cible. Le formulaire cible est considéré comme la référence. Ce qui signifie que seul les champs
 	 * présents dans la cible sont copiés et les autres sont ingorés
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 */
@@ -179,7 +178,7 @@ public class FormHelper {
 
 	/**
 	 * Retourne un champ depuis un form par son nom
-	 * 
+	 *
 	 * @param form
 	 * @param name
 	 * @return
@@ -189,6 +188,9 @@ public class FormHelper {
 		if (form != null && CollectionUtils.isNotEmpty(form.getSections())) {
 			for (Section section : form.getSections()) {
 				result = lookupField(section, name);
+				if (result != null) {
+					break;
+				}
 			}
 		}
 		return result;
@@ -208,7 +210,7 @@ public class FormHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param form
 	 * @return la map des champs existants
 	 */
@@ -228,7 +230,7 @@ public class FormHelper {
 
 	/**
 	 * Rempli le formulaire à partir de la map des données
-	 * 
+	 *
 	 * @param form
 	 * @param datas
 	 */
@@ -266,7 +268,7 @@ public class FormHelper {
 
 	/**
 	 * Rempli la map à partir du formulaire
-	 * 
+	 *
 	 * @param form
 	 * @param datas
 	 * @throws FormConvertException
@@ -301,26 +303,26 @@ public class FormHelper {
 		Object result = null;
 		try {
 			switch (fieldDefinition.getType()) {
-			case BOOLEAN:
-				result = Boolean.valueOf(value);
-				break;
-			case DATE:
-				String pattern = StringUtils.isNotEmpty(fieldDefinition.getExtendedType())
-						? fieldDefinition.getExtendedType()
-						: DEFAULT_DATA_FORMAT;
-				SimpleDateFormat dataFormat = new SimpleDateFormat(pattern);
-				result = dataFormat.parse(value);
+				case BOOLEAN:
+					result = Boolean.valueOf(value);
+					break;
+				case DATE:
+					String pattern = StringUtils.isNotEmpty(fieldDefinition.getExtendedType())
+							? fieldDefinition.getExtendedType()
+							: DEFAULT_DATA_FORMAT;
+					SimpleDateFormat dataFormat = new SimpleDateFormat(pattern);
+					result = dataFormat.parse(value);
 
-				break;
-			case DOUBLE:
-				result = Double.valueOf(value);
-				break;
-			case LONG:
-				result = Long.valueOf(value);
-				break;
-			default:
-				result = value;
-				break;
+					break;
+				case DOUBLE:
+					result = Double.valueOf(value);
+					break;
+				case LONG:
+					result = Long.valueOf(value);
+					break;
+				default:
+					result = value;
+					break;
 			}
 		} catch (ParseException e) {
 			throw new FormConvertException("Failed to convert value:" + value + " for field:" + fieldDefinition, e);

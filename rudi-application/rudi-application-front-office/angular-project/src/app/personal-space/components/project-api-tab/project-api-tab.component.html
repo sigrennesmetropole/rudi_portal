@@ -10,9 +10,8 @@
             <app-password [label]="getLabel()" [hidePassword]="hidePassword"
                           (passwordEmitter)="handlePasswordChanged($event)">
             </app-password>
-            <app-error-box text="Le mot de passe que vous avez saisi n'est pas valide.
-            Veuillez re-saisir le mot de passe."
-                           *ngIf="hasError" class="mb-3 error-box">
+            <app-error-box [text]="'personalSpace.projectApi.errorPassword' | translate"
+                           *ngIf="passwordError" class="mb-3 error-box">
             </app-error-box>
             <button mat-raised-button class="action-button"
                     (click)="getApiKeys()">{{'personalSpace.projectApi.consult' | translate}}</button>
@@ -25,7 +24,7 @@
                 <span class="title-keys">{{'personalSpace.projectApi.consumerKey' | translate}}</span>
                 <p>{{'personalSpace.projectApi.textConsumerKey' | translate}}</p>
                 <div class="app-copied-style">
-                    <app-copied-button [toCopy]="keys?.consumerKey" [isMasked]="false"></app-copied-button>
+                    <app-copied-button [toCopy]="keys?.consumerKey" [masked]="false"></app-copied-button>
                 </div>
             </div>
 
@@ -34,7 +33,7 @@
                 <span class="title-keys">{{'personalSpace.projectApi.consumerSecret' | translate}}</span>
                 <p>{{'personalSpace.projectApi.textConsumerSecret' | translate}}</p>
                 <div class="app-copied-style">
-                    <app-copied-button [toCopy]="keys?.consumerSecret" [isMasked]="true"></app-copied-button>
+                    <app-copied-button [toCopy]="keys?.consumerSecret" [masked]="true"></app-copied-button>
                 </div>
             </div>
         </form>

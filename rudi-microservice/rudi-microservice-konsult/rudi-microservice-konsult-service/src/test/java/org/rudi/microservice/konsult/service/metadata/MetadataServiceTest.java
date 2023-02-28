@@ -1,5 +1,12 @@
 package org.rudi.microservice.konsult.service.metadata;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.DocumentContent;
@@ -22,12 +29,6 @@ import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -138,7 +139,7 @@ public class MetadataServiceTest {
 
 		assertThatThrownBy(() -> metadataService.downloadMetadataMedia(jddOuvert.getGlobalId(), media.getMediaId()))
 				.isInstanceOf(AppServiceException.class)
-				.hasMessage("Type de média %s non pris en charge",
+				.hasMessageStartingWith("Type de média %s non pris en charge",
 						media.getMediaType());
 	}
 

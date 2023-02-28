@@ -39,7 +39,7 @@
     "access_condition": {
         "licence": {
             "licence_type": "STANDARD",
-            "licence_label": "licence_Apache-2.0"
+            "licence_label": "apache-2.0"
         }
     },
     "available_formats": [

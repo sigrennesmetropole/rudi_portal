@@ -1,8 +1,8 @@
-<div class="table-jdd" [hidden]="jdds.length==0">
+<div class="table-jdd" [hidden]="!hasOtherIndicators() && !hasOtherRequests()">
     <hr>
     <span class="table-title-style" [translate]="'personalSpace.project.details.otherDetails'"> </span>
 
-    <table mat-table [dataSource]="dataSource" matSort class="mat-table-demandes-acces">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-table-demandes-acces" [hidden]="!hasOtherRequests()">
 
         <!-- Date Column -->
         <ng-container matColumnDef="date">
@@ -34,9 +34,21 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <div class="other-requests-from-others" *ngIf="hasOtherIndicators()">
-        <span [hidden]="!isOneToOne()">{{ 'personalSpace.project.details.otherFromOtherProducer' | translate : {x: _otherIndicators.x, n: _otherIndicators.n} }}</span>
-        <span [hidden]="!isOneToMany()">{{ 'personalSpace.project.details.otherFromOtherProducers' | translate : {x: _otherIndicators.x, n: _otherIndicators.n} }}</span>
-        <span [hidden]="!isManyToOne()">{{ 'personalSpace.project.details.othersFromOtherProducer' | translate : {x: _otherIndicators.x, n: _otherIndicators.n} }}</span>
-        <span [hidden]="!isManyToMany()">{{ 'personalSpace.project.details.othersFromOtherProducers' | translate : {x: _otherIndicators.x, n: _otherIndicators.n} }}</span>
+        <span [hidden]="!isOneToOne()">{{ 'personalSpace.project.details.otherFromOtherProducer' | translate : {
+            x: _otherIndicators.x,
+            n: _otherIndicators.n
+        } }}</span>
+        <span [hidden]="!isOneToMany()">{{ 'personalSpace.project.details.otherFromOtherProducers' | translate : {
+            x: _otherIndicators.x,
+            n: _otherIndicators.n
+        } }}</span>
+        <span [hidden]="!isManyToOne()">{{ 'personalSpace.project.details.othersFromOtherProducer' | translate : {
+            x: _otherIndicators.x,
+            n: _otherIndicators.n
+        } }}</span>
+        <span [hidden]="!isManyToMany()">{{ 'personalSpace.project.details.othersFromOtherProducers' | translate : {
+            x: _otherIndicators.x,
+            n: _otherIndicators.n
+        } }}</span>
     </div>
 </div>

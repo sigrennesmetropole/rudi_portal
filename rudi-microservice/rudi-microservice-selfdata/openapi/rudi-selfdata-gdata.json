@@ -1,0 +1,85 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Selfdata Rudi",
+		"version": "0.0.1",
+		"title": "rudi-selfdata-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Selfdata API",
+			"variables": {
+				"basePath": {
+					"default": "selfdata/v1"
+				}
+			}
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"DictionaryEntry": {
+				"$ref": "../../../rudi-facet/rudi-facet-kaccess/src/main/resources/openapi/RUDI-PRODUCER.yml/#/components/schemas/DictionaryEntry"
+			},
+			"GenericDataType": {
+				"description": "Type des champs d'un objet générique",
+				"type": "string",
+				"enum": [
+					"STRING",
+					"TEXT",
+					"BOOLEAN",
+					"LONG",
+					"DOUBLE",
+					"DATE"
+				]
+			},
+			"GenericData": {
+				"description": "Données d'une objet générique",
+				"type": "object",
+				"properties": {
+					"label": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"type": {
+						"$ref": "#/components/schemas/GenericDataType"
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			},
+			"GenericDataObject": {
+				"description": "Données d'un objet générique",
+				"type": "object",
+				"properties": {
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/GenericData"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

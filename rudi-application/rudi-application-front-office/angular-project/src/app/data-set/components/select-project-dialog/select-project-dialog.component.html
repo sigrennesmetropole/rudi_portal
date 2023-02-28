@@ -4,8 +4,9 @@
     </mat-dialog-actions>
     <mat-dialog-content>
         <span class="dialog-title">{{'metaData.restrictedDatasetRequestDialog.title'|translate}}</span>
-        <p class="description">{{'metaData.restrictedDatasetRequestDialog.description' | translate}}</p>
-
+        <p class="description">{{'metaData.restrictedDatasetRequestDialog.description' | translate}}
+            <a class="pointer text-underline link-color" (click)="goToSubmitProject()">{{'metaData.restrictedDatasetRequestDialog.description-2'|translate}}</a>.
+        </p>
         <form [formGroup]="formGroup">
 
             <!-- selectionner projet -->

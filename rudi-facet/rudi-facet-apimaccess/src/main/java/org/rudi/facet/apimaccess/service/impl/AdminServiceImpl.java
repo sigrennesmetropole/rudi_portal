@@ -1,6 +1,10 @@
 package org.rudi.facet.apimaccess.service.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.admin.AdminOperationAPI;
 import org.rudi.facet.apimaccess.exception.AdminOperationException;
@@ -9,11 +13,10 @@ import org.springframework.stereotype.Service;
 import org.wso2.carbon.apimgt.rest.api.admin.RoleAlias;
 import org.wso2.carbon.apimgt.rest.api.admin.RoleAliasList;
 
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.function.Predicate;
+import lombok.RequiredArgsConstructor;
 
-@Service
+@Service("apimAdminServiceImpl")
+// renommé pour éviter les conflits avec org.rudi.microservice.kalim.service.admin.impl.AdminServiceImpl
 @RequiredArgsConstructor
 class AdminServiceImpl implements AdminService {
 	private final AdminOperationAPI adminOperationAPI;

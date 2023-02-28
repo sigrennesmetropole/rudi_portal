@@ -1,5 +1,5 @@
 {
-    "concept_code": "open-source-licences",
+    "concept_code": "public-domain-cc0s",
     "concept_uri": "https://opensource.org/licenses",
     "concept_icon": "icon44",
     "concept_role": "role44",
@@ -19,7 +19,7 @@
             "concept_code": "licence_MIT"
         },
         {
-            "concept_code": "licence_Apache-2.0",
+            "concept_code": "apache-2.0",
             "sibling_concepts": [
                 {
                     "concept_code": "licence_MPL-2.0"

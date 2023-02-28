@@ -1,5 +1,8 @@
 package org.rudi.microservice.kalim.service.integration.impl.validator;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,15 +17,12 @@ import org.rudi.facet.kaccess.constant.RudiMetadataField;
 import org.rudi.microservice.kalim.service.IntegrationError;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 
-import java.util.Collections;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LicenceValidatorTest {
+class LicenceValidatorTest {
 
 	@InjectMocks
 	private LicenceValidator licenceValidator;
@@ -35,7 +35,7 @@ public class LicenceValidatorTest {
 
 	@Test
 	@DisplayName("Test de la validation de la licence avec une licence vide")
-	public void testValidateLicenceWithEmptyValue() {
+	void testValidateLicenceWithEmptyValue() {
 		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
 				licenceValidator.validate(null);
 
@@ -51,8 +51,8 @@ public class LicenceValidatorTest {
 
 	@Test
 	@DisplayName("Test pour s'assurer qu'on passe bien da la méthode qui valide la licence standard")
-	public void testValidateLicenceStandard() {
-		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel("licence");
+	void testValidateLicenceStandard() {
+		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel(LicenceStandard.LicenceLabelEnum.PUBLIC_DOMAIN_CC0);
 		licenceStandard.setLicenceType(Licence.LicenceTypeEnum.STANDARD);
 		when(licenceStandardValidator.validate(licenceStandard)).thenReturn(Collections.emptySet());
 
@@ -65,7 +65,7 @@ public class LicenceValidatorTest {
 
 	@Test
 	@DisplayName("Test pour s'assurer qu'on passe bien da la méthode qui valide la licence custom")
-	public void testValidateLicenceCustom() {
+	void testValidateLicenceCustom() {
 		LicenceCustom licenceCustom = new LicenceCustom().customLicenceLabel(Collections.emptyList());
 		licenceCustom.setLicenceType(Licence.LicenceTypeEnum.CUSTOM);
 		when(licenceCustomValidator.validate(licenceCustom)).thenReturn(Collections.emptySet());

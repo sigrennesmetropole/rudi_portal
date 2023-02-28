@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-parent</artifactId>
-		<version>0.3.0</version>
+		<version>1.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -17,24 +17,31 @@
 	<!-- Sous-modules du projet -->
 	<modules>
 		<module>rudi-facet-core</module>
-		
+
 		<module>rudi-facet-generator</module>
 		<module>rudi-facet-generator-text</module>
+		<module>rudi-facet-generator-docx</module>
+		<module>rudi-facet-generator-pdf</module>
 		<module>rudi-facet-email</module>
 		<module>rudi-facet-bpmn</module>
 		<module>rudi-facet-crypto</module>
-		
+		<module>rudi-facet-dataset</module>
+		<module>rudi-facet-doks</module>
+		<module>rudi-facet-bucket-s3</module>
+
 		<module>rudi-facet-oauth2</module>
-		
+
 		<module>rudi-facet-dataverse</module>
 		<module>rudi-facet-kaccess</module>
 		<module>rudi-facet-kmedia</module>
 		<module>rudi-facet-apimaccess</module>
-		
+
 		<module>rudi-facet-strukture</module>
 		<module>rudi-facet-acl</module>
 		<module>rudi-facet-kos</module>
 		<module>rudi-facet-projekt</module>
+		<module>rudi-facet-rva</module>
+		<module>rudi-facet-selfdata</module>
 
 	</modules>
 

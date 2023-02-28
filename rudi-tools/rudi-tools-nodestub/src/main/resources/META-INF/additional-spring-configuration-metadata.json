@@ -14,6 +14,11 @@
 			"name": "rudi.facet.kalim.endpoint.resources",
 			"type": "java.lang.String",
 			"description": "Resources API path."
+		},
+		{
+			"name": "rudi.nodestub.blacklisted-user-login",
+			"type": "java.lang.String",
+			"description": "Login de l'utilisateur dont la demande d'accès sera toujouts en Traitée absent dans NodeStub."
 		}
 	],
 	"hints": [

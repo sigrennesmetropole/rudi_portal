@@ -1,0 +1,65 @@
+<mat-sidenav-container>
+    <mat-sidenav-content class="sidebar-content-pd">
+        <div class="selfdata-container">
+
+            <app-loader [allPage]="true" [isLight]="false"
+                        [active]="submitLoading"></app-loader>
+
+            <!-- En tête de la page -->
+            <div>
+                <app-page-title [title1]="'metaData.selfdataInformationRequest.creation.title1' | translate"
+                                [title2]="'metaData.selfdataInformationRequest.creation.title2' | translate"
+                                class="d-flex justify-content-center w-100">
+                </app-page-title>
+                <div class="subtitle-container">
+                    <div class="subtitle-content">
+                        <app-page-subtitle
+                            [text]="'metaData.selfdataInformationRequest.creation.subtitle' | translate"
+                            class="mb-1"
+                        >
+                        </app-page-subtitle>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenu de la page -->
+            <div class="form-container mt-5">
+                <mat-card class="form-content mb-5">
+                    <div *ngIf="isLoading">
+                        <app-loader [allPage]="false" [isLight]="true" [noText]="true"
+                                    [active]="isLoading"></app-loader>
+                    </div>
+                    <div *ngIf="!isLoading && errorLoading">
+                        <app-error-box [text]="'metaData.selfdataInformationRequest.creation.errorLoading' | translate">
+                        </app-error-box>
+                    </div>
+                    <div *ngIf="!isLoading && form && !errorLoading">
+                        <h1 class="information-request-title"
+                            [translate]="'metaData.selfdataInformationRequest.creation.requestTitle'">
+                        </h1>
+                        <p class="information-request-subtitle">
+                            <span>
+                                <span class="required-symbol">*</span>
+                                {{'metaData.selfdataInformationRequest.creation.mandatoryInformation' | translate}}
+                            </span>
+                        </p>
+                        <app-workflow-form [draftForm]="form" [properties]="properties"></app-workflow-form>
+                    </div>
+                </mat-card>
+            </div>
+            <!-- Boutons d'action -->
+            <div class="action-section">
+                <div class="inside-action-section">
+                    <button class="button mat-stroked-button cancel-button" mat-button (click)="cancel()">
+                        {{'metaData.selfdataInformationRequest.creation.cancel' | translate}}
+                    </button>
+                    <button
+                        class="button mat-stroked-button send-button" mat-raised-button
+                        (click)="handleClickSubmit()">
+                        {{'metaData.selfdataInformationRequest.creation.send' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

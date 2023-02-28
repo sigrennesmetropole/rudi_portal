@@ -5,6 +5,8 @@ import {CloseEvent, DialogClosedData} from '../../data-set/models/dialog-closed-
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Action, Task} from '../../projekt/projekt-api';
+import {Section} from '../../api-bpmn';
+import {getSectionWithFields} from '../utils/workflow-form-utils';
 
 @Component({
     selector: 'app-workflow-popin',
@@ -37,11 +39,12 @@ export class WorkflowPopinComponent implements AfterViewInit {
     }
 
     get hasRequiredFields(): boolean {
-        const form = getWorkflowForm(this.action, this.task);
-        if (!form) {
+        const form = getWorkflowForm(this.action, this.task, null);
+        if (!form || form.sections == null || form.sections.length === 0) {
             return false;
         }
-        return form.sections.some(section => section.fields.some(field => field.definition.required));
+
+        return getSectionWithFields(form).some(section => section.fields.some(field => field.definition.required));
     }
 
     ngAfterViewInit(): void {

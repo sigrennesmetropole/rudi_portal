@@ -1,0 +1,124 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Selfdata Rudi",
+		"version": "0.0.1",
+		"title": "rudi-selfdata-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Selfdata API",
+			"variables": {
+				"basePath": {
+					"default": "selfdata/v1"
+				}
+			}
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"DictionaryEntry": {
+				"$ref": "../../../rudi-facet/rudi-facet-kaccess/src/main/resources/openapi/RUDI-PRODUCER.yml/#/components/schemas/DictionaryEntry"
+			},
+			"BarChartType": {
+				"description": "Type de graphique de type Barre (affichage des points ou des lignes ou en barre)",
+				"type": "string",
+				"enum": [
+					"POINT",
+					"LINE",
+					"BAR"
+				]
+			},
+			"BarChartSeries": {
+				"description": "Série d'un graphique de type Barre",
+				"type": "object",
+				"properties": {
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					}
+				}
+			},
+			"BarChartValues": {
+				"description": "Valeurs d'une série d'un graphique en barre",
+				"type": "object",
+				"properties": {
+					"colour": {
+						"type": "string",
+						"description": "la couleur de la barre ou de l'aire sous la courbe soit en #RRGGBBAA soit en nom"
+					},
+					"borderColour": {
+						"type": "string",
+						"description": "la couleur du trait de la barre ou de la ligne soit en #RRGGBBAA soit en nom"
+					},
+					"values": {
+						"type": "array",
+						"items": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					}
+				}
+			},
+			"BarChartData": {
+				"description": "Données d'un graphique de type Barre",
+				"type": "object",
+				"properties": {
+					"legend": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"type": {
+						"$ref": "#/components/schemas/BarChartType"
+					},
+					"legendYAxis": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"legendXAxis": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/DictionaryEntry"
+						}
+					},
+					"series": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BarChartSeries"
+						}
+					},
+					"values": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BarChartValues"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

@@ -3,16 +3,27 @@
  */
 package org.rudi.facet.bpmn.service.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.val;
+import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.SetUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.FormDefinition;
 import org.rudi.bpmn.core.bean.FormSectionDefinition;
 import org.rudi.bpmn.core.bean.ProcessFormDefinition;
 import org.rudi.bpmn.core.bean.SectionDefinition;
+import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.facet.bpmn.bean.form.FormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
@@ -27,7 +38,6 @@ import org.rudi.facet.bpmn.entity.form.FormDefinitionEntity;
 import org.rudi.facet.bpmn.entity.form.FormSectionDefinitionEntity;
 import org.rudi.facet.bpmn.entity.form.ProcessFormDefinitionEntity;
 import org.rudi.facet.bpmn.entity.form.SectionDefinitionEntity;
-import org.rudi.facet.bpmn.helper.form.ActionId;
 import org.rudi.facet.bpmn.mapper.form.FormDefinitionMapper;
 import org.rudi.facet.bpmn.mapper.form.FormSectionDefinitionMapper;
 import org.rudi.facet.bpmn.mapper.form.ProcessFormDefinitionMapper;
@@ -39,15 +49,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nonnull;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.TreeSet;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 /**
  * @author FNI18300
@@ -55,8 +59,10 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class FormServiceImpl implements FormService {
 
+	private static final String FORM_DEFINITION_FILE_NAME_SEPARATOR = "__";
 	private final SectionDefinitionDao sectionDefintionDao;
 
 	private final SectionDefinitionCustomDao sectionDefintionCustomDao;
@@ -82,6 +88,8 @@ public class FormServiceImpl implements FormService {
 	private final SectionAdaptor sectionAdaptor = this.new SectionAdaptor();
 	private final FormAdaptor formAdaptor = this.new FormAdaptor();
 	private final ProcessFormAdaptor processFormAdaptor = this.new ProcessFormAdaptor();
+	private final JsonResourceReader jsonResourceReader;
+	private final DefinitionResources definitionResources;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -334,37 +342,63 @@ public class FormServiceImpl implements FormService {
 
 	@Override
 	@Transactional // readOnly = false
-	public void createOrUpdateProcessFormDefinitionForAction(ActionId actionId) throws IOException {
-		val sectionName = getSectionNameForAction(actionId);
-		val section = createOrUpdateSectionDefinition(new SectionDefinition()
-				.name(sectionName)
-				.label(sectionName)
-				.definition(getJsonForSectionDefinition("bpmn/form/" + sectionName + ".json")));
-		val form = createOrUpdateFormDefinition(new FormDefinition()
-				.name(sectionName + "__form")
-				.addFormSectionDefinitionsItem(new FormSectionDefinition()
-						.order(1)
-						.readOnly(false)
-						.sectionDefinition(section)));
-		final var processForm = new ProcessFormDefinition()
-				.processDefinitionId(actionId.processDefinitionId)
-				.userTaskId(actionId.userTaskId)
-				.actionName(actionId.actionName)
-				.formDefinition(form);
-		createOrUpdateProcessFormDefinition(processForm);
-	}
+	public Collection<ProcessFormDefinition> createOrUpdateAllSectionAndFormDefinitions() throws IOException {
 
-	private String getSectionNameForAction(ActionId actionId) {
-		return actionId.processDefinitionId + "__" + actionId.userTaskId + "__" + actionId.actionName;
-	}
-
-	@Nonnull
-	private String getJsonForSectionDefinition(String filename) throws IOException {
-		final var resource = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(filename);
-		if (!resource.exists()) {
-			throw new FileNotFoundException("JSON resource for section definition does not exist : " + filename);
+		final Collection<SectionDefinition> sectionDefinitions = definitionResources.getSections();
+		final Map<String, SectionDefinition> createdOrUpdatedSectionsByName = new HashMap<>(sectionDefinitions.size());
+		for (final var sectionDefinition : sectionDefinitions) {
+			final String referencedSectionName = sectionDefinition.getName();
+			final var createdOrUpdatedSection = createOrUpdateSectionDefinition(sectionDefinition);
+			createdOrUpdatedSectionsByName.put(referencedSectionName, createdOrUpdatedSection);
 		}
-		return IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+
+		final Map<String, FormManualDefinition> formManualDefinitionsByName = definitionResources.getForms();
+		final Collection<ProcessFormDefinition> createdOrUpdatedProcessFormDefinitions = new ArrayList<>(formManualDefinitionsByName.size());
+		for (final Map.Entry<String, FormManualDefinition> entry : formManualDefinitionsByName.entrySet()) {
+			final String formName = entry.getKey();
+			final var formManualDefinition = entry.getValue();
+
+			val form = new FormDefinition()
+					.name(formName);
+
+			var nextSectionOrder = 1;
+			for (final var referencedSection : formManualDefinition.getSections()) {
+				final var section = createdOrUpdatedSectionsByName.get(referencedSection.getName());
+				form.addFormSectionDefinitionsItem(new FormSectionDefinition()
+						.order(nextSectionOrder)
+						.readOnly(false)
+						.sectionDefinition(section));
+				++nextSectionOrder;
+			}
+
+			final var createdOrUpdatedForm = createOrUpdateFormDefinition(form);
+			final var criteria = createCriteriaFromSectionFormManualDefinitionFilename(formName);
+			createdOrUpdatedProcessFormDefinitions.add(createOrUpdateProcessFormDefinition(new ProcessFormDefinition()
+					.processDefinitionId(criteria.getProcessDefinitionId())
+					.userTaskId(criteria.getUserTaskId())
+					.actionName(criteria.getActionName())
+					.formDefinition(createdOrUpdatedForm)));
+		}
+
+		return createdOrUpdatedProcessFormDefinitions;
+	}
+
+	/**
+	 * @return null si le JSON ne correspond pas à un fichier JSON de définition de formulaire valide, ou en cas d'erreur
+	 */
+	@Nonnull
+	private ProcessFormDefinitionSearchCriteria createCriteriaFromSectionFormManualDefinitionFilename(String formName) {
+		if (formName != null) {
+			final var splitFilename = formName.split(FORM_DEFINITION_FILE_NAME_SEPARATOR);
+			if (splitFilename.length >= 2) {
+				return ProcessFormDefinitionSearchCriteria.builder()
+						.processDefinitionId(splitFilename[0])
+						.userTaskId(splitFilename[1])
+						.actionName(splitFilename.length > 2 ? splitFilename[2] : null)
+						.build();
+			}
+		}
+		throw new InvalidParameterException("Form name does not match process form definition naming convention \"<processDefinitionId>__<userTaskId>[__<actionName>]\" : " + formName);
 	}
 
 	interface AbstractFormElementAdaptor<T, C> {
@@ -498,6 +532,7 @@ public class FormServiceImpl implements FormService {
 			criteria.setProcessDefinitionId(processForm.getProcessDefinitionId());
 			criteria.setUserTaskId(processForm.getUserTaskId());
 			criteria.setActionName(processForm.getActionName());
+//			criteria.setRevision(processForm.getRevision()); // FIXME criteria.revision INT alors que processForm.revision STRING
 			return criteria;
 		}
 

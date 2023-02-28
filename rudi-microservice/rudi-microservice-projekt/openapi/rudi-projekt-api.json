@@ -147,6 +147,9 @@
 					},
 					{
 						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
 					}
 				],
 				"responses": {
@@ -374,6 +377,9 @@
 					},
 					{
 						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
 					}
 				],
 				"responses": {
@@ -1971,6 +1977,31 @@
 				}
 			}
 		},
+		"/properties/front-office": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Propriétés de configuration du Front Office",
+				"description": "Toutes les propriétés sous forme de clé/valeur pour configurer l'application Front Office",
+				"operationId": "getFrontOfficeProperties",
+				"responses": {
+					"200": {
+						"description": "Propriétés au format JSON.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/FrontOfficeProperties"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
 		"/supports": {
 			"post": {
 				"tags": [
@@ -2038,6 +2069,9 @@
 					},
 					{
 						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
 					}
 				],
 				"responses": {
@@ -2265,6 +2299,9 @@
 					},
 					{
 						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
 					}
 				],
 				"responses": {
@@ -3578,7 +3615,44 @@
 				}
 			}
 		},
-		
+		"/new-dataset-request/{new-dataset-request-uuid}/project": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche le projet associé à une nouvelle demande",
+				"description": "Recherche le projet associé à une nouvelle demande à partir de son task-id",
+				"operationId": "findProjectByNewDatasetRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "new-dataset-request-uuid",
+						"description": "Uuid de l'asset",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/Project"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+
 		"/linked-dataset/tasks/draft-form": {
 			"get": {
 				"tags": [
@@ -4135,7 +4209,7 @@
 				"summary": "Fait avancer la tâche",
 				"description": "Fait avancer la tâche à partir d'une action",
 				"operationId": "doItNewDatasetRequest",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -4194,7 +4268,7 @@
 				"summary": "Mets à jour une tâche",
 				"description": "Mets à jour une tâche et l'asset associée",
 				"operationId": "updateNewDatasetRequestTask",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -4248,7 +4322,7 @@
 				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
 				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
 				"operationId": "createNewDatasetRequestDraft",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -4304,7 +4378,7 @@
 				"summary": "Démarre la tâche",
 				"description": "Démarre la tâche",
 				"operationId": "startNewDatasetRequestTask",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -4352,7 +4426,6 @@
 				}
 			}
 		}
-		
 	},
 	"components": {
 		"parameters": {

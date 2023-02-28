@@ -8,193 +8,210 @@
             {{'project.stepper.submission.step1.requiredInformation' | translate}}
         </p>
     </div>
-<form [formGroup]="step1FormGroup">
-<!-- Title Field-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.title'|translate}}</mat-label>
-            <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
-        </div>
-        <mat-hint class="title-hint">{{'project.stepper.submission.step1.titleHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline" hideRequiredMarker>
-            <input type="text" formControlName="title" matInput
-                   autocomplete="off">
-            <mat-error class="stepper-mat-error"
-                       *ngIf="step1FormGroup.get('title').errors?.required">
-                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
-            </mat-error>
-        </mat-form-field>
-    </ng-container>
+    <form [formGroup]="step1FormGroup">
+        <!-- Title Field-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.title'|translate}}</mat-label>
+                <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
+            </div>
+            <mat-hint class="title-hint">{{'project.stepper.submission.step1.titleHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <input type="text" formControlName="title" matInput
+                       autocomplete="off">
+                <mat-error class="stepper-mat-error"
+                           *ngIf="step1FormGroup.get('title').errors?.required">
+                    <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
+                </mat-error>
+            </mat-form-field>
+        </ng-container>
 
-    <!-- Description Field-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.description'|translate}}</mat-label>
-            <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
-        </div>
+        <!-- Description Field-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.description'|translate}}</mat-label>
+                <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
+            </div>
 
-        <mat-hint
-            class="title-hint">{{'project.stepper.submission.step1.descriptionHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline" hideRequiredMarker>
+            <mat-hint
+                class="title-hint">{{'project.stepper.submission.step1.descriptionHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline" hideRequiredMarker>
                                         <textarea class="text-area-height" type="text" matInput
                                                   formControlName="description" autocomplete="off"></textarea>
-            <mat-error class="stepper-mat-error"
-                       *ngIf="step1FormGroup.get('description').errors?.required">
-                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
-            </mat-error>
-        </mat-form-field>
-    </ng-container>
+                <mat-error class="stepper-mat-error"
+                           *ngIf="step1FormGroup.get('description').errors">
+                    <ng-container *ngIf="step1FormGroup.get('description').errors.required"><em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}</ng-container>
+                    <ng-container *ngIf="step1FormGroup.get('description').errors.maxlength">
+                        <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldMaxLength.before'|translate}}
+                        {{step1FormGroup.get('description').errors.maxlength.requiredLength}}
+                        {{'project.firstStepForm.errorFieldMaxLength.after'|translate}}
+                    </ng-container>
+                </mat-error>
+            </mat-form-field>
+        </ng-container>
 
-    <!-- Image Field-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.image'|translate}}</mat-label>
-        </div>
+        <!-- Image Field-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.image'|translate}}</mat-label>
+            </div>
 
-        <mat-hint class="title-hint">{{'project.stepper.submission.step1.imageHint'|translate}}
-        </mat-hint>
+            <mat-hint class="title-hint">{{'project.stepper.submission.step1.imageHint'|translate}}
+            </mat-hint>
 
-        <div class="image-form-margin">
-            <app-uploader-template [formGroup]="step1FormGroup" (imageChanged)="handleImageChanged()"></app-uploader-template>
-        </div>
-        <p class="stepper-mat-error" *ngIf="step1FormGroup.get('image').errors"></p>
-    </ng-container>
+            <div class="image-form-margin" *ngIf="fileMaxSize && fileExtensions">
+                <app-uploader [fileFormControl]="step1FormGroup?.controls?.image"
+                              [adapter]="adapter"
+                              (fileChanged)="handleImageChanged()"
+                              [enableCropper]="true"
+                              [fileMaxCount]="1"
+                              [fileMaxSize]="fileMaxSize.toMegabytes()"
+                              [fileExtensions]="fileExtensions"
+                              [imageText]="'project.imageUploader.ajouterImage'"
+                              [imageFormat]="'project.imageUploader.formatImage'">
 
-    <!-- période de realisation -->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.periode'|translate}}</mat-label>
-        </div>
+                </app-uploader>
+            </div>
+            <p class="stepper-mat-error" *ngIf="step1FormGroup.get('image').errors"></p>
+        </ng-container>
 
-        <mat-hint
-            class="title-hint">{{'project.stepper.submission.step1.periodeHint'|translate}}
-        </mat-hint>
+        <!-- période de realisation -->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.periode'|translate}}</mat-label>
+            </div>
 
-        <div class="d-flex justify-content-between">
-            <app-month-year-datepicker [formGroup]="step1FormGroup" controlName="begin_date"
-                                       [errorMessage]="'project.stepper.submission.step1.periodeBeginError' | translate"
-                                       [placeholder]="'project.stepper.submission.step1.periodeBeginPlaceholder' | translate">
-            </app-month-year-datepicker>
-            <app-month-year-datepicker [formGroup]="step1FormGroup" controlName="end_date"
-                                       [errorMessage]="'project.stepper.submission.step1.periodeEndError' | translate"
-                                       [placeholder]="'project.stepper.submission.step1.periodeEndPlaceholder' | translate">
-            </app-month-year-datepicker>
-        </div>
-    </ng-container>
+            <mat-hint
+                class="title-hint">{{'project.stepper.submission.step1.periodeHint'|translate}}
+            </mat-hint>
 
-    <!--  Public cible-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.firstStepForm.publicCible'|translate}}</mat-label>
-        </div>
+            <div class="d-flex justify-content-between">
+                <app-month-year-datepicker [formGroup]="step1FormGroup" controlName="begin_date"
+                                           [errorMessage]="'project.stepper.submission.step1.periodeBeginError' | translate"
+                                           [placeholder]="'project.stepper.submission.step1.periodeBeginPlaceholder' | translate">
+                </app-month-year-datepicker>
+                <app-month-year-datepicker [formGroup]="step1FormGroup" controlName="end_date"
+                                           [errorMessage]="'project.stepper.submission.step1.periodeEndError' | translate"
+                                           [placeholder]="'project.stepper.submission.step1.periodeEndPlaceholder' | translate">
+                </app-month-year-datepicker>
+            </div>
+        </ng-container>
 
-        <mat-hint
-            class="title-hint">{{'project.firstStepForm.publicCibleHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline">
-            <mat-select multiple placeholder="{{'project.firstStepForm.publicCiblePlaceholder'|translate}}"
-                        formControlName="publicCible">
-                <mat-option *ngFor="let cible of publicCible" [value]="cible">
-                    {{ cible.label }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
+        <!--  Public cible-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.firstStepForm.publicCible'|translate}}</mat-label>
+            </div>
 
-    <!--    Echelle-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.echelle'|translate}}</mat-label>
-        </div>
+            <mat-hint
+                class="title-hint">{{'project.firstStepForm.publicCibleHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline">
+                <mat-select multiple placeholder="{{'project.firstStepForm.publicCiblePlaceholder'|translate}}"
+                            formControlName="publicCible">
+                    <mat-option *ngFor="let cible of publicCible" [value]="cible">
+                        {{ cible.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
 
-        <mat-hint
-            class="title-hint">{{'project.stepper.submission.step1.echelleHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline">
-            <mat-select placeholder="{{'project.stepper.submission.step1.select-option'|translate}}"
-                        formControlName="echelle">
-                <mat-option *ngFor="let echelle of territoireScale"
-                            [value]="echelle">
-                    {{ echelle.label }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </ng-container>
+        <!--    Echelle-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.echelle'|translate}}</mat-label>
+            </div>
 
-    <!--  territoire concerne-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.territoireConcerne'|translate}}</mat-label>
-        </div>
-        <mat-hint class="title-hint">{{'project.stepper.submission.step1.territoireConcerneHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline" hideRequiredMarker>
-            <input type="text" formControlName="territoire" matInput
-                   autocomplete="off">
-            <mat-error class="stepper-mat-error"
-                       *ngIf="step1FormGroup.get('territoire').errors?.required">
-                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.stepper.submission.step1.errorFieldRequired'|translate}}
-            </mat-error>
-        </mat-form-field>
-    </ng-container>
-    <!--    Type reutilisation-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.reuseType'|translate}}</mat-label>
-            <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
-        </div>
+            <mat-hint
+                class="title-hint">{{'project.stepper.submission.step1.echelleHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline">
+                <mat-select placeholder="{{'project.stepper.submission.step1.select-option'|translate}}"
+                            formControlName="echelle">
+                    <mat-option *ngFor="let echelle of territoireScale"
+                                [value]="echelle">
+                        {{ echelle.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
 
-        <mat-hint
-            class="title-hint">{{'project.stepper.submission.step1.reuseTypeHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline" hideRequiredMarker>
-            <mat-select placeholder="{{'project.stepper.submission.step1.select-option'|translate}}" formControlName="type">
-                <mat-option *ngFor="let project of projectType"
-                            [value]="project.code">{{project.label}}</mat-option>
-            </mat-select>
-            <mat-error class="stepper-mat-error"
-                       *ngIf="step1FormGroup.get('type').errors?.required">
-                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
-            </mat-error>
-        </mat-form-field>
+        <!--  territoire concerne-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.territoireConcerne'|translate}}</mat-label>
+            </div>
+            <mat-hint class="title-hint">{{'project.stepper.submission.step1.territoireConcerneHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <input type="text" formControlName="territoire" matInput
+                       autocomplete="off">
+                <mat-error class="stepper-mat-error"
+                           *ngIf="step1FormGroup.get('territoire').errors?.required">
+                    <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.stepper.submission.step1.errorFieldRequired'|translate}}
+                </mat-error>
+            </mat-form-field>
+        </ng-container>
+        <!--    Type reutilisation-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.reuseType'|translate}}</mat-label>
+                <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
+            </div>
 
-    </ng-container>
-    <!--    Accompagnement souhaité-->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label>{{'project.stepper.submission.step1.accompagnementSouhaite'|translate}}</mat-label>
-            <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
-        </div>
+            <mat-hint
+                class="title-hint">{{'project.stepper.submission.step1.reuseTypeHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <mat-select placeholder="{{'project.stepper.submission.step1.select-option'|translate}}"
+                            formControlName="type">
+                    <mat-option *ngFor="let project of projectType"
+                                [value]="project.code">{{project.label}}</mat-option>
+                </mat-select>
+                <mat-error class="stepper-mat-error"
+                           *ngIf="step1FormGroup.get('type').errors?.required">
+                    <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
+                </mat-error>
+            </mat-form-field>
 
-        <mat-hint
-            class="title-hint">{{'project.stepper.submission.step1.accompagnementSouhaiteHint'|translate}}
-        </mat-hint>
-        <mat-form-field appearance="outline">
-            <mat-select multiple
-                        placeholder="{{'project.stepper.submission.step1.select-options'|translate}}"
-                        formControlName="accompagnement">
-                <mat-option *ngFor="let support of supports"
-                            [value]="support">
-                    {{ support.label }}
-                </mat-option>
-            </mat-select>
-            <mat-error class="stepper-mat-error"
-                       *ngIf="step1FormGroup.get('accompagnement').errors?.required">
-                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
-            </mat-error>
-        </mat-form-field>
-    </ng-container>
+        </ng-container>
+        <!--    Accompagnement souhaité-->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label>{{'project.stepper.submission.step1.accompagnementSouhaite'|translate}}</mat-label>
+                <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
+            </div>
 
-    <!-- Niveau de confidentialité -->
-    <ng-container>
-        <div class="d-flex">
-            <mat-label  class="margin-to-11">{{'project.stepper.submission.step1.projectConfidentiality'|translate}}</mat-label>
-            <span class="ml-1 mat-error margin-to-11">{{'signup.etoile'|translate}}</span>
-        </div>
-        <app-radio-list [formGroup]="step1FormGroup" controlName="confidentiality"
-                        [suggestions]="suggestions"></app-radio-list>
-    </ng-container>
-</form>
+            <mat-hint
+                class="title-hint">{{'project.stepper.submission.step1.accompagnementSouhaiteHint'|translate}}
+            </mat-hint>
+            <mat-form-field appearance="outline">
+                <mat-select multiple
+                            placeholder="{{'project.stepper.submission.step1.select-options'|translate}}"
+                            formControlName="accompagnement">
+                    <mat-option *ngFor="let support of supports"
+                                [value]="support">
+                        {{ support.label }}
+                    </mat-option>
+                </mat-select>
+                <mat-error class="stepper-mat-error"
+                           *ngIf="step1FormGroup.get('accompagnement').errors?.required">
+                    <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
+                </mat-error>
+            </mat-form-field>
+        </ng-container>
+
+        <!-- Niveau de confidentialité -->
+        <ng-container>
+            <div class="d-flex">
+                <mat-label
+                    class="margin-to-11">{{'project.stepper.submission.step1.projectConfidentiality'|translate}}</mat-label>
+                <span class="ml-1 mat-error margin-to-11">{{'signup.etoile'|translate}}</span>
+            </div>
+            <app-radio-list [formGroup]="step1FormGroup" controlName="confidentiality"
+                            [suggestions]="suggestions"></app-radio-list>
+        </ng-container>
+    </form>
 </div>

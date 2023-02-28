@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Field, Section} from '../../api-bpmn';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
+import {WorkflowProperties} from '../workflow-form/workflow-properties';
 
 /**
  * Champ généré dynamiquement à partir d'un {@link Field} du WorkFlow.
@@ -28,6 +29,12 @@ export class WorkflowFieldComponent {
     @Input()
     field: Field;
 
+    @Input()
+    properties: WorkflowProperties;
+
+    @Input()
+    worflowFormReadOnly: boolean;
+
     @Output()
     submit: EventEmitter<void> = new EventEmitter<void>();
 
@@ -47,8 +54,20 @@ export class WorkflowFieldComponent {
         return this.field.definition.required;
     }
 
+    get readonly(): boolean {
+        return this.field.definition.readOnly || this.worflowFormReadOnly;
+    }
+
+    get formControl(): AbstractControl {
+        return this.formGroup.get(this.formControlName);
+    }
+
+
+    addOtherControls(): void {
+        // Par défaut on ne rajoute, les components fils en rajoutent si besoin
+    }
 }
 
 export function computeFormControlName(section: Section, field: Field): string {
-    return section.name + '.' + field.definition.name;
+    return section.name + '_' + field.definition.name;
 }

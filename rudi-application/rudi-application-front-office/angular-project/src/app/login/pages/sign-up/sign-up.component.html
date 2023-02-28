@@ -57,7 +57,7 @@
 
 
                                     <mat-form-field
-                                                    appearance="standard" hideRequiredMarker>
+                                        appearance="standard" hideRequiredMarker>
                                         <mat-label>{{'signup.password'|translate}} <span
                                             class="mat-error">{{'signup.etoile'|translate}}</span></mat-label>
                                         <input matInput [type]="hidePassword ? 'password' : 'text'" id="password"
@@ -71,11 +71,11 @@
                                                 class="hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                                         </button>
                                         <mat-error
-                                                   *ngIf="formControls.password.errors?.minlength">
+                                            *ngIf="formControls.password.errors?.minlength">
                                             <em class="fa fa-info-circle fa-2x mr-2"></em>{{'signup.passwordErrorPre'|translate}} {{passwordMinLength}} {{'signup.passwordErrorPost'|translate}}
                                         </mat-error>
                                         <mat-error
-                                                   *ngIf="formControls.password.errors?.required">
+                                            *ngIf="formControls.password.errors?.required">
                                             <em class="fa fa-info-circle fa-2x mr-2"></em>{{'signup.passwordRequired'|translate}}
                                         </mat-error>
                                     </mat-form-field>
@@ -108,15 +108,18 @@
                                     </mat-form-field>
 
                                     <div class="form-group form-check mt-4">
-                                        <mat-checkbox class="signup-checkbox" formControlName="cgu">
+                                        <mat-checkbox class="signup-checkbox signup-checkbox-align"
+                                                      formControlName="cgu">
                                         </mat-checkbox>
                                         <span class="signup-agree mr-2">{{'signup.lu'|translate}}</span>
-                                        <a href="{{'rudidatarennes.cgu'|getBackendProperty|async}}" rel="noopener noreferrer" class="signup-cgu">{{'signup.cgu'|translate}}</a>
+                                        <a href="{{'rudidatarennes.cgu'|getBackendProperty|async}}"
+                                           rel="noopener noreferrer" class="signup-cgu">{{'signup.cgu'|translate}}</a>
                                         <span class="required-symbol mat-error">&nbsp;*</span>
                                     </div>
 
                                     <div class="form-group form-check">
-                                        <mat-checkbox class="signup-checkbox" formControlName="subscribeToNotifications"></mat-checkbox>
+                                        <mat-checkbox class="signup-checkbox signup-checkbox-align"
+                                                      formControlName="subscribeToNotifications"></mat-checkbox>
                                         <span>{{'signup.subscribeToNotifications'|translate}}</span>
                                     </div>
 
@@ -164,8 +167,10 @@
                     {{'signup.rgpd.p2'|translate}}
                 </p>
                 <p>
-                    {{'signup.rgpd.p3.1'|translate}} "<a href="https://e-demarches.rennes.fr/Rennes/workflow_url?ECITIZ_ACTIVITY_PATH=Demandeur&USAGER_PROCESS=CONTACT">{{'signup.rgpd.p3.2'|translate}}</a>"
-                    {{'signup.rgpd.p3.3'|translate}} (<a href="https://metropole.rennes.fr">https://metropole.rennes.fr</a>)
+                    {{'signup.rgpd.p3.1'|translate}} "<a
+                    href="https://e-demarches.rennes.fr/Rennes/workflow_url?ECITIZ_ACTIVITY_PATH=Demandeur&USAGER_PROCESS=CONTACT">{{'signup.rgpd.p3.2'|translate}}</a>"
+                    {{'signup.rgpd.p3.3'|translate}} (<a
+                    href="https://metropole.rennes.fr">https://metropole.rennes.fr</a>)
                     {{'signup.rgpd.p3.4'|translate}} :
                 </p>
                 <p>

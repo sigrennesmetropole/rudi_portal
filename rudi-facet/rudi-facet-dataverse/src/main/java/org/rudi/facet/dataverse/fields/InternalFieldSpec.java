@@ -24,17 +24,12 @@ class InternalFieldSpec extends ChildFieldSpec {
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getJavaType() {
 		return null;
 	}
 
 	@Override
 	public FieldTypeClass getTypeClass() {
-		return null;
-	}
-
-	@Override
-	public Class<?> getValueType() {
 		return null;
 	}
 

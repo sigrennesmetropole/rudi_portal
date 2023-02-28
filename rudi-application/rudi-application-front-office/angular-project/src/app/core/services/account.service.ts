@@ -113,4 +113,12 @@ export class AccountService {
     checkPasswordChangeToken(token: string): Observable<void> {
         return this.aclService.checkPasswordChangeToken(token);
     }
+
+    /**
+     * Surppirme le refresh token pour finaliser la déconnexion
+     * @param token le refresh token a supprimer du BE
+     */
+    accoutLogout(token: string): Observable<void> {
+        return this.aclService.accountLogout(token);
+    }
 }

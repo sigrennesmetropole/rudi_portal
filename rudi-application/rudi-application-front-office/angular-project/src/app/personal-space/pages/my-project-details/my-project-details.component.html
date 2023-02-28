@@ -11,7 +11,7 @@
                 [logo]="projectLogo"
                 [projectTitle]="project?.title"
                 [ownerDescription]="projectOwnerInfo?.name"
-                [status]="project?.status"
+                [status]="project?.functional_status"
             >
             </app-project-heading>
 
@@ -20,7 +20,7 @@
                 <app-tab [label]="'personalSpace.project.tabs.information' | translate"
                          [icon]="'icon_tab_infos'">
                     <ng-template>
-                        <app-project-information [project]="project" ></app-project-information>
+                        <app-project-information [project]="project"></app-project-information>
                     </ng-template>
                 </app-tab>
                 <app-tab [label]="'personalSpace.project.tabs.datasets' | translate" [icon]="'jdd_icon'">

@@ -8,8 +8,11 @@ import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoi
 })
 export class PageTitleComponent implements OnInit {
     mediaSize: MediaSize;
+    @Input() urlToDoc: string;
     @Input() title1: string;
     @Input() title2: string;
+    @Input() title3: string;
+    @Input() title4: string;
 
     constructor(
         private readonly breakpointObserver: BreakpointObserverService,
@@ -19,5 +22,4 @@ export class PageTitleComponent implements OnInit {
     ngOnInit(): void {
         this.mediaSize = this.breakpointObserver.getMediaSize();
     }
-
 }

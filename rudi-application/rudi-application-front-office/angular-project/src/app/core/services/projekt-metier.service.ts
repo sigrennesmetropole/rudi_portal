@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {forkJoin, Observable, of, zip} from 'rxjs';
 import {
     Confidentiality,
+    FrontOfficeProperties,
     LinkedDataset,
     LinkedDatasetStatus,
     NewDatasetRequest,
@@ -25,16 +26,18 @@ import {DataRequestItem} from '../../project/model/data-request-item';
 import {RequestDetails} from '../../shared/models/request-details';
 import {DateTimeUtils} from '../../shared/utils/date-time-utils';
 import {ErrorWithCause} from '../../shared/models/error-with-cause';
+import {DataSize} from '../../shared/models/data-size';
+import {PropertiesAdapter} from './properties-adapter';
 
 const {firstElementOrThrow} = PageResultUtils;
 
-export type Order = 'title' | '-title' | 'updatedDate' | '-updatedDate' | 'code' | '-code';
+export type Order = 'title' | '-title' | 'updatedDate' | '-updatedDate' | 'code' | '-code' | 'order_';
 export const ORDERS: Order[] = ['title', '-title', 'updatedDate', '-updatedDate'];
-export const DEFAULT_ORDER: Order = 'title';
+export const DEFAULT_PROJECT_ORDER: Order = 'title';
 
 const DEFAULT_LINKED_DATASET_STATUS: LinkedDatasetStatus = 'VALIDATED';
 const RESTRICTED_LINKED_DATASET_STATUS: LinkedDatasetStatus = 'DRAFT';
-export const DEFAULT_TARGET_AUDIENCE_ORDER: Order = 'code';
+export const DEFAULT_ORDER: Order = 'order_';
 
 @Injectable({
     providedIn: 'root'
@@ -46,17 +49,24 @@ export class ProjektMetierService {
      */
     static UNKOWN_USER_INFO_NAME = '[Utilisateur inconnu]';
 
+    private readonly propertiesAdapter: PropertiesAdapter<FrontOfficeProperties>;
+
     constructor(
         private readonly projektService: ProjektService,
         private readonly imageLogoService: ImageLogoService,
         private readonly konsultMetierService: KonsultMetierService
     ) {
+        this.propertiesAdapter = new class extends PropertiesAdapter<FrontOfficeProperties> {
+            protected fetchBackendProperties(): Observable<FrontOfficeProperties> {
+                return projektService.getFrontOfficeProperties();
+            }
+        }();
     }
 
     /**
      * Récupération de la liste des projets depuis le serveur
      */
-    searchProjects(criteria: ProjectSearchCriteria, order = DEFAULT_ORDER): Observable<PagedProjectList> {
+    searchProjects(criteria: ProjectSearchCriteria, order = DEFAULT_PROJECT_ORDER): Observable<PagedProjectList> {
         return this.projektService.searchProjects(
             criteria.dataset_uuids,
             criteria.linked_dataset_uuids,
@@ -149,7 +159,7 @@ export class ProjektMetierService {
      */
     searchProjectTypes(): Observable<ProjectType[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
-            this.projektService.searchProjectTypes(null, offset));
+            this.projektService.searchProjectTypes(null, offset, DEFAULT_ORDER));
     }
 
     /**
@@ -157,7 +167,7 @@ export class ProjektMetierService {
      */
     searchSupports(): Observable<Support[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
-            this.projektService.searchSupports(null, offset));
+            this.projektService.searchSupports(null, offset, DEFAULT_ORDER));
     }
 
     /**
@@ -165,7 +175,7 @@ export class ProjektMetierService {
      */
     searchTerritorialScales(): Observable<TerritorialScale[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
-            this.projektService.searchTerritorialScales(null, offset));
+            this.projektService.searchTerritorialScales(null, offset, DEFAULT_ORDER));
     }
 
     /**
@@ -173,7 +183,7 @@ export class ProjektMetierService {
      */
     searchProjectConfidentialities(): Observable<Confidentiality[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
-            this.projektService.searchConfidentialities(null, offset));
+            this.projektService.searchConfidentialities(null, offset, DEFAULT_ORDER));
     }
 
     /**
@@ -181,7 +191,7 @@ export class ProjektMetierService {
      */
     searchProjectPublicCible(): Observable<TargetAudience[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
-            this.projektService.searchTargetAudiences(null, offset, DEFAULT_TARGET_AUDIENCE_ORDER)
+            this.projektService.searchTargetAudiences(null, offset, DEFAULT_ORDER)
         );
     }
 
@@ -431,7 +441,7 @@ export class ProjektMetierService {
     getOwnerInfo(ownerType: OwnerType, ownerUuid: string): Observable<OwnerInfo> {
         return this.projektService.getOwnerInfo(ownerType, ownerUuid).pipe(
             catchError((error) => {
-                const errorString = 'Le porteur de projet de type : ' +  ownerType +
+                const errorString = 'Le porteur de projet de type : ' + ownerType +
                     ' et d\'uuid : ' + ownerUuid + ' n\'existe pas ou plus dans RUDI';
                 const errorWithCause = new ErrorWithCause(errorString, error);
                 console.error(errorWithCause);
@@ -440,4 +450,21 @@ export class ProjektMetierService {
             })
         );
     }
+
+    getDataSizeProperty(key: string): Observable<DataSize> {
+        return this.propertiesAdapter.getDataSize(key);
+    }
+
+    getStrings(key: string): Observable<string[]> {
+        return this.propertiesAdapter.getStrings(key);
+    }
+
+    /**
+     * Get d'un projet par UUID d'une nouvelle demande de jdd
+     * @param uuid l'uuid d'une nouvelle demande de jdd
+     */
+    findProjectByNewDatasetRequest(uuid: string): Observable<Project> {
+        return this.projektService.findProjectByNewDatasetRequest(uuid);
+    }
+
 }

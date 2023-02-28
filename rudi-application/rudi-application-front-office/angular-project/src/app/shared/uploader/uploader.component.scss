@@ -1,0 +1,99 @@
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+@import "src/app/styles/variables-rudi";
+
+.block-upload {
+    font-family: OpenSans, Helvetica, Arial, sans-serif;
+
+
+    ::ng-deep {
+        :host {
+            display: block;
+            padding: 0 !important;
+        }
+
+        file-drop {
+            padding: 0 !important;
+            margin-bottom: 2em;
+        }
+
+        .cropperJsBox .cropper-actions {
+            flex-direction: row-reverse;
+        }
+
+        .cropperJsBox .cropper-actions .cropSubmit {
+            background: $primary-color !important;
+            color: #fff;
+        }
+
+        .cropperJsBox .cropper-actions .cropCancel {
+            background: white !important;
+            color: black;
+        }
+
+        .awesome-uploader-style {
+            max-height: 165px !important;
+            max-width: 640px !important;
+            overflow: auto !important;
+            display: contents !important;;
+        }
+
+        .file-drop-wrapper {
+            background: none !important;
+        }
+
+        #dropZone {
+            background: #fff;
+            border: 2px solid #ecf0f1 !important;
+            border-radius: 6px;
+            max-width: var(--width) !important;
+            max-height: 165px !important;
+            height: 165px !important;
+            padding: 12px 0 !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 4px;
+
+            .item {
+                margin-top: 13px;
+            }
+
+            .upload-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .ajouter-une-image {
+                font-size: 16px;
+                color: #323643;
+                font-weight: normal;
+                font-stretch: normal;
+                font-style: normal;
+                line-height: normal;
+                letter-spacing: normal;
+            }
+
+            .au-format-png-pdf-o {
+                max-width: 355px;
+                margin: 25px 0 0;
+                font-size: 12px;
+                font-weight: normal;
+                font-stretch: normal;
+                font-style: normal;
+                line-height: 2;
+                letter-spacing: normal;
+                text-align: center;
+                color: #71757e;
+            }
+        }
+
+        file-preview-item {
+            max-width: unset; // par défaut la librairie fixe 440px
+        }
+    }
+}
+

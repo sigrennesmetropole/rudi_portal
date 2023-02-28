@@ -1,7 +1,7 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.UUID;
+
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.Confidentiality;
@@ -14,7 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class ConfidentialityController implements ConfidentialitiesApi {
 	private final UtilPageable utilPageable;
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Confidentiality> createConfidentiality(Confidentiality confidentiality) throws AppServiceException {
 		val createdConfidentiality = confidentialityService.createConfidentiality(confidentiality);
 		val location = ServletUriComponentsBuilder
@@ -41,9 +45,9 @@ public class ConfidentialityController implements ConfidentialitiesApi {
 	}
 
 	@Override
-	public ResponseEntity<PagedConfidentialityList> searchConfidentialities(Integer limit, Integer offset) {
+	public ResponseEntity<PagedConfidentialityList> searchConfidentialities(Integer limit, Integer offset, String order) throws Exception {
 		val searchCriteria = new ConfidentialitySearchCriteria();
-		val pageable = utilPageable.getPageable(offset, limit, "order_");
+		val pageable = utilPageable.getPageable(offset, limit, order);
 		val page = confidentialityService.searchConfidentialities(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedConfidentialityList()
 				.total(page.getTotalElements())
@@ -51,7 +55,7 @@ public class ConfidentialityController implements ConfidentialitiesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Void> updateConfidentiality(UUID uuid, Confidentiality confidentiality) throws Exception {
 		confidentiality.setUuid(uuid);
 		confidentialityService.updateConfidentiality(confidentiality);
@@ -59,7 +63,7 @@ public class ConfidentialityController implements ConfidentialitiesApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MODULE_PROJEKT_ADMINISTRATOR', 'MODULE_PROJEKT')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ")")
 	public ResponseEntity<Void> deleteConfidentiality(UUID uuid) {
 		confidentialityService.deleteConfidentiality(uuid);
 		return ResponseEntity.noContent().build();

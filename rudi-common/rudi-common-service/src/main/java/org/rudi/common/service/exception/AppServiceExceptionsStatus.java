@@ -1,8 +1,9 @@
 package org.rudi.common.service.exception;
 
-import lombok.Getter;
 import org.assertj.core.util.VisibleForTesting;
 import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 /**
  * Codes des status remontés en front en cas d'erreur de saisie de l'utilsateur.
@@ -15,6 +16,7 @@ public enum AppServiceExceptionsStatus {
 	FORBIDDEN(HttpStatus.FORBIDDEN),
 	NOT_FOUND(HttpStatus.NOT_FOUND),
 	UNPROCESSABLE_ENTITY(HttpStatus.UNPROCESSABLE_ENTITY),
+	BUSINESS_ERROR("BUSINESS_ERROR", 409),
 	UNKNOWN_CLIENT_KEY("ERROR_UNKNOWN_CLIENT_KEY_480", 480),
 	ACCESS_DENIED_METADATA_MEDIA("ERROR_ACCESS_DENIED_METADATA_MEDIA_483", 483),
 	MISSING_FIELD_ACCOUNT("ERROR_MISSING_FIELD_ACCOUNT_441", 441),
@@ -25,7 +27,7 @@ public enum AppServiceExceptionsStatus {
 	SEND_EMAIL_ACTIVATION("ERROR_SEND_EMAIL_CONFIRMATION_545", 545),
 	SEND_EMAIL_REGISTRATION("ERROR_SEND_EMAIL_REGISTRATION_546", 546),
 	BAD_GATEWAY(HttpStatus.BAD_GATEWAY);
-
+	
 	private final String stringValue;
 	private final HttpStatus httpStatus;
 	private final int customHttpStatusCode;

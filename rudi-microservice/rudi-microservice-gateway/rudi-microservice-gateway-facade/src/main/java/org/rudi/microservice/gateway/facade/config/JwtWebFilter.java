@@ -34,36 +34,26 @@ public class JwtWebFilter extends AbstractAuthenticationWebFilter {
 	}
 
 	protected Mono<Authentication> handleToken(String requestAuthentTokenHeader) {
-		try {
-			// Récupération des données du token
-			// Attention la superclass du présent filtre supprime le Bearer déjà
-			// mais pour le bon fonctionnement du CommonJwtTokenUtil il faut le remettre
-			final JwtTokenData authentJtd = jwtTokenUtil
-					.validateToken(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX + requestAuthentTokenHeader);
+		// Récupération des données du token
+		// Attention la superclass du présent filtre supprime le Bearer déjà
+		// mais pour le bon fonctionnement du CommonJwtTokenUtil il faut le remettre
+		final JwtTokenData authentJtd = jwtTokenUtil
+				.validateToken(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX + requestAuthentTokenHeader);
 
-			// Si le token est expiré
-			if (!authentJtd.isHasError() && authentJtd.isExpired()) {
-				// Génération d'un code HTTP 489
-				LOGGER.warn("Le token JWT d'authentification à expiré");
-				return Mono.empty();
-			} else if (!authentJtd.isHasError() && authentJtd.getSubject() != null && authentJtd.getAccount() != null
-					&& SecurityContextHolder.getContext().getAuthentication() == null) {
+		if (!authentJtd.isHasError() && authentJtd.getSubject() != null && authentJtd.getAccount() != null
+				&& SecurityContextHolder.getContext().getAuthentication() == null) {
 
-				// Validation du token
-				final AuthenticatedUser user = mapper.convertValue(authentJtd.getAccount(), AuthenticatedUser.class);
-				// Application des authorités
-				final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						user.getLogin(), null, collectAuthorities(user));
-				usernamePasswordAuthenticationToken.setDetails(user);
+			// Validation du token
+			final AuthenticatedUser user = mapper.convertValue(authentJtd.getAccount(), AuthenticatedUser.class);
+			// Application des authorités
+			final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+					user.getLogin(), null, collectAuthorities(user));
+			usernamePasswordAuthenticationToken.setDetails(user);
 
-				return Mono.just(usernamePasswordAuthenticationToken);
-			} else {
-				// On considère que le token est invalide
-				LOGGER.warn("Le token reçu par Gateway n'est pas un token JWT valide");
-				return Mono.empty();
-			}
-		} catch (Exception e) {
-			LOGGER.warn("JWT Gateway authentication failed", e);
+			return Mono.just(usernamePasswordAuthenticationToken);
+		} else {
+			// On considère que le token est invalide
+			LOGGER.warn("Le token reçu par Gateway n'est pas un token JWT valide");
 			return Mono.empty();
 		}
 	}

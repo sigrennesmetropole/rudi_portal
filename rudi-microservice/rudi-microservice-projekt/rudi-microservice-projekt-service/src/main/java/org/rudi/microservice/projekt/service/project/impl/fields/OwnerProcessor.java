@@ -1,8 +1,12 @@
 package org.rudi.microservice.projekt.service.project.impl.fields;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.core.security.Role;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
@@ -10,21 +14,23 @@ import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.acl.helper.RolesHelper;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationMembersException;
 import org.rudi.microservice.projekt.storage.entity.OwnerType;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Component
 @RequiredArgsConstructor
 class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldProcessor, DeleteProjectFieldProcessor {
 	private final UtilContextHelper utilContextHelper;
 	private final ACLHelper aclHelper;
+
+	private final RolesHelper rolesHelper;
 	private final OrganizationHelper organizationHelper;
 
 	@Override
@@ -38,8 +44,8 @@ class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldP
 			}
 
 			validateProject(project, authenticatedUserUuid, ownerUuid,
-					"Authenticated user and project manager must be the same user",
-					"Authenticated user cannot create project in the name of an organization they do not belong to");
+					"Authenticated user must be moderator or must be the same user as existing project manager",
+					"Authenticated user cannot create project in the name of an organization they do not belong to, unless he is moderator");
 		}
 
 		if (existingProject != null) {
@@ -51,40 +57,50 @@ class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldP
 			}
 
 			validateProject(existingProject, authenticatedUserUuid, ownerUuid,
-					"Authenticated user and existing project manager must be the same user",
-					"Authenticated user cannot update project in the name of an organization they do not belong to");
+					"Authenticated user must be moderator or must be the same user as existing project manager",
+					"Authenticated user cannot update project in the name of an organization they do not belong to, unless he is moderator");
 		}
 	}
 
-	private void validateProject(@Nonnull ProjectEntity project, UUID authenticatedUserUuid, UUID ownerUuid, String userErrorMessage, String organizationErrorMessage) throws AppServiceForbiddenException, GetOrganizationMembersException {
+	private void validateProject(@Nonnull ProjectEntity project, UUID authenticatedUserUuid, UUID ownerUuid,
+			String userErrorMessage, String organizationErrorMessage)
+			throws AppServiceForbiddenException, GetOrganizationMembersException {
 		if (project.getOwnerType() == OwnerType.USER) {
-			validateOwnerAsManager(ownerUuid, authenticatedUserUuid, userErrorMessage);
+			validateAuthenticatedUserAsProjectOwnerOrModerator(ownerUuid, authenticatedUserUuid, userErrorMessage);
 		}
 		if (project.getOwnerType() == OwnerType.ORGANIZATION) {
 			validateOwnerAsOrganization(ownerUuid, authenticatedUserUuid, organizationErrorMessage);
 		}
 	}
 
-	private void validateOwnerAsManager(UUID managerUuid, UUID authenticatedUserUuid, String errorMessage) throws AppServiceForbiddenException {
-		val existingManager = getManager(managerUuid);
-		val previousManagerUserUuid = existingManager.getUuid();
-		if (!previousManagerUserUuid.equals(authenticatedUserUuid)) {
+	private void validateAuthenticatedUserAsProjectOwnerOrModerator(UUID managerUuid, UUID authenticatedUserUuid,
+			String errorMessage) throws AppServiceForbiddenException {
+		val projectManager = getUserByUUID(managerUuid);
+		val projectManagerUuid = projectManager.getUuid();
+		val authenticatedUser = getUserByUUID(authenticatedUserUuid);
+
+		if (!projectManagerUuid.equals(authenticatedUserUuid) && !rolesHelper.hasAnyRole(authenticatedUser,
+				Role.MODERATOR)) {
 			throw new AppServiceForbiddenException(errorMessage);
 		}
 	}
 
-	private void validateOwnerAsOrganization(UUID organizationUuid, UUID authenticatedUserUuid, String errorMessage) throws AppServiceForbiddenException, GetOrganizationMembersException {
-		val authenticatedUserIsMember = organizationHelper.organizationContainsUser(organizationUuid, authenticatedUserUuid);
-		if (!authenticatedUserIsMember) {
+	private void validateOwnerAsOrganization(UUID organizationUuid, UUID authenticatedUserUuid, String errorMessage)
+			throws AppServiceForbiddenException, GetOrganizationMembersException {
+		val authenticatedUserIsMember = organizationHelper.organizationContainsUser(organizationUuid,
+				authenticatedUserUuid);
+		val authenticatedUser = getUserByUUID(authenticatedUserUuid);
+
+		if (!authenticatedUserIsMember && !rolesHelper.hasAnyRole(authenticatedUser, Role.MODERATOR)) {
 			throw new AppServiceForbiddenException(errorMessage);
 		}
 	}
 
 	@Nonnull
-	private User getManager(UUID managerUserUuid) throws AppServiceForbiddenException {
-		final var manager = aclHelper.getUserByUUID(managerUserUuid);
+	private User getUserByUUID(UUID userUuid) throws AppServiceForbiddenException {
+		final var manager = aclHelper.getUserByUUID(userUuid);
 		if (manager == null) {
-			throw new AppServiceForbiddenException("Unknown user with UUID " + managerUserUuid);
+			throw new AppServiceForbiddenException("Unknown user with UUID " + userUuid);
 		}
 		return manager;
 	}

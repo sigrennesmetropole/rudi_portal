@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {DEFAULT_ORDER, ProjektMetierService} from './projekt-metier.service';
+import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from './projekt-metier.service';
 import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class ProjectListService {
      * @param order la colonne sur léquelles on trie
      */
     public searchProjectsCatalog(linkedDatasetsGlobalIds: string[], offset: number, limit: number,
-                                 order = DEFAULT_ORDER): Observable<ProjectCatalogItemPage> {
+                                 order = DEFAULT_PROJECT_ORDER): Observable<ProjectCatalogItemPage> {
 
         // La page renvoyée
         const page = new ProjectCatalogItemPage();

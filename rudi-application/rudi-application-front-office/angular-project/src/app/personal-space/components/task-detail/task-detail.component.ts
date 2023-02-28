@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
-import {RequestToPrint} from '../linked-dataset-tasks/linked-dataset-tasks.component';
 import {Level} from '../../../shared/notification-template/notification-template.component';
 import {DatePipe} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,8 +8,13 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
-import {LinkedDatasetTaskDependencyFetchers, LinkedDatasetTaskService} from '../../../core/services/linked-dataset-task.service';
 import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {RequestDisplayData} from './request-display-data';
+import {
+    LinkedDatasetTaskDependenciesService,
+    LinkedDatasetTaskDependencyFetchers
+} from '../../../core/services/tasks/projekt/linked-dataset-task-dependencies.service';
+import {NewDatasetRequestTaskDepenciesService} from '../../../core/services/tasks/projekt/new-dataset-request-task-depencies.service';
 
 @Component({
     selector: 'app-task-detail',
@@ -18,18 +22,21 @@ import {injectDependencies} from '../../../shared/utils/dependencies-utils';
     styleUrls: ['./task-detail.component.scss']
 })
 export class TaskDetailComponent implements OnInit {
-    loading: boolean;
-    requestToPrint: RequestToPrint;
+    loading = false;
+    requestDisplayData: RequestDisplayData;
+    @Input()
+    isNewRequest: boolean;
 
     constructor(private readonly route: ActivatedRoute,
                 private readonly router: Router,
                 private readonly breakpointObserverService: BreakpointObserverService,
                 private readonly iconRegistry: MatIconRegistry,
                 private readonly sanitizer: DomSanitizer,
-                private snackBarService: SnackBarService,
+                private readonly snackBarService: SnackBarService,
                 private readonly translateService: TranslateService,
-                private readonly linkedDatasetTaskService: LinkedDatasetTaskService,
-                private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers) {
+                private readonly linkedDatasetTaskDependenciesService: LinkedDatasetTaskDependenciesService,
+                private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers,
+                private readonly newDatasetRequestTaskDepenciesService: NewDatasetRequestTaskDepenciesService,) {
     }
 
     // Recup de l'id de la task depuis la route
@@ -42,13 +49,17 @@ export class TaskDetailComponent implements OnInit {
     // Au changement de la taskId, on récupère la task correspondante et ses dépendances
     set taskId(idTask: string) {
         if (idTask) {
-            this.loadTask(idTask);
+            if (this.isNewRequest) {
+                this.loadTaskForNewDatasetRequest(idTask);
+            } else {
+                this.loadTaskForLinkedDataset(idTask);
+            }
         }
     }
 
-    private loadTask(idTask: string): void {
+    private loadTaskForLinkedDataset(idTask: string): void {
         this.loading = true;
-        this.linkedDatasetTaskService.getTask(idTask).pipe(
+        this.linkedDatasetTaskDependenciesService.getTaskWithDependencies(idTask).pipe(
             injectDependencies({
                 dataset: this.linkedDatasetDependencyFetchers.dataset,
                 project: this.linkedDatasetDependencyFetchers.project,
@@ -66,11 +77,34 @@ export class TaskDetailComponent implements OnInit {
                     endDate: asset.end_date ? new Date(asset.end_date) : undefined,
                     comment: asset.comment,
                     ownerEmail: dependencies.project.contact_email
-                } as RequestToPrint);
+                } as RequestDisplayData);
             }),
         ).subscribe({
-            next: (requestToPrint) => {
-                this.requestToPrint = requestToPrint;
+            next: (requestDisplayData:RequestDisplayData) => {
+                this.requestDisplayData = requestDisplayData;
+                this.loading = false;
+            },
+            error: (e) => {
+                console.error(`Not authorized to access this task : ${idTask}`, e);
+                this.printErrorMessage('error.technicalError');
+                this.loading = false;
+            }
+        });
+    }
+
+    private loadTaskForNewDatasetRequest(idTask: string): void {
+        this.loading = true;
+        this.newDatasetRequestTaskDepenciesService.getTaskWithDependencies(idTask).pipe(
+            map(({task, asset, dependencies}) => {
+                return ({
+                    taskId: task.id,
+                    receivedDate: new Date(task.updatedDate),
+                    comment: asset.description,
+                } as RequestDisplayData);
+            }),
+        ).subscribe({
+            next: (requestDisplayData:RequestDisplayData) => {
+                this.requestDisplayData = requestDisplayData;
                 this.loading = false;
             },
             error: (e) => {

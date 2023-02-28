@@ -1,8 +1,19 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField;
 import org.rudi.facet.dataverse.fields.FieldSpec;
@@ -14,16 +25,7 @@ import org.rudi.facet.kaccess.bean.Organization;
 import org.rudi.facet.kaccess.bean.OrganizationOrganizationCoordinates;
 import org.rudi.facet.kaccess.bean.ReferenceDates;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 abstract class PrimitiveFieldsMapper<T> {
@@ -89,6 +91,9 @@ abstract class PrimitiveFieldsMapper<T> {
 
 	private boolean isInstanceOfATypeNotMappedToJsonString(@Nonnull Object value) {
 		final Class<?> valueType = value.getClass();
+		if (valueType.isEnum()) {
+			return true;
+		}
 		for (final Class<?> type : TYPES_NOT_MAPPED_TO_JSON_STRING) {
 			if (type.isAssignableFrom(valueType)) {
 				return true;

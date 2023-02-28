@@ -6,7 +6,6 @@ import {Observable, Subject} from 'rxjs';
 import {OrderValue} from '../../../core/services/filters/order-filter';
 import {SimpleSkosConcept} from '../../../kos/kos-model';
 import {Item} from '../filter-forms/array-filter-form.component';
-import {RestrictedAccessFilterItem} from '../filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
 import {Metadata, MetadataList} from '../../../api-kaccess';
 import {FiltersService} from '../../../core/services/filters.service';
 import {SidenavOpeningsService} from '../../../core/services/sidenav-openings.service';
@@ -14,6 +13,7 @@ import {ThemeCacheService} from '../../../core/services/theme-cache.service';
 import {takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
+import {AccessStatusFilterItem} from '../filter-forms/access-status-filter-form/access-status-filter-form.component';
 
 const FIRST_PAGE = 1;
 const EMPTY_METADATA_LIST: MetadataList = {
@@ -40,8 +40,9 @@ export class ListContainerComponent implements OnInit, OnDestroy {
      * maximum = 12 (current limit in SCSS rule : .data-set-container-*-cards).
      * Default : automatic (based on screen width).
      */
-    @Input() resultsPerRow: number|undefined;
-    @Input() restrictedAccessForcedValue;
+    @Input() resultsPerRow: number | undefined;
+    @Input() accessStatusForcedValue;
+    @Input() accessStatusHiddenValues;
     /** On peut sélectionner une carte dans la liste ? */
     @Input() isSelectable = false;
     @Output() selectMetadata = new EventEmitter<Metadata>();
@@ -52,6 +53,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     metadataList = EMPTY_METADATA_LIST;
     searchIsRunning = false;
     searche$: Observable<string>;
+
     get themes(): SimpleSkosConcept[] {
         return this.themeCacheService.themes;
     }
@@ -61,7 +63,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     selectedThemeItems: Item[] = [];
     selectedProducerItems: Item[] = [];
 
-    selectedRestrictedAccessItems: RestrictedAccessFilterItem[] = [];
+    selectedAccessStatusItems: AccessStatusFilterItem[] = [];
     private isDestroyed$ = new Subject<void>();
     private currentPage = FIRST_PAGE;
 
@@ -95,10 +97,11 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     get isFiltered(): boolean {
         return this.filtersService.isFiltered;
     }
+
     get hasSelectedItems(): boolean {
         return (
             this.selectedDatesItems?.length > 0 ||
-            this.selectedRestrictedAccessItems?.length > 0 ||
+            this.selectedAccessStatusItems?.length > 0 ||
             this.selectedProducerItems?.length > 0 ||
             this.selectedThemeItems?.length > 0
         );

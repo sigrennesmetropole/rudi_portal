@@ -1,9 +1,11 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.bpmn.service;
 
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import org.hibernate.exception.DataException;
 import org.rudi.bpmn.core.bean.AssetDescription;
@@ -15,7 +17,7 @@ import org.rudi.facet.bpmn.exception.InvalidDataException;
 
 /**
  * Service de gestion des tâches
- * 
+ *
  * @param <D> le dto
  */
 public interface TaskService<D extends AssetDescription> {
@@ -26,11 +28,12 @@ public interface TaskService<D extends AssetDescription> {
 	 * @return
 	 * @throws FormDefinitionException
 	 */
+	@Nullable
 	Form lookupDraftForm() throws FormDefinitionException;
 
 	/**
 	 * Demande de création d'une tâche draft Tant que la tâche n'est pas démarrée elle n'apparait dans aucune bannette
-	 * 
+	 *
 	 * @param assertDescription
 	 * @return la tâche
 	 * @throws InvalidDataException si les données du formulaire sont incorrectes
@@ -40,7 +43,7 @@ public interface TaskService<D extends AssetDescription> {
 
 	/**
 	 * Demande d'affectation à la personne connectée
-	 * 
+	 *
 	 * @param taskId
 	 * @return
 	 */
@@ -48,21 +51,21 @@ public interface TaskService<D extends AssetDescription> {
 
 	/**
 	 * Désaffectation de la tâche - ne peut être fait que si on est claimer ou admin
-	 * 
+	 *
 	 * @param taskId
 	 */
 	void unclaimTask(String taskId);
 
 	/**
 	 * Abandon d'un signalement à l'état draft
-	 * 
+	 *
 	 * @param assetUuid
 	 */
 	void cancelDraft(UUID assetUuid);
 
 	/**
 	 * Déclenchement d'une action sur une tâche
-	 * 
+	 *
 	 * @param taskId
 	 * @param actionName
 	 * @throws DataException
@@ -71,7 +74,7 @@ public interface TaskService<D extends AssetDescription> {
 
 	/**
 	 * Mets à jour le signalement associé à la tâche
-	 * 
+	 *
 	 * @param task
 	 * @return
 	 * @throws DataException
@@ -82,7 +85,7 @@ public interface TaskService<D extends AssetDescription> {
 
 	/**
 	 * Créé une nouvelle tâche à partir du signalement draft
-	 * 
+	 *
 	 * @param task
 	 * @return
 	 * @throws DataException
@@ -92,13 +95,13 @@ public interface TaskService<D extends AssetDescription> {
 	Task startTask(Task task) throws InvalidDataException, FormDefinitionException, FormConvertException;
 
 	/**
-	 * 
+	 *
 	 * @return le nom du process
 	 */
 	String getProcessDefinitionKey();
 
 	/**
-	 * 
+	 *
 	 * @param assetUuid
 	 * @return vrai si l'asset à une tâche en cours
 	 */
@@ -106,7 +109,7 @@ public interface TaskService<D extends AssetDescription> {
 
 	/**
 	 * Retourne l'id de la tâche associé à l'asset
-	 * 
+	 *
 	 * @param assetUuid
 	 * @return
 	 */

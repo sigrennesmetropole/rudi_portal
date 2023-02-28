@@ -1,0 +1,11 @@
+{
+	"help": "Vous vous apprêtez à accepter la demande de nouvelles données. Veuillez remplir le champ ci-dessous pour fournir des informations supplémentaires porteur de projet. ",
+	"fieldDefinitions": [
+		{
+			"name": "messageToProjectOwner",
+			"label": "Message à l’attention du porteur de projet",
+			"type": "TEXT",
+			"required": true
+		}
+	]
+}

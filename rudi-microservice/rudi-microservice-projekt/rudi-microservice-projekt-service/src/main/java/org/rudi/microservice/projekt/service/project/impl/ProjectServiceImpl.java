@@ -1,8 +1,14 @@
 package org.rudi.microservice.projekt.service.project.impl;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceException;
@@ -43,12 +49,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @Transactional(readOnly = true)
@@ -117,7 +119,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional // readOnly = false
 	public Project updateProject(Project projectToUpdate) throws AppServiceException {
-		val entity = projectMapper.dtoToEntity(projectToUpdate);
+		ProjectEntity entity = projectMapper.dtoToEntity(projectToUpdate);
 		val existingProject = getRequiredProjectEntity(projectToUpdate.getUuid());
 
 		// TODO existingProject ou project ?
@@ -170,8 +172,7 @@ public class ProjectServiceImpl implements ProjectService {
 		} catch (DataverseAPIException e) {
 			throw new AppServiceException(
 					String.format("Erreur lors du téléchargement du %s du projet avec projectUuid = %s",
-							kindOfData.getValue(), projectUuid),
-					e);
+							kindOfData.getValue(), projectUuid), e);
 		}
 	}
 
@@ -192,8 +193,9 @@ public class ProjectServiceImpl implements ProjectService {
 			val tempFile = resourceHelper.copyResourceToTempFile(media);
 			mediaService.setMediaFor(MediaOrigin.PROJECT, projectUuid, kindOfData, tempFile);
 		} catch (final DataverseAPIException | IOException e) {
-			throw new AppServiceException(String.format("Erreur lors de l'upload du %s du projet d'uuid %s",
-					kindOfData.getValue(), projectUuid), e);
+			throw new AppServiceException(
+					String.format("Erreur lors de l'upload du %s du projet d'uuid %s", kindOfData.getValue(),
+							projectUuid), e);
 		}
 	}
 
@@ -202,8 +204,9 @@ public class ProjectServiceImpl implements ProjectService {
 		try {
 			mediaService.deleteMediaFor(MediaOrigin.PROJECT, projectUuid, kindOfData);
 		} catch (final DataverseAPIException e) {
-			throw new AppServiceException(String.format("Erreur lors de la suppression du %s du projet d'uuid %s",
-					kindOfData.getValue(), projectUuid), e);
+			throw new AppServiceException(
+					String.format("Erreur lors de la suppression du %s du projet d'uuid %s", kindOfData.getValue(),
+							projectUuid), e);
 		}
 	}
 
@@ -309,11 +312,13 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Integer getNumberOfRequests(UUID projectUuid) throws AppServiceNotFoundException {
 		getRequiredProjectEntity(projectUuid);
-		return projectCustomDao.getNumberOfLinkedDatasets(projectUuid) + projectCustomDao.getNumberOfNewRequests(projectUuid);
+		return projectCustomDao.getNumberOfLinkedDatasets(projectUuid) + projectCustomDao.getNumberOfNewRequests(
+				projectUuid);
 	}
 
 	@Override
-	public Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException {
+	public Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable)
+			throws GetOrganizationException {
 		//get user uuid
 		UUID userUuid = null;
 		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();

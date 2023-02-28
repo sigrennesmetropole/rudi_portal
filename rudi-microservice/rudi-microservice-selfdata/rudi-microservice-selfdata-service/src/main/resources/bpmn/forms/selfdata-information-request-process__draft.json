@@ -1,0 +1,12 @@
+{
+	"sections": [
+		{
+			"name": "matching-data",
+			"readOnly": false
+		},
+		{
+			"name": "consent",
+			"readOnly": false
+		}
+	]
+}

@@ -1,5 +1,10 @@
 package org.rudi.common.test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
@@ -11,11 +16,6 @@ import org.rudi.common.core.json.DefaultJackson2ObjectMapperBuilder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 import static java.util.Objects.requireNonNull;
 
@@ -53,7 +53,7 @@ public class JsonAssert<A> extends AbstractStringAssert<JsonAssert<A>> {
 		isEqualToJsonString(expected);
 	}
 
-	public <E extends A> void isEqualToJsonRepresentationOf(E expectedObject) throws IOException, JSONException {
+	public <T> void isEqualToJsonRepresentationOf(T expectedObject) throws IOException, JSONException {
 		final String expectedJsonString = toJson(expectedObject);
 		isEqualToJsonString(expectedJsonString);
 	}

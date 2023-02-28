@@ -21,7 +21,6 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @author FNI18300
- *
  */
 @MappedSuperclass
 @Setter
@@ -58,7 +57,7 @@ public abstract class AbstractAssetDescriptionEntity extends AbstractLongIdEntit
 	@Column(name = "updated_date")
 	private LocalDateTime updatedDate;
 
-	@Column(name = "description", length = 1024)
+	@Column(name = "description", length = 1024, nullable = false)
 	private String description;
 
 	@Column(name = "assignee", length = 100)

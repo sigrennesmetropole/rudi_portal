@@ -1,0 +1,11 @@
+<app-card [header]="!isLoading" [title]="graphData.title">
+    <app-loader [allPage]="false" [isLight]="true" [noText]="true"
+                [active]="isLoading"></app-loader>
+    <div *ngIf="!isLoading">
+        <div class="data">
+            <app-d3-line-and-plot-chart *ngIf="isLineOrPoint"
+                                        [graphBar]="graphData"></app-d3-line-and-plot-chart>
+            <app-d3-bar-chart *ngIf="isBar" [graphBar]="graphData"></app-d3-bar-chart>
+        </div>
+    </div>
+</app-card>

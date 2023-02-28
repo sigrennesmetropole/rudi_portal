@@ -1,0 +1,17 @@
+<app-card [header]="!isLoading" [title]="genericDataObject.title">
+    <app-loader [allPage]="false" [isLight]="true" [noText]="true"
+                [active]="isLoading"></app-loader>
+    <div *ngIf="!isLoading" class="data">
+        <div *ngFor="let data of genericDataObject.genericDataObject.data"
+             class="rudi-panel-data-gdata">
+            <table class="table rudi-panel-table" aria-describedby="data_language-table-header">
+                <tbody class="rudi-panel-tbody-border mat-header-row">
+                <tr>
+                    <td>{{getLabel(data.label)}}</td>
+                    <th scope="row">{{data.value}}</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</app-card>

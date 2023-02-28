@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MediaSize} from '../../core/services/breakpoint-observer.service';
 import {AppInfo, MiscellaneousService} from '../../api-konsult';
 import {RedirectService} from '../../core/services/redirect.service';
+import {FooterUtils} from '../utils/footer-utils';
 
 @Component({
     selector: 'app-footer',
@@ -15,7 +16,7 @@ export class FooterComponent implements OnInit {
 
     constructor(
         private readonly miscellaneousService: MiscellaneousService
-    ,
+        ,
         private readonly redirectService: RedirectService
     ) {
     }
@@ -26,5 +27,9 @@ export class FooterComponent implements OnInit {
 
     goToTop(): void {
         this.redirectService.goToTop();
+    }
+
+    get currentYear(): number {
+        return FooterUtils.getCurrentYear();
     }
 }

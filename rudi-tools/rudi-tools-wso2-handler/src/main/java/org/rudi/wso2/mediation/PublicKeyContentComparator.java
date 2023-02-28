@@ -15,7 +15,7 @@ class PublicKeyContentComparator implements PublicKeyComparator {
 	/**
 	 * Nom de la propriété envoyée par l'IRISA contenant la deuxième ligne de la clé publique utilisée pour chiffrer
 	 */
-	static final String PUBLIC_KEY_PARTIAL_CONTENT_ADDITIONAL_PROPERTY = "pubKeyCut";
+	static final String PUBLIC_KEY_PARTIAL_CONTENT_ADDITIONAL_PROPERTY = "pub_key_cut";
 	private static final Log LOGGER = LogFactory.getLog(PublicKeyContentComparator.class);
 
 	@Override

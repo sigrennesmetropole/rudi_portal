@@ -1,0 +1,11 @@
+<div *ngIf="showMatchingDataCard">
+    <app-loader [allPage]="false" [isLight]="false"
+                [active]="matchingDataLoading"></app-loader>
+    <app-card *ngIf="!matchingDataLoading" [title]="'personalSpace.matchingData.title'|translate" [header]="true">
+        <hr>
+        <div *ngFor="let data of data" class="radio-body">
+            <div class="label">{{data.label}}</div>
+            <div class="value">{{data.value}}</div>
+        </div>
+    </app-card>
+</div>

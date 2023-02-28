@@ -6,9 +6,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.rudi.facet.dataverse.bean.SearchItemInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.rudi.facet.dataverse.bean.SearchItemInfo;
 
 import lombok.Data;
 
@@ -17,6 +16,9 @@ public class SearchElements<T extends SearchItemInfo> {
 
 	@JsonProperty(value = "total_count")
 	private Long total;
+
+	@JsonProperty(value = "start")
+	private Long start;
 
 	@JsonProperty("items")
 	@Valid

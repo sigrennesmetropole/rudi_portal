@@ -1,5 +1,9 @@
 package org.rudi.microservice.acl.facade.controller;
 
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.acl.core.bean.Account;
 import org.rudi.microservice.acl.core.bean.PasswordChange;
@@ -10,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.UUID;
 
 @RestController
 public class AccountController implements AccountApi {
@@ -46,7 +47,8 @@ public class AccountController implements AccountApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> validatePasswordChange(@Valid @RequestBody PasswordChange change) throws AppServiceException {
+	public ResponseEntity<Void> validatePasswordChange(@Valid @RequestBody PasswordChange change)
+			throws AppServiceException {
 		accountService.validatePasswordChange(change);
 		return ResponseEntity.noContent().build();
 	}
@@ -56,4 +58,8 @@ public class AccountController implements AccountApi {
 		return ResponseEntity.ok(accountService.isAccountCreatedNotValidated(login));
 	}
 
+	@Override
+	public ResponseEntity<Void> accountLogout(String token) throws Exception {
+		return ResponseEntity.noContent().build();
+	}
 }

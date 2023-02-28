@@ -1,8 +1,8 @@
 package org.rudi.common.test;
 
-import org.json.JSONException;
-
 import java.io.IOException;
+
+import org.json.JSONException;
 
 public class RudiObjectAssert<A> extends org.assertj.core.api.ObjectAssert<A> {
 
@@ -35,7 +35,7 @@ public class RudiObjectAssert<A> extends org.assertj.core.api.ObjectAssert<A> {
 	 * @throws JSONException if the JSON formatting failed
 	 */
 	@SuppressWarnings("UnusedReturnValue") // On garde le retour pour pouvoir faire des appels chaînés
-	public <E extends A> RudiObjectAssert<A> isJsonEqualTo(E expectedObject) throws IOException, JSONException {
+	public <E> RudiObjectAssert<A> isJsonEqualTo(E expectedObject) throws IOException, JSONException {
 		final JsonAssert<A> jsonAssert = new JsonAssert<>(actual);
 		jsonAssert.isEqualToJsonRepresentationOf(expectedObject);
 		return this;

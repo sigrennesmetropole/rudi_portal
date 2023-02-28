@@ -1,0 +1,11 @@
+{
+	"help": "Vous pouvez refuser la demande d'accès si le projet est incomplet et ne concorde pas avec votre jeu de données, ou si des informations supplémentaires sont nécessaires",
+	"fieldDefinitions": [
+		{
+			"name": "messageToProjectOwner",
+			"label": "Message à l’attention du porteur de projet",
+			"type": "TEXT",
+			"required": true
+		}
+	]
+}

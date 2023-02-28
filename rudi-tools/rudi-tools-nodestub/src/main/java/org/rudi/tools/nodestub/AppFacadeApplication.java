@@ -9,7 +9,11 @@ import org.springframework.context.annotation.PropertySource;
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = { "org.rudi.tools.nodestub", "org.rudi.facet.oauth2" })
+@SpringBootApplication(scanBasePackages = {
+		"org.rudi.common",
+		"org.rudi.facet.oauth2",
+		"org.rudi.tools.nodestub",
+})
 @PropertySource(value = { "classpath:nodestub/nodestub-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 

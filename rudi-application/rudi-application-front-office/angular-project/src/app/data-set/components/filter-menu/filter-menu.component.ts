@@ -1,7 +1,6 @@
-import {Component, ContentChild, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {Observable} from 'rxjs';
-import {RestrictedAccessFilterFormComponent} from '../filter-forms/restricted-access-filter-form/restricted-access-filter-form.component';
 
 @Component({
   selector: 'app-filter-menu',

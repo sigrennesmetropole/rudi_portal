@@ -1,5 +1,15 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,16 +31,7 @@ import org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields.Abstrac
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields.RootFields;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.DATASET_SIZE;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.DATASET_SIZE_NUMBER_OF_FIELDS;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.DATASET_SIZE_NUMBER_OF_RECORDS;
@@ -40,6 +41,7 @@ import static org.rudi.facet.kaccess.constant.RudiMetadataField.KEYWORDS;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.LOCAL_ID;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.RESOURCE_LANGUAGES;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.RESOURCE_TITLE;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.RUDI_ELEMENT_SPEC;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.STORAGE_STATUS;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.SUMMARY;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.SUMMARY_LANGUAGE;
@@ -53,6 +55,7 @@ import static org.rudi.facet.kaccess.constant.RudiMetadataField.TEMPORAL_SPREAD_
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.THEME;
 
 @Component
+@Slf4j
 public class RudiMetadataBlockMapper extends AbstractMetadataBlockElementMapper<Metadata> {
 
 	/*
@@ -67,8 +70,19 @@ public class RudiMetadataBlockMapper extends AbstractMetadataBlockElementMapper<
 	public RudiMetadataBlockMapper(FieldGenerator fieldGenerator, DateTimeMapper dateTimeMapper, Collection<AbstractFieldsMapper<?>> fieldsMappers) {
 		super(fieldGenerator, dateTimeMapper);
 		this.sortedFieldsMappers = fieldsMappers.stream()
+				.filter(this::isValid)
 				.sorted(Comparator.comparingInt(AbstractFieldsMapper::getRank))
 				.collect(Collectors.toList());
+	}
+
+	private boolean isValid(AbstractFieldsMapper<?> mapper) {
+		if (!RUDI_ELEMENT_SPEC.containsLevel1Field(mapper.parentOfPrimitiveFieldsSpec)) {
+			log.error("Mapper {} is ignored because it maps level 1 field {} which is not part of RUDI_ELEMENT_SPEC",
+					mapper,
+					mapper.parentOfPrimitiveFieldsSpec);
+			return false;
+		}
+		return true;
 	}
 
 	@Override

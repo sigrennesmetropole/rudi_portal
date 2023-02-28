@@ -44,17 +44,18 @@
     </app-filter-menu>
 
     <app-filter-menu
-        #restrictedAccessMenu
-        (closed)="restrictedAccessForm.revert()"
-        [counter$]="restrictedAccessForm.counter$"
-        [isHidden]="restrictedAccessForcedValue !== undefined"
+        #accessStatusMenu
+        (closed)="AccessStatusForm.revert()"
+        [counter$]="AccessStatusForm.counter$"
+        [isHidden]="accessStatusForcedValue !== undefined"
         buttonTextKey="filterBox.restrictedAccess.statut">
-        <app-restricted-access-filter-form
-            #restrictedAccessForm
-            (selectedItemsChange)="selectedRestrictedAccessItemsChange.emit($event);"
-            (submit)="restrictedAccessMenu.close()"
-            [forcedValue]="restrictedAccessForcedValue"
+        <app-access-status-filter-form
+            #AccessStatusForm
+            (selectedItemsChange)="selectedAccessStatusItemsChange.emit($event);"
+            (submit)="accessStatusMenu.close()"
+            [forcedValue]="accessStatusForcedValue"
+            [hiddenValues]="accessStatusHiddenValues"
             ulClass="pl-0">
-        </app-restricted-access-filter-form>
+        </app-access-status-filter-form>
     </app-filter-menu>
 </mat-toolbar>

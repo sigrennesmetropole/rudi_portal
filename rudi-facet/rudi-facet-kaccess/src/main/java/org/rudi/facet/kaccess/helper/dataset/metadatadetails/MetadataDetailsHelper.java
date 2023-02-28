@@ -11,4 +11,9 @@ public class MetadataDetailsHelper {
         final MetadataAccessConditionConfidentiality confidentiality = metadata.getAccessCondition().getConfidentiality();
         return confidentiality != null && Boolean.TRUE.equals(confidentiality.getRestrictedAccess());
     }
+
+    public boolean isSelfdata(Metadata metadata) {
+        final MetadataAccessConditionConfidentiality confidentiality = metadata.getAccessCondition().getConfidentiality();
+        return confidentiality != null && Boolean.TRUE.equals(confidentiality.getGdprSensitive()) && Boolean.TRUE.equals(confidentiality.getRestrictedAccess());
+    }
 }

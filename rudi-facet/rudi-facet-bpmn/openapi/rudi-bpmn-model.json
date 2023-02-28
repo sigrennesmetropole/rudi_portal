@@ -65,7 +65,9 @@
 					"BOOLEAN",
 					"DATE",
 					"LIST",
-					"TEXT"
+					"TEXT",
+					"ADDRESS",
+					"ATTACHMENT"
 				]
 			},
 			"ValidatorType": {
@@ -135,6 +137,9 @@
 						"type": "string"
 					},
 					"label": {
+						"type": "string"
+					},
+					"help": {
 						"type": "string"
 					},
 					"definition": {
@@ -230,6 +235,9 @@
 					"label": {
 						"type": "string"
 					},
+					"help": {
+						"type": "string"
+					},
 					"readOnly": {
 						"type": "boolean"
 					},
@@ -323,14 +331,17 @@
 						"type": "string",
 						"format": "date-time"
 					},
+					"title": {
+						"type": "string"
+					},
 					"form": {
 						"type": "object",
 						"$ref": "#/components/schemas/Form"
-					}		
+					}
 				},
 				"discriminator": {
-        			"propertyName": "object_type"
-        		}
+					"propertyName": "object_type"
+				}
 			},
 			"Task": {
 				"type": "object",
@@ -374,6 +385,41 @@
 					"asset": {
 						"type": "object",
 						"$ref": "#/components/schemas/AssetDescription"
+					}
+				}
+			},
+			"HistoricInformation": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"executionId": {
+						"type": "string"
+					},
+					"startTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"endTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"duration": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"activityName": {
+						"type": "string"
+					},
+					"activityType": {
+						"type": "string"
+					},
+					"assignee": {
+						"type": "string"
+					},
+					"deleteReason": {
+						"type": "string"
 					}
 				}
 			}

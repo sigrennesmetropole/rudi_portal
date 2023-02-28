@@ -1,5 +1,8 @@
 package org.rudi.facet.apimaccess.service.apis;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +18,7 @@ import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.bean.DevPortalSubscriptionSearchCriteria;
-import org.rudi.facet.apimaccess.bean.InterfaceContract;
+import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.rudi.facet.apimaccess.bean.LimitingPolicies;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
@@ -30,9 +33,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
-
-import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,11 +72,11 @@ class ApiManagerServiceTest {
 		// création d'un api
 		APIDescription apiDescription = new APIDescription()
 				.globalId(UUID.randomUUID())
-				.mediaType("text/csv")
+				.responseMediaType("text/csv")
 				.endpointUrl("https://demo.dataverse.org/api/access/datafile/1821528")
 				.name("api-test-" + System.currentTimeMillis())
 				.version("1.0.0")
-				.interfaceContract(InterfaceContract.DOWNLOAD.getValue())
+				.interfaceContract(InterfaceContract.DOWNLOAD.getUrlPath())
 				.providerUuid(UUID.randomUUID())
 				.providerCode(RandomStringUtils.randomAlphabetic(10))
 				.mediaUuid(UUID.randomUUID());

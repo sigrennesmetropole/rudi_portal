@@ -24,7 +24,7 @@
         </mat-icon>
     </button>
 
-    <ng-container *ngFor="let restrictedAccessItem of notNullSelectedRestrictedAccessItems">
+    <ng-container *ngFor="let restrictedAccessItem of notNullSelectedAccessStatusItems">
         <button class="rudi-btn-md d-flex align-items-center mb-2" mat-flat-button>
             {{ restrictedAccessItem.name }}
             <mat-icon (click)="deleteRestrictedAccessFilter()" aria-hidden="false" aria-label="close icon"

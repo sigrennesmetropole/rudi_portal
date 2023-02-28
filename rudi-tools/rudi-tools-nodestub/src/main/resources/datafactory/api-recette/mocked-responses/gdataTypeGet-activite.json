@@ -1,0 +1,20 @@
+{
+	"legend": [
+		{
+			"lang": "fr-FR",
+			"text": "Informations sur les activités du producteur"
+		}
+	],
+	"data": [
+		{
+			"label": [
+				{
+					"lang": "fr-FR",
+					"text": "Activité du producteur"
+				}
+			],
+			"type": "STRING",
+			"value": "Pavillon"
+		}
+	]
+}

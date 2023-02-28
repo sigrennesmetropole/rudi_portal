@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ProjektMetierService} from './projekt-metier.service';
 import {RadioListItem} from '../../shared/radio-list/radio-list-item';
 import {forkJoin, iif, Observable, of} from 'rxjs';
-import {catchError, mapTo, switchMap, tap} from 'rxjs/operators';
+import {catchError, mapTo, switchMap} from 'rxjs/operators';
 import {
     Confidentiality,
     LinkedDataset,
@@ -54,9 +54,14 @@ import {Organization} from '../../strukture/strukture-model';
 import {OrganizationMetierService} from './organization-metier.service';
 import {Task} from 'src/app/projekt/projekt-api/model/task';
 import {HttpErrorResponse} from '@angular/common/http';
-import {TaskMetierService} from './task-metier.service';
 import {Moment} from 'moment';
 import {consistentPeriodValidator} from '../validators/consistent-period-validator';
+import {ProjectTaskMetierService} from './tasks/projekt/project-task-metier.service';
+import {LinkedDatasetTaskMetierService} from './tasks/projekt/linked-dataset-task-metier.service';
+import {ActionFallbackUtils} from '../../shared/utils/action-fallback-utils';
+import {AccessStatusFiltersType} from './filters/access-status-filters-type';
+import {MetadataUtils} from '../../shared/utils/metadata-utils';
+import {AccessConditionConfidentiality} from '../../shared/utils/access-condition-confidentiality';
 
 /**
  * Liste des codes de niveaux de restriction connus
@@ -71,6 +76,11 @@ const DEFAULT_CONFIDENTIALITY_CODE = 'OPEN';
  * Statut d'un projet correspondant à une réutilisation
  */
 const REUSE_STATUS: ProjectStatus = 'VALIDATED';
+
+/**
+ * Taille maximale de la description d'un projet ou d'une réutilisation
+ */
+const MAX_DESCRIPTION_LENGTH = 3000;
 
 /**
  * Liste des éléments requis pour charger le formulaire de déclaration projet
@@ -96,6 +106,7 @@ export interface FormReutilisationDependencies {
 }
 
 const RESTRICTED_DATASET_ICON: TitleIconType = 'key_icon_88_secondary-color';
+const SELFDATA_DATASET_ICON: TitleIconType = 'self-data-icon';
 
 @Injectable({
     providedIn: 'root'
@@ -138,7 +149,8 @@ export class ProjectSubmissionService {
      * @param newDatasetRequests l'ensemble des demandes de données d'un projet (côté back)
      * @private
      */
-    private static getNewDatasetRequestsDeleted(dataRequests: DataRequestItem[], newDatasetRequests: NewDatasetRequest[]): NewDatasetRequest[] {
+    private static getNewDatasetRequestsDeleted(dataRequests: DataRequestItem[], newDatasetRequests: NewDatasetRequest[])
+        : NewDatasetRequest[] {
         // Ceux qui existent côté back mais pas côté front doivent être supprimés du back
         const uuidsFront: string[] = dataRequests.map((dataRequest: DataRequestItem) => dataRequest.uuid);
         return newDatasetRequests.filter((newDatasetRequest: NewDatasetRequest) => {
@@ -197,7 +209,8 @@ export class ProjectSubmissionService {
                 private readonly translateService: TranslateService,
                 private readonly snackBarService: SnackBarService,
                 private readonly userService: UserService,
-                private readonly taskService: TaskMetierService,
+                private readonly projectTaskMetierService: ProjectTaskMetierService,
+                private readonly linkedDatasetTaskMetierService: LinkedDatasetTaskMetierService,
                 private readonly formBuilder: FormBuilder,
                 private readonly dialog: MatDialog,
                 private readonly organizationMetierService: OrganizationMetierService,
@@ -210,7 +223,7 @@ export class ProjectSubmissionService {
     public initStep1ReutilisationFormGroup(): FormGroup {
         return this.formBuilder.group({
             title: ['', Validators.required],
-            description: ['', Validators.required],
+            description: ['', [Validators.required, Validators.maxLength(MAX_DESCRIPTION_LENGTH)]],
             image: [''],
             publicCible: [''],
             type: ['', Validators.required],
@@ -242,7 +255,7 @@ export class ProjectSubmissionService {
     public initStep1ProjectFormGroup(): FormGroup {
         return this.formBuilder.group({
             title: ['', Validators.required],
-            description: ['', Validators.required],
+            description: ['', [Validators.required, Validators.maxLength(MAX_DESCRIPTION_LENGTH)]],
             image: [''],
             begin_date: [null],
             end_date: [null],
@@ -416,6 +429,14 @@ export class ProjectSubmissionService {
      * @param metadata le JDD pour créer une vue
      */
     public metadataToProjectDatasetItem(metadata: Metadata): ProjectDatasetItem {
+        let iconTitle: TitleIconType;
+        let accessConditionConfidentiality = MetadataUtils.getAccessConditionConfidentiality(metadata);
+        if (accessConditionConfidentiality === AccessConditionConfidentiality.Restricted) {
+            iconTitle = RESTRICTED_DATASET_ICON;
+        }
+        if (accessConditionConfidentiality === AccessConditionConfidentiality.Selfdata) {
+            iconTitle = SELFDATA_DATASET_ICON;
+        }
         return {
             title: metadata.resource_title,
             overTitle: metadata.producer.organization_name,
@@ -423,7 +444,7 @@ export class ProjectSubmissionService {
             pictoValue: metadata.producer.organization_id,
             identifier: metadata.local_id,
             editable: metadata.access_condition?.confidentiality?.restricted_access,
-            titleIcon: metadata.access_condition?.confidentiality?.restricted_access ? RESTRICTED_DATASET_ICON : undefined
+            titleIcon: iconTitle
         };
     }
 
@@ -445,11 +466,12 @@ export class ProjectSubmissionService {
     /**
      * Ouvre une popin de sélection d'un JDD
      */
-    public openDialogMetadata(restrictedAccessFilterValue: boolean): Observable<Metadata> {
+    public openDialogMetadata(restrictedAccessFilterValue: AccessStatusFiltersType, restrictedAccessHiddenValues: AccessStatusFiltersType[]): Observable<Metadata> {
         const dialogConfig = new DefaultMatDialogConfig<AddDataSetDialogData>();
         dialogConfig.width = '';
         dialogConfig.data = {
-            restrictedAccessForcedValue: restrictedAccessFilterValue
+            accessStatusForcedValue: restrictedAccessFilterValue,
+            accessStatusHiddenValues: restrictedAccessHiddenValues,
         };
 
         const dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
@@ -683,30 +705,14 @@ export class ProjectSubmissionService {
 
             // 2) projet créé, maintenant on doit démarrer son workflow
             switchMap((created: Project) => {
-                // Démarrage du workflow qui peut échouer
-                return this.submitProject(created).pipe(
-                    // Si on a une erreur pendant le workflow on doit supprimer la réutilisation qui a été créé
-                    catchError((workflowError: HttpErrorResponse) => {
-                        console.error(workflowError);
-                        return this.projektMetierService.deleteProject(created).pipe(
-                            // Si on a une erreur pendant la suppression ben
-                            // on ne peut que se plier en 4 et informer la console d'erreur ...
-                            catchError((projectSuppressionError: Error) => {
-                                console.error(projectSuppressionError);
-                                throw Error('Erreur lors de la suppression du project après avoir eu une erreur dans le workflow, ' +
-                                    'une incohérence a été créée');
-                            }),
-
-                            // Après la suppression du projet on doit quand même arrêter la chaîne en erreur car il y'en a eu une
-                            tap(() => {
-                                throw Error('Une erreur a eu lieu lors du démarrage du workflow de la réutilisation');
-                            })
-                        );
-                    }),
-
-                    // Tout se passe bien avec les workflow on renvoie le projet créé
-                    mapTo(created)
-                );
+                const submitAction = new ActionFallbackUtils<Task>({
+                    action: this.submitProject(created),
+                    fallback: this.projektMetierService.deleteProject(created),
+                    fallbackSuccessMessage: 'Une erreur a eu lieu lors du démarrage du workflow de la réutilisation',
+                    fallbackErrorMessage: 'Erreur lors de la suppression du project après avoir eu une erreur dans le workflow, ' +
+                        'une incohérence a été créée'
+                });
+                return submitAction.doActionFallbackOnfailure().pipe(mapTo(created));
             }),
         );
     }
@@ -718,8 +724,8 @@ export class ProjectSubmissionService {
      */
     private createAndStartTaskForLinkedDatasets(links: LinkedDataset[]): Observable<Task[]> {
         const link$: Observable<Task>[] = links.map(
-            link => this.taskService.createLinkedDatasetDraft(link).pipe(
-                switchMap((task: Task) => this.taskService.startLinkedDatasetTask(task))
+            link => this.linkedDatasetTaskMetierService.createDraft(link).pipe(
+                switchMap((task: Task) => this.linkedDatasetTaskMetierService.startTask(task))
             )
         );
         return forkJoin(link$);
@@ -731,10 +737,10 @@ export class ProjectSubmissionService {
      */
     public submitProject(project: Project): Observable<Task> {
         // 1) On crée le draft à partir du projet
-        return this.taskService.createProjectDraft(project).pipe(
+        return this.projectTaskMetierService.createDraft(project).pipe(
             // 2 et maintenant on doit démarrer le workflow de cet élément
             switchMap((task: Task) => {
-                return this.taskService.startProjectTask(task);
+                return this.projectTaskMetierService.startTask(task);
             })
         );
     }
@@ -783,26 +789,7 @@ export class ProjectSubmissionService {
                 // Si le projet est déjà soumis
                 () => createdProject.project_status === ProjectStatus.InProgress,
                 // Il faut transmettre la demande créé
-                this.createAndStartTaskForLinkedDatasets(linksCreated).pipe(
-                    // S'il y'a une erreur de workflow on doit supprimer la demande
-                    catchError((workflowError: HttpErrorResponse) => {
-                        console.error(workflowError);
-                        const linksUuids = linksCreated.map(link => link.uuid);
-                        return this.projektMetierService.unlinkDatasetsToProject(createdProject.uuid, linksUuids).pipe(
-                            // Si on arrive quand même pas à supprimer la demande ... on se plie en 4
-                            catchError((deletionError: HttpErrorResponse) => {
-                                console.error(deletionError);
-                                throw Error('Impossible de supprimer la demande d\'accès alors que son workflow a échoué, ' +
-                                    'une incohérence a été créée');
-                            }),
-
-                            // Après la suppression du linked dataset on doit quand même arrêter la chaîne en erreur car il y'en a eu une
-                            tap(() => {
-                                throw Error('Une erreur a eu lieu lors du démarrage du workflow de la demande d\'accès');
-                            })
-                        );
-                    })
-                ),
+                this.createAndStartLinkedDatasetsAndFallback(linksCreated, createdProject),
                 // Sinon on ne fait rien
                 of([])
             )),
@@ -826,7 +813,8 @@ export class ProjectSubmissionService {
 
                 // Récupération des items créés et supprimés du projets par comparaison
                 const added: DataRequestItem[] = ProjectSubmissionService.getNewDatasetRequestsAdded(dataRequests);
-                const deleted: NewDatasetRequest[] = ProjectSubmissionService.getNewDatasetRequestsDeleted(dataRequests, newDatasetRequests);
+                const deleted: NewDatasetRequest[] = ProjectSubmissionService
+                    .getNewDatasetRequestsDeleted(dataRequests, newDatasetRequests);
                 const edited: NewDatasetRequest[] = ProjectSubmissionService.getNewDatasetRequestsEdited(dataRequests, newDatasetRequests);
 
                 // Si on a rien à ajouter ou suppr on fait rien
@@ -904,5 +892,22 @@ export class ProjectSubmissionService {
             label: this.translateService.instant(translateKey + '.label'),
             description: this.translateService.instant(translateKey + '.description')
         };
+    }
+
+    /**
+     * Crée/démarre la tâche liée à un JDD lié avec gestion de suppression si erreur de workflow
+     * @param linksCreated les JDDs liés créés
+     * @param createdProject le proejt les contenant
+     * @private
+     */
+    private createAndStartLinkedDatasetsAndFallback(linksCreated: LinkedDataset[], createdProject: Project): Observable<Task[]> {
+        const linksAction = new ActionFallbackUtils<Task[]>({
+            action: this.createAndStartTaskForLinkedDatasets(linksCreated),
+            fallback: this.projektMetierService.unlinkDatasetsToProject(createdProject.uuid, linksCreated.map(link => link.uuid)),
+            fallbackSuccessMessage: 'Une erreur a eu lieu lors du démarrage du workflow de la demande d\'accès',
+            fallbackErrorMessage: 'Impossible de supprimer la demande d\'accès alors que son workflow a échoué, ' +
+                'une incohérence a été créée'
+        });
+        return linksAction.doActionFallbackOnfailure();
     }
 }

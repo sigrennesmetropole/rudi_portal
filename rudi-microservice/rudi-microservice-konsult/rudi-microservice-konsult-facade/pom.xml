@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsult</artifactId>
-		<version>0.3.0</version>
+		<version>1.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsult-facade</artifactId>
@@ -162,6 +162,7 @@
 						<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
 						<importMapping>MetadataList=org.rudi.facet.kaccess.bean.MetadataList</importMapping>
 						<importMapping>MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets</importMapping>
+						<importMapping>Credentials=org.rudi.facet.apimaccess.bean.Credentials</importMapping>
 					</importMappings>
 					<languageSpecificPrimitives>
 						<languageSpecificPrimitive>Metadata</languageSpecificPrimitive>

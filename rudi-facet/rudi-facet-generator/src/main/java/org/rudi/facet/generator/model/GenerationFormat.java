@@ -27,6 +27,10 @@ public enum GenerationFormat {
 	ZIP("application/zip", "zip"),
 	/** Mime-type json */
 	JSON("application/json", "json"),
+	/** PNG */
+	PNG("image/png", "png"),
+	/** JPEG */
+	JPG("image/jpg", "jpg"),
 	/** Docx */
 	DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"),
 	DOC("application/msword", "doc"), DOT("application/msword", "dot"),

@@ -22,7 +22,7 @@
                 </mat-hint>
                 <mat-form-field appearance="outline" hideRequiredMarker>
                     <input type="text" formControlName="title" matInput
-                           autocomplete="off">
+                           autocomplete="off" maxlength="150">
                     <mat-error class="stepper-mat-error"
                                *ngIf="newDatasetRequestFormGroup.get('title').errors?.required">
                         <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}
@@ -42,7 +42,8 @@
                 </mat-hint>
                 <mat-form-field appearance="outline" hideRequiredMarker>
                                         <textarea class="text-area-height" type="text" matInput
-                                                  formControlName="description" autocomplete="off"></textarea>
+                                                  formControlName="description" autocomplete="off"
+                                                  maxlength="255"></textarea>
                     <mat-error class="stepper-mat-error"
                                *ngIf="newDatasetRequestFormGroup.get('description').errors?.required">
                         <em class="fa fa-info-circle fa-2x mr-2"></em>{{'project.firstStepForm.errorFieldRequired'|translate}}

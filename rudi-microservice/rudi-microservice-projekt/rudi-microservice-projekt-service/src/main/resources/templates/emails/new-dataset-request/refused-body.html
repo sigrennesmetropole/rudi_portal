@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<title>TODO</title>
-<style type="text/css">
-body {font-family: Montserrat; font-size:12px; color:#004680;}
-a {font-weight: bold;color:#004680;}
-a:hover { color:#004680; }
-</style>
+    <title>Rudi - Votre demande de nouvelles données</title>
+    <style type="text/css">
+        body {
+            font-family: Montserrat;
+            font-size: 12px;
+            color: #004680;
+        }
+
+        a {
+            font-weight: bold;
+            color: #004680;
+        }
+
+        a:hover {
+            color: #004680;
+        }
+    </style>
 </head>
 <body style="font-family:Montserrat;font-size:12px;	color:#004680;">
-TODO
+<div>
+    <p>Bonjour,</p>
+    <p>
+        L'équipe Rudi vous informe que votre demande de nouvelles données a été refusée.
+    </p>
+    <p>
+        Votre demande concerne l'ajout du jeu de données : ${asset.title} : ${asset.description}</p>
+    <p>
+        Voici les informations complémentaires apportées à votre demande : ${messageToProjectOwner} </a>
+    </p>
+    <p>
+        A très bientôt, <br>
+        L'équipe RUDI <br>
+        <a href="${urlServer}">${urlServer}</a>
+    </p>
+</div>
 </body>
 </html>

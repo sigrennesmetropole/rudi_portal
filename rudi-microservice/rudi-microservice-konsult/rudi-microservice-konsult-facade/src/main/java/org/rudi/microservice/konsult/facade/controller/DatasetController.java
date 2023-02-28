@@ -1,6 +1,11 @@
 package org.rudi.microservice.konsult.facade.controller;
 
-import lombok.RequiredArgsConstructor;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.helper.ControllerHelper;
 import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
@@ -14,10 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.ANONYMOUS;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +32,9 @@ public class DatasetController implements DatasetsApi {
 	private final ControllerHelper controllerHelper;
 
 	@Override
-	public ResponseEntity<MetadataList> searchMetadatas(String freeText,
-			List<String> themes, List<String> keywords, List<String> producerNames, OffsetDateTime dateDebut,
-			OffsetDateTime dateFin, Boolean restrictedAccess, List<UUID> globalIds, Integer offset, Integer limit, String order) throws Exception {
+	public ResponseEntity<MetadataList> searchMetadatas(String freeText, List<String> themes, List<String> keywords,
+			List<String> producerNames, OffsetDateTime dateDebut, OffsetDateTime dateFin, Boolean restrictedAccess,
+			Boolean gdprSensitive, List<UUID> globalId, Integer offset, Integer limit, String order) throws Exception {
 
 		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria()
 				.limit(limit)
@@ -42,7 +47,8 @@ public class DatasetController implements DatasetsApi {
 				.dateFin(dateFin)
 				.order(order)
 				.restrictedAccess(restrictedAccess)
-				.globalIds(globalIds);
+				.gdprSensitive(gdprSensitive)
+				.globalIds(globalId);
 
 		return ResponseEntity.ok(metadataService.searchMetadatas(datasetSearchCriteria));
 	}
@@ -64,13 +70,13 @@ public class DatasetController implements DatasetsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'ANONYMOUS', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + ANONYMOUS + ", " + USER + ")")
 	public ResponseEntity<Boolean> hasSubscribeToDataset(UUID globalId) throws Exception {
 		return ResponseEntity.ok(metadataService.hasSubscribeToDataset(globalId));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMINISTRATOR', 'ANONYMOUS', 'USER')")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + ANONYMOUS + ", " + USER + ")")
 	public ResponseEntity<Void> subscribeToDataset(UUID globalId) throws Exception {
 		metadataService.subscribeToDataset(globalId);
 		return ResponseEntity.noContent().build();

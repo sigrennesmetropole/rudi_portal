@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {ProjectCatalogItem} from '../../model/project-catalog-item';
-import {DEFAULT_ORDER, ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from '../../../core/services/projekt-metier.service';
 import {AclService} from '../../../acl/acl-api';
 import {Router} from '@angular/router';
 
@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
     mediaSize: MediaSize;
     searchIsRunning = true;
     projectListTotal = 0;
-    order = DEFAULT_ORDER;
+    order = DEFAULT_PROJECT_ORDER;
 
     constructor(private projektMetierService: ProjektMetierService,
                 private aclService: AclService,

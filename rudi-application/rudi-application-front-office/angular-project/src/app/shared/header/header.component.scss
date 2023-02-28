@@ -236,7 +236,7 @@
         color: $rudi-header-primary-color;
 
         &:focus {
-            outline:none;
+            outline: none;
         }
 
         &:hover {
@@ -266,5 +266,28 @@
     .mat-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay,
     .mat-stroked-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay {
         opacity: 0 !important;
+
     }
+
+    .img-style {
+        margin-right: 5px;
+        width: 20px;
+        margin-bottom: 1px;
+
+        &:hover {
+            border-color: $accent-color-svg;
+        }
+    }
+}
+
+.title {
+    font-family: OpenSans, serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 2.57;
+    text-align: left;
+    color: var(--0-classic-blue);
+}
+.hr{
+    margin: 0;
 }

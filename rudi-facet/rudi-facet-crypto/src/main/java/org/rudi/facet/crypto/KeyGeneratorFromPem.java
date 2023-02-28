@@ -13,8 +13,10 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import org.bouncycastle.util.io.pem.PemReader;
+import org.springframework.stereotype.Component;
 
 // source initiale : https://www.baeldung.com/java-read-pem-file-keys#1-read-public-key
+@Component
 public class KeyGeneratorFromPem {
 
 	// source : https://stackoverflow.com/a/55339208/1655155
