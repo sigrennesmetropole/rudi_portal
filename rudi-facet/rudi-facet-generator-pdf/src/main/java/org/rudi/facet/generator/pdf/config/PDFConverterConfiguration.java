@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.generator.pdf.config;
 
@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author FNI18300
@@ -15,6 +16,7 @@ import lombok.Getter;
 @Configuration
 @ConfigurationProperties(prefix = "rudi.pdf")
 @Getter
+@Setter
 public class PDFConverterConfiguration {
 
 	private String defaultFont = "fonts/Arial-MT.ttf";

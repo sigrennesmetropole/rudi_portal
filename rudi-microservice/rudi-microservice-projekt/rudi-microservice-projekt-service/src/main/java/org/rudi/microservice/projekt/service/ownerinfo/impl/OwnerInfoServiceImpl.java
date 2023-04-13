@@ -7,12 +7,15 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.microservice.projekt.core.bean.LinkedDataset;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetStatus;
 import org.rudi.microservice.projekt.core.bean.OwnerInfo;
 import org.rudi.microservice.projekt.core.bean.OwnerType;
 import org.rudi.microservice.projekt.service.ownerinfo.OwnerInfoService;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetCustomDao;
+import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetDao;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
 	private final List<OwnerInfoHelper> ownerInfoHelpers;
 	private final EnumMap<OwnerType, OwnerInfoHelper> ownerInfoHelpersByOwnerType = new EnumMap<>(OwnerType.class);
 	private final LinkedDatasetCustomDao linkedDatasetCustomDao;
+	private final LinkedDatasetDao linkedDatasetDao;
 
 	@Override
 	public OwnerInfo getOwnerInfo(OwnerType ownerType, UUID ownerUuid) throws AppServiceException {
@@ -45,13 +49,22 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
 	}
 
 	@Override
-	public boolean checkOwnerHasAccessToDataset(UUID ownerUuid, UUID datasetUuid) {
+	public boolean hasAccessToDataset(UUID uuidToCheck, UUID datasetUuid) {
 		final var linkedDatasetSearchCriteria = new LinkedDatasetSearchCriteria()
 				.datasetUuid(datasetUuid)
-				.projectOwnerUuid(ownerUuid)
+				.projectOwnerUuid(uuidToCheck)
 				.status(LinkedDatasetStatus.VALIDATED)
 				.checkEndDate(true);
 		final var linkedDatasetEntities = linkedDatasetCustomDao.searchLinkedDatasets(linkedDatasetSearchCriteria, Pageable.unpaged());
 		return linkedDatasetEntities.getTotalElements() > 0;
+	}
+
+	@Override
+	public UUID getLinkedDatasetOwner(UUID linkedDatasetUuid) throws AppServiceNotFoundException {
+		final var linkedDatasetEntity = linkedDatasetDao.findByUuid(linkedDatasetUuid);
+		if (linkedDatasetEntity == null) {
+			throw new AppServiceNotFoundException(LinkedDataset.class, linkedDatasetUuid);
+		}
+		return linkedDatasetEntity.getProject().getOwnerUuid();
 	}
 }

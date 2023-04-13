@@ -14,11 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.ClientKey;
+import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
@@ -28,13 +26,14 @@ import org.rudi.facet.apimaccess.exception.APINotUniqueException;
 import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertiesException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertyException;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.MediaFile;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,6 +41,7 @@ import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
+import lombok.val;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,11 +59,11 @@ class APIManagerHelperTest {
 	@Mock
 	private MetadataDetailsHelper metadataDetailsHelper;
 	@Mock
-	private CustomClientRegistrationRepository customClientRegistrationRepository;
-	@Mock
-	private UtilContextHelper utilContextHelper;
-	@Mock
 	private ACLHelper aclHelper;
+	@Mock
+	private OrganizationHelper organizationHelper;
+	@Mock
+	private ProjektHelper projektHelper;
 
 	@BeforeAll
 	public static void beforeAll() {
@@ -72,22 +72,31 @@ class APIManagerHelperTest {
 
 	@BeforeEach
 	void beforeEachTest() {
-		apiManagerHelper = new APIManagerHelper(apIsService, applicationService, metadataDetailsHelper, anonymousUsername, customClientRegistrationRepository, utilContextHelper, aclHelper);
+		apiManagerHelper = new APIManagerHelper(apIsService, applicationService, metadataDetailsHelper, anonymousUsername, aclHelper, organizationHelper, projektHelper);
+	}
+
+	private User getUserWithUsername(String username) {
+		final User authenticatedUser = new User();
+		authenticatedUser.setType(org.rudi.facet.acl.bean.UserType.PERSON);
+		val userUuid = UUID.randomUUID();
+		authenticatedUser.setLogin(username);
+		authenticatedUser.setUuid(userUuid);
+		return authenticatedUser;
 	}
 
 	@Test
 	@DisplayName("Test pour savoir si l'utilisateur a souscrit à un jdd alors que l'api n'existe pas")
 	void TestUserHasSubscribeToMetadataMedia() throws APIManagerException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		val authenticatedUser = getUserWithUsername("username");
 		final ClientKey clientKey = new ClientKey();
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(any())).thenReturn(new APIList().count(0).list(Collections.emptyList()));
 
 		UUID globalId = UUID.randomUUID();
 		UUID mediaId = UUID.randomUUID();
-		assertThatThrownBy(() -> apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId))
+		UUID ownerUuid = UUID.randomUUID();
+		assertThatThrownBy(() -> apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, ownerUuid))
 				.isInstanceOf(AppServiceException.class)
 				.hasMessage("Erreur lors de la récupération de la souscription à l'api globalId = %s et mediaId = %s", globalId, mediaId)
 				.hasCauseInstanceOf(APINotFoundException.class);
@@ -97,27 +106,27 @@ class APIManagerHelperTest {
 	@DisplayName("Test pour savoir si l'utilisateur a souscrit à un media d'un jdd, " +
 			"lorsque son application wso n'a pas souscrit à l'api correspondante dans WSO2")
 	void testHasSubscribeToJddMediaWithNoSubscriptionToAPI() throws APIManagerException, AppServiceException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		val authenticatedUser = getUserWithUsername("username");
 		final ClientKey clientKey = new ClientKey();
 
 		UUID globalId = UUID.randomUUID();
 		UUID mediaId = UUID.randomUUID();
+		UUID ownerUuid = UUID.randomUUID();
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(globalId).mediaUuid(mediaId);
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin())).thenReturn(false);
 
-		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId)).isFalse();
+		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, ownerUuid)).isFalse();
 	}
 
 	@Test
 	@DisplayName("Test pour savoir si l'utilisateur a souscrit à un media d'un jdd, " +
 			"lorsque son application wso a souscrit à l'api correspondante dans WSO2")
 	void testHasSubscribeToJddMediaWithSubscriptionToAPI() throws APIManagerException, AppServiceException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		val authenticatedUser = getUserWithUsername("username");
 		final ClientKey clientKey = new ClientKey();
 
 		UUID globalId = UUID.randomUUID();
@@ -125,19 +134,18 @@ class APIManagerHelperTest {
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(globalId).mediaUuid(mediaId);
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin())).thenReturn(true);
 
-		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId)).isTrue();
+		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, authenticatedUser.getUuid())).isTrue();
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd ouvert auquel le user connu a souscrit")
 	void getLoginAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
 			throws APIManagerException, AppServiceException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		val authenticatedUser = getUserWithUsername("username");
 		final ClientKey clientKey = new ClientKey();
 
 		Metadata metadata = new Metadata().globalId(UUID.randomUUID());
@@ -146,11 +154,10 @@ class APIManagerHelperTest {
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(metadata.getGlobalId()).mediaUuid(media.getMediaId());
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin())).thenReturn(true);
-
 		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isEqualTo(authenticatedUser.getLogin());
 	}
@@ -159,7 +166,7 @@ class APIManagerHelperTest {
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd ouvert auquel le user connu n'a pas souscrit")
 	void getLoginAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
 			throws APIManagerException, AppServiceException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		val authenticatedUser = getUserWithUsername("username");
 		final ClientKey clientKey = new ClientKey();
 
 		Metadata metadata = new Metadata().globalId(UUID.randomUUID());
@@ -168,8 +175,8 @@ class APIManagerHelperTest {
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(metadata.getGlobalId()).mediaUuid(media.getMediaId());
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
 				.thenReturn(false);
@@ -183,7 +190,7 @@ class APIManagerHelperTest {
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd restreint auquel le user connu a souscrit")
 	void getLoginAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
 			throws APIManagerException, AppServiceException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("username", UserType.PERSON);
+		val authenticatedUser = getUserWithUsername("username");
 		final ClientKey clientKey = new ClientKey();
 
 		Metadata metadata = new Metadata().globalId(UUID.randomUUID());
@@ -192,8 +199,8 @@ class APIManagerHelperTest {
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(metadata.getGlobalId()).mediaUuid(media.getMediaId());
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
 				.thenReturn(true);
@@ -205,8 +212,8 @@ class APIManagerHelperTest {
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd restreint auquel le user connu n'a pas souscrit")
 	void getLoginAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
-			throws APIManagerException {
-		final AuthenticatedUser authenticatedUser = new AuthenticatedUser("mpokora", UserType.PERSON);
+			throws APIManagerException, AppServiceException {
+		val authenticatedUser = getUserWithUsername("mpokora");
 		final ClientKey clientKey = new ClientKey();
 
 		Metadata metadata = new Metadata().globalId(UUID.fromString("92569f8a-2885-44d0-9fd6-f97d05f05b80"));
@@ -215,8 +222,8 @@ class APIManagerHelperTest {
 		APISearchCriteria apiSearchCriteria = new APISearchCriteria().globalId(metadata.getGlobalId()).mediaUuid(media.getMediaId());
 		APIInfo apiInfo = new APIInfo().id(UUID.randomUUID().toString());
 
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(aclHelper.getClientKeyByLogin(authenticatedUser.getLogin())).thenReturn(clientKey);
+		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1).list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
 				.thenReturn(false);
@@ -224,7 +231,7 @@ class APIManagerHelperTest {
 
 		assertThatThrownBy(() -> apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isInstanceOf(AccessDeniedMetadataMediaException.class)
-				.hasMessage("L'utilisateur mpokora ne peut pas accéder au média media_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b du jeu de données global_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80");
+				.hasMessage("L'utilisateur connecté ne peut pas accéder au média media_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b du jeu de données global_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80");
 	}
 
 	@Test
@@ -238,7 +245,7 @@ class APIManagerHelperTest {
 				.as("Une exception est lancée si on ne retrouve pas les infos sur l'API")
 				.isInstanceOf(APINotFoundException.class)
 				.hasMessage("Aucune API ne correspond à l'information mediaId = ac27b14c-4b9e-4ee1-9436-0d603dd05137")
-				;
+		;
 	}
 
 	@Test

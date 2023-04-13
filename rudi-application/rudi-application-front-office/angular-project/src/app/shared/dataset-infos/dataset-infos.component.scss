@@ -2,7 +2,7 @@
 @import "src/app/styles/common-style";
 
 .producteur-img-box {
-    width: 70px;
+    min-width: 70px;
     height: 70px;
     padding: 10px 4px 10px 4px;
     border-radius: 3.4px;
@@ -17,13 +17,15 @@
         font-size: 12px;
         line-height: 1.67;
         color: $primary-text;
+        height: 12px;
     }
 
     &-resource_title {
         font-size: 16px;
         color: $primary-color;
         font-weight: 600;
-        @include max-3-lignes;
+        margin-top: 5px;
+        @include max-2-lignes;
     }
 
 }

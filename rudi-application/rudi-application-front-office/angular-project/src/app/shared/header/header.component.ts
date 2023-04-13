@@ -142,6 +142,5 @@ export class HeaderComponent {
         } else {
             this.router.navigate(['/catalogue']);
         }
-        this.router.navigate(['/catalogue']);
     }
 }

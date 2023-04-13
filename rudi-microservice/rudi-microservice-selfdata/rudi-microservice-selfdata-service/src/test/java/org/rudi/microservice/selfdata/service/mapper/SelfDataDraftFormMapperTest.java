@@ -1,5 +1,7 @@
 package org.rudi.microservice.selfdata.service.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -16,11 +18,10 @@ import org.rudi.microservice.selfdata.service.SelfdataSpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.RequiredArgsConstructor;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SelfdataSpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SelfDataDraftFormMapperTest {
+class SelfDataDraftFormMapperTest {
 
 	private final SelfdataDraftFormMapper selfdataDraftFormMapper;
 
@@ -43,8 +44,9 @@ public class SelfDataDraftFormMapperTest {
 
 		// Retrouver les données de test
 		List<Field> fieldsUpdated = section.getFields();
-		Field fieldUpdated = fieldsUpdated.stream().filter(field -> field.getDefinition().getName().equals(matchingDataCode))
-				.collect(Collectors.toList()).stream().findFirst().orElse(null);
+		Field fieldUpdated = fieldsUpdated.stream()
+				.filter(field -> field.getDefinition().getName().equals(matchingDataCode)).collect(Collectors.toList())
+				.stream().findFirst().orElse(null);
 
 		assertThat(fieldUpdated).isNotNull();
 		assertThat(fieldUpdated.getDefinition().getLabel()).isEqualTo(matchingDataLabel);

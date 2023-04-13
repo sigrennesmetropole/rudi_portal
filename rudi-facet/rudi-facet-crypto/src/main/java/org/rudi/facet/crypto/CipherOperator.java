@@ -17,7 +17,7 @@ import javax.crypto.IllegalBlockSizeException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-abstract class CipherOperator {
+public abstract class CipherOperator {
 
 	private final String algorithm;
 	private final int bufferSize;

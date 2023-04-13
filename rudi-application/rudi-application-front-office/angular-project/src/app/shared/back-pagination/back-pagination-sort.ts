@@ -1,5 +1,5 @@
 import {Sort} from '@angular/material/sort';
-import {Order} from '../../core/services/projekt-metier.service';
+import {Order} from '../../core/services/asset/project/projekt-metier.service';
 import {SortTableInterface} from './sort-table-interface';
 
 export class BackPaginationSort {

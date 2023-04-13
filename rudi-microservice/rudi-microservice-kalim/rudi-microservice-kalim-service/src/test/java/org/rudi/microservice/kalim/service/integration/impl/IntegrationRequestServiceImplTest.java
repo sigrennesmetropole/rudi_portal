@@ -1,5 +1,10 @@
 package org.rudi.microservice.kalim.service.integration.impl;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.UUID;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,11 +39,6 @@ import org.rudi.microservice.kalim.service.mapper.ReportErrorMapperImpl;
 import org.rudi.microservice.kalim.storage.dao.integration.IntegrationRequestCustomDao;
 import org.rudi.microservice.kalim.storage.dao.integration.IntegrationRequestDao;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -204,7 +204,7 @@ class IntegrationRequestServiceImplTest {
 				.url("https://marine.fr/noeuds");
 
 		when(integrationRequestCustomDao.findByUUIDAndLock(integrationRequest.getUuid())).thenReturn(integrationRequest);
-		when(providerHelper.getNodeProviderByUUID(integrationRequest.getNodeProviderId())).thenReturn(node);
+		when(providerHelper.requireNodeProviderByUUID(integrationRequest.getNodeProviderId())).thenReturn(node);
 		doNothing().when(kalimProviderHelper).sendReport(eq(node.getUrl()), reportCaptor.capture());
 
 		integrationRequestService.handleIntegrationRequest(integrationRequest.getUuid());

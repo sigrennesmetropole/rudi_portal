@@ -27,11 +27,11 @@ export class MetadataUtils {
 
     static getAccessStatus(filters: Filters): Status {
         const status: Status = {};
-        if (filters.accessStatus == AccessStatusFiltersType.GdprSensitive) {
+        if (filters.accessStatus === AccessStatusFiltersType.GdprSensitive) {
             status.gdprSensitive = true;
-        } else if (filters.accessStatus == AccessStatusFiltersType.Restricted) {
+        } else if (filters.accessStatus === AccessStatusFiltersType.Restricted) {
             status.restrictedAcces = true;
-        } else if (filters.accessStatus == AccessStatusFiltersType.Opened) {
+        } else if (filters.accessStatus === AccessStatusFiltersType.Opened) {
             status.restrictedAcces = false;
         }
         return status;

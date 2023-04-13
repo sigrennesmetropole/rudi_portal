@@ -209,7 +209,7 @@ public class PDFConvertorImpl implements PDFConvertor {
 		ByteArrayOutputStream baosErr = new ByteArrayOutputStream();
 		ByteArrayOutputStream baosOut = new ByteArrayOutputStream();
 		gs.setStdErr(baosErr);
-		gs.setStdErr(baosOut);
+		gs.setStdOut(baosOut);
 		try {
 			String[] gsArgs = createGhostscriptArgs(output);
 			gs.initialize(gsArgs);

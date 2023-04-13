@@ -49,7 +49,7 @@ export class SelfdataDatasetDataTabComponent implements OnInit {
                 private readonly translateService: TranslateService,
                 private readonly logService: LogService,
                 private readonly selfdataService: SelfdataDatasetService,
-                private readonly propertiesMetierService:PropertiesMetierService,) {
+                private readonly propertiesMetierService: PropertiesMetierService,) {
     }
 
     ngOnInit(): void {
@@ -97,6 +97,7 @@ export class SelfdataDatasetDataTabComponent implements OnInit {
                 this.emitSubscriptionSucced(true);
             },
             error: (error) => {
+                console.error(error);
                 if (error instanceof ErrorWithCause) {
                     this.subscriptionErrorMessage = error.functionalMessage;
                 } else {
@@ -111,8 +112,8 @@ export class SelfdataDatasetDataTabComponent implements OnInit {
     }
 
     accessData(): Observable<void> {
-        return this.selfdataApiAccessService.checkPasswordAndDoSubscriptions(
-            [this.metadata], this.password, OwnerType.User, this.ownerUuid)
+        return this.selfdataApiAccessService.doSubscriptionProcessToDatasets(
+            this.password, [{metadata: this.metadata}], OwnerType.User, this.ownerUuid)
             .pipe(
                 tap((result: SubscriptionRequestReport) => {
                     if (result.failed.length > 0) {

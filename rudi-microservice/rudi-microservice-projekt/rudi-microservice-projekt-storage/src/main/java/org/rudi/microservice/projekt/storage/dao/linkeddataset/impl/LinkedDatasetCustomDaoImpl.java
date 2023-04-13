@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -39,7 +40,7 @@ public class LinkedDatasetCustomDaoImpl extends AbstractCustomDaoImpl<LinkedData
 	}
 
 	@Override
-	protected void addPredicates(LinkedDatasetSearchCriteria searchCriteria, CriteriaBuilder builder, Root<LinkedDatasetEntity> root, List<Predicate> predicates) {
+	protected void addPredicates(LinkedDatasetSearchCriteria searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<LinkedDatasetEntity> root, List<Predicate> predicates) {
 		predicateStringCriteria(searchCriteria.getDatasetUuid(), DATASET_UUID_FIELD, predicates, builder, root);
 
 		if (isTrue(searchCriteria.getCheckEndDate())) {

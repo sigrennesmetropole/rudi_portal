@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,7 +19,13 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.rudi.common.facade.util.UtilPageable;
+import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.facet.acl.bean.Role;
+import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.bean.UserType;
+import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.api.PageResultUtils;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
@@ -30,7 +37,6 @@ import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
 import org.rudi.facet.dataverse.bean.DatasetVersion;
 import org.rudi.facet.dataverse.bean.SearchDatasetInfo;
 import org.rudi.facet.dataverse.bean.SearchType;
-import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
 import org.rudi.facet.dataverse.model.search.SearchElements;
 import org.rudi.facet.dataverse.model.search.SearchParams;
 import org.rudi.facet.dataverse.utils.MetadataListUtils;
@@ -42,11 +48,15 @@ import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
+import org.rudi.facet.organization.bean.Organization;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.facet.providers.helper.ProviderHelper;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequestSearchCriteria;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.bean.Method;
+import org.rudi.microservice.kalim.core.bean.OrganizationsReparationReport;
 import org.rudi.microservice.kalim.service.admin.AdminService;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.integration.IntegrationRequestService;
@@ -68,7 +78,6 @@ import lombok.val;
 public class AdminServiceImpl implements AdminService {
 	private final DatasetOperationAPI datasetOperationAPI;
 	private final Collection<ResourceRepairer> resourceRepairers;
-	private final DateTimeMapper dateTimeMapper;
 	private final MetadataBlockHelper metadataBLockHelper;
 	private final DatasetService datasetService;
 	private final APIManagerHelper apiManagerHelper;
@@ -76,9 +85,17 @@ public class AdminServiceImpl implements AdminService {
 	private final ProviderHelper providerHelper;
 	private final IntegrationRequestService integrationRequestService;
 	private final UtilPageable utilPageable;
+	private final OrganizationHelper organizationHelper;
+	private final ACLHelper aclHelper;
 
 	@Value("${dataverse.api.rudi.data.alias}")
 	private String rudiAlias;
+
+	@Value("${default.organization.roles:USER,ORGANIZATION}")
+	private List<String> defaultOrganizationRoles;
+
+	@Value("${default.organization.password:12345678Mm$}")
+	private String defaultOrganizationPassword;
 
 	@Override
 	public void repairResources() throws DataverseAPIException {
@@ -115,6 +132,46 @@ public class AdminServiceImpl implements AdminService {
 
 		updateRepairedResources(repairedResourcesByPersistentId);
 
+	}
+
+	@Override
+	public OrganizationsReparationReport repairOrganizations() throws AppServiceException {
+
+		log.info("Launching repair organzations");
+
+		OrganizationsReparationReport report = new OrganizationsReparationReport();
+		report.setOrganizationsRepaired(new ArrayList<>());
+		report.setPasswordUsed(defaultOrganizationPassword);
+
+		List<Organization> organizations;
+		try {
+			organizations = organizationHelper.getAllOrganizations();
+		} catch (GetOrganizationException e) {
+			throw new AppServiceException("Erreur while repairing organizations", e);
+		}
+
+		for (Organization organization : organizations) {
+			String organizationUuid = organization.getUuid().toString();
+			User organizationUser = aclHelper.getUserByLogin(organizationUuid);
+			if (organizationUser == null) {
+				log.info("Repairing organization : " + organizationUuid);
+				report.getOrganizationsRepaired().add(organization.getUuid());
+				User createdUser = new User();
+				createdUser.setLogin(organizationUuid);
+				createdUser.setPassword(report.getPasswordUsed());
+				createdUser.setType(UserType.ROBOT);
+				List<Role> roles = aclHelper.searchRoles()
+						.stream()
+						.filter(element -> defaultOrganizationRoles.contains(element.getCode()))
+						.collect(Collectors.toList());
+				createdUser.setRoles(roles);
+				aclHelper.createUser(createdUser);
+			}
+		}
+
+		log.info("End of organizations reparation, users created having password : " + report.getPasswordUsed());
+		log.info("organizations repaired : " + report.getOrganizationsRepaired().toString());
+		return report;
 	}
 
 	private void updateRepairedResources(Map<String, DatasetVersion> repairedResourcesByPersistentId) {

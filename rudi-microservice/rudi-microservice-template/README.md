@@ -6,9 +6,7 @@ Suite à la création d'un nouveau microservice, mettre à jour les fichiers sui
 - [ ] ansible/roles/apache/templates/rudi.conf.j2
 - [ ] ansible/roles/apache/templates/rudi_ssl.conf.j2
 - [ ] ansible/roles/rudi/vars/main.yml
-- [ ] docker/copy-rudi.sh
-- [ ] docker/config/gateway/gateway.yml
-- [ ] docker/docker-compose.yml
+- [ ] ci/docker/gateway/gateway.yml
 - [ ] rudi-application/rudi-application-front-office/angular-project/package.json
 - [ ] rudi-common/rudi-common-core/src/main/java/org/rudi/common/core/security/QuotedRoleCodes.java
 - [ ] rudi-common/rudi-common-core/src/main/java/org/rudi/common/core/security/Role.java
@@ -20,14 +18,19 @@ Suite à la création d'un nouveau microservice, mettre à jour les fichiers sui
   - generate:[MICROSERVICE]-api
   - generate:[MICROSERVICE]-model
   - Ajouter les 2 lignes dans l'instruction generate:all
+- [ ] .gitignore : ajouter les lignes suivantes:
+  - [ ] `/rudi-application/rudi-application-front-office/angular-project/src/app/<microservice>/<microservice>-api`
+  - [ ] `/rudi-application/rudi-application-front-office/angular-project/src/app/<microservice>/<microservice>-model`
 
 Créer également ces fichiers :
 
 - [ ] .run/<microservice>.run.xml
 - [ ] ansible/roles/rudi/templates/<microservice>/<microservice>.properties.j2 (très proche du fichier
   docker/config/<microservice>/<microservice>.properties)
-- [ ] docker/<microservice>/Dockerfile
-- [ ] docker/config/<microservice>/<microservice>.properties
+- [ ] ci/docker/<microservice>/Dockerfile
+- [ ] ci/karbon/apps/rudi-<microservice>/conf-env/<microservice>-dev-karbon.properties
+- [ ] ci/karbon/apps/rudi-<microservice>/rudi-<microservice>.yml
+- [ ] ci/karbon/apps/rudi-<microservice>/rudi-<microservice>-${CI_ENVIRONMENT_NAME}.deployment.yml
 - [ ] rudi-microservice/rudi-microservice-<microservice>/rudi-microservice-<microservice>-facade/src/main/*/*Controller.java : ne pas oublier d'ajouter les @PreAuthorize
 - [ ] rudi-microservice/rudi-microservice-acl/rudi-microservice-acl-service/src/main/resources/bdd/V*__microservice_<microservice>.sql avec :
   - [ ] un `user` dans `acl_data` avec les champs suivants :

@@ -346,6 +346,46 @@
 						"type": "string"
 					}
 				}
+			},
+			"CaptchaModel": {
+				"type": "object",
+				"required": [
+					"code",
+					"id"
+				],
+				"properties": {
+					"id": {
+						"type": "string",
+						"example": "304647208",
+						"description": "identifiant du captcha à valider"
+					},
+					"code": {
+						"type": "string",
+						"example": "AJKDLDOM3",
+						"description": "Code du captcha à valider"
+					}
+				}
+			},
+			"CaptchaType": {
+				"type": "string",
+				"enum": [
+					"captchaFR",
+					"captchaEN",
+					"numerique6_7CaptchaFR",
+					"numerique6_7CaptchaEN",
+					"alphabetique6_7CaptchaFR",
+					"alphabetique6_7CaptchaEN",
+					"alphanumerique12CaptchaFR",
+					"alphanumerique12CaptchaEN",
+					"alphabetique12CaptchaFR",
+					"alphabetique12CaptchaEN",
+					"numerique12CaptchaFR",
+					"numerique12CaptchaEN",
+					"alphanumerique6to9LightCaptchaEN",
+					"alphanumerique6to9LightCaptchaFR",
+					"alphanumerique4to6LightCaptchaEN",
+					"alphanumerique4to6LightCaptchaFR"
+				]
 			}
 		}
 	}

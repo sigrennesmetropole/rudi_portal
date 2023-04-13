@@ -123,6 +123,9 @@
                                         <span>{{'signup.subscribeToNotifications'|translate}}</span>
                                     </div>
 
+                                    <app-rudi-captcha *ngIf="enableCaptchaOnPage"
+                                                      [nomCaptcha]="'captchaFR'"></app-rudi-captcha>
+
                                 </div>
                             </div>
                         </form>
@@ -139,6 +142,10 @@
                         </button>
                         <mat-progress-spinner *ngIf="loading" class="mr-auto mt-2" mode="indeterminate"
                                               diameter="30"></mat-progress-spinner>
+                        <!-- Box erreur captcha -->
+                        <app-error-box *ngIf="errorCaptchaInput"
+                                       [text]="'authentification.error-captcha' | translate"
+                        ></app-error-box>
                         <!-- Box erreur d'authent normale -->
                         <app-error-box *ngIf="errorString !== ''"
                                        [text]="errorString"

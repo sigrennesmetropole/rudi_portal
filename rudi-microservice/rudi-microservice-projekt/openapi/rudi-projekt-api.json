@@ -852,7 +852,8 @@
 								"format": "uuid"
 							}
 						}
-					},{
+					},
+					{
 						"in": "query",
 						"name": "linkedDatasetUuids",
 						"description": "UUIDs des LinkedDatasetEntity (des demandes d'accès) liées aux projets recherchés",
@@ -1116,7 +1117,7 @@
 						"name": "status",
 						"description": "Statut de la demande, optionnel. Si vide : récupération de tous les JDDs",
 						"schema": {
-							"$ref":"rudi-projekt-model.json#/components/schemas/LinkedDatasetStatus"
+							"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDatasetStatus"
 						},
 						"example": "DRAFT"
 					}
@@ -2595,7 +2596,7 @@
 						"$ref": "#/components/responses/ServiceUnavailable"
 					}
 				}
-		}
+			}
 		},
 		"/target-audience/{uuid}": {
 			"get": {
@@ -2720,17 +2721,17 @@
 				}
 			}
 		},
-		"/owner-info/{ownerUuid}/dataset-access/{datasetUuid}": {
+		"/owner-info/{uuidToCheck}/dataset-access/{datasetUuid}": {
 			"get": {
 				"tags": [
 					"projekt"
 				],
-				"summary": "Vérifie si le porteur de projet a accès au jeu de données indiqué",
-				"description": "Un porteur de projet peut être un utilisateur ou une organisation.",
-				"operationId": "checkOwnerHasAccessToDataset",
+				"summary": "Vérifie si un uuid a accès au jeu de données indiqué",
+				"description": "Un uuid peut-être celui d'un utilisateur (porteur de projet) ou une organisation.",
+				"operationId": "hasAccessToDataset",
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/OwnerUuidParam"
+						"$ref": "#/components/parameters/UuidToCheck"
 					},
 					{
 						"name": "datasetUuid",
@@ -2746,12 +2747,49 @@
 				],
 				"responses": {
 					"200": {
-						"description": "true si le porteur de projet a accès au jeu de données.",
+						"description": "True si l'uuid to check a accès au JDD",
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "boolean",
-									"example": true
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/owner-info/{linkedDatasetUuid}": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Donne à partir du linkedDatasetUuid, le porteur de projet ayant fait la demande",
+				"description": "Donne à partir du linkedDatasetUuid, le porteur de projet (personne ou organisation) ayant fait la demande",
+				"operationId": "getLinkedDatasetOwner",
+				"parameters": [
+					{
+						"name": "linkedDatasetUuid",
+						"in": "path",
+						"description": "UUID du linkedDataset associé au projet dont on veut le propriétaire",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "b9887e0f-db4e-47f0-87cd-e2f7f8d80689"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "L'UUID du project owner",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/OwnerUuid"
 								}
 							}
 						}
@@ -2923,15 +2961,15 @@
 					}
 				],
 				"requestBody": {
-		          "content": {
-		            "application/xml": {
-		              "schema": {
-		                "type": "string",
-		                "format": "binary"
-		              }
-		            }
-		          }
-		        },
+					"content": {
+						"application/xml": {
+							"schema": {
+								"type": "string",
+								"format": "binary"
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -3037,7 +3075,7 @@
 				"summary": "Recherche des tâches",
 				"description": "Recherche des tâches",
 				"operationId": "searchTasks",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "query",
 						"name": "title",
@@ -3180,7 +3218,7 @@
 				"summary": "Chargement d'une tâche",
 				"description": "Chargement d'une tâche",
 				"operationId": "getTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3284,7 +3322,7 @@
 				"summary": "Claim d'une tâche",
 				"description": "Claim d'une tâche",
 				"operationId": "claimProjectTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3341,7 +3379,7 @@
 				"summary": "Unclaim d'une tâche",
 				"description": "Unclaim d'une tâche",
 				"operationId": "unclaimProjectTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3398,7 +3436,7 @@
 				"summary": "Fait avancer la tâche",
 				"description": "Fait avancer la tâche à partir d'une action",
 				"operationId": "doItProject",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3457,7 +3495,7 @@
 				"summary": "Mets à jour une tâche",
 				"description": "Mets à jour une tâche et l'asset associée",
 				"operationId": "updateProjectTask",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -3511,7 +3549,7 @@
 				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
 				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
 				"operationId": "createProjectDraft",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -3567,7 +3605,7 @@
 				"summary": "Démarre la tâche",
 				"description": "Démarre la tâche",
 				"operationId": "startProjectTask",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -3652,7 +3690,6 @@
 				}
 			}
 		},
-
 		"/linked-dataset/tasks/draft-form": {
 			"get": {
 				"tags": [
@@ -3708,7 +3745,7 @@
 				"summary": "Claim d'une tâche",
 				"description": "Claim d'une tâche",
 				"operationId": "claimLinkedDatasetTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3765,7 +3802,7 @@
 				"summary": "Unclaim d'une tâche",
 				"description": "Unclaim d'une tâche",
 				"operationId": "unclaimLinkedDatasetTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3822,7 +3859,7 @@
 				"summary": "Fait avancer la tâche",
 				"description": "Fait avancer la tâche à partir d'une action",
 				"operationId": "doItLinkedDataset",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -3881,7 +3918,7 @@
 				"summary": "Mets à jour une tâche",
 				"description": "Mets à jour une tâche et l'asset associée",
 				"operationId": "updateLinkedDatasetTask",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -3935,7 +3972,7 @@
 				"summary": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
 				"description": "Créé la tâche à partir de l'asset et l'asset s'il n'existe pas",
 				"operationId": "createLinkedDatasetDraft",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -3991,7 +4028,7 @@
 				"summary": "Démarre la tâche",
 				"description": "Démarre la tâche",
 				"operationId": "startLinkedDatasetTask",
-				"parameters": [	],
+				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -4039,7 +4076,6 @@
 				}
 			}
 		},
-		
 		"/new-dataset-request/tasks/draft-form": {
 			"get": {
 				"tags": [
@@ -4095,7 +4131,7 @@
 				"summary": "Claim d'une tâche",
 				"description": "Claim d'une tâche",
 				"operationId": "claimNewDatasetRequestTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -4152,7 +4188,7 @@
 				"summary": "Unclaim d'une tâche",
 				"description": "Unclaim d'une tâche",
 				"operationId": "unclaimNewDatasetRequestTask",
-				"parameters": [				
+				"parameters": [
 					{
 						"in": "path",
 						"name": "task-id",
@@ -4459,6 +4495,16 @@
 				"name": "ownerUuid",
 				"in": "path",
 				"description": "UUID du porteur de projet",
+				"required": true,
+				"schema": {
+					"$ref": "rudi-projekt-model.json#/components/schemas/OwnerUuid"
+				},
+				"example": "39a9d56e-1c99-47b5-9367-7aef7f4c075f"
+			},
+			"UuidToCheck": {
+				"name": "uuidToCheck",
+				"in": "path",
+				"description": "UUID dont on veut verifier l'accès",
 				"required": true,
 				"schema": {
 					"$ref": "rudi-projekt-model.json#/components/schemas/OwnerUuid"

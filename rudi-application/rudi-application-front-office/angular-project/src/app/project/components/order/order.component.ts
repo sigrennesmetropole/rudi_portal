@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {Order, ORDERS} from '../../../core/services/projekt-metier.service';
+import {Order, ORDERS} from '../../../core/services/asset/project/projekt-metier.service';
 import {forkJoin, Observable} from 'rxjs';
 import {Item} from '../../../data-set/components/filter-forms/array-filter-form.component';
 import {map} from 'rxjs/operators';

@@ -47,7 +47,15 @@
     white-space: normal;
     margin-top: 0.3em !important;
 }
-.color-btn{
+
+.confirm-btn {
+    margin-left: 2%;
+    width: 140px;
     background-color: $primary-color;
     color: $banner-solid-color;
+}
+
+.cancel-btn {
+    margin-right: 2%;
+    width: 140px;
 }

@@ -1,9 +1,10 @@
 package org.rudi.facet.projekt.helper;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Configuration
 @ConfigurationProperties(prefix = "rudi.projekt")
@@ -21,5 +22,9 @@ public class ProjektProperties {
 	 * URL de base de l'API projekt (cf basePath dans le fichier rudi-projekt-api.json)
 	 */
 	private String baseUrl = "lb://RUDI-PROJEKT/projekt/v1";
-	private String checkOwnerHasAccessToDatasetPath = "/owner-info/{ownerUuid}/dataset-access/{datasetUuid}";
+
+	private String hasAccessToDatasetPath = "/owner-info/{ownerUuid}/dataset-access/{datasetUuid}";
+
+	private String linkedDatasetOwnerPath = "/owner-info/{linkedDatasetUuid}";
+
 }

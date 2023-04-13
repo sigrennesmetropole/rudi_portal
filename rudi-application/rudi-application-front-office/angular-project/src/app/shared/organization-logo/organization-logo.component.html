@@ -1,2 +1,3 @@
 <img *ngIf="content" [alt]="name | translate" [src]="content" [class]="cssClass">
-<img *ngIf="!content" [src]="defaultContent" alt="logo par défaut" [class]="cssClass">
+<img *ngIf="!content && isANewRequest" src='/assets/images/rudi_picto_nouvelle_demande.svg' alt="{{'project.detail.newRequestLogo'|translate}}" [class]="cssClass">
+<img *ngIf="!content && !isANewRequest" [src]="defaultContent" alt="{{'project.detail.defaultLogo'|translate}}" [class]="cssClass">

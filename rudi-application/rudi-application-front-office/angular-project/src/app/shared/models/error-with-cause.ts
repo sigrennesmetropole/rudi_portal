@@ -14,11 +14,17 @@ export class ErrorWithCause extends Error {
     functionalMessage: string;
 
     /**
+     * Code d'erreur
+     */
+    code: number;
+
+    /**
      * Constructeur du wrapper d'erreur lors du chaînage RXJS
      * @param message le message fonctionnel de l'erreur
      * @param cause l'erreur trouvée (optionnelle si erreur purement fonctionnelle)
+     * @param code code d'erreur (optionnelle)
      */
-    constructor(message: string, cause?: Error) {
+    constructor(message: string, cause?: Error, code?: number) {
         let technicalError;
         if (cause) {
             technicalError = '\nCause : ' + cause.message;
@@ -31,6 +37,9 @@ export class ErrorWithCause extends Error {
             this.cause = new Error(message);
         } else {
             this.cause = cause;
+        }
+        if (code) {
+            this.code = code;
         }
     }
 

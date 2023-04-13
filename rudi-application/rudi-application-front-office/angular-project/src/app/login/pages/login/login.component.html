@@ -18,7 +18,8 @@
                 <div class="d-flex justify-content-center mb-2">
                     <span class="text-center">{{'authentification.pas-compte'|translate}}</span>
                     <span class="text-center ml-1 link-bold-underlined-colored pointer"
-                          routerLink="sign-up" [queryParams]="{redirectTo: redirectToParam}">{{'authentification.inscrire'|translate}}</span>
+                          routerLink="sign-up"
+                          [queryParams]="{redirectTo: redirectToParam}">{{'authentification.inscrire'|translate}}</span>
                 </div>
                 <!-- Le bloc formulaire authent -->
                 <form [formGroup]="loginForm" (submit)="handleClickLogin()">
@@ -59,6 +60,12 @@
                                             {{'authentification.passwordRequired'|translate}}
                                         </mat-error>
                                     </mat-form-field>
+                                    <app-rudi-captcha *ngIf="enableCaptchaOnPage"
+                                                      [nomCaptcha]="'captchaFR'"></app-rudi-captcha>
+                                    <!-- Box erreur sur le captcha -->
+                                    <app-error-box *ngIf="errorCaptchaInput"
+                                                   [text]="'authentification.error-captcha'|translate">
+                                    </app-error-box>
                                     <!-- Box erreur d'authent normale -->
                                     <app-error-box *ngIf="isError4xx"
                                                    [text]="'authentification.error-body'|translate"

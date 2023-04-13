@@ -1,4 +1,4 @@
-import {LinkedDatasetMetadatas} from '../project-dependencies.service';
+import {LinkedDatasetMetadatas} from '../asset/project/project-dependencies.service';
 
 /**
  * Wrapper pour savoir si l'utilisateur peut souscrire à un JDD

@@ -1,4 +1,4 @@
-import {LinkedDatasetMetadatas} from './project-dependencies.service';
+import {LinkedDatasetMetadatas} from './asset/project/project-dependencies.service';
 import {Project} from '../../projekt/projekt-api';
 import {Observable} from 'rxjs';
 import {DialogClosedData} from '../../data-set/models/dialog-closed-data';
@@ -9,6 +9,9 @@ import {
 } from '../../personal-space/components/dialog-subscribe-datasets/dialog-subscribe-datasets.component';
 import {MatDialog} from '@angular/material/dialog';
 import {Injectable} from '@angular/core';
+import {
+    DeletionConfirmationPopinComponent
+} from '../../personal-space/components/project-datasets-tab/deletion-confirmation-popin/deletion-confirmation-popin.component';
 
 @Injectable({
     providedIn: 'root'
@@ -34,6 +37,17 @@ export class DialogSubscribeDatasetsService {
         };
 
         const dialogRef = this.dialog.open(DialogSubscribeDatasetsComponent, dialogConfig);
+        return dialogRef.afterClosed();
+    }
+
+    /**
+     * Ouverture d'une dialog permettant de supprimer un jdd de notre projet
+     * @param requestUuid
+     */
+    public openDialogDeletionConfirmation(requestUuid:string): Observable<DialogClosedData<string>> {
+        const dialogConfig = new DefaultMatDialogConfig<string>();
+        dialogConfig.data = requestUuid;
+        const dialogRef = this.dialog.open(DeletionConfirmationPopinComponent, dialogConfig);
         return dialogRef.afterClosed();
     }
 }

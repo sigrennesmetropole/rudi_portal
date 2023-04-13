@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {KonsultMetierService} from '../../konsult-metier.service';
-import {ProjektMetierService} from '../../projekt-metier.service';
+import {ProjektMetierService} from '../../asset/project/projekt-metier.service';
 import {DatasetConfidentiality, Indicators, NewDatasetRequest, ProjektService} from '../../../../projekt/projekt-api';
 import {Metadata} from '../../../../api-kaccess';
 import {LinkedDataset, OwnerInfo, Project} from '../../../../projekt/projekt-model';

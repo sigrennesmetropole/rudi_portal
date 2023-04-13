@@ -3,7 +3,7 @@ import {Project} from '../../../projekt/projekt-model';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {AclService} from '../../../acl/acl-api';
 import {TranslateService} from '@ngx-translate/core';
 import {PageTitleService} from '../../../core/services/page-title.service';

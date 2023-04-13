@@ -52,13 +52,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] AUTHENTICATION_PERMIT_URL = { AUTHENTICATE_URL, CHECK_CREDENTIAL_URL };
 
+	// En autorisant une URL ici, il faut l'autoriser dans le WebSecuConfig de la gateway pour les appels front
 	private static final String[] SB_PERMIT_ALL_URL = {
 			// URL public
 			"/acl/v1/application-information", "/acl/v1/healthCheck", "/oauth/*token*", "/oauth/logout", "oauth/jwks",
 			AUTHENTICATE_URL,
 			// swagger ui / openapi
 			"/acl/v3/api-docs/**", "/acl/swagger-ui/**", "/acl/swagger-ui.html", "/acl/swagger-resources/**",
-			"/configuration/ui", "/configuration/security", "/webjars/**", "/error" };
+			"/configuration/ui", "/configuration/security", "/webjars/**", "/error", "/acl/v1/kaptcha" };
 
 	@Value("${module.oauth2.check-token-uri}")
 	private String checkTokenUri;

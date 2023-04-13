@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.generator.docx.impl;
 
@@ -34,6 +34,7 @@ public class DocxTestDataModel extends AbstractDocxDataModel {
 		data.put("date", new Date());
 		data.put("items", Arrays.asList("a", "b", "c"));
 		data.put("o", new DocxTestBean("a", "title", true));
+		data.put("dataUtils", this);
 		return data;
 	}
 

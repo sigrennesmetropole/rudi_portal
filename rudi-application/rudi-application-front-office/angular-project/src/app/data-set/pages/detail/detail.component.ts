@@ -18,7 +18,7 @@ import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ObservableUtils} from '../../../shared/utils/ObservableUtils';
 import {Project} from '../../../projekt/projekt-model';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {PageResultUtils} from '../../../shared/utils/page-result-utils';
 import {catchError, defaultIfEmpty, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 import {AuthenticationState} from '../../../core/services/authentication/authentication-method';
@@ -26,7 +26,7 @@ import {AuthenticationService} from '../../../core/services/authentication.servi
 import {Level} from '../../../shared/notification-template/notification-template.component';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
 import {MatDialog} from '@angular/material/dialog';
-import {ProjectSubmissionService} from '../../../core/services/project-submission.service';
+import {ProjectSubmissionService} from '../../../core/services/asset/project/project-submission.service';
 import {PageTitleService} from '../../../core/services/page-title.service';
 import {FiltersService} from '../../../core/services/filters.service';
 import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';

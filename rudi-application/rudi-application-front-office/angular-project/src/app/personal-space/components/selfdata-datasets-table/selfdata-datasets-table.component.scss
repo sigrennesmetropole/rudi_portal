@@ -16,51 +16,53 @@
     align-items: center;
 }
 
-table {
-    width: 100%;
-    font-family: OpenSans, sans-serif;
-    cursor: pointer;
-
-    * {
+::ng-deep {
+    table {
+        width: 100%;
         font-family: OpenSans, sans-serif;
-    }
+        cursor: pointer;
 
-    tr {
-        height: unset;
-
-        &:focus, &:active, &:hover {
-            background-color: $selected-table-row;
-        }
-    }
-
-    th {
-        font-weight: 600;
-        font-size: 13px;
-        color: $primary-text;
-        padding: 12px 24px;
-
-        mat-icon {
-            @include mat-icon-size(18px);
-            margin-right: 5px;
+        * {
+            font-family: OpenSans, sans-serif;
         }
 
-    }
+        tr {
+            height: unset;
 
-    td {
-        padding: 24px 24px;
-        font-size: 15px;
-        line-height: 1.4;
-
-        &.dataset-title {
-            font-weight: bold;
-            color: var(--0-classic-blue);
+            &:focus, &:active, &:hover {
+                background-color: $selected-table-row;
+            }
         }
 
-        &:last-child {
-            text-align: center;
-        }
-    }
+        th {
+            font-weight: 600;
+            font-size: 13px;
+            color: $primary-text;
+            padding: 12px 24px;
 
+            mat-icon {
+                @include mat-icon-size(18px);
+                margin-right: 5px;
+            }
+
+        }
+
+        td {
+            padding: 24px 24px;
+            font-size: 15px;
+            line-height: 1.4;
+
+            &.dataset-title {
+                font-weight: bold;
+                color: var(--0-classic-blue);
+            }
+
+            &:last-child {
+                text-align: center;
+            }
+        }
+
+    }
 }
 
 .status-chip {
@@ -93,7 +95,7 @@ table {
 }
 
 .table-header {
-    font-family: OpenSans;
+    font-family: OpenSans, sans-serif;
 }
 
 .table-header:first-child {

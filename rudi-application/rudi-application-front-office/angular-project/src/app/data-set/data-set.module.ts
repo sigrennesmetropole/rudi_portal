@@ -65,7 +65,8 @@ import {
         DataSetRoutingModule
     ],
     exports: [
-        ListContainerComponent
+        ListContainerComponent,
+        SelectProjectDialogComponent
     ],
     entryComponents: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,5 +1,7 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -25,8 +27,6 @@ import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -69,7 +69,7 @@ class CustomClientRegistrationRepositoryTest {
 		final var clientRegistrationV017OperationAPI = new ClientRegistrationV017OperationAPI(properties, apiManagerHttpExceptionFactory);
 		final var clientRegisterForAdmin = new ClientRegistererForAdmin(tokenUri, null, adminRegistrationId, adminClientId, adminClientSecret, clientRegistrationV017OperationAPI);
 
-		final var clientRegisterForRudiAndAnonymous = new ClientRegistererForRudiAndAnonymous(tokenUri, defaultScopes, clientRegistrationV017OperationAPI);
+		final var clientRegisterForRudiAndAnonymous = new ClientRegistererForRudiAndAnonymous(tokenUri, defaultScopes, clientRegistrationV017OperationAPI, false);
 
 		final var objectMapper = new ObjectMapper();
 		final var clientRegistrationExceptionFactory = new OAuth2DynamicClientRegistrationExceptionFactory(objectMapper);

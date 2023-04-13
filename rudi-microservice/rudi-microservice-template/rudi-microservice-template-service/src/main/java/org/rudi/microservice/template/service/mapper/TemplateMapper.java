@@ -12,7 +12,6 @@ import org.rudi.microservice.template.storage.entity.domaina.TemplateEntity;
 
 /**
  * @author FNI18300
- *
  */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { MapperUtils.class })
 public interface TemplateMapper extends AbstractMapper<TemplateEntity, Template> {
@@ -26,7 +25,8 @@ public interface TemplateMapper extends AbstractMapper<TemplateEntity, Template>
 	 * On ignore toutes les entités filles (sinon l'id de chaque entité fille est supprimé et elles sont recréées en base)
 	 */
 	@Override
-	@Mapping(target = "childEntity", ignore = true) // TODO ignorer les vraies entités filles (cf Javadoc ci-dessus)
+	@Mapping(target = "childEntity", ignore = true)
+	// TODO ignorer les vraies entités filles (cf Javadoc ci-dessus)
 	void dtoToEntity(Template dto, @MappingTarget TemplateEntity entity);
 
 	/**

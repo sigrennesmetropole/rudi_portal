@@ -31,12 +31,14 @@ public class ApimServiceImpl implements ApimService {
 	private final RegistrationHelper registrationHelper;
 
 	@Override
-	public boolean hasEnabledApi(Credentials credentials) throws SSLException {
+	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException {
+		checkCredentials(credentials);
 		return registrationHelper.findRegistrationForUser(credentials.getLogin(), credentials.getPassword()) != null;
 	}
 
 	@Override
-	public void enableApi(Credentials credentials) throws APIManagerException, SSLException {
+	public void enableApi(Credentials credentials) throws APIManagerException, SSLException, AppServiceForbiddenException {
+		checkCredentials(credentials);
 		registrationHelper.assignInternalSubscriberRole(credentials.getLogin(), credentials.getPassword());
 		registrationHelper.register(credentials.getLogin(), credentials.getPassword());
 		registrationHelper.getOrCreateApplicationForUser(credentials.getLogin());

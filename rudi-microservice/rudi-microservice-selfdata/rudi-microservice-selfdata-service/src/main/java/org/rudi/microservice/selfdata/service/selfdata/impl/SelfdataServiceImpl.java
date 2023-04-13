@@ -41,7 +41,8 @@ import org.rudi.microservice.selfdata.service.exception.UserNotFoundException;
 import org.rudi.microservice.selfdata.service.helper.selfdatadataset.SelfdataApiParameters;
 import org.rudi.microservice.selfdata.service.helper.selfdatadataset.SelfdataDatasetApisHelper;
 import org.rudi.microservice.selfdata.service.helper.selfdatadataset.SelfdataDatasetHelper;
-import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.SelfDataMatchingDataHelper;
+import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.MatchingDataCipherOperator;
+import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.SelfdataMatchingDataHelper;
 import org.rudi.microservice.selfdata.service.mapper.SelfdataInformationRequestMapper;
 import org.rudi.microservice.selfdata.service.selfdata.SelfdataService;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestCustomDao;
@@ -51,13 +52,18 @@ import org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDat
 import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.SelfdataInformationRequestEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 /**
@@ -66,9 +72,12 @@ import lombok.val;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class SelfdataServiceImpl implements SelfdataService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfdataServiceImpl.class);
+
+	private final ApplicationContext applicationContext;
 
 	private final SelfdataInformationRequestDao selfdataInformationRequestDao;
 
@@ -86,7 +95,12 @@ public class SelfdataServiceImpl implements SelfdataService {
 
 	private final RegistrationHelper registrationHelper;
 
-	private final SelfDataMatchingDataHelper selfDataMatchingDataHelper;
+	private final SelfdataMatchingDataHelper selfdataMatchingDataHelper;
+
+	private final MatchingDataCipherOperator matchingDataCipherOperator;
+
+	@Value("${rudi.selfdata.recrypt.pageSize:20}")
+	private int recryptPageSize;
 
 	@Override
 	@Transactional // readOnly = false
@@ -106,8 +120,8 @@ public class SelfdataServiceImpl implements SelfdataService {
 		if (selfdataInformationRequest.getUuid() == null) {
 			throw new IllegalArgumentException("UUID manquant");
 		}
-		SelfdataInformationRequestEntity entity = selfdataInformationRequestDao.findByUuid(
-				selfdataInformationRequest.getUuid());
+		SelfdataInformationRequestEntity entity = selfdataInformationRequestDao
+				.findByUuid(selfdataInformationRequest.getUuid());
 		if (entity == null) {
 			throw new IllegalArgumentException("Resource inexistante:" + selfdataInformationRequest.getUuid());
 		}
@@ -155,8 +169,8 @@ public class SelfdataServiceImpl implements SelfdataService {
 		SelfdataInformationRequestCustomSearchCriteria customCriteria = new SelfdataInformationRequestCustomSearchCriteria();
 		customCriteria.setDatasetUuid(criteria.getDatasetUuid());
 		customCriteria.setLogin(user.getLogin());
-		Page<SelfdataInformationRequestEntity> page = selfdataInformationRequestCustomDao.searchSelfdataInformationRequests(
-				customCriteria, pageable);
+		Page<SelfdataInformationRequestEntity> page = selfdataInformationRequestCustomDao
+				.searchSelfdataInformationRequests(customCriteria, pageable);
 
 		List<SelfdataInformationRequest> requests = selfdataInformationRequestMapper.entitiesToDto(page.getContent());
 		return new PagedSelfdataInformationRequestList().total(page.getTotalElements()).elements(requests);
@@ -339,10 +353,11 @@ public class SelfdataServiceImpl implements SelfdataService {
 		if (user == null) {
 			throw new UserNotFoundException("Utilisateur non trouvé");
 		}
-		Map<String, Object> informationRequestMap = selfDataMatchingDataHelper.getInformationRequestMapByDatasetUuid(user.getLogin(),
-				datasetUuid);
+		Map<String, Object> informationRequestMap = selfdataMatchingDataHelper
+				.getInformationRequestMapByDatasetUuid(user.getLogin(), datasetUuid);
 
-		Optional<Section> optionalMatchingDataSection = selfDataMatchingDataHelper.getMatchingDataSectionByDatasetUuid(datasetUuid);
+		Optional<Section> optionalMatchingDataSection = selfdataMatchingDataHelper
+				.getMatchingDataSectionByDatasetUuid(datasetUuid);
 
 		if (optionalMatchingDataSection.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -362,5 +377,55 @@ public class SelfdataServiceImpl implements SelfdataService {
 			return matchingData;
 		}
 	}
-}
 
+	@Override
+	public void recryptSelfdataInformationRequest(String previousAliasKey) {
+		int offset = 0;
+		int count = 0;
+		log.info("Recrypt started...");
+		Pageable pageable = PageRequest.of(offset, recryptPageSize, Direction.ASC, "id");
+		log.info("Recrypt from item {} to {}", offset, offset + recryptPageSize);
+		// pour toutes les pages jusqu'à ce qu'on ait plus de données
+		while ((count = getMe().recryptSelfdataInformationRequest(previousAliasKey, pageable)) > 0) {
+			log.info("Recrypt count items {}", count);
+			offset += recryptPageSize;
+			pageable = PageRequest.of(offset, recryptPageSize, Direction.ASC, "id");
+			log.info("Recrypt from item {} to {}", offset, offset + recryptPageSize);
+		}
+		log.info("Recrypt done.");
+	}
+
+	/**
+	 * @return l'implémentation de service transactionnée
+	 */
+	protected SelfdataServiceImpl getMe() {
+		return (SelfdataServiceImpl) applicationContext.getBean(SelfdataService.class);
+	}
+
+	/**
+	 * chiffrement des données pour une page - seule cette méthode est transactionnée
+	 *
+	 * @param previousAliasKey l'alias de la clé dépréciée
+	 * @param pageable         la pagination
+	 * @return le nombre d'éléments collectés
+	 */
+	@Transactional // readonly = false
+	public int recryptSelfdataInformationRequest(String previousAliasKey, Pageable pageable) {
+		// Collecte des demandes
+		SelfdataInformationRequestCustomSearchCriteria searchCriteria = new SelfdataInformationRequestCustomSearchCriteria();
+		Page<SelfdataInformationRequestEntity> items = selfdataInformationRequestCustomDao
+				.searchSelfdataInformationRequests(searchCriteria, pageable);
+		// itération sur les demandes
+		for (SelfdataInformationRequestEntity item : items) {
+			// pour chaque demande
+			try {
+				log.info("Recrypt handle {}", item.getUuid());
+				selfdataMatchingDataHelper.recryptSelfdataInformationRequest(item, previousAliasKey);
+			} catch (Exception e) {
+				log.error("Recrypt failed to handle:" + item.getUuid(), e);
+			}
+		}
+		return items.getNumberOfElements();
+	}
+
+}

@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {RadioListItem} from '../../../shared/radio-list/radio-list-item';
-import {FormProjectDependencies, ProjectSubmissionService} from '../../../core/services/project-submission.service';
+import {FormProjectDependencies, ProjectSubmissionService} from '../../../core/services/asset/project/project-submission.service';
 import {Confidentiality, OwnerType, Project, Support, TargetAudience, TerritorialScale} from '../../../projekt/projekt-model';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {FiltersService} from '../../../core/services/filters.service';
 import {ReuseProjectCommonComponent} from '../../components/reuse-project-common/reuse-project-common.component';
 import {MatHorizontalStepper} from '@angular/material/stepper';
@@ -18,7 +18,9 @@ import {RequestDetails} from '../../../shared/models/request-details';
 import {Metadata} from '../../../api-kaccess';
 import {Observable} from 'rxjs';
 import {catchError, switchMap, tap} from 'rxjs/operators';
+import {RedirectService} from '../../../core/services/redirect.service';
 import {CloseEvent, DialogClosedData} from '../../../data-set/models/dialog-closed-data';
+import {AuthenticationService} from '../../../core/services/authentication.service';
 import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
 
 @Component({
@@ -60,7 +62,9 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
         private readonly snackBarService: SnackBarService,
         private readonly translateService: TranslateService,
         private readonly formBuilder: FormBuilder,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly redirectService: RedirectService,
+        private readonly authenticationService: AuthenticationService
     ) {
         super(projektMetierService, filtersService, projectSubmissionService);
     }
@@ -269,6 +273,11 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
      * en restant sur cet écran
      */
     save(): void {
+        // Si le token a expiré on annule tout et le renvoie vers le form de connexion
+        if (!this.authenticationService.isAuthenticatedWithToken()) {
+            this.redirectToLogin();
+            return;
+        }
 
         // Recuperation de l'image projet
         let image: Blob;
@@ -384,10 +393,26 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
         return createOrUpdate;
     }
 
+    private redirectToLogin(): void {
+        this.router.navigate
+        (['/login'],
+            {
+                queryParams: {
+                    snackBar: 'project.buttonPopover.genericUnauthorizedMessage'
+                }
+            }
+        );
+    }
+
     /**
      * Methode permettant de soumettre le projet, géstion création ou mise à jour puis soumission
      */
     submit(): void {
+        // Si le token a expiré on annule tout et le renvoie vers le form de connexion
+        if (!this.authenticationService.isAuthenticatedWithToken()) {
+            this.redirectToLogin();
+            return;
+        }
 
         // chargement du loader
         this.isLoading = true;

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoint-observer.service';
 import {IconRegistryService} from '../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../models/title-icon-type';
@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
     templateUrl: './dataset-infos.component.html',
     styleUrls: ['./dataset-infos.component.scss']
 })
-export class DatasetsInfosComponent implements OnInit {
+export class DatasetsInfosComponent {
     /**
      * affiche ou pas  le logo
      */
@@ -43,8 +43,17 @@ export class DatasetsInfosComponent implements OnInit {
      *
      */
     @Input() currentJddId: string;
+    /**
+     * Est ou pas dans le tableau de la page 'Mes réutilisations'
+     */
+    @Input() isTabReuse=false;
+    /**
+     * S'agit -il d'une nouvelle demande ?
+     */
+    @Input() isANewRequest = false;
     restrictedDatasetIcon = 'key_icon_88_secondary-color';
     mediaSize: MediaSize;
+
 
 
     constructor(
@@ -56,8 +65,6 @@ export class DatasetsInfosComponent implements OnInit {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
     }
 
-    ngOnInit(): void {
-    }
 
     /**
      * Méthode appelée au clic sur un jdd et qui redirige l'utilisateur vers la page de details de ce jdd

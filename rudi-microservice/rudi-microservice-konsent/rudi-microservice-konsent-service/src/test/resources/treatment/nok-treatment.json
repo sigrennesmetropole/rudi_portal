@@ -1,0 +1,10 @@
+{
+	"owner_type": "USER",
+	"owner_uuid": "84bb25d4-2191-4325-8a21-9dd59ddd9f08",
+	"name": "koTreatment",
+	"target_type": "PROJECT",
+	"target_uuid": "2c90a1ab-ae62-4954-8689-e0989820e124",
+	"status": "VALIDATED",
+	"creation_date": "2020-07-21T12:12:23.000+02:00",
+	"updated_date": "2020-07-21T12:12:23.000+02:00"
+}

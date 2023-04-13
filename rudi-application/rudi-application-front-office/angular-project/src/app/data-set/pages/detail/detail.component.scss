@@ -542,15 +542,12 @@ img {
 
 .see-more {
     text-align: center;
+    margin-top: 15px;
 
     .nav-link {
-        color: #323643;
+        color: $black !important;
+        cursor: pointer;
         font-family: Helvetica, serif;
         font-size: 14px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: normal;
     }
 }

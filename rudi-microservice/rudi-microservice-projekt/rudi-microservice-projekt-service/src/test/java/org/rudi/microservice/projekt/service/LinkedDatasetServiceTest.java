@@ -71,8 +71,9 @@ class LinkedDatasetServiceTest {
 	private OrganizationHelper organizationHelper;
 
 	@SuppressWarnings("unused") // mocké pour ACLHelper
-	@MockBean
+	@MockBean(name = "rudi_oauth2")
 	private WebClientConfig webClientConfig;
+
 	@SuppressWarnings("unused") // mocké pour OrganizationHelper
 	@MockBean(name = "struktureWebClient")
 	private WebClientConfig struktureWebClient;

@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
-class CryptoUtil {
+public class CryptoUtil {
 
 	private CryptoUtil() {
 	}
@@ -42,7 +42,7 @@ class CryptoUtil {
 	 *
 	 * @see <a href="https://www.hypr.com/nonce/">https://www.hypr.com/nonce/</a>
 	 */
-	static byte[] generateRandomNonce(int length) {
+	public static byte[] generateRandomNonce(int length) {
 		final var nonce = new byte[length];
 		new SecureRandom().nextBytes(nonce);
 		return nonce;

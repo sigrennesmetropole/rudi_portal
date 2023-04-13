@@ -3,7 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {ProjectType} from '../../../projekt/projekt-model';
 import {AdapterWithoutBackend} from '../../../shared/uploader/adapter-without-backend';
 import {DataSize} from '../../../shared/models/data-size';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 
 @Component({
     selector: 'app-step1-reutilisation',

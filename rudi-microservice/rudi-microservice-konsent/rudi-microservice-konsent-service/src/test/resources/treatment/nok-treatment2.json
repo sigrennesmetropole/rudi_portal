@@ -1,0 +1,169 @@
+{
+	"owner_type": "USER",
+	"owner_uuid": "bf2736f0-7f93-451b-82f5-532b1b7186ce",
+	"name": "koTreatment2",
+	"target_type": "PROJECT",
+	"target_uuid": "2c90a1ab-ae62-4954-8689-e0989820e124",
+	"status": "VALIDATED",
+	"creation_date": "2020-07-21T12:12:23.000+02:00",
+	"updated_date": "2020-07-21T12:12:23.000+02:00",
+	"version": {
+		"version": 1,
+		"creation_date": "2020-07-21T12:12:23.000+02:00",
+		"updated_date": "2020-07-21T12:12:23.000+02:00",
+		"status": "VALIDATED",
+		"titles": [
+			{
+				"uuid": "d43451af-460d-48a7-9000-defb99fd4f47",
+				"lang": "fr-FR",
+				"text": "Titre de la version 1"
+			}
+		],
+		"datas": [
+			{
+				"uuid": "249c1d23-2a26-445d-bed0-af83d0b0d305",
+				"lang": "fr-FR",
+				"text": "Data de la version 1"
+			}
+		],
+		"retention": {
+			"uuid": "1a540d71-ca8d-4657-935b-c488a6956fb5",
+			"code": "AZERTY",
+			"labels": [
+				{
+					"uuid": "c8b755c5-1e18-4695-b948-8a85116608ae",
+					"lang": "fr-FR",
+					"text": "Label 1"
+				}
+			],
+			"opening_date": "2020-07-21T12:12:23.000+02:00",
+			"closing_date": "2020-07-21T12:12:23.000+02:00",
+			"order": 1,
+			"value": 5,
+			"unit": "MONTH"
+		},
+		"usages": [
+			{
+				"uuid": "c0b0e633-beda-4339-a796-f69976daf30d",
+				"lang": "fr-FR",
+				"text": "Usage de la version 1"
+			}
+		],
+		"operation_treatment_natures": [
+			{
+				"uuid": "ff7ce5a4-bc80-4912-9bb1-583d90da5f2f",
+				"lang": "fr-FR",
+				"text": "operationTreatmentNature de la version 1"
+			},
+			{
+				"uuid": "be379082-b868-4b8c-90ae-d532ee9c4e95",
+				"lang": "fr-FR",
+				"text": "operationTreatmentNature 2 de la version 1"
+			}
+		],
+		"purpose": {
+			"uuid": "19ace8bb-c0fb-437f-8c1e-d8ab9915a6ba",
+			"code": "MMAM",
+			"labels": [
+				{
+					"uuid": "e053cd70-8466-42ab-8f06-43c9fb3f9a3a",
+					"lang": "fr-FR",
+					"text": "Label 2"
+				},
+				{
+					"uuid": "d9a5d25c-2a18-4b80-9ade-5b9f34cfb27c",
+					"lang": "fr-FR",
+					"text": "Label 3"
+				}
+			],
+			"opening_date": "2020-07-21T12:12:23.000+02:00",
+			"closing_date": "2020-07-21T12:12:23.000+02:00",
+			"order": 1
+		},
+		"typology": {
+			"uuid": "6550fcdf-046c-48eb-a5d3-306c1bd5cd18",
+			"code": "ZWXSQ",
+			"labels": [
+				{
+					"uuid": "e273bdce-cd39-4eab-a4d5-51831d6c8aca",
+					"lang": "fr-FR",
+					"text": "Label 2"
+				}
+			],
+			"opening_date": "2020-07-21T12:12:23.000+02:00",
+			"closing_date": "2020-07-21T12:12:23.000+02:00",
+			"order": 2
+		},
+		"data_recipients": [
+			{
+				"uuid": "6e8f1fbb-07da-4858-93ce-a2930b4c879c",
+				"code": "PSDO",
+				"labels": [
+					{
+						"uuid": "7d6b6e72-0250-4f6a-811d-868ce4863a22",
+						"lang": "fr-FR",
+						"text": "Label 1"
+					}
+				],
+				"opening_date": "2020-07-21T12:12:23.000+02:00",
+				"closing_date": "2020-07-21T12:12:23.000+02:00",
+				"order": 1
+			}
+		],
+		"data_recipient_detail": "Detail data recipient",
+		"security_measures": [
+			{
+				"uuid": "9dc020af-72c3-4861-81d2-1b48bae63b09",
+				"code": "SM",
+				"labels": [
+					{
+						"uuid": "a5e12b2f-2533-4a14-821a-e1e4f8648aa6",
+						"lang": "fr-FR",
+						"text": "Label 1"
+					}
+				],
+				"opening_date": "2020-07-21T12:12:23.000+02:00",
+				"closing_date": "2020-07-21T12:12:23.000+02:00",
+				"order": 1
+			}
+		],
+		"security_measure_detail": "Détail security measure",
+		"outside_u_e_transfert": "UE transfert value",
+		"involved_population": {
+			"uuid": "e812d2f5-9e9d-4ba5-9e72-648f1590344e",
+			"code": "INVOLVED",
+			"labels": [
+				{
+					"uuid": "ab36205f-7833-4519-a2ee-d529e7f128f3",
+					"lang": "fr-FR",
+					"text": "Label 2"
+				},
+				{
+					"uuid": "0ca4887d-ed29-4548-941a-ecf3474a5230",
+					"lang": "fr-FR",
+					"text": "Label 3"
+				}
+			],
+			"opening_date": "2020-07-21T12:12:23.000+02:00",
+			"closing_date": "2020-07-21T12:12:23.000+02:00",
+			"order": 1
+		},
+		"obsolete_date": "2020-07-21T12:12:23.000+02:00",
+		"data_protection_officer": {
+			"uuid": "62c47429-4008-47e5-90b9-22f0eb080f2b",
+			"name": "I am",
+			"email": "iam@themanager.com",
+			"phone_number": "0741258963",
+			"address1": "Chez moi",
+			"address2": "Chez toi"
+		},
+		"manager": {
+			"uuid": "ff68801f-6c25-40ba-bc1d-9702e8128c59",
+			"name": "You are",
+			"email": "youare@themanager.com",
+			"phone_number": "0741258963",
+			"address1": "Chez lui",
+			"address2": "Chez eux"
+		}
+	}
+}

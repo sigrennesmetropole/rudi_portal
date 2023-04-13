@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {OwnerInfo, Project} from '../../../projekt/projekt-api';
 import * as moment from 'moment';
-import {ProjectDependenciesFetchers, ProjectDependenciesService} from '../../../core/services/project-dependencies.service';
+import {ProjectDependenciesFetchers, ProjectDependenciesService} from '../../../core/services/asset/project/project-dependencies.service';
 import {injectDependencies} from '../../../shared/utils/dependencies-utils';
 import {map} from 'rxjs/operators';
 

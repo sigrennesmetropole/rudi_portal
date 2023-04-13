@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +76,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
- *
  */
 @Component
 @Slf4j
@@ -183,7 +183,7 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 
 	/**
 	 * liste les alias possibles
-	 * 
+	 *
 	 * @param ks
 	 * @throws KeyStoreException
 	 */
@@ -364,22 +364,22 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 			PDRectangle bbox = new PDRectangle(rectangle.getWidth(), rectangle.getHeight());
 			Matrix initialScale = null;
 			switch (sourceDocument.getPage(pageNumber).getRotation()) {
-			case ROTATION_90:
-				form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
-				initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
-						bbox.getHeight() / bbox.getWidth());
-				break;
-			case ROTATION_180:
-				form.setMatrix(AffineTransform.getQuadrantRotateInstance(2));
-				break;
-			case 270:
-				form.setMatrix(AffineTransform.getQuadrantRotateInstance(3));
-				initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
-						bbox.getHeight() / bbox.getWidth());
-				break;
-			case ROTATION_0:
-			default:
-				break;
+				case ROTATION_90:
+					form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
+					initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
+							bbox.getHeight() / bbox.getWidth());
+					break;
+				case ROTATION_180:
+					form.setMatrix(AffineTransform.getQuadrantRotateInstance(2));
+					break;
+				case 270:
+					form.setMatrix(AffineTransform.getQuadrantRotateInstance(3));
+					initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
+							bbox.getHeight() / bbox.getWidth());
+					break;
+				case ROTATION_0:
+				default:
+					break;
 			}
 			form.setBBox(bbox);
 
@@ -431,31 +431,31 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 		PDRectangle rect = new PDRectangle();
 		// signing should be at the same position regardless of page rotation.
 		switch (page.getRotation()) {
-		case ROTATION_90:
-			rect.setLowerLeftY(x);
-			rect.setUpperRightY(x + width);
-			rect.setLowerLeftX(y);
-			rect.setUpperRightX(y + height);
-			break;
-		case ROTATION_180:
-			rect.setUpperRightX(pageRect.getWidth() - x);
-			rect.setLowerLeftX(pageRect.getWidth() - x - width);
-			rect.setLowerLeftY(y);
-			rect.setUpperRightY(y + height);
-			break;
-		case ROTATION_270:
-			rect.setLowerLeftY(pageRect.getHeight() - x - width);
-			rect.setUpperRightY(pageRect.getHeight() - x);
-			rect.setLowerLeftX(pageRect.getWidth() - y - height);
-			rect.setUpperRightX(pageRect.getWidth() - y);
-			break;
-		case ROTATION_0:
-		default:
-			rect.setLowerLeftX(x);
-			rect.setUpperRightX(x + width);
-			rect.setLowerLeftY(pageRect.getHeight() - y - height);
-			rect.setUpperRightY(pageRect.getHeight() - y);
-			break;
+			case ROTATION_90:
+				rect.setLowerLeftY(x);
+				rect.setUpperRightY(x + width);
+				rect.setLowerLeftX(y);
+				rect.setUpperRightX(y + height);
+				break;
+			case ROTATION_180:
+				rect.setUpperRightX(pageRect.getWidth() - x);
+				rect.setLowerLeftX(pageRect.getWidth() - x - width);
+				rect.setLowerLeftY(y);
+				rect.setUpperRightY(y + height);
+				break;
+			case ROTATION_270:
+				rect.setLowerLeftY(pageRect.getHeight() - x - width);
+				rect.setUpperRightY(pageRect.getHeight() - x);
+				rect.setLowerLeftX(pageRect.getWidth() - y - height);
+				rect.setUpperRightX(pageRect.getWidth() - y);
+				break;
+			case ROTATION_0:
+			default:
+				rect.setLowerLeftX(x);
+				rect.setUpperRightX(x + width);
+				rect.setLowerLeftY(pageRect.getHeight() - y - height);
+				rect.setUpperRightY(pageRect.getHeight() - y);
+				break;
 		}
 		return rect;
 	}
@@ -487,22 +487,36 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 			CertificateException, UnrecoverableKeyException {
 		// chargement du certificat et de la clé
 		if (certificateChains == null || privateKey == null) {
-			try (InputStream keyStoreStream = Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream(pdfSignerConfiguration.getKeyStorePath());) {
-				Security.addProvider(new BouncyCastleProvider());
 
-				KeyStore ks = KeyStore.getInstance(pdfSignerConfiguration.getKeyStoreType());
-				ks.load(keyStoreStream, pdfSignerConfiguration.getKeyStorePasswordChars());
+			File f = new File(pdfSignerConfiguration.getKeyStorePath());
 
-				if (pdfSignerConfiguration.isDebug()) {
-					exploreKeyStore(ks);
+			if (f.exists() && f.isFile()) {
+				try (InputStream keyStoreStream = new FileInputStream(pdfSignerConfiguration.getKeyStorePath());) {
+					certificateChains = loadCertificate(keyStoreStream);
 				}
-				privateKey = (PrivateKey) ks.getKey(pdfSignerConfiguration.getKeyStoreKeyAlias(),
-						pdfSignerConfiguration.getKeyStoreKeyPasswordChars());
-				certificateChains = ks.getCertificateChain(pdfSignerConfiguration.getKeyStoreKeyAlias());
+			} else {
+				try (InputStream keyStoreStream = Thread.currentThread().getContextClassLoader()
+						.getResourceAsStream(pdfSignerConfiguration.getKeyStorePath());) {
+					certificateChains = loadCertificate(keyStoreStream);
+				}
 			}
 		}
+
 		return certificateChains;
+	}
+
+	protected Certificate[] loadCertificate(InputStream keyStoreStream) throws KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+		Security.addProvider(new BouncyCastleProvider());
+		KeyStore ks = KeyStore.getInstance(pdfSignerConfiguration.getKeyStoreType());
+		ks.load(keyStoreStream, pdfSignerConfiguration.getKeyStorePasswordChars());
+		if (pdfSignerConfiguration.isDebug()) {
+			exploreKeyStore(ks);
+		}
+		privateKey = (PrivateKey) ks.getKey(pdfSignerConfiguration.getKeyStoreKeyAlias(),
+				pdfSignerConfiguration.getKeyStoreKeyPasswordChars());
+
+		return ks.getCertificateChain(pdfSignerConfiguration.getKeyStoreKeyAlias());
 	}
 
 	@Override

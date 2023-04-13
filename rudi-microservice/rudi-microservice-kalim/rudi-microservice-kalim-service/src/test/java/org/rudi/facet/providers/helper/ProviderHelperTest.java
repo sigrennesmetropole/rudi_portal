@@ -99,7 +99,7 @@ class ProviderHelperTest {
 				.addHeader("Content-Type", "application/json")
 		);
 
-		final Provider providerByNodeProviderUUID = providerHelper.getProviderByNodeProviderUUID(searchedNode.getUuid());
+		final Provider providerByNodeProviderUUID = providerHelper.requireProviderByNodeProviderUUID(searchedNode.getUuid());
 
 		assertThat(providerByNodeProviderUUID).isEqualTo(searchedProvider);
 
@@ -127,7 +127,7 @@ class ProviderHelperTest {
 				.addHeader("Content-Type", "application/json")
 		);
 
-		final NodeProvider nodeProviderByUUID = providerHelper.getNodeProviderByUUID(searchedNode.getUuid());
+		final NodeProvider nodeProviderByUUID = providerHelper.requireNodeProviderByUUID(searchedNode.getUuid());
 
 		assertThat(nodeProviderByUUID).isEqualTo(searchedNode);
 

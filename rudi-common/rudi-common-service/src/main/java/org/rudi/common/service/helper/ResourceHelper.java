@@ -54,6 +54,11 @@ public class ResourceHelper {
 	}
 
 	@Nonnull
+	public File createTemporaryFile() throws IOException {
+		return File.createTempFile("rudi", ".tmp", new File(temporaryDirectory));
+	}
+
+	@Nonnull
 	public DocumentContent convertToDocumentContent(Resource resource) throws IOException {
 		File resourceFile = copyResourceToTempFile(resource);
 		String fileName = resource.getFilename();

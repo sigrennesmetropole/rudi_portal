@@ -1,4 +1,4 @@
-import {Order} from '../../core/services/projekt-metier.service';
+import {Order} from '../../core/services/asset/project/projekt-metier.service';
 
 /**
  *  interface de tri d'une tabe avec une pagination backend

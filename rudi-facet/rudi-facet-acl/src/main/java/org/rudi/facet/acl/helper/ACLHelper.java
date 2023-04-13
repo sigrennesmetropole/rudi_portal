@@ -159,13 +159,31 @@ public class ACLHelper {
 	 */
 	@Nullable
 	private User getUser(UserSearchCriteria criteria) {
-		UserPageResult pageResult = loadBalancedWebClient.get().uri(buildUsersSearchURL(criteria, 1)).retrieve()
+
+		UserPageResult pageResult = loadBalancedWebClient.get()
+				.uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
+						.queryParam(LIMIT_PARAMETER, 1)
+						.queryParam(USER_LOGIN_PARAMETER, criteria.getLogin())
+						.queryParam(USER_PASSWORD_PARAMETER, criteria.getPassword())
+						.queryParam(ROLE_UUIDS_PARAMETER, getRolesCriteria(criteria.getRoleUuids()))
+				.build())
+				.retrieve()
 				.bodyToMono(UserPageResult.class).block();
 		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
 			return pageResult.getElements().get(0);
 		} else {
 			return null;
 		}
+	}
+
+	@Nullable
+	private String getRolesCriteria(List<UUID> roleUuids) {
+		String roles = null;
+		if(CollectionUtils.isNotEmpty(roleUuids)) {
+			roles = roleUuids.stream().map(UUID::toString).collect(Collectors.joining(","));
+		}
+
+		return roles;
 	}
 
 	@Nullable
@@ -223,7 +241,13 @@ public class ACLHelper {
 					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList()))
 					.build();
 			UserPageResult pageResult = loadBalancedWebClient
-					.get().uri(buildUsersSearchURL(criteria, 1))
+					.get()
+					.uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
+							.queryParam(LIMIT_PARAMETER, 1)
+							.queryParam(USER_LOGIN_PARAMETER, criteria.getLogin())
+							.queryParam(USER_PASSWORD_PARAMETER, criteria.getPassword())
+							.queryParam(ROLE_UUIDS_PARAMETER, getRolesCriteria(criteria.getRoleUuids()))
+							.build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {
 				result.addAll(pageResult.getElements());
@@ -244,36 +268,8 @@ public class ACLHelper {
 		return urlBuilder.toString();
 	}
 
-	protected String buildUsersSearchURL(@Nonnull UserSearchCriteria criteria, int limit) {
-		final var urlBuilder = new StringBuilder();
-		urlBuilder.append(getAclServiceURL()).append(getUsersEndpointSearchURL());
-		var and = false;
-
-		if (limit > 0) {
-			and = andOrWhat(urlBuilder, and);
-			urlBuilder.append(LIMIT_PARAMETER).append('=').append(1);
-		}
-
-		final var login = criteria.getLogin();
-		if (StringUtils.isNotEmpty(login)) {
-			and = andOrWhat(urlBuilder, and);
-			urlBuilder.append(USER_LOGIN_PARAMETER).append('=').append(login);
-		}
-
-		final var password = criteria.getPassword();
-		if (StringUtils.isNotEmpty(password)) {
-			and = andOrWhat(urlBuilder, and);
-			urlBuilder.append(USER_PASSWORD_PARAMETER).append('=').append(password);
-		}
-
-		final var roleUuids = criteria.getRoleUuids();
-		if (CollectionUtils.isNotEmpty(roleUuids)) {
-			andOrWhat(urlBuilder, and);
-			urlBuilder.append(ROLE_UUIDS_PARAMETER).append('=')
-					.append(roleUuids.stream().map(UUID::toString).collect(Collectors.joining(",")));
-		}
-
-		return urlBuilder.toString();
+	protected String buildUsersSearchURL() {
+		return getAclServiceURL() + getUsersEndpointSearchURL();
 	}
 
 	protected String buildRolesSearchURL(String code) {

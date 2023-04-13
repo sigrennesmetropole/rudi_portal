@@ -45,6 +45,17 @@ import {D3LineAndPlotChartComponent} from './components/d3-line-and-plot-chart/d
 import {D3BarChartComponent} from './components/d3-bar-chart/d3-bar-chart.component';
 import {NewRequestDetailComponent} from './pages/new-request-detail/new-request-detail.component';
 import {MatchingDataCardComponent} from './components/matching-data-card/matching-data-card.component';
+import {OpenDatasetTableComponent} from './components/project-datasets-tab/open-dataset-table/open-dataset-table.component';
+import {
+    NewDatasetRequestTableComponent
+} from './components/project-datasets-tab/new-dataset-request-table/new-dataset-request-table.component';
+import {
+    RestrictedDatasetTableComponent
+} from './components/project-datasets-tab/restricted-dataset-table/restricted-dataset-table.component';
+import {
+    DeletionConfirmationPopinComponent
+} from './components/project-datasets-tab/deletion-confirmation-popin/deletion-confirmation-popin.component';
+import {PopoverModule} from 'ngx-smart-popover';
 
 @NgModule({
     declarations: [
@@ -84,7 +95,11 @@ import {MatchingDataCardComponent} from './components/matching-data-card/matchin
         D3BarChartComponent,
         D3LineAndPlotChartComponent,
         NewRequestDetailComponent,
-        MatchingDataCardComponent
+        MatchingDataCardComponent,
+        OpenDatasetTableComponent,
+        NewDatasetRequestTableComponent,
+        RestrictedDatasetTableComponent,
+        DeletionConfirmationPopinComponent,
     ],
     imports: [
         CommonModule,
@@ -94,6 +109,7 @@ import {MatchingDataCardComponent} from './components/matching-data-card/matchin
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
+        PopoverModule,
     ]
     ,
     providers:

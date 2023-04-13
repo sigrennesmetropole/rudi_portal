@@ -7,8 +7,9 @@ import {OrganizationService} from '../../../../strukture/api-strukture';
 import {TranslateService} from '@ngx-translate/core';
 import {AbstractApiAccessService} from '../abstract-api-access.service';
 import {Credentials} from '../credentials';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {SelfdataService, Credentials as SelfdataCredentials} from '../../../../selfdata/selfdata-api';
+import {SubscriptionData} from '../subscription-data';
 
 @Injectable({
     providedIn: 'root'
@@ -39,5 +40,13 @@ export class SelfdataApiAccessService extends AbstractApiAccessService {
 
     hasEnabledApi(credentials: Credentials): Observable<boolean> {
         return this.selfdataService.hasEnabledApi(SelfdataApiAccessService.toSelfdataCredentials(credentials));
+    }
+
+    hasSubscribedToDataset(subscriptionData: SubscriptionData): Observable<boolean> {
+        return throwError(new Error('Attente de l\'API de souscription selfdata'));
+    }
+
+    subscribeToDataset(subscriptionData: SubscriptionData): Observable<unknown> {
+        return throwError(new Error('Attente de l\'API de souscription selfdata'));
     }
 }

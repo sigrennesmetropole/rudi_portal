@@ -13,6 +13,36 @@
                 <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="loading"></app-loader>
             </div>
         </div>
-        <app-work-in-progress></app-work-in-progress>
+
+        <!-- Tableau des JDDs ouverts -->
+        <app-open-dataset-table [openDatasetsList]="linkedDatasetsOpened"
+                                [tableLoading]="openedLinkedDatasetLoading"
+                                [hasAddButton]="!_project.is_a_reuse"
+                                [disableAddButton]="addingInProgress"
+                                (addOpenedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, false)"
+                                (addingElementToOpenedTable)=updateAddButtonStatus($event)
+            (requestUuidEmitter)="handleOpenDatasetRequestUuidChanged($event)">
+        </app-open-dataset-table>
+
+        <!-- Tableau des demandes d'accès à des JDDs restreints -->
+        <app-restricted-dataset-table [restrictedDatasetsList]="linkedDatasetsRestricted"
+                                      [tableLoading]="restrictedLinkedDatasetLoading"
+                                      [hasAddButton]="!_project.is_a_reuse"
+                                      [disableAddButton]="addingInProgress"
+                                      (addRestrictedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, true)"
+                                      (addingElementToRestrictedTable)=updateAddButtonStatus($event)
+                                      (requestUuidEmitter)="handleRestrictedDatasetRequestUuidChanged($event)">
+        </app-restricted-dataset-table>
+
+        <!-- Tableau des nouvelles demandes -->
+        <app-new-dataset-request-table [newDatasetRequestList]="newDatasetRequests"
+                                       [tableLoading]="newLinkedDatasetLoading"
+                                       [hasAddButton]="!_project.is_a_reuse"
+                                       [disableAddButton]="addingInProgress"
+                                       (addNewDatasetRequestEvent)="addNewDatasetRequest($event)"
+                                       (addingElementToNewDatasetTable)=updateAddButtonStatus($event)
+            (requestUuidEmitter)="handleNewDatasetRequestUuidChanged($event)">
+        </app-new-dataset-request-table>
+
     </mat-card>
 </div>

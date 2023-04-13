@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {ConfirmedValidator} from './confirmed-validator';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../../core/services/account.service';
 import {AuthenticationService} from '../../../core/services/authentication.service';
 import {RouteHistoryService} from '../../../core/services/route-history.service';
@@ -10,6 +10,9 @@ import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RudiValidators} from '../../../shared/validators/rudi-validators';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
+import {RudiCaptchaComponent} from '../../../shared/rudi-captcha/rudi-captcha.component';
+import {CAPTCHA_NOT_VALID_CODE, CaptchaCheckerService} from '../../../core/services/captcha-checker.service';
+import {ErrorWithCause} from '../../../shared/models/error-with-cause';
 
 @Component({
     selector: 'app-sign-up',
@@ -50,6 +53,18 @@ export class SignUpComponent implements OnInit {
     passwordMinLength = 10;
     passwordMaxLength = 100;
 
+    /**
+     * Indique si le captcha doit s'activer sur cette page
+     */
+    enableCaptchaOnPage: true;
+
+    /**
+     * Error on captcha input
+     */
+    errorCaptchaInput = false;
+
+    @ViewChild(RudiCaptchaComponent) rudiCaptcha: RudiCaptchaComponent;
+
     constructor(private formBuilder: FormBuilder,
                 private routeHistoryService: RouteHistoryService,
                 private authenticationService: AuthenticationService,
@@ -59,6 +74,8 @@ export class SignUpComponent implements OnInit {
                 private router: Router,
                 private accountService: AccountService,
                 private propertiesService: PropertiesMetierService,
+                private readonly captchaCheckerService: CaptchaCheckerService,
+                private readonly route: ActivatedRoute,
     ) {
     }
 
@@ -70,13 +87,17 @@ export class SignUpComponent implements OnInit {
     }
 
     /**
-     * Teste si le formulaire est valide
+     * Teste si le formulaire est valide et le captcha bien rempli (ou non activé)
      */
     get isValid(): boolean {
-        return this.signupForm.valid;
+        return this.signupForm.valid && (this.rudiCaptcha?.isFilled() || !this.enableCaptchaOnPage);
     }
 
     ngOnInit(): void {
+        if (this.route.snapshot.data?.aclAppInfo) {
+            this.enableCaptchaOnPage = this.route.snapshot.data.aclAppInfo.captchaEnabled;
+        }
+
         this.mediaSize = this.breakpointObserver.getMediaSize();
 
         // Construction du formulaire d'inscription
@@ -99,35 +120,38 @@ export class SignUpComponent implements OnInit {
      * Methode permettant l'inscription
      */
     handleClickSignup(): void {
-
         // Reset des toggles
         this.loading = true;
         this.errorString = '';
 
-        // lancement d'appels REST multiples pour créer un compte puis s'authentifier
-        this.accountService.createAccount(this.signupForm).subscribe(
-            () => {
-                this.loading = false;
-
-                // Si on s'est bien authentifié on revient sur la page d'avant Si on peut go back on go back
-                this.routeHistoryService.goBackOrElseGoAccount();
-                this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
-                    this.snackBarService.openSnackBar({
-                        message: `
+        // Validation du captcha avant tout puis appel du nextStep
+        this.captchaCheckerService.validateCaptchaAndDoNextStep(this.enableCaptchaOnPage, this.rudiCaptcha,
+            this.accountService.createAccount(this.signupForm))
+            .subscribe(
+                () => {
+                    this.loading = false;
+                    this.routeHistoryService.goBackOrElseGoAccount();
+                    this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
+                        this.snackBarService.openSnackBar({
+                            message: `
                         ${this.translateService.instant('snackbarTemplate.successIncription')}
                         <a href="${rudidatarennesContactLink}">
                             ${this.translateService.instant('snackbarTemplate.successIncriptionLinkText')}
                         </a>
                     `,
-                        keepBeforeSecondRouteChange: true
+                            keepBeforeSecondRouteChange: true
+                        });
                     });
+                },
+                // Si erreur lors de la création du compte ou de l'authent auto
+                (error: Error) => {
+                    this.loading = false;
+                    console.error(error);
+                    if (error instanceof ErrorWithCause && error.code === CAPTCHA_NOT_VALID_CODE) {
+                        this.errorCaptchaInput = true;
+                        return;
+                    }
+                    this.errorString = error.message;
                 });
-
-            },
-            // Si erreur lors de la création du compte ou de l'authent auto
-            (errorString: string) => {
-                this.loading = false;
-                this.errorString = errorString;
-            });
     }
 }

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {map, switchMap} from 'rxjs/operators';
-import {ProjectDependenciesService} from '../../../core/services/project-dependencies.service';
+import {ProjectDependenciesService} from '../../../core/services/asset/project/project-dependencies.service';
 import {OwnerType, Project} from '../../../projekt/projekt-model';
 import {ActivatedRoute} from '@angular/router';
 import {ApiKeys} from '../../../api-konsult';
@@ -69,15 +69,7 @@ export class ProjectApiTabComponent implements OnInit {
         this.keys = null;
         this.loading = true;
         this.passwordError = false;
-        this.utilisateurService.isPasswordCorrectForConnectedUser(this.password).pipe(
-            switchMap((isPasswordCorrect: boolean) => {
-                if (isPasswordCorrect) {
-                    return this.apiAccessService.getConsumerKeys(this.password, this.project.owner_type, this.project.owner_uuid);
-                }
-                this.passwordError = true;
-                return throwError('Mot de passe incorrect pour consulter les clés WSO2');
-            })
-        ).subscribe({
+        this.apiAccessService.getConsumerKeys(this.password, this.project.owner_type, this.project.owner_uuid).subscribe({
                 next: (keys: ApiKeys) => {
                     this.loading = false;
                     this.keys = keys;

@@ -178,6 +178,21 @@
 						}
 					}
 				]
+			},
+			"OrganizationsReparationReport": {
+				"type": "object",
+				"properties": {
+					"passwordUsed": {
+						"type": "string"
+					},
+					"organizationsRepaired": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				}
 			}
 		}
 	}

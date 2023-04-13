@@ -6,15 +6,15 @@ import {AclService, User} from '../../../acl/acl-api';
 import {ApiKeys, ApiKeysType, KonsultService} from '../../../api-konsult';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrganizationService} from '../../../strukture/api-strukture';
-import {Metadata} from '../../../api-kaccess';
 import {ErrorWithCause} from '../../../shared/models/error-with-cause';
-import {LinkedDatasetMetadatas} from '../project-dependencies.service';
+import {LinkedDatasetMetadatas} from '../asset/project/project-dependencies.service';
 import {TranslateService} from '@ngx-translate/core';
 import {SubscriptionRequestStatus} from './subscription-request-status.enum';
 import {SubscriptionRequestReport} from './subscription-request-report';
 import {SubscriptionRequestResult} from './subscription-request-result';
 import {LinkWithSubscribability} from './link-with-subscribability';
 import {Credentials} from './credentials';
+import {SubscriptionData} from './subscription-data';
 
 /**
  * Nombre maximal de souscriptions qu'on peut appeler en parallèle
@@ -103,47 +103,22 @@ export abstract class AbstractApiAccessService {
     }
 
     /**
-     * @param metadatasToSubscribe les JDDs auxquels on veut souscrire
-     * @param password mot de passe de l'utilisateur (ou de l'organisation si fait l'action pour une organisation)
-     * @param ownerType utile pour savoir si celui qui fait l'action le fait en son propre compte ou au nom de son organisation
-     * @param ownerUuid uuid du porteur du projet (peut correspondre à un user classique ou une organisation)
-     * @private
-     */
-    public checkPasswordAndDoSubscriptions(metadatasToSubscribe: Metadata[], password: string, ownerType: OwnerType, ownerUuid: string): Observable<SubscriptionRequestReport> {
-        return this.userService.isPasswordCorrectForConnectedUser(password).pipe(
-            switchMap((isPasswordCorrect: boolean) => {
-                if (isPasswordCorrect) {
-                    return this.doSubscriptionProcessToDatasets(password, metadatasToSubscribe, ownerType, ownerUuid).pipe(
-                        catchError((error: ErrorWithCause) => {
-                            return throwError(error);
-                        })
-                    );
-                }
-                return throwError(new ErrorWithCause(this.translateService.instant('personalSpace.projectApi.errorPassword')));
-            })
-        );
-    }
-
-    /**
      * Réalise la souscription aux média des JDDs fournis
      * @param password le mot de passe utilisateur OU organisation
-     * @param metadatas les JDDs choisis pour souscrire
+     * @param subscriptionDatas les éléments pour réaliser la souscription
      * @param ownerType utile pour savoir si celui qui fait l'action le fait en son propre compte ou au nom de son organisation
      * @param ownerUuid uuid du porteur du projet (peut correspondre à un user classique ou une organisation)
      */
-    public doSubscriptionProcessToDatasets(password: string, metadatas: Metadata[],
+    public doSubscriptionProcessToDatasets(password: string, subscriptionDatas: SubscriptionData[],
                                            ownerType: OwnerType = null, ownerUuid: string = null): Observable<SubscriptionRequestReport> {
 
         return this.enableApiForSubscribtion(password, ownerType, ownerUuid).pipe(
-            catchError((error: Error) => {
-                throw new ErrorWithCause('Une erreur a eu lieu lors de l\'activation des accès aux APIs', error);
-            }),
             switchMap(() => {
-                return from(metadatas).pipe(
-                    mergeMap((metadata: Metadata) => {
-                        return this.subscribeToDataset(metadata).pipe(
+                return from(subscriptionDatas).pipe(
+                    mergeMap((subscriptionData: SubscriptionData) => {
+                        return this.doSubscribeToDataset(subscriptionData).pipe(
                             catchError((subscribeError: Error) => {
-                                return of(new SubscriptionRequestResult(metadata, SubscriptionRequestStatus.FAILURE, subscribeError));
+                                return of(new SubscriptionRequestResult(subscriptionData.metadata, SubscriptionRequestStatus.FAILURE, subscribeError));
                             })
                         );
                     }, MAX_CONCURRENT_SUBSCRIPTION),
@@ -164,27 +139,27 @@ export abstract class AbstractApiAccessService {
 
     /**
      * Effectue une souscription aux médias d'un jeu de données
-     * @param metadata le JDD à souscrire
+     * @param subscriptionData les données nécessaires pour réaliser la souscription
      */
-    public subscribeToDataset(metadata: Metadata): Observable<SubscriptionRequestResult> {
+    public doSubscribeToDataset(subscriptionData: SubscriptionData): Observable<SubscriptionRequestResult> {
 
-        return this.konsultService.hasSubscribeToDataset(metadata.global_id).pipe(
+        return this.hasSubscribedToDataset(subscriptionData).pipe(
             catchError((hasSubscribeError: HttpErrorResponse) => {
                 throw new ErrorWithCause('Erreur lors de la vérification de la souscription au JDD', hasSubscribeError);
             }),
             switchMap((hasSubscribed: boolean) => {
                 if (!hasSubscribed) {
-                    return this.konsultService.subscribeToDataset(metadata.global_id).pipe(
+                    return this.subscribeToDataset(subscriptionData).pipe(
                         // Si erreur HTTP pendant la souscription stop chaînage
                         catchError((subscribeError: HttpErrorResponse) => {
                             throw new ErrorWithCause('Erreur lors de la souscription au JDD', subscribeError);
                         }),
 
-                        mapTo(new SubscriptionRequestResult(metadata, SubscriptionRequestStatus.SUCCESS))
+                        mapTo(new SubscriptionRequestResult(subscriptionData.metadata, SubscriptionRequestStatus.SUCCESS))
                     );
                 }
 
-                return of(new SubscriptionRequestResult(metadata, SubscriptionRequestStatus.IGNORED));
+                return of(new SubscriptionRequestResult(subscriptionData.metadata, SubscriptionRequestStatus.IGNORED));
             })
         );
     }
@@ -197,7 +172,7 @@ export abstract class AbstractApiAccessService {
     public filterSubscribableMetadatas(linkAndMetadatas: LinkedDatasetMetadatas[], project: Project): Observable<LinkedDatasetMetadatas[]> {
         return from(linkAndMetadatas).pipe(
             mergeMap((linkAndMetadata: LinkedDatasetMetadatas) => {
-                return this.projektService.checkOwnerHasAccessToDataset(project.owner_uuid, linkAndMetadata.dataset.global_id).pipe(
+                return this.projektService.hasAccessToDataset(project.owner_uuid, linkAndMetadata.dataset.global_id).pipe(
                     map((hasAccess: boolean) => new LinkWithSubscribability(linkAndMetadata, hasAccess))
                 );
             }),
@@ -224,20 +199,14 @@ export abstract class AbstractApiAccessService {
                 // 1) Check si on a les accès aux APIs pour ce contexte
                 credentials = credentialsRetrieved;
                 return this.hasEnabledApi(credentials).pipe(
-                    catchError((httpError: Error) => {
-                        console.error(httpError);
-                        throw Error('Erreur lors de la vérification des accès API pour ce projet');
-                    })
+                    catchError((error: HttpErrorResponse) => this.handleApiAccessError(error))
                 );
             }),
             switchMap((hasAccess: boolean) => {
                 // 2) si on a pas les accès on les créé
                 if (!hasAccess) {
                     return this.enableApi(credentials).pipe(
-                        catchError((httpError: HttpErrorResponse) => {
-                            console.error(httpError);
-                            throw Error('Erreur lors de la création des accès API pour ce projet');
-                        }),
+                        catchError((error: HttpErrorResponse) => this.handleApiAccessError(error)),
                         mapTo(credentials)
                     );
                 }
@@ -247,9 +216,29 @@ export abstract class AbstractApiAccessService {
         );
     }
 
+    /**
+     * Lorsque les appels vers API-ACCESS renvoient 403, ons ait que c'est une erreur de login/mot de passe
+     * @param httpError l'erreur HTTP reçue
+     * @private
+     */
+    private handleApiAccessError(httpError: HttpErrorResponse): Observable<never> {
+        console.error(httpError);
+
+        if (httpError.status === 403) {
+            const errorMessage = this.translateService.instant('personalSpace.apiAccess.errorPassword');
+            return throwError(new ErrorWithCause(errorMessage, httpError));
+        }
+
+        throw Error('Erreur lors de la vérification des accès API pour l\'utilisateur connecté');
+    }
+
     abstract hasEnabledApi(credentials: Credentials): Observable<boolean>;
 
     abstract enableApi(credentials: Credentials): Observable<void>;
+
+    abstract hasSubscribedToDataset(subscriptionData: SubscriptionData): Observable<boolean>;
+
+    abstract subscribeToDataset(subscriptionData: SubscriptionData): Observable<unknown>;
 
     private getKeys(apiKeys: ApiKeysType, credentials: Credentials): Observable<ApiKeys> {
         return this.konsultService.getKeys(apiKeys, credentials);

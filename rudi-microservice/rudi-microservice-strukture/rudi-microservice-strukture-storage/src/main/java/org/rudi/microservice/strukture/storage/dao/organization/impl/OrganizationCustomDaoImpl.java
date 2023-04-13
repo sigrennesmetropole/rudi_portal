@@ -1,5 +1,13 @@
 package org.rudi.microservice.strukture.storage.dao.organization.impl;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.common.storage.dao.PredicateListBuilder;
 import org.rudi.microservice.strukture.core.bean.OrganizationSearchCriteria;
@@ -10,12 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.List;
 
 @Repository
 public class OrganizationCustomDaoImpl extends AbstractCustomDaoImpl<OrganizationEntity, OrganizationSearchCriteria> implements OrganizationCustomDao {
@@ -31,7 +33,7 @@ public class OrganizationCustomDaoImpl extends AbstractCustomDaoImpl<Organizatio
 	}
 
 	@Override
-	protected void addPredicates(OrganizationSearchCriteria searchCriteria, CriteriaBuilder builder, Root<OrganizationEntity> root, List<Predicate> predicates) {
+	protected void addPredicates(OrganizationSearchCriteria searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<OrganizationEntity> root, List<Predicate> predicates) {
 		predicateStringCriteria(searchCriteria.getUuid(), "uuid", predicates, builder, root);
 		predicateStringCriteria(searchCriteria.getName(), "name", predicates, builder, root);
 	}

@@ -3,8 +3,10 @@ package org.rudi.microservice.kalim.facade.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.rudi.microservice.kalim.core.bean.OrganizationsReparationReport;
 import org.rudi.microservice.kalim.facade.controller.api.AdminApi;
 import org.rudi.microservice.kalim.service.admin.AdminService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,12 @@ public class AdminController implements AdminApi {
 	public ResponseEntity<Void> repairResources() throws Exception {
 		adminService.repairResources();
 		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
+	public ResponseEntity<OrganizationsReparationReport> repairOrganizations() throws Exception {
+		return ResponseEntity.ok(adminService.repairOrganizations());
 	}
 
 	@Override

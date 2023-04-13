@@ -80,6 +80,111 @@
 				}
 			}
 		},
+		"/admin/recrypt": {
+			"post": {
+				"tags": [
+					"admin"
+				],
+				"summary": "Chiffre ou rechiffre les données",
+				"description": "Parcourt les SelfdataInformationRequest pour collecter les matching data, chiffrer les données non encore chiffrées (migration) ou rechiffrer des données chiffrer avec la nouvelle clé.",
+				"operationId": "recryptSelfdataInformationRequest",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "previous-alias-key",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"400": {
+						"description": "Bad Request Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "Not Acceptable",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"408": {
+						"description": "Request Timeout",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Too Many Requests",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "Service Unavailable",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/information-requests/draft-form": {
 			"get": {
 				"tags": [
@@ -868,6 +973,16 @@
 							"application/json": {
 								"schema": {
 									"type": "boolean"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Erreur lorsque le login ou mot de passe est invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
 								}
 							}
 						}

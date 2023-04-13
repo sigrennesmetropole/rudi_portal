@@ -1,0 +1,1354 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Konsent Rudi",
+		"version": "0.0.1",
+		"title": "rudi-konsent-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Konsent API",
+			"variables": {
+				"basePath": {
+					"default": "konsent/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "consent",
+			"description": "Services consent"
+		},
+		{
+			"name": "treatment",
+			"description": "Services Treatment"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/treatments": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Création d'un traitement",
+				"description": "Création d'une instance de traitement",
+				"operationId": "createTreatment",
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/Treatment"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Treatment"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "MAJ d'un traitement",
+				"description": "Permet de mettre à jour la version courante d'un traitement",
+				"operationId": "updateTreatment",
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/Treatment"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Treatment"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"summary": "Recherche de traitement",
+				"description": "Recherche des traitements créés par le user connecté ou par ses organisations",
+				"operationId": "searchTreatments",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "purposes",
+						"description": "Liste d'uuid d'objectif de traitement",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "treatmentStatus",
+						"description": "Liste d'état de traitement. Permet de filtrer les traitements dont les versions courantes sont dans les états voulus",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/TreatmentStatus"
+							}
+						}
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/PagedTreatmentList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/treatments/{uuid}/publish": {
+			"put": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Publier un traitement",
+				"description": "Permet de publier en traitement en faisant passer sa version courante de DRAFT à VALIDATED",
+				"operationId": "publishTreatment",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "uuid du traitement",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Treatment"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/treatments/{uuid}": {
+			"get": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Retourne un traitement",
+				"description": "Retourne un traitement avec la version la plus récente",
+				"operationId": "getTreatment",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "uuid du traitement",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "validated",
+						"description": "Version la plus récente validée si true",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Treatment"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Supprime un traitement",
+				"description": "Supprime un traitement si celui-ci n'a aucune version valide",
+				"operationId": "deleteTreatment",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "uuid du traitement à supprimer",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "OK"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/treatments/{uuid}/versions": {
+			"get": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Retourne des versions d'un traitement",
+				"description": "Retourne une page des versions d'un traitement",
+				"operationId": "searchTreatmentVersions",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"description": "uuid du traitement",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/PagedTreatmentVersionList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/treatments/{treatmentUuid}/versions/{versionUuid}": {
+			"delete": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Supprime une version d'un traitement",
+				"description": "Supprime une version d'un traitement. Fonctionne que si la dite version est en l'état DRAFT",
+				"operationId": "deleteTreatmentVersion",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "treatmentUuid",
+						"description": "uuid du traitement",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "versionUuid",
+						"description": "uuid de la version du traitement",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "OK"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/consents": {
+			"post": {
+				"tags": [
+					"consent"
+				],
+				"summary": "Soumission d'un consentement",
+				"description": "Soumission d'un consentement utilisateur pour un traitement voulu par un porteur de projet",
+				"operationId": "createConsent",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Consent"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"summary": "Retourne la liste des consentements pour un porteur de projet.",
+				"description": "Retourne la liste des consentements pour un porteur de projet. Il s'agit du porteur de projet connecté",
+				"operationId": "searchConsents",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcceptDateMin"
+					},
+					{
+						"$ref": "#/components/parameters/AcceptDateMax"
+					},
+					{
+						"$ref": "#/components/parameters/ExpirationDateMin"
+					},
+					{
+						"$ref": "#/components/parameters/ExpirationDateMax"
+					},
+					{
+						"$ref": "#/components/parameters/OwnerUuids"
+					},
+					{
+						"$ref": "#/components/parameters/TreatmentUuids"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Liste paginée de consentements",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/PagedConsentList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/my-consents": {
+			"get": {
+				"tags": [
+					"consent"
+				],
+				"summary": "Retourne ma liste de consentements.",
+				"description": "Retourne la liste des consentements donnés par un utilisateur. Il s'agit de l'utilisateur connecté",
+				"operationId": "searchMyConsents",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcceptDateMin"
+					},
+					{
+						"$ref": "#/components/parameters/AcceptDateMax"
+					},
+					{
+						"$ref": "#/components/parameters/ExpirationDateMin"
+					},
+					{
+						"$ref": "#/components/parameters/ExpirationDateMax"
+					},
+					{
+						"$ref": "#/components/parameters/OwnerUuids"
+					},
+					{
+						"$ref": "#/components/parameters/TreatmentUuids"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Liste paginée des consentements de l'utilisateur connecté",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/PagedConsentList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/my-treatments-consents": {
+			"get": {
+				"summary": "Retourne la liste des consentements pour mes traitements en tant que porteur de projet",
+				"description": "Retourne la liste des consentements pour les traitements d'un porteur de projet. Il s'agit du porteur de projet connecté",
+				"operationId": "searchMyTreatmentsConsents",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcceptDateMin"
+					},
+					{
+						"$ref": "#/components/parameters/AcceptDateMax"
+					},
+					{
+						"$ref": "#/components/parameters/ExpirationDateMin"
+					},
+					{
+						"$ref": "#/components/parameters/ExpirationDateMax"
+					},
+					{
+						"$ref": "#/components/parameters/OwnerUuids"
+					},
+					{
+						"$ref": "#/components/parameters/TreatmentUuids"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Liste paginée de consentements",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/PagedConsentList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/typology-treatment": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Crée une typology de traitement",
+				"description": "Crée une typology de traitement",
+				"operationId": "createTypologyTreatement",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/TypologyTreatment"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Une typologie de traitement est créée avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/TypologyTreatment"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/retention": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Crée une retention",
+				"description": "Crée une retention",
+				"operationId": "createRetention",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/Retention"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Une retention est créée avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Retention"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/purpose": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Crée un purpose",
+				"description": "Crée un purpose à partir de son dto",
+				"operationId": "createPurpose",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/Purpose"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Un purpose est créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/Purpose"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/security-measure": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Crée une mesure de sécurité",
+				"description": "Crée une mesure de sécurité",
+				"operationId": "createSecurityMeasure",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/SecurityMeasure"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Crée une mesure de sécurité",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/SecurityMeasure"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/data-manager": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Crée un manager des données",
+				"description": "Crée un manager des données",
+				"operationId": "createDataManager",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/DataManager"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Crée un manager des données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/DataManager"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/data-recipient": {
+			"post": {
+				"tags": [
+					"treatment"
+				],
+				"summary": "Crée un data recipient",
+				"description": "Crée un data recipient",
+				"operationId": "createDataRecipient",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-konsent-model.json#/components/schemas/DataRecipient"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Crée un manager des données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-konsent-model.json#/components/schemas/DataRecipient"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"LimitParam": {
+				"in": "query",
+				"name": "limit",
+				"description": "Le nombre de résultats à retourner par page",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OffsetParam": {
+				"in": "query",
+				"name": "offset",
+				"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OrderParam": {
+				"in": "query",
+				"name": "order",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"AcceptDateMin": {
+				"in": "query",
+				"name": "accept-date-min",
+				"required": false,
+				"schema": {
+					"$ref": "rudi-konsent-model.json#/components/schemas/RudiDate"
+				}
+			},
+			"AcceptDateMax": {
+				"in": "query",
+				"name": "accept-date-max",
+				"required": false,
+				"schema": {
+					"$ref": "rudi-konsent-model.json#/components/schemas/RudiDate"
+				}
+			},
+			"ExpirationDateMin": {
+				"in": "query",
+				"name": "expiration-date-min",
+				"required": false,
+				"schema": {
+					"$ref": "rudi-konsent-model.json#/components/schemas/RudiDate"
+				}
+			},
+			"ExpirationDateMax": {
+				"in": "query",
+				"name": "expiration-date-max",
+				"required": false,
+				"schema": {
+					"$ref": "rudi-konsent-model.json#/components/schemas/RudiDate"
+				}
+			},
+			"OwnerUuids": {
+				"in": "query",
+				"name": "owners",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
+			"TreatmentUuids": {
+				"in": "query",
+				"name": "treatments",
+				"required": false,
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			}
+		},
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error"
+			},
+			"BadRequestError": {
+				"description": "Bad Request Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Unauthorized": {
+				"description": "Unauthorized",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Forbidden": {
+				"description": "Forbidden",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotAcceptable": {
+				"description": "Not Acceptable",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"RequestTimeout": {
+				"description": "Request Timeout",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"TooManyRequests": {
+				"description": "Too Many Requests",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"ServiceUnavailable": {
+				"description": "Service Unavailable"
+			}
+		},
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
+}

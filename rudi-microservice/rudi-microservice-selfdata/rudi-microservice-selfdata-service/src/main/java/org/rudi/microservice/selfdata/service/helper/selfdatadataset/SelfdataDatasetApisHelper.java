@@ -1,9 +1,6 @@
 package org.rudi.microservice.selfdata.service.helper.selfdatadataset;
 
-
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -111,7 +108,8 @@ public class SelfdataDatasetApisHelper {
 
 		// Contrôle de l'authent
 		if (user == null || StringUtils.isBlank(user.getLogin())) {
-			throw new AppServiceUnauthorizedException("Impossible de récupérer les données GDATA sans être authentifié");
+			throw new AppServiceUnauthorizedException(
+					"Impossible de récupérer les données GDATA sans être authentifié");
 		}
 
 		// Vérification de l'enregistrement dans WSO2
@@ -140,8 +138,8 @@ public class SelfdataDatasetApisHelper {
 		// Recherche du média GDATA
 		Media gdataMedia = getGdataMedia(metadata);
 		if (gdataMedia == null) {
-			throw new AppServiceException("Malgré les contrôles, pas de média GDATA sur le JDD d'uuid : " +
-					metadata.getGlobalId());
+			throw new AppServiceException(
+					"Malgré les contrôles, pas de média GDATA sur le JDD d'uuid : " + metadata.getGlobalId());
 		}
 
 		// orchestration des appels vers WSO2
@@ -179,8 +177,8 @@ public class SelfdataDatasetApisHelper {
 		// Recherche du média TPBC
 		Media tpbcMedia = getTpbcMedia(metadata);
 		if (tpbcMedia == null) {
-			throw new AppServiceException("Malgré les contrôles, pas de média TPBC sur le JDD d'uuid : " +
-					metadata.getGlobalId());
+			throw new AppServiceException(
+					"Malgré les contrôles, pas de média TPBC sur le JDD d'uuid : " + metadata.getGlobalId());
 		}
 
 		// Gestion des paramètres de date en filtrage
@@ -219,14 +217,14 @@ public class SelfdataDatasetApisHelper {
 		}
 
 		// Demande à WSO2 des infos sur l'API pour l'appeler
-		APISearchCriteria criteria = new APISearchCriteria()
-				.globalId(metadata.getGlobalId()).mediaUuid(media.getMediaId());
+		APISearchCriteria criteria = new APISearchCriteria().globalId(metadata.getGlobalId())
+				.mediaUuid(media.getMediaId());
 		APIList apiList;
 		try {
 			apiList = apIsService.searchAPI(criteria);
 		} catch (APIsOperationException e) {
-			throw new AppServiceException("Erreur lors de la recherche de l'API correspondant au média d'uuid "
-					+ media.getMediaId(), e);
+			throw new AppServiceException(
+					"Erreur lors de la recherche de l'API correspondant au média d'uuid " + media.getMediaId(), e);
 		}
 
 		// Check : a-t-on une API ?
@@ -240,8 +238,8 @@ public class SelfdataDatasetApisHelper {
 		try {
 			response = applicationOperationAPI.getAPIResponse(apiInfo.getContext(), apiInfo.getVersion(),
 					application.getApplicationId(), connectedUser.getLogin(), queryParams);
-		} catch (ApplicationOperationException | ApplicationKeysNotFoundException
-				| APIEndpointException | ApplicationTokenGenerationException e) {
+		} catch (ApplicationOperationException | ApplicationKeysNotFoundException | APIEndpointException
+				| ApplicationTokenGenerationException e) {
 			throw new TechnicalWso2CallException(e);
 		}
 

@@ -4,7 +4,7 @@ Doc de Dataverse : <https://guides.dataverse.org/en/5.1/admin/metadatacustomizat
 
 1. On génére le fichier [rudi.tsv](rudi.tsv) avec maven
 2. On uploade ensuite le fichier sur Dataverse.
-3. On propage les modifications pour Ansible
+3. On propage les modifications pour Ansible/Karbon
 
 # Génération du fichier rudi.tsv par maven
 
@@ -40,12 +40,28 @@ http://dv.open-dev.com:8095/api/admin/datasetfield/rudi_media_type
 
 On peut aussi vérifier que le catalogue et le détail s'affichent toujours bien.
 
-# Propagation des modifications pour Ansible
+# Propagation des modifications pour Ansible/Karbon
 
-L'ajout de champs modifie le fichier schema_dv_mdb_fields.xml de l'instance Dataverse.
-À chaque déploiement Ansible, ce fichier est écrasé.
-Il faut donc récupérer ce fichier depuis la machine et mettre à jour celui utilisé par Ansible :
-[schema_dv_mdb_fields.xml](../../../../../../ansible/roles/dataverse/files/solr-data/collection1/conf/schema_dv_mdb_fields.xml)
+L'ajout de champs modifie les fichiers suivants de l'instance Dataverse :
+
+- schema.xml
+- schema_dv_mdb_fields.xml
+- schema_dv_mdb_copies.xml
+
+À chaque déploiement Ansible/Karbon, ces fichiers sont écrasés.
+Il faut donc récupérer ces fichiers depuis la machine (ou la VM ou le pod) ciblée et écraser les fichiers correspondants dans les dossiers suivants :
+
+- Pour Ansible : [ce dossier](../../../../../../ansible/roles/dataverse/files/solr-data/collection1/conf)
+- Pour Karbon : [ce dossier](../../../../../../ci/karbon/apps/dataverse-solr/conf)
+
+**Attention cependant** : certaines modifications doivent être conservées car Dataverse ne les prend pas en compte dans le fichier tsv.
+Notamment :
+
+- schema.xml : n'écraser ce fichier que si les modifications apportées sont réellement voulues
+- schema_dv_mdb_fields.xml : ne pas écraser le type des champs qui ont le type :
+  - `text_fr`
+  - `rudi_id`
+- schema_dv_mdb_copies.xml : 
 
 # Instances Dataverse
 

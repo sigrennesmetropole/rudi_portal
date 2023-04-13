@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from './projekt-metier.service';
+import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from './asset/project/projekt-metier.service';
 import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PagedProjectList, Project, ProjectSearchCriteria} from '../../projekt/projekt-model';
-import {ProjectDependenciesFetchers, ProjectWithDependencies} from './project-dependencies.service';
+import {ProjectDependenciesFetchers, ProjectWithDependencies} from './asset/project/project-dependencies.service';
 import {mapEach} from '../../shared/utils/ObservableUtils';
 import {injectDependenciesEach} from '../../shared/utils/dependencies-utils';
 

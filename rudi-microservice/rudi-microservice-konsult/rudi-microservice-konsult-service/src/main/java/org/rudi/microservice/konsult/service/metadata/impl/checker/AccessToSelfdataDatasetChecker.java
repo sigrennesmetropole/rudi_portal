@@ -1,5 +1,6 @@
 package org.rudi.microservice.konsult.service.metadata.impl.checker;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.rudi.common.service.exception.AppServiceForbiddenException;
@@ -26,21 +27,27 @@ class AccessToSelfdataDatasetChecker extends AbstractAccessToDatasetChecker {
 	 * Doit être utilisé si notre métadata est un selfdata (Règle fonctionnelle: un JDD ne peut pas être selfdata et restreint à la fois)
 	 *
 	 * @param metadata JDD dont on teste on veut savoir si on doit utiliser le checker ou non
-	 * @return
+	 * @return true si le checker doit être utilisé sur le JDD
 	 */
 	@Override
-	public boolean hasToBeUse(Metadata metadata) {
+	public boolean accept(Metadata metadata) {
 		return metadataDetailsHelper.isSelfdata(metadata);
 	}
 
 	@Override
-	public void checkAuthenticatedUserHasAccessToDataset(UUID datasetUuid) throws AppServiceForbiddenException, AppServiceUnauthorizedException {
-		final var user = this.getAuthenticatedUser(datasetUuid);
+	public void checkAuthenticatedUserHasAccessToDataset(UUID datasetUuid, Optional<UUID> requestUuid) throws AppServiceForbiddenException, AppServiceUnauthorizedException {
+		final var user = this.getAuthenticatedUser();
 		final var userHasAccessToDataset = selfdataHelper.hasMatchingToDataset(user.getUuid(), datasetUuid);
 		if (!userHasAccessToDataset) {
 			throw new AppServiceForbiddenException(
 					String.format("Cannot subscribe because user has not been granted access to selfdata dataset %s",
 							datasetUuid));
 		}
+	}
+
+
+	@Override
+	public UUID getOwnerUuidToUse(UUID requestUuid) throws AppServiceForbiddenException, AppServiceUnauthorizedException {
+		return this.getAuthenticatedUser().getUuid();
 	}
 }

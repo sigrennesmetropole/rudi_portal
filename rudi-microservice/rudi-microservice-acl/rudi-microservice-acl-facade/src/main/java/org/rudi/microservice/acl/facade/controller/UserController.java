@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
@@ -74,7 +75,7 @@ public class UserController implements UsersApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE + ")")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE + ", " + MODULE_KALIM + ")")
 	public ResponseEntity<User> createUser(@Valid User user) throws Exception {
 		return ResponseEntity.ok(userService.createUser(user));
 	}

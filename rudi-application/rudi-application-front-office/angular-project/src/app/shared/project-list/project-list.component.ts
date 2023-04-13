@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
 import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
 import {ProjectListService} from '../../core/services/project-list.service';
-import {DEFAULT_PROJECT_ORDER, Order} from '../../core/services/projekt-metier.service';
+import {DEFAULT_PROJECT_ORDER, Order} from '../../core/services/asset/project/projekt-metier.service';
 
 const FIRST_PAGE = 1;
 

@@ -6,7 +6,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {UserService} from '../../../core/services/user.service';
 import {LinkedDataset, Project} from '../../../projekt/projekt-model';
 import {map} from 'rxjs/operators';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';
 import {Metadata} from '../../../api-kaccess';
 import {MatSelectChange} from '@angular/material/select';

@@ -2,11 +2,12 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SelfdataAttachmentService} from '../../core/services/selfdata-attachment.service';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AttachmentPopinData} from './attachment-popin-data';
 import {Level} from '../notification-template/notification-template.component';
 import {SnackBarService} from '../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
+import {CloseEvent} from '../../data-set/models/dialog-closed-data';
 
 @Component({
     selector: 'app-workflow-field-attachment-popin',
@@ -18,7 +19,8 @@ export class WorkflowFieldAttachmentPopinComponent implements OnInit {
     consent: boolean;
     attachmentLoader = false;
 
-    constructor(matIconRegistry: MatIconRegistry,
+    constructor(public dialogRef: MatDialogRef<WorkflowFieldAttachmentPopinComponent>,
+                matIconRegistry: MatIconRegistry,
                 domSanitizer: DomSanitizer,
                 private readonly selfdataAttachmentService: SelfdataAttachmentService,
                 private readonly snackBarService: SnackBarService,
@@ -42,10 +44,11 @@ export class WorkflowFieldAttachmentPopinComponent implements OnInit {
                     next: (content: Blob) => {
                         const url = window.URL.createObjectURL(content);
                         window.open(url, '_blank').focus();
-                        this.attachmentLoader = true;
+                        this.attachmentLoader = false;
                     },
                     complete: () => {
                         this.attachmentLoader = false;
+                        this.handleClose();
                     },
                     error: err => {
                         console.error(err);
@@ -57,5 +60,15 @@ export class WorkflowFieldAttachmentPopinComponent implements OnInit {
                     }
                 }
             );
+    }
+
+    /**
+     * Fermeture de la popin
+     */
+    handleClose(): void {
+        this.dialogRef.close({
+            closeEvent: CloseEvent.VALIDATION,
+            data: null
+        });
     }
 }

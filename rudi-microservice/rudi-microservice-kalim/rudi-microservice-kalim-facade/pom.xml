@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-kalim</artifactId>
-		<version>1.0</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-kalim-facade</artifactId>
@@ -203,6 +203,7 @@
 						<delimiter>@</delimiter>
 					</delimiters>
 					<useDefaultDelimiters>false</useDefaultDelimiters>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 

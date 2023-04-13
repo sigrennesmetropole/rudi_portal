@@ -405,7 +405,7 @@
 						"in": "query",
 						"name": "role-uuids",
 						"description": "UUIDS des roles",
-						"required": "false",
+						"required": false,
 						"schema": {
 							"type": "array",
 							"items": {
@@ -1483,6 +1483,127 @@
 					}
 				}
 			}
+		},
+		"/kaptcha": {
+			"get": {
+				"tags": [
+					"captcha"
+				],
+				"summary": "Retourne un nouveau captcha",
+				"description": "Retourne un nouveau captcha généré auprès de CaptchEtat",
+				"operationId": "generateCaptcha",
+				"parameters": [
+					{
+						"name": "get",
+						"in": "query",
+						"description": "Type de captcha voulu",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "c",
+						"in": "query",
+						"description": "Nom du captcha voulant être récupéré. Ce parametre est obligatoire lorsqu'on choisi les types d'objets du parametre type suivants (html, script-include, image, sound, p(refresh))",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "t",
+						"in": "query",
+						"description": "Identifiant captcha, c'est un parametre technique non utilisable par le developpeur. Il est renseigné dans les requêtes auto-générées.",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "cs",
+						"in": "query",
+						"description": "Code style du captcha, c'est un parametre technique non utilisable par le developpeur. Il est renseigné dans les requêtes auto-générées.",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "d",
+						"in": "query",
+						"description": "Si le paramètre existe, le navigateur peut créer une balise audio via javascript en tant qu'audio ; c'est un parametre technique non utilisable par le developpeur. Il est renseigné dans les requêtes auto-générées.",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Stream renvoyé par l'API",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"captcha"
+				],
+				"summary": "Valide un captcha",
+				"description": "Valide la saisie utilisateur d'un captcha auprès de CaptchEtat",
+				"operationId": "validateCaptcha",
+				"requestBody": {
+					"description": "DTO d'un captcha",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-acl-model.json#/components/schemas/CaptchaModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -1508,6 +1629,10 @@
 					"comment": {
 						"type": "string",
 						"description": "Description de la version de l'application"
+					},
+					"captchaEnabled": {
+						"type": "boolean",
+						"description": "Indique si le captcha doit-être activé côté front sur cet environnement"
 					}
 				}
 			}

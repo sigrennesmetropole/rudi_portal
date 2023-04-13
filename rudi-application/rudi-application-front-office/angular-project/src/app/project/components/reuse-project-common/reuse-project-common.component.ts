@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {Metadata} from '../../../api-kaccess';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {FiltersService} from '../../../core/services/filters.service';
 import {FormGroup} from '@angular/forms';
-import {ProjectSubmissionService} from '../../../core/services/project-submission.service';
+import {ProjectSubmissionService} from '../../../core/services/asset/project/project-submission.service';
 import {Project, ProjectType} from '../../../projekt/projekt-model';
 import {ProjectDatasetItem} from '../../model/project-dataset-item';
 import {DataRequestItem} from '../../model/data-request-item';

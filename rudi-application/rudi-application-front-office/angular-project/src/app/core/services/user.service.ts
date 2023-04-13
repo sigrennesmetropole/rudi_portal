@@ -83,26 +83,4 @@ export class UserService {
         }
         return result;
     }
-
-    /**
-     * Permet de savoir si le mot de passe de l'utilsiateur connecté fourni est bon
-     * @param password
-     */
-    isPasswordCorrectForConnectedUser(password: string): Observable<boolean> {
-
-        const loginForm = this.formBuilder.group({ login: [''], password: [''] });
-
-        return this.getConnectedUser().pipe(
-            switchMap((currentUser: User) => {
-                loginForm.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION).setValue(currentUser.login);
-                loginForm.get(AuthenticationService.FIELD_PASSWORD_AUTHENTICATION).setValue(password);
-                return this.authenticationService.authenticate(loginForm).pipe(mapTo(true));
-            }),
-            catchError(() => {
-                // l'erreur renvoyée par authenticate est le code HTTP donc on s'en fiche pour l'explication
-                console.error(new Error('Authentification échouée pendant la vérification du mot de passe de l\'utilisateur connecté'));
-                return of(false);
-            })
-        );
-    }
 }

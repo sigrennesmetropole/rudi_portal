@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {map} from 'rxjs/operators';
 import {injectDependencies} from '../../../shared/utils/dependencies-utils';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {
     LinkedDatasetTaskDependenciesService,
     LinkedDatasetTaskDependencyFetchers
@@ -28,7 +28,8 @@ export class ProjectOwnerDetailComponent implements OnInit {
     dependencies: ProjectOwnerDependencies;
     inconnu = ProjektMetierService.UNKOWN_USER_INFO_NAME;
     @Input()
-    isNewRequest:boolean;
+    isNewRequest: boolean;
+
     constructor(private readonly route: ActivatedRoute,
                 private readonly linkedDatasetTaskDependenciesService: LinkedDatasetTaskDependenciesService,
                 private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers,

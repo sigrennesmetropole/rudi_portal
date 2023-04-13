@@ -1,5 +1,7 @@
 package org.rudi.microservice.konsult.service.helper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -8,9 +10,9 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusState;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
@@ -19,12 +21,14 @@ import org.rudi.facet.apimaccess.exception.APINotFoundException;
 import org.rudi.facet.apimaccess.exception.APINotUniqueException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertiesException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertyException;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
+import org.rudi.facet.organization.bean.Organization;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
 import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,37 +47,34 @@ public class APIManagerHelper {
 	private final ApplicationService applicationService;
 	private final MetadataDetailsHelper metadataDetailsHelper;
 	private final String anonymousUsername;
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
-	private final UtilContextHelper utilContextHelper;
 	private final ACLHelper aclHelper;
+	private final OrganizationHelper organizationHelper;
+	private final ProjektHelper projektHelper;
 
 	public APIManagerHelper(
 			APIsService apIsService, ApplicationService applicationService,
 			MetadataDetailsHelper metadataDetailsHelper,
 			@Value("${apimanager.oauth2.client.anonymous.username}") String anonymousUsername,
-			CustomClientRegistrationRepository customClientRegistrationRepository,
-			UtilContextHelper utilContextHelper,
-			ACLHelper aclHelper
-	) {
+			ACLHelper aclHelper, OrganizationHelper organizationHelper, ProjektHelper projektHelper) {
 		this.apIsService = apIsService;
 		this.applicationService = applicationService;
 		this.metadataDetailsHelper = metadataDetailsHelper;
 		this.anonymousUsername = anonymousUsername;
-		this.customClientRegistrationRepository = customClientRegistrationRepository;
-		this.utilContextHelper = utilContextHelper;
 		this.aclHelper = aclHelper;
+		this.organizationHelper = organizationHelper;
+		this.projektHelper = projektHelper;
 	}
 
-	public boolean userHasSubscribeToEachMediaOfDataset(UUID globalId) throws ClientKeyNotFoundException, APIManagerException {
-		return doForEachMediaOfDataset(globalId, (apiInfo, username) -> null);
+	public boolean userHasSubscribeToEachMediaOfDataset(UUID globalId, UUID ownerUuid) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
+		return doForEachMediaOfDataset(globalId, ownerUuid, (apiInfo, username) -> null);
 	}
 
-	public void subscribeToEachMediaOfDataset(UUID globalId) throws ClientKeyNotFoundException, APIManagerException {
-		doForEachMediaOfDataset(globalId, (apiInfo, username) -> applicationService.subscribeAPIToDefaultUserApplication(apiInfo.getId(), username));
+	public void subscribeToEachMediaOfDataset(UUID globalId, UUID uuidToSubscribe) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
+		doForEachMediaOfDataset(globalId, uuidToSubscribe, (apiInfo, username) -> applicationService.subscribeAPIToDefaultUserApplication(apiInfo.getId(), username));
 	}
 
-	private boolean doForEachMediaOfDataset(UUID globalId, ForEachMediaFunction mediaFunction) throws ClientKeyNotFoundException, APIManagerException {
-		final String username = getAuthenticatedUsernameAndCheckRegistration();
+	private boolean doForEachMediaOfDataset(UUID globalId, UUID ownerUuid, ForEachMediaFunction mediaFunction) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
+		final String username = getUsernameToSubscribe(ownerUuid);
 
 		final var searchCriteria = new APISearchCriteria()
 				.globalId(globalId)
@@ -95,11 +96,12 @@ public class APIManagerHelper {
 	 *
 	 * @param globalId id du jdd
 	 * @param mediaId  id du media
+	 * @param uuid     uuid dont on veut verifier la souscription
 	 * @return true si le user a souscrit
 	 * @throws AppServiceException Erreur de récupération de l'api ou de la souscription
 	 */
-	public boolean userHasSubscribeToMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException {
-		final String username = getAuthenticatedUsernameAndCheckRegistration();
+	public boolean userHasSubscribeToMetadataMedia(UUID globalId, UUID mediaId, UUID uuid) throws AppServiceException {
+		final String username = getUsernameToSubscribe(uuid);
 
 		try {
 			val apiInfo = getApiInfo(globalId, mediaId);
@@ -110,22 +112,13 @@ public class APIManagerHelper {
 		}
 	}
 
-	private void checkRegistrationOf(String username) throws ClientKeyNotFoundException {
-		val clientKey = aclHelper.getClientKeyByLogin(username);
-		if (clientKey == null) {
-			throw new ClientKeyNotFoundException(username);
+	private String getUsernameToSubscribe(UUID uuidToUse) {
+		val user = aclHelper.getUserByUUID(uuidToUse);
+		if (user == null) {
+			return uuidToUse.toString();
+		} else {
+			return user.getLogin();
 		}
-		customClientRegistrationRepository.addClientRegistration(username,
-				new ClientAccessKey().setClientId(clientKey.getClientId()).setClientSecret(clientKey.getClientSecret()));
-	}
-
-	private String getAuthenticatedUsernameAndCheckRegistration() throws ClientKeyNotFoundException {
-		val authenticatedUser = utilContextHelper.getAuthenticatedUser();
-		final var username = authenticatedUser.getLogin();
-
-		checkRegistrationOf(username);
-
-		return username;
 	}
 
 	@Nonnull
@@ -159,15 +152,20 @@ public class APIManagerHelper {
 	 * @throws AppServiceException                en cas d'erreur avec WSO2
 	 */
 	public String getLoginAbleToDownloadMedia(Metadata metadata, Media media) throws AppServiceException {
-		final String authenticatedUserLogin = utilContextHelper.getAuthenticatedUser().getLogin();
 
-		if (userHasSubscribeToMetadataMedia(metadata.getGlobalId(), media.getMediaId())) {
-			return authenticatedUserLogin;
-		} else if (!metadataDetailsHelper.isRestricted(metadata)) {
-			log.warn("L'utilisateur {} n'a pas souscrit au jeu de données {}, on utilise donc le login {} pour télécharger le média {}", authenticatedUserLogin, metadata.getGlobalId(), anonymousUsername, media.getMediaId());
+		User ownerToDownload = findOwnerToDownload(metadata.getGlobalId(), media.getMediaId());
+		if (ownerToDownload != null) {
+			return ownerToDownload.getLogin();
+		}
+
+		if (!metadataDetailsHelper.isRestricted(metadata)) {
+			log.warn("L'utilisateur connecté n'a pas souscrit au jeu de données {}, " +
+					"on utilise donc le login {} pour télécharger le média {}", metadata.getGlobalId(),
+					anonymousUsername, media.getMediaId());
 			return anonymousUsername;
-		} else { // le JDD est restreint et l'utilisateur n'y a pas souscrit => il ne peut pas télécharger le média
-			throw new AccessDeniedMetadataMediaException(authenticatedUserLogin, media.getMediaId(), metadata.getGlobalId());
+		} else {
+			// le JDD est restreint et l'utilisateur connecté n'y a pas souscrit => il ne peut pas télécharger le média
+			throw new AccessDeniedMetadataMediaException(media.getMediaId(), metadata.getGlobalId());
 		}
 	}
 
@@ -197,6 +195,74 @@ public class APIManagerHelper {
 		 */
 		@Nullable
 		Object apply(APIInfo apiInfo, String username) throws APIManagerException;
+	}
+
+	public List<User> collectOrganizationsWithAccess(UUID userUuid, UUID globalId) throws AppServiceException {
+		List<User> ownersList = new ArrayList<>();
+		List<UUID> organizationUuids = organizationHelper.getMyOrganizationsUuids(userUuid);
+		for (UUID organizationUuid : organizationUuids) {
+			Organization organization = organizationHelper.getOrganization(organizationUuid);
+			if (organization == null) {
+				throw new AppServiceException
+						("Une organisation devrait exister mais n'est pas récupérable, UUID : " + organizationUuid);
+			}
+			User organizationUser = aclHelper.getUserByLogin(organization.getUuid().toString());
+			if (organizationUser == null) {
+				throw new AppServiceException("l'user correspondant à l'organisation "
+						+ organizationUuid + " n'existe pas");
+			}
+			if (projektHelper.hasAccessToDataset(organization.getUuid(), globalId)) {
+				ownersList.add(organizationUser);
+			}
+		}
+
+		return ownersList;
+	}
+
+	/**
+	 * Recherche le owner potentiel au nom duquel la souscription a été réalisée
+	 *
+	 * @param metadataId UUID du JDD dont on veut télécharger les médias
+	 * @return user or organisation à partir duquel on fait le téléchargement
+	 * @throws AppServiceException levée si problème WSO2
+	 */
+	public User findOwnerToDownload(UUID metadataId, UUID mediaId) throws AppServiceException {
+
+		val authenticatedUser = aclHelper.getAuthenticatedUser();
+		if (userHasSubscribed(authenticatedUser, metadataId, mediaId)) {
+			return authenticatedUser;
+		}
+
+		val potentialOwners = collectOrganizationsWithAccess(authenticatedUser.getUuid(), metadataId);
+		if (CollectionUtils.isNotEmpty(potentialOwners)) {
+			for (User potentialOwner : potentialOwners) {
+				if (userHasSubscribed(potentialOwner, metadataId, mediaId)) {
+					return potentialOwner;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Vérifie s'il existe une souscription pour l'user fourni auprès du média du JDD fourni
+	 * @param user le user testé
+	 * @param globalId le global ID du média
+	 * @param mediaId le media ID
+	 * @return si il y'a une souscription ou pas
+	 */
+	private boolean userHasSubscribed(User user, UUID globalId, UUID mediaId) {
+		boolean userHasSubscribed = false;
+
+		try {
+			userHasSubscribed = userHasSubscribeToMetadataMedia(globalId, mediaId, user.getUuid());
+		} catch (AppServiceException e) {
+			log.error("Erreur lors de la vérification de la souscription de l'utilisateur " + user.getLogin()
+					+ " au média " + mediaId + " du JDD " + globalId,  e);
+		}
+
+		return userHasSubscribed;
 	}
 
 }

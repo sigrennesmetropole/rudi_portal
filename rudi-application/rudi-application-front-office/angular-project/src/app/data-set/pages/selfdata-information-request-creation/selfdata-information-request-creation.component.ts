@@ -10,6 +10,9 @@ import {DataSize} from '../../../shared/models/data-size';
 import {WorkflowProperties} from '../../../shared/workflow-form/workflow-properties';
 import {SelfdataInformationRequestSubmissionService} from '../../../core/services/selfdata-information-request-submission.service';
 import {SelfdataAttachmentService} from '../../../core/services/selfdata-attachment.service';
+import {RudiCaptchaComponent} from '../../../shared/rudi-captcha/rudi-captcha.component';
+import {CAPTCHA_NOT_VALID_CODE, CaptchaCheckerService} from '../../../core/services/captcha-checker.service';
+import {ErrorWithCause} from '../../../shared/models/error-with-cause';
 
 const ERROR_DURATION = 10000;
 
@@ -29,6 +32,18 @@ export class SelfdataInformationRequestCreationComponent implements OnInit {
     workflowFormComponent: WorkflowFormComponent;
 
     /**
+     * Indique si on active le captcha sur la page ou non (false par défaut)
+     *
+     */
+    enableCaptchaOnPage: true;
+
+    /**
+     * Error on captcha input
+     */
+    errorCaptchaInput = false;
+
+    @ViewChild(RudiCaptchaComponent) rudiCaptcha: RudiCaptchaComponent;
+    /**
      * Taille maximale acceptée par le backend, pour l'upload de fichier.
      */
     fileMaxSize: DataSize;
@@ -40,10 +55,15 @@ export class SelfdataInformationRequestCreationComponent implements OnInit {
         private readonly router: Router,
         private readonly snackbar: SnackBarService,
         private readonly selfdataAttachmentService: SelfdataAttachmentService,
+        private readonly captchaCheckerService: CaptchaCheckerService,
     ) {
     }
 
     ngOnInit(): void {
+        if (this.activatedRoute.snapshot.data?.aclAppInfo) {
+            this.enableCaptchaOnPage = this.activatedRoute.snapshot.data.aclAppInfo.captchaEnabled;
+        }
+
         this.activatedRoute.params.pipe(
             tap(() => {
                 this.isLoading = true;
@@ -71,23 +91,33 @@ export class SelfdataInformationRequestCreationComponent implements OnInit {
             .subscribe(value => this.fileMaxSize = value);
     }
 
+    get isValid(): boolean {
+        return this.rudiCaptcha?.isFilled() || !this.enableCaptchaOnPage;
+    }
+
     handleClickSubmit(): void {
-        if (this.workflowFormComponent.submit()) {
-            this.submitLoading = true;
-            this.selfdataInformationRequestSubmissionService.submitSelfdataForm(this.form, this.metadata)
-                .subscribe({
-                    next: () => {
-                        this.submitLoading = false;
-                        this.router.navigate(['../selfdata-information-request-creation-success'], {relativeTo: this.activatedRoute});
-                    },
-                    error: err => {
-                        this.submitLoading = false;
-                        console.error(err);
+        if (!this.workflowFormComponent.submit()) {
+            return;
+        }
+        // Validation du captcha avant tout
+        this.captchaCheckerService.validateCaptchaAndDoNextStep(this.enableCaptchaOnPage, this.rudiCaptcha,
+            this.selfdataInformationRequestSubmissionService.submitSelfdataForm(this.form, this.metadata))
+            .subscribe({
+                next: () => {
+                    this.submitLoading = false;
+                    this.router.navigate(['../selfdata-information-request-creation-success'], {relativeTo: this.activatedRoute});
+                },
+                error: err => {
+                    this.submitLoading = false;
+                    console.error(err);
+                    if (err instanceof ErrorWithCause && err.code === CAPTCHA_NOT_VALID_CODE) {
+                        this.errorCaptchaInput = true;
+                    } else {
                         // Erreur de lancement de tous les process, informer l'utilisateur
                         this.snackbar.showError('metaData.selfdataInformationRequest.creation.errorToUser', ERROR_DURATION);
                     }
-                });
-        }
+                }
+            });
     }
 
     cancel(): void {

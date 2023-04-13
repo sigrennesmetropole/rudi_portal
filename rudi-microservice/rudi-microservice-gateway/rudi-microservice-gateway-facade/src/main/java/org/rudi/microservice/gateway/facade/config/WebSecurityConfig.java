@@ -3,6 +3,8 @@
  */
 package org.rudi.microservice.gateway.facade.config;
 
+import java.util.Arrays;
+
 import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +23,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.server.WebFilter;
 
-import java.util.Arrays;
-
 /**
  * @author FNI18300
  */
@@ -31,7 +31,7 @@ public class WebSecurityConfig {
 
 	private static final String[] SB_PERMIT_ALL_URL = {
 			// URLs que la gateway laisse passer et les traitements de sécurité sont gérés plus bas dans les µservices
-			"/authenticate", "/authenticate/**", "/refresh_token", "/oauth/**"};
+			"/authenticate", "/authenticate/**", "/refresh_token", "/oauth/**", "/acl/v1/kaptcha" };
 
 	@Value("${application.role.administrateur.code}")
 	private String administrateurRoleCode;

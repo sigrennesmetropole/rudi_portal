@@ -1,3 +1,9 @@
+@import "../../../styles/common-style";
+
 .account-container {
-  padding-top: 180px;
+    padding-top: 180px;
+}
+
+.main-container {
+    @include card-container-bgcolor;
 }

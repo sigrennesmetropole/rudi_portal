@@ -126,9 +126,9 @@ class IntegrationRequestServiceTest {
 		ReflectionTestUtils.setField(postHandler, "metadataValidators", Collections.emptyList());
 		ReflectionTestUtils.setField(putHandler, "metadataValidators", Collections.emptyList());
 
-		when(providerHelper.getProviderByNodeProviderUUID(Mockito.any())).thenReturn(provider);
+		when(providerHelper.requireProviderByNodeProviderUUID(Mockito.any())).thenReturn(provider);
 		when(mockedKalimProviderHelper.getAuthenticatedNodeProvider()).thenReturn(nodeProvider);
-		when(providerHelper.getNodeProviderByUUID(Mockito.any())).thenReturn(nodeProvider);
+		when(providerHelper.requireNodeProviderByUUID(Mockito.any())).thenReturn(nodeProvider);
 	}
 
 	@AfterEach

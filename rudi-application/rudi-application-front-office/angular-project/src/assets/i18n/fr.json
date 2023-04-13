@@ -262,7 +262,9 @@
             "creation_date": "Date de déclaration",
             "updated_date": "Mise à jour",
             "datasets": "Jeux de données utilisés",
-            "defaultType": "Réutilisation"
+            "defaultType": "Réutilisation",
+            "defaultLogo": "logo par défaut",
+            "newRequestLogo":"logo des nouvelles demandes"
         },
         "orders": {
             "title": "Titre de A à Z",
@@ -352,7 +354,8 @@
         "errorServerIsNotActive": "Une erreur s'est produite lors de la vérification de votre compte",
         "errorServerAuthent": "Erreur interne du serveur pendant l'authentification. Veuillez contacter un administrateur",
         "errorLoginLocked": "Votre compte a été bloqué pendant 20 minutes suite à 10 essais infructueux d'authentification. Passé ce délai vous pourrez de nouveau vous authentifier. Vous avez oublié votre mot de passe ? Cliquez ",
-        "errorLoginLockedFooter": "ici"
+        "errorLoginLockedFooter": "ici",
+        "error-captcha": "Le Captcha saisi n'est pas valide. Veuillez essayer de nouveau."
     },
     "resetPassword": {
         "reset": "Page de réinitialisation du mot de passe",
@@ -1087,6 +1090,9 @@
         }
     },
     "personalSpace": {
+        "apiAccess": {
+            "errorPassword": "Le mot de passe que vous avez saisi n'est pas valide. Veuillez re-saisir le mot de passe."
+        },
         "receivedAccessRequests": {
             "title1": "Mes demandes",
             "title2": "reçues",
@@ -1147,8 +1153,42 @@
             },
             "tabs": {
                 "api": "API",
-                "datasets": "Jeux de données",
-                "information": "Information"
+                "datasets": {
+                    "title": "Jeux de données",
+                    "addButton": "Ajouter",
+                    "openDatasets": {
+                        "tableLabel": "Tableau des JDDs ouverts associés à un projet",
+                        "tableTitle": "Jeux de données ouverts ajoutés au projet",
+                        "columnAddedData": "Ajouté le",
+                        "columnDataset": "Jeu de données",
+                        "columnStatus": "Statut"
+                    },
+                    "restrictedDatasets": {
+                        "tableLabel": "Tableau des demandes d'accès à des JDDs restreints associées à un projet",
+                        "tableTitle": "Demande d'accès à des jeux de données restreints",
+                        "columnAddedData": "Ajouté le",
+                        "columnDataset": "Jeu de données",
+                        "columnStatus": "Statut"
+                    },
+                    "newDatasets": {
+                        "tableLabel": "Tableau des nouvelles demandes de JDDs associées à un projet",
+                        "tableTitle": "Demande de nouvelles données (hors catalogue)",
+                        "columnAddedData": "Ajouté le",
+                        "columnRequest": "Demande",
+                        "columnStatus": "Statut"
+                    }
+                },
+                "information": "Information",
+                "deletion": {
+                    "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande d'ajout n'a pas encore été traitée par l'équipe Rudi.",
+                    "title" : "Retirer un jeu de données",
+                    "text1" : "Vous souhaitez retirer un jeu de données de votre projet ? Cliquer sur confirmer.",
+                    "text2" : "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour ce projet.",
+                    "confirmationPopup": {
+                        "cancel": "Annuler",
+                        "validate": "Confirmer"
+                    }
+                }
             },
             "heading": {
                 "projectStatusPrefix": "Projet ⠂"
@@ -1208,13 +1248,16 @@
             "consumerKey": "Consumer Key",
             "consumerSecret": "Consumer Secret",
             "textConsumerKey": "Votre Consumer Key est le login à renseigner pour vous authentifier lorsque vous requêtez des API.",
-            "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API.",
-            "errorPassword": "Le mot de passe que vous avez saisi n'est pas valide. Veuillez re-saisir le mot de passe."
+            "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API."
         },
         "projectDatasets": {
             "subscribe": "Souscrire",
             "errorInitialization": "Erreur lors du chargement des données nécessaires à l'onglet.",
-            "explainationText": "Vous trouverez ici vos données issues de votre demande d'accès. De plus amples informations sont disponibles sur "
+            "explainationText": "Vous trouverez ici vos données issues de votre demande d'accès. De plus amples informations sont disponibles sur ",
+            "delete": {
+                "error": "Echec de la suppression du jeu de données. Merci de renouveler la suppression. Si le problème persiste veuillez contacter un administrateur.",
+                "alt": "bouton de suppression "
+            }
         },
         "dialogDatasets": {
             "title": "Souscrire",

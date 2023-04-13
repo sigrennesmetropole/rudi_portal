@@ -4,9 +4,11 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,7 +30,6 @@ import static org.apache.commons.lang3.BooleanUtils.isTrue;
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
  *
  * @author FNI18300
- *
  */
 @Component
 @Slf4j
@@ -110,6 +111,18 @@ public class ProviderHelper {
 		return result;
 	}
 
+
+	/**
+	 * Version non null de {@link #getProviderByNodeProviderUUID(UUID)}.
+	 * @throws NullPointerException si le fournisseur est introuvable
+	 */
+	@Nonnull
+	public Provider requireProviderByNodeProviderUUID(UUID nodeProviderUUId) {
+		final var provider = getProviderByNodeProviderUUID(nodeProviderUUId);
+		return Objects.requireNonNull(provider, "Fournisseur introuvable pour l'UUID de nœud fournisseur " + nodeProviderUUId);
+	}
+
+
 	/**
 	 * Accède au service µProviders pour trouver un noeud par son uuid
 	 *
@@ -125,6 +138,16 @@ public class ProviderHelper {
 					.orElse(null);
 		}
 		return result;
+	}
+
+	/**
+	 * Version non null de {@link #getNodeProviderByUUID(UUID)}.
+	 * @throws NullPointerException si le nœud fournisseur est introuvable
+	 */
+	@Nonnull
+	public NodeProvider requireNodeProviderByUUID(UUID nodeProviderUUId) {
+		final var nodeProvider = getNodeProviderByUUID(nodeProviderUUId);
+		return Objects.requireNonNull(nodeProvider, "Nœud fournisseur introuvable à l'UUID " + nodeProvider);
 	}
 
 	protected URI buildGetURL(UriBuilder uriBuilder, UUID value) {

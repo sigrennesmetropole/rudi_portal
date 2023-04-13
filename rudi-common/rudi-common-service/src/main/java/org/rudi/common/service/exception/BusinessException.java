@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public abstract class BusinessException extends AppServiceException {
 
+	private static final long serialVersionUID = -9115197988540984572L;
+
 	/**
 	 * Construction de l'objet, le message d'erreur n'est exploité que côté back pour les logs
 	 *
@@ -18,6 +20,7 @@ public abstract class BusinessException extends AppServiceException {
 
 	/**
 	 * Construction de la clé de translate à partir du nom de la classe
+	 *
 	 * @return un nom de clé de translate
 	 */
 	public String getTranslateKey() {

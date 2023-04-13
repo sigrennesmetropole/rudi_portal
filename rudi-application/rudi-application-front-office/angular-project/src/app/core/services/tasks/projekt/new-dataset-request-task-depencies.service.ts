@@ -10,7 +10,7 @@ import {NewDatasetRequestTaskMetierService} from './new-dataset-request-task-met
 import {ProjektTaskSearchCriteria} from './projekt-task-search-criteria.interface';
 import {OwnerInfo, Project} from '../../../../projekt/projekt-model';
 import {DependencyFetcher, OwnerKey} from '../../../../shared/utils/dependencies-utils';
-import {ProjektMetierService} from '../../projekt-metier.service';
+import {ProjektMetierService} from '../../asset/project/projekt-metier.service';
 
 /**
  * les dépendances attendues pour une tâche
@@ -58,10 +58,11 @@ export class NewDatasetRequestTaskDependencyFetchers
     constructor(
         organizationService: OrganizationService,
         aclService: AclService,
-        private readonly projektMetierService:ProjektMetierService
+        private readonly projektMetierService: ProjektMetierService
     ) {
         super(organizationService, aclService);
     }
+
     get project(): DependencyFetcher<NewDatasetRequestTask, Project> {
         return {
             hasPrerequisites: (input: NewDatasetRequestTask) => input != null && input.asset != null && input.asset.uuid != null,
@@ -69,6 +70,7 @@ export class NewDatasetRequestTaskDependencyFetchers
             getValue: datasetUuid => this.projektMetierService.findProjectByNewDatasetRequest(datasetUuid)
         };
     }
+
     get ownerInfo(): DependencyFetcher<NewDatasetRequestTask, OwnerInfo> {
         return {
             hasPrerequisites: (input: NewDatasetRequestTask) => input != null && input.dependencies != null

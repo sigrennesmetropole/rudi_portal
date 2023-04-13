@@ -6,7 +6,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import {OwnerType, Project} from '../../../projekt/projekt-model';
-import {LinkedDatasetMetadatas} from '../../../core/services/project-dependencies.service';
+import {LinkedDatasetMetadatas} from '../../../core/services/asset/project/project-dependencies.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Metadata} from '../../../api-kaccess';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
@@ -16,6 +16,7 @@ import {Level} from '../../../shared/notification-template/notification-template
 import {KonsultApiAccessService} from '../../../core/services/api-access/konsult/konsult-api-access.service';
 import {SubscriptionRequestReport} from '../../../core/services/api-access/subscription-request-report';
 import {SubscriptionRequestResult} from '../../../core/services/api-access/subscription-request-result';
+import {SubscriptionData} from '../../../core/services/api-access/subscription-data';
 
 /**
  * Les données que peuvent accepter la Dialog
@@ -115,11 +116,13 @@ export class DialogSubscribeDatasetsComponent implements OnInit {
      * Lancement de la souscription au.x jeu.x de donnée.s séléctionné.s pour un projet
      */
     validate(): void {
-        const metadatasSelected: Metadata[] = this.selection.selected.map((select: LinkedDatasetMetadatas) => select.dataset);
+        const metadatasSelected: SubscriptionData[] = this.selection.selected.map((select: LinkedDatasetMetadatas) => {
+            return {metadata: select.dataset, linkedDataset: select.linkedDataset} as SubscriptionData;
+        });
         this.loading = true;
         this.infoMessage = null;
         this.subscriptionErrorMessage = null;
-        this.apiAccessService.checkPasswordAndDoSubscriptions(metadatasSelected, this.password, this.project.owner_type, this.project.owner_uuid)
+        this.apiAccessService.doSubscriptionProcessToDatasets(this.password, metadatasSelected, this.project.owner_type, this.project.owner_uuid)
             .subscribe({
                 next: (report: SubscriptionRequestReport) => {
                     this.loading = false;

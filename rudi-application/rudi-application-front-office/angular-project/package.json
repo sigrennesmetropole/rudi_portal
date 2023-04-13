@@ -19,7 +19,7 @@
         "generate:kaccess": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-facet/rudi-facet-kaccess/src/main/resources/openapi/rudi-kaccess-model.yml -o src/app/api-kaccess",
         "generate:kmedia": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-facet/rudi-facet-kmedia/src/main/resources/openapi/rudi-kmedia-model.yml -o src/app/api-kmedia",
         "generate:rva": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-facet/rudi-facet-rva/openapi/rudi-rva-model.json -o src/app/api-rva",
-        "generate:all-microservices": "npm run generate:strukture && npm run generate:konsult && npm run generate:acl && npm run generate:kos && npm run generate:projekt && npm run generate:selfdata",
+        "generate:all-microservices": "npm run generate:strukture && npm run generate:konsult && npm run generate:acl && npm run generate:kos && npm run generate:projekt && npm run generate:selfdata && npm run generate:konsent",
         "generate:strukture": "npm run generate:strukture-model && npm run generate:strukture-api",
         "generate:strukture-api": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-strukture/openapi/rudi-strukture-api.json -o src/app/strukture/api-strukture -c openapitools.json -t ./template",
         "generate:strukture-model": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-strukture/openapi/rudi-strukture-model.json -o src/app/strukture/strukture-model",
@@ -35,7 +35,10 @@
         "generate:projekt-model": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-projekt/openapi/rudi-projekt-model.json -o src/app/projekt/projekt-model -c openapitools.json -t ./template",
         "generate:selfdata": "npm run generate:selfdata-model && npm run generate:selfdata-api",
         "generate:selfdata-api": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-selfdata/openapi/rudi-selfdata-api.json -o src/app/selfdata/selfdata-api -c openapitools.json -t ./template",
-        "generate:selfdata-model": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-selfdata/openapi/rudi-selfdata-model.json -o src/app/selfdata/selfdata-model -c openapitools.json -t ./template"
+        "generate:selfdata-model": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-selfdata/openapi/rudi-selfdata-model.json -o src/app/selfdata/selfdata-model -c openapitools.json -t ./template",
+        "generate:konsent": "npm run generate:konsent-model && npm run generate:konsent-api",
+        "generate:konsent-api": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-konsent/openapi/rudi-konsent-api.json -o src/app/konsent/konsent-api -c openapitools.json -t ./template",
+        "generate:konsent-model": "openapi-generator-cli generate -g typescript-angular -i ../../../rudi-microservice/rudi-microservice-konsent/openapi/rudi-konsent-model.json -o src/app/konsent/konsent-model -c openapitools.json -t ./template"
     },
     "private": true,
     "dependencies": {
@@ -54,9 +57,11 @@
         "@ngx-translate/core": "^13.0.0",
         "@ngx-translate/http-loader": "^6.0.0",
         "@sleiss/ngx-awesome-uploader": "^12.0.6",
+        "angular-captcha": "^3.7.4",
         "angular-svg-icon": "^11.0.0",
         "bootstrap": "^4.5.3",
         "cropperjs": "^1.5.12",
+        "d3": "^6.7.0",
         "file-saver": "^2.0.5",
         "font-awesome": "^4.7.0",
         "jquery": "^3.5.1",
@@ -77,7 +82,6 @@
         "sass": "^1.42.1",
         "tslib": "^2.0.0",
         "uuid": "^9.0.0",
-        "d3": "^6.7.0",
         "zone.js": "~0.10.2"
     },
     "devDependencies": {

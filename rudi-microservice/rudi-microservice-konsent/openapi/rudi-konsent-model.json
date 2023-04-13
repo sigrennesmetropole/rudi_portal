@@ -1,0 +1,701 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "Model Konsent Rudi",
+		"version": "0.0.1",
+		"title": "rudi-konsent-model",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Konsent Model",
+			"variables": {
+				"basePath": {
+					"default": "konsent/v1"
+				}
+			}
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AbstractLongId": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					}
+				}
+			},
+			"AbstractLabelized": {
+				"type": "object",
+				"required": [
+					"code"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongId"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string",
+								"maxLength": 30
+							},
+							"label": {
+								"type": "string",
+								"maxLength": 100
+							}
+						}
+					}
+				]
+			},
+			"AbstractMultilangual": {
+				"type": "object",
+				"required": [
+					"code"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongId"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string",
+								"maxLength": 30
+							},
+							"labels": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/DictionaryEntry"
+								}
+							}
+						}
+					}
+				]
+			},
+			"AbstractStamped": {
+				"type": "object",
+				"required": [
+					"opening_date",
+					"order"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLabelized"
+					},
+					{
+						"properties": {
+							"opening_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"closing_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"order": {
+								"type": "integer"
+							}
+						}
+					}
+				]
+			},
+			"AbstractMultilangualStamped": {
+				"type": "object",
+				"required": [
+					"opening_date",
+					"order"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangual"
+					},
+					{
+						"properties": {
+							"opening_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"closing_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"order": {
+								"type": "integer"
+							}
+						}
+					}
+				]
+			},
+			"Consent": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongId"
+					},
+					{
+						"properties": {
+							"owner_type": {
+								"$ref": "#/components/schemas/OwnerType"
+							},
+							"owner_uuid": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"treatment": {
+								"$ref": "#/components/schemas/Treatment"
+							},
+							"treatment_version": {
+								"$ref": "#/components/schemas/TreatmentVersion"
+							},
+							"consent_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"expiration_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							}
+						}
+					}
+				]
+			},
+			"SearchCriteria": {
+				"description": "Critère de recherche",
+				"type": "object",
+				"properties": {
+					"offset": {
+						"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+						"type": "integer",
+						"format": "int32"
+					},
+					"limit": {
+						"description": "Le nombre de résultats à retourner par page",
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"ConsentSearchCriteria": {
+				"description": "Critère de recherche d'un traitement",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"accept_date_min": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"accept_date_max": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"expiration_date_min": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"expiration_date_max": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"owner_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"treatment_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"treatment_owner_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"my_organizations_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"user_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"expired": {
+								"type": "boolean"
+							}
+						}
+					}
+				]
+			},
+			"UuidList": {
+				"type": "array",
+				"items": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"TreatmentVersionSearchCriteria": {
+				"description": "Critère de recherche d'une version de traitement",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"treatment_uuid": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"status": {
+								"$ref": "#/components/schemas/TreatmentStatus"
+							},
+							"order": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"TreatmentSearchCriteria": {
+				"description": "Critère de recherche d'un konsent",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					},
+					{
+						"properties": {
+							"my_organizations_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"user_uuids": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"purposes": {
+								"$ref": "#/components/schemas/UuidList"
+							},
+							"treatment_statuses": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/TreatmentStatus"
+								}
+							},
+							"order": {
+								"type": "string"
+							},
+							"accept_date_min": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"accept_date_max": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"expiration_date_min": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"expiration_date_max": {
+								"$ref": "#/components/schemas/RudiDate"
+							}
+						}
+					}
+				]
+			},
+			"PagedList": {
+				"description": "Liste paginée d'éléments",
+				"type": "object",
+				"required": [
+					"total",
+					"elements"
+				],
+				"properties": {
+					"total": {
+						"description": "Nombre total d'éléments pour cette recherche (peut être supérieur au nombre d'éléments de la page courante)",
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"PagedConsentList": {
+				"description": "Liste paginée de konsents",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Konsents de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Consent"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedTreatmentList": {
+				"description": "Liste paginée de traitements",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Treatment de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Treatment"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedTreatmentVersionList": {
+				"description": "Liste paginée de versions de traitements",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Treatment de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/TreatmentVersion"
+								}
+							}
+						}
+					}
+				]
+			},
+			"DictionaryEntry": {
+				"type": "object",
+				"required": [
+					"lang",
+					"text"
+				],
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"lang": {
+						"$ref": "#/components/schemas/Language"
+					},
+					"text": {
+						"type": "string"
+					}
+				}
+			},
+			"Language": {
+				"type": "string",
+				"pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+				"enum": [
+					"cs-CZ",
+					"da-DK",
+					"de-CH",
+					"de-DE",
+					"en-GB",
+					"en-US",
+					"el-GR",
+					"es-ES",
+					"fr-FR",
+					"hu-HU",
+					"it-IT",
+					"no-NO",
+					"pl-PL",
+					"pt-PT",
+					"ro-RO",
+					"ru-RU",
+					"sk-SK",
+					"cs",
+					"da",
+					"de",
+					"en",
+					"el",
+					"es",
+					"fr",
+					"hu",
+					"it",
+					"no",
+					"pl",
+					"pt",
+					"ro",
+					"ru",
+					"sk"
+				]
+			},
+			"TypologyTreatment": {
+				"type": "object",
+				"description": "Type d'un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangualStamped"
+					}
+				]
+			},
+			"Purpose": {
+				"type": "object",
+				"description": "Objectif d'un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangualStamped"
+					}
+				]
+			},
+			"DataManager": {
+				"type": "object",
+				"description": "Responsable des données récoltées par un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongId"
+					},
+					{
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"phone_number": {
+								"type": "string"
+							},
+							"address1": {
+								"type": "string"
+							},
+							"address2": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"RetentionUnit": {
+				"type": "string",
+				"enum": [
+					"WEEK",
+					"MONTH",
+					"YEAR"
+				]
+			},
+			"Retention": {
+				"type": "object",
+				"description": "Durée de traitement des données qui seront récoltées par un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangualStamped"
+					},
+					{
+						"properties": {
+							"value": {
+								"type": "integer"
+							},
+							"unit": {
+								"$ref": "#/components/schemas/RetentionUnit"
+							}
+						}
+					}
+				]
+			},
+			"InvolvedPopulationCategory": {
+				"type": "object",
+				"description": "Catégorie de population concernée par un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangualStamped"
+					}
+				]
+			},
+			"DataRecipient": {
+				"type": "object",
+				"description": "Service receptionnant les données récoltées par un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangualStamped"
+					}
+				]
+			},
+			"SecurityMeasure": {
+				"type": "object",
+				"description": "Mesures de sécurité",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractMultilangualStamped"
+					}
+				]
+			},
+			"TargetType": {
+				"type": "string",
+				"enum": [
+					"DATASET",
+					"PROJECT"
+				]
+			},
+			"TreatmentStatus": {
+				"type": "string",
+				"enum": [
+					"DRAFT",
+					"VALIDATED"
+				]
+			},
+			"Treatment": {
+				"type": "object",
+				"description": "Définition d'un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongId"
+					},
+					{
+						"properties": {
+							"owner_type": {
+								"$ref": "#/components/schemas/OwnerType"
+							},
+							"owner_uuid": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"name": {
+								"type": "string"
+							},
+							"target_type": {
+								"$ref": "#/components/schemas/TargetType"
+							},
+							"target_uuid": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"status": {
+								"$ref": "#/components/schemas/TreatmentStatus"
+							},
+							"creation_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"updated_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"version": {
+								"$ref": "#/components/schemas/TreatmentVersion"
+							}
+						}
+					}
+				]
+			},
+			"TreatmentVersion": {
+				"type": "object",
+				"description": "Version d'un traitement",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongId"
+					},
+					{
+						"properties": {
+							"version": {
+								"type": "integer"
+							},
+							"creation_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"updated_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"status": {
+								"$ref": "#/components/schemas/TreatmentStatus"
+							},
+							"titles": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/DictionaryEntry"
+								}
+							},
+							"datas": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/DictionaryEntry"
+								}
+							},
+							"retention": {
+								"$ref": "#/components/schemas/Retention"
+							},
+							"usages": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/DictionaryEntry"
+								}
+							},
+							"operation_treatment_natures": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/DictionaryEntry"
+								}
+							},
+							"purpose": {
+								"$ref": "#/components/schemas/Purpose"
+							},
+							"typology": {
+								"$ref": "#/components/schemas/TypologyTreatment"
+							},
+							"data_recipients": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/DataRecipient"
+								}
+							},
+							"data_recipient_detail": {
+								"type": "string"
+							},
+							"security_measures": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SecurityMeasure"
+								}
+							},
+							"security_measure_detail": {
+								"type": "string"
+							},
+							"outside_u_e_transfert": {
+								"type": "string"
+							},
+							"involved_population": {
+								"$ref": "#/components/schemas/InvolvedPopulationCategory"
+							},
+							"obsolete_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"data_protection_officer": {
+								"$ref": "#/components/schemas/DataManager"
+							},
+							"manager": {
+								"$ref": "#/components/schemas/DataManager"
+							}
+						}
+					}
+				]
+			},
+			"ReadOnlyDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time",
+				"readOnly": true
+			},
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			},
+			"OwnerType": {
+				"type": "string",
+				"enum": [
+					"ORGANIZATION",
+					"USER"
+				]
+			}
+		}
+	}
+}

@@ -17,6 +17,7 @@ import org.rudi.facet.providers.helper.ProviderHelper;
 import org.rudi.microservice.selfdata.core.bean.MatchingField;
 import org.rudi.microservice.selfdata.core.bean.NodeProviderInfo;
 import org.rudi.microservice.selfdata.service.exception.MissingProviderException;
+import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.SelfdataMatchingDataHelper;
 import org.rudi.microservice.selfdata.storage.dao.selfdatatokentuple.SelfdataTokenTupleDao;
 import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.SelfdataTokenTupleEntity;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class SelfdataPairingUtils {
 	private final SelfdataTokenTupleDao selfdataTokenDao;
 	private final ProviderHelper providerHelper;
+	private final SelfdataMatchingDataHelper selfdataMatchingDataHelper;
 	private final DocumentContentHelper documentContentHelper;
 	private final EverythingAllowedAuthorizationPolicy authorizationPolicy;
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfdataPairingUtils.class);
@@ -117,11 +119,16 @@ public class SelfdataPairingUtils {
 	 * @throws AppServiceUnauthorizedException
 	 */
 	private void deleteAttachment(MatchingData matchingData, Map<String, Object> informationRequestMap) throws AppServiceNotFoundException, AppServiceForbiddenException, AppServiceUnauthorizedException {
-		UUID attachmentUuid = UUID.fromString(informationRequestMap.get(matchingData.getCode()).toString());
+		String UUIDString = informationRequestMap.get(matchingData.getCode()).toString();
+		if (UUIDString.startsWith(SelfdataMatchingDataHelper.SELFDATA_CRYPTED_VALUE_IDENTIFIER)) {
+			UUIDString = selfdataMatchingDataHelper.decrypt(UUIDString);
+		}
+		UUID attachmentUuid = UUID.fromString(UUIDString);
 		// On ne veut pas bloquer le traitement de la tâche parce qu'on arrive pas à supprimer une PJ (les PJ étant gardées sous forme de métadata dans RUDI)
 		try {
 			documentContentHelper.deleteAttachment(attachmentUuid, authorizationPolicy);
-		} catch (AppServiceNotFoundException | AppServiceForbiddenException | AppServiceUnauthorizedException exception) {
+		} catch (AppServiceNotFoundException | AppServiceForbiddenException |
+				 AppServiceUnauthorizedException exception) {
 			LOGGER.error("Une erreur est survenue lors de la suppression d'une pièce jointe. {}", exception);
 		}
 	}

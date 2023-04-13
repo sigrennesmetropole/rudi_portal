@@ -12,6 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @SuppressWarnings("java:S1075")
 public class OrganizationProperties {
 
+	/**
+	 * URL de base pour appeler le micro-service Strukture via Load Balancer
+	 */
+	private String serviceBaseUrl = "lb://RUDI-STRUKTURE/strukture/v1/";
+
 	private String organizationsPath = "/organizations";
 	private String membersPath = "/organizations/{organizationUuid}/members";
 

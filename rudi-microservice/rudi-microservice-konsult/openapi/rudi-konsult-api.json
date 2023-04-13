@@ -154,6 +154,16 @@
 								}
 							}
 						}
+					},
+					"403": {
+						"description": "Erreur lorsque le login ou mot de passe est invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -419,14 +429,14 @@
 				}
 			}
 		},
-		"/datasets/{globalId}/has-subscribe": {
+		"/datasets/{globalId}/has-subscribe-to-selfdata": {
 			"get": {
 				"tags": [
 					"konsult"
 				],
 				"summary": "Permet de savoir si l'utilisateur a souscrit au jeu de données",
 				"description": "Retourne true si l'utilisateur a souscrit au jeu de données",
-				"operationId": "hasSubscribeToDataset",
+				"operationId": "hasSubscribeToSelfdataDataset",
 				"parameters": [
 					{
 						"$ref": "#/components/parameters/GlobalIdPathParam"
@@ -462,14 +472,60 @@
 				}
 			}
 		},
-		"/datasets/{globalId}/subscribe": {
+		"/datasets/{globalId}/has-subscribe-to-linked-dataset/{linkedDatasetUuid}": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Permet de savoir si l'utilisateur a souscrit au jeu de données",
+				"description": "Retourne true si l'utilisateur a souscrit au jeu de données (ouvert ou restreint)",
+				"operationId": "hasSubscribeToLinkedDataset",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/GlobalIdPathParam"
+					},
+					{
+						"$ref": "#/components/parameters/LinkedDatasetUuidPathParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne true si l'utilisateur a souscrit au jeu de données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Erreur lorsque l'utilisateur n'a pas souscrit au jeu de données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"480": {
+						"$ref": "#/components/responses/UnknownClientKeyError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/subscribe-to-selfdata": {
 			"post": {
 				"tags": [
 					"konsult"
 				],
-				"summary": "Souscrit au jeu de données",
-				"description": "L'utilisateur souscrit au jeu de données",
-				"operationId": "subscribeToDataset",
+				"summary": "Souscrit au jeu de données (selfdata)",
+				"description": "L'utilisateur souscrit au jeu de données (selfdata)",
+				"operationId": "subscribeToSelfdataDataset",
 				"parameters": [
 					{
 						"$ref": "#/components/parameters/GlobalIdPathParam"
@@ -478,6 +534,45 @@
 				"responses": {
 					"204": {
 						"description": "L'utilisateur a souscrit au jeu de données avec succès"
+					},
+					"403": {
+						"description": "Erreur lorsque l'utilisateur n'est pas autorisé à souscrire au jeu de données",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiForbiddenError"
+								}
+							}
+						}
+					},
+					"480": {
+						"$ref": "#/components/responses/UnknownClientKeyError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/datasets/{globalId}/subscribe-to-linked-dataset/{linkedDatasetUuid}": {
+			"post": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Souscrit au jeu de données ouvert ou restreint",
+				"description": "L'utilisateur souscrit au jeu de données ouvert ou restreint",
+				"operationId": "subscribeToLinkedDataset",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/GlobalIdPathParam"
+					},
+					{
+						"$ref": "#/components/parameters/LinkedDatasetUuidPathParam"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "L'utilisateur a souscrit au jeu de données ouvert ou restreint avec succès s'il a une demande d'accès validée pour le JDD"
 					},
 					"403": {
 						"description": "Erreur lorsque l'utilisateur n'est pas autorisé à souscrire au jeu de données",
@@ -773,6 +868,16 @@
 				"in": "path",
 				"name": "globalId",
 				"description": "Identifiant du jeu de données",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
+			"LinkedDatasetUuidPathParam": {
+				"in": "path",
+				"name": "linkedDatasetUuid",
+				"description": "Identifiant de la demande d'accès au JDD restreint",
 				"required": true,
 				"schema": {
 					"type": "string",

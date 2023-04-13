@@ -11,6 +11,8 @@ import {LoginRoutingModule} from './login-routing.module';
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {AccountInfoComponent} from './pages/account-info/account-info.component';
+import {BotDetectCaptchaModule} from 'angular-captcha';
+
 @NgModule({
     declarations:
         [
@@ -27,7 +29,8 @@ import {AccountInfoComponent} from './pages/account-info/account-info.component'
         CommonModule,
         CoreModule,
         SharedModule,
-        LoginRoutingModule
+        LoginRoutingModule,
+        BotDetectCaptchaModule
     ],
     exports: [],
     entryComponents: [],

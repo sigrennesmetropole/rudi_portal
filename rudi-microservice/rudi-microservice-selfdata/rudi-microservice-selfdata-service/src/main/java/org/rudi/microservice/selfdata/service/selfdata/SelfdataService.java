@@ -80,4 +80,11 @@ public interface SelfdataService {
 
 	List<MatchingData> getMySelfdataInformationRequestMatchingData(UUID datasetUUID)
 			throws AppServiceException, InvalidDataException, FormDefinitionException;
+
+	/**
+	 * Rechiffrement ou chiffrement (dans le cas d'un migration) des données pivots
+	 * 
+	 * @param previousAliasKey c'est le nom de la clé initial (dans le cas d'un rechiffrement)
+	 */
+	void recryptSelfdataInformationRequest(String previousAliasKey);
 }

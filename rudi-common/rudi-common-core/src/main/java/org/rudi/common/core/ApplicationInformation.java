@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.common.core;
 
@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class ApplicationInformation {
-	
+
 	private String version;
 
 	private String comment;

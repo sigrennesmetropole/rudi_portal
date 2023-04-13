@@ -32,7 +32,6 @@ import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.konsult.service.exception.APIManagerExternalServiceException;
-import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 import org.rudi.microservice.konsult.service.exception.DataverseExternalServiceException;
 import org.rudi.microservice.konsult.service.exception.MediaNotFoundException;
 import org.rudi.microservice.konsult.service.exception.MetadataNotFoundException;
@@ -45,9 +44,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +59,6 @@ public class MetadataServiceImpl implements MetadataService {
 	private final APIManagerHelper apiManagerHelper;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final MetadataWithSameThemeFinder metadataWithSameThemeFinder;
-	private final MetadataDetailsHelper metadataDetailsHelper;
 	@Value("${apimanager.oauth2.client.anonymous.username}")
 	private String anonymousUsername;
 	private final List<AbstractAccessToDatasetChecker> accessToDatasetCheckerList;
@@ -151,19 +146,53 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public boolean hasSubscribeToDataset(UUID globalId) throws ClientKeyNotFoundException, APIManagerException {
-		return apiManagerHelper.userHasSubscribeToEachMediaOfDataset(globalId);
+	public boolean hasSubscribeToSelfdataDataset(UUID globalId) throws AppServiceException, APIManagerException {
+		final var metadata = getMetadataById(globalId);
+		UUID ownerUuid = null; // Uuid au à partir duquel on a souscrit (soi-même pour un selfdata)
+		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
+			if (accessToDatasetChecker.accept(metadata)) {
+				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(null);
+			}
+		}
+		return apiManagerHelper.userHasSubscribeToEachMediaOfDataset(globalId, ownerUuid);
 	}
 
 	@Override
-	public void subscribeToDataset(UUID globalId) throws APIManagerException, AppServiceException {
+	public boolean hasSubscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws AppServiceException, APIManagerException {
 		final var metadata = getMetadataById(globalId);
+		UUID ownerUuid = null; // Uuid à partir duquel on a souscrit (soi-même pour un selfdata)
 		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
-			if (accessToDatasetChecker.hasToBeUse(metadata)) {
-				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId);
+			if (accessToDatasetChecker.accept(metadata)) {
+				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(linkedDatasetUuid);
 			}
 		}
-		apiManagerHelper.subscribeToEachMediaOfDataset(globalId);
+		return apiManagerHelper.userHasSubscribeToEachMediaOfDataset(globalId, ownerUuid);
+	}
+
+	@Override
+	public void subscribeToSelfdataDataset(UUID globalId) throws APIManagerException, AppServiceException {
+		final var metadata = getMetadataById(globalId);
+		UUID ownerUuid = null; // Uuid au à partir duquel on va souscrire (soi-même pour un selfdata)
+		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
+			if (accessToDatasetChecker.accept(metadata)) {
+				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId, Optional.empty());
+				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(null);
+			}
+		}
+		apiManagerHelper.subscribeToEachMediaOfDataset(globalId, ownerUuid);
+	}
+
+	@Override
+	public void subscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws APIManagerException, AppServiceException {
+		final var metadata = getMetadataById(globalId);
+		UUID ownerUuid = null; // Uuid à partir duquel on va souscrire (soi-même ou une de nos organisations)
+		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
+			if (accessToDatasetChecker.accept(metadata)) {
+				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId, Optional.of(linkedDatasetUuid));
+				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(linkedDatasetUuid);
+			}
+		}
+		apiManagerHelper.subscribeToEachMediaOfDataset(globalId, ownerUuid);
 	}
 
 	private Media getMetadataMediaById(Metadata metadata, UUID mediaId) throws MediaNotFoundException {
@@ -203,7 +232,7 @@ public class MetadataServiceImpl implements MetadataService {
 
 	@Override
 	public Boolean hasSubscribeToMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException {
-		return apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId);
+		return apiManagerHelper.findOwnerToDownload(globalId, mediaId) != null;
 	}
 
 	private MetadataListFacets searchMetadataWithFacets(DatasetSearchCriteria datasetSearchCriteria,

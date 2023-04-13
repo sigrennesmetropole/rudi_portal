@@ -1,5 +1,4 @@
-<app-loader [active]="attachmentLoader" [allPage]="true"></app-loader>
-<div id="content-style" *ngIf="!attachmentLoader">
+<div id="content-style">
     <mat-dialog-actions class="dialog-header-button">
         <mat-icon svgIcon="icon-close" class="" [mat-dialog-close]="null"></mat-icon>
     </mat-dialog-actions>
@@ -16,11 +15,14 @@
             </div>
             <div>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.consentText' | translate }}</div>
         </div>
-        <mat-dialog-actions class="d-flex justify-content-between dialog-footer-button">
-            <button class="buttons mat-stroked-button btn dialog-cancel" mat-raised-button [mat-dialog-close]="null">
+        <app-loader [active]="attachmentLoader" [isLight]="true" [allPage]="false" [noText]="true"></app-loader>
+        <mat-dialog-actions class="d-flex justify-content-center dialog-footer-button">
+            <button class="buttons mat-stroked-button btn dialog-cancel cancel-btn" mat-raised-button
+                    [mat-dialog-close]="null">
                 <span>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.cancel' | translate }}</span>
             </button>
-            <button class="buttons mat-stroked-button btn dialog-validate color-btn" mat-raised-button (click)="openDocument()" [disabled]="!consent">
+            <button class="buttons mat-stroked-button btn dialog-validate confirm-btn" mat-raised-button
+                    (click)="openDocument()" [disabled]="!consent || attachmentLoader">
                 <span>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.download' | translate }}</span>
             </button>
         </mat-dialog-actions>

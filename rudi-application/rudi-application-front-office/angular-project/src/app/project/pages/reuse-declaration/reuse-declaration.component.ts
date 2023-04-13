@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {OwnerType, Project, TargetAudience} from '../../../projekt/projekt-model';
 import {UserService} from '../../../core/services/user.service';
 import {KonsultMetierService} from '../../../core/services/konsult-metier.service';
@@ -12,7 +12,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
-import {FormReutilisationDependencies, ProjectSubmissionService} from '../../../core/services/project-submission.service';
+import {FormReutilisationDependencies, ProjectSubmissionService} from '../../../core/services/asset/project/project-submission.service';
 import {ReuseProjectCommonComponent} from '../../components/reuse-project-common/reuse-project-common.component';
 import {FiltersService} from '../../../core/services/filters.service';
 import {User} from '../../../acl/acl-model';

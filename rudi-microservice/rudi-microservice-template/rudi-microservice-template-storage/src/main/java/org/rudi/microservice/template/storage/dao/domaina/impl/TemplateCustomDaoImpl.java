@@ -1,5 +1,13 @@
 package org.rudi.microservice.template.storage.dao.domaina.impl;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.template.core.bean.TemplateSearchCriteria;
 import org.rudi.microservice.template.storage.dao.domaina.TemplateCustomDao;
@@ -9,12 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.List;
 
 @Repository
 public class TemplateCustomDaoImpl extends AbstractCustomDaoImpl<TemplateEntity, TemplateSearchCriteria> implements TemplateCustomDao {
@@ -30,7 +32,7 @@ public class TemplateCustomDaoImpl extends AbstractCustomDaoImpl<TemplateEntity,
 	}
 
 	@Override
-	protected void addPredicates(TemplateSearchCriteria searchCriteria, CriteriaBuilder builder, Root<TemplateEntity> root, List<Predicate> predicates) {
+	protected void addPredicates(TemplateSearchCriteria searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<TemplateEntity> root, List<Predicate> predicates) {
 		// TODO ajouter les critères du TemplateSearchCriteria via les méthodes predicate...Criteria(...)
 	}
 

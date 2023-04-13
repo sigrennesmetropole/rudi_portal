@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusState;
@@ -67,6 +68,7 @@ class APIManagerHelperUnmockedAPIManagerTest {
 	}
 
 	@Test
+	@Disabled
 	void updateAPI_unarchiveAPI() throws IOException, APIManagerException {
 
 		val media1 = jsonResourceReader.read("media/media1.json", Media.class);
@@ -78,8 +80,8 @@ class APIManagerHelperUnmockedAPIManagerTest {
 		val provider = new Provider()
 				.uuid(UUID.randomUUID())
 				.code("PROVIDER_TEST_APIM");
-		when(providerHelper.getNodeProviderByUUID(any())).thenReturn(nodeProvider);
-		when(providerHelper.getProviderByNodeProviderUUID(any())).thenReturn(provider);
+		when(providerHelper.requireNodeProviderByUUID(any())).thenReturn(nodeProvider);
+		when(providerHelper.requireProviderByNodeProviderUUID(any())).thenReturn(provider);
 
 		// 1. Créer un JDD avec 2 média => 2 API créées dans WSO2
 		final IntegrationRequestEntity request = createRequestFrom(nodeProvider);

@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {Project} from '../../../projekt/projekt-model';
 import {map} from 'rxjs/operators';
 import {AclService} from '../../../acl/acl-api';
@@ -16,7 +16,7 @@ import {
     LinkedDatasetMetadatas,
     ProjectDependenciesFetchers,
     ProjectDependenciesService,
-} from '../../../core/services/project-dependencies.service';
+} from '../../../core/services/asset/project/project-dependencies.service';
 import {Base64EncodedLogo} from '../../../core/services/image-logo.service';
 
 const ICON_INFO = '../assets/icons/icon_tab_infos.svg';

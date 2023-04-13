@@ -1,13 +1,4 @@
 <div class="header-container mat-typography" [ngClass]="ngClass">
-    <div class="header-version d-flex align-items-center justify-content-center">
-        <label class="header-version-title text-center">
-            <strong>{{'header.creationPortal'|translate}}</strong>
-            <span class="mx-1">{{'header.appointment'|translate}}</span>
-            <a class="text-white text-decoration-underline mr-4" href="https://rudi.datarennes.fr/"
-               target="_blank" rel="noopener noreferrer">{{'header.site'|translate}}</a>
-            <mat-icon class="pointer rudi-icon-launch" aria-hidden="false" aria-label="back icon">launch</mat-icon>
-        </label>
-    </div>
     <div *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl">
         <nav ngxNavbarDynamicExpand class="header-nav rudi-header-container navbar-expand pr-0"
              aria-label="navbar-desktop">

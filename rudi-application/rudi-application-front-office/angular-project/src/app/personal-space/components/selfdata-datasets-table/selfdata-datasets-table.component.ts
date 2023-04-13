@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Order} from '../../../core/services/projekt-metier.service';
+import {Order} from '../../../core/services/asset/project/projekt-metier.service';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {SelfdataDataset} from './selfdata-dataset.interface';
 import {SelfdataDatasetService} from '../../../core/services/selfdata-dataset/selfdata-dataset.service';

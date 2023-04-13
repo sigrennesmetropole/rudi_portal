@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Order, ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {Order, ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {UserService} from '../../../core/services/user.service';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {Sort} from '@angular/material/sort';
-import {ProjectDependenciesFetchers, ProjectDependenciesService} from '../../../core/services/project-dependencies.service';
+import {ProjectDependenciesFetchers, ProjectDependenciesService} from '../../../core/services/asset/project/project-dependencies.service';
 import {injectDependenciesEach} from '../../../shared/utils/dependencies-utils';
 import {tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';

@@ -23,6 +23,8 @@ public final class RoleCodes {
 	public static final String MODULE_PROJEKT_ADMINISTRATOR = "MODULE_PROJEKT_ADMINISTRATOR";
 	public static final String MODULE_SELFDATA_ADMINISTRATOR = "MODULE_SELFDATA_ADMINISTRATOR";
 	public static final String MODULE_STRUKTURE = "MODULE_STRUKTURE";
+	public static final String MODULE_KONSENT = "MODULE_KONSENT";
+	public static final String MODULE_KONSENT_ADMINISTRATOR = "MODULE_KONSENT_ADMINISTRATOR";
 	public static final String MODULE_STRUKTURE_ADMINISTRATOR = "MODULE_STRUKTURE_ADMINISTRATOR";
 	public static final String ORGANIZATION = "ORGANIZATION";
 	public static final String PROJECT_MANAGER = "PROJECT_MANAGER";

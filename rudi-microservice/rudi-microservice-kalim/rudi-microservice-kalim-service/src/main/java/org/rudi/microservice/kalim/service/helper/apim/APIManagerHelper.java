@@ -294,7 +294,7 @@ public class APIManagerHelper {
 	/**
 	 * Création des clientKeys pour les users rudi et anonymous
 	 *
-	 * @throws SSLException Erreur lors de la création des clientKeys
+	 * @throws APIManagerException Erreur lors de la création des clientKeys
 	 */
 	private void checkRudiAndAnonymousClientRegistrations() throws APIManagerException {
 		// On s'assure que la registration est OK quand on va faire des modifs dans WSO2
@@ -311,7 +311,7 @@ public class APIManagerHelper {
 	}
 
 	private APISearchCriteria buildApiSearchCriteriaFrom(IntegrationRequestEntity integrationRequest) {
-		val provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
+		val provider = providerHelper.requireProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
 		return new APISearchCriteria()
 				.globalId(integrationRequest.getGlobalId())
 				.providerUuid(provider.getUuid())
@@ -343,8 +343,8 @@ public class APIManagerHelper {
 		checkRudiAndAnonymousClientRegistrations();
 
 		// Récupération des infos sur le fournisseur de données
-		final NodeProvider nodeProvider = providerHelper.getNodeProviderByUUID(nodeProviderId);
-		final Provider provider = providerHelper.getProviderByNodeProviderUUID(nodeProviderId);
+		final NodeProvider nodeProvider = providerHelper.requireNodeProviderByUUID(nodeProviderId);
+		final Provider provider = providerHelper.requireProviderByNodeProviderUUID(nodeProviderId);
 
 		// Construction de l'API chez WSO2
 		APIDescription apiDescription = buildAPIDescriptionByMetadataIntegration(metadata, nodeProvider, provider, media);
@@ -373,8 +373,8 @@ public class APIManagerHelper {
 	private void updateApiForMedia(Metadata metadata, Media media, IntegrationRequestEntity integrationRequest) throws APIManagerException {
 
 		// Récupération des infos du fournisseur
-		NodeProvider nodeProvider = providerHelper.getNodeProviderByUUID(integrationRequest.getNodeProviderId());
-		Provider provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
+		NodeProvider nodeProvider = providerHelper.requireNodeProviderByUUID(integrationRequest.getNodeProviderId());
+		Provider provider = providerHelper.requireProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
 
 		// Construction de la nouvelle description de l'API puis MAJ chez WSO2
 		APIDescription apiDescription = buildAPIDescriptionByMetadataIntegration(metadata, nodeProvider, provider, media);
@@ -383,8 +383,8 @@ public class APIManagerHelper {
 
 	private void archiveApiForMedia(Media media, IntegrationRequestEntity integrationRequest) throws APIManagerException {
 		// Récupération des infos du fournisseur
-		val nodeProvider = providerHelper.getNodeProviderByUUID(integrationRequest.getNodeProviderId());
-		val provider = providerHelper.getProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
+		val nodeProvider = providerHelper.requireNodeProviderByUUID(integrationRequest.getNodeProviderId());
+		val provider = providerHelper.requireProviderByNodeProviderUUID(integrationRequest.getNodeProviderId());
 
 		// Construction d'un metadata "vide" pour le passer en param avec le globalId cible
 		val metadata = new Metadata();

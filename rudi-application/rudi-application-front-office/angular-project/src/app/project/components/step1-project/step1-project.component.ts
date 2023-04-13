@@ -3,7 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {RadioListItem} from '../../../shared/radio-list/radio-list-item';
 import {ProjectType, Support, TargetAudience, TerritorialScale} from '../../../projekt/projekt-model';
 import {AdapterWithoutBackend} from '../../../shared/uploader/adapter-without-backend';
-import {ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {DataSize} from '../../../shared/models/data-size';
 
 @Component({

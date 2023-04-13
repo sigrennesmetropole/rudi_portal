@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -42,7 +43,7 @@ public class SelfdataInformationRequestCustomDaoImpl extends AbstractCustomDaoIm
 	}
 
 	@Override
-	protected void addPredicates(SelfdataInformationRequestCustomSearchCriteria searchCriteria, CriteriaBuilder builder, Root<SelfdataInformationRequestEntity> root, List<Predicate> predicates) {
+	protected void addPredicates(SelfdataInformationRequestCustomSearchCriteria searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<SelfdataInformationRequestEntity> root, List<Predicate> predicates) {
 		if (StringUtils.isNotBlank(searchCriteria.getLogin())) {
 			Predicate loginEqualsCriteriaLogin = builder.equal(root.get(INITATOR_FIELD), searchCriteria.getLogin());
 			predicates.add(loginEqualsCriteriaLogin);

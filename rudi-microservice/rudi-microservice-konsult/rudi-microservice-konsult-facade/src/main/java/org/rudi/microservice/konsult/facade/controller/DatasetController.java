@@ -71,14 +71,27 @@ public class DatasetController implements DatasetsApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + ANONYMOUS + ", " + USER + ")")
-	public ResponseEntity<Boolean> hasSubscribeToDataset(UUID globalId) throws Exception {
-		return ResponseEntity.ok(metadataService.hasSubscribeToDataset(globalId));
+	public ResponseEntity<Boolean> hasSubscribeToSelfdataDataset(UUID globalId) throws Exception {
+		return ResponseEntity.ok(metadataService.hasSubscribeToSelfdataDataset(globalId));
 	}
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + ANONYMOUS + ", " + USER + ")")
-	public ResponseEntity<Void> subscribeToDataset(UUID globalId) throws Exception {
-		metadataService.subscribeToDataset(globalId);
+	public ResponseEntity<Boolean> hasSubscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws Exception {
+		return ResponseEntity.ok(metadataService.hasSubscribeToLinkedDataset(globalId, linkedDatasetUuid));
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + ANONYMOUS + ", " + USER + ")")
+	public ResponseEntity<Void> subscribeToSelfdataDataset(UUID globalId) throws Exception {
+		metadataService.subscribeToSelfdataDataset(globalId);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + ANONYMOUS + ", " + USER + ")")
+	public ResponseEntity<Void> subscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws Exception {
+		metadataService.subscribeToLinkedDataset(globalId, linkedDatasetUuid);
 		return ResponseEntity.noContent().build();
 	}
 

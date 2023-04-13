@@ -1,16 +1,19 @@
-<app-loader [active]="isLoading">
-</app-loader>
-<!-- User account information and his organizations list-->
-<div *ngIf="user" [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd || mediaSize.isLg, 'p-large': mediaSize.isXl}"
-     class="account-container container-fluid data-set-main-container">
-    <ul>
-        <li>{{'accountInfo.prenom' | translate}} : {{user.firstname}} </li>
-        <li>{{'accountInfo.nom' | translate}} : {{user.lastname}}</li>
-        <li>{{'accountInfo.adresseEmail' | translate}} : {{this.email}}</li>
-        <li>{{'accountInfo.myOrganizations' | translate}} : {{getOrganizations(myOrganizations)}}</li>
-        <p *ngIf="urlToDoc">
-            {{'accountInfo.contactUs' | translate}} <br>
-            {{'accountInfo.moreInfo' | translate}} <a href="{{urlToDoc}}"> {{urlToDoc}}</a>
-        </p>
-    </ul>
-</div>
+<app-page>
+    <app-loader [active]="isLoading">
+    </app-loader>
+    <!-- User account information and his organizations list-->
+    <div *ngIf="user"
+         [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd || mediaSize.isLg, 'p-large': mediaSize.isXl}"
+         class="account-container container-fluid data-set-main-container">
+        <ul>
+            <li>{{'accountInfo.prenom' | translate}} : {{user.firstname}} </li>
+            <li>{{'accountInfo.nom' | translate}} : {{user.lastname}}</li>
+            <li>{{'accountInfo.adresseEmail' | translate}} : {{this.email}}</li>
+            <li>{{'accountInfo.myOrganizations' | translate}} : {{getOrganizations(myOrganizations)}}</li>
+            <p *ngIf="urlToDoc">
+                {{'accountInfo.contactUs' | translate}} <br>
+                {{'accountInfo.moreInfo' | translate}} <a href="{{urlToDoc}}"> {{urlToDoc}}</a>
+            </p>
+        </ul>
+    </div>
+</app-page>

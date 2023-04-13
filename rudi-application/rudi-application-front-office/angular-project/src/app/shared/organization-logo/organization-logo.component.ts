@@ -16,6 +16,7 @@ export type OrganizationType = 'producer' | 'provider';
 export class OrganizationLogoComponent {
     @Input() organizationType: OrganizationType;
     @Input() cssClass: string;
+    @Input() isANewRequest;
     defaultContent = DEFAULT_LOGO;
     content: Base64EncodedLogo;
 

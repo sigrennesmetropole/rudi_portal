@@ -1,9 +1,11 @@
 package org.rudi.microservice.kalim.service.integration.impl;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.UUID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
@@ -38,10 +40,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 /**
  * Service de gestion des IntegrationRequest
@@ -95,6 +96,7 @@ public class IntegrationRequestServiceImpl implements IntegrationRequestService 
 	}
 
 	@Override
+	@Transactional // readOnly = false
 	public IntegrationRequest createDeleteIntegrationRequestFromGlobalId(UUID globalId) throws DataverseAPIException, AppServiceException, IntegrationException {
 		final var nodeProvider = kalimProviderHelper.getAuthenticatedNodeProvider();
 		checkAuthenticatedNodeProviderIsNotNull(nodeProvider);
@@ -191,7 +193,7 @@ public class IntegrationRequestServiceImpl implements IntegrationRequestService 
 			Report report = createReport(integrationRequest);
 
 			// envoie du rapport
-			NodeProvider nodeProvider = providerHelper.getNodeProviderByUUID(integrationRequest.getNodeProviderId());
+			NodeProvider nodeProvider = providerHelper.requireNodeProviderByUUID(integrationRequest.getNodeProviderId());
 			kalimProviderHelper.sendReport(nodeProvider.getUrl(), report);
 
 			// mise à jour de l'état de la demande

@@ -26,7 +26,6 @@ import {SelfdataAttachmentService} from '../selfdata-attachment.service';
 import {AddressMetierService} from '../address-metier.service';
 import {MatchingDataView} from '../../../personal-space/components/matching-data-card/matching-data-view';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -152,7 +151,7 @@ export class SelfdataDatasetService {
      * getMySelfdataInformationRequestMatchingData, service qui reccupère les données pivots
      * @param uuid
      */
-    getMySelfdataInformationRequestMatchingData(uuid: string):Observable<MatchingData[]> {
+    getMySelfdataInformationRequestMatchingData(uuid: string): Observable<MatchingData[]> {
         return this.taskService.getMySelfdataInformationRequestMatchingData(uuid).pipe(
             switchMap((matchingData: MatchingData[]) => {
                 return from(matchingData.filter((data) => data.type !== FieldType.Attachment)).pipe(

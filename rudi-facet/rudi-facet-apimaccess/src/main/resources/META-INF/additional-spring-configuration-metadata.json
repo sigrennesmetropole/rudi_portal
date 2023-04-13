@@ -96,6 +96,11 @@
 			"description": "Login de connexion de l'utilisateur anonymous."
 		},
 		{
+			"name": "apimanager.oauth2.client.anonymous.use-domain-prefix-to-register",
+			"type": "java.lang.Boolean",
+			"description": "Applique le patch pour faire fonctionner le register de l'utilisateur \"anonymous\" dans le cas où WSO2 le traite injustement en tant que \"PRIMARY/anonymous\" au lieu de \"RUDI/anonymous\". Cf. erreur \"RegistrationServiceImpl User anonymous does not have any of subscribe/create/publish privileges to create an OAuth app\" dans les commentaires de la RUDI-3042."
+		},
+		{
 			"name": "apimanager.oauth2.client.anonymous.password",
 			"type": "java.lang.String",
 			"description": "Password de connexion de l'utilisateur anonymous."

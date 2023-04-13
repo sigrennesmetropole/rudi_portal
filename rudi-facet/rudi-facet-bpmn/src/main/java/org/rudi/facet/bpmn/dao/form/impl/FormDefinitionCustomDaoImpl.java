@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.rudi.facet.bpmn.dao.form.impl;
 
@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -49,7 +50,7 @@ public class FormDefinitionCustomDaoImpl extends
 
 	@Override
 	protected void addPredicates(FormDefinitionSearchCriteria searchCriteria, CriteriaBuilder builder,
-			Root<FormDefinitionEntity> root, List<Predicate> predicates) {
+			CriteriaQuery<?> criteriaQuery, Root<FormDefinitionEntity> root, List<Predicate> predicates) {
 		if (searchCriteria != null) {
 			if (StringUtils.isNotEmpty(searchCriteria.getFormName())) {
 				predicates

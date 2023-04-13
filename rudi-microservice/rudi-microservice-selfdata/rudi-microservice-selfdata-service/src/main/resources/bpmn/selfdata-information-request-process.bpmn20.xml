@@ -183,7 +183,8 @@
 			<bpmn:script>selfdataInformationRequestWorkflowContext.info(&quot;Update status validated&quot;);
 				selfdataInformationRequestWorkflowContext.updateStatus(context, execution, &quot;PENDING&quot;, &quot;VALIDATED&quot;,
 				&quot;Identité vérifiée&quot;);
-				selfdataInformationRequestWorkflowContext.computePotentialProducersOwners(context,execution,&quot;file:templates/emails/selfdata-information-request/subject.txt&quot;, &quot;file:templates/emails/selfdata-information-request/body.html&quot;);
+				selfdataInformationRequestWorkflowContext.computePotentialProducersOwners(context,execution,&quot;file:templates/emails/selfdata-information-request/subject.txt&quot;,
+				&quot;file:templates/emails/selfdata-information-request/body.html&quot;);
 			</bpmn:script>
 		</bpmn:scriptTask>
 		<bpmn:scriptTask id="ScriptTask_10" name="Demande rejétée" scriptFormat="javascript">
@@ -191,7 +192,7 @@
 			<bpmn:outgoing>SequenceFlow_41</bpmn:outgoing>
 			<bpmn:script>selfdataInformationRequestWorkflowContext.info(&quot;Update status rejected&quot;);
 				selfdataInformationRequestWorkflowContext.updateStatus(context, execution, &quot;CANCELLED&quot;, &quot;REJECTED&quot;,
-				&quot;Demande réjétée par l'animateur&quot;);
+				&quot;Demande rejetée par l'animateur&quot;);
 			</bpmn:script>
 		</bpmn:scriptTask>
 		<bpmn:sequenceFlow id="SequenceFlow_41" sourceRef="ScriptTask_10" targetRef="UserTask_3"/>

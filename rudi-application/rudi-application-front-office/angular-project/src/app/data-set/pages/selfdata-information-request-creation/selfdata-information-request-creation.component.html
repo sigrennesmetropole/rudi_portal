@@ -1,10 +1,8 @@
+<app-loader [allPage]="true" [isLight]="false"
+            [active]="submitLoading"></app-loader>
 <mat-sidenav-container>
     <mat-sidenav-content class="sidebar-content-pd">
         <div class="selfdata-container">
-
-            <app-loader [allPage]="true" [isLight]="false"
-                        [active]="submitLoading"></app-loader>
-
             <!-- En tête de la page -->
             <div>
                 <app-page-title [title1]="'metaData.selfdataInformationRequest.creation.title1' | translate"
@@ -44,6 +42,11 @@
                             </span>
                         </p>
                         <app-workflow-form [draftForm]="form" [properties]="properties"></app-workflow-form>
+                        <app-rudi-captcha *ngIf="enableCaptchaOnPage" [nomCaptcha]="'captchaFR'"></app-rudi-captcha>
+                        <!-- Box erreur captcha -->
+                        <app-error-box *ngIf="errorCaptchaInput"
+                                       [text]="'authentification.error-captcha' | translate"
+                        ></app-error-box>
                     </div>
                 </mat-card>
             </div>
@@ -55,7 +58,7 @@
                     </button>
                     <button
                         class="button mat-stroked-button send-button" mat-raised-button
-                        (click)="handleClickSubmit()">
+                        (click)="handleClickSubmit()" [disabled]="!isValid">
                         {{'metaData.selfdataInformationRequest.creation.send' | translate}}
                     </button>
                 </div>

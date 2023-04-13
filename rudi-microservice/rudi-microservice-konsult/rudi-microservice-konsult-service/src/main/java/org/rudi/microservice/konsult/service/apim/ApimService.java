@@ -9,9 +9,9 @@ import org.rudi.microservice.konsult.core.bean.ApiKeys;
 import org.rudi.microservice.konsult.core.bean.ApiKeysType;
 
 public interface ApimService {
-	boolean hasEnabledApi(Credentials credentials) throws SSLException;
+	boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException;
 
-	void enableApi(Credentials credentials) throws SSLException, APIManagerException;
+	void enableApi(Credentials credentials) throws SSLException, APIManagerException, AppServiceForbiddenException;
 
 	ApiKeys getKeys(ApiKeysType type, Credentials credentials) throws APIManagerException, AppServiceForbiddenException;
 }

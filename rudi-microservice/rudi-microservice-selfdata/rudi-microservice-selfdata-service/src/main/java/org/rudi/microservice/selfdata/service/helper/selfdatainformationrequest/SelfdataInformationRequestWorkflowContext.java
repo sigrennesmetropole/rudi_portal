@@ -39,6 +39,7 @@ import org.rudi.microservice.selfdata.service.exception.MissingProviderException
 import org.rudi.microservice.selfdata.service.exception.ProviderApiException;
 import org.rudi.microservice.selfdata.service.exception.UserNotFoundException;
 import org.rudi.microservice.selfdata.service.helper.provider.SelfdataProviderHelper;
+import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.SelfdataMatchingDataHelper;
 import org.rudi.microservice.selfdata.service.utils.SelfdataPairingUtils;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestDao;
 import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.SelfdataInformationRequestEntity;
@@ -65,15 +66,17 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 	private final OrganizationHelper organizationHelper;
 	private final SelfdataProviderHelper selfdataProviderHelper;
 	private final SelfdataPairingUtils selfdataPairingUtils;
+	private final SelfdataMatchingDataHelper selfdataMatchingDataHelper;
 
 	protected SelfdataInformationRequestWorkflowContext(EMailService eMailService, TemplateGeneratorImpl templateGenerator,
 			SelfdataInformationRequestDao assetDescriptionDao, SelfdataInformationRequestAssigmentHelper assignmentHelper,
-			ACLHelper aclHelper, FormHelper formHelper, DatasetService datasetService, OrganizationHelper organizationHelper, SelfdataProviderHelper selfdataProviderHelper, SelfdataPairingUtils selfdataPairingUtils) {
+			ACLHelper aclHelper, FormHelper formHelper, DatasetService datasetService, OrganizationHelper organizationHelper, SelfdataProviderHelper selfdataProviderHelper, SelfdataPairingUtils selfdataPairingUtils, SelfdataMatchingDataHelper selfdataMatchingDataHelper) {
 		super(eMailService, templateGenerator, assetDescriptionDao, assignmentHelper, aclHelper, formHelper);
 		this.datasetService = datasetService;
 		this.organizationHelper = organizationHelper;
 		this.selfdataProviderHelper = selfdataProviderHelper;
 		this.selfdataPairingUtils = selfdataPairingUtils;
+		this.selfdataMatchingDataHelper = selfdataMatchingDataHelper;
 	}
 
 	@Transactional(readOnly = false)
@@ -215,6 +218,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 
 	/**
 	 * sendEmailToUser envoie un email à un User
+	 *
 	 * @param executionEntity
 	 * @param assetDescription
 	 * @param userList
@@ -254,6 +258,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 
 	/**
 	 * sendEmailToUsersByRole envoie un email à un tous les users d'un rôle
+	 *
 	 * @param executionEntity
 	 * @param assetDescription
 	 * @param userRole
@@ -273,7 +278,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 		try {
 			if (CollectionUtils.isNotEmpty(userRole)) {
 				for (String role : userRole) {
-					users  = getAclHelper().searchUsers(role);
+					users = getAclHelper().searchUsers(role);
 					if (users != null) {
 						for (User user : users) {
 							assigneeEmails.add(lookupEMailAddress(user));
@@ -293,6 +298,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 			log.warn("Failed to send email to user with role " + userRole + " from " + assetDescription, e);
 		}
 	}
+
 	/**
 	 * Fait l'appariement entre l'utilisateur, les données pivots saisies et le JDD selfdata
 	 *
@@ -320,6 +326,9 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 		final Metadata dataset = datasetService.getDataset(datasetUuid);
 		final List<MatchingData> matchingDataList = selfdataPairingUtils.getMatchingDataList(dataset);
 		List<MatchingField> matchingDataFields = selfdataPairingUtils.extractMatchingDataFromFormData(informationRequestMap, matchingDataList);
+		// Dechiffrement des matchingData.
+		selfdataMatchingDataHelper.decrypt(matchingDataFields);
+
 		// Appeler sur le bouchon l'API d'appariemment
 		NodeProviderInfo providerInfo;
 		providerInfo = selfdataPairingUtils.getNodeProviderInfo(dataset);

@@ -4,6 +4,7 @@ import {HomeComponent} from './home/home.component';
 import {AuthGuardService as AuthGuard} from './core/services/auth-guard.service';
 import {NotAuthorizedComponent} from './login/pages/not-authorized/not-authorized.component';
 import {UserGuardService} from './core/services/user-guard.service';
+import {AclConfigurationResolver} from './shared/resolver/acl-configuration-resolver';
 
 const routes: Routes = [
 
@@ -11,7 +12,10 @@ const routes: Routes = [
         path: 'catalogue',
         loadChildren: () => import('./data-set/data-set.module')
             .then(m => m.DataSetModule),
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        resolve: {
+            aclAppInfo: AclConfigurationResolver
+        }
     },
     {
         path: 'projets',
@@ -23,7 +27,10 @@ const routes: Routes = [
         path: 'login',
         loadChildren: () => import('./login/login.module')
             .then(m => m.LoginModule),
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        resolve: {
+            aclAppInfo: AclConfigurationResolver
+        }
     },
     {
         path: 'personal-space',
@@ -58,7 +65,8 @@ const routes: Routes = [
         initialNavigation: 'enabled',
         scrollPositionRestoration: 'enabled'
     })],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [AclConfigurationResolver]
 })
 export class AppRoutingModule {
 }

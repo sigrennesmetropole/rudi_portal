@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {AuthenticationMethod, AuthenticationState} from './authentication/authentication-method';
 import {LogService} from './log.service';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {FormGroup} from '@angular/forms';
-import {AuthenticationMethod, AuthenticationState} from './authentication/authentication-method';
+import {AccountService} from './account.service';
 import {ANONYMOUS_USERNAME, AnonymousAuthentication} from './authentication/anonymous-authentication';
 import {LoginAuthentication} from './authentication/login-authentication';
+import {FormGroup} from '@angular/forms';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {AccountService} from './account.service';
 
 /**
  * Le header qui contient le token qui certifie si on est authentifié ou pas
@@ -30,6 +30,7 @@ export const SESSION_TOKEN = '_jwt';
 export const X_TOKEN = '_xtoken';
 
 const AUTHENTICATION_STATE_SESSION_STORAGE_KEY = 'authenticationState';
+
 
 @Injectable({
     providedIn: 'root'

@@ -226,7 +226,7 @@ public class AbstractCustomDaoImpl<E, C> {
 	}
 
 	@Nonnull
-	private PageImpl<E> emptyPage(Pageable pageable) {
+	protected PageImpl<E> emptyPage(Pageable pageable) {
 		return new PageImpl<>(new ArrayList<>(), pageable, 0);
 	}
 
@@ -235,7 +235,7 @@ public class AbstractCustomDaoImpl<E, C> {
 		if (searchCriteria != null) {
 			List<Predicate> predicates = new ArrayList<>();
 
-			addPredicates(searchCriteria, builder, root, predicates);
+			addPredicates(searchCriteria, builder, criteriaQuery, root, predicates);
 
 			final PredicateListBuilder<E, C> predicateListBuilder = new PredicateListBuilder<>(searchCriteria,
 					predicates, builder, root);
@@ -252,18 +252,18 @@ public class AbstractCustomDaoImpl<E, C> {
 	@SuppressWarnings("unused") // La méthode a vocation à être surchargée par les classes filles
 	/**
 	 * Méthode de configuration des prédicats
-	 * 
+	 *
 	 * @param searchCriteria le critère de recherche
 	 * @param builder        le builder
 	 * @param root           la racine de la recherche
 	 * @param predicates     la liste des prédicats
 	 */
-	protected void addPredicates(C searchCriteria, CriteriaBuilder builder, Root<E> root, List<Predicate> predicates) {
+	protected void addPredicates(C searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<E> root, List<Predicate> predicates) {
 		// Par défaut, aucun critère de recherche n'est imposé
 	}
 
 	/**
-	 * Version de {@link #addPredicates(Object, CriteriaBuilder, Root, List)} utilisant un {@link PredicateListBuilder}
+	 * Version de {@link #addPredicates(Object, CriteriaBuilder, CriteriaQuery, Root, List)} utilisant un {@link PredicateListBuilder}
 	 */
 	protected void addPredicates(PredicateListBuilder<E, C> builder) {
 		// Par défaut, aucun critère de recherche n'est imposé

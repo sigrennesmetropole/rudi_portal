@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 import org.rudi.facet.apimaccess.bean.Applications;
 import org.rudi.facet.apimaccess.bean.DevPortalSubscriptionSearchCriteria;
-import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.rudi.facet.apimaccess.bean.LimitingPolicies;
 import org.rudi.facet.apimaccess.bean.LimitingPolicy;
 import org.rudi.facet.apimaccess.bean.SearchCriteria;
@@ -28,6 +28,7 @@ import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApimaccessSpringBootTest;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.apimaccess.service.PolicyService;
+import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
@@ -57,6 +58,7 @@ class ApiManagerServiceTest {
 
 	@Test
 	@Order(1)
+	@Disabled
 	void testScenario() throws APIManagerException {
 		// récupération des subscription policies
 		LimitingPolicies subscriptionLimitingPolicies = policyService

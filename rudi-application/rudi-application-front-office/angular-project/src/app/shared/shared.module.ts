@@ -65,6 +65,8 @@ import {SelfdataProcessDefinitionKeyTranslatePipe} from './pipes/selfdata-proces
 import {BackPaginationComponent} from './back-pagination/back-pagination.component';
 import {DatasetHeadingComponent} from './dataset-heading/dataset-heading.component';
 import {DocumentationButtonComponent} from './documentation-button/documentation-button.component';
+import {BotDetectCaptchaModule} from 'angular-captcha';
+import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
 
 @NgModule({
     declarations:
@@ -131,7 +133,8 @@ import {DocumentationButtonComponent} from './documentation-button/documentation
             SelfdataProcessDefinitionKeyTranslatePipe,
             BackPaginationComponent,
             DatasetHeadingComponent,
-            DocumentationButtonComponent
+            DocumentationButtonComponent,
+            RudiCaptchaComponent
         ],
     imports: [
         CommonModule,
@@ -139,7 +142,8 @@ import {DocumentationButtonComponent} from './documentation-button/documentation
         CoreModule,
         PopoverModule,
         FilePickerModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        BotDetectCaptchaModule
     ],
     exports: [
         MaterialModules,
@@ -196,7 +200,8 @@ import {DocumentationButtonComponent} from './documentation-button/documentation
         SelfdataProcessDefinitionKeyTranslatePipe,
         BackPaginationComponent,
         DatasetHeadingComponent,
-        DocumentationButtonComponent
+        DocumentationButtonComponent,
+        RudiCaptchaComponent
     ],
     entryComponents: [],
     providers: [

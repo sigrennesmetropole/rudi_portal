@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {ProjectCatalogItem} from '../../model/project-catalog-item';
-import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from '../../../core/services/projekt-metier.service';
+import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {AclService} from '../../../acl/acl-api';
 import {Router} from '@angular/router';
 

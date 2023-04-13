@@ -58,6 +58,15 @@ public class RudiAlgorithmSpec implements AlgorithmParameterSpec {
 			.authenticationTagLength(128)
 			.initializationVectorLength(12)
 			.build();
+	
+	public static final RudiAlgorithmSpec AES_DEFAULT = RudiAlgorithmSpec.builder()
+			// On utilise exactement le même paramétrage que la librairie JavaScript "SubtleCrypto" : https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm
+			.secretKeyAlgorithm("AES")
+			.secretKeySize(256)
+			.cipherAlgorithm("AES/GCM/NoPadding") // https://fr.wikipedia.org/wiki/Galois/Counter_Mode
+			.authenticationTagLength(128)
+			.initializationVectorLength(12)
+			.build();
 
 	/**
 	 * Paramètres de l'algorithme de chiffrement du premier bloc
@@ -118,19 +127,19 @@ public class RudiAlgorithmSpec implements AlgorithmParameterSpec {
 	 *
 	 * @see GCMParameterSpec#getTLen()
 	 */
-	final int authenticationTagLength;
+	public final int authenticationTagLength;
 
 	/**
 	 * Initialization Vector length (in bytes)
 	 *
 	 * @see GCMParameterSpec#getIV()
 	 */
-	final int initializationVectorLength;
+	public final int initializationVectorLength;
 
 	/**
 	 * Algorithme utilisé pour chiffrer tous les blocs de données se trouvant après le premier bloc.
 	 */
-	final String cipherAlgorithm;
+	public final String cipherAlgorithm;
 
 	int getSecretKeySizeInBytes() {
 		return secretKeySize / 8;
@@ -139,7 +148,7 @@ public class RudiAlgorithmSpec implements AlgorithmParameterSpec {
 	/**
 	 * @return taille de bloc maximum que la clé privée peut chiffrer
 	 */
-	int getMaximumBlockSizeInBytes() {
+	public int getMaximumBlockSizeInBytes() {
 		return secretKeySize;
 	}
 

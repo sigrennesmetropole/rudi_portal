@@ -24,7 +24,7 @@ class ClientRegistererForAdmin extends ClientRegisterer<ClientAccessKey> {
 			@Value("${apimanager.oauth2.client.admin.registration.client-secret}") String adminClientSecret,
 			ClientRegistrationV017OperationAPI clientRegistrationOperationAPI
 	) {
-		super(tokenUri, scopes, clientRegistrationOperationAPI);
+		super(tokenUri, scopes, clientRegistrationOperationAPI, false);
 		this.adminRegistrationId = adminRegistrationId;
 		this.adminClientId = adminClientId;
 		this.adminClientSecret = adminClientSecret;

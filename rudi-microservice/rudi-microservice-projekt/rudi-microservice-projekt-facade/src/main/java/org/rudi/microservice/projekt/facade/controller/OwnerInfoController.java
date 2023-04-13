@@ -22,7 +22,13 @@ public class OwnerInfoController implements OwnerInfoApi {
 	}
 
 	@Override
-	public ResponseEntity<Boolean> checkOwnerHasAccessToDataset(UUID ownerUuid, UUID datasetUuid) throws Exception {
-		return ResponseEntity.ok(ownerInfoService.checkOwnerHasAccessToDataset(ownerUuid, datasetUuid));
+	public ResponseEntity<Boolean> hasAccessToDataset(UUID uuidToCheck, UUID datasetUuid) throws Exception {
+		return ResponseEntity.ok(ownerInfoService.hasAccessToDataset(uuidToCheck, datasetUuid));
 	}
+
+	@Override
+	public ResponseEntity<UUID> getLinkedDatasetOwner(UUID linkedDatasetUuid) throws Exception {
+		return ResponseEntity.ok(ownerInfoService.getLinkedDatasetOwner(linkedDatasetUuid));
+	}
+
 }

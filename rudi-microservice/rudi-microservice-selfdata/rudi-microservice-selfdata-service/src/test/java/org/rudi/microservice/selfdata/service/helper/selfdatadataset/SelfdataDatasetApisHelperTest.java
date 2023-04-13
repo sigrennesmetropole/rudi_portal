@@ -1,5 +1,12 @@
 package org.rudi.microservice.selfdata.service.helper.selfdatadataset;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -53,16 +60,10 @@ import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import lombok.RequiredArgsConstructor;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SelfdataSpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SelfdataDatasetApisHelperTest {
+class SelfdataDatasetApisHelperTest {
 
 	private final SelfdataDatasetApisHelper selfdataDatasetApisHelper;
 	private final CustomClientRegistrationRepository customClientRegistrationRepository;
@@ -86,13 +87,9 @@ public class SelfdataDatasetApisHelperTest {
 	}
 
 	private static Stream<Arguments> getMalformedMetadatas() {
-		return Stream.of(
-				Arguments.of(new Metadata()),
-				Arguments.of(getMetadataWithoutApis()),
-				Arguments.of(getMetadataWithWrongApis()),
-				Arguments.of(getMetadataWithTooMuchGdata()),
-				Arguments.of(getMetadataWithTooMuchTpbc())
-		);
+		return Stream.of(Arguments.of(new Metadata()), Arguments.of(getMetadataWithoutApis()),
+				Arguments.of(getMetadataWithWrongApis()), Arguments.of(getMetadataWithTooMuchGdata()),
+				Arguments.of(getMetadataWithTooMuchTpbc()));
 	}
 
 	@Test
@@ -108,7 +105,8 @@ public class SelfdataDatasetApisHelperTest {
 	@ParameterizedTest
 	@MethodSource("getUnauthenticatedUsers")
 	void test_searchCachedRegistration_401_when_unauthenticated(AuthenticatedUser input) {
-		assertThrows(AppServiceUnauthorizedException.class, () -> selfdataDatasetApisHelper.searchCachedRegistration(input));
+		assertThrows(AppServiceUnauthorizedException.class,
+				() -> selfdataDatasetApisHelper.searchCachedRegistration(input));
 	}
 
 	private static Stream<Arguments> getUnauthenticatedUsers() {
@@ -116,11 +114,7 @@ public class SelfdataDatasetApisHelperTest {
 		AuthenticatedUser userEmptyLogin = new AuthenticatedUser();
 		userEmptyLogin.setLogin("");
 
-		return Stream.of(
-				null,
-				Arguments.of(new AuthenticatedUser()),
-				Arguments.of(userEmptyLogin)
-		);
+		return Stream.of(null, Arguments.of(new AuthenticatedUser()), Arguments.of(userEmptyLogin));
 	}
 
 	@Test
@@ -135,7 +129,8 @@ public class SelfdataDatasetApisHelperTest {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin(RandomStringUtils.random(6));
 
-		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId").setClientSecret("randomSecret");
+		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId")
+				.setClientSecret("randomSecret");
 
 		customClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
 		assertNotNull(selfdataDatasetApisHelper.searchCachedRegistration(user));
@@ -150,8 +145,7 @@ public class SelfdataDatasetApisHelperTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidApiParams")
 	void test_getTpbcData_ko_when_invalidParameters(SelfdataApiParameters parameters) {
-		assertThrows(AppServiceException.class,
-				() -> selfdataDatasetApisHelper.getTpbcData(parameters));
+		assertThrows(AppServiceException.class, () -> selfdataDatasetApisHelper.getTpbcData(parameters));
 	}
 
 	private static Stream<Arguments> getInvalidApiParams() {
@@ -182,17 +176,9 @@ public class SelfdataDatasetApisHelperTest {
 		allButEmpty.setApplication(new Application());
 		allButEmpty.setUser(new AuthenticatedUser());
 
-		return Stream.of(
-				null,
-				Arguments.of(new SelfdataApiParameters()),
-				Arguments.of(justMetadata),
-				Arguments.of(justUser),
-				Arguments.of(justApplication),
-				Arguments.of(justMetadata),
-				Arguments.of(userAndApplication),
-				Arguments.of(metadataAndApplication),
-				Arguments.of(allButEmpty)
-		);
+		return Stream.of(null, Arguments.of(new SelfdataApiParameters()), Arguments.of(justMetadata),
+				Arguments.of(justUser), Arguments.of(justApplication), Arguments.of(justMetadata),
+				Arguments.of(userAndApplication), Arguments.of(metadataAndApplication), Arguments.of(allButEmpty));
 	}
 
 	@ParameterizedTest
@@ -218,11 +204,7 @@ public class SelfdataDatasetApisHelperTest {
 	private static Stream<Arguments> getMissingWso2Responses() {
 		APIList emptyList = new APIList();
 		emptyList.setList(new ArrayList<>());
-		return Stream.of(
-				null,
-				Arguments.of(new APIList()),
-				Arguments.of(emptyList)
-		);
+		return Stream.of(null, Arguments.of(new APIList()), Arguments.of(emptyList));
 	}
 
 	@Test
@@ -276,14 +258,13 @@ public class SelfdataDatasetApisHelperTest {
 
 		when(apIsService.searchAPI(any())).thenReturn(apiList);
 		when(applicationOperationAPI.getAPIResponse(any(), any(), any(), any(), any())).thenThrow(inputException);
-		assertThrows(TechnicalWso2CallException.class,
-				() -> selfdataDatasetApisHelper.getTpbcData(parameters));
+		assertThrows(TechnicalWso2CallException.class, () -> selfdataDatasetApisHelper.getTpbcData(parameters));
 	}
 
 	@Test
-	public void test_getGdataData_ok() throws AppServiceException, APIsOperationException,
-			ApplicationTokenGenerationException, ApplicationKeysNotFoundException, ApplicationOperationException,
-			APIEndpointException {
+	public void test_getGdataData_ok()
+			throws AppServiceException, APIsOperationException, ApplicationTokenGenerationException,
+			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException {
 		String mock;
 		try {
 			File file = new File("./src/test/resources/gdata-mocked-response.json");
@@ -293,8 +274,7 @@ public class SelfdataDatasetApisHelperTest {
 		}
 
 		ClientResponse successfulResponse = ClientResponse.create(HttpStatus.OK)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.getValue())
-				.body(mock).build();
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.getValue()).body(mock).build();
 
 		APIList apiList = new APIList();
 		List<APIInfo> apiInfos = new ArrayList<>();
@@ -326,8 +306,7 @@ public class SelfdataDatasetApisHelperTest {
 		}
 
 		ClientResponse successfulResponse = ClientResponse.create(HttpStatus.OK)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.getValue())
-				.body(mock).build();
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.getValue()).body(mock).build();
 
 		APIList apiList = new APIList();
 		List<APIInfo> apiInfos = new ArrayList<>();
@@ -349,12 +328,8 @@ public class SelfdataDatasetApisHelperTest {
 	private static Stream<Arguments> getValidDateParams() {
 		OffsetDateTime minimum = OffsetDateTime.parse("2020-01-01T15:20:30+08:00");
 		OffsetDateTime maximum = OffsetDateTime.parse("2021-01-01T15:20:30+08:00");
-		return Stream.of(
-				Arguments.of(null, null),
-				Arguments.of(minimum, null),
-				Arguments.of(null, maximum),
-				Arguments.of(minimum, maximum)
-		);
+		return Stream.of(Arguments.of(null, null), Arguments.of(minimum, null), Arguments.of(null, maximum),
+				Arguments.of(minimum, maximum));
 	}
 
 	@Test
@@ -387,27 +362,21 @@ public class SelfdataDatasetApisHelperTest {
 	private AuthenticatedUser createAndRegisterValidUser() {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin("validUser@com");
-		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId").setClientSecret("randomSecret");
+		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId")
+				.setClientSecret("randomSecret");
 		customClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
 		return user;
 	}
 
 	private static Stream<Arguments> getThrownExceptions() {
-		return Stream.of(
-				Arguments.of(ApplicationOperationException.class),
+		return Stream.of(Arguments.of(ApplicationOperationException.class),
 				Arguments.of(ApplicationKeysNotFoundException.class),
-				Arguments.of(ApplicationTokenGenerationException.class),
-				Arguments.of(APIEndpointException.class)
-		);
+				Arguments.of(ApplicationTokenGenerationException.class), Arguments.of(APIEndpointException.class));
 	}
 
 	private static Metadata getSelfdataMetadata() {
-		Metadata metadata = new Metadata()
-				.accessCondition(
-						new MetadataAccessCondition().confidentiality(
-								new MetadataAccessConditionConfidentiality().gdprSensitive(true)
-						)
-				);
+		Metadata metadata = new Metadata().accessCondition(new MetadataAccessCondition()
+				.confidentiality(new MetadataAccessConditionConfidentiality().gdprSensitive(true)));
 
 		MetadataExtMetadataExtSelfdata extSelfdata = new MetadataExtMetadataExtSelfdata();
 		extSelfdata.setExtSelfdataContent(new SelfdataContent());
@@ -470,7 +439,6 @@ public class SelfdataDatasetApisHelperTest {
 		metadata.setAvailableFormats(medias);
 		return metadata;
 	}
-
 
 	private static Media createMediaService(String name, InterfaceContract contract, String url) {
 		return new Media().mediaName(name).mediaType(Media.MediaTypeEnum.SERVICE)

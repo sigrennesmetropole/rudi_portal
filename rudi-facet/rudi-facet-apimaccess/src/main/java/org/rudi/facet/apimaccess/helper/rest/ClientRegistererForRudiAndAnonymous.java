@@ -11,9 +11,10 @@ class ClientRegistererForRudiAndAnonymous extends ClientRegisterer<ClientAccessK
 	ClientRegistererForRudiAndAnonymous(
 			@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
 			@Value("${apimanager.oauth2.client.default.registration.scopes}") String[] scopes,
-			ClientRegistrationV017OperationAPI clientRegistrationOperationAPI
+			ClientRegistrationV017OperationAPI clientRegistrationOperationAPI,
+			@Value("${apimanager.oauth2.client.anonymous.use-domain-prefix-to-register:false}") boolean useDomainPrefixToRegisterAnonymous
 	) {
-		super(tokenUri, scopes, clientRegistrationOperationAPI);
+		super(tokenUri, scopes, clientRegistrationOperationAPI, useDomainPrefixToRegisterAnonymous);
 	}
 
 }
