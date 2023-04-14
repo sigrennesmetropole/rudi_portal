@@ -1,0 +1,48 @@
+#create-jvm-options "\-XX\:MaxMetaspaceSize=512m"
+#create-jvm-options "\-XX\:MetaspaceSize=256m"
+#create-jvm-options "\-XX\:+UseG1GC"
+#create-jvm-options "\-XX\:+UseStringDeduplication"
+#create-jvm-options "\-XX\:+DisableExplicitGC"
+delete-jvm-options \-Xmx512m
+create-jvm-options \-Xmx1g
+#create-jvm-options \-Dfish.payara.classloading.delegate=false
+
+
+#delete-connector-connection-pool --cascade=true jms/__defaultConnectionFactory-Connection-Pool
+#create-connector-connection-pool --steadypoolsize=1 --maxpoolsize=250 --poolresize=2 --maxwait=60000 --raname=jmsra --connectiondefinition=javax.jms.QueueConnectionFactory jms/IngestQueueConnectionFactoryPool
+#create-connector-resource --poolname=jms/IngestQueueConnectionFactoryPool jms/IngestQueueConnectionFactory
+#create-admin-object --restype=javax.jms.Queue --raname=jmsra --property=Name=DataverseIngest jms/DataverseIngest
+create-jdbc-connection-pool --restype=javax.sql.DataSource --datasourceclassname=org.postgresql.ds.PGPoolingDataSource --property=create=true:User=${ENV=DATAVERSE_DB_USER}:PortNumber=${ENV=DATAVERSE_DB_PORT}:databaseName=${ENV=DATAVERSE_DB_NAME}:ServerName=${ENV=DATAVERSE_DB_HOST} dvnDbPool
+set resources.jdbc-connection-pool.dvnDbPool.property.password=${ENV=DATAVERSE_DB_PASSWORD}
+create-jdbc-resource --connectionpoolid=dvnDbPool jdbc/dataverse
+
+create-jvm-options \-Ddataverse.rserve.host=${ENV=RSERVE_HOST}
+create-jvm-options \-Ddataverse.rserve.port=${ENV=RSERVE_PORT}
+create-jvm-options \-Ddataverse.rserve.user=${ENV=RSERVE_USER}
+create-jvm-options \-Ddataverse.rserve.password=${ENV=RSERVE_PASSWORD}
+create-jvm-options \-Ddataverse.fqdn=localhost
+create-jvm-options \-Ddataverse.siteUrl=http\://\${dataverse.fqdn}\:8080
+create-jvm-options \-Ddataverse.auth.password-reset-timeout-in-minutes=60
+
+create-jvm-options \-Ddoi.username=dataciteuser
+create-jvm-options \-Ddoi.password=datacitepassword
+create-jvm-options \-Ddoi.baseurlstring=https\://mds.test.datacite.org
+
+create-jvm-options \-Ddoi.dataciterestapiurlstring=https\://mds.test.datacite.org
+create-jvm-options \-Ddataverse.timerServer=true
+create-jvm-options \-Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl
+
+create-jvm-options \-Ddataverse.db.user=${ENV=DATAVERSE_DB_USER}
+create-jvm-options \-Ddataverse.db.host=${ENV=DATAVERSE_DB_HOST}
+create-jvm-options \-Ddataverse.db.port=${ENV=DATAVERSE_DB_PORT}
+create-jvm-options \-Ddataverse.db.name=${ENV=DATAVERSE_DB_NAME}
+create-jvm-options \-Ddataverse.db.password=${ENV=DATAVERSE_DB_PASSWORD}
+
+#create-system-properties -Ddataverse.db.password=${ENV=DATAVERSE_DB_PASSWORD}
+#set server-config.network-config.protocols.protocol.http-listener-1.http.comet-support-enabled=true
+#set server-config.network-config.protocols.protocol.http-listener-1.http.request-timeout-seconds="${GLASSFISH_REQUEST_TIMEOUT}"
+#create-network-listener --protocol http-listener-1 --listenerport 8009 --jkenabled true jk-connector
+
+delete-javamail-resource mail/notifyMailSession
+create-javamail-resource --mailhost "$i{ENV=SMTP_SERVER}" --mailuser "dataversenotify" --fromaddress "do-not-reply@${HOST_ADDRESS}" --property mail.smtp.port="${ENV=SMTP_SERVER_PORT}" mail/notifyMailSession
+    

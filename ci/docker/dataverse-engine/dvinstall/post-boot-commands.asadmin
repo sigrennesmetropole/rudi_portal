@@ -1,0 +1,9 @@
+create-system-properties "dataverse.files.directory=/data"
+create-system-properties "dataverse.files.file.type=file"
+create-system-properties "dataverse.files.file.label=file"
+create-system-properties "dataverse.files.file.directory=/data"
+create-system-properties "dataverse.files.local.type=file"
+create-system-properties "dataverse.files.local.label=file"
+create-system-properties "dataverse.files.local.directory=/data"
+
+deploy /opt/dv/dvinstall/dataverse.war
