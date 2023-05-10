@@ -2,6 +2,8 @@
 
 ## Présentation
 
+Rudi est une plateforme de partage de données à l’échelle locale qui vise à permettre aux acteurs du territoire de partager facilement leurs données tout en en gardant la maîtrise, d’accéder en un même point à de nombreuses données et de créer des services numériques basés sur une gestion responsable et éthique des données.
+
 Ce répertoire regroupe le code du portail Rudi dans sa version stable.
 Le **portail Rudi** est accessible à l'adresse : https://rudi.bzh
 
