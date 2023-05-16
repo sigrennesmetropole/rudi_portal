@@ -10,11 +10,11 @@ import {IconRegistryService} from '../../../core/services/icon-registry.service'
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
 
 @Component({
-    selector: 'app-received-access-requests',
-    templateUrl: './received-access-requests.component.html',
-    styleUrls: ['./received-access-requests.component.scss']
+    selector: 'app-my-notifications',
+    templateUrl: './my-notifications.component.html',
+    styleUrls: ['./my-notifications.component.scss']
 })
-export class ReceivedAccessRequestsComponent implements OnInit {
+export class MyNotificationsComponent implements OnInit {
     searchIsRunning = false;
     requestsToStudy: RequestToStudy[];
     urlToDoc: string;

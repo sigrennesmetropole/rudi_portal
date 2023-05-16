@@ -5,7 +5,7 @@
 <app-search-count
     [searchIsRunning]="loading"
     [count]="requestsToStudy?.length"
-    [noResultMessage]="'personalSpace.receivedAccessRequests.noResult' | translate">
+    [noResultMessage]="'personalSpace.myNotifications.noResult' | translate">
 </app-search-count>
 
 <!-- On utilise hidden à la place de *ngIf pour éviter des bugs avec mat-table : https://stackoverflow.com/a/56127490/1655155 -->
@@ -16,13 +16,13 @@
 
         <ng-container matColumnDef="receivedDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header"
-                scope="col">{{'personalSpace.receivedAccessRequests.receivedDate'|translate}}</th>
+                scope="col">{{'personalSpace.myNotifications.receivedDate'|translate}}</th>
             <td mat-cell *matCellDef="let requestToStudy"> {{requestToStudy.receivedDate | date: 'dd/MM/YYYY'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="processDefinitionKey">
             <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col" class="table-header">
-                {{'personalSpace.receivedAccessRequests.processDefinitionKey'|translate}}
+                {{'personalSpace.myNotifications.processDefinitionKey'|translate}}
             </th>
             <td mat-cell *matCellDef="let requestToStudy">
                 <div class="icon-container">
@@ -34,23 +34,23 @@
 
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header"
-                scope="col">{{'personalSpace.receivedAccessRequests.description'|translate}}</th>
-            <td mat-cell *matCellDef="let requestToStudy" class="dataset-title"> {{requestToStudy.description}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="initiator">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header"
-                scope="col"
-                class="th-padding">{{'personalSpace.receivedAccessRequests.ownerName'|translate}}</th>
-            <td mat-cell
-                *matCellDef="let requestToStudy"> {{requestToStudy.initiator}} </td>
+                scope="col">{{'personalSpace.myNotifications.description'|translate}}</th>
+            <td mat-cell *matCellDef="let requestToStudy" class="dataset-title">
+                <div class="description-container">
+                    {{requestToStudy.description}}
+                </div>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header"
-                scope="col">{{'personalSpace.receivedAccessRequests.status'|translate}}</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header status-header"
+                scope="col">
+                <div>
+                    <span>{{'personalSpace.myNotifications.status'|translate}}</span>
+                </div>
+            </th>
             <td mat-cell *matCellDef="let requestToStudy"><span
-                class="status-chip center-column">{{requestToStudy.status}}</span>
+                class="status-chip">{{requestToStudy.status}}</span>
             </td>
         </ng-container>
 

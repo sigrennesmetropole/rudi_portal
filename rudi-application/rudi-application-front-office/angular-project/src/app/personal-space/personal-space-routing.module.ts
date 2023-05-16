@@ -1,9 +1,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MyAccountComponent} from './pages/my-account/my-account.component';
-import {ReceivedAccessRequestsComponent} from './pages/received-access-requests/received-access-requests.component';
+import {MyNotificationsComponent} from './pages/my-notifications/my-notifications.component';
 import {RequestDetailComponent} from './pages/request-detail/request-detail.component';
-import {MyProjectsComponent} from './pages/projects/my-projects.component';
 import {ProjectDetailComponent} from './components/project-detail/project-detail.component';
 import {CommonModule} from '@angular/common';
 import {MyProjectDetailsComponent} from './pages/my-project-details/my-project-details.component';
@@ -15,6 +14,7 @@ import {SelfdataDatasetDetailsComponent} from './pages/selfdata-dataset-details/
 import {UserGuardService} from '../core/services/user-guard.service';
 import {AuthGuardService as AuthGuard} from '../core/services/auth-guard.service';
 import {NewRequestDetailComponent} from './pages/new-request-detail/new-request-detail.component';
+import {MyActivityComponent} from './pages/my-activity/my-activity.component';
 
 const routes: Routes = [
     {
@@ -28,15 +28,15 @@ const routes: Routes = [
         canActivate: [AuthGuard, UserGuardService]
     },
     {
-        // Path received-access-requests
-        path: 'received-access-requests',
-        component: ReceivedAccessRequestsComponent,
+        // Path my-notifications
+        path: 'my-notifications',
+        component: MyNotificationsComponent,
         canActivate: [AuthGuard, UserGuardService]
     },
     {
-        // Path Projects
-        path: 'my-projects',
-        component: MyProjectsComponent,
+        // Path my activity
+        path: 'my-activity',
+        component: MyActivityComponent,
         canActivate: [AuthGuard, UserGuardService]
     },
     {

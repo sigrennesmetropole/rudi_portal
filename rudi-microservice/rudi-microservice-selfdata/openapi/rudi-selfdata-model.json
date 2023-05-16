@@ -139,6 +139,12 @@
 							"datasetUuid": {
 								"type": "string",
 								"format": "uuid"
+							},
+							"status": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SelfdataInformationRequestStatus"
+								}
 							}
 						}
 					}

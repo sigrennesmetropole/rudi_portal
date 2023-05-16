@@ -44,10 +44,6 @@
             &.owner-name {
                 font-weight: bold;
             }
-
-            &:last-child {
-                text-align: center;
-            }
         }
 
     }
@@ -66,6 +62,7 @@
 .icon-container {
     display: flex;
     align-items: center;
+    width: 23ch;
 }
 
 .table-header {
@@ -76,10 +73,9 @@
     text-decoration: underline;
 }
 
-.table-header:last-child {
-    display: flex;
+// Centrer le contenu de la colonne "status"
+::ng-deep .status-header .mat-sort-header-container {
     justify-content: center;
-    height: inherit;
 }
 
 .status-chip {
@@ -90,3 +86,28 @@
     font-size: 13px;
     color: $primary-color;
 }
+
+// Taille fixe colonne date (format dd/mm/yyyy) marge de 16 caractères
+.mat-column-receivedDate {
+    width: 16ch;
+}
+
+// Taille fixe colonne statut, 50 caractères max en BDD
+.mat-column-status {
+    width: 50ch;
+    text-align: center;
+}
+
+// Taille variable pour la description 40% de la fenêtre (compromis)
+.mat-column-description {
+    max-width: 40vw;
+}
+
+// Crop de la description si trop longue
+.description-container {
+    max-width: 100%;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

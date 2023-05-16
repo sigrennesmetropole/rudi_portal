@@ -8,15 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.rudi.facet.bpmn.entity.workflow.AbstractAssetDescriptionEntity;
 import org.rudi.microservice.projekt.core.common.SchemaConstants;
 import org.rudi.microservice.projekt.storage.entity.DatasetConfidentiality;
-import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,12 +25,12 @@ import lombok.ToString;
 @Table(name = "linked_dataset", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
-@ToString(exclude = {"project"})
+@ToString(exclude = { "project" })
 public class LinkedDatasetEntity extends AbstractAssetDescriptionEntity {
 
 	private static final long serialVersionUID = -7654406330206580256L;
+	public static final String FIELD_ID = "id";
 	public static final String DATASET_UUID_FIELD = "datasetUuid";
-	public static final String PROJECT_FIELD = "project";
 	public static final String STATUS_FIELD = "linkedDatasetStatus";
 	public static final String END_DATE_FIELD = "endDate";
 	public static final String PROJECT_FK = "project_fk";
@@ -71,10 +67,6 @@ public class LinkedDatasetEntity extends AbstractAssetDescriptionEntity {
 	@Column(name = "dataset_confidentiality", nullable = false, length = 20)
 	@Enumerated(EnumType.STRING)
 	private DatasetConfidentiality datasetConfidentiality = DatasetConfidentiality.OPENED;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = PROJECT_FK)
-	private ProjectEntity project;
 
 	@Override
 	public boolean equals(Object o) {

@@ -25,7 +25,7 @@ export class SuccessRestrictedRequestDialogComponent {
 
     goToMyReuses(): Promise<boolean>  {
         this.handleClose();
-       return  this.router.navigate(['/personal-space/my-projects']);
+       return  this.router.navigate(['/personal-space/my-activity']);
     }
 
     /**

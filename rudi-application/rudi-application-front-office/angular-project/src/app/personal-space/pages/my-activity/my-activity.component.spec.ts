@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyLinkedDatasetsComponent } from './my-linked-datasets.component';
+import { MyActivityComponent } from './my-activity.component';
 
-describe('AllLinkedDatasetsComponent', () => {
-  let component: MyLinkedDatasetsComponent;
-  let fixture: ComponentFixture<MyLinkedDatasetsComponent>;
+describe('MyActivityComponent', () => {
+  let component: MyActivityComponent;
+  let fixture: ComponentFixture<MyActivityComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MyLinkedDatasetsComponent ]
+      declarations: [ MyActivityComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MyLinkedDatasetsComponent);
+    fixture = TestBed.createComponent(MyActivityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

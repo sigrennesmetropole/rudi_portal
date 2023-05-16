@@ -26,6 +26,7 @@ import lombok.ToString;
 public class SelfdataInformationRequestEntity extends AbstractAssetDescriptionEntity {
 
 	private static final long serialVersionUID = -6508639499690690560L;
+	public static final String SELFDATA_INFORMATION_REQUEST_STATUS = "selfdataInformationRequestStatus";
 
 	@Column(name = "dataset_uuid", nullable = false, unique = true)
 	private UUID datasetUuid;

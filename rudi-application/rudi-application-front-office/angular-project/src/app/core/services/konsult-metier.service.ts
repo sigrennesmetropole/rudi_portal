@@ -12,6 +12,7 @@ import * as mime from 'mime';
 import * as customMimeDatabase from '../../../assets/mime-db/custom-mime-db.json';
 // @ts-ignore
 import * as Module from 'module';
+import {AccessStatusFiltersType} from './filters/access-status-filters-type';
 
 export const MAX_RESULTS_PER_PAGE = 36;
 export const MAX_RESULTS_PER_REQUEST = 100;
@@ -41,8 +42,11 @@ export class KonsultMetierService {
     /**
      * Recuperation de la liste de metadata depuis le server
      */
-    searchMetadatas(filters?: Filters, offset?: number, limit?: number): Observable<MetadataList> {
+    searchMetadatas(filters?: Filters, accessStatusHiddenValues?: AccessStatusFiltersType[], offset?: number, limit?: number): Observable<MetadataList> {
         const accessStatus = MetadataUtils.getAccessStatus(filters);
+        if (MetadataUtils.isSelfdataHidden(accessStatusHiddenValues)) {
+            accessStatus.gdprSensitive = false;
+        }
         return this.konsultService.searchMetadatas(
             filters.search,
             filters.themes,
@@ -83,7 +87,7 @@ export class KonsultMetierService {
                 order: DEFAULT_ORDER_VALUE,
                 accessStatus: null,
                 globalIds
-            }, offset, MAX_RESULTS_PER_REQUEST)
+            }, null, offset, MAX_RESULTS_PER_REQUEST)
         );
     }
 
@@ -121,7 +125,6 @@ export class KonsultMetierService {
     getNumberOfDatasetsOnTheSameTheme(globalId: string): Observable<number> {
         return this.konsultService.getNumberOfDatasetsOnTheSameTheme(globalId);
     }
-
     getMediaFileExtension(media: Media): string {
         const mediaFile = media as MediaFile;
         const originalFileType = mediaFile.file_type.replace(CRYPT_SUFFIX, '');

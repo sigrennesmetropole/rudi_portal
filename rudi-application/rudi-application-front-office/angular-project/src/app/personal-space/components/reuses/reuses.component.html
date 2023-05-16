@@ -4,7 +4,8 @@
     [noResultMessage]="'personalSpace.myReuses.noResult' | translate"
     [hyperLink]="'personalSpace.myReuses.here' | translate"
     [hasLink]="true"
-    [routerLink]="'/projets'">
+    [routerLink]="'/projets'"
+    [resultMessage]="'personalSpace.myReuses.resultTilte' | translate">
 </app-search-count>
 <app-loader [active]="searchIsRunning" [allPage]="true" [isLight]="true" [noText]="true"></app-loader>
 <!-- On utilise hidden à la place de *ngIf pour éviter des bugs avec mat-table : https://stackoverflow.com/a/56127490/1655155 -->

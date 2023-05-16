@@ -11,6 +11,8 @@ import {PagedProjectList} from '../../../projekt/projekt-model';
 import {mapEach} from '../../../shared/utils/ObservableUtils';
 import {BackPaginationSort} from '../../../shared/back-pagination/back-pagination-sort';
 import {SortTableInterface} from '../../../shared/back-pagination/sort-table-interface';
+import {Status} from '../../../api-bpmn';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface ProjectSummary {
     uuid: string;
@@ -51,7 +53,8 @@ export class ReusesComponent implements OnInit {
                 private readonly userService: UserService,
                 private readonly breakpointObserver: BreakpointObserverService,
                 private readonly projectDependencyFetcher: ProjectDependenciesFetchers,
-                private readonly projectDependencyService: ProjectDependenciesService) {
+                private readonly projectDependencyService: ProjectDependenciesService,
+                private readonly translateService: TranslateService) {
         this.mediaSize = this.breakpointObserver.getMediaSize();
     }
 
@@ -96,7 +99,7 @@ export class ReusesComponent implements OnInit {
                 mapEach(({project, dependencies}) => ({
                     uuid: project.uuid,
                     updatedDate: new Date(project.updated_date),
-                    projectTitle: project.title,
+                    projectTitle: this.computeTitleProject(project.status) + project.title,
                     confidentiality: project.confidentiality.label,
                     status: project.functional_status,
                     numberOfDatasets: dependencies.numberOfRequests
@@ -127,5 +130,18 @@ export class ReusesComponent implements OnInit {
             this.backPaginationSort.currentPage = this.page;
             this.loadProjects(this.backPaginationSort.sortTable(sort));
         }
+    }
+
+    /**
+     * Méthode qui permet de rajouter au titre du projet le bon prefixe en fonction de son statut
+     * @param status
+     */
+    computeTitleProject(status: Status): string {
+        if (status === Status.Completed) {
+            return this.translateService.instant('personalSpace.myReuses.isReuse') + ' ';
+        } else {
+            return this.translateService.instant('personalSpace.myReuses.isProject') + ' ';
+        }
+
     }
 }

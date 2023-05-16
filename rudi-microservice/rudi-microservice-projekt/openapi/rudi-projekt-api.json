@@ -4461,6 +4461,120 @@
 					}
 				}
 			}
+		},
+		"/my-linked-datasets": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche des linked datasets du user connecté",
+				"description": "Recherche des linked datasets du user connecté",
+				"operationId": "searchMyLinkedDatasets",
+				"parameters": [
+					{
+						"name": "criteria",
+						"in": "query",
+						"description": "critères de recherches",
+						"required": true,
+						"schema": {
+							"$ref": "./rudi-projekt-model.json#/components/schemas/LinkedDatasetSearchCriteria"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-projekt-model.json#/components/schemas/PagedLinkedDatasetList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/my-new-dataset-requests": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche des new datasets request du user connecté",
+				"description": "Recherche des new datasets request du user connecté",
+				"operationId": "searchMyNewDatasetRequests",
+				"parameters": [
+					{
+						"name": "criteria",
+						"in": "query",
+						"description": "critères de recherches",
+						"required": true,
+						"schema": {
+							"$ref": "./rudi-projekt-model.json#/components/schemas/NewDatasetRequestSearchCriteria"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-projekt-model.json#/components/schemas/PagedNewDatasetRequestList"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
 		}
 	},
 	"components": {

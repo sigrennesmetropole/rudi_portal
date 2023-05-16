@@ -16,11 +16,11 @@ export class ProcessDefinitionKeyTranslatePipe implements PipeTransform {
     transform(value: string): string {
         let result: string;
         if (value === ProcessDefinitionEnum.LINKED_DATASET_PROCESS) {
-            result = this.translateService.instant('personalSpace.receivedAccessRequests.access');
+            result = this.translateService.instant('personalSpace.myNotifications.access');
         } else if (value === ProcessDefinitionEnum.NEW_DATASET_REQUEST_PROCESS) {
-            result = this.translateService.instant('personalSpace.receivedAccessRequests.newRequest');
+            result = this.translateService.instant('personalSpace.myNotifications.newRequest');
         } else if (value === ProcessDefinitionEnum.SELFDATA_INFORMATION_REQUEST_Process) {
-            result = this.translateService.instant('personalSpace.receivedAccessRequests.selfdata');
+            result = this.translateService.instant('personalSpace.myNotifications.selfdata');
         } else {
             result = '-';
         }

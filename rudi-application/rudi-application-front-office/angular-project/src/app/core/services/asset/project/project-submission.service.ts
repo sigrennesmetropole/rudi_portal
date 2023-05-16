@@ -476,7 +476,7 @@ export class ProjectSubmissionService {
     /**
      * Ouvre une popin de sélection d'un JDD
      */
-    public openDialogMetadata(restrictedAccessFilterValue: AccessStatusFiltersType, restrictedAccessHiddenValues: AccessStatusFiltersType[]): Observable<Metadata> {
+    public openDialogMetadata(restrictedAccessFilterValue: AccessStatusFiltersType, restrictedAccessHiddenValues?: AccessStatusFiltersType[]): Observable<Metadata> {
         const dialogConfig = new DefaultMatDialogConfig<AddDataSetDialogData>();
         dialogConfig.width = '';
         dialogConfig.data = {

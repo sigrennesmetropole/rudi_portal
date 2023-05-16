@@ -51,6 +51,10 @@ public class FilterQuery extends ArrayList<String> {
 	 * @param value valeur recherchée, null si on recherche où le champ est sans valeur
 	 */
 	public <T> FilterQuery add(FieldSpec fieldSpec, @Nullable T value) {
+		return add(fieldSpec, value, false);
+	}
+
+	public <T> FilterQuery add(FieldSpec fieldSpec, @Nullable T value, boolean except) {
 		final String filterQueryItem;
 		if (value == null) {
 			filterQueryItem = ItemBuilder.buildFilterQueryForFieldWithoutValue(fieldSpec);
@@ -59,9 +63,12 @@ public class FilterQuery extends ArrayList<String> {
 			if (withExactMatch) {
 				itemBuilder.withExactMatch();
 			}
-			filterQueryItem = itemBuilder.buildForField(fieldSpec);
+			if (!except) {
+				filterQueryItem = itemBuilder.buildForField(fieldSpec);
+			} else {
+				filterQueryItem = itemBuilder.buildFilterQueryForExceptValueField(fieldSpec);
+			}
 		}
-
 		add(filterQueryItem);
 		return this;
 	}

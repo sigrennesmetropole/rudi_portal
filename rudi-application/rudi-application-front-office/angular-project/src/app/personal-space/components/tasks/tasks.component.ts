@@ -17,7 +17,7 @@ import {compareDates, compareIgnoringCase} from '../../../shared/utils/comparato
 })
 export class TasksComponent implements OnInit {
 
-    requestsToStudyDisplayedColumns: string[] = ['receivedDate', 'processDefinitionKey', 'description', 'initiator', 'status'];
+    requestsToStudyDisplayedColumns: string[] = ['receivedDate', 'processDefinitionKey', 'description', 'status'];
     dataSource: MatTableDataSource<RequestToStudy>;
     restrictedDatasetIcon = 'key_icon_88_blue_definition_key';
     selfdataIcon = 'self_data_icon_definition_key';

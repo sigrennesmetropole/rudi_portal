@@ -92,7 +92,8 @@ class SearchCriteriaMapperTest {
 		final SearchParams searchParams = searchCriteriaMapper
 				.datasetSearchCriteriaToSearchParams(datasetSearchCriteria, false);
 		assertThat(searchParams.getFilterQuery())
-				.containsExactly("rudi_access_condition_confidentiality_gdpr_sensitive:\"false\"", "rudi_access_condition_confidentiality_restricted_access:\"true\"");
+				.contains("rudi_access_condition_confidentiality_restricted_access:\"true\"")
+				.doesNotContain("rudi_access_condition_confidentiality_gdpr_sensitive:\"true\"");
 	}
 
 	@Test

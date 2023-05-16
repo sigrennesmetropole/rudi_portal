@@ -136,6 +136,6 @@ export class SelfdataInformationRequestDetailComponent
     }
 
     protected goBackToList(): Promise<boolean> {
-        return this.router.navigate(['/personal-space/received-access-requests']);
+        return this.router.navigate(['/personal-space/my-notifications']);
     }
 }

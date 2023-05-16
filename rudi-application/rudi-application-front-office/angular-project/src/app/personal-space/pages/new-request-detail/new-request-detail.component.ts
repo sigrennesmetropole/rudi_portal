@@ -74,6 +74,6 @@ export class NewRequestDetailComponent extends TaskDetailComponent<LinkedDataset
         }
     }
     protected goBackToList(): Promise<boolean> {
-        return this.router.navigate(['/personal-space/received-access-requests']);
+        return this.router.navigate(['/personal-space/my-notifications']);
     }
 }

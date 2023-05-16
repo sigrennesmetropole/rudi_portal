@@ -17,7 +17,7 @@ export class SelfdataProcessDefinitionKeyTranslatePipe implements PipeTransform 
     transform(value: string): string {
         let result: string;
         if (value === ProcessDefinitionEnum.SELFDATA_INFORMATION_REQUEST_Process) {
-            result = this.translateService.instant('personalSpace.receivedAccessRequests.access');
+            result = this.translateService.instant('personalSpace.myNotifications.access');
         } else {
             result = '-';
         }

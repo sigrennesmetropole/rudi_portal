@@ -1,0 +1,26 @@
+<app-page>
+    <app-loader [allPage]="false" [isTransparent]="true" [noText]="true"
+                [active]="searchUrlLoading"></app-loader>
+    <app-page-title *ngIf="!searchUrlLoading"
+                    [title1]="'personalSpace.myActivity.title'|translate"
+                    [title3]="'personalSpace.myActivity.description1'|translate"
+                    [title4]="'personalSpace.myActivity.linkText'|translate"
+                    [urlToDoc]="urlToDoc"
+                    class="d-flex justify-content-center w-100"></app-page-title>
+
+    <app-tabs>
+        <app-tab [label]="'personalSpace.myActivity.tab1'|translate"
+        [icon]="'icon-my-reuses'">
+            <ng-template>
+                <app-reuses [ITEMS_PER_PAGE]="10"></app-reuses>
+            </ng-template>
+        </app-tab>
+        <app-tab [label]="'personalSpace.myActivity.tab2'|translate"
+                 [icon]="'icon-demands'">
+            <ng-template>
+                <app-my-requests></app-my-requests>
+            </ng-template>
+        </app-tab>
+    </app-tabs>
+
+</app-page>

@@ -1,4 +1,5 @@
 <pagination-controls
+    [id]="id"
     (pageChange)="handlePageChange($event)"
     [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
     class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"

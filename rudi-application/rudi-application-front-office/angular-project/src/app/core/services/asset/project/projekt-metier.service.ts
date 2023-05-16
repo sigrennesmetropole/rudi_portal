@@ -28,6 +28,7 @@ import {DateTimeUtils} from '../../../../shared/utils/date-time-utils';
 import {ErrorWithCause} from '../../../../shared/models/error-with-cause';
 import {DataSize} from '../../../../shared/models/data-size';
 import {PropertiesAdapter} from '../../properties-adapter';
+import {LinkedDatasetMetadatas} from './project-dependencies.service';
 
 const {firstElementOrThrow} = PageResultUtils;
 
@@ -518,6 +519,18 @@ export class ProjektMetierService {
      * @param projectUuid
      */
     deleteLinkedDatasetRequest(projectUuid: string ,linkedDatasetRequestUuid: string): Observable<void> {
-        return of();
+        return of(void 0);
+    }
+
+     getDatasetsByUpdatedDate(data: LinkedDatasetMetadatas[]): LinkedDatasetMetadatas[] {
+        return data.sort((a: LinkedDatasetMetadatas, b: LinkedDatasetMetadatas) => {
+            return new Date(b.linkedDataset?.updated_date).getTime() - new Date(a.linkedDataset?.updated_date).getTime();
+        });
+    }
+
+     getRequestsByUpdatedDate(data: NewDatasetRequest[]): NewDatasetRequest[] {
+        return data.sort((a: NewDatasetRequest, b: NewDatasetRequest) => {
+            return new Date(b.updated_date).getTime() - new Date(a.updated_date).getTime();
+        });
     }
 }

@@ -21,7 +21,9 @@ export type TitleIconType =
     'icon_add_blue' |
     'square-fill' |
     'circle-fill' |
-    'dash';
+    'dash'|
+    'icon-demands'|
+    'icon-my-reuses';
 
 
 export const ALL_TYPES: TitleIconType[] = [
@@ -44,6 +46,8 @@ export const ALL_TYPES: TitleIconType[] = [
     'square-fill',
     'circle-fill',
     'dash',
+    'icon-demands',
+    'icon-my-reuses'
 ];
 
 export const PROCESS_DEFINITION_KEY_TYPES: TitleIconType[] = [

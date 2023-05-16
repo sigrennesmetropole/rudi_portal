@@ -44,11 +44,15 @@ import lombok.ToString;
 @Table(name = "project", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
-@ToString(exclude = {"desiredSupports", "linkedDatasets", "datasetRequests"})
+@ToString(exclude = { "desiredSupports", "linkedDatasets", "datasetRequests" })
 public class ProjectEntity extends AbstractAssetDescriptionEntity {
 
-	public static final String FIELD_OWNER_UUID = "ownerUuid";
 	private static final long serialVersionUID = -6508639499690690560L;
+	public static final String FIELD_OWNER_UUID = "ownerUuid";
+	public static final String FIELD_DATASET_REQUESTS = "datasetRequests";
+	public static final String FIELD_LINKED_DATASET = "linkedDatasets";
+	public static final String FIELD_ID = "id";
+
 
 	/**
 	 * Titre

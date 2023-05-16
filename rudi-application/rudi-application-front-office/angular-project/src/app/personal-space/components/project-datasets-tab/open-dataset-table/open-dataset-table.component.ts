@@ -13,6 +13,7 @@ import {DatasetsTableData, RowTableData} from '../dataset.interface';
 import {DialogSubscribeDatasetsService} from '../../../../core/services/dialog-subscribe-datasets.service';
 import {DialogClosedData} from '../../../../data-set/models/dialog-closed-data';
 import {ProjectConsultationService} from '../../../../core/services/asset/project/project-consultation.service';
+import {ProjektMetierService} from '../../../../core/services/asset/project/projekt-metier.service';
 
 @Component({
     selector: 'app-open-dataset-table',
@@ -51,13 +52,14 @@ export class OpenDatasetTableComponent {
         private readonly translateService: TranslateService,
         private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
         private readonly projectConsultationService: ProjectConsultationService,
+        private readonly projektMetierService:ProjektMetierService,
         ) {
     }
 
     @Input()
     set openDatasetsList(value: LinkedDatasetMetadatas[]) {
         if (value && value.length > 0) {
-            this.openDatasets = value.map((element: LinkedDatasetMetadatas) => {
+            this.openDatasets = this.projektMetierService.getDatasetsByUpdatedDate(value).map((element: LinkedDatasetMetadatas) => {
                 const dataset = element?.dataset;
                 this.associatedMetadatas.push(dataset);
                 return {
@@ -80,7 +82,7 @@ export class OpenDatasetTableComponent {
     openOpenedDatasetsPopin(): void {
         this.addingElementToOpenedTable.emit(true);
         const selectedMetadata$ = this.projectSubmissionService
-            .openDialogMetadata(AccessStatusFiltersType.Opened, [AccessStatusFiltersType.Restricted, AccessStatusFiltersType.GdprSensitive]);
+            .openDialogMetadata(AccessStatusFiltersType.Opened);
         this.projectSubmissionService.checkLinkExistsOrCreateLinkObject(selectedMetadata$, this.associatedMetadatas)
             .subscribe({
                 next: (linkToAdd: LinkedDatasetFromProject) => {
