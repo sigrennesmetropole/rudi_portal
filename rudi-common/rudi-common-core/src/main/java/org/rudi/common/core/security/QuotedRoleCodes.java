@@ -19,6 +19,7 @@ public final class QuotedRoleCodes {
 	public static final String MODULE_KOS_ADMINISTRATOR = "'" + RoleCodes.MODULE_KOS_ADMINISTRATOR + "'";
 	public static final String MODULE_PROJEKT = "'" + RoleCodes.MODULE_PROJEKT + "'";
 	public static final String MODULE_PROJEKT_ADMINISTRATOR = "'" + RoleCodes.MODULE_PROJEKT_ADMINISTRATOR + "'";
+	public static final String MODULE_SELFDATA = "'" + RoleCodes.MODULE_SELFDATA + "'";
 	public static final String MODULE_SELFDATA_ADMINISTRATOR = "'" + RoleCodes.MODULE_SELFDATA_ADMINISTRATOR + "'";
 	public static final String MODULE_STRUKTURE = "'" + RoleCodes.MODULE_STRUKTURE + "'";
 	public static final String MODULE_STRUKTURE_ADMINISTRATOR = "'" + RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR + "'";

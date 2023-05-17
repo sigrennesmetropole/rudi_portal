@@ -9,7 +9,9 @@ import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.projekt.helper.ProjektHelper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AccessToOpenedDatasetChecker extends AbstractAccessToDatasetChecker {
 	private final ProjektHelper projektHelper;
 

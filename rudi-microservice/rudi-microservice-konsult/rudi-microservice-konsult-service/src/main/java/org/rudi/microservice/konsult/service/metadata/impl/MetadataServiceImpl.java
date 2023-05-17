@@ -14,11 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.MissingParameterException;
-import org.rudi.facet.acl.bean.ClientKey;
-import org.rudi.facet.acl.helper.ACLHelper;
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
@@ -29,7 +26,6 @@ import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataFacets;
 import org.rudi.facet.kaccess.bean.MetadataList;
 import org.rudi.facet.kaccess.bean.MetadataListFacets;
-import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.konsult.service.exception.APIManagerExternalServiceException;
 import org.rudi.microservice.konsult.service.exception.DataverseExternalServiceException;
@@ -39,7 +35,6 @@ import org.rudi.microservice.konsult.service.exception.UnhandledMediaTypeExcepti
 import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.rudi.microservice.konsult.service.metadata.MetadataService;
 import org.rudi.microservice.konsult.service.metadata.impl.checker.AbstractAccessToDatasetChecker;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -55,12 +50,8 @@ public class MetadataServiceImpl implements MetadataService {
 	private final DatasetService datasetService;
 	private final ApplicationService applicationService;
 	private final APIsService apIsService;
-	private final ACLHelper aclHelper;
 	private final APIManagerHelper apiManagerHelper;
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final MetadataWithSameThemeFinder metadataWithSameThemeFinder;
-	@Value("${apimanager.oauth2.client.anonymous.username}")
-	private String anonymousUsername;
 	private final List<AbstractAccessToDatasetChecker> accessToDatasetCheckerList;
 
 	@Override
@@ -137,7 +128,7 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException {
+	public DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException, GetClientRegistrationException {
 
 		final Metadata metadata = getMetadataById(globalId);
 		final Media media = getMetadataMediaById(metadata, mediaId);
@@ -154,7 +145,7 @@ public class MetadataServiceImpl implements MetadataService {
 				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(null);
 			}
 		}
-		return apiManagerHelper.userHasSubscribeToEachMediaOfDataset(globalId, ownerUuid);
+		return apiManagerHelper.userHasSubscribedToEachMediaOfDataset(globalId, ownerUuid);
 	}
 
 	@Override
@@ -166,7 +157,7 @@ public class MetadataServiceImpl implements MetadataService {
 				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(linkedDatasetUuid);
 			}
 		}
-		return apiManagerHelper.userHasSubscribeToEachMediaOfDataset(globalId, ownerUuid);
+		return apiManagerHelper.userHasSubscribedToEachMediaOfDataset(globalId, ownerUuid);
 	}
 
 	@Override
@@ -180,6 +171,11 @@ public class MetadataServiceImpl implements MetadataService {
 			}
 		}
 		apiManagerHelper.subscribeToEachMediaOfDataset(globalId, ownerUuid);
+	}
+
+	@Override
+	public void unsubscribeToDataset(UUID globalId, UUID subscriptionOwnerUuid) throws APIManagerException {
+		applicationService.deleteUserSubscriptionsForDatasetAPIs(subscriptionOwnerUuid.toString(), globalId);
 	}
 
 	@Override
@@ -211,14 +207,7 @@ public class MetadataServiceImpl implements MetadataService {
 		return apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media);
 	}
 
-	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException {
-		// si l'utilisateur est anonymous, il faut récupérer ses client id et client secret s'ils ne sont pas déjà dans le cache
-		if (loginAbleToDownloadMedia.equals(anonymousUsername) && customClientRegistrationRepository.findByUsername(anonymousUsername) == null) {
-			ClientKey clientKey = aclHelper.getClientKeyByLogin(anonymousUsername);
-			customClientRegistrationRepository.addClientRegistration(anonymousUsername,
-					new ClientAccessKey().setClientId(clientKey.getClientId()).setClientSecret(clientKey.getClientSecret()));
-		}
-
+	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException, GetClientRegistrationException {
 		if (media.getMediaType().equals(Media.MediaTypeEnum.FILE)) {
 			try {
 				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(), loginAbleToDownloadMedia);

@@ -1,12 +1,5 @@
 package org.rudi.microservice.selfdata.service.helper.selfdatadataset;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -34,7 +27,8 @@ import org.rudi.facet.apimaccess.exception.APIsOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationKeysNotFoundException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationTokenGenerationException;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
+import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.rudi.facet.kaccess.bean.Connector;
@@ -60,13 +54,19 @@ import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import lombok.RequiredArgsConstructor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SelfdataSpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class SelfdataDatasetApisHelperTest {
 
 	private final SelfdataDatasetApisHelper selfdataDatasetApisHelper;
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
+	private final RudiClientRegistrationRepository rudiClientRegistrationRepository;
 
 	@MockBean
 	private APIsService apIsService;
@@ -118,21 +118,21 @@ class SelfdataDatasetApisHelperTest {
 	}
 
 	@Test
-	void test_searchCachedRegistration_null_when_userNotSubscribed() throws AppServiceException {
+	void test_searchCachedRegistration_null_when_userNotSubscribed() throws AppServiceException, GetClientRegistrationException {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin("valid@mail.com");
 		assertNull(selfdataDatasetApisHelper.searchCachedRegistration(user));
 	}
 
 	@Test
-	void test_searchCachedRegistration_ok_when_userSubscribed() throws AppServiceException {
+	void test_searchCachedRegistration_ok_when_userSubscribed() throws AppServiceException, GetClientRegistrationException {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin(RandomStringUtils.random(6));
 
 		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId")
 				.setClientSecret("randomSecret");
 
-		customClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
+		rudiClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
 		assertNotNull(selfdataDatasetApisHelper.searchCachedRegistration(user));
 	}
 
@@ -264,7 +264,7 @@ class SelfdataDatasetApisHelperTest {
 	@Test
 	public void test_getGdataData_ok()
 			throws AppServiceException, APIsOperationException, ApplicationTokenGenerationException,
-			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException {
+			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException, GetClientRegistrationException {
 		String mock;
 		try {
 			File file = new File("./src/test/resources/gdata-mocked-response.json");
@@ -295,7 +295,7 @@ class SelfdataDatasetApisHelperTest {
 	@MethodSource("getValidDateParams")
 	public void test_getTpbcData_ok(OffsetDateTime minimum, OffsetDateTime maximum)
 			throws AppServiceException, APIsOperationException, ApplicationTokenGenerationException,
-			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException {
+			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException, GetClientRegistrationException {
 
 		String mock;
 		try {
@@ -364,7 +364,7 @@ class SelfdataDatasetApisHelperTest {
 		user.setLogin("validUser@com");
 		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId")
 				.setClientSecret("randomSecret");
-		customClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
+		rudiClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
 		return user;
 	}
 

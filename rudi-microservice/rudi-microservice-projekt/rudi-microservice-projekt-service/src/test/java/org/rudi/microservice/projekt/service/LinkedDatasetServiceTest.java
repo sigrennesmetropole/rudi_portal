@@ -1,10 +1,5 @@
 package org.rudi.microservice.projekt.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +16,7 @@ import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataAccessCondition;
@@ -42,6 +38,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Class de test de la couche service
@@ -112,7 +112,7 @@ class LinkedDatasetServiceTest {
 
 	@Test
 	@DisplayName("Je crée un projet puis lui ajoute un JDD ouvert")
-	void linkOpenDatasetToProject() throws IOException, AppServiceException, DataverseAPIException {
+	void linkOpenDatasetToProject() throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
 
 		// Création projet
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -148,7 +148,7 @@ class LinkedDatasetServiceTest {
 
 	@Test
 	@DisplayName("Je crée un projet puis lui ajoute un JDD restreint")
-	void linkRestrictedDatasetToProject() throws IOException, AppServiceException, DataverseAPIException {
+	void linkRestrictedDatasetToProject() throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
 
 		// Création projet
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);

@@ -31,6 +31,10 @@ import {
 import {
     SelfdataInformationRequestCreationSuccessComponent
 } from './pages/selfdata-information-request-creation-success/selfdata-information-request-creation-success.component';
+import {SpreadsheetComponent} from './components/spreadsheet/spreadsheet.component';
+import {AgGridModule} from 'ag-grid-angular';
+import {SpreadsheetTabComponent} from './components/spreadsheet-tab/spreadsheet-tab.component';
+import {DatasetInformationsComponent} from './components/dataset-informations/dataset-informations.component';
 
 
 @NgModule({
@@ -56,13 +60,17 @@ import {
             SelectProjectDialogComponent,
             SuccessRestrictedRequestDialogComponent,
             SelfdataInformationRequestCreationComponent,
-            SelfdataInformationRequestCreationSuccessComponent
+            SelfdataInformationRequestCreationSuccessComponent,
+            SpreadsheetComponent,
+            DatasetInformationsComponent,
+            SpreadsheetTabComponent
         ],
     imports: [
         CommonModule,
         CoreModule,
         SharedModule,
-        DataSetRoutingModule
+        DataSetRoutingModule,
+        AgGridModule
     ],
     exports: [
         ListContainerComponent,

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
@@ -106,7 +107,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public Organization createOrganization(Organization organization) throws CreateUserException {
+	public Organization createOrganization(Organization organization) throws AppServiceBadRequestException {
 		val entity = organizationMapper.dtoToEntity(organization);
 		for (final CreateOrganizationFieldProcessor processor : createOrganizationFieldProcessors) {
 			processor.processBeforeCreate(entity);

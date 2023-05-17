@@ -20,7 +20,7 @@ import {ProjectConsultationService} from '../../../../core/services/asset/projec
 })
 export class NewDatasetRequestTableComponent {
     newDatasetsRequest: NewDatasetRequestTableData[] = [];
-    displayedColumns: string[] = ['addedDate', 'title', 'status','delete-img'];
+    displayedColumns: string[] = ['addedDate', 'title', 'status', 'delete-img'];
     dataSource: MatTableDataSource<NewDatasetRequestTableData> = new MatTableDataSource(this.newDatasetsRequest);
     @Output() requestUuidEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -53,7 +53,7 @@ export class NewDatasetRequestTableComponent {
 
     @Input()
     set newDatasetRequestList(value: NewDatasetRequest[]) {
-        if (value && value.length > 0) {
+        if (value) {
             this.newDatasetsRequest = value.map((element: NewDatasetRequest) => {
                 return {
                     addedDate: moment(element.creation_date).format('DD/MM/YYYY'),

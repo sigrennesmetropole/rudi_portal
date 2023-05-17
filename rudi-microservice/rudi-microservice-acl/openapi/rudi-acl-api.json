@@ -1043,6 +1043,94 @@
 				}
 			}
 		},
+		"/users/{login}/client-registration": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Registration id de l'utlisateur",
+				"description": "Retourne le registrationId de l'utilisateur dans WSO2",
+				"operationId": "getClientRegistration",
+				"parameters": [
+					{
+						"name": "login",
+						"in": "path",
+						"description": "Login de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-acl-model.json#/components/schemas/ClientRegistrationDto"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Fais la registration du user",
+				"description": "Lance la registration du user dans WSO2 par ACL",
+				"operationId": "addClientRegistration",
+				"parameters": [
+					{
+						"name": "login",
+						"in": "path",
+						"description": "Login de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Access key du user",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./rudi-acl-model.json#/components/schemas/AccessKeyDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/roles": {
 			"get": {
 				"tags": [

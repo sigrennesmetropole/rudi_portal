@@ -1,5 +1,10 @@
 package org.rudi.facet.apimaccess.api.apis;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
 import org.rudi.facet.apimaccess.api.MonoUtils;
@@ -22,10 +27,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 import reactor.core.publisher.Mono;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
 
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.ACTION;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.API_DEFINITION;
@@ -64,6 +65,14 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 	@Nonnull
 	public API getAPI(String apiId) throws APIsOperationWithIdException {
 		final Mono<API> mono = populateRequestWithAdminRegistrationId(HttpMethod.GET, buildPublisherURIPath(API_GET_PATH), Map.of(API_ID, apiId))
+				.retrieve()
+				.bodyToMono(API.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
+	}
+
+	@Nonnull
+	public API getAPIFromDevportal(String apiId, String username) throws APIsOperationWithIdException {
+		final Mono<API> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(API_GET_PATH), Map.of(API_ID, apiId))
 				.retrieve()
 				.bodyToMono(API.class);
 		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));

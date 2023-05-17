@@ -1,6 +1,11 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.net.ssl.SSLException;
+
 import org.ehcache.Cache;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
@@ -8,22 +13,18 @@ import org.rudi.facet.apimaccess.api.registration.ClientRegistrationResponse;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.net.ssl.SSLException;
-
-import java.util.Objects;
-
+import lombok.extern.slf4j.Slf4j;
 import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_CACHE_CLIENT_REGISTRATION;
 
 @Component
 @Slf4j
-public class CustomClientRegistrationRepository implements ReactiveClientRegistrationRepository {
+@ConditionalOnProperty(name = "apimanager.oauth2.client.registration.internal", havingValue = "true")
+public class CustomMemoryClientRegistrationRepository implements RudiClientRegistrationRepository {
 
 	private final Cache<String, ClientRegistration> cache;
 	private final APIManagerProperties properties;
@@ -31,7 +32,7 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
 	private final ClientRegistererForUsers clientRegistererForUsers;
 
 	@SuppressWarnings("java:S107")
-	public CustomClientRegistrationRepository(
+	public CustomMemoryClientRegistrationRepository(
 			@Qualifier(API_MACCESS_CACHE_CLIENT_REGISTRATION) Cache<String, ClientRegistration> cache,
 			APIManagerProperties properties,
 			ClientRegistererForAdmin clientRegistererForAdmin,
@@ -61,14 +62,22 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
 	}
 
 	@Nullable
-	public ClientRegistration findByUsername(String username) {
+	@Override
+	public ClientRegistration findByUsername(String username) throws GetClientRegistrationException {
 		final var registrationId = ClientRegisterer.getRegistrationId(username);
+		if (registrationId == null) {
+			throw new GetClientRegistrationException(username, new NullPointerException());
+		}
 		return findByRegistrationId(registrationId).block();
 	}
 
 	@Nullable
-	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException {
+	@Override
+	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException {
 		final var cachedRegistration = findByUsername(username);
+		if (cachedRegistration == null) {
+			throw new GetClientRegistrationException(username, new NullPointerException());
+		}
 		if (cachedRegistration != null) {
 			return cachedRegistration;
 		}
@@ -87,10 +96,12 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
 	 * Renvoie l'enregistrement client s'il existe dans le cache, sinon réalise l'enregistrement
 	 */
 	@Nonnull
+	@Override
 	public ClientRegistration findRegistrationOrRegister(String username, String password) throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
 		return Objects.requireNonNullElse(findByUsername(username), register(username, password));
 	}
 
+	@Override
 	public ClientRegistration register(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
 		final var clientRegisterer = getClientRegistererFor(username);
 		final var clientRegistration = clientRegisterer.register(username, password);
@@ -98,6 +109,7 @@ public class CustomClientRegistrationRepository implements ReactiveClientRegistr
 		return clientRegistration;
 	}
 
+	@Override
 	public void addClientRegistration(String username, ClientRegistrationResponse clientAccessKey) {
 		if (clientAccessKey != null) {
 			final var clientRegisterer = getClientRegistererFor(username);

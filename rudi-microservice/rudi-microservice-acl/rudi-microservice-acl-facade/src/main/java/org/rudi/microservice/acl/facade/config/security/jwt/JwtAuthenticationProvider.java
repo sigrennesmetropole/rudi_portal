@@ -6,7 +6,7 @@ package org.rudi.microservice.acl.facade.config.security.jwt;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.UserType;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AddressType;
 import org.rudi.microservice.acl.core.bean.EmailAddress;
@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
- *
  */
 @Component
 @Slf4j
@@ -39,7 +38,7 @@ public class JwtAuthenticationProvider extends AbstractDetailServiceImpl impleme
 	private UserService userService;
 
 	@Autowired
-	private CustomClientRegistrationRepository customClientRegistrationRepository;
+	private RudiClientRegistrationRepository rudiClientRegistrationRepository;
 
 	@Autowired
 	@Qualifier("clientPasswordEncoder")
@@ -59,7 +58,7 @@ public class JwtAuthenticationProvider extends AbstractDetailServiceImpl impleme
 		try {
 			// récupération du client id + client secret de l'utilisateur qui se connecte (inutile de le faire pour les users rudi et anonymous)
 			if (!login.equals(anonymousUsername)) {
-				customClientRegistrationRepository.register(login, password);
+				rudiClientRegistrationRepository.register(login, password);
 			}
 		} catch (Exception e) {
 			log.error(String.format(
@@ -72,7 +71,7 @@ public class JwtAuthenticationProvider extends AbstractDetailServiceImpl impleme
 
 	/**
 	 * Check credential and return authentication objet
-	 * 
+	 *
 	 * @param authentication
 	 * @return
 	 */

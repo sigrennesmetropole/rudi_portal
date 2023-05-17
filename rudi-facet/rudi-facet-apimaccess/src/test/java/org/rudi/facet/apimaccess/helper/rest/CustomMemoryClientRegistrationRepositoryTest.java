@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CustomClientRegistrationRepositoryTest {
+class CustomMemoryClientRegistrationRepositoryTest {
 	public static final String SCOPE = "apim:admin";
 	public static MockWebServer mockWebServer;
 
@@ -42,7 +42,7 @@ class CustomClientRegistrationRepositoryTest {
 	@Mock
 	private APIManagerProperties properties;
 	private final APIManagerProperties APIManagerProperties = new APIManagerProperties();
-	private CustomClientRegistrationRepository customClientRegistrationRepository;
+	private CustomMemoryClientRegistrationRepository customMemoryClientRegistrationRepository;
 	private final JsonResourceReader jsonResourceReader = new JsonResourceReader();
 
 	@BeforeAll
@@ -76,7 +76,7 @@ class CustomClientRegistrationRepositoryTest {
 		final var oAuth2DynamicClientRegistrationOperationAPI = new OAuth2DynamicClientRegistrationOperationAPI(properties, clientRegistrationExceptionFactory);
 		final var clientRegisterForUsers = new ClientRegistererForUsers(tokenUri, defaultScopes, oAuth2DynamicClientRegistrationOperationAPI);
 
-		customClientRegistrationRepository = new CustomClientRegistrationRepository(
+		customMemoryClientRegistrationRepository = new CustomMemoryClientRegistrationRepository(
 				cache,
 				APIManagerProperties,
 				clientRegisterForAdmin,
@@ -103,7 +103,7 @@ class CustomClientRegistrationRepositoryTest {
 
 		when(properties.getRegistrationV017Path()).thenReturn("v0.17/register");
 
-		final ClientRegistration clientRegistration = customClientRegistrationRepository.register(username, password);
+		final ClientRegistration clientRegistration = customMemoryClientRegistrationRepository.register(username, password);
 
 		assertThat(clientRegistration)
 				.hasFieldOrPropertyWithValue("registrationId", username)
@@ -130,7 +130,7 @@ class CustomClientRegistrationRepositoryTest {
 
 		when(properties.getRegistrationV11Path()).thenReturn("v1.1/register");
 
-		final ClientRegistration clientRegistration = customClientRegistrationRepository.register(username, password);
+		final ClientRegistration clientRegistration = customMemoryClientRegistrationRepository.register(username, password);
 
 		assertThat(clientRegistration)
 				.hasFieldOrPropertyWithValue("registrationId", username)
@@ -158,7 +158,7 @@ class CustomClientRegistrationRepositoryTest {
 
 		when(properties.getRegistrationV017Path()).thenReturn("v0.17/register");
 
-		assertThatThrownBy(() -> customClientRegistrationRepository.register(username, password))
+		assertThatThrownBy(() -> customMemoryClientRegistrationRepository.register(username, password))
 				.as("On retrouve le username dans le message d'erreur")
 				.hasMessageContaining(username)
 				.as("On retrouve le body renvoyé par WSO2")

@@ -1,6 +1,7 @@
 package org.rudi.facet.apimaccess.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +71,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private final SubscriptionOperationAPI subscriptionOperationAPI;
 	private final QueryBuilder queryBuilder;
 	private final APIManagerProperties apiManagerProperties;
-
+	private static final String DATASET_UUID_FIELD = "global_id";
 	/**
 	 * Usernames dont on peut gérer les souscriptions car on connaît leurs mots-de-passe
 	 */
@@ -337,4 +338,67 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 	};
 
+	@Override
+	public SubscriptionList searchUserSubscriptions(DevPortalSubscriptionSearchCriteria devPortalSubscriptionSearchCriteria, String username) throws SubscriptionOperationException {
+		if (devPortalSubscriptionSearchCriteria == null) {
+			throw new IllegalArgumentException("Les paramètres de recherche sont absents");
+		}
+		if (StringUtils.isEmpty(devPortalSubscriptionSearchCriteria.getApplicationId())) {
+			throw new IllegalArgumentException("ApplicationId est obligatoire");
+		}
+		if (devPortalSubscriptionSearchCriteria.getLimit() != null && devPortalSubscriptionSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
+			LOGGER.warn("Le nombre de souscriptions application - api dépasse le nombre d'élément maximum autorisé: {} > {}",
+					devPortalSubscriptionSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
+			devPortalSubscriptionSearchCriteria.setLimit(LIMIT_MAX_VALUE);
+		}
+		return subscriptionOperationAPI.searchUserSubscriptions(devPortalSubscriptionSearchCriteria, username);
+	}
+
+	public void deleteUserSubscriptionsForDatasetAPIs(String username, UUID datasetUuid) throws APIManagerException {
+		// 1- Recupération de l'id du rudi_application du owner
+		val myApps = searchApplication(null, username);
+		if (myApps == null) {
+			throw new APIManagerException(String.format("No application found for user %s", username));
+		}
+		val defaultApp = myApps.getList().stream().filter(applicationInfo -> applicationInfo.getName().equals(defaultApplicationName)).findFirst();
+		if (defaultApp.isEmpty()) {
+			throw new APIManagerException(String.format("Default application %s not found for user %s", defaultApplicationName, username));
+		}
+		val defaultAppId = defaultApp.get().getApplicationId();
+		// 2- Recupération des souscriptions du defaultApp du owner
+		val searchCriteria = new DevPortalSubscriptionSearchCriteria().applicationId(defaultAppId);
+		val mySubscriptions = searchUserSubscriptions(searchCriteria, username);
+		if (mySubscriptions == null || mySubscriptions.getCount() == 0) {
+			// Pas de souscription trouvée, y a rien à supprimer donc comme souscription, on continue sur la suppression du linkedDataset
+			return;
+		}
+		val subscriptionsDeleted = new ArrayList<Subscription>(); // Elle servira pour rollbacker au besoin
+		for (Subscription subscription : mySubscriptions.getList()) {
+			// Suppression de toutes les souscriptions aux médias de ce dataset
+			val subscribedAPI = apIsService.getAPIFromDevportal(subscription.getApiId(), username);
+			val apisDatasetUuid = subscribedAPI.getAdditionalProperties().get(DATASET_UUID_FIELD);
+			if (apisDatasetUuid.equals(datasetUuid.toString())) {
+				try {
+					unsubscribeAPI(subscription.getSubscriptionId(), username);
+					subscriptionsDeleted.add(subscription);
+				} catch (SubscriptionOperationException exception) {
+					doRollback(subscriptionsDeleted, username);
+					throw new SubscriptionOperationException(subscription.getSubscriptionId(), username, exception);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Fonction de rollback: Souscrit aux APIs du JDD pour lesquelles on avait réussi la désouscription
+	 *
+	 * @param subscriptions list des souscriptions ayant été supprimées
+	 * @param username      le owner des souscriptions
+	 * @throws APISubscriptionException
+	 */
+	private void doRollback(List<Subscription> subscriptions, String username) throws APISubscriptionException {
+		for (Subscription subscription : subscriptions) {
+			subscribeAPI(subscription, username);
+		}
+	}
 }

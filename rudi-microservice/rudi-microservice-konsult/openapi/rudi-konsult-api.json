@@ -593,6 +593,35 @@
 				}
 			}
 		},
+		"/datasets/{globalId}/unsubscribe-to-dataset/{souscriptionOwnerUuid}": {
+			"delete": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Desouscrit au jeu de données ouvert ou restreint",
+				"description": "L'utilisateur désouscrit au jeu de données ouvert ou restreint donc à tous les médias dudit JDD",
+				"operationId": "unsubscribeToDataset",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/GlobalIdPathParam"
+					},
+					{
+						"$ref": "#/components/parameters/SubscriptionOwnerUuidPathParam"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "True ou false selon que l'utilisateur a désouscrit au jeu de données ouvert ou restreint avec succès s'il avait effectivement souscrit au JDD"
+					},
+					"480": {
+						"$ref": "#/components/responses/UnknownClientKeyError"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
 		"/datasets/{globalId}/media/{mediaId}/has-subscribe": {
 			"get": {
 				"tags": [
@@ -884,6 +913,16 @@
 					"format": "uuid"
 				}
 			},
+			"OwnerUuidPathParam": {
+				"in": "path",
+				"name": "ownerUuid",
+				"description": "UUID du user ayanat souscrit",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
+				}
+			},
 			"GlobalIdParam": {
 				"in": "query",
 				"name": "globalId",
@@ -895,6 +934,16 @@
 						"type": "string",
 						"format": "uuid"
 					}
+				}
+			},
+			"SubscriptionOwnerUuidPathParam": {
+				"in": "query",
+				"name": "souscriptionOwnerUuid",
+				"description": "UUID du souscripteur",
+				"required": false,
+				"schema": {
+					"type": "string",
+					"format": "uuid"
 				}
 			}
 		},
@@ -1005,6 +1054,9 @@
 							},
 							"docRudiBzh": {
 								"type": "string"
+							},
+							"tableDisplayMaxFileSize": {
+								"type": "number"
 							}
 						}
 					}

@@ -16,7 +16,8 @@ import org.rudi.facet.apimaccess.exception.APIsOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationKeysNotFoundException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationTokenGenerationException;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
+import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.kaccess.bean.Media;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -49,7 +50,7 @@ public class SelfdataDatasetApisHelper {
 	private String maxDateParam;
 
 	private final SelfdataMediaHelper selfdataMediaHelper;
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
+	private final RudiClientRegistrationRepository rudiClientRegistrationRepository;
 	private final ApplicationOperationAPI applicationOperationAPI;
 	private final APIsService apIsService;
 
@@ -104,7 +105,7 @@ public class SelfdataDatasetApisHelper {
 	 * @return la souscription, nul si non souscrit
 	 * @throws AppServiceException si pas authentifié
 	 */
-	protected ClientRegistration searchCachedRegistration(AuthenticatedUser user) throws AppServiceException {
+	protected ClientRegistration searchCachedRegistration(AuthenticatedUser user) throws AppServiceException, GetClientRegistrationException {
 
 		// Contrôle de l'authent
 		if (user == null || StringUtils.isBlank(user.getLogin())) {
@@ -113,7 +114,7 @@ public class SelfdataDatasetApisHelper {
 		}
 
 		// Vérification de l'enregistrement dans WSO2
-		return customClientRegistrationRepository.findByUsername(user.getLogin());
+		return rudiClientRegistrationRepository.findByUsername(user.getLogin());
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class SelfdataDatasetApisHelper {
 	 * @return les données personnelles au format GDATA
 	 * @throws AppServiceException si erreur technique
 	 */
-	public GenericDataObject getGdataData(SelfdataApiParameters parameters) throws AppServiceException {
+	public GenericDataObject getGdataData(SelfdataApiParameters parameters) throws AppServiceException, GetClientRegistrationException {
 
 		if (parameters == null || parameters.getMetadata() == null || parameters.getUser() == null
 				|| StringUtils.isBlank(parameters.getUser().getLogin()) || parameters.getApplication() == null
@@ -155,7 +156,7 @@ public class SelfdataDatasetApisHelper {
 	 * @return les données personnelles au format TPBC
 	 * @throws AppServiceException si erreur technique
 	 */
-	public BarChartData getTpbcData(SelfdataApiParameters parameters) throws AppServiceException {
+	public BarChartData getTpbcData(SelfdataApiParameters parameters) throws AppServiceException, GetClientRegistrationException {
 
 		if (parameters == null || parameters.getMetadata() == null || parameters.getUser() == null
 				|| StringUtils.isBlank(parameters.getUser().getLogin()) || parameters.getApplication() == null
@@ -208,7 +209,7 @@ public class SelfdataDatasetApisHelper {
 	 * @throws AppServiceException problème d'appel vers WSO2
 	 */
 	private ClientResponse callWso2Api(AuthenticatedUser connectedUser, Media media, Metadata metadata,
-			Application application, MultiValueMap<String, String> queryParams) throws AppServiceException {
+			Application application, MultiValueMap<String, String> queryParams) throws AppServiceException, GetClientRegistrationException {
 
 		// Recherche de la registration dans le cache pour appeler WSO2
 		ClientRegistration registration = searchCachedRegistration(connectedUser);

@@ -518,17 +518,17 @@ export class ProjektMetierService {
      * @param linkedDatasetRequestUuid
      * @param projectUuid
      */
-    deleteLinkedDatasetRequest(projectUuid: string ,linkedDatasetRequestUuid: string): Observable<void> {
-        return of(void 0);
+    deleteLinkedDatasetRequest(projectUuid: string, linkedDatasetRequestUuid: string): Observable<any> {
+        return this.projektService.unlinkProjectToDataset(projectUuid, linkedDatasetRequestUuid);
     }
 
-     getDatasetsByUpdatedDate(data: LinkedDatasetMetadatas[]): LinkedDatasetMetadatas[] {
+    getDatasetsByUpdatedDate(data: LinkedDatasetMetadatas[]): LinkedDatasetMetadatas[] {
         return data.sort((a: LinkedDatasetMetadatas, b: LinkedDatasetMetadatas) => {
             return new Date(b.linkedDataset?.updated_date).getTime() - new Date(a.linkedDataset?.updated_date).getTime();
         });
     }
 
-     getRequestsByUpdatedDate(data: NewDatasetRequest[]): NewDatasetRequest[] {
+    getRequestsByUpdatedDate(data: NewDatasetRequest[]): NewDatasetRequest[] {
         return data.sort((a: NewDatasetRequest, b: NewDatasetRequest) => {
             return new Date(b.updated_date).getTime() - new Date(a.updated_date).getTime();
         });

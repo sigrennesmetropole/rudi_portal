@@ -21,9 +21,13 @@ export type TitleIconType =
     'icon_add_blue' |
     'square-fill' |
     'circle-fill' |
-    'dash'|
-    'icon-demands'|
-    'icon-my-reuses';
+    'dash' |
+    'icon-demands' |
+    'icon-my-reuses' |
+    'tabulated-data' |
+    'icon-info' |
+    'filter-icon' |
+    'search';
 
 
 export const ALL_TYPES: TitleIconType[] = [
@@ -47,7 +51,12 @@ export const ALL_TYPES: TitleIconType[] = [
     'circle-fill',
     'dash',
     'icon-demands',
-    'icon-my-reuses'
+    'icon-my-reuses',
+    'tabulated-data',
+    'icon-info',
+    'key_icon_circle',
+    'filter-icon',
+    'search'
 ];
 
 export const PROCESS_DEFINITION_KEY_TYPES: TitleIconType[] = [

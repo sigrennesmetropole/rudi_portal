@@ -30,11 +30,11 @@ import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_WEBCLIENT;
 @RequiredArgsConstructor
 public class WebClientHelper {
 
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
+	private final RudiClientRegistrationRepository rudiClientRegistrationRepository;
 
 	@Bean
 	WebClient.Builder apimWebClientBuilder(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) throws SSLException {
-		ReactiveOAuth2AuthorizedClientService reactiveOAuth2AuthorizedClientService = new InMemoryReactiveOAuth2AuthorizedClientService(customClientRegistrationRepository);
+		ReactiveOAuth2AuthorizedClientService reactiveOAuth2AuthorizedClientService = new InMemoryReactiveOAuth2AuthorizedClientService(rudiClientRegistrationRepository);
 
 		final var sslContext = SslContextBuilder
 				.forClient()
@@ -53,7 +53,7 @@ public class WebClientHelper {
 		clientCredentialsReactiveOAuth2AuthorizedClientProvider.setAccessTokenResponseClient(webClientReactiveClientCredentialsTokenResponseClient);
 
 		final var authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
-				customClientRegistrationRepository, reactiveOAuth2AuthorizedClientService);
+				rudiClientRegistrationRepository, reactiveOAuth2AuthorizedClientService);
 
 		authorizedClientManager.setAuthorizedClientProvider(clientCredentialsReactiveOAuth2AuthorizedClientProvider);
 
@@ -62,12 +62,12 @@ public class WebClientHelper {
 
 		final var objectMapper = jackson2ObjectMapperBuilder.build();
 
-        return WebClient.builder()
-                .filter(oauthFilter)
-                .codecs(clientDefaultCodecsConfigurer -> {
-                    clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON));
-                    clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON));
-                })
+		return WebClient.builder()
+				.filter(oauthFilter)
+				.codecs(clientDefaultCodecsConfigurer -> {
+					clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON));
+					clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON));
+				})
 				.clientConnector(new ReactorClientHttpConnector(httpClient));
 	}
 

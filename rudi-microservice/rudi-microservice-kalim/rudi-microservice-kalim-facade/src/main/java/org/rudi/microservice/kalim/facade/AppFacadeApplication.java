@@ -25,7 +25,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 		"org.rudi.facet.organization",
 		"org.rudi.microservice.kalim.facade",
 		"org.rudi.microservice.kalim.service",
-		"org.rudi.microservice.kalim.storage"
+		"org.rudi.microservice.kalim.storage",
+		"org.rudi.facet.apimremote",
 })
 @EnableEurekaClient
 @EnableScheduling

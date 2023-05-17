@@ -170,7 +170,7 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 	/**
 	 * Liste des datasets liés (ou demandés à être lié pour jdd restreint) au projet
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = LinkedDatasetEntity.PROJECT_FK)
 	private Set<LinkedDatasetEntity> linkedDatasets = new HashSet<>();
 

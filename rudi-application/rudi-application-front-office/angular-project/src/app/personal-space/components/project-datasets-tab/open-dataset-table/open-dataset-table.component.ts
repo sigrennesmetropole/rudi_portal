@@ -22,7 +22,7 @@ import {ProjektMetierService} from '../../../../core/services/asset/project/proj
 })
 export class OpenDatasetTableComponent {
     openDatasets: DatasetsTableData[] = [];
-    displayedColumns: string[] = ['addedDate', 'title', 'status','delete-img'];
+    displayedColumns: string[] = ['addedDate', 'title', 'status', 'delete-img'];
     dataSource: MatTableDataSource<DatasetsTableData> = new MatTableDataSource(this.openDatasets);
     @Output() requestUuidEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -52,13 +52,14 @@ export class OpenDatasetTableComponent {
         private readonly translateService: TranslateService,
         private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
         private readonly projectConsultationService: ProjectConsultationService,
-        private readonly projektMetierService:ProjektMetierService,
-        ) {
+        private readonly projektMetierService: ProjektMetierService,
+    ) {
     }
 
     @Input()
     set openDatasetsList(value: LinkedDatasetMetadatas[]) {
-        if (value && value.length > 0) {
+        this.associatedMetadatas = [];
+        if (value) {
             this.openDatasets = this.projektMetierService.getDatasetsByUpdatedDate(value).map((element: LinkedDatasetMetadatas) => {
                 const dataset = element?.dataset;
                 this.associatedMetadatas.push(dataset);

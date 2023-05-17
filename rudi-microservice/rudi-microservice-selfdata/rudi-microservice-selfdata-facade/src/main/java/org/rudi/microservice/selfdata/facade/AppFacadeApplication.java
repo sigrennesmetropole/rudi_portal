@@ -35,6 +35,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.microservice.selfdata.service",
 		"org.rudi.microservice.selfdata.storage",
 		"org.rudi.facet.providers",
+		"org.rudi.facet.apimremote",
 })
 @EnableEurekaClient
 @PropertySource(value = { "classpath:selfdata/selfdata-common.properties" })

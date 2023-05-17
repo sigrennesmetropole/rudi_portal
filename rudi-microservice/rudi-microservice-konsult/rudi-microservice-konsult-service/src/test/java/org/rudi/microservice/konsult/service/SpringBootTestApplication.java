@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.rudi.facet.projekt",
 		"org.rudi.facet.selfdata",
 		"org.rudi.facet.organization",
+		"org.rudi.facet.apimremote",
 })
 public class SpringBootTestApplication {
 }
