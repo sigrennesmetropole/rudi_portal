@@ -308,8 +308,8 @@
         "logOutError": "Une erreur est survenue lors de la connexion, veuillez reessayer plustard.",
         "accountMenu": {
             "myAccount": "Mon compte",
-            "myReuses": "Mes réutilisations",
-            "receivedLinkedDatasets": "Demandes reçues",
+            "myActivity": "Mon activité",
+            "myNotifications": "Mes notifications",
             "mySelfdata": "Mes données personnelles"
         }
     },
@@ -1093,9 +1093,8 @@
         "apiAccess": {
             "errorPassword": "Le mot de passe que vous avez saisi n'est pas valide. Veuillez re-saisir le mot de passe."
         },
-        "receivedAccessRequests": {
-            "title1": "Mes demandes",
-            "title2": "reçues",
+        "myNotifications": {
+            "title1": "Mes notifications",
             "tab1": "À traiter",
             "tab2": "Toutes les demandes",
             "noResult": "Vous n'avez pas de nouvelle demande. Vous pouvez consulter l'historique de vos demandes dans l'onglet \"Toutes les demandes\".",
@@ -1103,12 +1102,30 @@
             "description": "Description",
             "ownerName": "Demandeur",
             "status": "Statut",
-            "processDefinitionKey": "Type de la demande",
+            "processDefinitionKey": "Type de tâche",
             "access": "Accès",
             "newRequest": "Nouvelles données",
             "selfdata": "Données personnelles",
-            "explainationText": "Vous trouverez dans cet espace l'ensemble des demandes d'utilisateurs de Rudi concernant vos jeux de données : demande d'accès à des données restreintes, demande de nouvelles données, demande d'accès à des données personnelles... Cliquez sur une demande pour en consulter le détail.",
+            "explainationText": "Vous trouverez sur cette page l'ensemble des demandes qui vous ont été adressées et qui nécessitent une action de votre part : demande d'accès à vos données, notifications sur vos projets ou suites à vos demandes envoyées.",
             "linkText": "Cliquez ici pour en savoir plus."
+        },
+        "myRequests": {
+            "dateTableHeader": "Date",
+            "datasetTableHeader": "Jeu de données",
+            "initiatorTableHeader": "Demandeur",
+            "statusTableHeader": "Statut",
+            "myLinkedDatasets": {
+                "countMessage": "demande(s) d'accès à des jeux de données à accès restreint",
+                "noResultMessage": "Aucune demande d'accès à des jeux de données à accès restreint"
+            },
+            "mySelfdataInformationRequests": {
+                "countMessage": "demande(s) liée(s) à des données personnelles",
+                "noResultMessage": "Aucune demande liée à des données personnelles"
+            },
+            "myNewDatasetRequests": {
+                "countMessage": "demande(s) liée(s) de nouvelles données (hors catalogue)",
+                "noResultMessage": "Aucune demande de nouvelles données (hors catalogue)"
+            }
         },
         "myProjects": {
             "title1": "Mes réutilisations",
@@ -1123,6 +1140,13 @@
             "endDate": "Fin d’accès",
             "unknown": "inconnu"
         },
+        "myActivity": {
+            "title": "Mon activité",
+            "description1": "Vous pouvez retrouver sur cette page l'ensemble de vos actions effectuées sur Rudi : vos projets et réutilisations, vos demandes d'accès à des données restreintes, demande de nouvelles données et demande d'accès à des données personnelles. ",
+            "linkText": "Cliquez ici pour en savoir plus.",
+            "tab1": "Mes réutilisations",
+            "tab2": "Mes demandes"
+        },
         "myReuses": {
             "updatedDate": "Date de mise à jour",
             "title": "Titre de la réutilisation",
@@ -1130,7 +1154,10 @@
             "status": "Statut du projet",
             "numberOfDataset": "Jeux de données",
             "noResult": "Vous n'avez pas encore créé de projet ou de réutilisation dans Rudi. Les formulaires de création de projet ou de réutilisation sont accessibles en cliquant ",
-            "here": " ici"
+            "here": " ici",
+            "isReuse": "Réutilisation - ",
+            "isProject": "Projet - ",
+            "resultTilte": "réutilisation(s)"
         },
         "project": {
             "project": "Projet",
@@ -1165,7 +1192,7 @@
                     },
                     "restrictedDatasets": {
                         "tableLabel": "Tableau des demandes d'accès à des JDDs restreints associées à un projet",
-                        "tableTitle": "Demande d'accès à des jeux de données restreints",
+                        "tableTitle": "Demande d'accès à des jeux de données à accès restreint",
                         "columnAddedData": "Ajouté le",
                         "columnDataset": "Jeu de données",
                         "columnStatus": "Statut"
@@ -1180,7 +1207,7 @@
                 },
                 "information": "Information",
                 "deletion": {
-                    "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande d'ajout n'a pas encore été traitée par l'équipe Rudi.",
+                    "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande n'a pas encore été traitée par l'équipe Rudi.",
                     "title" : "Retirer un jeu de données",
                     "text1" : "Vous souhaitez retirer un jeu de données de votre projet ? Cliquer sur confirmer.",
                     "text2" : "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour ce projet.",

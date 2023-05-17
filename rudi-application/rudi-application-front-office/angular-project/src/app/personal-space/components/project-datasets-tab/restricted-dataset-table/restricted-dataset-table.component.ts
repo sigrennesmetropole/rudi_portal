@@ -13,6 +13,7 @@ import {DatasetsTableData, RowTableData} from '../dataset.interface';
 import {DialogSubscribeDatasetsService} from '../../../../core/services/dialog-subscribe-datasets.service';
 import {DialogClosedData} from '../../../../data-set/models/dialog-closed-data';
 import {ProjectConsultationService} from '../../../../core/services/asset/project/project-consultation.service';
+import {ProjektMetierService} from '../../../../core/services/asset/project/projekt-metier.service';
 
 @Component({
     selector: 'app-restricted-dataset-table',
@@ -50,13 +51,14 @@ export class RestrictedDatasetTableComponent {
         private readonly translateService: TranslateService,
         private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
         private readonly projectConsultationService: ProjectConsultationService,
+        private readonly projektMetierService:ProjektMetierService,
     ) {
     }
 
     @Input()
     set restrictedDatasetsList(value: LinkedDatasetMetadatas[]) {
         if (value && value.length > 0) {
-            this.restrictedDatasets = value.map((element: LinkedDatasetMetadatas) => {
+            this.restrictedDatasets = this.projektMetierService.getDatasetsByUpdatedDate(value).map((element: LinkedDatasetMetadatas) => {
                 const dataset = element?.dataset;
                 // Extraction des JDDs dans une variable dédiée
                 this.associatedMetadatas.push(dataset);
@@ -80,7 +82,7 @@ export class RestrictedDatasetTableComponent {
     openRestrictedDatasetsPopin(): void {
         this.addingElementToRestrictedTable.emit(true);
         const selectedMetadata$ = this.projectSubmissionService
-            .openDialogMetadata(AccessStatusFiltersType.Restricted, [AccessStatusFiltersType.Opened, AccessStatusFiltersType.GdprSensitive]);
+            .openDialogMetadata(AccessStatusFiltersType.Restricted);
         this.projectSubmissionService
             .checkLinkExistsOrCreateLinkObject(selectedMetadata$, this.associatedMetadatas)
             .subscribe({

@@ -107,9 +107,9 @@ export class ProjectDatasetsTabComponent {
                 }),
                 tap((projectWithDependencies: ProjectWithDependencies) => {
                     this.linkedDatasetMetadatas = projectWithDependencies.dependencies.linkedDatasetMetadatas;
-                    this.linkedDatasetsOpened = this.getDatasetsByUpdatedDate(projectWithDependencies.dependencies.linkedDatasetsOpened);
-                    this.linkedDatasetsRestricted = this.getDatasetsByUpdatedDate(projectWithDependencies.dependencies.linkedDatasetsRestricted);
-                    this.newDatasetRequests = this.getRequestsByUpdatedDate(projectWithDependencies.dependencies.newDatasetRequests);
+                    this.linkedDatasetsOpened = this.projektMetierService.getDatasetsByUpdatedDate(projectWithDependencies.dependencies.linkedDatasetsOpened);
+                    this.linkedDatasetsRestricted = this.projektMetierService.getDatasetsByUpdatedDate(projectWithDependencies.dependencies.linkedDatasetsRestricted);
+                    this.newDatasetRequests = this.projektMetierService.getRequestsByUpdatedDate(projectWithDependencies.dependencies.newDatasetRequests);
                 }),
                 switchMap((projectWithDependencies: ProjectWithDependencies) => this.apiAccessService.filterSubscribableMetadatas(
                         projectWithDependencies.dependencies.linkedDatasetMetadatas,
@@ -159,18 +159,6 @@ export class ProjectDatasetsTabComponent {
                     console.error(error);
                 }
             });
-    }
-
-    private getDatasetsByUpdatedDate(data: LinkedDatasetMetadatas[]): LinkedDatasetMetadatas[] {
-        return data.sort((a: LinkedDatasetMetadatas, b: LinkedDatasetMetadatas) => {
-            return new Date(b.linkedDataset?.updated_date).getTime() - new Date(a.linkedDataset?.updated_date).getTime();
-        });
-    }
-
-    private getRequestsByUpdatedDate(data: NewDatasetRequest[]): NewDatasetRequest[] {
-        return data.sort((a: NewDatasetRequest, b: NewDatasetRequest) => {
-            return new Date(b.updated_date).getTime() - new Date(a.updated_date).getTime();
-        });
     }
 
     updateAddButtonStatus(buttonStatus: boolean): void {

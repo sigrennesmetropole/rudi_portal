@@ -51,4 +51,8 @@ export class MetadataUtils {
             return AccessConditionConfidentiality.Opened;
         }
     }
+
+    static isSelfdataHidden(accessStatusHiddenValues: AccessStatusFiltersType[]): boolean {
+        return accessStatusHiddenValues?.includes(AccessStatusFiltersType.GdprSensitive);
+    }
 }

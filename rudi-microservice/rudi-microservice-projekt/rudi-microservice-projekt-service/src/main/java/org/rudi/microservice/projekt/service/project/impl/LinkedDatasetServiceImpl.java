@@ -17,17 +17,23 @@ import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
+import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetStatus;
+import org.rudi.microservice.projekt.core.bean.PagedLinkedDatasetList;
+import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
 import org.rudi.microservice.projekt.service.mapper.LinkedDatasetMapper;
 import org.rudi.microservice.projekt.service.project.LinkedDatasetService;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.CreateLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.DeleteLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.UpdateLinkedDatasetFieldProcessor;
+import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetCustomDao;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectDao;
 import org.rudi.microservice.projekt.storage.entity.DatasetConfidentiality;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +52,11 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	private final ProjectDao projectDao;
 	private final LinkedDatasetMapper linkedDatasetMapper;
 	private final LinkedDatasetDao linkedDatasetDao;
+	private final LinkedDatasetCustomDao linkedDatasetCustomDao;
 	private final DatasetService datasetService;
 	private final MetadataDetailsHelper metadataDetailsHelper;
+	private final MyInformationsHelper myInformationsHelper;
+
 
 	@Override
 	@Transactional // readOnly = false
@@ -180,8 +189,27 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 		}
 		return project;
 	}
-	// JDD ouvert ou pas ? Permet de verifier à terme si un projet est une réutilisation ou pas
-	private boolean isRestrictedLinkedDataset(DatasetConfidentiality confidentiality) {
-		return confidentiality == DatasetConfidentiality.RESTRICTED;
+
+	@Override
+	public PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable) throws AppServiceNotFoundException, AppServiceException {
+		//Récupération des UUIDs du connectedUser et de ses organisations.
+
+		List<UUID> uuids = myInformationsHelper.getMeAndMyOrganizationUuids();
+		if (CollectionUtils.isEmpty(uuids)) {
+			return new PagedLinkedDatasetList().total(0L).elements(List.of());
+		}
+
+		//Création d'un custom criteria contenant cette liste d'UUIDs
+		LinkedDatasetSearchCriteria customCriteria = new LinkedDatasetSearchCriteria();
+		customCriteria.setLimit(criteria.getLimit());
+		customCriteria.setOffset(criteria.getOffset());
+		customCriteria.setProjectOwnerUuids(uuids);
+		customCriteria.status(criteria.getStatus());
+
+
+		Page<LinkedDatasetEntity> pages = linkedDatasetCustomDao.searchLinkedDatasets(customCriteria, pageable);
+		List<LinkedDataset> request = linkedDatasetMapper.entitiesToDto(pages.getContent());
+
+		return new PagedLinkedDatasetList().total(pages.getTotalElements()).elements(request);
 	}
 }

@@ -1,0 +1,11 @@
+@import "src/app/styles/common-style";
+
+.filters-container {
+    height: 60px;
+    background-color: $banner-solid-color;
+}
+
+.tasks-container {
+    display: block;
+    padding: 31px 80px;
+}

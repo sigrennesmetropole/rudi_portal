@@ -1,5 +1,4 @@
 import {Sort} from '@angular/material/sort';
-import {Order} from '../../core/services/asset/project/projekt-metier.service';
 import {SortTableInterface} from './sort-table-interface';
 
 export class BackPaginationSort {
@@ -9,11 +8,11 @@ export class BackPaginationSort {
 
 
     sort(column?: string, isAsc?: boolean, page?: number): SortTableInterface {
-        let data: SortTableInterface = {page: page, order: null};
+        const data: SortTableInterface = {page, order: null};
         if (isAsc && column) {
-            data.order = column as Order;
+            data.order = column;
         } else if (!isAsc && column) {
-            data.order = ('-' + column) as Order;
+            data.order = ('-' + column);
         }
         return data;
     }

@@ -88,6 +88,11 @@ class ItemBuilder<T> {
 		return valueToString(value);
 	}
 
+	@Nonnull
+	public String buildFilterQueryForExceptValueField(FieldSpec fieldSpec) {
+		return "-" + fieldSpec.getName() + ":" + valueToString();
+	}
+
 	protected <V> String valueToString(@Nonnull V value) {
 		return Stream.of(value)
 				.map(Object::toString)

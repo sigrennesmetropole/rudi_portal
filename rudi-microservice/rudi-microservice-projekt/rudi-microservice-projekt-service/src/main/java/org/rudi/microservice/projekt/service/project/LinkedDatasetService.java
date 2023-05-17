@@ -7,7 +7,10 @@ import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
+import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetStatus;
+import org.rudi.microservice.projekt.core.bean.PagedLinkedDatasetList;
+import org.springframework.data.domain.Pageable;
 
 public interface LinkedDatasetService {
 	/**
@@ -51,4 +54,6 @@ public interface LinkedDatasetService {
 	 */
 	void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid)
 			throws AppServiceNotFoundException, AppServiceException;
+
+	PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable) throws AppServiceNotFoundException, AppServiceException;
 }

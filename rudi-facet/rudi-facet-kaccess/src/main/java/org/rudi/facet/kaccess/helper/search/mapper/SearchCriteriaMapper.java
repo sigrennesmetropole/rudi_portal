@@ -164,14 +164,25 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 		}
 
 		final Boolean restrictedAccess = datasetSearchCriteria.getRestrictedAccess();
-		if (restrictedAccess != null) {
-			fqFilter.add(GDPR_SENSITIVE, false);
-			fqFilter.add(RESTRICTED_ACCESS, restrictedAccess);
-		}
-		final Boolean gdprSensitive = datasetSearchCriteria.getGdprSensitive();
-		if (gdprSensitive != null) {
-			fqFilter.add(GDPR_SENSITIVE, gdprSensitive);
+
+		if (Boolean.TRUE.equals(restrictedAccess)) {
+			// Dans le cas d'un jdd restreint
 			fqFilter.add(RESTRICTED_ACCESS, true);
+			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
+		} else if (Boolean.FALSE.equals(restrictedAccess)) {
+			// Dans le cas d'un jdd Ouvert
+			fqFilter.add(RESTRICTED_ACCESS, Boolean.TRUE, true);
+		}
+
+		final Boolean gdprSensitive = datasetSearchCriteria.getGdprSensitive();
+
+		if (Boolean.TRUE.equals(gdprSensitive)) {
+			// Dans le cas d'un jdd selfdata
+			fqFilter.add(GDPR_SENSITIVE, true);
+			fqFilter.add(RESTRICTED_ACCESS, true);
+		} else if (Boolean.FALSE.equals(gdprSensitive)) {
+			// Dans le cas d'un jdd qui est tout sauf selfdata
+			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
 		}
 
 		final String doi = datasetSearchCriteria.getDoi();

@@ -738,7 +738,7 @@
 				}
 			}
 		},
-		"/information-requests/my-information-requests": {
+		"/my-selfdata-information-requests": {
 			"get": {
 				"tags": [
 					"selfdata"

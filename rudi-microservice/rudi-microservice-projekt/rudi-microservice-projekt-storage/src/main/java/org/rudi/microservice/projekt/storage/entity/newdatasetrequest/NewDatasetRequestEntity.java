@@ -22,6 +22,8 @@ import lombok.ToString;
 public class NewDatasetRequestEntity extends AbstractAssetDescriptionEntity {
 
 	private static final long serialVersionUID = -4643950814750418854L;
+	public static final String FIELD_ID = "id";
+	public static final String FIELD_NEW_DATASET_REQUEST_STATUS = "newDatasetRequestStatus";
 
 	@Column(name = "new_dataset_request_status", length = 20, nullable = false)
 	@Enumerated(EnumType.STRING)

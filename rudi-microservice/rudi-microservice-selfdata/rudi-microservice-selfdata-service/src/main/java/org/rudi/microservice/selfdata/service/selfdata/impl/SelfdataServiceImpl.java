@@ -41,7 +41,6 @@ import org.rudi.microservice.selfdata.service.exception.UserNotFoundException;
 import org.rudi.microservice.selfdata.service.helper.selfdatadataset.SelfdataApiParameters;
 import org.rudi.microservice.selfdata.service.helper.selfdatadataset.SelfdataDatasetApisHelper;
 import org.rudi.microservice.selfdata.service.helper.selfdatadataset.SelfdataDatasetHelper;
-import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.MatchingDataCipherOperator;
 import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.SelfdataMatchingDataHelper;
 import org.rudi.microservice.selfdata.service.mapper.SelfdataInformationRequestMapper;
 import org.rudi.microservice.selfdata.service.selfdata.SelfdataService;
@@ -76,28 +75,16 @@ import lombok.val;
 public class SelfdataServiceImpl implements SelfdataService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfdataServiceImpl.class);
-
 	private final ApplicationContext applicationContext;
-
 	private final SelfdataInformationRequestDao selfdataInformationRequestDao;
-
 	private final SelfdataInformationRequestCustomDao selfdataInformationRequestCustomDao;
-
 	private final SelfdataInformationRequestMapper selfdataInformationRequestMapper;
-
 	private final SelfdataDatasetHelper selfdataDatasetHelper;
-
 	private final UtilContextHelper utilContextHelper;
-
 	private final DatasetService datasetService;
-
 	private final SelfdataDatasetApisHelper selfdataDatasetApisHelper;
-
 	private final RegistrationHelper registrationHelper;
-
 	private final SelfdataMatchingDataHelper selfdataMatchingDataHelper;
-
-	private final MatchingDataCipherOperator matchingDataCipherOperator;
 
 	@Value("${rudi.selfdata.recrypt.pageSize:20}")
 	private int recryptPageSize;
@@ -169,6 +156,9 @@ public class SelfdataServiceImpl implements SelfdataService {
 		SelfdataInformationRequestCustomSearchCriteria customCriteria = new SelfdataInformationRequestCustomSearchCriteria();
 		customCriteria.setDatasetUuid(criteria.getDatasetUuid());
 		customCriteria.setLogin(user.getLogin());
+		if (CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			customCriteria.setStatus(criteria.getStatus());
+		}
 		Page<SelfdataInformationRequestEntity> page = selfdataInformationRequestCustomDao
 				.searchSelfdataInformationRequests(customCriteria, pageable);
 

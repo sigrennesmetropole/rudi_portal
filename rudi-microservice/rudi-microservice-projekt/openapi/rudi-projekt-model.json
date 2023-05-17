@@ -112,17 +112,17 @@
 				"properties": {
 					"object_type": {
 						"type": "string"
-					}	
+					}
 				},
 				"discriminator": {
-        			"propertyName": "object_type",
-        			"mapping": {
+					"propertyName": "object_type",
+					"mapping": {
 						"Project": "#/components/schemas/Project",
 						"NewDatasetRequest": "#/components/schemas/NewDatasetRequest",
 						"LinkedDataset": "#/components/schemas/LinkedDataset"
 					}
-        		}
-        	},
+				}
+			},
 			"Project": {
 				"type": "object",
 				"required": [
@@ -133,7 +133,7 @@
 				],
 				"allOf": [
 					{
-						"$ref": "AssetDescription"
+						"$ref": "#/components/schemas/AssetDescription"
 					},
 					{
 						"properties": {
@@ -143,7 +143,6 @@
 								"maxLength": 150
 							},
 							"project_status": {
-								"description": "Statut",
 								"$ref": "#/components/schemas/ProjectStatus"
 							},
 							"expected_completion_start_date": {
@@ -245,7 +244,7 @@
 				"type": "object",
 				"allOf": [
 					{
-						"$ref": "AssetDescription"
+						"$ref": "#/components/schemas/AssetDescription"
 					},
 					{
 						"properties": {
@@ -269,7 +268,7 @@
 							"linked_dataset_status": {
 								"$ref": "#/components/schemas/LinkedDatasetStatus"
 							},
-							"dataset_confidentiality" : {
+							"dataset_confidentiality": {
 								"$ref": "#/components/schemas/DatasetConfidentiality"
 							},
 							"end_date": {
@@ -307,6 +306,10 @@
 						"description": "Le nombre de résultats à retourner par page",
 						"type": "integer",
 						"format": "int32"
+					},
+					"order": {
+						"description": "Le critère de tri des résultats",
+						"type": "string"
 					}
 				}
 			},
@@ -401,14 +404,19 @@
 				"description": "Etat de la demande",
 				"type": "string",
 				"enum": [
-					"DRAFT", "IN_PROGRESS", "VALIDATED", "CANCELLED"
+					"DRAFT",
+					"IN_PROGRESS",
+					"VALIDATED",
+					"CANCELLED"
 				]
 			},
 			"DatasetConfidentiality": {
 				"description": "Type du JDD (Ouvert | Restreint)",
 				"type": "string",
 				"enum": [
-					"OPENED", "RESTRICTED","SELFDATA"
+					"OPENED",
+					"RESTRICTED",
+					"SELFDATA"
 				]
 			},
 			"ProjectTypeSearchCriteria": {
@@ -437,7 +445,7 @@
 				],
 				"allOf": [
 					{
-						"$ref": "AssetDescription"
+						"$ref": "#/components/schemas/AssetDescription"
 					},
 					{
 						"properties": {
@@ -504,14 +512,20 @@
 								"format": "uuid",
 								"example": "b9887e0f-db4e-47f0-87cd-e2f7f8d80689"
 							},
-							"projectOwnerUuid": {
+							"projectOwnerUuids": {
 								"description": "UUID du porteur de projet",
-								"type": "string",
-								"format": "uuid",
-								"example": "39a9d56e-1c99-47b5-9367-7aef7f4c075f"
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid",
+									"example": "39a9d56e-1c99-47b5-9367-7aef7f4c075f"
+								}
 							},
 							"status": {
-								"$ref": "#/components/schemas/LinkedDatasetStatus"
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/LinkedDatasetStatus"
+								}
 							},
 							"checkEndDate": {
 								"description": "Vérifie que la date de fin de la demande n'est pas renseignée ou qu'elle n'est pas encore atteinte",
@@ -533,6 +547,21 @@
 							"title_description": {
 								"description": "Cherche un texte présent dans le titre ou la description",
 								"type": "string"
+							},
+							"status": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/NewDatasetRequestStatus"
+								}
+							},
+							"projectOwnerUuids": {
+								"description": "UUID du porteur de projet",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid",
+									"example": "39a9d56e-1c99-47b5-9367-7aef7f4c075f"
+								}
 							}
 						}
 					}
@@ -707,6 +736,26 @@
 								"type": "array",
 								"items": {
 									"$ref": "#/components/schemas/LinkedDataset"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedNewDatasetRequestList": {
+				"description": "List paginée des new datasets requests liées ou demandées",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Liste des new datasets request liés ou demandés",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/NewDatasetRequest"
 								}
 							}
 						}

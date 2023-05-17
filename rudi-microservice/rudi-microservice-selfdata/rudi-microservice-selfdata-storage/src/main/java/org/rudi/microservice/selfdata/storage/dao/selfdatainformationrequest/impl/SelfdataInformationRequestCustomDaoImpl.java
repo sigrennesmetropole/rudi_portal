@@ -3,6 +3,7 @@ package org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.im
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -17,6 +18,7 @@ import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestCustomDao;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestCustomSearchCriteria;
 import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.SelfdataInformationRequestEntity;
+import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.SelfdataInformationRequestStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -52,6 +54,13 @@ public class SelfdataInformationRequestCustomDaoImpl extends AbstractCustomDaoIm
 		if (searchCriteria.getDatasetUuid() != null) {
 			Predicate datasetUuidEqualsCriteriaDatasetUuid = builder.equal(root.get(DATASET_UUID_FIELD), searchCriteria.getDatasetUuid());
 			predicates.add(datasetUuidEqualsCriteriaDatasetUuid);
+		}
+
+		if (CollectionUtils.isNotEmpty(searchCriteria.getStatus())) {
+			List<SelfdataInformationRequestStatus> statusList = searchCriteria.getStatus().stream().map(status ->
+					SelfdataInformationRequestStatus.valueOf(status.name())
+			).collect(Collectors.toList());
+			predicates.add(root.get(SelfdataInformationRequestEntity.SELFDATA_INFORMATION_REQUEST_STATUS).in(statusList));
 		}
 	}
 

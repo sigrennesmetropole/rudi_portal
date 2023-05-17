@@ -151,7 +151,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.searchIsRunning = true;
         this.konsultMetierService
-            .searchMetadatas(this.filtersService.currentFilters, this.offset, this.limit)
+            .searchMetadatas(this.filtersService.currentFilters,this.accessStatusHiddenValues, this.offset, this.limit)
             .subscribe((data) => {
                     this.metadataList = data ?? EMPTY_METADATA_LIST;
                 },

@@ -1,0 +1,78 @@
+<app-search-count
+    [searchIsRunning]="searchIsRunning"
+    [count]="total"
+    [resultMessage]="'personalSpace.myRequests.myNewDatasetRequests.countMessage' | translate"
+    [noResultMessage]="'personalSpace.myRequests.myNewDatasetRequests.noResultMessage' | translate">
+</app-search-count>
+
+<!-- On utilise hidden à la place de *ngIf pour éviter des bugs avec mat-table : https://stackoverflow.com/a/56127490/1655155 -->
+<div [hidden]="!(elements?.length)">
+
+    <!-- Wrapper du tableau et du loader -->
+    <div class="table-and-loader-container">
+
+        <!-- le tableau -->
+        <table mat-table aria-describedby="tableau des demandes d'accès à des jeux de données à accès restreints"
+               [dataSource]='elements | paginate: {
+                    id: backPaginatorId, itemsPerPage: ITEMS_PER_PAGE, currentPage: backPaginationSort.currentPage, totalItems: total
+               }'
+               matSort matSortActive="updatedDate"
+               matSortDirection="desc"
+               (matSortChange)="sortTable($event)"
+        >
+
+            <ng-container matColumnDef="updatedDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">{{'personalSpace.myRequests.dateTableHeader' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.updatedDate | date: 'dd/MM/YYYY'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">
+                    <div class="icon-container">
+                        <mat-icon class="icon-style" [svgIcon]="'nouvelles_donnees_definition_key'"></mat-icon>
+                        <span>{{'personalSpace.myRequests.datasetTableHeader' | translate}}</span>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element" class="dataset-title">
+                    <div class="title-container">
+                        {{element.title}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="initiator">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col">{{'personalSpace.myRequests.initiatorTableHeader' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.initiator}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="functionalStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    scope="col" class="status-header">
+                    {{'personalSpace.myRequests.statusTableHeader' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span class="status-chip">{{element.functionalStatus}}</span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+            <tr mat-row *matRowDef="let project; columns: displayedColumns;">
+            </tr>
+
+        </table>
+
+        <!-- le loader du tableau -->
+        <div class="table-loader" *ngIf="searchIsRunning">
+            <app-loader [allPage]="false" [noText]="true" [active]="true" [isTransparent]="true"></app-loader>
+        </div>
+
+    </div>
+
+    <app-back-pagination [backPaginationSort]="backPaginationSort" [id]="backPaginatorId"
+                         [addScrolling]="false"
+                         [total]="total" (loadData)="loadContent($event)"></app-back-pagination>
+</div>

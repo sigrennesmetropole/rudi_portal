@@ -96,11 +96,11 @@ export class HeaderComponent {
     }
 
     handleClickGoReceivedLinkedDatasets(): Promise<boolean> {
-        return this.router.navigate(['/personal-space/received-access-requests']);
+        return this.router.navigate(['/personal-space/my-notifications']);
     }
 
     handleClickGoToReuse(): Promise<boolean> {
-        return this.router.navigate(['/personal-space/my-projects']);
+        return this.router.navigate(['/personal-space/my-activity']);
     }
 
     getUrlToDoc(): void {

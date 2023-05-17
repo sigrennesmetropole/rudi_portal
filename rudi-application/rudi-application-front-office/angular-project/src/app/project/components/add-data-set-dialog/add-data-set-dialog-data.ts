@@ -2,5 +2,5 @@ import {AccessStatusFiltersType} from '../../../core/services/filters/access-sta
 
 export interface AddDataSetDialogData {
     accessStatusForcedValue: AccessStatusFiltersType;
-    accessStatusHiddenValues: AccessStatusFiltersType[];
+    accessStatusHiddenValues?: AccessStatusFiltersType[];
 }

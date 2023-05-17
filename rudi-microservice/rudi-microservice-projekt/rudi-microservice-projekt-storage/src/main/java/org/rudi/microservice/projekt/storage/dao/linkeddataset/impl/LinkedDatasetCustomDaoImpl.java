@@ -2,29 +2,31 @@ package org.rudi.microservice.projekt.storage.dao.linkeddataset.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
-import org.rudi.common.storage.dao.PredicateListBuilder;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetCustomDao;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
+import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetStatus;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import lombok.val;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.DATASET_UUID_FIELD;
 import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.END_DATE_FIELD;
-import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.PROJECT_FIELD;
 import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.STATUS_FIELD;
 
 @Repository
@@ -48,26 +50,29 @@ public class LinkedDatasetCustomDaoImpl extends AbstractCustomDaoImpl<LinkedData
 			final var endDateIsNotOver = builder.greaterThan(root.get(END_DATE_FIELD), LocalDateTime.now());
 			predicates.add(builder.or(endDateIsNull, endDateIsNotOver));
 		}
+
+		if (CollectionUtils.isNotEmpty(searchCriteria.getProjectOwnerUuids())) {
+			Subquery<Long> subqueryProjectOwner = criteriaQuery.subquery(Long.class);
+			Root<ProjectEntity> subRoot = subqueryProjectOwner.from(ProjectEntity.class);
+			Join<ProjectEntity, LinkedDatasetEntity> joinDatasetRequest = subRoot.join(ProjectEntity.FIELD_LINKED_DATASET, JoinType.INNER);
+			subqueryProjectOwner.select(joinDatasetRequest.get(LinkedDatasetEntity.FIELD_ID));
+			subqueryProjectOwner.where(subRoot.get(ProjectEntity.FIELD_OWNER_UUID).in(searchCriteria.getProjectOwnerUuids()));
+			predicates.add(root.get(ProjectEntity.FIELD_ID).in(subqueryProjectOwner));
+		}
+
+		if (CollectionUtils.isNotEmpty(searchCriteria.getStatus())) {
+			List<LinkedDatasetStatus> statusList = searchCriteria.getStatus().stream().map(status ->
+					LinkedDatasetStatus.valueOf(status.name())
+			).collect(Collectors.toList());
+			predicates.add(root.get(STATUS_FIELD).in(statusList));
+		}
+
+		if (searchCriteria.getDatasetUuid() != null) {
+			predicates.add(root.get(LinkedDatasetEntity.DATASET_UUID_FIELD).in(searchCriteria.getDatasetUuid()));
+		}
+
+
 	}
 
-	@Override
-	protected void addPredicates(PredicateListBuilder<LinkedDatasetEntity, LinkedDatasetSearchCriteria> builder) {
-		val searchCriteria = builder.getSearchCriteria();
-		builder
-				.add(searchCriteria.getProjectOwnerUuid(), LinkedDatasetCustomDaoImpl::linkedDatasetIsInProjectOwnedBy)
-				.add(searchCriteria.getStatus(), LinkedDatasetCustomDaoImpl::getEntityStatus, LinkedDatasetCustomDaoImpl::linkedDatasetHasStatus)
-		;
-	}
 
-	private static Predicate linkedDatasetIsInProjectOwnedBy(Root<LinkedDatasetEntity> linkedDataset, UUID ownerUuid) {
-		return linkedDataset.join(PROJECT_FIELD).get(ProjectEntity.FIELD_OWNER_UUID).in(ownerUuid);
-	}
-
-	private static Predicate linkedDatasetHasStatus(Root<LinkedDatasetEntity> linkedDataset, org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetStatus status) {
-		return linkedDataset.get(STATUS_FIELD).in(status);
-	}
-
-	private static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetStatus getEntityStatus(String name) {
-		return org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetStatus.valueOf(name);
-	}
 }

@@ -1,0 +1,17 @@
+<app-page>
+    <app-loader [allPage]="false" [isTransparent]="true" [noText]="true"
+                [active]="searchUrlLoading"></app-loader>
+    <app-page-title *ngIf="!searchUrlLoading"
+                    [title1]="'personalSpace.myNotifications.title1'|translate"
+                    [title3]="'personalSpace.myNotifications.explainationText'|translate"
+                    [title4]="'personalSpace.myNotifications.linkText'|translate"
+                    [urlToDoc]="urlToDoc"
+                    class="d-flex justify-content-center w-100"></app-page-title>
+
+    <div class="filters-container"></div>
+
+    <div class="tasks-container">
+        <app-tasks [loading]="searchIsRunning" [requestsToStudy]="requestsToStudy"></app-tasks>
+    </div>
+
+</app-page>

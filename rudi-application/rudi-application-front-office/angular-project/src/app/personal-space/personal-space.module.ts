@@ -5,7 +5,7 @@ import {PersonalSpaceRoutingModule} from './personal-space-routing.module';
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {TasksComponent} from './components/tasks/tasks.component';
 import {MatTableModule} from '@angular/material/table';
-import {ReceivedAccessRequestsComponent} from './pages/received-access-requests/received-access-requests.component';
+import {MyNotificationsComponent} from './pages/my-notifications/my-notifications.component';
 import {ProjectDetailComponent} from './components/project-detail/project-detail.component';
 import {SharedModule} from '../shared/shared.module';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -17,7 +17,6 @@ import {AccesDetailsTable1Component} from './components/project-detail/acces-det
 import {RequestDetailComponent} from './pages/request-detail/request-detail.component';
 import {TaskDetailComponent} from './components/task-detail/task-detail.component';
 import {ProjectOwnerDetailComponent} from './components/project-owner-detail/project-owner-detail.component';
-import {MyProjectsComponent} from './pages/projects/my-projects.component';
 import {ReusesComponent} from './components/reuses/reuses.component';
 import {MyProjectDetailsComponent} from './pages/my-project-details/my-project-details.component';
 import {ProjectBasicDetailsComponent} from './components/project-basic-details/project-basic-details.component';
@@ -26,7 +25,6 @@ import {ProjectDatasetsTabComponent} from './components/project-datasets-tab/pro
 import {DialogSubscribeDatasetsComponent} from './components/dialog-subscribe-datasets/dialog-subscribe-datasets.component';
 import {ProjectTasksComponent} from './components/project-tasks/project-tasks.component';
 import {LinkedDatasetHistoryComponent} from './components/linked-dataset-history/linked-dataset-history.component';
-import {MyLinkedDatasetsComponent} from './components/my-linked-datasets/my-linked-datasets.component';
 import {ProjectInformationComponent} from './components/project-information/project-information.component';
 import {
     SelfdataInformationRequestDetailComponent
@@ -56,11 +54,16 @@ import {
     DeletionConfirmationPopinComponent
 } from './components/project-datasets-tab/deletion-confirmation-popin/deletion-confirmation-popin.component';
 import {PopoverModule} from 'ngx-smart-popover';
+import {MyActivityComponent} from './pages/my-activity/my-activity.component';
+import { MyRequestsComponent } from './components/my-requests/my-requests.component';
+import { MyNewDatasetRequestsComponent } from './components/my-requests-tables/my-new-dataset-requests/my-new-dataset-requests.component';
+import { MySelfdataRequestsComponent } from './components/my-requests-tables/my-selfdata-requests/my-selfdata-requests.component';
+import {MyLinkedDatasetsComponent} from './components/my-requests-tables/my-linked-datasets/my-linked-datasets.component';
 
 @NgModule({
     declarations: [
         MyAccountComponent,
-        ReceivedAccessRequestsComponent,
+        MyNotificationsComponent,
         TasksComponent,
         RequestDetailComponent,
         ProjectDetailComponent,
@@ -69,7 +72,6 @@ import {PopoverModule} from 'ngx-smart-popover';
         AccesDetailsTable3Component,
         TaskDetailComponent,
         ProjectOwnerDetailComponent,
-        MyProjectsComponent,
         ReusesComponent,
         ProjectOwnerDetailComponent,
         MyProjectDetailsComponent,
@@ -79,7 +81,6 @@ import {PopoverModule} from 'ngx-smart-popover';
         DialogSubscribeDatasetsComponent,
         ProjectTasksComponent,
         LinkedDatasetHistoryComponent,
-        MyLinkedDatasetsComponent,
         ProjectInformationComponent,
         SelfdataInformationRequestDetailComponent,
         SelfdataMainInformationComponent,
@@ -100,6 +101,11 @@ import {PopoverModule} from 'ngx-smart-popover';
         NewDatasetRequestTableComponent,
         RestrictedDatasetTableComponent,
         DeletionConfirmationPopinComponent,
+        MyActivityComponent,
+        MyRequestsComponent,
+        MyLinkedDatasetsComponent,
+        MyNewDatasetRequestsComponent,
+        MySelfdataRequestsComponent
     ],
     imports: [
         CommonModule,
