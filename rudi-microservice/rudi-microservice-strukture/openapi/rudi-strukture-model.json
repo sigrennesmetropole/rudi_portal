@@ -216,6 +216,12 @@
 								"type": "string",
 								"format": "date-time",
 								"description": "Une date de fin d'activité"
+							},
+							"description": {
+								"type": "string"
+							},
+							"url": {
+								"type": "string"
 							}
 						}
 					}

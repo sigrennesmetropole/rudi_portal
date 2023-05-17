@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.rudi.common.facade.util.UtilPageable;
+import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.acl.bean.User;
@@ -34,7 +35,7 @@ public class OrganizationsController implements OrganizationsApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ", " + MODULE_KALIM + ")")
-	public ResponseEntity<Organization> createOrganization(Organization organization) throws CreateUserException {
+	public ResponseEntity<Organization> createOrganization(Organization organization) throws AppServiceBadRequestException {
 		return ResponseEntity.ok(organizationService.createOrganization(organization));
 	}
 

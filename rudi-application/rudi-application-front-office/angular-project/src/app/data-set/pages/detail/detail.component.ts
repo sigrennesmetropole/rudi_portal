@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Licence, LicenceCustom, LicenceStandard, Media, Metadata} from '../../../api-kaccess';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Licence, LicenceStandard, Media, MediaFile, MediaType, Metadata} from '../../../api-kaccess';
 import {KonsultMetierService} from '../../../core/services/konsult-metier.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
@@ -28,7 +28,6 @@ import {PropertiesMetierService} from '../../../core/services/properties-metier.
 import {MatDialog} from '@angular/material/dialog';
 import {ProjectSubmissionService} from '../../../core/services/asset/project/project-submission.service';
 import {PageTitleService} from '../../../core/services/page-title.service';
-import {FiltersService} from '../../../core/services/filters.service';
 import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';
 import {RequestDetails} from '../../../shared/models/request-details';
 import {LinkedDatasetFromProject} from '../../models/linked-dataset-from-project';
@@ -41,9 +40,10 @@ import * as moment from 'moment';
 import {IconRegistryService} from '../../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../../../shared/models/title-icon-type';
 import {MetadataUtils} from '../../../shared/utils/metadata-utils';
-import {Form} from '../../../api-bpmn';
 import MediaTypeEnum = Media.MediaTypeEnum;
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
+import {DisplayTableService} from '../../../core/services/data-set/display-table.service';
+import {FiltersService} from '../../../core/services/filters.service';
 
 const actionOnStartCreateLinkedDataset = 'ON_START_CREATE_LINKED_DATASET';
 
@@ -53,19 +53,16 @@ const actionOnStartCreateLinkedDataset = 'ON_START_CREATE_LINKED_DATASET';
     styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
-    static readonly MAX_DATASETS_DISPLAYED = 3;
+    MAX_DATASETS_DISPLAYED = 3;
     @ViewChild('clickMenuFormatTrigger') clickMenuFormatTrigger: MatMenuTrigger;
-    @ViewChild('a_export') exportLink: ElementRef;
     form: FormGroup;
     public selection: string;
     mediaType = mediaType.Media.MediaTypeEnum;
     mediaSize: MediaSize;
-    formatsMenuActive = false;
     mediaDataType = MediaTypeEnum;
     restrictedAccess: boolean;
     licenceLabel;
     conceptUri;
-    licenceType = Licence.LicenceTypeEnum;
     themeLabel: string;
     _themePicto: string;
     downloadableMedias: Media[] = [];
@@ -76,9 +73,9 @@ export class DetailComponent implements OnInit {
     // Pour filtrer à partir du même thème
     themeCode: string;
     totalOtherDatasets: number;
-    mediasTitle: string; // Bloc titre des médias
-    // TODO: lier ce form au formgroup
-    informationRequestForm: Form;
+    mediasTitle: string;
+
+    mediaToDisplayTable: Media;
 
     /**
      * Permet de suivre la valeur du JDD récupéré. Nous devons passer par un Observable car le chargement
@@ -109,21 +106,12 @@ export class DetailComponent implements OnInit {
         private readonly router: Router,
         private readonly activatedRoute: ActivatedRoute,
         private readonly propertiesMetierService: PropertiesMetierService,
-        private readonly pageTitleService: PageTitleService,
-        private readonly filtersService: FiltersService,
+        private readonly pageTitleService: PageTitleService
     ) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
         this.form = this.fb.group({
             options: []
         });
-        this.matIconRegistry.addSvgIcon(
-            'icon-info',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/icon_info.svg')
-        );
-        this.matIconRegistry.addSvgIcon(
-            'key_icon_circle',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/key_icon_circle.svg')
-        );
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
 
     }
@@ -165,7 +153,23 @@ export class DetailComponent implements OnInit {
         return MetadataUtils.isSelfdata(this.metadata);
     }
 
+
+    get isSpreadsheetDisplayed(): boolean {
+        for (const item of this.metadata.available_formats) {
+            const objet: MediaFile = item as MediaFile;
+            if (objet.file_type === MediaType.TextCsv ||
+                objet.file_type === MediaType.ApplicationVndMsExcel) {
+                this.mediaToDisplayTable = item;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     ngOnInit(): void {
+
         // Flow d'initialisation de la page
         this.route.params.pipe(
             tap(() => {
@@ -311,14 +315,6 @@ export class DetailComponent implements OnInit {
     }
 
     /**
-     * Permet de récupérer le résumé long d'un metadata
-     * @param item
-     */
-    getSummaryDescription(item: Metadata): string {
-        return this.languageService.getTextForCurrentLanguage(item.summary);
-    }
-
-    /**
      * Fonction permettant de retourner l'extension du fichier
      */
     getMediaFileExtension(media: Media): string {
@@ -342,6 +338,7 @@ export class DetailComponent implements OnInit {
         this.isLoading = true;
         const selectedItem = this.selectedItem;
         if (selectedItem) {
+
             this.konsultMetierService.downloadMetadataMedia(this.metadata.global_id, selectedItem.media_id)
                 .subscribe(
                     (response) => {
@@ -360,20 +357,7 @@ export class DetailComponent implements OnInit {
                         });
                     });
             this.clickMenuFormatTrigger.closeMenu();
-
         }
-    }
-
-    getCustomLicenceLabel(licence: Licence): string {
-        return this.dataSetDetailsFunctions.getCustomLicenceLabel(licence);
-    }
-
-    getCustomLicenceUri(): string {
-        if (this.metadata.access_condition?.licence.licence_type === LicenceTypeEnum.Custom) {
-            const licenceCustom = this.metadata.access_condition.licence as LicenceCustom;
-            return licenceCustom.custom_licence_uri;
-        }
-        return '';
     }
 
     getLicenceLabel(): Observable<string> {
@@ -450,22 +434,12 @@ export class DetailComponent implements OnInit {
 
     private loadOtherDatasets(metadata: Metadata): void {
         this.otherDatasets = [];
-        this.konsultMetierService.getMetadatasWithSameTheme(metadata.global_id, DetailComponent.MAX_DATASETS_DISPLAYED)
+        this.konsultMetierService.getMetadatasWithSameTheme(metadata.global_id, this.MAX_DATASETS_DISPLAYED)
             .subscribe(otherDatasets => {
                 this.otherDatasets = otherDatasets;
             });
         this.konsultMetierService.getNumberOfDatasetsOnTheSameTheme(this._metadata.global_id)
             .subscribe(result => this.totalOtherDatasets = result);
-    }
-
-    public filterOnTheSameThemeAndGoToCatalog(): void {
-        this.filtersService.deleteAllFilters();
-        this.filtersService.themesFilter.value = [this.themeCode];
-        this.router.navigate(['/catalogue']);
-    }
-
-    public hasManyOtherDatasets(): boolean {
-        return this.totalOtherDatasets > DetailComponent.MAX_DATASETS_DISPLAYED;
     }
 
     /**
@@ -629,3 +603,5 @@ export class DetailComponent implements OnInit {
         return of(null);
     }
 }
+
+

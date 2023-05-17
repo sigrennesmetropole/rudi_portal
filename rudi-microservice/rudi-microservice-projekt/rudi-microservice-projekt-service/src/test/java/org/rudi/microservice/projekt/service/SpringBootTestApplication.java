@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.rudi.common.core.json",
 		"org.rudi.common.service",
 		"org.rudi.common.storage",
+		"org.rudi.common.facade",
 		"org.rudi.facet.acl",
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kmedia",
@@ -20,7 +21,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.rudi.facet.kaccess",
 		"org.rudi.microservice.projekt.core",
 		"org.rudi.microservice.projekt.service",
-		"org.rudi.microservice.projekt.storage"
+		"org.rudi.microservice.projekt.storage",
+		"org.rudi.facet.apimremote",
+		"org.rudi.facet.apimaccess",
 })
 public class SpringBootTestApplication {
 }

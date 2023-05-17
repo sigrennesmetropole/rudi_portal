@@ -20,6 +20,7 @@ import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.registration.RegistrationHelper;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.bpmn.exception.InvalidDataException;
@@ -167,7 +168,7 @@ public class SelfdataServiceImpl implements SelfdataService {
 	}
 
 	@Override
-	public GenericDataObject getGdataData(UUID datasetUuid) throws AppServiceException {
+	public GenericDataObject getGdataData(UUID datasetUuid) throws AppServiceException, GetClientRegistrationException {
 
 		SelfdataApiParameters parameters = getApiParameters(datasetUuid);
 		return selfdataDatasetApisHelper.getGdataData(parameters);
@@ -175,7 +176,7 @@ public class SelfdataServiceImpl implements SelfdataService {
 
 	@Override
 	public BarChartData getTpbcData(UUID datasetUuid, OffsetDateTime minDate, OffsetDateTime maxDate)
-			throws AppServiceException {
+			throws AppServiceException, GetClientRegistrationException {
 
 		SelfdataApiParameters parameters = getApiParameters(datasetUuid);
 		parameters.setMinDate(minDate);

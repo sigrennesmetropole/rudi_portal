@@ -123,7 +123,6 @@
 					"label": {
 						"type": "string",
 						"description": "Libellé de l'adresse"
-
 					},
 					"type": {
 						"$ref": "#/components/schemas/AddressType"
@@ -220,7 +219,6 @@
 					"label": {
 						"type": "string",
 						"description": "Libelle du rôle"
-
 					},
 					"openingDate": {
 						"type": "string",
@@ -267,6 +265,124 @@
 				]
 			},
 			"ClientKey": {
+				"type": "object",
+				"properties": {
+					"clientId": {
+						"type": "string"
+					},
+					"clientSecret": {
+						"type": "string"
+					}
+				}
+			},
+			"ClientRegistrationDto": {
+				"type": "object",
+				"properties": {
+					"registrationId": {
+						"type": "string"
+					},
+					"clientId": {
+						"type": "string"
+					},
+					"clientSecret": {
+						"type": "string"
+					},
+					"redirectUriTemplate": {
+						"type": "string"
+					},
+					"clientName": {
+						"type": "string"
+					},
+					"clientAuthenticationMethod": {
+						"$ref": "#/components/schemas/ClientAuthenticationMethodDto"
+					},
+					"authorizationGrantType": {
+						"$ref": "#/components/schemas/AuthorizationGrantTypeDto"
+					},
+					"scopes": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"providerDetails": {
+						"$ref": "#/components/schemas/ProviderDetailsDto"
+					}
+				}
+			},
+			"ClientAuthenticationMethodDto": {
+				"type": "object",
+				"properties": {
+					"value": {
+						"type": "string",
+						"enum": [
+							"BASIC",
+							"POST",
+							"NONE"
+						]
+					}
+				}
+			},
+			"AuthorizationGrantTypeDto": {
+				"type": "object",
+				"properties": {
+					"value": {
+						"type": "string",
+						"enum": [
+							"IMPLICIT",
+							"REFRESH_TOKEN",
+							"CLIENT_CREDENTIALS",
+							"PASSWORD"
+						]
+					}
+				}
+			},
+			"ProviderDetailsDto": {
+				"type": "object",
+				"properties": {
+					"authorizationUri": {
+						"type": "string"
+					},
+					"tokenUri": {
+						"type": "string"
+					},
+					"userInfoEndpoint": {
+						"$ref": "#/components/schemas/UserInfoEndpointDto"
+					},
+					"jwkSetUri": {
+						"type": "string"
+					},
+					"configurationMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ConfigurationMetadataDto"
+						}
+					}
+				}
+			},
+			"UserInfoEndpointDto": {
+				"type": "object",
+				"properties": {
+					"uri": {
+						"type": "string"
+					},
+					"userNameAttributeName": {
+						"type": "string"
+					}
+				}
+			},
+			"ConfigurationMetadataDto": {
+				"type": "object",
+				"properties": {
+					"key": {
+						"type": "string"
+					},
+					"value": {
+						"type": "object"
+					}
+				}
+			},
+			"AccessKeyDto": {
 				"type": "object",
 				"properties": {
 					"clientId": {

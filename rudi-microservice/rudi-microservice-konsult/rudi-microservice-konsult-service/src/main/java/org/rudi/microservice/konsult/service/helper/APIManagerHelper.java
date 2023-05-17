@@ -65,7 +65,7 @@ public class APIManagerHelper {
 		this.projektHelper = projektHelper;
 	}
 
-	public boolean userHasSubscribeToEachMediaOfDataset(UUID globalId, UUID ownerUuid) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
+	public boolean userHasSubscribedToEachMediaOfDataset(UUID globalId, UUID ownerUuid) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
 		return doForEachMediaOfDataset(globalId, ownerUuid, (apiInfo, username) -> null);
 	}
 
@@ -160,7 +160,7 @@ public class APIManagerHelper {
 
 		if (!metadataDetailsHelper.isRestricted(metadata)) {
 			log.warn("L'utilisateur connecté n'a pas souscrit au jeu de données {}, " +
-					"on utilise donc le login {} pour télécharger le média {}", metadata.getGlobalId(),
+							"on utilise donc le login {} pour télécharger le média {}", metadata.getGlobalId(),
 					anonymousUsername, media.getMediaId());
 			return anonymousUsername;
 		} else {
@@ -247,9 +247,10 @@ public class APIManagerHelper {
 
 	/**
 	 * Vérifie s'il existe une souscription pour l'user fourni auprès du média du JDD fourni
-	 * @param user le user testé
+	 *
+	 * @param user     le user testé
 	 * @param globalId le global ID du média
-	 * @param mediaId le media ID
+	 * @param mediaId  le media ID
 	 * @return si il y'a une souscription ou pas
 	 */
 	private boolean userHasSubscribed(User user, UUID globalId, UUID mediaId) {
@@ -259,7 +260,7 @@ public class APIManagerHelper {
 			userHasSubscribed = userHasSubscribeToMetadataMedia(globalId, mediaId, user.getUuid());
 		} catch (AppServiceException e) {
 			log.error("Erreur lors de la vérification de la souscription de l'utilisateur " + user.getLogin()
-					+ " au média " + mediaId + " du JDD " + globalId,  e);
+					+ " au média " + mediaId + " du JDD " + globalId, e);
 		}
 
 		return userHasSubscribed;

@@ -65,7 +65,10 @@ class AccessToRestrictedDatasetChecker extends AbstractAccessToDatasetChecker {
 							globalId));
 		}
 		val projectOwnerUuid = projektHelper.getLinkedDatasetOwner(requestUuid.get());
-		if (!potentialOwners.stream().map(User::getLogin).collect(Collectors.toList()).contains(projectOwnerUuid.toString())) {
+		if (!(
+				potentialOwners.stream().map(User::getLogin).collect(Collectors.toList()).contains(projectOwnerUuid.toString()) ||
+						potentialOwners.stream().map(User::getUuid).collect(Collectors.toList()).contains(projectOwnerUuid)
+		)) {
 			throw new AppServiceForbiddenException(
 					String.format("Cannot subscribe. Some incoherence exists between user (%s) and request data (%s)",
 							user.getLogin(),

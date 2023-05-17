@@ -9,8 +9,8 @@ import org.rudi.facet.apimaccess.bean.Credentials;
 import org.rudi.facet.apimaccess.bean.EndpointKeyType;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.registration.RegistrationHelper;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.microservice.konsult.core.bean.ApiKeys;
 import org.rudi.microservice.konsult.core.bean.ApiKeysType;
@@ -26,12 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class ApimServiceImpl implements ApimService {
 
 	private final ApplicationService applicationService;
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
 	private final ACLHelper aclHelper;
 	private final RegistrationHelper registrationHelper;
 
 	@Override
-	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException {
+	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException {
 		checkCredentials(credentials);
 		return registrationHelper.findRegistrationForUser(credentials.getLogin(), credentials.getPassword()) != null;
 	}

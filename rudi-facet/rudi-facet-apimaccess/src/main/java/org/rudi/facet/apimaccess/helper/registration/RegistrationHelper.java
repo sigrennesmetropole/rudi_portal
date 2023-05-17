@@ -8,7 +8,7 @@ import org.rudi.facet.apimaccess.exception.AdminOperationException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.AdminService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -20,12 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegistrationHelper {
 
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
+	private final RudiClientRegistrationRepository rudiClientRegistrationRepository;
 	private final AdminService adminService;
 	private final ApplicationService applicationService;
 
 	public void register(String login, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
-		customClientRegistrationRepository.findRegistrationOrRegister(login, password);
+		rudiClientRegistrationRepository.findRegistrationOrRegister(login, password);
 	}
 
 	public void assignInternalSubscriberRole(String login, String password) throws AdminOperationException {
@@ -36,7 +36,7 @@ public class RegistrationHelper {
 		return applicationService.getOrCreateDefaultApplication(login);
 	}
 
-	public ClientRegistration findRegistrationForUser(String login, String password) throws SSLException {
-		return customClientRegistrationRepository.findByUsernameAndPassword(login, password);
+	public ClientRegistration findRegistrationForUser(String login, String password) throws SSLException, GetClientRegistrationException {
+		return rudiClientRegistrationRepository.findByUsernameAndPassword(login, password);
 	}
 }

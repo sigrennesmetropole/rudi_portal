@@ -7,11 +7,13 @@ import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.facet.bpmn.service.TaskService;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
+@Order(1)
 @RequiredArgsConstructor
 class LinkedDatasetTaskProcessor implements DeleteLinkedDatasetFieldProcessor {
 

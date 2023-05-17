@@ -20,8 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.facet.acl.bean.AccessKeyDto;
 import org.rudi.facet.acl.bean.AddressType;
 import org.rudi.facet.acl.bean.ClientKey;
+import org.rudi.facet.acl.bean.ClientRegistrationDto;
 import org.rudi.facet.acl.bean.EmailAddress;
 import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
@@ -61,7 +63,6 @@ public class ACLHelper {
 	private static final String CODE_PARAMETER = "code";
 
 
-
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.search.url:/acl/v1/roles}")
 	private String rolesEndpointSearchURL;
@@ -77,6 +78,10 @@ public class ACLHelper {
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.client-key.url:/acl/v1/users/{login}/client-key}")
 	private String clientKeyEndpointURL;
+
+	@Getter
+	@Value("${rudi.facet.acl.endpoint.users.client-registration.url:/acl/v1/users/{login}/client-registration}")
+	private String clientRegistrationEndpointURL;
 
 	@Getter
 	@Value("${rudi.facet.acl.service.url:lb://RUDI-ACL/}")
@@ -166,7 +171,7 @@ public class ACLHelper {
 						.queryParam(USER_LOGIN_PARAMETER, criteria.getLogin())
 						.queryParam(USER_PASSWORD_PARAMETER, criteria.getPassword())
 						.queryParam(ROLE_UUIDS_PARAMETER, getRolesCriteria(criteria.getRoleUuids()))
-				.build())
+						.build())
 				.retrieve()
 				.bodyToMono(UserPageResult.class).block();
 		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
@@ -179,7 +184,7 @@ public class ACLHelper {
 	@Nullable
 	private String getRolesCriteria(List<UUID> roleUuids) {
 		String roles = null;
-		if(CollectionUtils.isNotEmpty(roleUuids)) {
+		if (CollectionUtils.isNotEmpty(roleUuids)) {
 			roles = roleUuids.stream().map(UUID::toString).collect(Collectors.joining(","));
 		}
 
@@ -190,6 +195,17 @@ public class ACLHelper {
 	public ClientKey getClientKeyByLogin(String login) {
 		return loadBalancedWebClient.get().uri(buildClientKeyGetURL(), Map.of(USER_LOGIN_PARAMETER, login)).retrieve()
 				.bodyToMono(ClientKey.class).block();
+	}
+
+	@Nullable
+	public ClientRegistrationDto getClientRegistrationByLogin(String login) {
+		return loadBalancedWebClient.get().uri(buildClientRegistrationURL(), Map.of(USER_LOGIN_PARAMETER, login)).retrieve()
+				.bodyToMono(ClientRegistrationDto.class).block();
+	}
+
+	public void addClientRegistration(String username, AccessKeyDto clientAccessKey) {
+		loadBalancedWebClient.post().uri(buildClientRegistrationURL(), Map.of(USER_LOGIN_PARAMETER, username)).bodyValue(clientAccessKey).retrieve()
+				.bodyToMono(void.class).block();
 	}
 
 	public User createUser(User user) {
@@ -285,6 +301,12 @@ public class ACLHelper {
 	protected String buildClientKeyGetURL() {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(getAclServiceURL()).append(getClientKeyEndpointURL());
+		return urlBuilder.toString();
+	}
+
+	protected String buildClientRegistrationURL() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getClientRegistrationEndpointURL());
 		return urlBuilder.toString();
 	}
 

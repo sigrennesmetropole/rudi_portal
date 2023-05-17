@@ -1,5 +1,6 @@
 package org.rudi.microservice.strukture.service.organization;
 
+import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 public interface OrganizationService {
 
-	Organization createOrganization(Organization organization) throws CreateUserException;
+	Organization createOrganization(Organization organization) throws AppServiceBadRequestException;
 
 	Organization getOrganization(UUID uuid) throws AppServiceNotFoundException;
 

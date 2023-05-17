@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 
@@ -186,6 +186,11 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-facet-apimremote</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-kos</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -233,7 +238,6 @@
 				<artifactId>rudi-facet-generator-pdf</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
 
 
 			<dependency>
@@ -758,6 +762,9 @@
 								<version>${springframework.boot.version}</version>
 							</path>
 						</annotationProcessorPaths>
+						<compilerArgs>
+							<arg>-Amapstruct.verbose=true</arg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 

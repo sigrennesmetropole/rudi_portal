@@ -23,6 +23,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.facet.organization",
 		"org.rudi.microservice.konsult.facade",
 		"org.rudi.microservice.konsult.service",
+		"org.rudi.facet.apimremote",
 })
 @EnableEurekaClient
 @PropertySource(value = { "classpath:konsult/konsult-common.properties" })

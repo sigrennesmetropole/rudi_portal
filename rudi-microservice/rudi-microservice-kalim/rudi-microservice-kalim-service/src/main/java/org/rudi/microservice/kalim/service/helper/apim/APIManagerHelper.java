@@ -23,7 +23,7 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.generator.OpenApiTemplates;
-import org.rudi.facet.apimaccess.helper.rest.CustomClientRegistrationRepository;
+import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataset.bean.InterfaceContract;
@@ -61,7 +61,7 @@ public class APIManagerHelper {
 	private final ApplicationService applicationService;
 	private final ProviderHelper providerHelper;
 	private final MetadataDetailsHelper metadataDetailsHelper;
-	private final CustomClientRegistrationRepository customClientRegistrationRepository;
+	private final RudiClientRegistrationRepository rudiClientRegistrationRepository;
 	private final OpenApiTemplates openApiTemplates;
 	private final APIManagerProperties apiManagerProperties;
 
@@ -307,7 +307,7 @@ public class APIManagerHelper {
 	}
 
 	private void checkClientRegistration(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
-		customClientRegistrationRepository.findRegistrationOrRegister(username, password);
+		rudiClientRegistrationRepository.findRegistrationOrRegister(username, password);
 	}
 
 	private APISearchCriteria buildApiSearchCriteriaFrom(IntegrationRequestEntity integrationRequest) {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.bpmn.exception.InvalidDataException;
 import org.rudi.microservice.selfdata.core.bean.BarChartData;
@@ -65,7 +66,7 @@ public interface SelfdataService {
 	 * @param datasetUuid l'UUID du JDD contenant les données
 	 * @return des données au format GDATA
 	 */
-	GenericDataObject getGdataData(UUID datasetUuid) throws AppServiceException;
+	GenericDataObject getGdataData(UUID datasetUuid) throws AppServiceException, GetClientRegistrationException;
 
 	/**
 	 * Récupération des données de l'utilisateur connecté pour le JDD d'uuid fourni au format TPBC
@@ -76,14 +77,14 @@ public interface SelfdataService {
 	 * @return des données au format TPBC
 	 */
 	BarChartData getTpbcData(UUID datasetUuid, OffsetDateTime minDate, OffsetDateTime maxDate)
-			throws AppServiceException;
+			throws AppServiceException, GetClientRegistrationException;
 
 	List<MatchingData> getMySelfdataInformationRequestMatchingData(UUID datasetUUID)
 			throws AppServiceException, InvalidDataException, FormDefinitionException;
 
 	/**
 	 * Rechiffrement ou chiffrement (dans le cas d'un migration) des données pivots
-	 * 
+	 *
 	 * @param previousAliasKey c'est le nom de la clé initial (dans le cas d'un rechiffrement)
 	 */
 	void recryptSelfdataInformationRequest(String previousAliasKey);

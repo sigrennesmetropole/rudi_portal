@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
@@ -57,11 +59,12 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	private final MetadataDetailsHelper metadataDetailsHelper;
 	private final MyInformationsHelper myInformationsHelper;
 
+	private final ApplicationService applicationService;
 
 	@Override
 	@Transactional // readOnly = false
 	public LinkedDataset linkProjectToDataset(UUID projectUuid, LinkedDataset linkedDataset)
-			throws AppServiceException {
+			throws AppServiceException, APIManagerException {
 
 		// 1) traduction DTO en entité
 		val project = getRequiredProjectEntity(projectUuid);
@@ -111,6 +114,7 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	}
 
+
 	@Override
 	public List<LinkedDataset> getLinkedDatasets(UUID projectUuid, LinkedDatasetStatus status)
 			throws AppServiceNotFoundException {
@@ -138,7 +142,7 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	@Override
 	@Transactional
-	public LinkedDataset updateLinkedDataset(UUID projectUuid, LinkedDataset linkedDataset) throws AppServiceException {
+	public LinkedDataset updateLinkedDataset(UUID projectUuid, LinkedDataset linkedDataset) throws AppServiceException, APIManagerException {
 		val project = getRequiredProjectEntity(projectUuid);
 		val entity = linkedDatasetMapper.dtoToEntity(linkedDataset);
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
@@ -162,7 +166,7 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	@Override
 	@Transactional // readOnly = false
-	public void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid) throws AppServiceException {
+	public void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid) throws AppServiceException, APIManagerException {
 		val project = getRequiredProjectEntity(projectUuid);
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
 			Iterator<LinkedDatasetEntity> it = project.getLinkedDatasets().iterator();
@@ -174,10 +178,9 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 					}
 
 					it.remove();
-					linkedDatasetDao.deleteById(linkedDataset.getId());
-					projectDao.save(project);
 				}
 			}
+			projectDao.save(project);
 		}
 	}
 

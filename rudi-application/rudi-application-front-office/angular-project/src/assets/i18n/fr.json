@@ -479,7 +479,8 @@
         "results": "résultat",
         "noResult": "Aucun résultat",
         "filtres": "Filtres",
-        "pour": " pour "
+        "pour": " pour ",
+        "search": "Rechercher... "
     },
     "filterBox": {
         "filtrer": "Filtrer",
@@ -701,6 +702,13 @@
                     }
                 }
             }
+        },
+        "tabulatedData": "Données tabulaires",
+        "tabulatedDataTab": {
+            "errorDownloading": "Erreur lors du chargement des données",
+            "errorFileSize": "Les données sont trop volumineuses, merci de les télécharger afin de les visualiser.",
+            "errorAccess": "Afin de pouvoir visualiser la donnée vous devez avoir été autorisé à la mobiliser dans le cadre d'un projet. Merci d'effectuer une demande d'accès en cliquant sur le bouton \"Demander l'accès\" situé en dessous de la zone de titre du jeu de données.",
+            "tableHeadingBtn": "Mon tableau comporte des entêtes"
         }
     },
     "availableFormats": {

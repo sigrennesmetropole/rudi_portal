@@ -1,6 +1,9 @@
 package org.rudi.facet.apimaccess.api.subscription;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
 import org.rudi.facet.apimaccess.api.MonoUtils;
@@ -19,10 +22,7 @@ import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
+import lombok.extern.slf4j.Slf4j;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.API_ID;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.APPLICATION_ID;
 import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT;
@@ -55,6 +55,15 @@ public class SubscriptionOperationAPI extends AbstractManagerAPI {
 				.retrieve()
 				.bodyToMono(SubscriptionList.class);
 		return MonoUtils.blockOrThrow(mono, e -> new SubscriptionOperationException(applicationAPISubscriptionSearchCriteria, username, e));
+	}
+
+	public SubscriptionList searchUserSubscriptions(DevPortalSubscriptionSearchCriteria userSubscriptionSearchCriteria, String username) throws SubscriptionOperationException {
+		final Mono<SubscriptionList> mono = populateRequestWithRegistrationId(HttpMethod.GET, username, buildDevPortalURIPath(SUBSCRIPTION_PATH),
+				uriBuilder -> uriBuilder
+						.queryParam(APPLICATION_ID, userSubscriptionSearchCriteria.getApplicationId()).build())
+				.retrieve()
+				.bodyToMono(SubscriptionList.class);
+		return MonoUtils.blockOrThrow(mono, e -> new SubscriptionOperationException(userSubscriptionSearchCriteria, username, e));
 	}
 
 	public List<org.wso2.carbon.apimgt.rest.api.publisher.Subscription> searchAPISubscriptions(PublisherSubscriptionSearchCriteria searchCriteria) {

@@ -29,7 +29,9 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.microservice.projekt.facade",
 		"org.rudi.microservice.projekt.service",
 		"org.rudi.microservice.projekt.storage",
-		"org.rudi.facet.projekt.helper"
+		"org.rudi.facet.projekt.helper",
+		"org.rudi.facet.apimremote",
+		"org.rudi.facet.apimaccess",
 })
 @EnableEurekaClient
 @PropertySource(value = { "classpath:projekt/projekt-common.properties" })

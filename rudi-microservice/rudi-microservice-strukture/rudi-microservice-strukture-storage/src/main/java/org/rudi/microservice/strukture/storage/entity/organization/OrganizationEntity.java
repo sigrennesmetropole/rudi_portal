@@ -6,6 +6,7 @@ import org.rudi.common.storage.entity.AbstractLongIdEntity;
 import org.rudi.microservice.strukture.core.common.SchemaConstants;
 
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -34,6 +35,12 @@ public class OrganizationEntity extends AbstractLongIdEntity {
 	private LocalDateTime openingDate;
 
 	private LocalDateTime closingDate;
+
+	@Column(name = "description", length = 800)
+	private String description;
+
+	@Column(name = "url", length = 80)
+	private String url;
 
 	/**
 	 * Membres

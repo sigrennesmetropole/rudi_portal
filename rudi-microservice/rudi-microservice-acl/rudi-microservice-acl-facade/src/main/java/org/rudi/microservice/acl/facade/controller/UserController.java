@@ -7,8 +7,9 @@ import javax.validation.Valid;
 
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
+import org.rudi.microservice.acl.core.bean.AccessKeyDto;
 import org.rudi.microservice.acl.core.bean.ClientKey;
-import org.rudi.microservice.acl.core.bean.FullName;
+import org.rudi.microservice.acl.core.bean.ClientRegistrationDto;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserPageResult;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
@@ -25,15 +26,19 @@ import lombok.RequiredArgsConstructor;
 import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
 
 /**
  * Controleur pour la gestion des utilisateurs RUDI
  *
  * @author MCY12700
- *
  */
 @RestController
 @RequiredArgsConstructor
@@ -130,5 +135,18 @@ public class UserController implements UsersApi {
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
 	public ResponseEntity<ClientKey> getClientKeyByLogin(String login) throws Exception {
 		return ResponseEntity.ok(userService.getClientKeyByLogin(login));
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", " + MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
+	public ResponseEntity<ClientRegistrationDto> getClientRegistration(String login) throws Exception {
+		return ResponseEntity.ok(userService.getClientRegistration(login));
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", " + MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
+	public ResponseEntity<Void> addClientRegistration(String login, AccessKeyDto accessKeyDto) throws Exception {
+		userService.addClientRegistration(login, accessKeyDto);
+		return ResponseEntity.ok().build();
 	}
 }

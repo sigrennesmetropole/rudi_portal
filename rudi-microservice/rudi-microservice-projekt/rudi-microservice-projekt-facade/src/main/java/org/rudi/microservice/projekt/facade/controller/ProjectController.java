@@ -12,6 +12,7 @@ import org.rudi.common.facade.helper.ControllerHelper;
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.bpmn.service.TaskService;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kmedia.bean.KindOfData;
@@ -130,7 +131,7 @@ public class ProjectController implements ProjectsApi {
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
 			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<LinkedDataset> linkProjectToDataset(UUID projectUuid, LinkedDataset linkedDataset)
-			throws AppServiceNotFoundException, DataverseAPIException, AppServiceException {
+			throws AppServiceNotFoundException, DataverseAPIException, AppServiceException, APIManagerException {
 		return ResponseEntity.ok(linkedDatasetService.linkProjectToDataset(projectUuid, linkedDataset));
 	}
 
@@ -142,7 +143,7 @@ public class ProjectController implements ProjectsApi {
 
 	@Override
 	public ResponseEntity<Void> unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUUID)
-			throws AppServiceNotFoundException, AppServiceException {
+			throws AppServiceException, APIManagerException {
 		linkedDatasetService.unlinkProjectToDataset(projectUuid, linkedDatasetUUID);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -255,5 +256,4 @@ public class ProjectController implements ProjectsApi {
 		val page = projectService.getMyProjects(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedProjectList().total(page.getTotalElements()).elements(page.getContent()));
 	}
-
 }

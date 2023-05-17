@@ -119,14 +119,11 @@ public interface ProjectService {
 			throws AppServiceNotFoundException, AppServiceException;
 
 	/**
-	 *
 	 * @param searchCriteria {projet dont on cherche les autres demandes, producteur non concerné par ses demandes (optionnel)}
-	 *
 	 */
 	Indicators computeIndicators(ComputeIndicatorsSearchCriteria searchCriteria);
 
 	/**
-	 *
 	 * @param projectUuid
 	 * @return nombre de jdds rattachés au projet (restreint + ouvert + nouvelle demande)
 	 */
@@ -135,8 +132,9 @@ public interface ProjectService {
 
 	/**
 	 * Recherche mes projets et ceux de mon organisation
+	 *
 	 * @param searchCriteria critère de filtrage
-	 * @param pageable info de pagination
+	 * @param pageable       info de pagination
 	 * @return Une page de project (limit max sinon 10)
 	 * @throws GetOrganizationException si erreur
 	 */

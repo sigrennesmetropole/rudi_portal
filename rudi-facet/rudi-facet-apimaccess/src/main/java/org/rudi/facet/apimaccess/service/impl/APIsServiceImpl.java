@@ -60,9 +60,10 @@ public class APIsServiceImpl implements APIsService {
 
 	/**
 	 * Création d'une API
-	 * @param apiDescription        paramètre de la nouvelle API
-	 * @return                      API
-	 * @throws APIManagerException  Erreur lors de la création
+	 *
+	 * @param apiDescription paramètre de la nouvelle API
+	 * @return API
+	 * @throws APIManagerException Erreur lors de la création
 	 */
 	private API createAPI(APIDescription apiDescription) throws APIManagerException {
 		if (apiDescription == null) {
@@ -118,12 +119,12 @@ public class APIsServiceImpl implements APIsService {
 	}
 
 	@Override
-	public  void archiveAPI(String apiId) throws UpdateAPILifecycleStatusException {
+	public void archiveAPI(String apiId) throws UpdateAPILifecycleStatusException {
 		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.BLOCK);
 	}
 
 	@Override
-	public  void unarchiveAPI(String apiId) throws UpdateAPILifecycleStatusException {
+	public void unarchiveAPI(String apiId) throws UpdateAPILifecycleStatusException {
 		updateAPILifecycleStatus(apiId, APILifecycleStatusAction.RE_PUBLISH);
 	}
 
@@ -163,6 +164,14 @@ public class APIsServiceImpl implements APIsService {
 			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
 		}
 		return apIsOperationAPI.getAPI(apiId);
+	}
+
+	@Override
+	public API getAPIFromDevportal(String apiId, String username) throws APIsOperationWithIdException {
+		if (StringUtils.isEmpty(apiId)) {
+			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
+		}
+		return apIsOperationAPI.getAPIFromDevportal(apiId, username);
 	}
 
 	@Override
