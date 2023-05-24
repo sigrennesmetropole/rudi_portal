@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<UserManager>
+	<Realm>
+		<Configuration>
+			<AddAdmin>true</AddAdmin>
+			<AdminRole>admin</AdminRole>
+			<AdminUser>
+				<UserName>{{apimanager_admin_username}}</UserName>
+				<Password>{{apimanager_admin_password}}</Password>
+			</AdminUser>
+			<EveryOneRoleName>everyone</EveryOneRoleName>
+
+			<OverrideUsernameClaimFromInternalUsername>true</OverrideUsernameClaimFromInternalUsername>
+			<!-- By default users in this role sees the registry root -->
+			<Property name="initializeNewClaimManager">true</Property>
+			<Property name="isCascadeDeleteEnabled">true</Property>
+			<Property name="dataSource">jdbc/SHARED_DB</Property>
+		</Configuration>
+		<UserStoreManager class="org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager">
+			<Property name="IsBulkImportSupported">true</Property>
+			<Property name="MaxUserNameListLength">100</Property>
+			<Property name="MultiAttributeSeparator">,</Property>
+			<Property name="UserNameUniqueAcrossTenants">false</Property>
+			<Property name="StoreSaltedPassword">true</Property>
+			<Property name="TenantManager">org.wso2.carbon.user.core.tenant.JDBCTenantManager</Property>
+			<Property name="CaseInsensitiveUsername">true</Property>
+			<Property name="UsernameJavaRegEx">^[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}</Property>
+			<Property name="WriteGroups">true</Property>
+			<Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
+			<Property name="RolenameJavaRegEx">^[\S]{3,30}$</Property>
+			<Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
+			<Property name="ReadGroups">true</Property>
+			<Property name="PasswordJavaRegExViolationErrorMsg">Password length should be within 5 to 30 characters</Property>
+			<Property name="MaxRoleNameListLength">100</Property>
+			<Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
+			<Property name="UsernameJavaRegExViolationErrorMsg">Username pattern policy violated</Property>
+			<Property name="UserRolesCacheEnabled">true</Property>
+			<Property name="SCIMEnabled">true</Property>
+			<Property name="PasswordDigest">SHA-256</Property>
+			<Property name="UsernameJavaScriptRegEx">^[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$</Property>
+			<Property name="ReadOnly">false</Property>
+		</UserStoreManager>
+
+		<AuthorizationManager class="org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager">
+			<Property name="GetAllRolesOfUserEnabled">false</Property>
+			<Property name="AdminRoleManagementPermissions">/permission</Property>
+			<Property name="AuthorizationCacheEnabled">true</Property>
+		</AuthorizationManager>
+	</Realm>
+</UserManager>
