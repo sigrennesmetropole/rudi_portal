@@ -2,7 +2,7 @@
 
 ## Généralités
 
-Le portail rudi peut-être installée de différentes manières mais étant donné le nombre élevé de microservices, une installation de type container est à privilégier (k8s ou docker-compose par exemple).
+Le portail rudi peut-être installé de différentes manières mais étant donné le nombre élevé de microservices, une installation de type container est à privilégier (k8s ou docker-compose par exemple).
 
 L'installation est constituée de 4 étapes successives :
 
