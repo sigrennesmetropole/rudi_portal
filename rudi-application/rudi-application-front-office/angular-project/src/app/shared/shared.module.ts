@@ -134,7 +134,7 @@ import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
             BackPaginationComponent,
             DatasetHeadingComponent,
             DocumentationButtonComponent,
-            RudiCaptchaComponent
+            RudiCaptchaComponent,
         ],
     imports: [
         CommonModule,

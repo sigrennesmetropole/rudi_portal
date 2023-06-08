@@ -2,6 +2,7 @@ package org.rudi.microservice.konsult.facade.controller;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -123,5 +124,11 @@ public class DatasetController implements DatasetsApi {
 	public ResponseEntity<Void> unsubscribeToDataset(UUID globalId, UUID subscriptionOwnerUuid) throws Exception {
 		metadataService.unsubscribeToDataset(globalId, subscriptionOwnerUuid);
 		return ResponseEntity.status(200).build();
+	}
+
+	@Override
+	public ResponseEntity<Resource> callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws Exception {
+		final DocumentContent documentContent = metadataService.callServiceMetadataMedia(globalId, mediaId, parameters);
+		return controllerHelper.downloadableResponseEntity(documentContent);
 	}
 }

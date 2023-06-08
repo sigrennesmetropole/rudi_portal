@@ -63,6 +63,8 @@ export class SignUpComponent implements OnInit {
      */
     errorCaptchaInput = false;
 
+    private static PASSWORD_REGEX: string = '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$';
+
     @ViewChild(RudiCaptchaComponent) rudiCaptcha: RudiCaptchaComponent;
 
     constructor(private formBuilder: FormBuilder,
@@ -105,7 +107,14 @@ export class SignUpComponent implements OnInit {
                 nom: [''],
                 prenom: [''],
                 adresseEmail: ['', [RudiValidators.email]],
-                password: ['', [Validators.required, Validators.minLength(this.passwordMinLength), Validators.maxLength(this.passwordMaxLength)]], // TODO il faudrait refuser les espaces
+                password: ['',
+                    [
+                        Validators.required,
+                        Validators.minLength(this.passwordMinLength),
+                        Validators.maxLength(this.passwordMaxLength),
+                        Validators.pattern(SignUpComponent.PASSWORD_REGEX)
+                    ]
+                ],
                 confirmPassword: ['', [Validators.required]],
                 cgu: [false, [Validators.requiredTrue]],
                 subscribeToNotifications: [false]

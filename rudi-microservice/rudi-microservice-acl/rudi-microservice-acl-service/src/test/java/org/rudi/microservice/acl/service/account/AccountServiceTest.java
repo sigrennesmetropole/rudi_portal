@@ -75,7 +75,7 @@ class AccountServiceTest {
 
 		// Création info de compte
 		Account account = new Account();
-		account.setPassword("password123456789456123");
+		account.setPassword("Pas$word123456789456123");
 
 		// On met un login qui n'est pas un mail
 		account.setLogin("stuff");
@@ -113,14 +113,14 @@ class AccountServiceTest {
 		UserEntity user = new UserEntity();
 		user.setUuid(UUID.randomUUID());
 		user.setLogin("alreadyhere@gmail.com");
-		user.setPassword("onepassworddamn");
+		user.setPassword("1Passwordd@mn");
 		user.setType(UserType.PERSON);
 		userDao.save(user);
 
 		// Création info de compte avec le même login
 		Account account = new Account();
 		account.setLogin("alreadyhere@gmail.com");
-		account.setPassword("somethingudmngayeahwaza");
+		account.setPassword("soMeth1ngudmngayeahw@za");
 
 		// Les infos sont KO : le login existe déjà
 		assertThrows(LoginAlreadyExistsException.class, () -> accountService.checkAccountCreation(account));
@@ -134,7 +134,7 @@ class AccountServiceTest {
 		// Informations pour la création de compte
 		Account account = new Account();
 		account.setLogin(login);
-		account.setPassword("somethingudmngayeahwaza");
+		account.setPassword("soMeth1ngudmngayeahw@za");
 		account.setFirstname("prénom");
 		account.setLastname("nomdefamille");
 
@@ -153,7 +153,7 @@ class AccountServiceTest {
 
 		Account account = new Account();
 		account.setLogin(login);
-		account.setPassword("somethingudmngayeahwaza");
+		account.setPassword("soMeth1ngudmngayeahw@za");
 		account.setFirstname("prénom");
 		account.setLastname("nomdefamille");
 

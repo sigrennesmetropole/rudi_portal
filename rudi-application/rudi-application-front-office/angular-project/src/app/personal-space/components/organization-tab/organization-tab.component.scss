@@ -1,0 +1,74 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/common-style";
+
+.span-style {
+    margin-left: 10px;
+    font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    color: $primary-color;
+    font-weight: 600;
+    position: relative;
+    top: 7px;
+}
+
+.my-organisation-count {
+    font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1em;
+}
+
+.card-no-result {
+    box-shadow: none;
+    border: solid 1.1px $blocks-and-menus-outline;
+    cursor: pointer;
+    padding: 25px 10px 10px 10px;
+    overflow: hidden;
+    width: 400px;
+    height: 100px;
+    margin-bottom: 1em;
+    background-color: $banner-solid-color-60;
+}
+
+.content {
+
+    ::ng-deep .ngx-pagination {
+        padding-left: 0;
+        margin-left: -6px !important;
+    }
+
+
+    ::ng-deep .ngx-pagination .pagination-previous {
+        color: $primary-text-light !important;
+        font-weight: normal !important;
+        font-stretch: normal;
+    }
+
+    ::ng-deep .ngx-pagination .pagination-next {
+        color: $primary-text-light !important;
+        font-weight: normal !important;
+        font-stretch: normal;
+    }
+
+    ::ng-deep .ngx-pagination .current {
+        padding: 0.1875rem 0.625rem;
+        background: $primary-color !important;
+        color: #fefefe;
+        cursor: default;
+        font-size: 14px;
+        border-radius: 3px;
+        text-decoration: none;
+
+    }
+
+    ::ng-deep .ngx-pagination a, .ngx-pagination button {
+        color: $primary-color !important;
+        display: block;
+        padding: 0.1875rem 0.625rem;
+        font-weight: 600 !important;
+        font-stretch: normal !important;
+        font-style: normal !important;
+
+    }
+
+}

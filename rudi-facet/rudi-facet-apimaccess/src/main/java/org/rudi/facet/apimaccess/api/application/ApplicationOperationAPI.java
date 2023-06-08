@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
+import org.rudi.facet.apimaccess.api.ContentTypeUtils;
 import org.rudi.facet.apimaccess.api.MonoUtils;
 import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationKey;
@@ -154,16 +155,20 @@ public class ApplicationOperationAPI extends AbstractManagerAPI {
 		return MonoUtils.blockOrThrow(mono, e -> new ApplicationTokenGenerationException(applicationId, keyMappingId, applicationTokenGenerateRequest, username, e));
 	}
 
-	public DocumentContent getAPIContent(String context, String version, String applicationId, String username) throws ApplicationOperationException, ApplicationKeysNotFoundException, APIEndpointException, IOException, ApplicationTokenGenerationException {
+	public DocumentContent getAPIContent(String context, String version, String applicationId, String username, MultiValueMap<String, String> parameters) throws ApplicationOperationException, ApplicationKeysNotFoundException, APIEndpointException, IOException, ApplicationTokenGenerationException {
+		if (parameters == null) {
+			parameters = new LinkedMultiValueMap<>();
+		}
+		final var response = getAPIResponse(context, version, applicationId, username, parameters);
+		final var flexResponse = new FlexClientResponseWrapper(response);
 
-		final var response = getAPIResponse(context, version, applicationId, username, new LinkedMultiValueMap<>());
-
-		Flux<DataBuffer> dataBufferFlux = response.bodyToFlux(DataBuffer.class);
-		HttpHeaders httpHeaders = response.headers().asHttpHeaders();
+		Flux<DataBuffer> dataBufferFlux = flexResponse.bodyToFlux(DataBuffer.class);
+		HttpHeaders httpHeaders = flexResponse.headers().asHttpHeaders();
 
 		String fileName = httpHeaders.getContentDisposition().getFilename();
-		String contentType = httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
-
+		String contentTypeValue = httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
+		var mediaType = ContentTypeUtils.normalize(contentTypeValue);
+		String contentType = mediaType.toString();
 		// il peut arriver qu'on ne puisse pas récupérer le nom du fichier téléchargé
 		if (StringUtils.isEmpty(fileName)) {
 			final String defaultFileName = getInterfaceContractFromContext(context);

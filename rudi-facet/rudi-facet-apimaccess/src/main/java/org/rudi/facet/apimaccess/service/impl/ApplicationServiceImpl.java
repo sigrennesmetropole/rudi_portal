@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
@@ -223,9 +224,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username) throws APIManagerException, IOException {
+	public DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username, MultiValueMap<String, String> parameters) throws APIManagerException, IOException {
 		final var apiInfo = getApiInfo(globalId, mediaId);
-		return applicationOperationAPI.getAPIContent(apiInfo.getContext(), apiInfo.getVersion(), getDefaultApplicationId(username), username);
+		return applicationOperationAPI.getAPIContent(apiInfo.getContext(), apiInfo.getVersion(), getDefaultApplicationId(username), username, parameters);
 	}
 
 	@Override

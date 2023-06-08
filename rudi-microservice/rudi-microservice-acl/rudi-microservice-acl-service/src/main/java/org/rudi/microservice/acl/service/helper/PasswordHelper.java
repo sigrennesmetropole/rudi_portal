@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.microservice.acl.service.account.MissingPasswordChangeFieldException;
 import org.rudi.microservice.acl.service.account.PasswordLengthException;
+import org.rudi.microservice.acl.service.account.PasswordNotMatchingRegexException;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author FNI18300
- *
  */
 @Component
 public class PasswordHelper {
@@ -35,6 +35,8 @@ public class PasswordHelper {
 	@Qualifier("userPasswordEncoder")
 	private PasswordEncoder userPasswordEncoder;
 
+	private static String PASSWORD_REGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$";
+
 	@Bean("userPasswordEncoder")
 	public PasswordEncoder userPasswordEncoder() {
 		return new BCryptPasswordEncoder(4);
@@ -48,7 +50,7 @@ public class PasswordHelper {
 		return Base64.getEncoder().encodeToString(value.getBytes());
 	}
 
-	public void checkPassword(String password) throws MissingPasswordChangeFieldException, PasswordLengthException {
+	public void checkPassword(String password) throws MissingPasswordChangeFieldException, PasswordLengthException, PasswordNotMatchingRegexException {
 		if (password == null) {
 			throw new MissingPasswordChangeFieldException("password");
 		}
@@ -56,6 +58,10 @@ public class PasswordHelper {
 		if (!isPasswordLengthValid(password)) {
 			throw new PasswordLengthException(this.minLengthPassword, this.maxLengthPassword);
 		}
+		if (!isPasswordConformToRegex(password)) {
+			throw new PasswordNotMatchingRegexException();
+		}
+
 	}
 
 	/**
@@ -72,6 +78,13 @@ public class PasswordHelper {
 
 		// Contrôle de longueur
 		return (password.length() >= this.minLengthPassword && password.length() <= this.maxLengthPassword);
+	}
+
+	private boolean isPasswordConformToRegex(String password) {
+		if (StringUtils.isEmpty(password)) {
+			return false;
+		}
+		return password.matches(PASSWORD_REGEX);
 	}
 
 	/**

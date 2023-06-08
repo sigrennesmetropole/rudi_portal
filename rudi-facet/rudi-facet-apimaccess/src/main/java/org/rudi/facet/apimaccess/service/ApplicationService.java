@@ -13,6 +13,7 @@ import org.rudi.facet.apimaccess.bean.EndpointKeyType;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APISubscriptionException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.springframework.util.MultiValueMap;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
 
@@ -147,10 +148,11 @@ public interface ApplicationService {
 	 * @param globalId Identifiant des métadonnées de l'API
 	 * @param mediaId  Identifiant du média de l'API
 	 * @param username username de l'utilisateur
+	 * @param parameters
 	 * @return DocumentContent
 	 * @throws APIManagerException Erreur lors de la récupération des informations
 	 */
-	DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username) throws APIManagerException, IOException;
+	DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username, MultiValueMap<String, String> parameters) throws APIManagerException, IOException;
 
 	/**
 	 * Supprimer une application

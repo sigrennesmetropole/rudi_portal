@@ -10,7 +10,6 @@ import {SupportRudiComponent} from './pages/support-rudi/support-rudi.component'
 import {LoginRoutingModule} from './login-routing.module';
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
-import {AccountInfoComponent} from './pages/account-info/account-info.component';
 import {BotDetectCaptchaModule} from 'angular-captcha';
 
 @NgModule({
@@ -23,7 +22,6 @@ import {BotDetectCaptchaModule} from 'angular-captcha';
             SupportRudiComponent,
             ForgotPasswordComponent,
             ResetPasswordComponent,
-            AccountInfoComponent
         ],
     imports: [
         CommonModule,

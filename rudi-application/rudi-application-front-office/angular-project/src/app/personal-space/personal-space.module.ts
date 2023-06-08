@@ -59,6 +59,9 @@ import { MyRequestsComponent } from './components/my-requests/my-requests.compon
 import { MyNewDatasetRequestsComponent } from './components/my-requests-tables/my-new-dataset-requests/my-new-dataset-requests.component';
 import { MySelfdataRequestsComponent } from './components/my-requests-tables/my-selfdata-requests/my-selfdata-requests.component';
 import {MyLinkedDatasetsComponent} from './components/my-requests-tables/my-linked-datasets/my-linked-datasets.component';
+import {MyProfilComponent} from './components/my-profil/my-profil.component';
+import {OrganizationTabComponent} from './components/organization-tab/organization-tab.component';
+import {OrganizationCardComponent} from './components/organization-card/organization-card.component';
 
 @NgModule({
     declarations: [
@@ -105,7 +108,10 @@ import {MyLinkedDatasetsComponent} from './components/my-requests-tables/my-link
         MyRequestsComponent,
         MyLinkedDatasetsComponent,
         MyNewDatasetRequestsComponent,
-        MySelfdataRequestsComponent
+        MySelfdataRequestsComponent,
+        MyProfilComponent ,
+        OrganizationTabComponent,
+        OrganizationCardComponent
     ],
     imports: [
         CommonModule,

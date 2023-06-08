@@ -1,0 +1,17 @@
+<mat-card
+    class="mat-elevation-z0 organization-card">
+    <mat-card-content>
+        <div class="d-flex my-3">
+            <div class="align-items-center producteur-img-box">
+                <app-organization-logo [organizationId]="myOrganization.uuid"
+                                       [isANewRequest]="false"
+                                       cssClass="producteur-img"
+                                       organizationType="producer"
+                ></app-organization-logo>
+            </div>
+            <div class="resource_title">
+                {{myOrganization.name}}
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

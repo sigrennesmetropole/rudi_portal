@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,8 @@ import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.rudi.microservice.konsult.service.metadata.MetadataService;
 import org.rudi.microservice.konsult.service.metadata.impl.checker.AbstractAccessToDatasetChecker;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -133,7 +136,7 @@ public class MetadataServiceImpl implements MetadataService {
 		final Metadata metadata = getMetadataById(globalId);
 		final Media media = getMetadataMediaById(metadata, mediaId);
 		final String loginAbleToDownloadMedia = getLoginAbleToDownloadMedia(metadata, media);
-		return downloadMetadataMedia(metadata, media, loginAbleToDownloadMedia);
+		return downloadMetadataMedia(metadata, media, loginAbleToDownloadMedia, null);
 	}
 
 	@Override
@@ -163,7 +166,7 @@ public class MetadataServiceImpl implements MetadataService {
 	@Override
 	public void subscribeToSelfdataDataset(UUID globalId) throws APIManagerException, AppServiceException {
 		final var metadata = getMetadataById(globalId);
-		UUID ownerUuid = null; // Uuid au à partir duquel on va souscrire (soi-même pour un selfdata)
+		UUID ownerUuid = null; // Uuid à partir duquel on va souscrire (soi-même pour un selfdata)
 		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
 			if (accessToDatasetChecker.accept(metadata)) {
 				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId, Optional.empty());
@@ -207,10 +210,10 @@ public class MetadataServiceImpl implements MetadataService {
 		return apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media);
 	}
 
-	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException, GetClientRegistrationException {
-		if (media.getMediaType().equals(Media.MediaTypeEnum.FILE)) {
+	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia, MultiValueMap<String, String> parameters) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException, GetClientRegistrationException {
+		if (media.getMediaType().equals(Media.MediaTypeEnum.FILE) || media.getMediaType().equals(Media.MediaTypeEnum.SERVICE)) {
 			try {
-				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(), loginAbleToDownloadMedia);
+				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(), loginAbleToDownloadMedia, parameters);
 			} catch (APIManagerException e) {
 				throw new APIManagerExternalServiceException(e);
 			}
@@ -254,5 +257,21 @@ public class MetadataServiceImpl implements MetadataService {
 			throw new DataverseExternalServiceException(de);
 		}
 
+	}
+
+	@Override
+	public 	DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws AppServiceException, GetClientRegistrationException, IOException {
+		final Metadata metadata = getMetadataById(globalId);
+		final Media media = getMetadataMediaById(metadata, mediaId);
+		final String loginAbleToDownloadMedia = getLoginAbleToDownloadMedia(metadata, media);
+		return downloadMetadataMedia(metadata, media, loginAbleToDownloadMedia, mapToMultiValueMap(parameters));
+	}
+
+	private MultiValueMap<String, String> mapToMultiValueMap(Map<String, String> mapToCast) {
+		var result = new LinkedMultiValueMap<String, String>();
+		for (Map.Entry<String, String> entry : mapToCast.entrySet()) {
+			result.add(entry.getKey(), entry.getValue());
+		}
+		return result;
 	}
 }

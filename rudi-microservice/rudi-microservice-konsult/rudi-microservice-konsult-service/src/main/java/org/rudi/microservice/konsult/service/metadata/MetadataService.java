@@ -2,6 +2,7 @@ package org.rudi.microservice.konsult.service.metadata;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -111,4 +112,16 @@ public interface MetadataService {
 	 * @return nombre de dataset sur le même thème
 	 */
 	Integer getNumberOfDatasetsOnTheSameTheme(UUID globalId) throws AppServiceException;
+
+	/**
+	 *
+	 * @param globalId uuid du JDD ayant les données carto
+	 * @param mediaId uuid du média
+	 * @param parameters paramètres d'appels du service (autant qu'on en a besoin)
+	 * @return
+	 * @throws AppServiceException
+	 * @throws GetClientRegistrationException
+	 * @throws IOException
+	 */
+	DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws AppServiceException, GetClientRegistrationException, IOException;
 }

@@ -16,6 +16,7 @@ import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetCust
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
 import org.rudi.microservice.projekt.storage.entity.OwnerType;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
+import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetStatus;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -70,7 +71,7 @@ public class LinkedDatasetSubscriptionProcessor implements DeleteLinkedDatasetFi
 	 * Permet de savoir si le owner a accès à ce JDD via une autre demande
 	 */
 	private boolean hasAccessThroughAnotherRequest(List<LinkedDatasetEntity> linkedDatasetEntityList, UUID datasetUuid) {
-		return linkedDatasetEntityList.stream().filter(linkedDatasetEntity -> linkedDatasetEntity.getDatasetUuid().equals(datasetUuid)).count() > 1;
+		return linkedDatasetEntityList.stream().filter(linkedDatasetEntity -> linkedDatasetEntity.getDatasetUuid().equals(datasetUuid) && linkedDatasetEntity.getLinkedDatasetStatus() == LinkedDatasetStatus.VALIDATED).count() > 1;
 	}
 
 	/**

@@ -24,10 +24,12 @@ export type TitleIconType =
     'dash' |
     'icon-demands' |
     'icon-my-reuses' |
+    'icon-my-profil' |
     'tabulated-data' |
     'icon-info' |
     'filter-icon' |
-    'search';
+    'search' |
+    'icon_tab_organization';
 
 
 export const ALL_TYPES: TitleIconType[] = [
@@ -52,11 +54,13 @@ export const ALL_TYPES: TitleIconType[] = [
     'dash',
     'icon-demands',
     'icon-my-reuses',
+    'icon-my-profil',
     'tabulated-data',
     'icon-info',
     'key_icon_circle',
     'filter-icon',
-    'search'
+    'search',
+    'icon_tab_organization'
 ];
 
 export const PROCESS_DEFINITION_KEY_TYPES: TitleIconType[] = [
