@@ -1,1 +1,29 @@
-<p>my-account works!</p>
+<app-page>
+    <app-loader [active]="isLoading">
+    </app-loader>
+
+    <app-page-title
+        [title1]="'personalSpace.myAccount.title'|translate"
+        [title3]="'personalSpace.myAccount.description1'|translate"
+        [title4]="'personalSpace.myAccount.linkText'|translate"
+        [urlToDoc]="urlToDoc"
+        class="d-flex justify-content-center w-100"></app-page-title>
+
+
+    <app-tabs>
+        <app-tab [label]="'personalSpace.myAccount.myProfil.tabTitle'|translate"
+                 [icon]="'icon-my-profil'">
+            <ng-template>
+                <app-my-profil></app-my-profil>
+            </ng-template>
+        </app-tab>
+        <app-tab [label]="'accountInfo.tab.myOrganizations'|translate"
+                 [icon]="'icon_tab_organization'">
+            <ng-template>
+                <app-organization-tab
+                ></app-organization-tab>
+            </ng-template>
+        </app-tab>
+    </app-tabs>
+
+</app-page>

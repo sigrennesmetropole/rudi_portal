@@ -19,7 +19,7 @@
                             <input class="form-control text-indent" type="search" name="search" autocomplete="off"
                                    [(ngModel)]="searchTerms"
                                    (keydown.enter)="onChanges()"
-                                   [placeholder]="'searchbox.search' | translate">
+                                   [placeholder]="'searchbox.searchInData' | translate">
                             <span class="search-box-clear search-box" [ngClass]="searchTerms ? 'active' : ''"
                                   *ngIf="searchTerms">
                               <mat-icon class="pointer mr-2" aria-hidden="false" aria-label="clear"

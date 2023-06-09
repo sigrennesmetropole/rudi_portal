@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
+import {LogService} from '../../../core/services/log.service';
 
 @Component({
   selector: 'app-my-account',
@@ -6,10 +8,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./my-account.component.scss']
 })
 export class MyAccountComponent implements OnInit {
+    isLoading: boolean;
+    urlToDoc: string;
 
-  constructor() { }
+    constructor(
+        private readonly propertiesMetierService: PropertiesMetierService,
+        private readonly logService: LogService
+    ) {}
 
-  ngOnInit(): void {
-  }
-
+    ngOnInit(): void {
+        this.isLoading = true;
+        this.propertiesMetierService.get('rudidatarennes.docRudiBzh').subscribe({
+            next: (rudiDocLink: string) => {
+                this.urlToDoc = rudiDocLink;
+                this.isLoading = false;
+            },
+            error: (err) => {
+                this.logService.error(err);
+                this.isLoading = false;
+            }
+        });
+    }
 }

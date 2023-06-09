@@ -6,7 +6,9 @@
         "/projets": "Réutilisations",
         "/projets/soumettre-un-projet": "Projet",
         "/login": "Mon compte",
-        "/personal-space": "Demandes d’accès reçues",
+        "/personal-space/my-activity": "Mon activité",
+        "/personal-space/selfdata-datasets": "Mes données personnelles",
+        "/personal-space/my-notifications": "Mes notifications",
         "/personal-space/new-request-detail": "Demande de nouvelles données"
     },
     "project": {
@@ -264,7 +266,7 @@
             "datasets": "Jeux de données utilisés",
             "defaultType": "Réutilisation",
             "defaultLogo": "logo par défaut",
-            "newRequestLogo":"logo des nouvelles demandes"
+            "newRequestLogo": "logo des nouvelles demandes"
         },
         "orders": {
             "title": "Titre de A à Z",
@@ -335,6 +337,7 @@
         "connection": "Connexion",
         "login": "Identifiant",
         "logout": "Déconnexion",
+        "mail": "Adresse e-mail",
         "password": "Mot de passe",
         "loginRequired": "Vous n'avez pas saisi votre identifiant. Veuillez le renseigner afin de vous connecter.",
         "passwordRequired": "Vous n'avez pas saisi votre mot de passe. Veuillez le renseigner afin de vous connecter.",
@@ -431,7 +434,7 @@
         "sansCompte": "Vous avez déjà un compte ?",
         "emailError": "Cette information est obligatoire. Assurez-vous qu'elle respecte ce format : exemple@domaine.com",
         "passwordMsgPre": "Veuillez utiliser au minimum ",
-        "passwordMsgPost": " caractères. Nous vous conseillons d'y intégrer des majuscules, minuscules, chiffres et caractères spéciaux.",
+        "passwordMsgPost": " caractères. Votre mot de passe doit contenir des majuscules, minuscules, chiffres et caractères spéciaux.",
         "passwordErrorPre": "Votre mot de passe ne doit pas être inférieur à ",
         "passwordErrorPost": " caractères.",
         "passwordRequired": "Vous n'avez pas saisi votre Mot de passe. Veuillez le renseigner afin de vous inscrire.",
@@ -480,7 +483,8 @@
         "noResult": "Aucun résultat",
         "filtres": "Filtres",
         "pour": " pour ",
-        "search": "Rechercher... "
+        "search": "Rechercher... ",
+        "searchInData": "Rechercher dans les données ..."
     },
     "filterBox": {
         "filtrer": "Filtrer",
@@ -557,7 +561,13 @@
         "adresseEmail": "Adresse Email",
         "myOrganizations": "Mes organisations",
         "contactUs": "Vous souhaitez créer, modifier ou être rattaché à une organisation ? Contactez-nous en cliquant sur le bouton \"Nous contacter\" ci-dessous",
-        "moreInfo": "Plus d'informations sur les organisations sont disponibles sur"
+        "moreInfo": "Plus d'informations sur les organisations sont disponibles sur",
+        "tab": {
+            "myOrganizations": "Mes organisations",
+            "noOrganizations": "Vous n'avez pas encore d'organisations.",
+            "img": "Pictogramme d'organisation",
+            "errorLoading": "Une erreur est survenue lors du chargement de vos organisations. Merci de recharger la page. Si le problème persiste, veuillez contacter un administrateur en cliquant ici."
+        }
     },
     "metaData": {
         "description": "Description",
@@ -703,12 +713,13 @@
                 }
             }
         },
-        "tabulatedData": "Données tabulaires",
+        "tabulatedDataTitle": "Tableau",
+        "tabulatedData": "Consultation des données sous forme de tableau",
         "tabulatedDataTab": {
             "errorDownloading": "Erreur lors du chargement des données",
             "errorFileSize": "Les données sont trop volumineuses, merci de les télécharger afin de les visualiser.",
             "errorAccess": "Afin de pouvoir visualiser la donnée vous devez avoir été autorisé à la mobiliser dans le cadre d'un projet. Merci d'effectuer une demande d'accès en cliquant sur le bouton \"Demander l'accès\" situé en dessous de la zone de titre du jeu de données.",
-            "tableHeadingBtn": "Mon tableau comporte des entêtes"
+            "tableHeadingBtn": "Ce tableau comporte des en-têtes"
         }
     },
     "availableFormats": {
@@ -1131,7 +1142,7 @@
                 "noResultMessage": "Aucune demande liée à des données personnelles"
             },
             "myNewDatasetRequests": {
-                "countMessage": "demande(s) liée(s) de nouvelles données (hors catalogue)",
+                "countMessage": "demande(s) de nouvelles données (hors catalogue)",
                 "noResultMessage": "Aucune demande de nouvelles données (hors catalogue)"
             }
         },
@@ -1216,9 +1227,9 @@
                 "information": "Information",
                 "deletion": {
                     "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande n'a pas encore été traitée par l'équipe Rudi.",
-                    "title" : "Retirer un jeu de données",
-                    "text1" : "Vous souhaitez retirer un jeu de données de votre projet ? Cliquer sur confirmer.",
-                    "text2" : "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour ce projet.",
+                    "title": "Retirer un jeu de données",
+                    "text1": "Vous souhaitez retirer un jeu de données de votre projet ? Cliquer sur confirmer.",
+                    "text2": "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour ce projet.",
                     "confirmationPopup": {
                         "cancel": "Annuler",
                         "validate": "Confirmer"
@@ -1360,6 +1371,20 @@
         },
         "matchingData": {
             "title": "Informations personnelles"
+        },
+        "myAccount": {
+            "title": "Mon compte",
+            "description1": "Vous trouverez sur cette page le récapitulatif des informations concernant votre compte Rudi. L'onglet \"Mes organisations\" vous permet de consulter et gérer les organisations auxquelles vous êtes rattaché, ainsi que de créer une nouvelle organisation. ",
+            "linkText": "Cliquez ici pour en savoir plus.",
+            "myProfil":{
+                "tabTitle": "Mon profil",
+                "pageTitle": "Mes informations personnelles",
+                "nom": "Nom",
+                "prenom": "Prénom",
+                "adresseEmail": "Adresse e-mail",
+                "myOrganizations": "Mes organisations",
+                "buttonModify": "Modifier mon profil"
+            }
         }
     },
     "task": {

@@ -1,0 +1,32 @@
+<!-- User account information and his organizations list-->
+<div class="my-profil-title">
+    <span>{{'personalSpace.myAccount.myProfil.pageTitle' | translate}}</span>
+</div>
+
+<mat-card class="mat-elevation-z4 my-profil-card">
+    <mat-card-content class="d-flex mb-0">
+        <div *ngIf="isLoading" class="loader-card">
+            <app-loader [active]="isLoading" [allPage]="false" [noText]="true" [isTransparent]="true">
+            </app-loader>
+        </div>
+        <ng-container *ngIf="!isLoading && user">
+            <div class="logo-container">
+                <img src="/assets/images/rudi_picto_profil_user.png" alt="Pas d'image.">
+            </div>
+            <div class="my-profil-card-content">
+                <div class="text-section">
+                    <span class="keyword">{{'personalSpace.myAccount.myProfil.nom' | translate}}</span>
+                    <span>{{user.lastname}}</span>
+                </div>
+                <div class="text-section">
+                    <span class="keyword">{{'personalSpace.myAccount.myProfil.prenom' | translate}}</span>
+                    <span>{{user.firstname}}</span>
+                </div>
+                <div class="text-section">
+                    <span class="keyword">{{'personalSpace.myAccount.myProfil.adresseEmail' | translate}}</span>
+                    <span>{{this.email}}</span>
+                </div>
+            </div>
+        </ng-container>
+    </mat-card-content>
+</mat-card>

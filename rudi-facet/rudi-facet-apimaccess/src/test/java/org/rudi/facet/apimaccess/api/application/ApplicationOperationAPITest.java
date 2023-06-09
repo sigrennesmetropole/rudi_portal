@@ -1,10 +1,12 @@
 package org.rudi.facet.apimaccess.api.application;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.apache.commons.collections.map.HashedMap;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,7 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -91,7 +94,7 @@ class ApplicationOperationAPITest {
 						.setBody(jsonDocumentContent)
 		);
 
-		final DocumentContent apiContent = applicationOperationAPI.getAPIContent(context, version, applicationId, username);
+		final DocumentContent apiContent = applicationOperationAPI.getAPIContent(context, version, applicationId, username, null);
 
 		RudiAssertions.assertThat(apiContent)
 				.hasContentType(MediaType.APPLICATION_JSON_VALUE)
@@ -135,7 +138,7 @@ class ApplicationOperationAPITest {
 						.setBody(jsonDocumentContent)
 		);
 
-		assertThatThrownBy(() -> applicationOperationAPI.getAPIContent(context, version, applicationId, username))
+		assertThatThrownBy(() -> applicationOperationAPI.getAPIContent(context, version, applicationId, username, null))
 				.isInstanceOf(APIEndpointException.class)
 				.hasMessage("HTTP 404 NOT_FOUND reçu du endpoint de l'API http://localhost:%s/datasets/659ad57a-d2b0-442c-af4d-9b57ede31224/dwnl/1.0.0. Si l'erreur HTTP renvoyée par WSO2 n'est pas reproduite en interrogeant directement le endpoint alors WSO2 est la cause du problème. Il peut être nécessaire d'exécuter le script re-deploy-all-apis.sh sur la machine hébergeant WSO2 (cf RUDI-1938).", mockWebServer.getPort())
 		;

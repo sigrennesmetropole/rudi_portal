@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * @author fnisseron
+ * @author FNI18300
  *
  */
 @AllArgsConstructor

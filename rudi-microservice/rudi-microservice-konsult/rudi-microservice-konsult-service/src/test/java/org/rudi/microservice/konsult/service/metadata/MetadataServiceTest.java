@@ -3,10 +3,12 @@ package org.rudi.microservice.konsult.service.metadata;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.DocumentContent;
@@ -33,6 +35,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -97,7 +101,7 @@ public class MetadataServiceTest {
 
 		DocumentContent mediaTelechargeJdd = new DocumentContent("test", "mediaType", new File("null"));
 
-		when(applicationService.downloadAPIContent(eq(jddOuvert.getGlobalId()), eq(media.getMediaId()), anyString()))
+		when(applicationService.downloadAPIContent(eq(jddOuvert.getGlobalId()), eq(media.getMediaId()), anyString(), anyObject()))
 				.thenReturn(mediaTelechargeJdd);
 
 		DocumentContent mediaTelechargeJddOuvert = metadataService.downloadMetadataMedia(jddOuvert.getGlobalId(),
@@ -178,7 +182,7 @@ public class MetadataServiceTest {
 
 		DocumentContent mediaTelechargeJdd = new DocumentContent("test", "mediaType", new File("null"));
 
-		when(applicationService.downloadAPIContent(eq(jddRestreint.getGlobalId()), eq(media.getMediaId()), anyString()))
+		when(applicationService.downloadAPIContent(eq(jddRestreint.getGlobalId()), eq(media.getMediaId()), anyString(), any()))
 				.thenReturn(mediaTelechargeJdd);
 
 		DocumentContent mediaTelechargeJddRestreint = metadataService.downloadMetadataMedia(jddRestreint.getGlobalId(),

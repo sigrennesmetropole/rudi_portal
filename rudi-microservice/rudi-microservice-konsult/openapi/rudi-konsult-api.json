@@ -716,6 +716,58 @@
 				}
 			}
 		},
+		"/datasets/{globalId}/media/{mediaId}/call-service": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des métadonné de type WMS/WFS d'un jeu de données.",
+				"description": "Récupère le flux WMS/WFS d'un média de type SERVICE",
+				"operationId": "callServiceMetadataMedia",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/GlobalIdPathParam"
+					},
+					{
+						"in": "path",
+						"name": "mediaId",
+						"description": "Identifiant du media",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "parameters",
+						"required": "false",
+						"schema": {
+							"type": "object",
+							"additionalProperties": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne les données d'un média",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
 		"/medias/{mediaId}/{interfaceContract}/{version}": {
 			"get": {
 				"tags": [

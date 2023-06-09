@@ -87,7 +87,7 @@ export class HeaderComponent {
     handleClickGoMonCompte(): void {
         // Si on est co : go /account
         if (this.isConnectedAsUser) {
-            this.router.navigate(['login/account']);
+            this.router.navigate(['/personal-space/my-account']);
         }
         // pas co ? go login
         else {

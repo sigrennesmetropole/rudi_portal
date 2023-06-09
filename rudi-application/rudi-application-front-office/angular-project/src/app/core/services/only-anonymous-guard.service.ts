@@ -32,7 +32,7 @@ export class OnlyAnonymousGuardService implements CanActivate, CanActivateChild 
                         }
 
                         // je suis déjà authentifié ? je retourne vers login/account
-                        this.router.navigate(['/login/account']).then();
+                        this.router.navigate(['/personal-space/my-account']).then();
                         return false;
                     }
                 )

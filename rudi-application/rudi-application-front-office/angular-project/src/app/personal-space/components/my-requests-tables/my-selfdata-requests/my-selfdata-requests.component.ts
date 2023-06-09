@@ -31,11 +31,15 @@ export class MySelfdataRequestsComponent extends AbstractMyRequestTableComponent
     }
 
     protected getMyElements(offset: number, limit: number, order: string): Observable<RequestItem[]> {
-        let selfdataInformationRequestSearchCriteria: SelfdataInformationRequestSearchCriteria = {};
+        const selfdataInformationRequestSearchCriteria: SelfdataInformationRequestSearchCriteria = {};
         selfdataInformationRequestSearchCriteria.offset = offset;
         selfdataInformationRequestSearchCriteria.limit = limit;
         selfdataInformationRequestSearchCriteria.order = order;
-        selfdataInformationRequestSearchCriteria.status = [SelfdataInformationRequestStatus.Completed, SelfdataInformationRequestStatus.Cancelled];
+        selfdataInformationRequestSearchCriteria.status = [
+            SelfdataInformationRequestStatus.Completed,
+            SelfdataInformationRequestStatus.Cancelled,
+            SelfdataInformationRequestStatus.Rejected
+        ];
         return this.myRequestsService.searchMyFinishedSelfdataInformationRequests(selfdataInformationRequestSearchCriteria).pipe(
             map((page: PagedLinkedDatasetList) => {
                 this.total = page.total;

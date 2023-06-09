@@ -78,7 +78,7 @@ export class RouteHistoryService {
         }
         // Sinon go /account si on est connecté
         else {
-            return this.router.navigate(['/login/account']);
+            return this.router.navigate(['/personal-space/my-account']);
         }
     }
 }

@@ -1,0 +1,59 @@
+@import "src/app/styles/variables-rudi";
+@import "src/app/styles/colors";
+@import "src/app/styles/common-style";
+
+.my-profil-title {
+    font-size: 17px;
+    font-family: "Open Sans";
+    font-weight: bold;
+    margin-bottom: 22px;
+}
+
+.loader-card{
+    width: 100%;
+    text-align: center;
+}
+
+.my-profil-card {
+    box-shadow: none;
+    width: 65%;
+    border: solid 1.1px $blocks-and-menus-outline;
+    padding: 17px 17px 17px 17px;
+    overflow: hidden;
+    margin-bottom: 100px;
+
+    mat-card-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 15px;
+        font-family: "Open Sans";
+
+        .text-section{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .keyword {
+            color: $primary-color
+        }
+
+    }
+
+    .logo-container {
+        margin: 0 16px 12px 0;
+    }
+
+    img {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+    }
+
+    .my-profil-card-content {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 22px;
+    }
+}

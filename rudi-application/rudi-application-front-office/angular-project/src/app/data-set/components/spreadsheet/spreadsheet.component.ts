@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {SPREADSHEET_LOCALE_FR} from './spreadsheet-locale-fr';
+import {BreakpointObserverService} from '../../../core/services/breakpoint-observer.service';
 
 export const SPREADSHEET_COLDEF_INDEX: ColDef = {
     field: '',
@@ -16,9 +17,17 @@ export const SPREADSHEET_COLDEF_INDEX: ColDef = {
 })
 export class SpreadsheetComponent {
 
-    constructor() {
+    constructor(
+        private readonly breakpointObserver: BreakpointObserverService,
+    ) {
         this.defaultColDef = SpreadsheetComponent.createDefaultColDef();
     }
+
+    private static MAX_COL_SM_SCREEN = 2;
+    private static MAX_COL_MD_SCREEN = 3;
+    private static MAX_COL_LG_SCREEN = 6;
+    private static MAX_COL_XL_SCREEN = 8;
+    private static MAX_COL_XXL_SCREEN = 10;
 
     gridOptions: GridOptions = {
         localeText: SPREADSHEET_LOCALE_FR
@@ -44,8 +53,30 @@ export class SpreadsheetComponent {
     }
 
     fitColumnSize(): void {
-        if (this.gridOptions && this.gridOptions.api) {
-            this.gridOptions.api.sizeColumnsToFit();
+        if (this.columnDefs.length <= this.mediaSizeGestion()){
+            if (this.gridOptions && this.gridOptions.api) {
+                this.gridOptions.api.sizeColumnsToFit();
+            }
         }
     }
+
+    private mediaSizeGestion(): number {
+        const mediaSize = this.breakpointObserver.getMediaSize();
+        if (mediaSize.isSm){
+            return SpreadsheetComponent.MAX_COL_SM_SCREEN;
+        }
+        if (mediaSize.isMd){
+            return SpreadsheetComponent.MAX_COL_MD_SCREEN;
+        }
+        if (mediaSize.isLg){
+            return SpreadsheetComponent.MAX_COL_LG_SCREEN;
+        }
+        if (mediaSize.isXl) {
+            return SpreadsheetComponent.MAX_COL_XL_SCREEN;
+        }
+
+        return SpreadsheetComponent.MAX_COL_XXL_SCREEN;
+    }
+
+
 }
