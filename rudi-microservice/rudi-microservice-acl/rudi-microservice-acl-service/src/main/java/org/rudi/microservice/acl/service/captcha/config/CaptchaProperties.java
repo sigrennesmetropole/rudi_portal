@@ -42,5 +42,5 @@ public class CaptchaProperties {
 	private String clientSecret;
 	private String clientName;
 
-	private String[] scopes = new String[]{ "WRITE" };
+	private String[] scopes = new String[]{ "piste.captchetat" };
 }

@@ -3,7 +3,6 @@ import {OrganizationMetierService} from '../../core/services/organization-metier
 import {ProvidersMetierService} from '../../core/services/providers-metier.service';
 import {ProducersMetierService} from '../../core/services/producers-metier.service';
 import {Base64EncodedLogo, DEFAULT_LOGO} from '../../core/services/image-logo.service';
-
 const PRODUCER = 'producer';
 const PROVIDER = 'provider';
 export type OrganizationType = 'producer' | 'provider';
@@ -19,6 +18,7 @@ export class OrganizationLogoComponent {
     @Input() isANewRequest;
     defaultContent = DEFAULT_LOGO;
     content: Base64EncodedLogo;
+    isLoading = false;
 
     constructor(
         private readonly producersMetierService: ProducersMetierService,
@@ -29,7 +29,17 @@ export class OrganizationLogoComponent {
     @Input() set organizationId(organizationId: string) {
         const service = this.getService();
         if (service && organizationId) {
-            service.getLogo(organizationId).subscribe(logo => this.content = logo, () => this.content = DEFAULT_LOGO);
+            this.isLoading = true;
+            service.getLogo(organizationId).subscribe({
+                next: logo => {
+                    this.content = logo;
+                    this.isLoading = false;
+                },
+                error: () => {
+                    this.content = DEFAULT_LOGO;
+                    this.isLoading = false;
+                }
+            });
         }
     }
 
@@ -47,5 +57,4 @@ export class OrganizationLogoComponent {
                 return undefined;
         }
     }
-
 }

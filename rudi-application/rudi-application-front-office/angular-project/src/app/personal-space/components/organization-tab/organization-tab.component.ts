@@ -4,6 +4,7 @@ import {BreakpointObserverService, NgClassObject} from '../../../core/services/b
 import {switchMap} from 'rxjs/operators';
 import {UserService} from '../../../core/services/user.service';
 import {OrganizationMetierService} from '../../../core/services/organization-metier.service';
+import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
 
 
 @Component({
@@ -22,7 +23,9 @@ export class OrganizationTabComponent implements OnInit {
 
     constructor(private readonly breakpointObserver: BreakpointObserverService,
                 private readonly utilisateurService: UserService,
-                private readonly organizationMetierService: OrganizationMetierService) {
+                private readonly organizationMetierService: OrganizationMetierService,
+                private readonly propertiesMetierService: PropertiesMetierService,
+    ) {
     }
 
     get showOrganization(): boolean {
@@ -63,5 +66,14 @@ export class OrganizationTabComponent implements OnInit {
                     }
                 }
             );
+    }
+
+    /**
+     * Quand l'utilisateur click sur le lien equipe technique Rudi
+     */
+    handleClickContactRudi(): void {
+        this.propertiesMetierService.get('rudidatarennes.contact').subscribe(link => {
+            window.location.href = link;
+        });
     }
 }

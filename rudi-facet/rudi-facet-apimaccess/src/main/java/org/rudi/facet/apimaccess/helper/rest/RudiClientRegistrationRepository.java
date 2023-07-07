@@ -15,7 +15,7 @@ public interface RudiClientRegistrationRepository extends ReactiveClientRegistra
 	ClientRegistration findByUsername(String username) throws GetClientRegistrationException;
 
 	@Nullable
-	ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException;
+	ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException, BuildClientRegistrationException;
 
 	/**
 	 * Renvoie l'enregistrement client s'il existe dans le cache, sinon réalise l'enregistrement

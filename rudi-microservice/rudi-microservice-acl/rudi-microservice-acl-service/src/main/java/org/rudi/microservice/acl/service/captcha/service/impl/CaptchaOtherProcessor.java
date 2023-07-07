@@ -22,7 +22,7 @@ public class CaptchaOtherProcessor extends AbstractCaptchaProcessor {
 
 	@Override
 	protected boolean hasToBeUsed(String typeCaptcha) {
-		return !StringUtils.equals(typeCaptcha, CAPTCHA_TYPE_IMAGE);
+		return !(StringUtils.equals(typeCaptcha, CAPTCHA_TYPE_IMAGE) || StringUtils.equals(typeCaptcha, CAPTCHA_TYPE_SOUND));
 	}
 
 	@Override

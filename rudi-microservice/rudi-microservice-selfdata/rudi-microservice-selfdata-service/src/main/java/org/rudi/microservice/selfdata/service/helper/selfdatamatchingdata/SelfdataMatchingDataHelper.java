@@ -250,7 +250,11 @@ public class SelfdataMatchingDataHelper {
 			fields.stream().forEach(field -> {
 				List<String> values = new ArrayList<>();
 				if (field != null && field.getValues() != null) {
-					field.getValues().stream().forEach(value -> values.add(encrypt(value)));
+					field.getValues().stream().forEach(value -> {
+						if (!value.isEmpty()) { // On encrypte pas une donnée sans contenu (string vide)
+							values.add(encrypt(value));
+						}
+					});
 				}
 				field.setValues(values);
 			});

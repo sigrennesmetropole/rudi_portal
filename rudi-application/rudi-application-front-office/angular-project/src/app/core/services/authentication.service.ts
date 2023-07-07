@@ -7,7 +7,7 @@ import {AccountService} from './account.service';
 import {ANONYMOUS_USERNAME, AnonymousAuthentication} from './authentication/anonymous-authentication';
 import {LoginAuthentication} from './authentication/login-authentication';
 import {FormGroup} from '@angular/forms';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 /**
  * Le header qui contient le token qui certifie si on est authentifié ou pas
@@ -305,6 +305,9 @@ export class AuthenticationService {
      * Déconnexion de l'utilisateur
      */
     logout(): Observable<void> {
-        return this.accountService.accoutLogout(AuthenticationService.getXToken());
+        return this.accountService.accoutLogout(AuthenticationService.getXToken())
+            .pipe(
+                tap(() => this.authenticationState = this.anonymousAuthenticationService.getTargetState()),
+            );
     }
 }

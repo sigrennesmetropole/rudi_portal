@@ -1,6 +1,5 @@
 package org.rudi.microservice.acl.service.captcha.service.impl;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.microservice.acl.service.captcha.config.CaptchaProperties;
@@ -12,14 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class CaptchaImageProcessor extends AbstractCaptchaMultimediaProcessor {
+public class CaptchaSoundProcessor extends AbstractCaptchaMultimediaProcessor {
 
-	public CaptchaImageProcessor(@Qualifier("captcha_webclient")WebClient captchaWebClient, CaptchaProperties captchaProperties, ResourceHelper resourceHelper) {
+	public CaptchaSoundProcessor(@Qualifier("captcha_webclient")WebClient captchaWebClient, CaptchaProperties captchaProperties, ResourceHelper resourceHelper) {
 		super(captchaWebClient, captchaProperties, resourceHelper);
 	}
 
 	@Override
 	protected boolean hasToBeUsed(String typeCaptcha) {
-		return StringUtils.equals(typeCaptcha, CAPTCHA_TYPE_IMAGE);
+		return StringUtils.equals(typeCaptcha, CAPTCHA_TYPE_SOUND);
 	}
 }

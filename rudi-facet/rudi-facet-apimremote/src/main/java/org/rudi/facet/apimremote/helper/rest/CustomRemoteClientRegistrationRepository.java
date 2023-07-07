@@ -43,16 +43,16 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 
 	@Nullable
 	@Override
-	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException {
-		// On part du principe que la registration est faite dans ACL et pas dans les remote
-		return findByUsername(username);
+	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException, BuildClientRegistrationException {
+		return findRegistrationOrRegister(username, password);
 	}
 
 	@NotNull
 	@Override
 	public ClientRegistration findRegistrationOrRegister(String username, String password) throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
-		// On part du principe que la registration est faite dans ACL et pas dans les remote
-		return findByUsername(username);
+		// On fait la registration dans ACL et pas dans les remote
+		val clientRegistrationDto = aclHelper.findRegistrationOrRegister(username, password);
+		return convertToEntity(clientRegistrationDto);
 	}
 
 	@Override

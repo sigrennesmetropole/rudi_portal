@@ -29,7 +29,8 @@ export type TitleIconType =
     'icon-info' |
     'filter-icon' |
     'search' |
-    'icon_tab_organization';
+    'icon_tab_organization'|
+    'icon-consentement';
 
 
 export const ALL_TYPES: TitleIconType[] = [
@@ -60,7 +61,8 @@ export const ALL_TYPES: TitleIconType[] = [
     'key_icon_circle',
     'filter-icon',
     'search',
-    'icon_tab_organization'
+    'icon_tab_organization',
+    'icon-consentement'
 ];
 
 export const PROCESS_DEFINITION_KEY_TYPES: TitleIconType[] = [

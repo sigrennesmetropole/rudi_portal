@@ -38,7 +38,7 @@
                 class="rudi-panel-available">{{ 'donneesPersonnellesBox.treatmentPeriod' | translate}}</div>
             <div
                 class="margin-data-value">{{ getSelfDataPeriod(metadata.ext_metadata.ext_selfdata.ext_selfdata_content.treatment_period) }}</div>
-            
+
             <app-boolean-data-block
                 [booleanValue]="metadata.ext_metadata.ext_selfdata.ext_selfdata_content.deletable_data"
                 [libelle]="'donneesPersonnellesBox.erasableData' | translate"></app-boolean-data-block>

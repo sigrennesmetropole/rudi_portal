@@ -4,7 +4,7 @@
 
 .my-profil-title {
     font-size: 17px;
-    font-family: "Open Sans";
+    font-family: OpenSans, sans-serif;
     font-weight: bold;
     margin-bottom: 22px;
 }
@@ -26,7 +26,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         font-size: 15px;
-        font-family: "Open Sans";
+        font-family: OpenSans, sans-serif;
 
         .text-section{
             display: flex;

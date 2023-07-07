@@ -137,10 +137,6 @@ export class HeaderComponent {
     }
 
     private goToCatalogues(): void {
-        if (this.router.url === '/catalogue') {
-            location.reload();
-        } else {
-            this.router.navigate(['/catalogue']);
-        }
+        this.router.navigate(['/catalogue']);
     }
 }

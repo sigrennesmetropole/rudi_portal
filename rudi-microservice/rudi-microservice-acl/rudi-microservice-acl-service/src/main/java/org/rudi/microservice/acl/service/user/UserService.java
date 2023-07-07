@@ -175,4 +175,7 @@ public interface UserService {
 	ClientRegistrationDto getClientRegistration(String login) throws Exception;
 
 	void addClientRegistration(String login, AccessKeyDto accessKey);
+
+	ClientRegistrationDto registerClientByPassword(String login, String password) throws Exception;
+
 }

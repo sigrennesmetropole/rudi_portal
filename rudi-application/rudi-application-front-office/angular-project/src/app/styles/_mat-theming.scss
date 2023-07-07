@@ -145,7 +145,6 @@ button.mat-menu-item:hover {
 }
 
 ::ng-deep.mat-menu-panel {
-    max-height: 50vh;
     overflow: hidden !important;
     border-radius: 6px !important;
     box-shadow: -1px 1px 8px 0 rgba(0, 0, 0, 0.25);

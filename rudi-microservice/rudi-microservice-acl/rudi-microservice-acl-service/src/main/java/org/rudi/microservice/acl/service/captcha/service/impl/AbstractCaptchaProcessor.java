@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class AbstractCaptchaProcessor {
 	protected static final String CAPTCHA_TYPE_IMAGE = "image";
+	protected static final String CAPTCHA_TYPE_SOUND = "sound";
 
 	private final WebClient captchaWebClient;
 	private final CaptchaProperties captchaProperties;

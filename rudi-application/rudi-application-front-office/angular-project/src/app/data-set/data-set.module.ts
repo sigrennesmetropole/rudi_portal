@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
 import {MapComponent} from './components/map/map.component';
 import {ProducerNamesFilterFormComponent} from './components/filter-forms/producer-names-filter-form/producer-names-filter-form.component';
-import {DataSetInfosComponent} from './components/data-set-infos/data-set-infos.component';
 import {OrderFilterFormComponent} from './components/filter-forms/order-filter-form/order-filter-form.component';
 import {DatesFilterFormComponent} from './components/filter-forms/dates-filter-form/dates-filter-form.component';
 import {DetailComponent} from './pages/detail/detail.component';
@@ -35,13 +34,14 @@ import {SpreadsheetComponent} from './components/spreadsheet/spreadsheet.compone
 import {AgGridModule} from 'ag-grid-angular';
 import {SpreadsheetTabComponent} from './components/spreadsheet-tab/spreadsheet-tab.component';
 import {DatasetInformationsComponent} from './components/dataset-informations/dataset-informations.component';
+import {DataSetInfosComponent} from './components/data-set-infos/data-set-infos.component';
 
 
 @NgModule({
     declarations:
         [
-            DetailComponent,
             DataSetInfosComponent,
+            DetailComponent,
             MapComponent,
             DataSetCardComponent,
             DatesFilterFormComponent,

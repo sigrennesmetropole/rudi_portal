@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_CACHE_CLIENT_REGISTRATION;
 
 @Component
@@ -98,7 +99,11 @@ public class CustomMemoryClientRegistrationRepository implements RudiClientRegis
 	@Nonnull
 	@Override
 	public ClientRegistration findRegistrationOrRegister(String username, String password) throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
-		return Objects.requireNonNullElse(findByUsername(username), register(username, password));
+		val registration = findByUsername(username);
+		if (registration == null) {
+			return register(username, password);
+		}
+		return registration;
 	}
 
 	@Override

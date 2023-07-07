@@ -10,10 +10,11 @@
 .header-img {
     width: 120px;
     height: 120px;
-    align-items: center;
     border-radius: 4px;
     border: solid 0.9px $blocks-and-menus-outline;
     margin-left: 80px;
+    display: flex;
+    align-items: center;
 
     img {
         margin: 0;
@@ -55,4 +56,8 @@
 
 .resource-description {
     width: 55em;
+}
+
+.organization-logo {
+    padding: 10px;
 }

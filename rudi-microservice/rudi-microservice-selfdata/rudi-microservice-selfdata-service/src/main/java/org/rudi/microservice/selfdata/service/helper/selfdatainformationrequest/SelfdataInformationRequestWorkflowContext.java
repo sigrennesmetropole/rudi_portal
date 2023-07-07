@@ -13,9 +13,7 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Status;
-import org.rudi.common.service.exception.AppServiceForbiddenException;
-import org.rudi.common.service.exception.AppServiceNotFoundException;
-import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.bean.workflow.EMailData;
@@ -35,8 +33,6 @@ import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.microservice.selfdata.core.bean.MatchingDescription;
 import org.rudi.microservice.selfdata.core.bean.MatchingField;
 import org.rudi.microservice.selfdata.core.bean.NodeProviderInfo;
-import org.rudi.microservice.selfdata.service.exception.MissingProviderException;
-import org.rudi.microservice.selfdata.service.exception.ProviderApiException;
 import org.rudi.microservice.selfdata.service.exception.UserNotFoundException;
 import org.rudi.microservice.selfdata.service.helper.provider.SelfdataProviderHelper;
 import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.SelfdataMatchingDataHelper;
@@ -311,7 +307,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 	@Transactional(readOnly = false)
 	@Nullable
 	public String callMatchingDataService(ScriptContext scriptContext, ExecutionEntity executionEntity)
-			throws InvalidDataException, DataverseAPIException, UserNotFoundException, AppServiceNotFoundException, AppServiceForbiddenException, AppServiceUnauthorizedException, MissingProviderException, ProviderApiException {
+			throws InvalidDataException, DataverseAPIException, AppServiceException {
 		// Verifier la présence du citoyen dans ACL
 		SelfdataInformationRequestEntity assetDescription = lookupAssetDescriptionEntity(executionEntity);
 		String citizenLogin = assetDescription.getInitiator();
