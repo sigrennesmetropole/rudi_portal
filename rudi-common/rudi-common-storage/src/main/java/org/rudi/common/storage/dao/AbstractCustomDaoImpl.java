@@ -207,9 +207,7 @@ public class AbstractCustomDaoImpl<E, C> {
 
 		val typedQuery = entityManager.createQuery(searchQuery);
 		if (pageable.isPaged()) {
-			typedQuery
-					.setFirstResult((int) pageable.getOffset())
-					.setMaxResults(pageable.getPageSize());
+			typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 		}
 		val projectEntities = typedQuery.getResultList();
 		return new PageImpl<>(projectEntities, pageable, totalCount.intValue());
@@ -249,7 +247,6 @@ public class AbstractCustomDaoImpl<E, C> {
 		}
 	}
 
-	@SuppressWarnings("unused") // La méthode a vocation à être surchargée par les classes filles
 	/**
 	 * Méthode de configuration des prédicats
 	 *
@@ -258,7 +255,8 @@ public class AbstractCustomDaoImpl<E, C> {
 	 * @param root           la racine de la recherche
 	 * @param predicates     la liste des prédicats
 	 */
-	protected void addPredicates(C searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<E> root, List<Predicate> predicates) {
+	protected void addPredicates(C searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery,
+			Root<E> root, List<Predicate> predicates) {
 		// Par défaut, aucun critère de recherche n'est imposé
 	}
 

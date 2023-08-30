@@ -1,14 +1,12 @@
 package org.rudi.microservice.projekt.service.type;
 
+import java.util.UUID;
+
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.microservice.projekt.core.bean.Confidentiality;
 import org.rudi.microservice.projekt.core.bean.ProjectType;
 import org.rudi.microservice.projekt.core.bean.ProjectTypeSearchCriteria;
-import org.rudi.microservice.projekt.storage.entity.ProjectTypeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.UUID;
 
 public interface ProjectTypeService {
 
@@ -25,8 +23,7 @@ public interface ProjectTypeService {
 	ProjectType getProjectType(UUID uuid);
 
 	/**
-	 * @param code du type
-	 * Get project type by code. Return null if not exist
+	 * @param code du type Get project type by code. Return null if not exist
 	 */
 	ProjectType findByCode(String code);
 

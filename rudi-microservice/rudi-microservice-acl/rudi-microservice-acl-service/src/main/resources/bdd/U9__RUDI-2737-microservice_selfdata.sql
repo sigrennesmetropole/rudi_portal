@@ -1,9 +1,9 @@
 DELETE
 FROM user_role
-WHERE user_fk = (SELECT id FROM acl_data.user WHERE login = 'selfdata');
+WHERE user_fk = (SELECT id FROM acl_data.user_ WHERE login = 'selfdata');
 
 DELETE
-FROM "user"
+FROM user_
 WHERE login = 'selfdata';
 
 DELETE

@@ -7,6 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 public class InvalidSelfdataApisException extends AppServiceNotFoundException {
 
+	private static final long serialVersionUID = 1748973246752933018L;
 	private final UUID datasetUuid;
 
 	public InvalidSelfdataApisException(UUID datasetUuid) {
@@ -16,6 +17,7 @@ public class InvalidSelfdataApisException extends AppServiceNotFoundException {
 
 	@Override
 	public String getMessage() {
-		return "Le JDD d'uuid : " + this.datasetUuid + " ne possède pas les APIs selfdata nécessaires pour une consultation (Une API TPBC et une API GDATA).";
+		return "Le JDD d'uuid : " + this.datasetUuid
+				+ " ne possède pas les APIs selfdata nécessaires pour une consultation (Une API TPBC et une API GDATA).";
 	}
 }

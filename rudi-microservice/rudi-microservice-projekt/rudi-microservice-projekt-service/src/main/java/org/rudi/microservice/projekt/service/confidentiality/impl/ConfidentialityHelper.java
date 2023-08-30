@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ConfidentialityHelper {
 
-	private static final String CONFIDENTIAL_CONFIDENTIALITY_CODE = "CONFIDENTIAL";
-	private static final String OPEN_CONFIDENTIALITY_CODE = "OPEN";
-	private static final String DEFAULT_CONFIDENTIALITY_CODE = OPEN_CONFIDENTIALITY_CODE;
+	public static final String CONFIDENTIAL_CONFIDENTIALITY_CODE = "CONFIDENTIAL";
+	public static final String OPEN_CONFIDENTIALITY_CODE = "OPEN";
+	public static final String DEFAULT_CONFIDENTIALITY_CODE = OPEN_CONFIDENTIALITY_CODE;
 
 	private final ConfidentialityDao confidentialityDao;
 

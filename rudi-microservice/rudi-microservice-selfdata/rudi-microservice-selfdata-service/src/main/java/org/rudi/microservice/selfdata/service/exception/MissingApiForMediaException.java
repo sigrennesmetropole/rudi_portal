@@ -7,6 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 public class MissingApiForMediaException extends AppServiceNotFoundException {
 
+	private static final long serialVersionUID = 7501495376085531253L;
 	private final UUID datasetUuid;
 	private final UUID mediaUuid;
 
@@ -18,6 +19,7 @@ public class MissingApiForMediaException extends AppServiceNotFoundException {
 
 	@Override
 	public String getMessage() {
-		return "Le JDD d'uuid : " + this.datasetUuid + " contenant le media d'uuid : " + this.mediaUuid + " ne contient pas d'API dans WSO2";
+		return "Le JDD d'uuid : " + this.datasetUuid + " contenant le media d'uuid : " + this.mediaUuid
+				+ " ne contient pas d'API dans WSO2";
 	}
 }

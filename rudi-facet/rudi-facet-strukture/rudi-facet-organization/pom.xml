@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-facet-strukture</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-facet-organization</artifactId>
@@ -34,7 +34,7 @@
 							<modelPackage>org.rudi.facet.organization.bean</modelPackage>
 							<inputSpec>${microservice.directory}/openapi/rudi-strukture-model.json</inputSpec>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
@@ -56,7 +56,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.plugin.version}</version>
+				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>

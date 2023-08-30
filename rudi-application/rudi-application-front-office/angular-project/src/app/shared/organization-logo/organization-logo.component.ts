@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {OrganizationMetierService} from '../../core/services/organization-metier.service';
+import {OrganizationMetierService} from '../../core/services/organization/organization-metier.service';
 import {ProvidersMetierService} from '../../core/services/providers-metier.service';
 import {ProducersMetierService} from '../../core/services/producers-metier.service';
 import {Base64EncodedLogo, DEFAULT_LOGO} from '../../core/services/image-logo.service';

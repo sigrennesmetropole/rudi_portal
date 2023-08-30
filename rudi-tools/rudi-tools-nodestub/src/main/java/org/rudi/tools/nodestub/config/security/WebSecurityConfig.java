@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
 	private static final String[] SB_PERMIT_ALL_URL = {
 			// swagger ui / openapi
@@ -43,8 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final UtilContextHelper utilContextHelper;
 	private final NodestubJwtTokenUtil nodestubJwtTokenUtil;
 
-	@Override
-	protected void configure(final HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		if (!disableAuthentification) {
 			http.cors().and().csrf().disable()
 					// starts authorizing configurations
@@ -52,14 +52,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					// configuring the session on the server
 					.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 					// installation du filtre de type header
-					.and()
-					.addFilterBefore(createOAuth2Filter(), UsernamePasswordAuthenticationFilter.class)
+					.and().addFilterBefore(createOAuth2Filter(), UsernamePasswordAuthenticationFilter.class)
 					.addFilterBefore(createJwtRequestFilter(), UsernamePasswordAuthenticationFilter.class)
-					.addFilterAfter(createPreAuthenticationFilter(), BasicAuthenticationFilter.class)
-			;
+					.addFilterAfter(createPreAuthenticationFilter(), BasicAuthenticationFilter.class);
 		} else {
 			http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll();
 		}
+		return http.build();
 	}
 
 	@Bean
@@ -73,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Url autorisées
 		// 4200 pour les développement | 8080 pour le déploiement
-		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);

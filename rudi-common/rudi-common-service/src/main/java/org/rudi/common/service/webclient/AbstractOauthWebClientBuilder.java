@@ -4,6 +4,7 @@ import javax.net.ssl.SSLException;
 
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
@@ -33,7 +34,10 @@ public abstract class AbstractOauthWebClientBuilder {
 				.forClient()
 				.trustManager(InsecureTrustManagerFactory.INSTANCE)
 				.build();
-		final var httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+		final var httpClient = HttpClient
+				.create()
+				.resolver(DefaultAddressResolverGroup.INSTANCE)
+				.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
 
 		final var clientCredentialsReactiveOAuth2AuthorizedClientProvider =
 				new ClientCredentialsReactiveOAuth2AuthorizedClientProvider();

@@ -1,0 +1,75 @@
+{
+	"object_type": "Project",
+	"title": "Projet de suivi des poubelles jaunes orangées",
+	"description": "On suit des poubelles même si ça sent mauvais. C'est un projet de Rennes Metropole qui est une organisation et non une personne physique",
+	"process_definition_key": "project-process",
+	"status": "DRAFT",
+	"project_status": "DRAFT",
+	"functional_status": "draft",
+	"initiator": "mpokora",
+	"expected_completion_date": "avant janvier 2022 impérativement",
+	"themes": [
+		"suivi",
+		"poubelles"
+	],
+	"keywords": [
+		"suivi",
+		"poubelles"
+	],
+	"type": {
+		"uuid": "e2e5a16b-e3fa-4a2c-808b-6acac6ce90a3",
+		"code": "nul",
+		"label": "Projets nuls",
+		"opening_date": "2021-12-01T10:36:40.614",
+		"closing_date": "2021-12-01T10:36:40.614",
+		"order": 2
+	},
+	"target_audiences": [
+		{
+			"uuid": "0081fc3b-f11c-448a-99b4-57cc994ca1b2",
+			"code": "eboueurs",
+			"label": "Eboueurs",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		},{
+			"uuid": "193e5179-bde1-47a5-8e41-f3f453ceee9d",
+			"code": "poubellologues",
+			"label": "Poubellologues",
+			"opening_date": "2021-10-29T12:01:04.403",
+			"closing_date": "2021-10-29T12:01:04.403",
+			"order": 1
+		}
+	],
+	"territorial_scale": {
+		"uuid": "192c952a-c06e-425a-865e-57d9f9fd378d",
+		"code": "megalopole",
+		"label": "Mégalopole",
+		"opening_date": "2021-12-02T10:36:40.614",
+		"closing_date": "2021-12-02T10:36:40.614",
+		"order": 2
+	},
+	"detailed_territorial_scale": "Romillé",
+	"desired_supports": [
+		{
+			"uuid": "61754760-38bd-4d23-adb6-34c9fff68899",
+			"code": "expertise",
+			"label": "Recherche d’expertise",
+			"opening_date": "2021-12-03T10:36:40.614",
+			"closing_date": "2021-12-03T10:36:40.614",
+			"order": 2
+		}
+	],
+	"desired_support_description": "je suis nul en tout",
+	"confidentiality": {
+		"uuid": "dd063c25-a76a-4266-921a-111b898735be",
+		"code": "tout-public",
+		"label": "Tout public",
+		"opening_date": "2021-12-04T10:36:40.614",
+		"closing_date": "2021-12-04T10:36:40.614",
+		"order": 2
+	},
+	"owner_uuid": "efea45a2-d6de-4d68-b655-904cef0472b2",
+	"contact_email": "jj@test.fr",
+	"owner_type": "ORGANIZATION"
+}

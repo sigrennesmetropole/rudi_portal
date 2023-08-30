@@ -51,7 +51,6 @@ public class FlexClientResponseWrapper extends ClientResponseWrapper {
 		return toFlux(ResolvableType.forClass(elementClass));
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T> BodyExtractor<Flux<T>, ReactiveHttpInputMessage> toFlux(ResolvableType elementType) {
 		return (inputMessage, context) -> readWithMessageReaders(inputMessage, context, elementType,
 				(HttpMessageReader<T> reader) -> readToFlux(inputMessage, context, elementType, reader),
@@ -77,15 +76,12 @@ public class FlexClientResponseWrapper extends ClientResponseWrapper {
 				});
 	}
 
-
-
-
 	private static <T> Flux<T> readToFlux(ReactiveHttpInputMessage message, BodyExtractor.Context context,
 			ResolvableType type, HttpMessageReader<T> reader) {
 
-		var wrappedMessage = new FlexClientHttpResponseDecorator((ClientHttpResponse)message);
+		var wrappedMessage = new FlexClientHttpResponseDecorator((ClientHttpResponse) message);
 		return context.serverResponse()
-				.map(response ->  reader.read(type, type, (ServerHttpRequest) wrappedMessage, response, context.hints()))
+				.map(response -> reader.read(type, type, (ServerHttpRequest) wrappedMessage, response, context.hints()))
 				.orElseGet(() -> reader.read(type, wrappedMessage, context.hints()));
 	}
 
@@ -125,7 +121,6 @@ public class FlexClientResponseWrapper extends ClientResponseWrapper {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T> Supplier<Mono<T>> skipBodyAsMono(ReactiveHttpInputMessage message) {
 		return message instanceof ClientHttpResponse ? () -> consumeAndCancel(message).then(Mono.empty()) : Mono::empty;
 	}

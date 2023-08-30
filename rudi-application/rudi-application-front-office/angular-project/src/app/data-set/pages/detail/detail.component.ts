@@ -42,8 +42,7 @@ import {ALL_TYPES} from '../../../shared/models/title-icon-type';
 import {MetadataUtils} from '../../../shared/utils/metadata-utils';
 import MediaTypeEnum = Media.MediaTypeEnum;
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
-import {DisplayTableService} from '../../../core/services/data-set/display-table.service';
-import {FiltersService} from '../../../core/services/filters.service';
+import {MAP_PROTOCOLS_SUPPORTED} from '../../../core/services/map/map-protocols';
 
 const actionOnStartCreateLinkedDataset = 'ON_START_CREATE_LINKED_DATASET';
 
@@ -76,6 +75,7 @@ export class DetailComponent implements OnInit {
     mediasTitle: string;
 
     mediaToDisplayTable: Media;
+    mediaToDisplayMap: Media;
 
     /**
      * Permet de suivre la valeur du JDD récupéré. Nous devons passer par un Observable car le chargement
@@ -167,6 +167,18 @@ export class DetailComponent implements OnInit {
         return false;
     }
 
+    get isMapDisplayed(): boolean {
+        for (const item of this.metadata.available_formats) {
+            const objet: MediaFile = item as MediaFile;
+            if (objet.file_type === MediaType.ApplicationGeojson ||
+                MAP_PROTOCOLS_SUPPORTED.includes(objet.connector.interface_contract)) {
+                this.mediaToDisplayMap = item;
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     ngOnInit(): void {
 

@@ -3,11 +3,12 @@ import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators}
 import {RvaAddress} from './workflow-field-address.model';
 import {Observable, of} from 'rxjs';
 import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
-import {AddressMetierService} from '../../core/services/address-metier.service';
 import {mapEach} from '../utils/ObservableUtils';
 import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 import {SnackBarService} from '../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
+import {SelfdataRvaService} from '../../core/services/rva/selfdata/selfdata-rva.service';
+import {RvaService} from '../../core/services/rva/rva.service';
 
 @Component({
     selector: 'app-workflow-field-address',
@@ -22,7 +23,7 @@ export class WorkflowFieldAddressComponent extends WorkflowFieldComponent implem
     hasError = false;
 
     constructor(
-        private readonly addressMetierService: AddressMetierService,
+        private readonly addressMetierService: SelfdataRvaService,
         private readonly formBuilder: FormBuilder,
         private readonly snackBarService: SnackBarService,
         private readonly translateService: TranslateService,
@@ -85,7 +86,7 @@ export class WorkflowFieldAddressComponent extends WorkflowFieldComponent implem
     }
 
     private getAddressesFromApi(query: string): Observable<RvaAddress[]> {
-        if (!AddressMetierService.isValidQuery(query)) {
+        if (!RvaService.isValidQuery(query)) {
             return of([]); // Renvoie le tableau comme un élément dans un subscribe
         }
         return this.addressMetierService.getFullAddresses(this.processQuery(query))

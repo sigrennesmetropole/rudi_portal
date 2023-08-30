@@ -19,11 +19,9 @@ import org.rudi.microservice.konsult.service.apim.ApimService;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ApimServiceImpl implements ApimService {
 
 	private final ApplicationService applicationService;
@@ -31,13 +29,15 @@ public class ApimServiceImpl implements ApimService {
 	private final RegistrationHelper registrationHelper;
 
 	@Override
-	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException, BuildClientRegistrationException {
+	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException,
+			GetClientRegistrationException, BuildClientRegistrationException {
 		checkCredentials(credentials);
 		return registrationHelper.findRegistrationForUser(credentials.getLogin(), credentials.getPassword()) != null;
 	}
 
 	@Override
-	public void enableApi(Credentials credentials) throws APIManagerException, SSLException, AppServiceForbiddenException {
+	public void enableApi(Credentials credentials)
+			throws APIManagerException, SSLException, AppServiceForbiddenException {
 		checkCredentials(credentials);
 		registrationHelper.assignInternalSubscriberRole(credentials.getLogin(), credentials.getPassword());
 		registrationHelper.register(credentials.getLogin(), credentials.getPassword());
@@ -45,12 +45,12 @@ public class ApimServiceImpl implements ApimService {
 	}
 
 	@Override
-	public ApiKeys getKeys(ApiKeysType type, Credentials credentials) throws APIManagerException, AppServiceForbiddenException {
+	public ApiKeys getKeys(ApiKeysType type, Credentials credentials)
+			throws APIManagerException, AppServiceForbiddenException {
 		checkCredentials(credentials);
 		final var application = registrationHelper.getOrCreateApplicationForUser(credentials.getLogin());
 		final var applicationKey = getApplicationKey(type, credentials.getLogin(), application.getApplicationId());
-		return new ApiKeys()
-				.consumerKey(applicationKey.getConsumerKey())
+		return new ApiKeys().consumerKey(applicationKey.getConsumerKey())
 				.consumerSecret(applicationKey.getConsumerSecret());
 	}
 
@@ -61,7 +61,8 @@ public class ApimServiceImpl implements ApimService {
 		}
 	}
 
-	private ApplicationKey getApplicationKey(ApiKeysType type, String login, String applicationId) throws ApplicationOperationException {
+	private ApplicationKey getApplicationKey(ApiKeysType type, String login, String applicationId)
+			throws ApplicationOperationException {
 		final var keyType = EndpointKeyType.fromValue(type.getValue());
 		return applicationService.getApplicationKey(applicationId, login, keyType);
 	}

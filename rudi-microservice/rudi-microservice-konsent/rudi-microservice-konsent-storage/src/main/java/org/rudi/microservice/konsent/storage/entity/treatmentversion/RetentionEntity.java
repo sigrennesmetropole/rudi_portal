@@ -21,19 +21,12 @@ import lombok.Setter;
 @Table(name = "retention", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
-@AssociationOverrides(
-		{
-				@AssociationOverride(name = "labels",
-						joinTable = @JoinTable(name = "retention_dictionary_entry",
-								joinColumns = @JoinColumn(name = "retention_fk"), inverseJoinColumns = @JoinColumn(name = "dictionary_entry_fk")
-						)
-				)
-		}
-)
+@AssociationOverrides({
+		@AssociationOverride(name = "labels", joinTable = @JoinTable(name = "retention_dictionary_entry", joinColumns = @JoinColumn(name = "retention_fk"), inverseJoinColumns = @JoinColumn(name = "dictionary_entry_fk"))) })
 public class RetentionEntity extends AbstractMultilangualStampedEntity {
 	private static final long serialVersionUID = 4513827721998162762L;
 
-	@Column(name = "value", nullable = false)
+	@Column(name = "value_", nullable = false)
 	private Integer value;
 
 	@Column(name = "unit", length = 20, nullable = false)

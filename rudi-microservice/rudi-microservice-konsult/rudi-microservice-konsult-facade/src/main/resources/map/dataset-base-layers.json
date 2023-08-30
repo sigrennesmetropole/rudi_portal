@@ -1,0 +1,28 @@
+[
+	{
+		"label": "Plan simplifié",
+		"url": "https://public.sig.rennesmetropole.fr/geowebcache/service/wmts",
+		"layerName": "ref_fonds:pvci_simple_gris",
+		"attributions": "Plan de ville simplifié gris - Rennes ville et métropole",
+		"type": "wmts",
+		"srs": "EPSG:3857",
+		"minZoom": "0",
+		"maxZoom": "22",
+		"format": "image/png",
+		"matrixSet": "EPSG:3857",
+		"matrixIdPrefix": "EPSG:3857"
+	},
+	{
+		"label": "Orthophotographie",
+		"url": "https://public.sig.rennesmetropole.fr/geowebcache/service/wmts",
+		"layerName": "raster:ortho2021",
+		"attributions": "Orthophotographie 2021 - Rennes Ville et Métropole, IGN, SDE35, Megalis Bretagne",
+		"type": "wmts",
+		"srs": "EPSG:3857",
+		"minZoom": "0",
+		"maxZoom": "22",
+		"format": "image/jpeg",
+		"matrixSet": "EPSG:3857",
+		"matrixIdPrefix": "EPSG:3857"
+	}
+]

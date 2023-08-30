@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-projekt</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-projekt-core</artifactId>
@@ -67,12 +67,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -92,7 +86,7 @@
 				<configuration>
 					<modelPackage>org.rudi.microservice.projekt.core.bean</modelPackage>
 					<generatorName>spring</generatorName>
-					<library>spring-mvc</library>
+					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
 					<generateModelDocumentation>false</generateModelDocumentation>
 					<generateSupportingFiles>false</generateSupportingFiles>
@@ -104,9 +98,7 @@
 					<typeMappings>
 						<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
 					</typeMappings>
-					<importMappings>
-						<importMapping>AssetDescription=org.rudi.bpmn.core.bean.AssetDescription</importMapping>
-					</importMappings>
+					<schemaMappings>AssetDescription=org.rudi.bpmn.core.bean.AssetDescription</schemaMappings>
 					<configOptions>
 						<dateLibrary>java8</dateLibrary>
 					</configOptions>
@@ -135,7 +127,7 @@
 					<dependency>
 						<groupId>io.swagger.core.v3</groupId>
 						<artifactId>swagger-annotations</artifactId>
-						<version>2.1.4</version>
+						<version>${swagger.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>${project.groupId}</groupId>

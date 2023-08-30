@@ -3,6 +3,7 @@ package org.rudi.common.service.helper;
 import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -86,5 +87,18 @@ public class UtilContextHelper {
 			result = authenticatedUser.getRoles().stream().anyMatch(r -> r.equalsIgnoreCase(roleName));
 		}
 		return result;
+	}
+
+	public boolean hasAnyRoles(List<String> roles) throws AppServiceUnauthorizedException {
+		if(getAuthenticatedUser()==null){
+			throw new AppServiceUnauthorizedException(String.format("Cannot informations without authentication"));
+		}
+
+		for(String role : roles){
+			if(hasRole(role)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

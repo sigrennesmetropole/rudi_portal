@@ -222,22 +222,7 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 		}
 		acroForm.getCOSObject().setNeedToBeUpdated(true);
 
-		PDRectangle rectangle = null;
-		// sign a PDF with an existing empty signature, as created by the CreateEmptySignatureForm example.
-		PDSignature signature = findExistingSignature(acroForm, signatureDescription.getFieldname());
-		if (signature != null) {
-			rectangle = acroForm.getField(signatureDescription.getFieldname()).getWidgets().get(0).getRectangle();
-		}
-
-		if (rectangle == null) {
-			Rectangle sourceRectangle = signatureDescription.getVisibleSignatureDescription().getRectangle();
-			Rectangle2D defaultRectangle = new Rectangle2D.Double(
-					sourceRectangle != null ? sourceRectangle.getX() : DEFAULT_LEFT,
-					sourceRectangle != null ? sourceRectangle.getY() : DEFAULT_TOP,
-					sourceRectangle != null ? sourceRectangle.getWidth() : DEFAULT_WIDTH,
-					sourceRectangle != null ? sourceRectangle.getHeight() : DEFAULT_HEIGHT);
-			rectangle = createSignatureRectangle(document, defaultRectangle);
-		}
+		PDRectangle rectangle = createOptionsRectangle(acroForm, signatureDescription, document);
 
 		if (acroForm.getNeedAppearances()) {
 			// PDFBOX-3738 NeedAppearances true results in visible signature becoming invisible
@@ -306,34 +291,35 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 	protected PDDocument createPseudoFile() throws IOException {
 		// on créé un fichier qui contient l'image de signature
 		File result = temporaryHelper.createOutputFile();
-		PDDocument document = new PDDocument();
-		PDPage page = new PDPage(PDRectangle.A4);
-		document.addPage(page);
-		PDPageContentStream contentStream = new PDPageContentStream(document, page);
-		contentStream.setFont(PDType1Font.HELVETICA, 14);
+		try(PDDocument document = new PDDocument()){
+			PDPage page = new PDPage(PDRectangle.A4);
+			document.addPage(page);
+			PDPageContentStream contentStream = new PDPageContentStream(document, page);
+			contentStream.setFont(PDType1Font.HELVETICA, 14);
 
-		PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
-		if (acroForm == null) {
-			acroForm = new PDAcroForm(document);
-			document.getDocumentCatalog().setAcroForm(acroForm);
+			PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
+			if (acroForm == null) {
+				acroForm = new PDAcroForm(document);
+				document.getDocumentCatalog().setAcroForm(acroForm);
+			}
+			acroForm.getCOSObject().setNeedToBeUpdated(true);
+
+			acroForm.setSignaturesExist(true);
+			acroForm.setAppendOnly(true);
+			acroForm.getCOSObject().setDirect(true);
+			PDSignatureField signatureField = new PDSignatureField(acroForm);
+			PDAnnotationWidget firstWidget = signatureField.getWidgets().get(0);
+			// backward linking
+			firstWidget.setPage(page);
+
+			// Make sure that the content stream is closed
+			contentStream.close();
+
+			// Save the results and ensure that the document is properly closed
+			document.save(result);
+			return document;
 		}
-		acroForm.getCOSObject().setNeedToBeUpdated(true);
 
-		acroForm.setSignaturesExist(true);
-		acroForm.setAppendOnly(true);
-		acroForm.getCOSObject().setDirect(true);
-		PDSignatureField signatureField = new PDSignatureField(acroForm);
-		PDAnnotationWidget firstWidget = signatureField.getWidgets().get(0);
-		// backward linking
-		firstWidget.setPage(page);
-
-		// Make sure that the content stream is closed
-		contentStream.close();
-
-		// Save the results and ensure that the document is properly closed
-		document.save(result);
-		document.close();
-		return document;
 	}
 
 	// create a template PDF document with empty signature and return it as a stream.
@@ -538,5 +524,26 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
+	}
+
+	private PDRectangle createOptionsRectangle(PDAcroForm acroForm, SignatureDescription signatureDescription, PDDocument document){
+		PDRectangle rectangle = null;
+		// sign a PDF with an existing empty signature, as created by the CreateEmptySignatureForm example.
+		PDSignature signature = findExistingSignature(acroForm, signatureDescription.getFieldname());
+		if (signature != null) {
+			rectangle = acroForm.getField(signatureDescription.getFieldname()).getWidgets().get(0).getRectangle();
+		}
+
+		if (rectangle == null) {
+			Rectangle sourceRectangle = signatureDescription.getVisibleSignatureDescription().getRectangle();
+			Rectangle2D defaultRectangle = new Rectangle2D.Double(
+					sourceRectangle != null ? sourceRectangle.getX() : DEFAULT_LEFT,
+					sourceRectangle != null ? sourceRectangle.getY() : DEFAULT_TOP,
+					sourceRectangle != null ? sourceRectangle.getWidth() : DEFAULT_WIDTH,
+					sourceRectangle != null ? sourceRectangle.getHeight() : DEFAULT_HEIGHT);
+			rectangle = createSignatureRectangle(document, defaultRectangle);
+		}
+
+		return rectangle;
 	}
 }

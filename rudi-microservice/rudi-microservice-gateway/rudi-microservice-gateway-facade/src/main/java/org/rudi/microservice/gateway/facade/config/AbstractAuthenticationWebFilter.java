@@ -3,6 +3,11 @@
  */
 package org.rudi.microservice.gateway.facade.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
@@ -24,12 +29,8 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import reactor.core.publisher.Mono;
 
 /**
  * @author FNI18300
@@ -74,7 +75,7 @@ public abstract class AbstractAuthenticationWebFilter implements WebFilter {
 		securityContext.setAuthentication(authentication);
 		return securityContextRepository.save(exchange, securityContext)
 				.then(authenticationSuccessHandler.onAuthenticationSuccess(webFilterExchange, authentication))
-				.subscriberContext(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)));
+				.contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)));
 	}
 
 	protected Mono<Authentication> authenticationConvert(ServerWebExchange exchange) {
@@ -91,7 +92,8 @@ public abstract class AbstractAuthenticationWebFilter implements WebFilter {
 			LOGGER.error("Le token ne commence pas avec la chaine Bearer");
 			return Mono.empty();
 		} else {
-			final String token = requestAuthentTokenHeader.substring(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX.length());
+			final String token = requestAuthentTokenHeader
+					.substring(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX.length());
 
 			return handleToken(token);
 		}

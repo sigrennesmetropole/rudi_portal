@@ -23,8 +23,8 @@ import {BarChartData} from './tpbcData.interface';
 import {LanguageService} from '../../../i18n/language.service';
 import {GdataDataInterface, GenericDataObject} from './gdataData.interface';
 import {SelfdataAttachmentService} from '../selfdata-attachment.service';
-import {AddressMetierService} from '../address-metier.service';
 import {MatchingDataView} from '../../../personal-space/components/matching-data-card/matching-data-view';
+import {SelfdataRvaService} from '../rva/selfdata/selfdata-rva.service';
 
 @Injectable({
     providedIn: 'root'
@@ -36,7 +36,7 @@ export class SelfdataDatasetService {
         private readonly languageService: LanguageService,
         private readonly taskService: TaskService,
         private readonly selfdataAttachmentService: SelfdataAttachmentService,
-        private readonly addressMetierService: AddressMetierService,
+        private readonly addressMetierService: SelfdataRvaService,
     ) {
     }
 

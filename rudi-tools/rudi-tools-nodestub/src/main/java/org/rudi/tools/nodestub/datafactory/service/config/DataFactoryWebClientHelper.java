@@ -2,6 +2,7 @@ package org.rudi.tools.nodestub.datafactory.service.config;
 
 import javax.net.ssl.SSLException;
 
+import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -37,7 +38,9 @@ public class DataFactoryWebClientHelper {
 				customClientRegistrationRepository);
 
 		final var sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-		final var httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+		final var httpClient = HttpClient.create()
+				.resolver(DefaultAddressResolverGroup.INSTANCE)
+				.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
 
 		final var clientCredentialsReactiveOAuth2AuthorizedClientProvider = new ClientCredentialsReactiveOAuth2AuthorizedClientProvider();
 		final var webClientReactiveClientCredentialsTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();

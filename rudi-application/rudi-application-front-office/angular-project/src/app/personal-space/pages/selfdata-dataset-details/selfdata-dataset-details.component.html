@@ -2,13 +2,13 @@
 
     <app-loader [active]="dataLoading" [allPage]="true" [noText]="true" [isLight]="false"></app-loader>
 
-    <app-dataset-heading *ngIf="metadata"
+    <app-page-heading *ngIf="metadata"
                          [organizationName]="metadata?.producer?.organization_name"
                          [resourceTitle]="metadata?.resource_title"
                          [organizationId]="metadata?.producer?.organization_id"
                          [icon]="'self-data-icon'"
     >
-    </app-dataset-heading>
+    </app-page-heading>
 
     <div class="banner">
         <app-tabs *ngIf="metadata">

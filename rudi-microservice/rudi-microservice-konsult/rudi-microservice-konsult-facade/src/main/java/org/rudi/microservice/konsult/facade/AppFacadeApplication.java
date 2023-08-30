@@ -20,6 +20,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.facet.kaccess",
 		"org.rudi.facet.projekt",
 		"org.rudi.facet.selfdata",
+		"org.rudi.facet.rva",
 		"org.rudi.facet.organization",
 		"org.rudi.microservice.konsult.facade",
 		"org.rudi.microservice.konsult.service",

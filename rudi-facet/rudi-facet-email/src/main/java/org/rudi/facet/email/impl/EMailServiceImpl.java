@@ -3,7 +3,14 @@
  */
 package org.rudi.facet.email.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,23 +20,14 @@ import org.rudi.facet.email.EMailConfiguration;
 import org.rudi.facet.email.EMailService;
 import org.rudi.facet.email.exception.EMailException;
 import org.rudi.facet.email.model.EMailDescription;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Properties;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implémentation du services d'envoie des courriels
@@ -39,13 +37,12 @@ import java.util.Properties;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EMailServiceImpl implements EMailService {
 
-	@Autowired
-	private EMailConfiguration emailConfiguration;
+	private final EMailConfiguration emailConfiguration;
 
-	@Autowired
-	protected JavaMailSender emailSender;
+	private final JavaMailSenderImpl javaMailSender;
 
 	@Override
 	public void sendMail(EMailDescription mailDescription) throws EMailException {
@@ -57,7 +54,7 @@ public class EMailServiceImpl implements EMailService {
 			mailDescription.setFrom(getDefaultFrom());
 		}
 		try {
-			MimeMessage message = emailSender.createMimeMessage();
+			MimeMessage message = javaMailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setFrom(mailDescription.getFrom());
 			if (CollectionUtils.isNotEmpty(mailDescription.getTos())) {
@@ -83,7 +80,7 @@ public class EMailServiceImpl implements EMailService {
 				}
 			}
 
-			emailSender.send(message);
+			javaMailSender.send(message);
 		} catch (Exception e) {
 			throw new EMailException("Failed to send mail:" + mailDescription, e);
 		}
@@ -134,25 +131,4 @@ public class EMailServiceImpl implements EMailService {
 		return Jsoup.parse(text).wholeText();
 	}
 
-	@Bean
-	public JavaMailSender getJavaMailSender() {
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setProtocol(emailConfiguration.getProtocol());
-		mailSender.setHost(emailConfiguration.getHost());
-		mailSender.setPort(emailConfiguration.getPort());
-		mailSender.setDefaultEncoding(StandardCharsets.UTF_8.name());
-
-		if (emailConfiguration.isAuthentification()) {
-			mailSender.setUsername(emailConfiguration.getUser());
-			mailSender.setPassword(emailConfiguration.getPassword());
-		}
-
-		Properties props = mailSender.getJavaMailProperties();
-		props.put("mail.transport.protocol", emailConfiguration.getProtocol());
-		props.put("mail.smtp.auth", Boolean.toString(emailConfiguration.isAuthentification()));
-		props.put("mail.smtp.starttls.enable", Boolean.toString(emailConfiguration.isTtlsEnable()));
-		props.put("mail.debug", Boolean.toString(emailConfiguration.isDebug()));
-
-		return mailSender;
-	}
 }

@@ -5,6 +5,8 @@ import org.rudi.microservice.konsent.storage.entity.treatment.TreatmentEntity;
 
 public class InvalidTreatmentException extends AppServiceException {
 
+	private static final long serialVersionUID = 3970844153636507841L;
+
 	public InvalidTreatmentException(String message) {
 		super(message);
 	}

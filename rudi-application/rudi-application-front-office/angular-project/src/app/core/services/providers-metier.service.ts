@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {OrganizationService, ProvidersService} from '../../strukture/api-strukture';
 import {KindOfData} from '../../api-kmedia';
-import {OrganizationMetierService} from './organization-metier.service';
+import {OrganizationMetierService} from './organization/organization-metier.service';
 import {Observable} from 'rxjs';
 import {ImageLogoService} from './image-logo.service';
 

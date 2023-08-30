@@ -53,10 +53,7 @@ public class FormSectionDefinitionEntity extends AbstractLongIdEntity implements
 			return false;
 		}
 		FormSectionDefinitionEntity other = (FormSectionDefinitionEntity) obj;
-		if (getOrder() != other.getOrder()) {
-			return false;
-		}
-		return true;
+		return getOrder() == other.getOrder();
 	}
 
 	@Override

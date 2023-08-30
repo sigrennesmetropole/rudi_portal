@@ -414,9 +414,17 @@
         </mat-expansion-panel-header>
         <div class="d-flex rudi-panel-body panel-provider" [ngClass]="{'map-panel-mobile': mediaSize.isDeviceMobile}">
             <div class="d-flex align-items-start" [ngClass]="{'map-spacing-desktop mr-4': mediaSize.isDeviceDesktop}">
-                <div
-                    [ngClass]="{'map-container-desktop': mediaSize.isDeviceDesktop, 'map-container-mobile' : mediaSize.isDeviceMobile}">
-                    <app-map [metadata]="metadata"></app-map>
+                <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="isMapLoading"></app-loader>
+                <div *ngIf="!isMapLoading"
+                     [ngClass]="{'map-container-desktop': mediaSize.isDeviceDesktop, 'map-container-mobile' : mediaSize.isDeviceMobile}">
+                    <app-map [mapId]="'rudi-detail'"
+                             [centeredGeometry]="centeredGeometry"
+                             [boundingBox]="boundingBox"
+                             [baseLayers]="baseLayers"
+                             [defaultZoom]="11"
+                             class="map-style"
+                    >
+                    </app-map>
                 </div>
             </div>
             <div class="d-flex flex-column" [ngClass]="{'map-spacing-desktop': mediaSize.isDeviceDesktop}">
@@ -452,9 +460,11 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="d-flex rudi-panel-body panel-provider">
-            <div class="mr-4 align-items-center rudi-logo-provider-box">
+            <div class="mr-4 align-items-center">
                 <app-organization-logo organizationType="provider"
-                                       [organizationId]="this.metadata.metadata_info.metadata_provider?.organization_id"></app-organization-logo>
+                                       cssClass="with-border"
+                                       [organizationId]="this.metadata.metadata_info.metadata_provider?.organization_id">
+                </app-organization-logo>
             </div>
             <div class="d-flex w-50 flex-column">
                 <span *ngIf="metadata?.metadata_info.metadata_provider?.organization_name" class="f-w-600">

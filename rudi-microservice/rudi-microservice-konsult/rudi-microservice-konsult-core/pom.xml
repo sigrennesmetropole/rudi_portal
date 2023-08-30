@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsult</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsult-core</artifactId>
@@ -58,6 +58,11 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-facet-rva</artifactId>
+		</dependency>
+
 		<!-- Swagger UI dependency -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -68,12 +73,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -90,40 +89,43 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<configuration>
+					<modelPackage>org.rudi.microservice.konsult.core.bean</modelPackage>
+					<schemaMappings>
+						Metadata=org.rudi.facet.kaccess.bean.Metadata,MetadataList=org.rudi.facet.kaccess.bean.MetadataList,MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets,Credentials=org.rudi.facet.apimaccess.bean.Credentials,Address=org.rudi.rva.core.bean.Address
+					</schemaMappings>
+					<generatorName>spring</generatorName>
+					<library>spring-boot</library>
+					<generateModelTests>false</generateModelTests>
+					<generateModelDocumentation>false</generateModelDocumentation>
+					<generateSupportingFiles>false</generateSupportingFiles>
+					<generateApiDocumentation>false</generateApiDocumentation>
+					<generateApis>false</generateApis>
+					<generateModels>true</generateModels>
+					<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+					<verbose>false</verbose>
+					<configOptions>
+						<interfaceOnly>true</interfaceOnly>
+						<dateLibrary>legacy</dateLibrary>
+					</configOptions>
+				</configuration>
 				<executions>
 					<execution>
-						<id>generate-models</id>
+						<id>generate-models-2</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<modelPackage>org.rudi.microservice.konsult.core.bean</modelPackage>
+							<inputSpec>${resource-directory}/openapi/rudi-konsult-model.json</inputSpec>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-models-1</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
 							<inputSpec>${resource-directory}/openapi/rudi-konsult-api.json</inputSpec>
-							<importMappings>
-								<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
-								<importMapping>MetadataList=org.rudi.facet.kaccess.bean.MetadataList</importMapping>
-								<importMapping>MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets</importMapping>
-								<importMapping>Credentials=org.rudi.facet.apimaccess.bean.Credentials</importMapping>
-							</importMappings>
-							<languageSpecificPrimitives>
-								<languageSpecificPrimitive>Metadata</languageSpecificPrimitive>
-								<languageSpecificPrimitive>MetadataList</languageSpecificPrimitive>
-								<languageSpecificPrimitive>MetadataFacets</languageSpecificPrimitive>
-							</languageSpecificPrimitives>
-							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
-							<generateModelTests>false</generateModelTests>
-							<generateModelDocumentation>false</generateModelDocumentation>
-							<generateSupportingFiles>false</generateSupportingFiles>
-							<generateApiDocumentation>false</generateApiDocumentation>
-							<generateApis>false</generateApis>
-							<generateModels>true</generateModels>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
-							<verbose>false</verbose>
-							<configOptions>
-								<interfaceOnly>true</interfaceOnly>
-								<dateLibrary>legacy</dateLibrary>
-							</configOptions>
 						</configuration>
 					</execution>
 				</executions>
@@ -131,7 +133,7 @@
 					<dependency>
 						<groupId>io.swagger.core.v3</groupId>
 						<artifactId>swagger-annotations</artifactId>
-						<version>2.1.4</version>
+						<version>${swagger.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>${project.groupId}</groupId>

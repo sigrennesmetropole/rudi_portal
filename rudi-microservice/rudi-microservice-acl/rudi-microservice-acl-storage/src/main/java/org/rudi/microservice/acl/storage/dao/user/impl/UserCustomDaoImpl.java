@@ -1,5 +1,17 @@
 package org.rudi.microservice.acl.storage.dao.user.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
@@ -17,15 +29,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.val;
 
 /**
  * Repository custom pour les users
@@ -110,6 +114,24 @@ public class UserCustomDaoImpl extends AbstractCustomDaoImpl<UserEntity, UserSea
 			if (CollectionUtils.isNotEmpty(searchCriteria.getRoleUuids())) {
 				Join<UserEntity, RoleEntity> joinRoles = root.join(FIELD_ROLES);
 				predicates.add((joinRoles.get(FIELD_UUID).in(searchCriteria.getRoleUuids())));
+			}
+
+			// user-uuids
+			if (CollectionUtils.isNotEmpty(searchCriteria.getUserUuids())) {
+				predicates.add(root.get(FIELD_UUID).in(searchCriteria.getUserUuids()));
+			}
+
+			//login-and-denomination
+			if (searchCriteria.getLoginAndDenomination() != null) {
+				String searchText = searchCriteria.getLoginAndDenomination();
+				searchText = searchText.toLowerCase(Locale.ROOT);
+				searchText = '%' + searchText + '%'; // Permet de chercher avec une partie de la chaine de caractère cible
+				val predicateOR = builder.or(
+						builder.like(builder.lower(root.get(FIELD_LOGIN)), searchText),
+						builder.like(builder.lower(root.get(FIELD_LASTNAME)), searchText),
+						builder.like(builder.lower(root.get(FIELD_FIRSTNAME)), searchText)
+				);
+				predicates.add(predicateOR);
 			}
 
 			// Email address

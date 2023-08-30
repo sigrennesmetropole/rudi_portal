@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class HashUtils {
 
 	private static final String SHA3_256 = "SHA3-256";
 
-	private static ObjectMapper objectMapper = new ObjectMapper();
+	private static ObjectMapper objectMapper = null;
 
 	public static String sha3(@NotNull String input) throws NoSuchAlgorithmException {
 		final MessageDigest digest = MessageDigest.getInstance(SHA3_256);
@@ -37,12 +38,12 @@ public class HashUtils {
 	}
 
 	public static <T> String sha3(@NotNull T input) throws NoSuchAlgorithmException, JsonProcessingException {
-		return sha3(objectMapper.writeValueAsString(input));
+		return sha3(getObjectMapper().writeValueAsString(input));
 	}
 
 	public static <T> String saltSha3(@NotNull T input, @NotNull String salt)
 			throws NoSuchAlgorithmException, JsonProcessingException {
-		return sha3(salt + objectMapper.writeValueAsString(input));
+		return sha3(salt + getObjectMapper().writeValueAsString(input));
 	}
 
 	private static String bytesToHex(byte[] hash) {
@@ -55,5 +56,13 @@ public class HashUtils {
 			hexString.append(hex);
 		}
 		return hexString.toString();
+	}
+
+	private static ObjectMapper getObjectMapper() {
+		if (objectMapper == null) {
+			objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+		}
+		return objectMapper;
 	}
 }

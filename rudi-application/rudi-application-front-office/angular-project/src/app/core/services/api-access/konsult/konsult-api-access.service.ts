@@ -1,25 +1,25 @@
 import {Injectable} from '@angular/core';
 import {UserService} from '../../user.service';
 import {AclService} from '../../../../acl/acl-api';
-import {Credentials as KonsultCredentials, KonsultService} from '../../../../api-konsult';
-import {ProjektService} from '../../../../projekt/projekt-api';
 import {OrganizationService} from '../../../../strukture/api-strukture';
 import {TranslateService} from '@ngx-translate/core';
 import {AbstractApiAccessService} from '../abstract-api-access.service';
 import {Credentials} from '../credentials';
 import {Observable, throwError} from 'rxjs';
 import {SubscriptionData} from '../subscription-data';
+import {KonsultService} from '../../../../konsult/konsult-api';
+import {ProjektService} from '../../../../projekt/projekt-api';
 
 @Injectable({
     providedIn: 'root'
 })
 export class KonsultApiAccessService extends AbstractApiAccessService {
 
-    private static toKonsultCredentials(credentials: Credentials): KonsultCredentials {
+    private static toKonsultCredentials(credentials: Credentials): Credentials {
         return {
             login: credentials.login,
             password: credentials.password
-        } as KonsultCredentials;
+        } as Credentials;
     }
 
     constructor(

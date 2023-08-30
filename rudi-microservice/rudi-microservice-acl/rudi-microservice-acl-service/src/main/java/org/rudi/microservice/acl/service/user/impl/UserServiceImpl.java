@@ -13,11 +13,17 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
+import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.core.security.RoleCodes;
+import org.rudi.common.service.exception.AppServiceBadRequestException;
+import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceForbiddenException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.common.service.util.PageableUtil;
 import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
@@ -28,6 +34,7 @@ import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AccessKeyDto;
 import org.rudi.microservice.acl.core.bean.ClientKey;
 import org.rudi.microservice.acl.core.bean.ClientRegistrationDto;
+import org.rudi.microservice.acl.core.bean.PasswordUpdate;
 import org.rudi.microservice.acl.core.bean.Role;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
@@ -37,6 +44,8 @@ import org.rudi.microservice.acl.service.mapper.ClientRegistrationMapper;
 import org.rudi.microservice.acl.service.mapper.UserFullMapper;
 import org.rudi.microservice.acl.service.mapper.UserLightMapper;
 import org.rudi.microservice.acl.service.mapper.UserMapper;
+import org.rudi.microservice.acl.service.password.IdenticalNewPasswordException;
+import org.rudi.microservice.acl.service.password.InvalidCredentialsException;
 import org.rudi.microservice.acl.service.user.UserService;
 import org.rudi.microservice.acl.storage.dao.address.AbstractAddressDao;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleDao;
@@ -59,6 +68,9 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
 
 /**
  * Service de gestion des utilisateurs RUDI
@@ -437,7 +449,7 @@ public class UserServiceImpl implements UserService {
 		LocalDateTime d = LocalDateTime.now().minus(Duration.ofMinutes(lockDuration));
 		List<UserEntity> users = userDao.findByAccountLockedAndLastFailedAttemptLessThan(true, d);
 		if (CollectionUtils.isNotEmpty(users)) {
-			users.stream().forEach(user -> unlockUser(user));
+			users.forEach(this::unlockUser);
 		}
 	}
 
@@ -474,5 +486,29 @@ public class UserServiceImpl implements UserService {
 				.setClientId(accessKey.getClientId())
 				.setClientSecret(accessKey.getClientSecret());
 		rudiClientRegistrationRepository.addClientRegistration(login, clientAccessKey);
+	}
+
+	@Override
+	@Transactional
+	public void updateUserPassword(String login, PasswordUpdate passwordUpdate) throws AppServiceException {
+
+		// Tente de modifier l'entité
+		var user = userDao.findByLogin(login);
+		if (user == null) {
+			throw new InvalidCredentialsException();
+		}
+		if (!passwordHelper.buildUserHasPasswordPredicate(passwordUpdate.getOldPassword()).test(user)) {
+			throw new InvalidCredentialsException();
+		}
+		if (passwordUpdate.getNewPassword().equals(passwordUpdate.getOldPassword())) {
+			throw new IdenticalNewPasswordException();
+		}
+
+		//Vérifie la complexité du nouveau mot de passe.
+		passwordHelper.checkPassword(passwordUpdate.getNewPassword());
+
+		//Changement du mot de passe
+		user.setPassword(passwordHelper.encodePassword(passwordUpdate.getNewPassword()));
+		userDao.save(user);
 	}
 }

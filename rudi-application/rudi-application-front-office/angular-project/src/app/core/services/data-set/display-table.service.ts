@@ -1,18 +1,17 @@
 import {Injectable} from '@angular/core';
 import {KonsultMetierService} from '../konsult-metier.service';
-import {Observable, Observer, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {HttpResponse} from '@angular/common/http';
 import {read, utils, WorkBook} from 'xlsx';
 import {GetBackendPropertyPipe} from '../../../shared/pipes/get-backend-property.pipe';
 import {ColDef} from 'ag-grid-community';
 import {DisplayTableDataInterface} from './display-table-data.interface';
-import {Media, Metadata} from '../../../api-kaccess';
-import {MetadataUtils} from '../../../shared/utils/metadata-utils';
-import {KonsultService} from '../../../api-konsult';
 import {SPREADSHEET_COLDEF_INDEX} from '../../../data-set/components/spreadsheet/spreadsheet.component';
 import {ErrorWithCause} from '../../../shared/models/error-with-cause';
 import {TranslateService} from '@ngx-translate/core';
+import {readFile} from './display.function';
+import {KonsultService} from '../../../konsult/konsult-api';
 
 @Injectable({
     providedIn: 'root'
@@ -37,23 +36,6 @@ export class DisplayTableService {
     }
 
     /**
-     * Permets de savoir si l'utilisateur connecté peut accéder à la fonction d'affichage tabulaire pour ce JDD
-     * @param metadata le JDD évalué
-     * @param media le média à afficher de manière tabulaire
-     */
-    hasAccess(metadata: Metadata, media: Media): Observable<boolean> {
-        if (metadata == null) {
-            return of(false);
-        } else if (MetadataUtils.isSelfdata(metadata)) {
-            return of(false);
-        } else if (MetadataUtils.isRestricted(metadata)) {
-            return this.konsultService.hasSubscribeToMetadataMedia(metadata.global_id, media.media_id);
-        }
-
-        return of(true);
-    }
-
-    /**
      * Téléchargement d'un fichier tabulaire et récupération du contenu en mémoire au format Workbook XLS
      * @param globalId ID du JDD contenant le média
      * @param mediaId ID du média XLS a télécharger
@@ -72,7 +54,7 @@ export class DisplayTableService {
                         }
 
                         // Lecture du flux du blob
-                        return this.readFile(blob);
+                        return readFile(blob);
                     })
                 );
             }),
@@ -126,28 +108,6 @@ export class DisplayTableService {
             columnDefs,
             rowData: sheet
         } as DisplayTableDataInterface;
-    }
-
-    /**
-     * Effectue le téléchargement du Blob pour récupérer son contenu en mémoire côté front
-     * @param blob le blob a télécharger
-     * @private
-     */
-    private readFile(blob: Blob): Observable<ArrayBuffer> {
-        return new Observable<ArrayBuffer>((observer: Observer<ArrayBuffer>) => {
-            const reader = new FileReader();
-
-            reader.onload = (event: ProgressEvent<FileReader>) => {
-                observer.next(event.target.result as ArrayBuffer);
-                observer.complete();
-            };
-
-            reader.onerror = (event: ProgressEvent<FileReader>) => {
-                observer.error(event);
-            };
-
-            reader.readAsArrayBuffer(blob);
-        });
     }
 
     /**

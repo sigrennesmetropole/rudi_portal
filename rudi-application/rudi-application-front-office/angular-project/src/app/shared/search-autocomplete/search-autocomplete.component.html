@@ -1,0 +1,21 @@
+<div>
+    <div class="input-and-loader">
+        <input type="text" class="form-control text-indent"
+               [placeholder]="placeholder"
+               [formControl]="formControl"
+               [matAutocomplete]="auto"
+               [title]="formControl.value"
+        >
+        <div class="spinner-on-input" *ngIf="loading">
+            <mat-spinner [diameter]="20"></mat-spinner>
+        </div>
+    </div>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setSelectedItem($event.option.value)">
+        <mat-option *ngFor="let item of autocompleteItems"
+                    [value]="item"
+                    [title]="item.label"
+        >
+            {{item.label}}
+        </mat-option>
+    </mat-autocomplete>
+</div>

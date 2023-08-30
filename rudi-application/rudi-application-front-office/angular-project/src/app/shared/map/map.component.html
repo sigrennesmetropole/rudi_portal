@@ -1,0 +1,50 @@
+<div class="map-container">
+    <div class="btn-container">
+        <div class="address-search" *ngIf="hasSearchAddress">
+            <app-search-autocomplete
+                class="address-search-field"
+                [placeholder]="'metaData.mapDataTab.searchAddressPlaceholder' | translate"
+                (searchTriggered)="searchAddresses($event)"
+                [autocompleteItems]="autocompleteItems"
+                [loading]="isAutocompleteSearching"
+                (itemSelected)="centerOnAddress($event)"
+            >
+            </app-search-autocomplete>
+        </div>
+        <div class="vertical-action-buttons">
+            <button mat-button class="rudi-btn-map mat-stroked-button no-outline-focus" (click)="handleClickZoomIn()">
+                <mat-icon>add</mat-icon>
+            </button>
+            <button mat-button class="rudi-btn-map mat-stroked-button no-outline-focus" (click)="handleClickCentrage()">
+                <mat-icon>home</mat-icon>
+            </button>
+            <button mat-button class="rudi-btn-map mat-stroked-button no-outline-focus" (click)="handleClickZoomOut()">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <ng-container *ngIf="baseLayers != null && baseLayers.length > 1">
+                <button mat-button class="rudi-btn-map mat-stroked-button no-outline-focus"
+                        [matMenuTriggerFor]="layerMenu"
+                >
+                    <mat-icon svgIcon="map"></mat-icon>
+                </button>
+                <mat-menu #layerMenu>
+                    <button *ngFor="let baseLayer of baseLayers"
+                            mat-menu-item
+                            class="no-outline-focus"
+                            (click)="switchLayer(baseLayer)"
+                    >
+                        {{baseLayer.label}}
+                    </button>
+                </mat-menu>
+            </ng-container>
+        </div>
+    </div>
+    <div id="map-popup" class="popup">
+        <app-map-popup
+            [feature]="popupFeature"
+            (closePopup)="handleClosePopup()"
+        >
+        </app-map-popup>
+    </div>
+    <div [id]="mapId" class="map"></div>
+</div>

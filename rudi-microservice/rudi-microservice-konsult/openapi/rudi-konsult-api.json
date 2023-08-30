@@ -139,7 +139,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Credentials"
+								"$ref": "Credentials"
 							}
 						}
 					}
@@ -180,7 +180,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Credentials"
+								"$ref": "Credentials"
 							}
 						}
 					}
@@ -215,7 +215,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Credentials"
+								"$ref": "Credentials"
 							}
 						}
 					}
@@ -269,6 +269,9 @@
 					},
 					{
 						"$ref": "#/components/parameters/GlobalIdParam"
+					},
+					{
+						"$ref": "#/components/parameters/ProducerUuidParam"
 					},
 					{
 						"$ref": "#/components/parameters/OffsetParam"
@@ -768,6 +771,100 @@
 				}
 			}
 		},
+		"/map/search-addresses": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Fait une recherche d'adresse RVA en renvoyant des points d'intérêts et des infos géométriques",
+				"description": "Fait une recherche d'adresse RVA en renvoyant des points d'intérêts et des infos géométriques",
+				"operationId": "searchAddresses",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "query",
+						"description": "Debut de l'adresse",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./../../../rudi-facet/rudi-facet-rva/openapi/rudi-rva-model.json#/components/schemas/Address"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/map/dataset/base-layers": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des fonds de plan disponible pour un affichage cartographique",
+				"description": "Récupération des fonds de plan disponible pour un affichage cartographique",
+				"operationId": "getDatasetBaseLayers",
+				"responses": {
+					"200": {
+						"description": "Retourne des layers qui seront les fonds de plan disponibles de nos cartes RUDI",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "LayerInformation"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/map/localisation/base-layers": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des fonds de plan disponible pour la mini carte de localisation des données d'un JDD",
+				"description": "Récupération des fonds de plan disponible pour la mini carte de localisation des données d'un JDD",
+				"operationId": "getLocalisationBaseLayers",
+				"responses": {
+					"200": {
+						"description": "Retourne des layers qui seront les fonds de plan disponibles de la mini carte RUDI",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./rudi-konsult-model.json#/components/schemas/LayerInformation"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
 		"/medias/{mediaId}/{interfaceContract}/{version}": {
 			"get": {
 				"tags": [
@@ -887,6 +984,15 @@
 					"items": {
 						"type": "string"
 					}
+				}
+			},
+			"ProducerUuidParam": {
+				"in": "query",
+				"name": "producerUuid",
+				"description": "UUID du producteur (l'UUID du producteur du jeu de données doit correspondre à cet UUID)",
+				"schema": {
+					"type": "string",
+					"format": "uuid"
 				}
 			},
 			"DateDebutParam": {
@@ -1127,17 +1233,6 @@
 					"SANDBOX",
 					"PRODUCTION"
 				]
-			},
-			"Credentials": {
-				"type": "object",
-				"properties": {
-					"login": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				}
 			},
 			"ApiKeys": {
 				"type": "object",

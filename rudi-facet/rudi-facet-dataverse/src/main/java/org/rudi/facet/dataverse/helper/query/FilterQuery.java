@@ -14,15 +14,17 @@ import org.rudi.facet.dataverse.fields.FieldSpec;
 
 public class FilterQuery extends ArrayList<String> {
 
+	private static final long serialVersionUID = 5935465342746119801L;
+
 	public static final String ANY_VALUE = "*";
-	private static final String ANY_FIELD = ANY_VALUE;
-	private static final String ANY_FIELD_WITH_ANY_VALUE = ANY_FIELD + ":" + ANY_VALUE;
-	private static final String OR = " OR ";
-	private static final String AND = " AND ";
+	public static final String ANY_FIELD = ANY_VALUE;
+	public static final String ANY_FIELD_WITH_ANY_VALUE = ANY_FIELD + ":" + ANY_VALUE;
+	public static final String OR = " OR ";
+	public static final String AND = " AND ";
 
 	/**
-	 * La valeur pour chaque critère ajouté via les méthodes add (par exemple : {@link #add(FieldSpec, Object)})
-	 * doit correspondre exactement à la valeur stockée côté Dataverse/Solr
+	 * La valeur pour chaque critère ajouté via les méthodes add (par exemple : {@link #add(FieldSpec, Object)}) doit correspondre exactement à la valeur
+	 * stockée côté Dataverse/Solr
 	 */
 	private boolean withExactMatch = false;
 
@@ -38,8 +40,7 @@ public class FilterQuery extends ArrayList<String> {
 		if (query.size() == 1) {
 			return query.get(0);
 		}
-		return query.stream()
-				.map(item -> itemNeedsParentheses(item) ? "(" + item + ")" : item)
+		return query.stream().map(item -> itemNeedsParentheses(item) ? "(" + item + ")" : item)
 				.collect(Collectors.joining(separator));
 	}
 
@@ -59,7 +60,9 @@ public class FilterQuery extends ArrayList<String> {
 		if (value == null) {
 			filterQueryItem = ItemBuilder.buildFilterQueryForFieldWithoutValue(fieldSpec);
 		} else {
-			final ItemBuilder<?> itemBuilder = value instanceof Collection ? new CollectionItemBuilder<>((Collection<?>) value) : new ItemBuilder<>(value);
+			final ItemBuilder<?> itemBuilder = value instanceof Collection
+					? new CollectionItemBuilder<>((Collection<?>) value)
+					: new ItemBuilder<>(value);
 			if (withExactMatch) {
 				itemBuilder.withExactMatch();
 			}
@@ -78,13 +81,16 @@ public class FilterQuery extends ArrayList<String> {
 			throw new UnsupportedOperationException("Cannot add wildcarded value when using exactMatch mode");
 		}
 
-		final ItemBuilder<?> itemBuilder = value instanceof Collection ? new CollectionItemBuilder<>((Collection<?>) value) : new ItemBuilder<>(value);
+		final ItemBuilder<?> itemBuilder = value instanceof Collection
+				? new CollectionItemBuilder<>((Collection<?>) value)
+				: new ItemBuilder<>(value);
 		itemBuilder.withWildcard();
 		add(itemBuilder.buildForField(fieldSpec));
 	}
 
 	public <T> void add(FieldSpec fieldSpec, @Nonnull T minValue, @Nonnull T maxValue) {
-		final RangedItemBuilder<?> itemBuilder = new RangedItemBuilder<>(new RangedItemBuilder.RangedValue<>(minValue, maxValue));
+		final RangedItemBuilder<?> itemBuilder = new RangedItemBuilder<>(
+				new RangedItemBuilder.RangedValue<>(minValue, maxValue));
 		add(itemBuilder.buildForField(fieldSpec));
 	}
 
@@ -110,8 +116,8 @@ public class FilterQuery extends ArrayList<String> {
 	}
 
 	/**
-	 * La valeur pour chaque critère ajouté via les méthodes add (par exemple : {@link #add(FieldSpec, Object)})
-	 * doit correspondre exactement à la valeur stockée côté Dataverse/Solr
+	 * La valeur pour chaque critère ajouté via les méthodes add (par exemple : {@link #add(FieldSpec, Object)}) doit correspondre exactement à la valeur
+	 * stockée côté Dataverse/Solr
 	 *
 	 * @return this
 	 */
@@ -122,9 +128,12 @@ public class FilterQuery extends ArrayList<String> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof List)) return false;
-		if (!super.equals(o)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof List))
+			return false;
+		if (!super.equals(o))
+			return false;
 		final FilterQuery strings = (FilterQuery) o;
 		return withExactMatch == strings.withExactMatch;
 	}

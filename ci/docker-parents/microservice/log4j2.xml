@@ -5,7 +5,7 @@
     </Properties>
  
     <Appenders>
-        <RollingFile name="fileLogger" fileName="${basePath}/app-info.log" filePattern="${basePath}/app-info-%d{yyyy-MM-dd}.log">
+        <RollingFile name="fileLogger" fileName="${basePath}/rudi.log" filePattern="${basePath}/rudi-%d{yyyy-MM-dd}.log">
             <PatternLayout>
                 <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
             </PatternLayout>
@@ -14,12 +14,26 @@
     		</Policies>
     		<DefaultRolloverStrategy max="5" />
         </RollingFile>
+         <RollingFile name="apiLogger" fileName="${basePath}/rudi-api.log" filePattern="${basePath}/rudi-api-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+        		<SizeBasedTriggeringPolicy size="10MB" />
+    		</Policies>
+    		<DefaultRolloverStrategy max="5" />
+        </RollingFile>
+ 
  
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout   pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
         </Console>
     </Appenders>
     <Loggers>
+    	<Logger name="org.rudi.common.facade.aop.FacadeAspect" level="DEBUG" additivity="false">
+            <appender-ref ref="apiLogger" level="DEBUG" />
+            <appender-ref ref="console" level="DEBUG" />
+        </Logger>    
         <Logger name="org.springframework" level="DEBUG" additivity="false">
             <appender-ref ref="fileLogger" level="INFO" />
             <appender-ref ref="console" level="DEBUG" />

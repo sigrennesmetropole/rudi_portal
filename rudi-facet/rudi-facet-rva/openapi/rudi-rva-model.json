@@ -156,7 +156,7 @@
 					}
 				}
 			},
-			"Map": {
+			"RvaMap": {
 				"description": "a (key, MapItem) map. `default`is an example key",
 				"properties": {
 					"default": {

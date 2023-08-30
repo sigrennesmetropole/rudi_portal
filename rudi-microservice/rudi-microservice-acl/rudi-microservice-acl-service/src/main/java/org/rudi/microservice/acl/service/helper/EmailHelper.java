@@ -43,6 +43,7 @@ import java.util.Optional;
 @Slf4j
 public class EmailHelper {
 
+	public static final String NO_EMAIL_ADDRESS_FOR = "No email address for {}";
 	private static final String EMAIL_PATTERN = "^(.+)@(\\S+)$";
 
 	@Value("${email.accountcreation.activation.subject}")
@@ -105,7 +106,7 @@ public class EmailHelper {
 			// recherche de l'email de destination
 			String to = lookupEmail(user);
 			if (to == null) {
-				log.info("No email address for {}", user.getLogin());
+				log.info(NO_EMAIL_ADDRESS_FOR, user.getLogin());
 				return;
 			}
 
@@ -146,7 +147,7 @@ public class EmailHelper {
 		// recherche de l'email de destination
 		String to = lookupEmail(account);
 		if (to == null) {
-			log.info("No email address for {}", account.getLogin());
+			log.info(NO_EMAIL_ADDRESS_FOR, account.getLogin());
 			return;
 		}
 
@@ -214,7 +215,7 @@ public class EmailHelper {
 			//Géneration du sujet
 			ResetPasswordRequestDataModel dataModelSubject = new ResetPasswordRequestDataModel(passwordObject, urlServer, resetPasswordPath, locale, changePasswordSubject);
 			DocumentContent subject = templateGenerator.generateDocument(dataModelSubject);
-			log.info("No email address for {}", email);
+			log.info(NO_EMAIL_ADDRESS_FOR, email);
 			// génération du corps
 			ResetPasswordRequestDataModel dataModelBody = new ResetPasswordRequestDataModel(passwordObject, urlServer, resetPasswordPath, locale,changePasswordBody);
 			DocumentContent body = templateGenerator.generateDocument(dataModelBody);
@@ -236,7 +237,7 @@ public class EmailHelper {
 			// recherche de l'email de destination
 			String to = lookupEmail(user);
 			if (to == null) {
-				log.error("No email address for {}", user.getLogin());
+				log.error(NO_EMAIL_ADDRESS_FOR, user.getLogin());
 				return;
 			}
 

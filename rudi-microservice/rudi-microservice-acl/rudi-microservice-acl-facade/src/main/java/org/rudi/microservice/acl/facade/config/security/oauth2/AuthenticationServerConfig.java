@@ -8,12 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.util.SecretKeyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -48,15 +49,15 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 	private String verifierKey;
 
 	private final AuthenticationManager authenticationManager;
+
 	private final UserDetailsService userDetailService;
 
-	@Bean("clientPasswordEncoder")
-	PasswordEncoder clientPasswordEncoder() {
-		return new BCryptPasswordEncoder(8);
-	}
+	@Autowired
+	@Qualifier("clientPasswordEncoder")
+	private PasswordEncoder passwordEncoder;
 
 	@Bean
-	JwtAccessTokenConverter jwtAccessTokenConverter() {
+	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		if (StringUtils.isNotEmpty(signingKey)) {
 			boolean rsaKey = false;
@@ -98,6 +99,9 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 	@Bean
 	public JWKSet jwkSet() throws IOException {
 		if (signingKey.startsWith(SecretKeyUtils.FILE_PREFIX)) {
+			if (StringUtils.isEmpty(verifierKey)) {
+				verifierKey = signingKey + PUB_EXTENSION;
+			}
 			final String privateKeyContent = readKeyContent(signingKey);
 			final String publicKeyContent = readKeyContent(verifierKey);
 			KeyPair keyPair = SecretKeyUtils.readKeyPairFromContents(publicKeyContent, privateKeyContent);
@@ -121,7 +125,7 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 		cfg.checkTokenAccess("permitAll");
 
 		// BCryptPasswordEncoder(8) is used for oauth_client_details.user_secret
-		cfg.passwordEncoder(clientPasswordEncoder());
+		cfg.passwordEncoder(passwordEncoder);
 	}
 
 	@Override

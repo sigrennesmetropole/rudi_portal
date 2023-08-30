@@ -5,6 +5,7 @@ import javax.net.ssl.SSLException;
 
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.resolver.DefaultAddressResolverGroup;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.MonoUtils;
 import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
@@ -55,7 +56,10 @@ public abstract class AbstractClientRegistrationOperationAPI<S extends ClientReg
 				.forClient()
 				.trustManager(InsecureTrustManagerFactory.INSTANCE)
 				.build();
-		final var httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+		final var httpClient = HttpClient
+				.create()
+				.resolver(DefaultAddressResolverGroup.INSTANCE)
+				.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
 		return WebClient.builder()
 				.baseUrl(properties.getBaseUrl())
 				.clientConnector(new ReactorClientHttpConnector(httpClient))

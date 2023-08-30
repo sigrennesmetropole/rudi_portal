@@ -48,7 +48,7 @@ abstract class ClientRegisterer<S extends ClientRegistrationResponse> {
 
 	public ClientRegistration register(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
 		S registrationResponse;
-		final var usernameForApiManager = (useDomainPrefixToRegisterAnonymous && "anonymous".equals(username)) ? "RUDI/anonymous" : username;
+		final var usernameForApiManager = "anonymous".equals(username) ? "RUDI/anonymous" : username;
 		final var registrationRequest = buildRegistrationRequest(usernameForApiManager);
 		try {
 			// On tente d'abord un register, même s'il a déjà été fait, avant de faire un getRegistration

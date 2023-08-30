@@ -1673,6 +1673,43 @@
 				}
 			}
 		},
+		"/organizations/{organizationUuid}/is-administrator": {
+			"get": {
+				"tags": [
+					"organization"
+				],
+				"summary": "Vérifie si l'utilisateur connecté est membre administrateur de l'organisation",
+				"description": "Vérifie si l'utilisateur connecté est membre administrateur de l'organisation",
+				"operationId": "isConnectedUserOrganizationAdministrator",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationUuid",
+						"description": "L'UUID de l'organisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Si l'utilisateur connecté est administrateur de l'organisation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
 		"/organizations/{organizationUuid}/members": {
 			"post": {
 				"tags": [
@@ -1797,6 +1834,122 @@
 						"$ref": "#/components/responses/ServiceUnavailable"
 					}
 				}
+			},
+			"put": {
+				"tags": [
+					"organization"
+				],
+				"summary": "Modifie un membre d'une organisation",
+				"description": "Modifie un membre d'une organisation",
+				"operationId": "updateOrganizationMember",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationUuid",
+						"description": "L'UUID de l'organisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "userUuid",
+						"description": "L'UUID de l'utilisateur dans ACL",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "infos de l'organization member",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-strukture-model.json#/components/schemas/OrganizationMember"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "L'utilisateur a été correctement modifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-strukture-model.json#/components/schemas/OrganizationMember"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/organizations/{organizationUuid}/user-members": {
+			"get": {
+				"tags": [
+					"organization"
+				],
+				"summary": "Recherche des membres d'une organisation",
+				"description": "Recherche des membres d'une organisation",
+				"operationId": "searchOrganizationUserMembers",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationUuid",
+						"required": true,
+						"schema": {
+							"$ref": "rudi-strukture-model.json#/components/schemas/OrganizationUuidParam"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search_text",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-strukture-model.json#/components/schemas/TextParam"
+						}
+					},
+					{
+						"in": "query",
+						"name": "member_type",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-strukture-model.json#/components/schemas/OrganizationMemberType"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Liste des membres de l'organisation enrichi par leur données utilisateurs",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-strukture-model.json#/components/schemas/PagedOrganizationUserMembers"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
 			}
 		},
 		"/organizations/{organizationUuid}/user": {
@@ -1829,6 +1982,47 @@
 								}
 							}
 						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/organizations/{organizationUuid}/password": {
+			"put": {
+				"tags": [
+					"organization"
+				],
+				"summary": "Modifie le mot de passe de l'utilisateur de l'organisation. ",
+				"description": "Modifie le mot de passe de l'utilisateur de l'organisation. La correspondance se fait entre le login de l'utilisateur et l'UUID de l'organisation.",
+				"operationId": "updateUserOrganizationPassword",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationUuid",
+						"description": "L'UUID de l'organisation",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Informations de changement de mot de passe",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-strukture-model.json#/components/schemas/PasswordUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "OK"
 					},
 					"500": {
 						"$ref": "#/components/responses/ServiceUnavailable"

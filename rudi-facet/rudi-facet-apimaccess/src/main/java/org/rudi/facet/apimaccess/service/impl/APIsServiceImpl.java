@@ -46,6 +46,7 @@ import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.buildAPICont
 public class APIsServiceImpl implements APIsService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(APIsServiceImpl.class);
+	private static final String API_ID_NOT_GIVEN = "L'identifiant de l'API n'est pas renseigné";
 
 	private final APIsOperationAPI apIsOperationAPI;
 	private final AdminOperationAPI adminOperationAPI;
@@ -161,7 +162,7 @@ public class APIsServiceImpl implements APIsService {
 	@Override
 	public API getAPI(String apiId) throws APIsOperationWithIdException {
 		if (StringUtils.isEmpty(apiId)) {
-			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
+			throw new IllegalArgumentException(APIsServiceImpl.API_ID_NOT_GIVEN);
 		}
 		return apIsOperationAPI.getAPI(apiId);
 	}
@@ -169,7 +170,7 @@ public class APIsServiceImpl implements APIsService {
 	@Override
 	public API getAPIFromDevportal(String apiId, String username) throws APIsOperationWithIdException {
 		if (StringUtils.isEmpty(apiId)) {
-			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
+			throw new IllegalArgumentException(APIsServiceImpl.API_ID_NOT_GIVEN);
 		}
 		return apIsOperationAPI.getAPIFromDevportal(apiId, username);
 	}
@@ -190,7 +191,7 @@ public class APIsServiceImpl implements APIsService {
 	@Override
 	public List<LimitingPolicy> getAPISubscriptionPolicies(String apiId) throws APIsOperationWithIdException {
 		if (StringUtils.isEmpty(apiId)) {
-			throw new IllegalArgumentException("L'identifiant de l'API n'est pas renseigné");
+			throw new IllegalArgumentException(APIsServiceImpl.API_ID_NOT_GIVEN);
 		}
 		return apIsOperationAPI.getAPISubscriptionPolicies(apiId);
 	}

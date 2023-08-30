@@ -258,7 +258,7 @@ create table ACT_RU_EVENT_SUBSCR (
 );
 
 create table ACT_EVT_LOG (
-    LOG_NR_ integer auto_increment,--identity,
+    LOG_NR_ integer, --auto_increment,--identity,
     TYPE_ varchar(64),
     PROC_DEF_ID_ varchar(64),
     PROC_INST_ID_ varchar(64),

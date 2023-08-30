@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-tools</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 	<artifactId>rudi-tools-nodestub</artifactId>
 	<name>rudi-tools-nodestub</name>
@@ -19,7 +19,22 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-test</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-common-facade</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-service</artifactId>
 		</dependency>
 
 		<dependency>
@@ -36,26 +51,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-kalim-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>rudi-common-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>rudi-common-service</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>rudi-common-facade</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>rudi-common-test</artifactId>
 		</dependency>
 
 		<!-- Server Web -->
@@ -113,7 +108,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -127,12 +121,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -162,7 +150,8 @@
 					<generateApiDocumentation>true</generateApiDocumentation>
 					<generateApis>true</generateApis>
 					<generateModels>true</generateModels>
-					<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+					<templateDirectory>
+						${resource-generation-directory}/openapi/generation/</templateDirectory>
 					<verbose>false</verbose>
 					<configOptions>
 						<dateLibrary>java8</dateLibrary>
@@ -177,14 +166,15 @@
 						<configuration>
 							<modelPackage>org.rudi.tools.nodestub.bean</modelPackage>
 							<apiPackage>org.rudi.tools.nodestub.controller.api</apiPackage>
-							<inputSpec>${resource-directory}/openapi/rudi-nodestub.json</inputSpec>
-							<importMappings>
-								<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
-								<importMapping>MetadataList=org.rudi.facet.kaccess.bean.MetadataList</importMapping>
-								<importMapping>Report=org.rudi.microservice.kalim.core.bean.Report</importMapping>
-								<importMapping>Method=org.rudi.microservice.kalim.core.bean.Method</importMapping>
-								<importMapping>ApiError=org.rudi.microservice.kalim.core.bean.ApiError</importMapping>
-							</importMappings>
+							<inputSpec>
+								${resource-directory}/openapi/rudi-nodestub.json</inputSpec>
+							<schemaMappings>
+								Metadata=org.rudi.facet.kaccess.bean.Metadata,
+								MetadataList=org.rudi.facet.kaccess.bean.MetadataList,
+								Report=org.rudi.microservice.kalim.core.bean.Report,
+								Method=org.rudi.microservice.kalim.core.bean.Method,
+								ApiError=org.rudi.microservice.kalim.core.bean.ApiError
+							</schemaMappings>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 							</configOptions>
@@ -196,9 +186,12 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<modelPackage>org.rudi.tools.nodestub.datafactory.apirecette.bean</modelPackage>
-							<apiPackage>org.rudi.tools.nodestub.datafactory.apirecette.controller.api</apiPackage>
-							<inputSpec>${resource-directory}/openapi/datafactory/api-recette.json</inputSpec>
+							<modelPackage>
+								org.rudi.tools.nodestub.datafactory.apirecette.bean</modelPackage>
+							<apiPackage>
+								org.rudi.tools.nodestub.datafactory.apirecette.controller.api</apiPackage>
+							<inputSpec>
+								${resource-directory}/openapi/datafactory/api-recette.json</inputSpec>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 							</configOptions>
@@ -209,7 +202,7 @@
 					<dependency>
 						<groupId>io.swagger.core.v3</groupId>
 						<artifactId>swagger-annotations</artifactId>
-						<version>2.1.4</version>
+						<version>${swagger.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>

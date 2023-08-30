@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-selfdata</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-selfdata-core</artifactId>
@@ -56,12 +56,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -101,7 +95,7 @@
 				<configuration>
 					<modelPackage>org.rudi.microservice.selfdata.core.bean</modelPackage>
 					<generatorName>spring</generatorName>
-					<library>spring-mvc</library>
+					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
 					<generateModelDocumentation>false</generateModelDocumentation>
 					<generateSupportingFiles>false</generateSupportingFiles>
@@ -113,11 +107,7 @@
 					<typeMappings>
 						<typeMapping>java.time.LocalDateTime=OffsetDateTime</typeMapping>
 					</typeMappings>
-					<importMappings>
-						<importMapping>AssetDescription=org.rudi.bpmn.core.bean.AssetDescription</importMapping>
-						<importMapping>DictionaryEntry=org.rudi.facet.kaccess.bean.DictionaryEntry</importMapping>
-						<importMapping>Credentials=org.rudi.facet.apimaccess.bean.Credentials</importMapping>
-					</importMappings>
+					<schemaMappings>AssetDescription=org.rudi.bpmn.core.bean.AssetDescription,DictionaryEntry=org.rudi.facet.kaccess.bean.DictionaryEntry,Credentials=org.rudi.facet.apimaccess.bean.Credentials</schemaMappings>
 					<configOptions>
 						<dateLibrary>java8</dateLibrary>
 					</configOptions>
@@ -164,7 +154,7 @@
 					<dependency>
 						<groupId>io.swagger.core.v3</groupId>
 						<artifactId>swagger-annotations</artifactId>
-						<version>2.1.4</version>
+						<version>${swagger.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>${project.groupId}</groupId>

@@ -8,7 +8,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 
-import bean.workflow.SelfdataTaskSearchCriteria;
 import org.activiti.engine.ProcessEngine;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.bpmn.core.bean.Action;
@@ -16,6 +15,7 @@ import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Section;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.common.service.util.ApplicationContext;
 import org.rudi.facet.bpmn.exception.FormConvertException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.bpmn.exception.InvalidDataException;
@@ -35,15 +35,14 @@ import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import bean.workflow.SelfdataTaskSearchCriteria;
 
 /**
- * @author KOU21310 Ce service permet de gérer les étapes du wkf associées à selfdataInformationRequest. Elle fait ainsi
- * des actions sur des tasks notamment et non sur des entity (ou asset)
+ * @author KOU21310 Ce service permet de gérer les étapes du wkf associées à selfdataInformationRequest. Elle fait ainsi des actions sur des tasks
+ *         notamment et non sur des entity (ou asset)
  */
 @Service
 @Transactional(readOnly = true)
-@Slf4j
 public class SelfdataInformationRequestTaskServiceImpl extends
 		AbstractTaskServiceImpl<SelfdataInformationRequestEntity, SelfdataInformationRequest, SelfdataInformationRequestDao, SelfdataInformationRequestWorkflowHelper, SelfdataInformationRequestAssigmentHelper>
 		implements SelfdataInformationRequestTaskService {
@@ -95,11 +94,11 @@ public class SelfdataInformationRequestTaskServiceImpl extends
 		// Récupération de l'asset hydraté de la task
 		UUID assetUuid = this.taskQueryService.getTask(taskId).getAsset().getUuid();
 
-		Map<String, Object> informationRequestMap = selfdataMatchingDataHelper.getInformationRequestMapByAssetUuid(
-				assetUuid);
+		Map<String, Object> informationRequestMap = selfdataMatchingDataHelper
+				.getInformationRequestMapByAssetUuid(assetUuid);
 
-		Optional<Section> optionalMatchingDataSection = selfdataMatchingDataHelper.getMatchingDataSectionByAssetUuid(
-				assetUuid);
+		Optional<Section> optionalMatchingDataSection = selfdataMatchingDataHelper
+				.getMatchingDataSectionByAssetUuid(assetUuid);
 
 		if (optionalMatchingDataSection.isPresent()) {
 			Form matchingDataForm = new Form();
@@ -121,7 +120,8 @@ public class SelfdataInformationRequestTaskServiceImpl extends
 	}
 
 	@Override
-	protected void updateDraftAssetData(SelfdataInformationRequest assetDescription, SelfdataInformationRequestEntity assetDescriptionEntity)
+	protected void updateDraftAssetData(SelfdataInformationRequest assetDescription,
+			SelfdataInformationRequestEntity assetDescriptionEntity)
 			throws FormDefinitionException, FormConvertException, InvalidDataException {
 		Map<String, Object> datas = formHelper.hydrateData(assetDescriptionEntity.getData());
 		Form orignalForm = lookupOriginalDraftForm(assetDescriptionEntity);
@@ -131,7 +131,6 @@ public class SelfdataInformationRequestTaskServiceImpl extends
 		formHelper.fillMap(orignalForm, datas);
 		assetDescriptionEntity.setData(formHelper.deshydrateData(datas));
 	}
-
 
 	@Override
 	/**
@@ -144,7 +143,8 @@ public class SelfdataInformationRequestTaskServiceImpl extends
 	 * @throws FormDefinitionException
 	 * @throws FormConvertException
 	 */
-	protected void updateAssetData(Task task, org.activiti.engine.task.Task originalTask, SelfdataInformationRequestEntity assetDescriptionEntity)
+	protected void updateAssetData(Task task, org.activiti.engine.task.Task originalTask,
+			SelfdataInformationRequestEntity assetDescriptionEntity)
 			throws InvalidDataException, FormDefinitionException, FormConvertException {
 		// on recharge les données présentes
 		Map<String, Object> datas = formHelper.hydrateData(assetDescriptionEntity.getData());
@@ -178,6 +178,9 @@ public class SelfdataInformationRequestTaskServiceImpl extends
 		formHelper.fillMap(actionForm, datas);
 		selfdataMatchingDataHelper.encrypt(actionForm);
 	}
+
+	@Override
+	protected AbstractTaskServiceImpl<SelfdataInformationRequestEntity, SelfdataInformationRequest, SelfdataInformationRequestDao, SelfdataInformationRequestWorkflowHelper, SelfdataInformationRequestAssigmentHelper> lookupMe() {
+		return ApplicationContext.getBean(SelfdataInformationRequestTaskServiceImpl.class);
+	}
 }
-
-

@@ -8,6 +8,7 @@ import {ErrorWithCause} from '../../../shared/models/error-with-cause';
 import {ALL_TYPES} from '../../../shared/models/title-icon-type';
 import {IconRegistryService} from '../../../core/services/icon-registry.service';
 import {LogService} from '../../../core/services/log.service';
+import {DataSetAccessService} from '../../../core/services/data-set/data-set-access.service';
 
 const EMPTY_SEARCH = '';
 
@@ -38,7 +39,8 @@ export class SpreadsheetTabComponent implements OnInit {
     constructor(
         private readonly displayTableService: DisplayTableService,
         private readonly iconRegistryService: IconRegistryService,
-        private readonly logService: LogService
+        private readonly logService: LogService,
+        private readonly datasetAccessService: DataSetAccessService
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
     }
@@ -53,7 +55,7 @@ export class SpreadsheetTabComponent implements OnInit {
     ngOnInit(): void {
         if (this.metadata && this.mediaToDisplay) {
             this.displayTableLoading = true;
-            this.displayTableService.hasAccess(this.metadata, this.mediaToDisplay).pipe(
+            this.datasetAccessService.hasAccess(this.metadata, this.mediaToDisplay).pipe(
                 switchMap((hasAccess: boolean) => {
                     if (hasAccess) {
                         this.errorAccess = false;

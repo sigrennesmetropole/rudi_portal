@@ -407,7 +407,8 @@
 					"DRAFT",
 					"IN_PROGRESS",
 					"VALIDATED",
-					"CANCELLED"
+					"CANCELLED",
+					"ARCHIVED"
 				]
 			},
 			"DatasetConfidentiality": {
@@ -527,9 +528,21 @@
 									"$ref": "#/components/schemas/LinkedDatasetStatus"
 								}
 							},
-							"checkEndDate": {
-								"description": "Vérifie que la date de fin de la demande n'est pas renseignée ou qu'elle n'est pas encore atteinte",
+							"endDateIsNotOver": {
+								"description": "Vérifie que la date de fin de la demande n'est pas encore atteinte",
 								"type": "boolean"
+							},
+							"endDateIsNull": {
+								"description": "Vérifie que la date de fin de la demande n'est pas renseignée",
+								"type": "boolean"
+							},
+							"endDateIsOver": {
+								"description": "Vérifie que la date de fin de la demande est expirée",
+								"type": "boolean"
+							},
+							"dataset_confidentiality": {
+								"description": "Cherche les linked dataset en lien avec avec des jdd d'une confidentialité donnée",
+								"type": "string"
 							}
 						}
 					}

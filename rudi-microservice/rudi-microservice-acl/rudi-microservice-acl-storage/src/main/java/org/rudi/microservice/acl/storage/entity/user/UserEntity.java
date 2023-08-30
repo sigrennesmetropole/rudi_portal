@@ -1,13 +1,9 @@
 package org.rudi.microservice.acl.storage.entity.user;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.apache.commons.collections4.CollectionUtils;
-import org.rudi.common.storage.entity.AbstractLongIdEntity;
-import org.rudi.microservice.acl.core.common.SchemaConstants;
-import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
-import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,16 +16,22 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.common.storage.entity.AbstractLongIdEntity;
+import org.rudi.microservice.acl.core.common.SchemaConstants;
+import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
+import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * User entity
  */
 @Entity
-@Table(name = "user", schema = SchemaConstants.DATA_SCHEMA)
+@Table(name = "user_", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
 @ToString
@@ -41,8 +43,7 @@ public class UserEntity extends AbstractLongIdEntity {
 	private String login;
 
 	/**
-	 * Mot de passe <b>encodé</b> de l'utilisateur.
-	 * Cf PasswordHelper#encodePassword(java.lang.String).
+	 * Mot de passe <b>encodé</b> de l'utilisateur. Cf PasswordHelper#encodePassword(java.lang.String).
 	 */
 	@Column(name = "password", length = 150, nullable = false)
 	private String password;

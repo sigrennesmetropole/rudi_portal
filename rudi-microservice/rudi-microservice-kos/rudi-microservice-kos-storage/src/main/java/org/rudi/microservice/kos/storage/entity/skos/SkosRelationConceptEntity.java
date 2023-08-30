@@ -1,13 +1,5 @@
 package org.rudi.microservice.kos.storage.entity.skos;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.rudi.common.storage.entity.AbstractLongIdEntity;
-import org.rudi.microservice.kos.core.bean.SkosRelationType;
-import org.rudi.microservice.kos.core.common.SchemaConstants;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +7,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.rudi.common.storage.entity.AbstractLongIdEntity;
+import org.rudi.microservice.kos.core.bean.SkosRelationType;
+import org.rudi.microservice.kos.core.common.SchemaConstants;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "skos_relation_concept", schema = SchemaConstants.DATA_SCHEMA)

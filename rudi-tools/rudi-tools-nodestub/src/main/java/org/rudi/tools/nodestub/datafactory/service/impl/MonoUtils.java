@@ -16,6 +16,7 @@ class MonoUtils {
 	private MonoUtils() {
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T, E extends DataFactoryApiException> T blockOrThrow(Mono<T> mono, Class<E> exceptionClass)
 			throws E {
 		try {

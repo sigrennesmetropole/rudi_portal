@@ -95,14 +95,6 @@
         font-size: 15px;
         margin-bottom: 12px;
 
-        .rudi-logo-provider-box {
-            border-radius: 3.4px;
-            border: solid 0.9px $blocks-and-menus-outline;
-            height: 70px;
-            width: 70px;
-            justify-content: center;
-        }
-
         img {
             max-width: 64px;
             height: auto;
@@ -343,4 +335,8 @@ table td {
 
 .margin-data-value {
     margin-bottom: 17px;
+}
+
+.map-style {
+    max-width: 600px;
 }

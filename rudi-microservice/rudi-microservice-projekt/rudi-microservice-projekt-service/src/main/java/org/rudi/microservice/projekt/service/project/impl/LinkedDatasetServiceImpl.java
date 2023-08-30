@@ -13,7 +13,6 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
-import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
@@ -29,7 +28,6 @@ import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.C
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.DeleteLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.UpdateLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetCustomDao;
-import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectDao;
 import org.rudi.microservice.projekt.storage.entity.DatasetConfidentiality;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
@@ -53,13 +51,11 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	private final ProjectDao projectDao;
 	private final LinkedDatasetMapper linkedDatasetMapper;
-	private final LinkedDatasetDao linkedDatasetDao;
 	private final LinkedDatasetCustomDao linkedDatasetCustomDao;
 	private final DatasetService datasetService;
 	private final MetadataDetailsHelper metadataDetailsHelper;
 	private final MyInformationsHelper myInformationsHelper;
 
-	private final ApplicationService applicationService;
 
 	@Override
 	@Transactional // readOnly = false

@@ -20,6 +20,7 @@ import org.rudi.bpmn.core.bean.FieldDefinition;
 import org.rudi.bpmn.core.bean.FieldType;
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Section;
+import org.rudi.common.service.util.ApplicationContext;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.dao.form.ProcessFormDefinitionCustomDao;
 import org.rudi.facet.bpmn.entity.form.ProcessFormDefinitionEntity;
@@ -57,7 +58,6 @@ public class FormHelper {
 	@Autowired
 	private FormMapper formMapper;
 
-	@Autowired
 	private BpmnHelper bpmnHelper;
 
 	@Autowired
@@ -333,8 +333,8 @@ public class FormHelper {
 
 	private ProcessFormDefinitionSearchCriteria createSearchCriteria(org.activiti.engine.task.Task input,
 			String actionName) {
-		ProcessInstance processInstance = bpmnHelper.lookupProcessInstance(input);
-		UserTask userTask = bpmnHelper.lookupUserTask(input);
+		ProcessInstance processInstance = lookupBpmnHelper().lookupProcessInstance(input);
+		UserTask userTask = lookupBpmnHelper().lookupUserTask(input);
 		return ProcessFormDefinitionSearchCriteria.builder()
 				.processDefinitionId(processInstance.getProcessDefinitionKey())
 				.revision(processInstance.getProcessDefinitionVersion()).acceptFlexRevision(true)
@@ -343,12 +343,24 @@ public class FormHelper {
 	}
 
 	private ProcessFormDefinitionSearchCriteria createSearchCriteria(String processDefinitionKey) {
-		String processInstanceId = bpmnHelper.lookupProcessInstanceBusinessKey(processDefinitionKey, null);
+		String processInstanceId = lookupBpmnHelper().lookupProcessInstanceBusinessKey(processDefinitionKey, null);
 		return ProcessFormDefinitionSearchCriteria.builder().processDefinitionId(processInstanceId)
 				.acceptFlexRevision(true).userTaskId(DRAFT_USER_TASK_ID).acceptFlexUserTaskId(true).build();
 	}
 
 	private Sort createSortCriteria() {
 		return Sort.by(Order.asc("revision"), Order.asc("userTaskId"));
+	}
+
+	/**
+	 * cicular reference
+	 * 
+	 * @return
+	 */
+	protected BpmnHelper lookupBpmnHelper() {
+		if (bpmnHelper == null) {
+			bpmnHelper = ApplicationContext.getBean(BpmnHelper.class);
+		}
+		return bpmnHelper;
 	}
 }

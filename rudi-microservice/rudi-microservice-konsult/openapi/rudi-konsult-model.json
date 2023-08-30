@@ -1,0 +1,71 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Konsult Rudi",
+		"version": "0.0.1",
+		"title": "rudi-projekt-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "ca.marchand@rennesmetropole.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Konsult API",
+			"variables": {
+				"basePath": {
+					"default": "konsult/v1"
+				}
+			}
+		}
+	],
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"LayerInformation": {
+				"type": "object",
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"layerName": {
+						"type": "string"
+					},
+					"attributions": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"srs": {
+						"type": "string"
+					},
+					"minZoom": {
+						"type": "number"
+					},
+					"maxZoom": {
+						"type": "number"
+					},
+					"format": {
+						"type": "string"
+					},
+					"matrixSet": {
+						"type": "string"
+					},
+					"matrixIdPrefix": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

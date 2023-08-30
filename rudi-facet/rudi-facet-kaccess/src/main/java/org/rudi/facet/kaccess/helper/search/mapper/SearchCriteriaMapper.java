@@ -1,6 +1,8 @@
 package org.rudi.facet.kaccess.helper.search.mapper;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -144,6 +146,11 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 					datasetSearchCriteria.getProducerNames());
 		}
 
+		if( datasetSearchCriteria.getProducerUuid() != null ){
+			fqFilter.add(RudiMetadataField.PRODUCER_ORGANIZATION_ID,
+					datasetSearchCriteria.getProducerUuid());
+		}
+
 		if (datasetSearchCriteria.getDateDebut() != null) {
 			val minTimestamp = dateTimeMapper.toDataverseTimestamp(datasetSearchCriteria.getDateDebut());
 			fqFilter.add(TEMPORAL_SPREAD_START_DATE, minTimestamp, FilterQuery.ANY_VALUE);
@@ -154,36 +161,11 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 			fqFilter.add(TEMPORAL_SPREAD_END_DATE, FilterQuery.ANY_VALUE, maxTimestamp);
 		}
 
-		final var globalIds = datasetSearchCriteria.getGlobalIds();
-		if (globalIds != null) {
-			if (globalIds.size() == 1) {
-				fqFilter.add(GLOBAL_ID, IterableUtils.first(globalIds));
-			} else {
-				fqFilter.add(GLOBAL_ID, globalIds);
-			}
-		}
+		createQueryFilterGlobalIds(datasetSearchCriteria, fqFilter);
 
-		final Boolean restrictedAccess = datasetSearchCriteria.getRestrictedAccess();
+		createQueryFilterRestrictedAccess(datasetSearchCriteria, fqFilter);
 
-		if (Boolean.TRUE.equals(restrictedAccess)) {
-			// Dans le cas d'un jdd restreint
-			fqFilter.add(RESTRICTED_ACCESS, true);
-			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
-		} else if (Boolean.FALSE.equals(restrictedAccess)) {
-			// Dans le cas d'un jdd Ouvert
-			fqFilter.add(RESTRICTED_ACCESS, Boolean.TRUE, true);
-		}
-
-		final Boolean gdprSensitive = datasetSearchCriteria.getGdprSensitive();
-
-		if (Boolean.TRUE.equals(gdprSensitive)) {
-			// Dans le cas d'un jdd selfdata
-			fqFilter.add(GDPR_SENSITIVE, true);
-			fqFilter.add(RESTRICTED_ACCESS, true);
-		} else if (Boolean.FALSE.equals(gdprSensitive)) {
-			// Dans le cas d'un jdd qui est tout sauf selfdata
-			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
-		}
+		createQueryFilterGDPRSensitive(datasetSearchCriteria, fqFilter);
 
 		final String doi = datasetSearchCriteria.getDoi();
 		if (doi != null) {
@@ -232,6 +214,41 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 			order = sourceOrder;
 		}
 		return extractSortParams(order);
+	}
+
+	private void createQueryFilterGlobalIds(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter){
+		final var globalIds = datasetSearchCriteria.getGlobalIds();
+		if (globalIds != null) {
+			if (globalIds.size() == 1) {
+				fqFilter.add(GLOBAL_ID, IterableUtils.first(globalIds));
+			} else {
+				fqFilter.add(GLOBAL_ID, globalIds);
+			}
+		}
+	}
+
+	private void createQueryFilterRestrictedAccess(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter){
+		final Boolean restrictedAccess = datasetSearchCriteria.getRestrictedAccess();
+		if (Boolean.TRUE.equals(restrictedAccess)) {
+			// Dans le cas d'un jdd restreint
+			fqFilter.add(RESTRICTED_ACCESS, true);
+			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
+		} else if(Boolean.FALSE.equals(restrictedAccess)){
+			// Dans le cas d'un jdd Ouvert
+			fqFilter.add(RESTRICTED_ACCESS, Boolean.TRUE, true);
+		}
+	}
+
+	private void createQueryFilterGDPRSensitive(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter){
+		final Boolean gdprSensitive = datasetSearchCriteria.getGdprSensitive();
+		if (Boolean.TRUE.equals(gdprSensitive)) {
+			// Dans le cas d'un jdd selfdata
+			fqFilter.add(GDPR_SENSITIVE, true);
+			fqFilter.add(RESTRICTED_ACCESS, true);
+		} else if(Boolean.FALSE.equals(gdprSensitive)){
+			// Dans le cas d'un jdd qui est tout sauf selfdata
+			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
+		}
 	}
 
 }

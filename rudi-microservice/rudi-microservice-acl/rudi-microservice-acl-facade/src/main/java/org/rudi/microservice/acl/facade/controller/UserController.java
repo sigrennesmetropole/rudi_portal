@@ -10,6 +10,7 @@ import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AccessKeyDto;
 import org.rudi.microservice.acl.core.bean.ClientKey;
 import org.rudi.microservice.acl.core.bean.ClientRegistrationDto;
+import org.rudi.microservice.acl.core.bean.PasswordUpdate;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserPageResult;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
@@ -18,6 +19,7 @@ import org.rudi.microservice.acl.facade.controller.api.UsersApi;
 import org.rudi.microservice.acl.service.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +36,7 @@ import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMIN
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
 
 /**
  * Controleur pour la gestion des utilisateurs RUDI
@@ -50,11 +53,12 @@ public class UserController implements UsersApi {
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE + ")")
 	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String password, @Valid String lastname,
-			@Valid String firstname, @Valid String company, @Valid UserType type, @Valid List<UUID> roleUuids,
+			@Valid String firstname, @Valid String company, @Valid UserType type, @Valid List<UUID> roleUuids, @Valid List<UUID> userUuids, @Valid String loginAndDenomination,
 			@Valid Integer offset, @Valid Integer limit, @Valid String order) {
 
 		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().login(login).password(password)
-				.firstname(firstname).lastname(lastname).company(company).type(type).roleUuids(roleUuids).build();
+				.firstname(firstname).lastname(lastname).company(company).type(type).roleUuids(roleUuids)
+				.userUuids(userUuids).loginAndDenomination(loginAndDenomination).build();
 
 		Pageable pageable = utilPageable.getPageable(offset, limit, order);
 
@@ -153,5 +157,12 @@ public class UserController implements UsersApi {
 	@Override
 	public ResponseEntity<ClientRegistrationDto> registerClientByPassword(String login, String password) throws Exception {
 		return ResponseEntity.ok(userService.registerClientByPassword(login, password));
+	}
+
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ")")
+	public ResponseEntity<Void> updateUserPassword(String login, PasswordUpdate passwordUpdate) throws Exception {
+		userService.updateUserPassword(login, passwordUpdate);
+		return ResponseEntity.noContent().build();
 	}
 }

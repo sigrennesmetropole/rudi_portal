@@ -1,0 +1,17 @@
+{
+	"uuid": "d41f684b-1b96-4d3f-b262-2220bb99c1ea",
+	"datasetUuid": "3bf65c89-97b3-4f3e-b492-b0e9a0f3e3ad",
+	"datasetOrganisationUuid": "68676756-8ad7-4eb3-b9c5-fe9c7bffa0a0",
+	"comment": "Linked dataset expiré, à remonter lors du calcul des linked dataset expirés",
+	"endDate": "2024-06-08T15:00:00.000",
+	"linkedDatasetStatus": "VALIDATED",
+	"datasetConfidentiality": "RESTRICTED",
+	"project_fk": 1,
+	"processDefinitionKey": "Peu importe",
+	"processDefinitionVersion": 2,
+	"status": "COMPLETED",
+	"functionalStatus": "En attente",
+	"initiator": "Tests U",
+	"creationDate": "2021-06-08T15:00:00.000",
+	"updatedDate": "2022-04-08T15:00:00.000"
+}

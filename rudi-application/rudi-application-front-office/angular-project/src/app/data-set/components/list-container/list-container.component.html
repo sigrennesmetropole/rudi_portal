@@ -35,11 +35,11 @@
         <div class="d-flex py-3 justify-content-between">
             <!--Nombre de résultats-->
             <div class=" w-50 search-count">
-                <ng-container *ngIf="searchIsRunning">
+                <ng-container *ngIf="!metadataListTotal">
                     {{'searchbox.searchIsRunning'|translate}}
                 </ng-container>
-                <ng-container *ngIf="!searchIsRunning">
-                    {{metadataList.total}} {{'searchbox.results'|translate}}{{metadataList.total > 1 ? 's' : ''}}
+                <ng-container *ngIf="metadataListTotal">
+                    {{metadataListTotal}} {{'searchbox.results'|translate}}{{metadataListTotal > 1 ? 's' : ''}}
                 </ng-container>
                 <span *ngIf="searche$ | async">{{'searchbox.pour'|translate}} "{{searche$ | async}}"</span>
             </div>
@@ -72,40 +72,16 @@
             </div>
             <!---------------------------------------->
         </div>
-        <div class="content">
-            <div fxLayout="row wrap" class="gap">
-                <div
-                    *ngFor="let metadata of metadataListItems | paginate: {
-              itemsPerPage: limit,
-              currentPage: page,
-              totalItems: metadataList.total
-            }"
-                    [ngClass]="{'data-set-container-sm': mediaSize.isSm || mediaSize.isMd, 'data-set-container-lg':  mediaSize.isLg,
-        'data-set-container-xl': mediaSize.isXl, 'data-set-container-xxl': mediaSize.isXxl}"
-                    [class]="resultsPerRow ? 'data-set-container-'+resultsPerRow+'-cards': ''"
-                >
-                    <app-data-set-card
-                        [metadata]="metadata"
-                        [themePicto]="getThemePictoFor(metadata)"
-                        [themeLabel]="getThemeLabelFor(metadata)"
-                        [isSelectable]="isSelectable"
-                        (selectMetadata)="selectMetadata.emit($event)"
-                        (dbSelectMetadata)="dbSelectMetadata.emit($event)"
-                    ></app-data-set-card>
-                </div>
 
-            </div>
-        </div>
-        <!-- Pagination des jdd -->
-
-        <pagination-controls
-            (pageChange)="handlePageChange($event)"
-            [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
-            class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
-            [ngClass]="paginationControlsNgClass"
-            [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
-            [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate">
-        </pagination-controls>
-
+        <app-dataset-list [accessStatusHiddenValues]="accessStatusForcedValue"
+                          [isSelectable]="isSelectable"
+                          [limit]="limit"
+                          [mediaSize]="mediaSize"
+                          [resultsPerRow]="resultsPerRow"
+                          (metadataListTotal)="getMetadataListTotal($event)"
+                          (selectMetadata)="selectMetadata.emit($event)"
+                          (dbSelectMetadata)="dbSelectMetadata.emit($event)"
+        ></app-dataset-list>
     </div>
+
 </div>

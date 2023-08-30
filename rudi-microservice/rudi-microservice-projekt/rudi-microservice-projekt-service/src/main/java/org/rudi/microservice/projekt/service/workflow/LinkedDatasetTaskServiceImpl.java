@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.activiti.engine.ProcessEngine;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.common.service.util.ApplicationContext;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.helper.workflow.BpmnHelper;
 import org.rudi.facet.bpmn.service.FormService;
@@ -24,13 +25,10 @@ import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetE
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @author FNI18300
  */
 @Service
-@Slf4j
 public class LinkedDatasetTaskServiceImpl extends
 		AbstractTaskServiceImpl<LinkedDatasetEntity, LinkedDataset, LinkedDatasetDao, LinkedDatasetWorkflowHelper, LinkedDatasetAssigmentHelper> {
 
@@ -56,7 +54,8 @@ public class LinkedDatasetTaskServiceImpl extends
 			variables.put(ProjektWorkflowConstants.OWNER_PROJECT_UUID, projectEntity.getUuid());
 		}
 
-		variables.put(ProjektWorkflowConstants.DATASET_PRODUCER_UUID, assetDescriptionEntity.getDatasetOrganisationUuid());
+		variables.put(ProjektWorkflowConstants.DATASET_PRODUCER_UUID,
+				assetDescriptionEntity.getDatasetOrganisationUuid());
 	}
 
 	@Override
@@ -69,6 +68,11 @@ public class LinkedDatasetTaskServiceImpl extends
 	public void loadBpmn() throws IOException {
 		super.loadBpmn();
 		formService.createOrUpdateAllSectionAndFormDefinitions();
+	}
+
+	@Override
+	protected AbstractTaskServiceImpl<LinkedDatasetEntity, LinkedDataset, LinkedDatasetDao, LinkedDatasetWorkflowHelper, LinkedDatasetAssigmentHelper> lookupMe() {
+		return ApplicationContext.getBean(LinkedDatasetTaskServiceImpl.class);
 	}
 
 }

@@ -29,6 +29,7 @@ import {ErrorWithCause} from '../../../../shared/models/error-with-cause';
 import {DataSize} from '../../../../shared/models/data-size';
 import {PropertiesAdapter} from '../../properties-adapter';
 import {LinkedDatasetMetadatas} from './project-dependencies.service';
+import { ObjectType } from '../../tasks/object-type.enum';
 
 const {firstElementOrThrow} = PageResultUtils;
 
@@ -231,7 +232,7 @@ export class ProjektMetierService {
                 dataset_uuid: datasetUuid,
                 comment: requestDetails?.comment,
                 linked_dataset_status: requestDetails ? RESTRICTED_LINKED_DATASET_STATUS : DEFAULT_LINKED_DATASET_STATUS,
-                object_type: 'LinkedDataset',
+                object_type: ObjectType.LINKED_DATASET,
                 end_date: DateTimeUtils.extractLocalDateTimeToISOString(requestDetails?.endDate)
             };
             return this.projektService.linkProjectToDataset(projectUuid, linkedDataset);
@@ -337,7 +338,7 @@ export class ProjektMetierService {
             title: dataRequest.title,
             description: dataRequest.description,
             uuid: dataRequest.uuid,
-            object_type: 'NewDatasetRequest'
+            object_type: ObjectType.NEW_DATASET_REQUEST
         };
     }
 

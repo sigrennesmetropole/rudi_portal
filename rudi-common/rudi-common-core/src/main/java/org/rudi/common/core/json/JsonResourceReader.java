@@ -6,12 +6,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.MapType;
 import org.springframework.core.io.Resource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.MapType;
 
 import lombok.Getter;
 
@@ -30,14 +31,28 @@ public class JsonResourceReader {
 		this(new DefaultJackson2ObjectMapperBuilder());
 	}
 
+	public JsonResourceReader(SubTypeRegister subTypeRegister) {
+		this(new DefaultJackson2ObjectMapperBuilder(), subTypeRegister);
+	}
+
 	public JsonResourceReader(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
+		this(jackson2ObjectMapperBuilder, null);
+	}
+
+	public JsonResourceReader(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder,
+			SubTypeRegister subTypeRegister) {
+		if (subTypeRegister != null) {
+			jackson2ObjectMapperBuilder.postConfigurer(objectMapper -> subTypeRegister.addSubTypes(objectMapper));
+		}
 		this.objectMapper = jackson2ObjectMapperBuilder.build();
 	}
 
 	/**
 	 * Exemple :
 	 *
-	 * <pre>read("metadata/agri.json", Metadata.class)</pre>
+	 * <pre>
+	 * read("metadata/agri.json", Metadata.class)
+	 * </pre>
 	 *
 	 * @param path      chemin du fichier JSON à parser (relatif au classpath)
 	 * @param valueType type de l'objet à parser (classe Java)
@@ -48,7 +63,8 @@ public class JsonResourceReader {
 	public <T> T read(String path, Class<T> valueType) throws IOException {
 		final URL resource = getClass().getClassLoader().getResource(path);
 		if (resource == null) {
-			throw new FileNotFoundException("Ressource de type " + valueType.getSimpleName() + " introuvable dans le classpath à ce chemin : " + path);
+			throw new FileNotFoundException("Ressource de type " + valueType.getSimpleName()
+					+ " introuvable dans le classpath à ce chemin : " + path);
 		}
 		return objectMapper.readValue(resource, valueType);
 	}
@@ -61,7 +77,6 @@ public class JsonResourceReader {
 	public <T> T read(Resource resource, Class<T> valueType) throws IOException {
 		return objectMapper.readValue(resource.getInputStream(), valueType);
 	}
-
 
 	/**
 	 * @param path chemin du fichier JSON à parser (relatif au classpath)
@@ -87,7 +102,8 @@ public class JsonResourceReader {
 	public <T> List<T> readList(String path, Class<T> itemType) throws IOException {
 		final URL resource = getClass().getClassLoader().getResource(path);
 		if (resource == null) {
-			throw new FileNotFoundException("Ressources de type " + itemType.getSimpleName() + " introuvable dans le classpath à ce chemin : " + path);
+			throw new FileNotFoundException("Ressources de type " + itemType.getSimpleName()
+					+ " introuvable dans le classpath à ce chemin : " + path);
 		}
 		final CollectionType valueType = objectMapper.getTypeFactory().constructCollectionType(List.class, itemType);
 		return objectMapper.readValue(resource, valueType);

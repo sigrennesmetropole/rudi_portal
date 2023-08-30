@@ -16,6 +16,7 @@ import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AccessKeyDto;
 import org.rudi.microservice.acl.core.bean.ClientKey;
 import org.rudi.microservice.acl.core.bean.ClientRegistrationDto;
+import org.rudi.microservice.acl.core.bean.PasswordUpdate;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,7 @@ public interface UserService {
 	/**
 	 * Retourne un utilisateur en fonction de son login, avec uniquement les propriétés minimales
 	 *
-	 * @param uuid
+	 * @param login
 	 * @return
 	 */
 	User getUserInfo(String login);
@@ -171,11 +172,37 @@ public interface UserService {
 	 * Déverouille les comptes après un certains délais
 	 */
 	void unlockUsers();
-	
+
+	/**
+	 * Récupération de la CLientRegistration d'un utilisateur par login
+	 * @param login login de l'utilisateur
+	 * @return la ClientRegistration WSO2
+	 * @throws Exception erreur avec WSO2
+	 */
 	ClientRegistrationDto getClientRegistration(String login) throws Exception;
 
+	/**
+	 * Création d'une client registration WSO2 pour un user
+	 * @param login le login de l'user qui fait l'action
+	 * @param accessKey les clés d'accès WSO2
+	 */
 	void addClientRegistration(String login, AccessKeyDto accessKey);
 
+	/**
+	 * Réalise la registration dans WSO2 à l'aide du login et du pwd de l'utilisateur connecté
+	 * @param login le login de l'utilisateur
+	 * @param password son mot de passe
+	 * @return uen client rgeistration associée
+	 * @throws Exception si problème de registration WSO2
+	 */
 	ClientRegistrationDto registerClientByPassword(String login, String password) throws Exception;
+
+	/**
+	 * Mise à jour du mot de passe d'un utilisateur autre que celui connecté par login
+	 * @param login le login de l'utilisateur modifié
+	 * @param passwordUpdate les infos de changement de mot de passe
+	 * @throws Exception si traitement invalide
+	 */
+	void updateUserPassword(String login, PasswordUpdate passwordUpdate) throws Exception;
 
 }

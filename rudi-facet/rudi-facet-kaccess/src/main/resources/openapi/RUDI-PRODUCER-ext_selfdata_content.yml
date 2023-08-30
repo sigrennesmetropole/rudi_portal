@@ -52,13 +52,8 @@ components:
             - API
             - OUT
         storage_period:
-          allOf:
-            - $ref: '#/components/schemas/Period' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
-            - description: >
-                Durée de conservation des données personnelles chez le producteur.
-                
-                Le producteur a la possibilité de définir la durée de conservation des données personnelles dans sa base.
-                Cela donne une indication sur le volume de données disponibles
+          $ref: '#/components/schemas/Period' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+         
         selfdata_held:
           description: >
             Liste des données détenues.
@@ -85,9 +80,8 @@ components:
               - LOCATION_DATA
               - NIR
         treatment_period:
-          allOf:
-            - $ref: '#/components/schemas/Period' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
-            - description: >
+          $ref: '#/components/schemas/Period' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+          description: >
                 Durée de traitement des demandes RGPD.
                 
                 Le producteur indique sous combien de temps il traite les demandes d'accès, d'effacement, rectification.

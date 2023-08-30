@@ -416,6 +416,28 @@
 					},
 					{
 						"in": "query",
+						"name": "user-uuids",
+						"description": "UUIDS des users",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "login-and-denomination",
+						"description": "Tout ou partie du login, du nom ou du prenom de l'utilisateur",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "offset",
 						"description": "Index de début",
 						"required": false,
@@ -1733,6 +1755,53 @@
 								}
 							}
 						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{login}/password": {
+			"put": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Gère la modification du mot de passe d'un utilisateur d'organisation",
+				"description": "permet la modification du mot de passe d'un utilisateur d'organisation",
+				"operationId": "updateUserPassword",
+				"parameters": [
+					{
+						"name": "login",
+						"in": "path",
+						"description": "Login de l'utilisateur d'organisation'",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Password du user",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./rudi-acl-model.json#/components/schemas/PasswordUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "OK"
 					},
 					"500": {
 						"description": "Internal server error",

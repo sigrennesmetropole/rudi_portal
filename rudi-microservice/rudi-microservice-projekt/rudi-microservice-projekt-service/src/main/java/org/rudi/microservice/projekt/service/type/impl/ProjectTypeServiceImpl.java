@@ -1,10 +1,11 @@
 package org.rudi.microservice.projekt.service.type.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.UUID;
+
+import javax.transaction.Transactional;
+
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.microservice.projekt.core.bean.Confidentiality;
-import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectType;
 import org.rudi.microservice.projekt.core.bean.ProjectTypeSearchCriteria;
 import org.rudi.microservice.projekt.service.mapper.ProjectTypeMapper;
@@ -17,9 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +32,8 @@ public class ProjectTypeServiceImpl implements ProjectTypeService {
 
 	@Override
 	public Page<ProjectType> searchProjectTypes(ProjectTypeSearchCriteria searchCriteria, Pageable pageable) {
-		return projectTypeMapper.entitiesToDto(projectTypeCustomDao.searchProjectTypes(searchCriteria, pageable), pageable);
+		return projectTypeMapper.entitiesToDto(projectTypeCustomDao.searchProjectTypes(searchCriteria, pageable),
+				pageable);
 	}
 
 	@Override

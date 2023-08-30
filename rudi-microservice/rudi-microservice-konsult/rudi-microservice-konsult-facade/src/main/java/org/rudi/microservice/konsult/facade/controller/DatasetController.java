@@ -43,7 +43,7 @@ public class DatasetController implements DatasetsApi {
 	@Override
 	public ResponseEntity<MetadataList> searchMetadatas(String freeText, List<String> themes, List<String> keywords,
 			List<String> producerNames, OffsetDateTime dateDebut, OffsetDateTime dateFin, Boolean restrictedAccess,
-			Boolean gdprSensitive, List<UUID> globalId, Integer offset, Integer limit, String order) throws Exception {
+			Boolean gdprSensitive, List<UUID> globalId, UUID producerUuid, Integer offset, Integer limit, String order) throws Exception {
 
 		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria()
 				.limit(limit)
@@ -52,6 +52,7 @@ public class DatasetController implements DatasetsApi {
 				.keywords(keywords)
 				.themes(themes)
 				.producerNames(producerNames)
+				.producerUuid(producerUuid)
 				.dateDebut(dateDebut)
 				.dateFin(dateFin)
 				.order(order)

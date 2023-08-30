@@ -28,9 +28,6 @@ const EMPTY_METADATA_LIST: MetadataList = {
 })
 export class ListContainerComponent implements OnInit, OnDestroy {
     @ViewChild('sidenav') sidenav: MatSidenav;
-    readonly maxPageDesktop = 9;
-    /** minimum = 5 */
-    readonly maxPageMobile = 5;
     @Input() orders: OrderValue[];
     @Input() mediaSize: MediaSize;
     @Input() hidePagination = false;
@@ -53,7 +50,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     metadataList = EMPTY_METADATA_LIST;
     searchIsRunning = false;
     searche$: Observable<string>;
-
+    metadataListTotal: number;
     get themes(): SimpleSkosConcept[] {
         return this.themeCacheService.themes;
     }
@@ -65,7 +62,6 @@ export class ListContainerComponent implements OnInit, OnDestroy {
 
     selectedAccessStatusItems: AccessStatusFilterItem[] = [];
     private isDestroyed$ = new Subject<void>();
-    private currentPage = FIRST_PAGE;
 
     constructor(
         private readonly konsultMetierService: KonsultMetierService,
@@ -77,21 +73,6 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         private readonly themeCacheService: ThemeCacheService,
     ) {
         this.searche$ = this.filtersService.searchFilter.value$;
-    }
-
-    get page(): number {
-        return this.currentPage;
-    }
-
-    set page(value: number) {
-        if (value < FIRST_PAGE) {
-            console.warn('Page number cannot be less than ' + FIRST_PAGE);
-            value = FIRST_PAGE;
-        }
-        this.currentPage = value;
-        this.offset = (this.currentPage - 1) * this.limit;
-
-        this.searchMetadatas();
     }
 
     get isFiltered(): boolean {
@@ -124,9 +105,6 @@ export class ListContainerComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.mediaSize = this.breakpointObserver.getMediaSize();
-        this.filtersService.filter$.pipe(takeUntil(this.isDestroyed$)).subscribe(() => {
-            this.page = FIRST_PAGE;
-        });
         this.sidenavOpeningsService.sideNavOpening$.pipe(takeUntil(this.isDestroyed$)).subscribe(() => {
             this.sidenav.open();
         });
@@ -135,49 +113,11 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         );
     }
 
-    /**
-     * Fonction permettant la gestion la pagination
-     */
-    handlePageChange(page: number): void {
-        this.page = page;
-        window.scroll(0, 0);
-    }
-
-
-    /**
-     * Appel du service
-     */
-    searchMetadatas(): void {
-        this.isLoading = true;
-        this.searchIsRunning = true;
-        this.konsultMetierService
-            .searchMetadatas(this.filtersService.currentFilters,this.accessStatusHiddenValues, this.offset, this.limit)
-            .subscribe((data) => {
-                    this.metadataList = data ?? EMPTY_METADATA_LIST;
-                },
-                (error) => {
-                    this.isLoading = false;
-                    console.error('getMetadatas failed', error.message);
-                },
-                () => {
-                    this.isLoading = false;
-                    this.searchIsRunning = false;
-                });
-    }
-
     getThemeLabelFor(metadata: Metadata): string {
         return this.themeCacheService.getThemeLabelFor(metadata);
     }
 
-    /**
-     * @returns Example : 'weather'
-     */
-    getThemePictoFor(metadata: Metadata): string {
-        return this.themeCacheService.getThemePictoFor(metadata);
+    getMetadataListTotal($event: number): void {
+        this.metadataListTotal = $event;
     }
-
-    get paginationControlsNgClass(): NgClassObject {
-        return this.breakpointObserver.getNgClassFromMediaSize('pagination-spacing');
-    }
-
 }

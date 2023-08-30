@@ -1,8 +1,5 @@
 package org.rudi.microservice.konsent.service.helper;
 
-
-import java.security.InvalidParameterException;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.microservice.konsent.service.exception.InvalidTreatmentException;
 import org.rudi.microservice.konsent.storage.entity.common.TreatmentStatus;
@@ -42,12 +39,8 @@ public class TreatmentHelper {
 		}
 
 		return treatmentEntity.getVersions().stream()
-				.filter(treatmentVersion -> treatmentVersion.getStatus().equals(TreatmentStatus.DRAFT))
-				.findFirst()
-				.orElseThrow(
-						() -> new InvalidTreatmentException(
-								treatmentEntity, "le traitement fourni n'a pas de version draft"
-						)
-				);
+				.filter(treatmentVersion -> treatmentVersion.getStatus().equals(TreatmentStatus.DRAFT)).findFirst()
+				.orElseThrow(() -> new InvalidTreatmentException(treatmentEntity,
+						"le traitement fourni n'a pas de version draft"));
 	}
 }

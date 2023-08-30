@@ -1,12 +1,12 @@
 import {Licence, LicenceCustom, Media, Metadata} from '../../../api-kaccess';
 import {LanguageService} from '../../../i18n/language.service';
 import {Injectable} from '@angular/core';
-import {KonsultService} from '../../../api-konsult';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {LogService} from '../../../core/services/log.service';
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
 import MediaTypeEnum = Media.MediaTypeEnum;
+import {KonsultService} from '../../../konsult/konsult-api';
 
 const DWNL_INTERFACE_CONTRACT = 'dwnl';
 

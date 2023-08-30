@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-facet</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-facet-email</artifactId>
@@ -13,11 +13,8 @@
 
 
 	<properties>
-		<surefire.plugin.version>2.22.2</surefire.plugin.version>
-		<resource-directory>${project.basedir}/src/main/resources
-		</resource-directory>
-		<resource-generation-directory>${project.basedir}/src/main/resources
-		</resource-generation-directory>
+		<resource-directory>${project.basedir}/src/main/resources</resource-directory>
+		<resource-generation-directory>${project.basedir}/src/main/resources</resource-generation-directory>
 	</properties>
 
 	<dependencies>

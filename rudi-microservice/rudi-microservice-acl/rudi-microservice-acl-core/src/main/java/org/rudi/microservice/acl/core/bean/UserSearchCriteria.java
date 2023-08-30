@@ -45,6 +45,9 @@ public class UserSearchCriteria {
 
 	private List<UUID> roleUuids;
 
+	private List<UUID> userUuids;
+
 	private String userEmail;
 
+	private String loginAndDenomination;
 }

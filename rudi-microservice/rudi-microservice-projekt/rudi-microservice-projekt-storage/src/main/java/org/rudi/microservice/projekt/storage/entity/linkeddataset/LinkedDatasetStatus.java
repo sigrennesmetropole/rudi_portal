@@ -24,7 +24,12 @@ public enum LinkedDatasetStatus implements PositionedStatus {
 	/**
 	 * Abandonné
 	 */
-	CANCELLED(StatusPosition.FINAL);
+	CANCELLED(StatusPosition.FINAL),
+
+	/**
+	 * Archivé
+	 */
+	ARCHIVED(StatusPosition.FINAL);
 
 	private final StatusPosition position;
 

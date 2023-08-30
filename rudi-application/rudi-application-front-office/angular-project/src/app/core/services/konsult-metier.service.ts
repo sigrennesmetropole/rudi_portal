@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpResponse} from '@angular/common/http';
-import {KonsultService} from '../../api-konsult';
 import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from '../../api-kaccess';
 import {Filters} from '../../shared/models/filters';
 import {map} from 'rxjs/operators';
@@ -13,6 +12,7 @@ import * as customMimeDatabase from '../../../assets/mime-db/custom-mime-db.json
 // @ts-ignore
 import * as Module from 'module';
 import {AccessStatusFiltersType} from './filters/access-status-filters-type';
+import {KonsultService} from '../../konsult/konsult-api';
 
 export const MAX_RESULTS_PER_PAGE = 36;
 export const MAX_RESULTS_PER_REQUEST = 100;
@@ -57,6 +57,7 @@ export class KonsultMetierService {
             accessStatus.restrictedAcces,
             accessStatus.gdprSensitive,
             filters.globalIds,
+            filters.producerUuid,
             offset,
             limit,
             filters.order,
@@ -86,7 +87,8 @@ export class KonsultMetierService {
                 },
                 order: DEFAULT_ORDER_VALUE,
                 accessStatus: null,
-                globalIds
+                globalIds,
+                producerUuid: null,
             }, null, offset, MAX_RESULTS_PER_REQUEST)
         );
     }

@@ -319,7 +319,7 @@ public class PDFConvertorImpl implements PDFConvertor {
 		dc.setTitle(title);
 		dc.addCreator(RUDI_CREATOR);
 
-		PDFAIdentificationSchema id = xmp.createAndAddPFAIdentificationSchema();
+		PDFAIdentificationSchema id = xmp.createAndAddPDFAIdentificationSchema();
 		id.setPart(1);
 		id.setConformance("B");
 

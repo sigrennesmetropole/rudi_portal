@@ -12,16 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
 import org.rudi.common.facade.config.filter.JwtTokenUtil;
 import org.rudi.common.facade.config.filter.Tokens;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.rudi.common.service.util.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,10 +29,15 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author FNI18300
  */
 @Component
+@RequiredArgsConstructor
 public class AnonymousAuthenticationLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	private static final String CLIENT_ID = "client_id";
@@ -53,16 +56,11 @@ public class AnonymousAuthenticationLoginSuccessHandler implements Authenticatio
 
 	private static final String X_TOKEN_HEADER = "X-TOKEN";
 
-	@Autowired
+	private final ObjectMapper objectMapper;
+
+	private final JwtTokenUtil jwtTokenUtil;
+
 	private TokenEndpoint tokenEndPoint;
-
-	private ObjectMapper objectMapper = new ObjectMapper();
-
-	@Autowired
-	AuthenticationManager authenticationManager;
-
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -79,7 +77,7 @@ public class AnonymousAuthenticationLoginSuccessHandler implements Authenticatio
 		parameters.put(SCOPE, READ_SCOPE);
 		parameters.put(CLIENT_ID, customToken.getName());
 
-		ResponseEntity<OAuth2AccessToken> tokenResponse = tokenEndPoint.postAccessToken(customToken, parameters);
+		ResponseEntity<OAuth2AccessToken> tokenResponse = getTokenEndPoint().postAccessToken(customToken, parameters);
 		String value = null;
 		Object body = null;
 		if (tokenResponse.hasBody()) {
@@ -123,5 +121,12 @@ public class AnonymousAuthenticationLoginSuccessHandler implements Authenticatio
 			throw new IOException("Failed to generate tokens", e);
 		}
 		return tokens;
+	}
+
+	private TokenEndpoint getTokenEndPoint() {
+		if (tokenEndPoint == null) {
+			tokenEndPoint = ApplicationContext.getBean(TokenEndpoint.class);
+		}
+		return tokenEndPoint;
 	}
 }

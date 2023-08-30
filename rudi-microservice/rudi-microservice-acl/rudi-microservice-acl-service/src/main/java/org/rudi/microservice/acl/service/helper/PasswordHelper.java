@@ -7,12 +7,10 @@ import java.util.Base64;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rudi.microservice.acl.service.account.MissingPasswordChangeFieldException;
-import org.rudi.microservice.acl.service.account.PasswordLengthException;
-import org.rudi.microservice.acl.service.account.PasswordNotMatchingRegexException;
+import org.rudi.microservice.acl.service.password.MissingPasswordChangeFieldException;
+import org.rudi.microservice.acl.service.password.PasswordLengthException;
+import org.rudi.microservice.acl.service.password.PasswordNotMatchingRegexException;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,15 +29,14 @@ public class PasswordHelper {
 	@Value("${account.max.length.password}")
 	private int maxLengthPassword;
 
-	@Autowired
-	@Qualifier("userPasswordEncoder")
 	private PasswordEncoder userPasswordEncoder;
 
-	private static String PASSWORD_REGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$";
+	private static String PASSWORD_REGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{12,100}$";
 
 	@Bean("userPasswordEncoder")
 	public PasswordEncoder userPasswordEncoder() {
-		return new BCryptPasswordEncoder(4);
+		userPasswordEncoder = new BCryptPasswordEncoder(4);
+		return userPasswordEncoder;
 	}
 
 	public String encodePassword(String password) {
@@ -50,7 +47,8 @@ public class PasswordHelper {
 		return Base64.getEncoder().encodeToString(value.getBytes());
 	}
 
-	public void checkPassword(String password) throws MissingPasswordChangeFieldException, PasswordLengthException, PasswordNotMatchingRegexException {
+	public void checkPassword(String password)
+			throws MissingPasswordChangeFieldException, PasswordLengthException, PasswordNotMatchingRegexException {
 		if (password == null) {
 			throw new MissingPasswordChangeFieldException("password");
 		}
@@ -102,6 +100,5 @@ public class PasswordHelper {
 		// ne produit pas toujours le même résultat
 		return userPasswordEncoder.matches(rawPassword, encodedPassword);
 	}
-
 
 }

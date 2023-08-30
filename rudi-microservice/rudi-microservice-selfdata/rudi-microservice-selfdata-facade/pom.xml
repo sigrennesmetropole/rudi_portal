@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-selfdata</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-selfdata-facade</artifactId>
@@ -111,7 +111,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -125,12 +124,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -141,7 +134,6 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>0.2.1</version>
 		</dependency>
 
 	</dependencies>
@@ -165,15 +157,7 @@
 						<typeMapping>java.time.LocalDateTime=OffsetDateTime</typeMapping>
 						<typeMapping>DocumentMetadata=org.rudi.doks.core.bean.DocumentMetadata</typeMapping>
 					</typeMappings>
-					<importMappings>
-						<importMapping>ProcessDefinition=org.rudi.bpmn.core.bean.ProcessDefinition</importMapping>
-						<importMapping>Status=org.rudi.bpmn.core.bean.Status</importMapping>
-						<importMapping>Form=org.rudi.bpmn.core.bean.Form</importMapping>
-						<importMapping>AssetDescription=org.rudi.bpmn.core.bean.AssetDescription</importMapping>
-						<importMapping>Task=org.rudi.bpmn.core.bean.Task</importMapping>
-						<importMapping>Address=org.rudi.rva.core.bean.Address</importMapping>
-						<importMapping>Credentials=org.rudi.facet.apimaccess.bean.Credentials</importMapping>
-					</importMappings>
+					<schemaMappings>ProcessDefinition=org.rudi.bpmn.core.bean.ProcessDefinition,Status=org.rudi.bpmn.core.bean.Status,Form=org.rudi.bpmn.core.bean.Form,AssetDescription=org.rudi.bpmn.core.bean.AssetDescription,Task=org.rudi.bpmn.core.bean.Task,Address=org.rudi.rva.core.bean.Address,Credentials=org.rudi.facet.apimaccess.bean.Credentials</schemaMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
@@ -253,14 +237,6 @@
 			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
-				<version>6.5.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>42.2.16</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 
 		</plugins>

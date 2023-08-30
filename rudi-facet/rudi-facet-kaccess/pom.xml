@@ -5,14 +5,13 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>rudi-facet-kaccess</artifactId>
 
 	<properties>
-		<surefire.plugin.version>2.22.2</surefire.plugin.version>
 		<resource-directory>${project.basedir}/src/main/resources</resource-directory>
 		<resource-generation-directory>${project.basedir}/src/main/resources</resource-generation-directory>
 	</properties>
@@ -55,17 +54,10 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>${jetbrains.annotations.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
@@ -85,47 +77,38 @@
 						</goals>
 						<configuration>
 							<modelPackage>org.rudi.facet.kaccess.bean</modelPackage>
-							<inputSpec>${resource-directory}/openapi/rudi-kaccess-model.yml</inputSpec>
-							<importMappings>
-								<importMapping>.SearchItemInfo=org.rudi.facet.dataverse.bean.SearchItemInfo
-								</importMapping>
-								<importMapping>SearchType=org.rudi.facet.dataverse.bean.SearchType</importMapping>
-								<importMapping>SearchDatasetInfo=org.rudi.facet.dataverse.bean.SearchDatasetInfo
-								</importMapping>
-								<importMapping>Identifier=org.rudi.facet.dataverse.bean.Identifier</importMapping>
-								<importMapping>Dataset=org.rudi.facet.dataverse.bean.Dataset</importMapping>
-								<importMapping>DatasetVersion=org.rudi.facet.dataverse.bean.DatasetVersion
-								</importMapping>
-								<importMapping>DatasetFile=org.rudi.facet.dataverse.bean.DatasetFile</importMapping>
-								<importMapping>DataFile=org.rudi.facet.dataverse.bean.DataFile</importMapping>
-								<importMapping>DatasetMetadataBlock=org.rudi.facet.dataverse.bean.DatasetMetadataBlock
-								</importMapping>
-								<importMapping>
-									DatasetMetadataBlockElement=org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement
-								</importMapping>
-								<importMapping>
-									DatasetMetadataBlockElementField=org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField
-								</importMapping>
-								<importMapping>FieldTypeClass=org.rudi.facet.dataverse.bean.FieldTypeClass
-								</importMapping>
-							</importMappings>
+							<inputSpec>
+								${resource-directory}/openapi/rudi-kaccess-model.yml</inputSpec>
+							<schemaMappings>
+								SearchItemInfo=org.rudi.facet.dataverse.bean.SearchItemInfo,SearchType=org.rudi.facet.dataverse.bean.SearchType,
+								Identifier=org.rudi.facet.dataverse.bean.Identifier,
+								Dataset=org.rudi.facet.dataverse.bean.Dataset,
+								DatasetVersion=org.rudi.facet.dataverse.bean.DatasetVersion,
+								DatasetFile=org.rudi.facet.dataverse.bean.DatasetFile,DataFile=org.rudi.facet.dataverse.bean.DataFile,
+								DatasetMetadataBlock=org.rudi.facet.dataverse.bean.DatasetMetadataBlock,
+								DatasetMetadataBlockElement=org.rudi.facet.dataverse.bean.DatasetMetadataBlockElement,
+								DatasetMetadataBlockElementField=org.rudi.facet.dataverse.bean.DatasetMetadataBlockElementField,
+								FieldTypeClass=org.rudi.facet.dataverse.bean.FieldTypeClass
+							</schemaMappings>
 							<typeMappings>
 								<typeMapping>URI=String</typeMapping>
 							</typeMappings>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
 							<generateApis>false</generateApis>
 							<generateModels>true</generateModels>
 							<generateSupportingFiles>false</generateSupportingFiles>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<templateDirectory>
+								${resource-generation-directory}/openapi/generation/</templateDirectory>
 							<verbose>false</verbose>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<dateLibrary>java8</dateLibrary>
 								<performBeanValidation>true</performBeanValidation>
+								<useBeanValidation>true</useBeanValidation>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -136,22 +119,27 @@
 						</goals>
 						<configuration>
 							<modelPackage>org.rudi.facet.kaccess.bean</modelPackage>
-							<inputSpec>${resource-directory}/openapi/RUDI-PRODUCER.yml</inputSpec>
+							<inputSpec>
+								${resource-directory}/openapi/RUDI-PRODUCER.yml</inputSpec>
 							<typeMappings>
 								<typeMapping>URI=String</typeMapping>
 								<typeMapping>Date=java.time.OffsetDateTime</typeMapping>
-								<!-- DictionaryEntry2 correspond au bean généré par la $ref : https://app.swaggerhub.com/apiproxy/registry/OlivierMartineau/RUDI-PRODUCER/1.4.0#/components/schemas/DictionaryEntry -->
-								<typeMapping>DictionaryEntry2=org.rudi.facet.kaccess.bean.DictionaryEntry</typeMapping>
+								<!-- DictionaryEntry2 correspond au bean généré
+								par la $ref :
+								https://app.swaggerhub.com/apiproxy/registry/OlivierMartineau/RUDI-PRODUCER/1.4.0#/components/schemas/DictionaryEntry -->
+								<typeMapping>
+									DictionaryEntry1=org.rudi.facet.kaccess.bean.DictionaryEntry</typeMapping>
 							</typeMappings>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
 							<generateApis>false</generateApis>
 							<generateModels>true</generateModels>
 							<generateSupportingFiles>false</generateSupportingFiles>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<templateDirectory>
+								${resource-generation-directory}/openapi/generation/</templateDirectory>
 							<verbose>false</verbose>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
@@ -165,7 +153,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>

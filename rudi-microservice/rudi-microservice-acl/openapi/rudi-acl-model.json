@@ -429,7 +429,11 @@
 						"type": "string",
 						"enum": [
 							"BASIC",
+							"CLIENT_SECRET_BASIC",
 							"POST",
+							"CLIENT_SECRET_POST",
+							"CLIENT_SECRET_JWT",
+							"PRIVATE_KEY_JWT",
 							"NONE"
 						]
 					}
@@ -501,6 +505,20 @@
 						"type": "string"
 					},
 					"clientSecret": {
+						"type": "string"
+					}
+				}
+			},
+			"PasswordUpdate": {
+				"description": "Informations nécessaires pour modifier le mot-de-passe d'un compte",
+				"type": "object",
+				"properties": {
+					"oldPassword": {
+						"description": "L'ancien mot de passe",
+						"type": "string"
+					},
+					"newPassword": {
+						"description": "Le nouveau mot-de-passe",
 						"type": "string"
 					}
 				}

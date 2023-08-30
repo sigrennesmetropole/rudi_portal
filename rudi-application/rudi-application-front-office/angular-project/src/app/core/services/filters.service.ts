@@ -20,7 +20,8 @@ const EMPTY_FILTERS: Filters = {
     },
     order: DEFAULT_ORDER_VALUE,
     accessStatus: null,
-    globalIds: []
+    globalIds: [],
+    producerUuid: '',
 };
 
 @Injectable({

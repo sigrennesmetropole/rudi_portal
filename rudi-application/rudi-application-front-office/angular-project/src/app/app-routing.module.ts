@@ -38,7 +38,15 @@ const routes: Routes = [
             .then(m => m.PersonalSpaceModule),
         canActivate: [UserGuardService]
     },
-
+    {
+        path: 'organization',
+        loadChildren: () => import('./organization/organization.module')
+            .then(m => m.OrganizationModule),
+        canActivate: [AuthGuard],
+        resolve: {
+            aclAppInfo: AclConfigurationResolver
+        }
+    },
     {
         // Path vide
         path: '',

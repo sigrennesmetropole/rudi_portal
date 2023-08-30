@@ -3,26 +3,29 @@
  */
 package org.rudi.common.facade.config.filter;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Filtre pour les tokens JWT
@@ -43,7 +46,8 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 
 	private String checkTokenUri;
 
-	public OAuth2RequestFilter(final String[] excludeUrlPatterns, String checkTokenUri, final UtilContextHelper utilContextHelper) {
+	public OAuth2RequestFilter(final String[] excludeUrlPatterns, String checkTokenUri,
+			final UtilContextHelper utilContextHelper) {
 		super(utilContextHelper);
 		this.excludeUrlPatterns = Arrays.asList(excludeUrlPatterns);
 		pathMatcher = new AntPathMatcher();
@@ -66,7 +70,8 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 			LOGGER.error("Le token ne commence pas avec la chaine Bearer");
 			setTokenIsInvalid(response);
 		} else {
-			final String tokenJwt = requestAuthentTokenHeader.substring(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX.length());
+			final String tokenJwt = requestAuthentTokenHeader
+					.substring(AbstractJwtTokenUtil.HEADER_TOKEN_JWT_PREFIX.length());
 
 			handleToken(response, tokenJwt);
 		}
@@ -76,7 +81,8 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 
 	private void handleToken(final HttpServletResponse response, final String tokenJwt) {
 		try {
-			ResponseEntity<OAuth2TokenData> checkToken = restTemplate.getForEntity(checkTokenUri + "?token=" + tokenJwt,
+			HttpEntity<MultiValueMap<String, String>> request = EntityHelper.buildFomEntity("token", tokenJwt);
+			ResponseEntity<OAuth2TokenData> checkToken = restTemplate.postForEntity(checkTokenUri, request,
 					OAuth2TokenData.class);
 			if (checkToken.getStatusCode() == HttpStatus.OK) {
 				handleToken(checkToken, response);
@@ -86,7 +92,8 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 				setTokenIsInvalid(response);
 			}
 		} catch (HttpClientErrorException.BadRequest e) {
-			LOGGER.warn("OAuth2 token check failed. JWT token check should be done afterward by another filter. See ACL logs for details.");
+			LOGGER.warn(
+					"OAuth2 token check failed. JWT token check should be done afterward by another filter. See ACL logs for details.");
 			// c'est la cas d'un token jwt reçu
 			setTokenIsInvalid(response);
 		} catch (Exception e) {

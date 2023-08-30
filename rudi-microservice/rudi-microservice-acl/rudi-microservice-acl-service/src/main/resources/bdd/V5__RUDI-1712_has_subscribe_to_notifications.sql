@@ -1,6 +1,6 @@
-ALTER TABLE "user"
+ALTER TABLE user_
     ADD COLUMN has_subscribe_to_notifications boolean NOT NULL DEFAULT FALSE;
-COMMENT ON COLUMN "user".has_subscribe_to_notifications
+COMMENT ON COLUMN user_.has_subscribe_to_notifications
     IS 'Peut-on contacter l''utilisateur sur son adresse mail ?';
 
 ALTER TABLE account_registration

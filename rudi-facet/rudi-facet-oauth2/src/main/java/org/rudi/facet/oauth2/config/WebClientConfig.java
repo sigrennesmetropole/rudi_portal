@@ -1,5 +1,8 @@
 package org.rudi.facet.oauth2.config;
 
+import java.nio.charset.StandardCharsets;
+
+import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -11,6 +14,8 @@ import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest;
+import org.springframework.security.oauth2.client.endpoint.WebClientReactiveClientCredentialsTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -19,9 +24,9 @@ import org.springframework.security.oauth2.client.web.server.AuthenticatedPrinci
 import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
 
 import lombok.Getter;
+import reactor.netty.http.client.HttpClient;
 
 /**
  * @author FNI18300
@@ -71,8 +76,16 @@ public class WebClientConfig {
 			@Qualifier("rudi_oauth2_repository") ReactiveClientRegistrationRepository clientRegistrationRepository,
 			@Qualifier("rudi_oauth2_client_service") ReactiveOAuth2AuthorizedClientService clientService,
 			@Qualifier("rudi_oauth2_client_repository") ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
+		WebClientReactiveClientCredentialsTokenResponseClient webClientReactiveClientCredentialsTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();
+		HttpHeaderConverter<OAuth2ClientCredentialsGrantRequest> httpHeaderConverter = new HttpHeaderConverter<>();
+		webClientReactiveClientCredentialsTokenResponseClient
+				.setHeadersConverter(httpHeaderConverter::populateTokenRequestHeaders);
+
 		ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider = ReactiveOAuth2AuthorizedClientProviderBuilder
-				.builder().clientCredentials().build();
+				.builder()
+				.clientCredentials(
+						b -> b.accessTokenResponseClient(webClientReactiveClientCredentialsTokenResponseClient))
+				.build();
 
 		AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
 				clientRegistrationRepository, clientService);
@@ -83,13 +96,14 @@ public class WebClientConfig {
 
 	@LoadBalanced
 	@Bean(name = "rudi_oauth2_builder")
-	public WebClient.Builder webClientBuilder(@Qualifier("rudi_oauth2_client_manager") ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
-		HttpClient httpClient = HttpClient.create();
+	public WebClient.Builder webClientBuilder(
+			@Qualifier("rudi_oauth2_client_manager") ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+		HttpClient httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
 		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
 				authorizedClientManager);
 		oauthFilter.setDefaultClientRegistrationId(REGISTRATION_ID);
 		return WebClient.builder().filter(oauthFilter)
-				.defaultHeaders(header -> header.setBasicAuth(clientId, clientSecret))
+				.defaultHeaders(header -> header.setBasicAuth(clientId, clientSecret, StandardCharsets.UTF_8))
 				.clientConnector(new ReactorClientHttpConnector(httpClient));
 	}
 

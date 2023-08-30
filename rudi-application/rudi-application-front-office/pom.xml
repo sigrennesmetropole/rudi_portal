@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-application</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -20,6 +20,8 @@
 		<sonar.language>ts</sonar.language>
 		<sonar.nodejs.executable>${env.CI_PROJECT_DIR}/rudi-application/rudi-application-front-office/${angular.project.nodeinstallation}/node/node</sonar.nodejs.executable>
 		<sonar.sources>${angular.project.location}</sonar.sources>
+		<sonar.exclusions>**/node_modules/**/*, **/*.spec.ts, **/*.e2e.ts, **/environments/**/*, **/*.routes.ts, **/main.ts, **/test-setup.ts, **/polyfills.ts</sonar.exclusions>
+		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
 	</properties>
 
 	<build>

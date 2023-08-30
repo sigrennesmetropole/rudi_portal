@@ -3,6 +3,9 @@ package org.rudi.facet.dataverse.api.exceptions;
 import java.util.UUID;
 
 public class DatasetNotFoundException extends DataverseAPIException {
+
+	private static final long serialVersionUID = -760083228808867503L;
+
 	private DatasetNotFoundException(String message) {
 		super(message);
 	}

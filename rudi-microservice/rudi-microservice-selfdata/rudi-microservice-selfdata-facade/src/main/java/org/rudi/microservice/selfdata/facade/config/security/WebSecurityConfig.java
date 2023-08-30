@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
 	private static final String ACTUATOR_URL = "/actuator/**";
 
@@ -44,14 +44,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${module.oauth2.check-token-uri}")
 	private String checkTokenUri;
 
-	@SuppressWarnings("FieldMayBeFinal") // Propriété Spring
 	@Value("${rudi.selfdata.security.authentication.disabled:false}")
 	private boolean disableAuthentification = false;
 
 	private final UtilContextHelper utilContextHelper;
 
-	@Override
-	protected void configure(final HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		if (!disableAuthentification) {
 			http.cors().and().csrf().disable()
 					// starts authorizing configurations
@@ -69,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		} else {
 			http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll();
 		}
+		return http.build();
 	}
 
 	@Bean
@@ -82,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Url autorisées
 		// 4200 pour les développement | 8080 pour le déploiement
-		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 
 		final var source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);

@@ -8,6 +8,7 @@ import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.microservice.acl.core.bean.Account;
 import org.rudi.microservice.acl.core.bean.PasswordChange;
 import org.rudi.microservice.acl.core.bean.User;
+import org.rudi.microservice.acl.service.password.AbstractPasswordException;
 
 /**
  * Service métier de gestion des comptes utilisateur
@@ -20,7 +21,7 @@ public interface AccountService {
 	 * @param account les informations de création de compte
 	 * @throws AbstractAccountRegistrationException erreur détectée
 	 */
-	void checkAccountCreation(Account account) throws AbstractAccountRegistrationException;
+	void checkAccountCreation(Account account) throws AbstractAccountRegistrationException, AbstractPasswordException;
 
 	/**
 	 * Record a account waiting for validation
@@ -28,7 +29,7 @@ public interface AccountService {
 	 * @param account the account to register
 	 * @throws AppServiceException
 	 */
-	void registerAccount(Account account) throws AbstractAccountRegistrationException;
+	void registerAccount(Account account) throws AbstractAccountRegistrationException, AbstractPasswordException;
 
 	/**
 	 * Validate an existing account by token

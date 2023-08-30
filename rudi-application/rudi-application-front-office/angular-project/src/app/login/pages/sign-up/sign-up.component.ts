@@ -13,6 +13,7 @@ import {PropertiesMetierService} from '../../../core/services/properties-metier.
 import {RudiCaptchaComponent} from '../../../shared/rudi-captcha/rudi-captcha.component';
 import {CAPTCHA_NOT_VALID_CODE, CaptchaCheckerService} from '../../../core/services/captcha-checker.service';
 import {ErrorWithCause} from '../../../shared/models/error-with-cause';
+import {PASSWORD_REGEX} from '../../../core/const';
 
 @Component({
     selector: 'app-sign-up',
@@ -50,7 +51,7 @@ export class SignUpComponent implements OnInit {
      * Pour savoir si on est en mode mobile ou desktop
      */
     mediaSize: MediaSize;
-    passwordMinLength = 10;
+    passwordMinLength = 12;
     passwordMaxLength = 100;
 
     /**
@@ -62,9 +63,6 @@ export class SignUpComponent implements OnInit {
      * Error on captcha input
      */
     errorCaptchaInput = false;
-
-    private static PASSWORD_REGEX: string = '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$';
-
     @ViewChild(RudiCaptchaComponent) rudiCaptcha: RudiCaptchaComponent;
 
     constructor(private formBuilder: FormBuilder,
@@ -112,7 +110,7 @@ export class SignUpComponent implements OnInit {
                         Validators.required,
                         Validators.minLength(this.passwordMinLength),
                         Validators.maxLength(this.passwordMaxLength),
-                        Validators.pattern(SignUpComponent.PASSWORD_REGEX)
+                        Validators.pattern(PASSWORD_REGEX)
                     ]
                 ],
                 confirmPassword: ['', [Validators.required]],

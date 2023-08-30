@@ -12,11 +12,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class EncryptionServiceImpl implements EncryptionService {
 
 	@Value("${media.encryption.public-key:encryption_key_public.key}")
@@ -31,9 +29,9 @@ public class EncryptionServiceImpl implements EncryptionService {
 	public DocumentContent getPublicEncryptionKey() throws AppServiceException {
 		Resource publicKeyResource = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(secret);
 
-		if(!publicKeyResource.exists()) {
+		if (!publicKeyResource.exists()) {
 			String errorMessage = "Impossible de récupérer le fichier de clé publique : \"" + secret + "\"";
-			if(StringUtils.isNotEmpty(additionalLocation)) {
+			if (StringUtils.isNotEmpty(additionalLocation)) {
 				errorMessage += " dans le répertoire additionalLocation : \"" + additionalLocation + "\" ou";
 			}
 			errorMessage += " dans le classpath";

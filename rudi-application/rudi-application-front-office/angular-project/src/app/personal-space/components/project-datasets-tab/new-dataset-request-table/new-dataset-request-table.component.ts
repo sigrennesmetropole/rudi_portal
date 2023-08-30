@@ -11,6 +11,7 @@ import {NewDatasetRequestTableData, RowTableData} from '../dataset.interface';
 import {DialogSubscribeDatasetsService} from '../../../../core/services/dialog-subscribe-datasets.service';
 import {DialogClosedData} from '../../../../data-set/models/dialog-closed-data';
 import {ProjectConsultationService} from '../../../../core/services/asset/project/project-consultation.service';
+import { ObjectType } from 'src/app/core/services/tasks/object-type.enum';
 
 
 @Component({
@@ -74,7 +75,7 @@ export class NewDatasetRequestTableComponent {
                     title: newRequest.title,
                     description: newRequest.description,
                     new_dataset_request_status: NewDatasetRequestStatus.InProgress,
-                    object_type: 'NewDatasetRequest'
+                    object_type: ObjectType.NEW_DATASET_REQUEST
                 };
                 this.addNewDatasetRequestEvent.emit(newDatasetRequestToAdd);
             },

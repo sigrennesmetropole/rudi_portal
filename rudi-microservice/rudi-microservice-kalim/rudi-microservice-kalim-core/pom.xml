@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-kalim</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-kalim-core</artifactId>
@@ -56,12 +56,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -96,7 +90,7 @@
 				<configuration>
 					<modelPackage>org.rudi.microservice.kalim.core.bean</modelPackage>
 					<generatorName>spring</generatorName>
-					<library>spring-mvc</library>
+					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
 					<generateModelDocumentation>false</generateModelDocumentation>
 					<generateSupportingFiles>false</generateSupportingFiles>
@@ -116,9 +110,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<importMappings>
-								<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
-							</importMappings>
+							<schemaMappings>Metadata=org.rudi.facet.kaccess.bean.Metadata</schemaMappings>
 							<inputSpec>${resource-directory}/openapi/rudi-kalim-api.json</inputSpec>
 						</configuration>
 					</execution>

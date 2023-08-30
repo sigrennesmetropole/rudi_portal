@@ -17,15 +17,13 @@ import org.springframework.security.oauth2.core.AuthenticationMethod;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 @ConditionalOnProperty(name = "apimanager.oauth2.client.registration.internal", havingValue = "false")
 public class CustomRemoteClientRegistrationRepository implements RudiClientRegistrationRepository {
 
@@ -43,20 +41,23 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 
 	@Nullable
 	@Override
-	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException, BuildClientRegistrationException {
+	public ClientRegistration findByUsernameAndPassword(String username, String password)
+			throws SSLException, GetClientRegistrationException, BuildClientRegistrationException {
 		return findRegistrationOrRegister(username, password);
 	}
 
 	@NotNull
 	@Override
-	public ClientRegistration findRegistrationOrRegister(String username, String password) throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
+	public ClientRegistration findRegistrationOrRegister(String username, String password)
+			throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
 		// On fait la registration dans ACL et pas dans les remote
 		val clientRegistrationDto = aclHelper.findRegistrationOrRegister(username, password);
 		return convertToEntity(clientRegistrationDto);
 	}
 
 	@Override
-	public ClientRegistration register(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
+	public ClientRegistration register(String username, String password)
+			throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
 		throw new UnsupportedOperationException("Méthode non implémentée. A implementer si le besoin est vérifié");
 	}
 
@@ -89,15 +90,14 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	 */
 	private ClientRegistration convertToEntity(ClientRegistrationDto registrationDto) {
 		val builder = ClientRegistration.withRegistrationId(registrationDto.getRegistrationId())
-				.clientId(registrationDto.getClientId())
-				.clientSecret(registrationDto.getClientSecret())
-				.clientName(registrationDto.getClientName())
-				.scope(registrationDto.getScopes())
-				.redirectUriTemplate(registrationDto.getRedirectUriTemplate())
+				.clientId(registrationDto.getClientId()).clientSecret(registrationDto.getClientSecret())
+				.clientName(registrationDto.getClientName()).scope(registrationDto.getScopes())
+				.redirectUri(registrationDto.getRedirectUriTemplate())
 				.tokenUri(registrationDto.getProviderDetails().getTokenUri())
 				.jwkSetUri(registrationDto.getProviderDetails().getJwkSetUri())
 				.userInfoUri(registrationDto.getProviderDetails().getUserInfoEndpoint().getUri())
-				.userNameAttributeName(registrationDto.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName())
+				.userNameAttributeName(
+						registrationDto.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName())
 				.userInfoAuthenticationMethod(AuthenticationMethod.HEADER)
 				.authorizationUri(registrationDto.getProviderDetails().getAuthorizationUri());
 
@@ -109,14 +109,14 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	private void addGrantType(ClientRegistration.Builder builder, ClientRegistrationDto registrationDto) {
 		AuthorizationGrantType grantType;
 		switch (registrationDto.getAuthorizationGrantType().getValue()) {
-			case PASSWORD:
-				grantType = AuthorizationGrantType.PASSWORD;
-				break;
-			case CLIENT_CREDENTIALS:
-				grantType = AuthorizationGrantType.CLIENT_CREDENTIALS;
-				break;
-			default:
-				grantType = AuthorizationGrantType.REFRESH_TOKEN;
+		case PASSWORD:
+			grantType = AuthorizationGrantType.PASSWORD;
+			break;
+		case CLIENT_CREDENTIALS:
+			grantType = AuthorizationGrantType.CLIENT_CREDENTIALS;
+			break;
+		default:
+			grantType = AuthorizationGrantType.REFRESH_TOKEN;
 		}
 		builder.authorizationGrantType(grantType);
 	}
@@ -124,14 +124,14 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	private void addAuthenticationMethod(ClientRegistration.Builder builder, ClientRegistrationDto registrationDto) {
 		ClientAuthenticationMethod authenticationMethod;
 		switch (registrationDto.getClientAuthenticationMethod().getValue()) {
-			case BASIC:
-				authenticationMethod = ClientAuthenticationMethod.BASIC;
-				break;
-			case POST:
-				authenticationMethod = ClientAuthenticationMethod.POST;
-				break;
-			default:
-				authenticationMethod = ClientAuthenticationMethod.NONE;
+		case BASIC:
+			authenticationMethod = ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
+			break;
+		case POST:
+			authenticationMethod = ClientAuthenticationMethod.CLIENT_SECRET_POST;
+			break;
+		default:
+			authenticationMethod = ClientAuthenticationMethod.NONE;
 		}
 		builder.clientAuthenticationMethod(authenticationMethod);
 	}

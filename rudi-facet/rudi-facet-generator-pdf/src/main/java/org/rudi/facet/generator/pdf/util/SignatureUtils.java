@@ -92,21 +92,29 @@ public class SignatureUtils {
 		for (int i = 0; i < refArray.size(); ++i) {
 			base = refArray.getObject(i);
 			if (base instanceof COSDictionary) {
-				COSDictionary sigRefDict = (COSDictionary) base;
-				if (COSName.DOCMDP.equals(sigRefDict.getDictionaryObject(COSName.TRANSFORM_METHOD))) {
-					base = sigRefDict.getDictionaryObject(COSName.TRANSFORM_PARAMS);
-					if (base instanceof COSDictionary) {
-						COSDictionary transformDict = (COSDictionary) base;
-						int accessPermissions = transformDict.getInt(COSName.P, 2);
-						if (accessPermissions < 1 || accessPermissions > 3) {
-							accessPermissions = 2;
-						}
-						return accessPermissions;
-					}
+				int permission = getMDPPermissionFromCOSDictionnary(base);
+				if(permission != 0){
+					return permission;
 				}
 			}
 		}
+		return 0;
+	}
 
+
+	private static int getMDPPermissionFromCOSDictionnary(COSBase base){
+		COSDictionary sigRefDict = (COSDictionary) base;
+		if (COSName.DOCMDP.equals(sigRefDict.getDictionaryObject(COSName.TRANSFORM_METHOD))) {
+			base = sigRefDict.getDictionaryObject(COSName.TRANSFORM_PARAMS);
+			if (base instanceof COSDictionary) {
+				COSDictionary transformDict = (COSDictionary) base;
+				int accessPermissions = transformDict.getInt(COSName.P, 2);
+				if (accessPermissions < 1 || accessPermissions > 3) {
+					accessPermissions = 2;
+				}
+				return accessPermissions;
+			}
+		}
 		return 0;
 	}
 

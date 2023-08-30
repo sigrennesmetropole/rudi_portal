@@ -1,0 +1,23 @@
+<mat-card class="main-container">
+    <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="isMapLoading"></app-loader>
+    <ng-container *ngIf="!isMapLoading">
+        <div class="map-header"></div>
+        <div class="map-container">
+            <app-map [mapId]="'rudi-map-tab'"
+                     [baseLayers]="baseLayers"
+                     [hasSearchAddress]="true"
+                     [metadata]="metadata"
+                     [media]="mediaToDisplay"
+            >
+            </app-map>
+        </div>
+    </ng-container>
+    <app-error-box *ngIf="isErrorAccess"
+                   [text]="'metaData.tabulatedDataTab.errorAccess' | translate"
+    >
+    </app-error-box>
+    <app-error-box *ngIf="isErrorServer"
+                   [text]="'metaData.tabulatedDataTab.errorDownloading' | translate"
+    >
+    </app-error-box>
+</mat-card>

@@ -3,8 +3,15 @@
  */
 package org.rudi.facet.bpmn.helper.workflow;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.ExclusiveGateway;
 import org.activiti.bpmn.model.FlowElement;
@@ -30,20 +37,13 @@ import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity;
 import org.rudi.facet.bpmn.exception.InvalidDataException;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.service.TaskConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
@@ -55,7 +55,6 @@ import java.util.stream.Collectors;
 public class BpmnHelper {
 
 	public static final String DEFAULT_ACTION = "default";
-	private static final Logger LOGGER = LoggerFactory.getLogger(BpmnHelper.class);
 
 	@Value("${rudi.bpmn.role.name}")
 	private String adminRoleName;
@@ -71,7 +70,6 @@ public class BpmnHelper {
 
 	@Autowired
 	private final ApplicationContext applicationContext;
-
 
 	/**
 	 * Retourne la tâche activiti par son id
@@ -93,7 +91,7 @@ public class BpmnHelper {
 	 * Retourne la tâche activiti par son id en tant qu'admin ou non
 	 * 
 	 * @param taskId
-	 * @param isAdmin
+	 * @param asAdmin
 	 * @return
 	 */
 	public org.activiti.engine.task.Task queryTaskById(String taskId, boolean asAdmin) {
@@ -219,7 +217,8 @@ public class BpmnHelper {
 
 	/**
 	 * 
-	 * @param contextDescription
+	 * @param processDefinitionKey
+	 * @param version
 	 * @return l'id de process instance pour un contexte
 	 */
 	public String lookupProcessInstanceBusinessKey(String processDefinitionKey, Integer version) {
@@ -300,7 +299,7 @@ public class BpmnHelper {
 	 * Ajoute un candidat sur une tâche
 	 * 
 	 * @param taskId
-	 * @param userId
+	 * @param userLogin
 	 */
 	public void addTaskCandidateUser(String taskId, String userLogin) {
 		org.activiti.engine.TaskService taskService = processEngine.getTaskService();
@@ -418,17 +417,18 @@ public class BpmnHelper {
 		UserTask userTask = lookupUserTask(task);
 		// Liste de script à executer pour recalculer les users
 		List<String> candidateUsers = userTask.getCandidateUsers();
-		for(String candidateUser  : candidateUsers) {
+		for (String candidateUser : candidateUsers) {
 			try {
 				result.addAll(executeCandidateUser(candidateUser, task));
 			} catch (InvocationTargetException | IllegalAccessException exception) {
-				LOGGER.error("Exeception thrown during scriplet execution", exception);
+				log.error("Exeception thrown during scriplet execution", exception);
 			}
 		}
 		return result;
 	}
 
-	private List<String> executeCandidateUser(String candidateUser, Task task) throws InvocationTargetException, IllegalAccessException {
+	private List<String> executeCandidateUser(String candidateUser, Task task)
+			throws InvocationTargetException, IllegalAccessException {
 		String inputWithoutBrackets = removeBrackets(candidateUser);
 		String objectName = extractObject(inputWithoutBrackets);
 		String methodName = extractMethod(candidateUser);
@@ -436,34 +436,40 @@ public class BpmnHelper {
 		Object bean = applicationContext.getBean(objectName);
 		Method[] methods = bean.getClass().getDeclaredMethods();
 		Method targetMethod = lookupMethod(methods, methodName, parametersFromScriptlet.length);
-		ExecutionEntity executionEntity = lookupExecution(task);
-		Object[] parametersConverted = convertParameters(executionEntity, targetMethod.getParameters(), parametersFromScriptlet);
-		Object result  = targetMethod.invoke(bean, parametersConverted);
-		return convertResult(result);
+		if (targetMethod != null) {
+			ExecutionEntity executionEntity = lookupExecution(task);
+			Object[] parametersConverted = convertParameters(executionEntity, targetMethod.getParameters(),
+					parametersFromScriptlet);
+			Object result = targetMethod.invoke(bean, parametersConverted);
+			return convertResult(result);
+		}
+		return Collections.emptyList();
 	}
 
 	private Object[] convertParameters(ExecutionEntity entity, Parameter[] trueTypes, String[] valuesGot) {
 		List<Object> arguments = new ArrayList<>();
 		arguments.add(null);
- 		arguments.add(entity);
-		if (ArrayUtils.isNotEmpty(valuesGot)) {
-			for (int i = 2; i < valuesGot.length; i++) {
-				if(trueTypes[i].getType().equals(String.class)) {
-					arguments.add(removeDoubleQuotes(valuesGot[i]));
-				} else if(trueTypes[i].getType().equals(int.class) || trueTypes[i].getType().equals(Integer.class)) {
-					arguments.add(Integer.valueOf(valuesGot[i].trim()));
-				} else if(trueTypes[i].getType().equals(long.class) || trueTypes[i].getType().equals(Long.class)) {
-					arguments.add(Long.valueOf(valuesGot[i]));
-				} else if( trueTypes[i].getType().equals(float.class) || trueTypes[i].getType().equals(Float.class)) {
-					arguments.add(Float.valueOf(valuesGot[i]));
-				} else if( trueTypes[i].getType().equals(double.class) || trueTypes[i].getType().equals(Double.class)) {
-					arguments.add(Double.valueOf(valuesGot[i]));
-				} else if( trueTypes[i].getType().equals(boolean.class) || trueTypes[i].getType().equals(Boolean.class)) {
-					arguments.add(Boolean.valueOf(valuesGot[i]));
-				} else {
-					LOGGER.error("Type of paramater not allowed", trueTypes[i].getType().toString());
-					arguments.add(null);
-				}
+		arguments.add(entity);
+		if (ArrayUtils.isEmpty(valuesGot)) {
+			return arguments.toArray();
+		}
+		for (int i = 2; i < valuesGot.length; i++) {
+			if (trueTypes[i].getType().equals(String.class)) {
+				arguments.add(removeDoubleQuotes(valuesGot[i]));
+			} else if (trueTypes[i].getType().equals(int.class) || trueTypes[i].getType().equals(Integer.class)) {
+				arguments.add(Integer.valueOf(valuesGot[i].trim()));
+			} else if (trueTypes[i].getType().equals(long.class) || trueTypes[i].getType().equals(Long.class)) {
+				arguments.add(Long.valueOf(valuesGot[i]));
+			} else if (trueTypes[i].getType().equals(float.class) || trueTypes[i].getType().equals(Float.class)) {
+				arguments.add(Float.valueOf(valuesGot[i]));
+			} else if (trueTypes[i].getType().equals(double.class) || trueTypes[i].getType().equals(Double.class)) {
+				arguments.add(Double.valueOf(valuesGot[i]));
+			} else if (trueTypes[i].getType().equals(boolean.class) || trueTypes[i].getType().equals(Boolean.class)) {
+				arguments.add(Boolean.valueOf(valuesGot[i]));
+			} else {
+				log.error(String.format("Type of parameter not allowed : %s", trueTypes[i].getType().toString()));
+
+				arguments.add(null);
 			}
 		}
 		return arguments.toArray();
@@ -474,8 +480,8 @@ public class BpmnHelper {
 	}
 
 	private Method lookupMethod(Method[] methods, String methodName, int numberOfParam) {
-		for(Method method : methods) {
-			if(method.getName().equals(methodName) && method.getParameterCount() == numberOfParam) {
+		for (Method method : methods) {
+			if (method.getName().equals(methodName) && method.getParameterCount() == numberOfParam) {
 				return method;
 			}
 		}
@@ -516,8 +522,9 @@ public class BpmnHelper {
 		return input;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<String> convertResult(Object input) {
-		if(input instanceof List) {
+		if (input instanceof List) {
 			return (List<String>) input;
 		}
 		List<String> result = new ArrayList<>();
@@ -527,11 +534,8 @@ public class BpmnHelper {
 
 	public boolean isCandidateUser(String taskId, String login) {
 		org.activiti.engine.TaskService taskService = processEngine.getTaskService();
-		return taskService.getIdentityLinksForTask(taskId)
-				.stream().filter(element -> element.getType().equals("USER"))
-				.map(IdentityLink::getUserId)
-				.collect(Collectors.toList())
-				.contains(login);
+		return taskService.getIdentityLinksForTask(taskId).stream().filter(element -> element.getType().equals("USER"))
+				.map(IdentityLink::getUserId).collect(Collectors.toList()).contains(login);
 	}
 
 	/**
@@ -547,8 +551,7 @@ public class BpmnHelper {
 		executionEntity.setProcessDefinitionId(task.getProcessDefinitionId());
 		executionEntity.setProcessDefinitionName(lookupProcessInstance(task).getProcessDefinitionName());
 		executionEntity.setProcessDefinitionKey(lookupProcessInstance(task).getProcessDefinitionKey());
-		executionEntity
-				.setProcessDefinitionVersion(lookupProcessInstance(task).getProcessDefinitionVersion());
+		executionEntity.setProcessDefinitionVersion(lookupProcessInstance(task).getProcessDefinitionVersion());
 		executionEntity.setBusinessKey(lookupProcessInstanceBusinessKey(task));
 		executionEntity.setStartTime(task.getCreateTime());
 		executionEntity.setDescription(task.getDescription());

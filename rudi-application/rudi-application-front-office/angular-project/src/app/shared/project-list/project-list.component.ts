@@ -17,6 +17,8 @@ export class ProjectListComponent implements OnInit {
     @Input() maxResultsPerPage = 12;
     @Input() allPage = true;
     @Input() isTransparent = false;
+    @Input() ownerId: string;
+    @Input() producerUuid: string;
     /**
      * Set fixed number of cards to be displayed in a row.
      * maximum = 12 (current limit in SCSS rule : .project-card-container-*-cards).
@@ -28,6 +30,8 @@ export class ProjectListComponent implements OnInit {
     @Output() clickProject = new EventEmitter<ProjectCatalogItem>();
     @Output() runningSearch = new EventEmitter<boolean>();
     @Output() projectListChange = new EventEmitter<ProjectCatalogItemPage>();
+    @Output() reuseListTotal = new EventEmitter<number>();
+
     readonly maxPageDesktop = 9;
     orderValue: Order;
     /** minimum = 5 */
@@ -99,11 +103,12 @@ export class ProjectListComponent implements OnInit {
     searchProjects(order: Order = DEFAULT_PROJECT_ORDER): void {
         this.isLoading = true;
         setTimeout(() => this.runningSearch.emit(true)); // setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
-        this.projectListService.searchProjectsCatalog(this.linkedDatasetsGlobalIds, this.offset, this.maxResultsPerPage, order)
+        this.projectListService.searchProjectsCatalog(this.linkedDatasetsGlobalIds, this.offset, this.maxResultsPerPage, order, this.producerUuid)
             .subscribe((data: ProjectCatalogItemPage) => {
                 this.isLoading = false;
                 this.projectList = data;
                 this.projectListChange.emit(data);
+                this.reuseListTotal.emit(data.total);
             }, error => {
                 console.error('searchProjects failed', error);
                 this.isLoading = false;

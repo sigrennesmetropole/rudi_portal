@@ -1,15 +1,16 @@
 import {Injectable} from '@angular/core';
 import {UserService} from '../../user.service';
 import {AclService} from '../../../../acl/acl-api';
-import {KonsultService} from '../../../../api-konsult';
-import {ProjektService} from '../../../../projekt/projekt-api';
 import {OrganizationService} from '../../../../strukture/api-strukture';
 import {TranslateService} from '@ngx-translate/core';
 import {AbstractApiAccessService} from '../abstract-api-access.service';
 import {Credentials} from '../credentials';
 import {Observable, throwError} from 'rxjs';
-import {SelfdataService, Credentials as SelfdataCredentials} from '../../../../selfdata/selfdata-api';
+import {SelfdataService} from '../../../../selfdata/selfdata-api';
+import { Credentials as SelfdataCredentials} from '../../../../api-apimaccess';
 import {SubscriptionData} from '../subscription-data';
+import {KonsultService} from '../../../../konsult/konsult-api';
+import {ProjektService} from '../../../../projekt/projekt-api';
 
 @Injectable({
     providedIn: 'root'

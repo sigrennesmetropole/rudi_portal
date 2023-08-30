@@ -7,13 +7,13 @@
              class="metadata-container pl-0 pr-0 container-fluid">
 
             <!-- Icon et titre de la ressource -->
-            <app-dataset-heading
+            <app-page-heading
                 [organizationName]="metadata?.producer?.organization_name"
                 [resourceTitle]="metadata?.resource_title"
                 [organizationId]="metadata?.producer.organization_id"
                 [icon]="getDatasetTitleIcon()"
             >
-            </app-dataset-heading>
+            </app-page-heading>
             <!-- Fin Icon et titre de la ressource -->
 
             <!-- Bandeau -->
@@ -48,6 +48,17 @@
                     <ng-template>
                         <app-spreadsheet-tab [metadata]="metadata" [mediaToDisplay]="mediaToDisplayTable">
                         </app-spreadsheet-tab>
+                    </ng-template>
+                </app-tab>
+                <app-tab *ngIf="isMapDisplayed"
+                         [label]="'metaData.mapData'|translate"
+                         [icon]="'map'">
+                    <ng-template>
+                        <app-map-tab
+                            [metadata]="metadata"
+                            [mediaToDisplay]="mediaToDisplayMap"
+                        >
+                        </app-map-tab>
                     </ng-template>
                 </app-tab>
 

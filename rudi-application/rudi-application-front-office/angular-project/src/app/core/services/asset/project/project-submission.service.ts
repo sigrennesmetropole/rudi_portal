@@ -51,7 +51,7 @@ import {
 import {DialogClosedData} from '../../../../data-set/models/dialog-closed-data';
 import {LinkedDatasetFromProject} from '../../../../data-set/models/linked-dataset-from-project';
 import {Organization} from '../../../../strukture/strukture-model';
-import {OrganizationMetierService} from '../../organization-metier.service';
+import {OrganizationMetierService} from '../../organization/organization-metier.service';
 import {Task} from 'src/app/projekt/projekt-api/model/task';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Moment} from 'moment';
@@ -64,6 +64,7 @@ import {MetadataUtils} from '../../../../shared/utils/metadata-utils';
 import {AccessConditionConfidentiality} from '../../../../shared/utils/access-condition-confidentiality';
 import {NewDatasetRequestTaskMetierService} from '../../tasks/projekt/new-dataset-request-task-metier.service';
 import {DatasetConfidentiality} from '../../../../projekt/projekt-api';
+import { ObjectType } from '../../tasks/object-type.enum';
 
 /**
  * Liste des codes de niveaux de restriction connus
@@ -255,7 +256,7 @@ export class ProjectSubmissionService {
             owner_type: ownerType,
             contact_email: step2FormGroup.get('contactEmail').value,
             project_status: REUSE_STATUS,
-            object_type: 'Project'
+            object_type: ObjectType.PROJECT
         };
     }
 
@@ -309,7 +310,7 @@ export class ProjectSubmissionService {
             owner_uuid: ownerType === OwnerType.Organization ? step2FormGroup.get('organizationUuid').value : user.uuid,
             contact_email: step2FormGroup.get('contactEmail').value,
             owner_type: ownerType,
-            object_type: 'Project',
+            object_type: ObjectType.PROJECT,
             target_audiences: step1FormGroup.get('publicCible').value === '' ? null : step1FormGroup.get('publicCible').value
         };
     }

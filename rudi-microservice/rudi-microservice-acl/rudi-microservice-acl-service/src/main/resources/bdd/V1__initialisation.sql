@@ -4,15 +4,15 @@ create table acl_data.email_address (email varchar(150) not null, id int8 not nu
 create table acl_data.postal_address (additional_identification varchar(255), distribution_service varchar(255), locality varchar(255), recipient_identification varchar(255), street_number varchar(255), id int8 not null, primary key (id));
 create table acl_data.telephone_address (phone_number varchar(20) not null, id int8 not null, primary key (id));
 create table acl_data.role (id  bigserial not null, uuid uuid not null, code varchar(50) not null, label varchar(100), closing_date timestamp, opening_date timestamp not null, order_ int4 not null, primary key (id));
-create table acl_data.user (id  bigserial not null, uuid uuid not null, company varchar(100), firstname varchar(30), lastname varchar(30), login varchar(100) not null, password varchar(150) not null, type varchar(255) not null, primary key (id));
+create table acl_data.user_ (id  bigserial not null, uuid uuid not null, company varchar(100), firstname varchar(30), lastname varchar(30), login varchar(100) not null, password varchar(150) not null, type varchar(255) not null, primary key (id));
 create table acl_data.user_role (user_fk int8 not null, role_fk int8 not null, primary key (user_fk, role_fk));
 alter table if exists acl_data.abstract_address add constraint FK5oaosawfo64gd0ucg879vxrae foreign key (address_role_fk) references acl_data.address_role;
-alter table if exists acl_data.abstract_address add constraint FKsc1ml9eg7knaarhkuyg53py9e foreign key (user_fk) references acl_data.user;
+alter table if exists acl_data.abstract_address add constraint FKsc1ml9eg7knaarhkuyg53py9e foreign key (user_fk) references acl_data.user_;
 alter table if exists acl_data.email_address add constraint FKryyrbe8jhs4nbj9uk5w4lfbde foreign key (id) references acl_data.abstract_address;
 alter table if exists acl_data.postal_address add constraint FKjv45t9x7yau7vm6wjfii1l222 foreign key (id) references acl_data.abstract_address;
 alter table if exists acl_data.telephone_address add constraint FKfohwbwly2nvy9sewvhiis2vvx foreign key (id) references acl_data.abstract_address;
 alter table if exists acl_data.user_role add constraint FKa68196081fvovjhkek5m97n3y foreign key (role_fk) references acl_data.role;
-alter table if exists acl_data.user_role add constraint FK859n2jvi8ivhui0rl0esws6o foreign key (user_fk) references acl_data.user;
+alter table if exists acl_data.user_role add constraint FK859n2jvi8ivhui0rl0esws6o foreign key (user_fk) references acl_data.user_;
 
 insert into acl_data.address_role(uuid, code, label, opening_date, order_, type)
 	VALUES ('6faf5005-be12-4c39-aa8b-902d74d4defa', 'LOGIN', 'Login email', timestamp '2021-01-01 01:00:00', 99, 'EMAIL'); 
@@ -32,7 +32,7 @@ insert into acl_data.role (uuid, code, label, opening_date, closing_date, order_
  ( '29d3c77b-48ab-4573-a293-553f946442b6', 'MODULE_ACL_ADMINISTRATOR' ,'Module administrateur ACL' , timestamp '2021-01-01 01:00:00' , null, 110),
  ( '536670d7-237f-4685-aea3-9d2fb0136f74', 'MODULE' ,'Module' , timestamp '2021-01-01 01:00:00' , null, 120);
  
-insert into acl_data.user (uuid, company, firstname, lastname, login, password, type) values
+insert into acl_data.user_ (uuid, company, firstname, lastname, login, password, type) values
 	('b3719275-0621-4df6-b11b-8fb9157827c0', 'rudi', 'rudi', 'rudi', 'rudi', '$2a$04$O4bZyIRZSZYHfOf3CSxQV.3YksooAFMyipj17EP/fuc7DNBAAP7vq', 'ROBOT'),
 	('ca86b4b6-ca68-4a92-8c0a-d5a590d13631', 'rudi', 'acl', 'acl', 'acl', '$2a$04$O4bZyIRZSZYHfOf3CSxQV.3YksooAFMyipj17EP/fuc7DNBAAP7vq', 'ROBOT'),
 	('ce7fd13a-73f2-40a8-a785-7c2c4f7cb320', 'rudi', 'providers', 'providers', 'providers', '$2a$04$O4bZyIRZSZYHfOf3CSxQV.3YksooAFMyipj17EP/fuc7DNBAAP7vq', 'ROBOT'),
@@ -42,20 +42,20 @@ insert into acl_data.user (uuid, company, firstname, lastname, login, password, 
 	('ca4a5ae2-c88f-415f-8c56-762bc7c2fd97', 'test', 'Michel', 'Martin', 'mm@test.fr', '$2a$04$O4bZyIRZSZYHfOf3CSxQV.3YksooAFMyipj17EP/fuc7DNBAAP7vq', 'PERSON');
 
 insert into acl_data.user_role( user_fk, role_fk) values
-	( (select id from acl_data.user where login = 'rudi'), (select id from acl_data.role where code = 'ADMINISTRATOR')),
-	( (select id from acl_data.user where login = 'acl'), (select id from acl_data.role where code = 'MODULE')),
-	( (select id from acl_data.user where login = 'acl'), (select id from acl_data.role where code = 'MODULE_ACL')),
-	( (select id from acl_data.user where login = 'providers'), (select id from acl_data.role where code = 'MODULE')),
-	( (select id from acl_data.user where login = 'providers'), (select id from acl_data.role where code = 'MODULE_PROVIDER')),
-	( (select id from acl_data.user where login = 'kalim'), (select id from acl_data.role where code = 'MODULE')),
-	( (select id from acl_data.user where login = 'kalim'), (select id from acl_data.role where code = 'MODULE_KALIM')),
-	( (select id from acl_data.user where login = 'konsult'), (select id from acl_data.role where code = 'MODULE')),
-	( (select id from acl_data.user where login = 'konsult'), (select id from acl_data.role where code = 'MODULE_KONSULT')),
-	( (select id from acl_data.user where login = '5596b5b2-b227-4c74-a9a1-719e7c1008c7'), (select id from acl_data.role where code = 'PROVIDER')),
-	( (select id from acl_data.user where login = 'mm@test.fr'), (select id from acl_data.role where code = 'USER'));
+	( (select id from acl_data.user_ where login = 'rudi'), (select id from acl_data.role where code = 'ADMINISTRATOR')),
+	( (select id from acl_data.user_ where login = 'acl'), (select id from acl_data.role where code = 'MODULE')),
+	( (select id from acl_data.user_ where login = 'acl'), (select id from acl_data.role where code = 'MODULE_ACL')),
+	( (select id from acl_data.user_ where login = 'providers'), (select id from acl_data.role where code = 'MODULE')),
+	( (select id from acl_data.user_ where login = 'providers'), (select id from acl_data.role where code = 'MODULE_PROVIDER')),
+	( (select id from acl_data.user_ where login = 'kalim'), (select id from acl_data.role where code = 'MODULE')),
+	( (select id from acl_data.user_ where login = 'kalim'), (select id from acl_data.role where code = 'MODULE_KALIM')),
+	( (select id from acl_data.user_ where login = 'konsult'), (select id from acl_data.role where code = 'MODULE')),
+	( (select id from acl_data.user_ where login = 'konsult'), (select id from acl_data.role where code = 'MODULE_KONSULT')),
+	( (select id from acl_data.user_ where login = '5596b5b2-b227-4c74-a9a1-719e7c1008c7'), (select id from acl_data.role where code = 'PROVIDER')),
+	( (select id from acl_data.user_ where login = 'mm@test.fr'), (select id from acl_data.role where code = 'USER'));
 	
 insert into acl_data.abstract_address(uuid, type, address_role_fk, user_fk)
-	values ('d501c038-9d3c-401b-8ef9-0aa153e1691c', 'EMAIL', (select id from acl_data.address_role where code = 'LOGIN' and type = 'EMAIL'), (select id from acl_data.user where login = '') );
+	values ('d501c038-9d3c-401b-8ef9-0aa153e1691c', 'EMAIL', (select id from acl_data.address_role where code = 'LOGIN' and type = 'EMAIL'), (select id from acl_data.user_ where login = '') );
 	
 insert into acl_data.email_address(id, email)
     values ((select id from acl_data.abstract_address where uuid = 'd501c038-9d3c-401b-8ef9-0aa153e1691c'),'mm@test.fr');

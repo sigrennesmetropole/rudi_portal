@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-gateway</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-gateway-facade</artifactId>
@@ -57,11 +57,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.netflix.hystrix</groupId>
-			<artifactId>hystrix-javanica</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-circuitbreaker-resilience4j</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/io.reactivex/rxjava-reactive-streams -->
+		<!--
+		https://mvnrepository.com/artifact/io.reactivex/rxjava-reactive-streams -->
 		<dependency>
 			<groupId>io.reactivex</groupId>
 			<artifactId>rxjava-reactive-streams</artifactId>
@@ -87,7 +88,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -203,9 +203,12 @@
 								</goals>
 								<configuration>
 									<target>
-										<echo>ANT TASK - copying gateway jar file....</echo>
-										<copy file="target/${project.artifactId}.jar"
-												todir="${project.basedir}/../../../docker/gateway" overwrite="true"/>
+										<echo>ANT TASK - copying gateway jar
+											file....</echo>
+										<copy
+											file="target/${project.artifactId}.jar"
+											todir="${project.basedir}/../../../docker/gateway"
+											overwrite="true" />
 									</target>
 								</configuration>
 							</execution>

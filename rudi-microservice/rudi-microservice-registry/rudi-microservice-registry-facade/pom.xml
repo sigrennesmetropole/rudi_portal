@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-registry</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-registry-facade</artifactId>
@@ -66,7 +66,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -80,12 +79,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -96,7 +89,6 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>0.2.1</version>
 		</dependency>
 
 	</dependencies>
@@ -186,9 +178,12 @@
 								</goals>
 								<configuration>
 									<target>
-										<echo>ANT TASK - copying registry jar file....</echo>
-										<copy file="target/${project.artifactId}.jar"
-												todir="${project.basedir}/../../../docker/registry" overwrite="true"/>
+										<echo>ANT TASK - copying registry jar
+											file....</echo>
+										<copy
+											file="target/${project.artifactId}.jar"
+											todir="${project.basedir}/../../../docker/registry"
+											overwrite="true" />
 									</target>
 								</configuration>
 							</execution>

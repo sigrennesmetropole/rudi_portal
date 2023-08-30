@@ -6,6 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Classe de configuration globale de l'application.
@@ -34,6 +35,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.facet.apimaccess",
 })
 @EnableEurekaClient
+@EnableScheduling
 @PropertySource(value = { "classpath:projekt/projekt-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 

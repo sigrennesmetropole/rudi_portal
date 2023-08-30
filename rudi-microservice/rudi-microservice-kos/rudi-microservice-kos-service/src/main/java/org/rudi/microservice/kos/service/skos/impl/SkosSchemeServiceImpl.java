@@ -1,6 +1,12 @@
 package org.rudi.microservice.kos.service.skos.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,11 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author FNI18300
@@ -104,7 +106,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 		skosSchemeDao.save(skosSchemeEntity);
 
-		List<SkosConceptEntity> skosConceptEntities = skosConceptDao.findAllByOfScheme_Uuid(skosSchemeEntity.getUuid());
+		List<SkosConceptEntity> skosConceptEntities = skosConceptDao.findAllByOfSchemeUuid(skosSchemeEntity.getUuid());
 		if (CollectionUtils.isNotEmpty(skosConceptEntities)) {
 			skosConceptDao.deleteAll(skosConceptEntities);
 		}
@@ -124,7 +126,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		if (skosSchemeEntity == null) {
 			throw new IllegalArgumentException(SKOS_SCHEME_UNKNOWN_MESSAGE + skosSchemeUuid);
 		}
-		List<SkosConceptEntity> skosConceptEntities = skosConceptDao.findAllByOfScheme_Uuid(skosSchemeUuid);
+		List<SkosConceptEntity> skosConceptEntities = skosConceptDao.findAllByOfSchemeUuid(skosSchemeUuid);
 		if (CollectionUtils.isNotEmpty(skosConceptEntities)) {
 			skosConceptDao.deleteAll(skosConceptEntities);
 		}
@@ -141,12 +143,14 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 			throw new IllegalArgumentException(UUID_SKOS_CONCEPT_MISSING_MESSAGE);
 		}
 
-		return skosConceptFullMapper.entityToDto(skosConceptDao.findByUuidAndOfScheme_Uuid(skosConceptUuid, skosSchemeUuid));
+		return skosConceptFullMapper
+				.entityToDto(skosConceptDao.findByUuidAndOfSchemeUuid(skosConceptUuid, skosSchemeUuid));
 	}
 
 	@Override
 	@Transactional
-	public SkosConcept createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept) throws MissingPreferredLabelForDefaultLanguageException {
+	public SkosConcept createSkosConcept(UUID skosSchemeUuid, SkosConcept skosConcept, Boolean asTopConcept)
+			throws MissingPreferredLabelForDefaultLanguageException {
 		if (skosSchemeUuid == null) {
 			throw new IllegalArgumentException(UUID_SKOS_SCHEME_MISSING_MESSAGE);
 		}
@@ -180,7 +184,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	@Override
 	@Transactional
-	public SkosConcept updateSkosConcept(UUID skosSchemeUuid, @Valid SkosConcept skosConcept, Boolean asTopConcept) throws MissingPreferredLabelForDefaultLanguageException {
+	public SkosConcept updateSkosConcept(UUID skosSchemeUuid, @Valid SkosConcept skosConcept, Boolean asTopConcept)
+			throws MissingPreferredLabelForDefaultLanguageException {
 		if (skosSchemeUuid == null) {
 			throw new IllegalArgumentException(UUID_SKOS_SCHEME_MISSING_MESSAGE);
 		}
@@ -192,9 +197,11 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 			throw new IllegalArgumentException(SKOS_SCHEME_UNKNOWN_MESSAGE + skosSchemeUuid);
 		}
 
-		SkosConceptEntity skosConceptEntity = skosConceptDao.findByCodeAndOfScheme_Uuid(skosConcept.getConceptCode(), skosSchemeUuid);
+		SkosConceptEntity skosConceptEntity = skosConceptDao.findByCodeAndOfSchemeUuid(skosConcept.getConceptCode(),
+				skosSchemeUuid);
 		if (skosConceptEntity == null) {
-			throw new IllegalArgumentException(String.format(SKOS_CONCEPT_WITH_SKOS_SCHEME_UNKNOWN, "uuid", skosConcept.getConceptId(), skosSchemeUuid));
+			throw new IllegalArgumentException(String.format(SKOS_CONCEPT_WITH_SKOS_SCHEME_UNKNOWN, "uuid",
+					skosConcept.getConceptId(), skosSchemeUuid));
 		}
 
 		skosConceptFullMapper.dtoToEntity(skosConcept, skosConceptEntity);
@@ -210,8 +217,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 			if (skosSchemeEntity.lookupSkosConcept(skosConceptEntity.getUuid()) == null) {
 				skosSchemeEntity.addTopConcept(skosConceptEntity);
 			}
-		}
-		else {
+		} else {
 			skosSchemeEntity.removeTopConcept(skosConceptEntity.getUuid());
 		}
 
@@ -230,9 +236,10 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 			throw new IllegalArgumentException(UUID_SKOS_CONCEPT_MISSING_MESSAGE);
 		}
 
-		SkosConceptEntity skosConceptEntity = skosConceptDao.findByUuidAndOfScheme_Uuid(skosConceptUuid, skosSchemeUuid);
+		SkosConceptEntity skosConceptEntity = skosConceptDao.findByUuidAndOfSchemeUuid(skosConceptUuid, skosSchemeUuid);
 		if (skosConceptEntity == null) {
-			throw new IllegalArgumentException(String.format(SKOS_CONCEPT_WITH_SKOS_SCHEME_UNKNOWN, "uuid", skosConceptUuid, skosSchemeUuid));
+			throw new IllegalArgumentException(
+					String.format(SKOS_CONCEPT_WITH_SKOS_SCHEME_UNKNOWN, "uuid", skosConceptUuid, skosSchemeUuid));
 		}
 		SkosSchemeEntity skosSchemeEntity = skosSchemeDao.findByUUID(skosSchemeUuid);
 		if (skosSchemeEntity == null) {
@@ -249,7 +256,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		if (skosSchemeSearchCriteria == null) {
 			skosSchemeSearchCriteria = SkosSchemeSearchCriteria.builder().build();
 		}
-		return skosSchemeMapper.entitiesToDto(skosSchemeCustomDao.searchSkosSchemes(skosSchemeSearchCriteria, pageable), pageable);
+		return skosSchemeMapper.entitiesToDto(skosSchemeCustomDao.searchSkosSchemes(skosSchemeSearchCriteria, pageable),
+				pageable);
 	}
 
 	@Override
@@ -261,7 +269,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		if (skosSchemeEntity == null) {
 			throw new IllegalArgumentException(SKOS_SCHEME_UNKNOWN_MESSAGE + skosSchemeUuid);
 		}
-		return skosConceptMapper.entitiesToDto(skosSchemeEntity.getTopConcepts()) ;
+		return skosConceptMapper.entitiesToDto(skosSchemeEntity.getTopConcepts());
 	}
 
 	private void validEntity(SkosSchemeEntity entity) {
@@ -280,20 +288,20 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 
 		// Concept must have at least one preferred label for default language
-		entity.getPreferedLabels()
-				.stream()
-				.filter(preferedLabel -> preferedLabel.getLang().equals(defaultLanguageValue))
-				.findAny()
-				.orElseThrow(() -> new MissingPreferredLabelForDefaultLanguageException(entity.getCode(), defaultLanguageValue));
+		entity.getPreferedLabels().stream()
+				.filter(preferedLabel -> preferedLabel.getLang().equals(defaultLanguageValue)).findAny()
+				.orElseThrow(() -> new MissingPreferredLabelForDefaultLanguageException(entity.getCode(),
+						defaultLanguageValue));
 	}
 
 	/**
 	 * Sauvegarde des skosConcepts d'un skosScheme
 	 *
-	 * @param topConcepts			liste des tops concepts
-	 * @param skosSchemeEntity		skosScheme
+	 * @param topConcepts      liste des tops concepts
+	 * @param skosSchemeEntity skosScheme
 	 */
-	private void saveSkosSchemeTopConcepts(List<SkosConcept> topConcepts, SkosSchemeEntity skosSchemeEntity) throws MissingPreferredLabelForDefaultLanguageException {
+	private void saveSkosSchemeTopConcepts(List<SkosConcept> topConcepts, SkosSchemeEntity skosSchemeEntity)
+			throws MissingPreferredLabelForDefaultLanguageException {
 		if (CollectionUtils.isNotEmpty(topConcepts)) {
 			for (SkosConcept topConcept : topConcepts) {
 				SkosConceptEntity skosConceptEntity = skosConceptFullMapper.dtoToEntity(topConcept);
@@ -308,16 +316,19 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	/**
 	 * Sauvegarde d'un top concept, création ou récupération des autres concepts
-	 * @param skosConceptEntity		skosConceptEntity
-	 * @param skosConcept			skosConcept
-	 * @param skosSchemeEntity		skosSchemeEntity
+	 * 
+	 * @param skosConceptEntity skosConceptEntity
+	 * @param skosConcept       skosConcept
+	 * @param skosSchemeEntity  skosSchemeEntity
 	 */
-	private void saveSkosConceptEntitiesFromRootTopConcept(SkosConceptEntity skosConceptEntity, SkosConcept skosConcept, SkosSchemeEntity skosSchemeEntity) throws MissingPreferredLabelForDefaultLanguageException {
+	private void saveSkosConceptEntitiesFromRootTopConcept(SkosConceptEntity skosConceptEntity, SkosConcept skosConcept,
+			SkosSchemeEntity skosSchemeEntity) throws MissingPreferredLabelForDefaultLanguageException {
 		validEntity(skosConceptEntity);
 		skosConceptEntity.setOfScheme(skosSchemeEntity);
 		if (CollectionUtils.isNotEmpty(skosConcept.getNarrowerConcepts())) {
 			for (SkosConcept narrowerSkosConcept : skosConcept.getNarrowerConcepts()) {
-				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(narrowerSkosConcept, skosSchemeEntity);
+				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(narrowerSkosConcept,
+						skosSchemeEntity);
 				saveSkosConceptEntitiesFromRootTopConcept(generatedEntity, narrowerSkosConcept, skosSchemeEntity);
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
@@ -330,7 +341,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getSiblingConcepts())) {
 			for (SkosConcept siblingSkosConcept : skosConcept.getSiblingConcepts()) {
-				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(siblingSkosConcept, skosSchemeEntity);
+				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(siblingSkosConcept,
+						skosSchemeEntity);
 				saveSkosConceptEntitiesFromRootTopConcept(generatedEntity, siblingSkosConcept, skosSchemeEntity);
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
@@ -343,7 +355,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getRelativeConcepts())) {
 			for (SkosConcept relativeSkosConcept : skosConcept.getRelativeConcepts()) {
-				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(relativeSkosConcept, skosSchemeEntity);
+				SkosConceptEntity generatedEntity = getOrGenerateSkosConceptEntity(relativeSkosConcept,
+						skosSchemeEntity);
 				saveSkosConceptEntitiesFromRootTopConcept(generatedEntity, relativeSkosConcept, skosSchemeEntity);
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
@@ -357,8 +370,10 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		skosConceptDao.save(skosConceptEntity);
 	}
 
-	private SkosConceptEntity getOrGenerateSkosConceptEntity(SkosConcept skosConcept, SkosSchemeEntity skosSchemeEntity) {
-		SkosConceptEntity skosConceptEntity = skosConceptDao.findByCodeAndOfScheme_Uuid(skosConcept.getConceptCode(), skosSchemeEntity.getUuid());
+	private SkosConceptEntity getOrGenerateSkosConceptEntity(SkosConcept skosConcept,
+			SkosSchemeEntity skosSchemeEntity) {
+		SkosConceptEntity skosConceptEntity = skosConceptDao.findByCodeAndOfSchemeUuid(skosConcept.getConceptCode(),
+				skosSchemeEntity.getUuid());
 		if (skosConceptEntity == null) {
 			skosConceptEntity = skosConceptMapper.dtoToEntity(skosConcept);
 			skosConceptEntity.setUuid(UUID.randomUUID());
@@ -370,7 +385,7 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 	}
 
 	private SkosConceptEntity getSkosConceptEntityByCodeOrException(String skosConceptCode, UUID skosSchemeUuid) {
-		SkosConceptEntity skosConceptEntity = skosConceptDao.findByCodeAndOfScheme_Uuid(skosConceptCode, skosSchemeUuid);
+		SkosConceptEntity skosConceptEntity = skosConceptDao.findByCodeAndOfSchemeUuid(skosConceptCode, skosSchemeUuid);
 		if (skosConceptEntity == null) {
 			throw new IllegalArgumentException(
 					String.format(SKOS_CONCEPT_WITH_SKOS_SCHEME_UNKNOWN, "code", skosConceptCode, skosSchemeUuid));
@@ -380,14 +395,17 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 
 	/**
 	 * Mise à jour des relations d'un concept à créer ou à mettre à jour
-	 * @param skosConceptEntity		skosConceptEntity
-	 * @param skosConcept			skosConcept
-	 * @param skosSchemeEntity		skosSchemeEntity
+	 * 
+	 * @param skosConceptEntity skosConceptEntity
+	 * @param skosConcept       skosConcept
+	 * @param skosSchemeEntity  skosSchemeEntity
 	 */
-	private void setSkosConceptEntityRelations(SkosConceptEntity skosConceptEntity, SkosConcept skosConcept, SkosSchemeEntity skosSchemeEntity) {
+	private void setSkosConceptEntityRelations(SkosConceptEntity skosConceptEntity, SkosConcept skosConcept,
+			SkosSchemeEntity skosSchemeEntity) {
 		if (CollectionUtils.isNotEmpty(skosConcept.getNarrowerConcepts())) {
 			skosConcept.getNarrowerConcepts().forEach(narrowerSkosConcept -> {
-				SkosConceptEntity narrowerSkosConceptEntity = getSkosConceptEntityByCodeOrException(narrowerSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
+				SkosConceptEntity narrowerSkosConceptEntity = getSkosConceptEntityByCodeOrException(
+						narrowerSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
 				skosRelationConceptEntity.setTarget(narrowerSkosConceptEntity);
@@ -399,7 +417,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getSiblingConcepts())) {
 			skosConcept.getSiblingConcepts().forEach(siblingSkosConcept -> {
-				SkosConceptEntity siblingSkosConceptEntity = getSkosConceptEntityByCodeOrException(siblingSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
+				SkosConceptEntity siblingSkosConceptEntity = getSkosConceptEntityByCodeOrException(
+						siblingSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
 				skosRelationConceptEntity.setTarget(siblingSkosConceptEntity);
@@ -411,7 +430,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getRelativeConcepts())) {
 			skosConcept.getRelativeConcepts().forEach(relativeSkosConcept -> {
-				SkosConceptEntity relativeSkosConceptEntity = getSkosConceptEntityByCodeOrException(relativeSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
+				SkosConceptEntity relativeSkosConceptEntity = getSkosConceptEntityByCodeOrException(
+						relativeSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
 				skosRelationConceptEntity.setTarget(relativeSkosConceptEntity);
@@ -423,7 +443,8 @@ public class SkosSchemeServiceImpl implements SkosSchemeService {
 		}
 		if (CollectionUtils.isNotEmpty(skosConcept.getBroaderConcepts())) {
 			skosConcept.getBroaderConcepts().forEach(broaderSkosConcept -> {
-				SkosConceptEntity broaderSkosConceptEntity = getSkosConceptEntityByCodeOrException(broaderSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
+				SkosConceptEntity broaderSkosConceptEntity = getSkosConceptEntityByCodeOrException(
+						broaderSkosConcept.getConceptCode(), skosSchemeEntity.getUuid());
 
 				SkosRelationConceptEntity skosRelationConceptEntity = new SkosRelationConceptEntity();
 				skosRelationConceptEntity.setTarget(broaderSkosConceptEntity);

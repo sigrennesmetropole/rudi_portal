@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-parent</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-application</artifactId>
@@ -14,7 +14,6 @@
 
 	<!-- Sous-modules du projet -->
 	<modules>
-		<!-- <module>rudi-application-back-office</module> -->
 		<module>rudi-application-front-office</module>
 	</modules>
 

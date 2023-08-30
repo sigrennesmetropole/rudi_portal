@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.activiti.engine.ProcessEngine;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.common.service.util.ApplicationContext;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.helper.workflow.BpmnHelper;
 import org.rudi.facet.bpmn.service.InitializationService;
@@ -54,6 +55,11 @@ public class ProjectTaskServiceImpl extends
 	@PostConstruct
 	public void loadBpmn() throws IOException {
 		super.loadBpmn();
+	}
+
+	@Override
+	protected AbstractTaskServiceImpl<ProjectEntity, Project, ProjectDao, ProjectWorkflowHelper, ProjectAssigmentHelper> lookupMe() {
+		return ApplicationContext.getBean(ProjectTaskServiceImpl.class);
 	}
 
 }

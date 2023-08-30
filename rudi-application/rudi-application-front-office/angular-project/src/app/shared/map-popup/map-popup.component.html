@@ -1,0 +1,10 @@
+<div>
+    <div class="close-container">
+        <mat-icon (click)="handleClose()">close</mat-icon>
+    </div>
+    <ul *ngIf="properties">
+        <li *ngFor="let key of keys">
+            {{key}} : {{value(key)}}
+        </li>
+    </ul>
+</div>

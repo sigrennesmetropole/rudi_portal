@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-facet</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-facet-bucket-s3</artifactId>
 	<description>Facet for bucket S3 access</description>
 
 	<properties>
-		<surefire.plugin.version>2.22.2</surefire.plugin.version>
+		
 		<resource-directory>${project.basedir}</resource-directory>
 		<resource-generation-directory>${project.basedir}
 		</resource-generation-directory>
@@ -56,10 +56,6 @@
 		<dependency>
 			<groupId>org.apache.jclouds.provider</groupId>
 			<artifactId>aws-s3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.jclouds.api</groupId>
-			<artifactId>s3</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

@@ -4,10 +4,11 @@
     "version": "5.0.0"
   },
   "importMappings": {
-    "MetadataList": "../api-kaccess/model/metadataList",
-    "Metadata": "../api-kaccess/model/metadata",
-    "MetadataFacets": "../api-kaccess/model/metadataFacets",
+    "MetadataList": "../../api-kaccess/model/metadataList",
+    "Metadata": "../../api-kaccess/model/metadata",
+    "MetadataFacets": "../../api-kaccess/model/metadataFacets",
     "KindOfData": "../../api-kmedia/model/kindOfData",
-    "AssetDescription": "../../../api-bpmn/model/assetDescription"
+    "AssetDescription": "../../../api-bpmn/model/assetDescription",
+    "Credentials": "../../api-apimaccess/model/credentials"
   }
 }

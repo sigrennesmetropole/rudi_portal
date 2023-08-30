@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>rudi-facet-rva</artifactId>
+
+	<properties>
+		<resource-directory>${project.basedir}</resource-directory>
+		<resource-generation-directory>${project.basedir}</resource-generation-directory>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.rudi</groupId>
@@ -32,20 +38,7 @@
 			<artifactId>rudi-facet-acl</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.rudi</groupId>
-			<artifactId>rudi-facet-acl</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-
-	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<surefire.plugin.version>2.22.2</surefire.plugin.version>
-		<resource-directory>${project.basedir}</resource-directory>
-		<resource-generation-directory>${project.basedir}</resource-generation-directory>
-	</properties>
 
 	<build>
 		<plugins>
@@ -57,7 +50,7 @@
 				<configuration>
 					<modelPackage>org.rudi.rva.core.bean</modelPackage>
 					<generatorName>spring</generatorName>
-					<library>spring-mvc</library>
+					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
 					<generateModelDocumentation>false</generateModelDocumentation>
 					<generateSupportingFiles>false</generateSupportingFiles>
@@ -65,6 +58,8 @@
 					<generateApis>false</generateApis>
 					<generateModels>true</generateModels>
 					<verbose>false</verbose>
+					<templateDirectory>
+						${resource-generation-directory}/openapi/generation/</templateDirectory>
 					<typeMappings>
 						<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
 					</typeMappings>
@@ -79,7 +74,8 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${resource-directory}/openapi/rudi-rva-model.json</inputSpec>
+							<inputSpec>
+								${resource-directory}/openapi/rudi-rva-model.json</inputSpec>
 						</configuration>
 					</execution>
 				</executions>
@@ -87,7 +83,7 @@
 					<dependency>
 						<groupId>io.swagger.core.v3</groupId>
 						<artifactId>swagger-annotations</artifactId>
-						<version>2.1.4</version>
+						<version>${swagger.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>${project.groupId}</groupId>
@@ -99,7 +95,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>

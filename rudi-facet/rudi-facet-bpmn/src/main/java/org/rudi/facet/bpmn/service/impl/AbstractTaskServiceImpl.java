@@ -110,9 +110,6 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	@Getter(value = AccessLevel.PROTECTED)
 	private final InitializationService initializationService;
 
-	@Autowired
-	private TaskService<D> me;
-
 	@Autowired(required = false)
 	private List<AssetDescriptionActionListener<E>> assetListeners;
 
@@ -593,21 +590,21 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	@PostConstruct
 	public void initialize() {
-		processEngine.getRuntimeService().addEventListener((ActivitiEventListener) me);
+		processEngine.getRuntimeService().addEventListener(this);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public void onEvent(ActivitiEvent event) {
 		switch (event.getType()) {
-			case ENTITY_CREATED:
-				cacheEntiy(event);
-				break;
-			case TASK_ASSIGNED:
-				assign(event);
-				break;
-			default:
-				// NOTHING
+		case ENTITY_CREATED:
+			cacheEntiy(event);
+			break;
+		case TASK_ASSIGNED:
+			assign(event);
+			break;
+		default:
+			// NOTHING
 		}
 
 	}
@@ -739,8 +736,8 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 		} else {
 			try (InputStream bpmnStream = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(computeBpmnFilename());
-				 InputStream lastProcessDefinitionStream = repositoryService.getResourceAsStream(
-						 lastProcessDefinition.getDeploymentId(), lastProcessDefinition.getResourceName());) {
+					InputStream lastProcessDefinitionStream = repositoryService.getResourceAsStream(
+							lastProcessDefinition.getDeploymentId(), lastProcessDefinition.getResourceName());) {
 				String lastProcessDefinitionMd5 = DigestUtils.md5DigestAsHex(lastProcessDefinitionStream);
 				String bpmnMd5 = DigestUtils.md5DigestAsHex(bpmnStream);
 				if (!lastProcessDefinitionMd5.equals(bpmnMd5)) {
@@ -768,4 +765,5 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 		}
 	}
 
+	protected abstract AbstractTaskServiceImpl<E, D, R, A, H> lookupMe();
 }

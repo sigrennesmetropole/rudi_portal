@@ -64,7 +64,7 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
 				.datasetUuid(datasetUuid)
 				.projectOwnerUuids(List.of(uuidToCheck))
 				.status(List.of(LinkedDatasetStatus.VALIDATED))
-				.checkEndDate(true);
+				.endDateIsNotOver(true);
 		final var linkedDatasetEntities = linkedDatasetCustomDao.searchLinkedDatasets(linkedDatasetSearchCriteria, Pageable.unpaged());
 		return linkedDatasetEntities.getTotalElements() > 0;
 	}

@@ -115,16 +115,7 @@ public class LinkedDatasetWorkflowContext
 				final var uuid = organization.getOrganizationId();
 				Collection<OrganizationMember> members = organizationHelper.getOrganizationMembers(uuid);
 				if (CollectionUtils.isNotEmpty(members)) {
-					assignees = new ArrayList<>();
-					for (OrganizationMember member : members) {
-						final var user = getAclHelper().getUserByUUID(member.getUserUuid());
-						if (user != null) {
-							assignees.add(user.getLogin());
-							assigneeEmails.add(lookupEMailAddress(user));
-						} else {
-							log.warn("Member with user uuid \"{}\" does not exist as user in ACL", member.getUserUuid());
-						}
-					}
+					computePotentialProducersOwnersAssigneesGestion(members, assignees, assigneeEmails);
 				}
 				if (log.isInfoEnabled()) {
 					log.info("Assignees: {}", StringUtils.join(assignees, ", "));
@@ -156,6 +147,18 @@ public class LinkedDatasetWorkflowContext
 			}
 		} catch (GetOrganizationException goe) {
 			log.error("Error when retrieving producer infos", goe);
+		}
+	}
+
+	private void computePotentialProducersOwnersAssigneesGestion(Collection<OrganizationMember> members, List<String> assignees, List<String> assigneeEmails){
+		for (OrganizationMember member : members) {
+			final var user = getAclHelper().getUserByUUID(member.getUserUuid());
+			if (user != null) {
+				assignees.add(user.getLogin());
+				assigneeEmails.add(lookupEMailAddress(user));
+			} else {
+				log.warn("Member with user uuid \"{}\" does not exist as user in ACL", member.getUserUuid());
+			}
 		}
 	}
 

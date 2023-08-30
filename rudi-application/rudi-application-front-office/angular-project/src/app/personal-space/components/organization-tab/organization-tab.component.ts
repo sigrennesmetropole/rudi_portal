@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Organization} from '../../../strukture/strukture-model';
 import {BreakpointObserverService, NgClassObject} from '../../../core/services/breakpoint-observer.service';
 import {switchMap} from 'rxjs/operators';
 import {UserService} from '../../../core/services/user.service';
-import {OrganizationMetierService} from '../../../core/services/organization-metier.service';
+import {OrganizationMetierService} from '../../../core/services/organization/organization-metier.service';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
 
 

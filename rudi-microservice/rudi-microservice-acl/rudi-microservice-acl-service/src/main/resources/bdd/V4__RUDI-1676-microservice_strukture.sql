@@ -1,5 +1,5 @@
 -- Renommage du user
-UPDATE acl_data.user
+UPDATE acl_data.user_
 SET firstname = 'strukture',
     lastname  = 'strukture',
     login     = 'strukture'

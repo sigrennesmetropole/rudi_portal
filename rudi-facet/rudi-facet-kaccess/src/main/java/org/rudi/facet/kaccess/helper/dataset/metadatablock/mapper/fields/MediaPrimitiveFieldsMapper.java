@@ -1,28 +1,5 @@
 package org.rudi.facet.kaccess.helper.dataset.metadatablock.mapper.fields;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.NotImplementedException;
-import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
-import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
-import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
-import org.rudi.facet.dataverse.utils.MessageUtils;
-import org.rudi.facet.kaccess.bean.Connector;
-import org.rudi.facet.kaccess.bean.ConnectorConnectorParameters;
-import org.rudi.facet.kaccess.bean.HashAlgorithm;
-import org.rudi.facet.kaccess.bean.Media;
-import org.rudi.facet.kaccess.bean.MediaFile;
-import org.rudi.facet.kaccess.bean.MediaFileAllOfChecksum;
-import org.rudi.facet.kaccess.bean.MediaSeries;
-import org.rudi.facet.kaccess.bean.MediaService;
-import org.rudi.facet.kaccess.bean.MediaType;
-import org.rudi.facet.kaccess.bean.ReferenceDates;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.Objects;
-
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.FILE_CHECKSUM_ALGO;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.FILE_CHECKSUM_HASH;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.FILE_ENCODING;
@@ -51,10 +28,36 @@ import static org.rudi.facet.kaccess.constant.RudiMetadataField.SERIES_TOTAL_NUM
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.SERIES_TOTAL_SIZE;
 import static org.rudi.facet.kaccess.constant.RudiMetadataField.SERVICE_API_DOCUMENTATION_URL;
 
+import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.NotImplementedException;
+import org.rudi.facet.dataverse.api.exceptions.DataverseMappingException;
+import org.rudi.facet.dataverse.fields.generators.FieldGenerator;
+import org.rudi.facet.dataverse.helper.dataset.metadatablock.mapper.DateTimeMapper;
+import org.rudi.facet.dataverse.utils.MessageUtils;
+import org.rudi.facet.kaccess.bean.Connector;
+import org.rudi.facet.kaccess.bean.ConnectorConnectorParametersInner;
+import org.rudi.facet.kaccess.bean.HashAlgorithm;
+import org.rudi.facet.kaccess.bean.Media;
+import org.rudi.facet.kaccess.bean.MediaFile;
+import org.rudi.facet.kaccess.bean.MediaFileAllOfChecksum;
+import org.rudi.facet.kaccess.bean.MediaSeries;
+import org.rudi.facet.kaccess.bean.MediaService;
+import org.rudi.facet.kaccess.bean.MediaType;
+import org.rudi.facet.kaccess.bean.ReferenceDates;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Component
 class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 
-	MediaPrimitiveFieldsMapper(FieldGenerator fieldGenerator, ObjectMapper objectMapper, DateTimeMapper dateTimeMapper) {
+	MediaPrimitiveFieldsMapper(FieldGenerator fieldGenerator, ObjectMapper objectMapper,
+			DateTimeMapper dateTimeMapper) {
 		super(fieldGenerator, objectMapper, dateTimeMapper);
 	}
 
@@ -62,13 +65,8 @@ class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 	public void metadataToFields(Media media, Map<String, Object> fields) throws DataverseMappingException {
 		createField(MEDIA_ID, media.getMediaId().toString(), fields);
 		createField(MEDIA_NAME, media.getMediaName(), fields);
-		createDatesFields(media.getMediaDates(), fields,
-				MEDIA_DATES_CREATED,
-				MEDIA_DATES_VALIDATED,
-				MEDIA_DATES_PUBLISHED,
-				MEDIA_DATES_UPDATED,
-				MEDIA_DATES_EXPIRES,
-				MEDIA_DATES_DELETED);
+		createDatesFields(media.getMediaDates(), fields, MEDIA_DATES_CREATED, MEDIA_DATES_VALIDATED,
+				MEDIA_DATES_PUBLISHED, MEDIA_DATES_UPDATED, MEDIA_DATES_EXPIRES, MEDIA_DATES_DELETED);
 		createField(MEDIA_CAPTION, media.getMediaCaption(), fields);
 		createField(MEDIA_VISUAL, media.getMediaVisual(), fields);
 		createField(MEDIA_TYPE, media.getMediaType().getValue(), fields);
@@ -84,7 +82,8 @@ class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 		}
 	}
 
-	private void createConnectorFields(@Nullable Connector connector, Map<String, Object> fields) throws DataverseMappingException {
+	private void createConnectorFields(@Nullable Connector connector, Map<String, Object> fields)
+			throws DataverseMappingException {
 		if (connector != null) {
 			createField(MEDIA_CONNECTOR_URL, connector.getUrl(), fields);
 			createField(MEDIA_CONNECTOR_INTERFACE_CONTRACT, connector.getInterfaceContract(), fields);
@@ -105,8 +104,10 @@ class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 	}
 
 	private void createChecksumFileFields(MediaFile file, Map<String, Object> fields) throws DataverseMappingException {
-		Objects.requireNonNull(file.getChecksum(), MessageUtils.buildErrorMessageRequiredMandatoryAttributes(FILE_CHECKSUM_ALGO));
-		Objects.requireNonNull(file.getChecksum().getAlgo(), MessageUtils.buildErrorMessageRequiredMandatoryAttributes(FILE_CHECKSUM_ALGO));
+		Objects.requireNonNull(file.getChecksum(),
+				MessageUtils.buildErrorMessageRequiredMandatoryAttributes(FILE_CHECKSUM_ALGO));
+		Objects.requireNonNull(file.getChecksum().getAlgo(),
+				MessageUtils.buildErrorMessageRequiredMandatoryAttributes(FILE_CHECKSUM_ALGO));
 
 		createField(FILE_CHECKSUM_ALGO, file.getChecksum().getAlgo().getValue(), fields);
 		createField(FILE_CHECKSUM_HASH, file.getChecksum().getHash(), fields);
@@ -121,7 +122,8 @@ class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 		createField(SERIES_TOTAL_SIZE, series.getTotalSize(), fields);
 	}
 
-	private void createServiceFields(MediaService service, Map<String, Object> fields) throws DataverseMappingException {
+	private void createServiceFields(MediaService service, Map<String, Object> fields)
+			throws DataverseMappingException {
 		createField(SERVICE_API_DOCUMENTATION_URL, service.getApiDocumentationUrl(), fields);
 	}
 
@@ -142,15 +144,10 @@ class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 			throw new NotImplementedException("Media Type not handled : " + mediaType);
 		}
 
-		return media
-				.mediaId(fields.get(MEDIA_ID).getValueAsUUID())
-				.mediaName(fields.get(MEDIA_NAME).getValueAsString())
-				.mediaDates(buildDates(fields))
-				.mediaType(mediaType)
-				.connector(buildConnector(fields))
+		return media.mediaId(fields.get(MEDIA_ID).getValueAsUUID()).mediaName(fields.get(MEDIA_NAME).getValueAsString())
+				.mediaDates(buildDates(fields)).mediaType(mediaType).connector(buildConnector(fields))
 				.mediaCaption(fields.get(MEDIA_CAPTION).getValueAsString())
-				.mediaVisual(fields.get(MEDIA_VISUAL).getValueAsString())
-		;
+				.mediaVisual(fields.get(MEDIA_VISUAL).getValueAsString());
 	}
 
 	@Nullable
@@ -166,46 +163,38 @@ class MediaPrimitiveFieldsMapper extends PrimitiveFieldsMapper<Media> {
 	}
 
 	private Connector buildConnector(MapOfFields fields) throws DataverseMappingException {
-		return new Connector()
-				.interfaceContract(fields.get(MEDIA_CONNECTOR_INTERFACE_CONTRACT).getValueAsString())
-				.connectorParameters(fields.get(MEDIA_CONNECTOR_PARAMETERS).getValueAsListOf(ConnectorConnectorParameters.class, objectMapper))
+		return new Connector().interfaceContract(fields.get(MEDIA_CONNECTOR_INTERFACE_CONTRACT).getValueAsString())
+				.connectorParameters(fields.get(MEDIA_CONNECTOR_PARAMETERS)
+						.getValueAsListOf(ConnectorConnectorParametersInner.class, objectMapper))
 				.url(fields.get(MEDIA_CONNECTOR_URL).getValueAsString());
 	}
 
 	@Nonnull
 	private MediaFile getMediaFile(MapOfFields fields) {
-		return new MediaFile()
-				.fileStructure(fields.get(FILE_STRUCTURE).getValueAsString())
+		return new MediaFile().fileStructure(fields.get(FILE_STRUCTURE).getValueAsString())
 				.fileSize(fields.get(FILE_SIZE).getValueAsLong())
 				.fileType(fields.get(FILE_TYPE).getValueAsEnumWith(MediaType::fromValue))
-				.fileEncoding(fields.get(FILE_ENCODING).getValueAsString())
-				.checksum(getFileChecksum(fields))
-				;
+				.fileEncoding(fields.get(FILE_ENCODING).getValueAsString()).checksum(getFileChecksum(fields));
 	}
 
 	private MediaFileAllOfChecksum getFileChecksum(MapOfFields fields) {
 		return new MediaFileAllOfChecksum()
 				.algo(fields.get(FILE_CHECKSUM_ALGO).getValueAsEnumWith(HashAlgorithm::fromValue))
-				.hash(fields.get(FILE_CHECKSUM_HASH).getValueAsString())
-				;
+				.hash(fields.get(FILE_CHECKSUM_HASH).getValueAsString());
 	}
 
 	@Nonnull
 	private MediaSeries getMediaSeries(MapOfFields fields) {
-		return new MediaSeries()
-				.latency(fields.get(SERIES_LATENCY).getValueAsLong())
+		return new MediaSeries().latency(fields.get(SERIES_LATENCY).getValueAsLong())
 				.period(fields.get(SERIES_PERIOD).getValueAsLong())
 				.currentNumberOfRecords(fields.get(SERIES_CURENT_NUMBER_OF_RECORDS).getValueAsLong())
 				.currentSize(fields.get(SERIES_CURENT_SIZE).getValueAsLong())
 				.totalNumberOfRecords(fields.get(SERIES_TOTAL_NUMBER_OF_RECORDS).getValueAsLong())
-				.totalSize(fields.get(SERIES_TOTAL_SIZE).getValueAsLong())
-				;
+				.totalSize(fields.get(SERIES_TOTAL_SIZE).getValueAsLong());
 	}
 
 	private Media getMediaService(MapOfFields fields) {
-		return new MediaService()
-				.apiDocumentationUrl(fields.get(SERVICE_API_DOCUMENTATION_URL).getValueAsString())
-				;
+		return new MediaService().apiDocumentationUrl(fields.get(SERVICE_API_DOCUMENTATION_URL).getValueAsString());
 	}
 
 	@Nullable

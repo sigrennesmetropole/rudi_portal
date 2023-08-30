@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-kalim</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-kalim-facade</artifactId>
@@ -111,7 +111,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -125,12 +124,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -185,9 +178,7 @@
 						</goals>
 						<configuration>
 							<!-- Les interfaces sont généres dans la target, c'est normal -->
-							<importMappings>
-								<importMapping>Metadata=org.rudi.facet.kaccess.bean.Metadata</importMapping>
-							</importMappings>
+							<schemaMappings>Metadata=org.rudi.facet.kaccess.bean.Metadata</schemaMappings>
 							<apiPackage>org.rudi.microservice.kalim.facade.controller.api</apiPackage>
 							<inputSpec>${resource-directory}/openapi/rudi-kalim-api.json</inputSpec>
 						</configuration>
@@ -239,22 +230,10 @@
 			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
-				<version>6.5.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>42.2.16</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>8</source>
-					<target>8</target>
-				</configuration>
 			</plugin>
 
 		</plugins>

@@ -72,7 +72,7 @@ CREATE TABLE konsent_data.retention
     opening_date timestamp    NOT NULL,
     order_       int4         NOT NULL,
     unit         varchar(255) NOT NULL,
-    value        int4         NOT NULL,
+    value_        int4         NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE konsent_data.security_measure
@@ -451,7 +451,7 @@ VALUES ((SELECT id FROM konsent_data.data_recipient WHERE code = 'OTHERS'),
 INSERT INTO konsent_data.dictionary_entry(uuid, lang, text)
 VALUES ('5b7ad33e-c109-4861-87aa-b5a7434cf529', 'FR_FR', 'Retention - Donnée temporaire');
 
-INSERT INTO konsent_data.retention (uuid, code, opening_date, closing_date, order_, value, unit)
+INSERT INTO konsent_data.retention (uuid, code, opening_date, closing_date, order_, value_, unit)
 VALUES ('4e00bbef-c08c-49ad-8c78-b01f210e219f', 'TEMPORARY', timestamp '2023-01-08 01:00:00', NULL, 1, 1,
         'YEAR');
 

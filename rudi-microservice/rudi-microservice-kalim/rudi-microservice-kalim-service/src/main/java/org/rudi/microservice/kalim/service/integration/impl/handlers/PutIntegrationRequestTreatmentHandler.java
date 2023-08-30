@@ -1,7 +1,6 @@
 package org.rudi.microservice.kalim.service.integration.impl.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Slf4j
 public class PutIntegrationRequestTreatmentHandler extends AbstractIntegrationRequestTreatmentHandlerWithValidation {
 
 	protected PutIntegrationRequestTreatmentHandler(DatasetService datasetService, APIManagerHelper apiManagerHelper, ObjectMapper objectMapper, List<AbstractMetadataValidator<?>> metadataValidators, Error500Builder error500Builder, MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator, DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator, OrganizationHelper organizationHelper) {

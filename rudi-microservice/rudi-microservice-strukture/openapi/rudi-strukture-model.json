@@ -235,7 +235,6 @@
 				"description": "Membre d'une organisation",
 				"type": "object",
 				"required": [
-					"user_uuid",
 					"role"
 				],
 				"allOf": [
@@ -249,18 +248,81 @@
 								"type": "string",
 								"format": "uuid"
 							},
+							"login": {
+								"description": "Login de l'utilisateur dans ACL",
+								"type": "string"
+							},
 							"role": {
 								"$ref": "#/components/schemas/OrganizationRole"
+							},
+							"added_date": {
+								"description": "Date d'ajout du membre dans l'organisation",
+								"type": "string",
+								"format": "date-time"
 							}
 						}
 					}
+				]
+			},
+			"OrganizationUserMember": {
+				"description": "Membre d'une organisation avec des informations croisées avec son utilisateur",
+				"type": "object",
+				"required": [
+					"user_uuid",
+					"role"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/OrganizationMember"
+					},
+					{
+						"properties": {
+							"firstname": {
+								"description": "Prénom du membre",
+								"type": "string"
+							},
+							"lastname": {
+								"description": "Nom de famille du membre",
+								"type": "string"
+							},
+							"login": {
+								"description": "Login (email) du membre",
+								"type": "string"
+							},
+							"last_connexion": {
+								"description": "Date de la dernière connexion",
+								"type": "string",
+								"format": "date-time"
+							}
+						}
+					}
+				]
+			},
+			"OrganizationMemberType": {
+				"description": "Type du membre (utilisateur robot de l'organisation ou membre physique et morale)",
+				"type": "string",
+				"enum": [
+					"PERSON",
+					"ROBOT"
 				]
 			},
 			"OrganizationNameParam": {
 				"description": "Tout ou partie du nom d'une organisation",
 				"type": "string"
 			},
+			"TextParam": {
+				"description": "Tout ou partie du nom, du prenom ou du login du membre",
+				"type": "string"
+			},
 			"OrganizationRole": {
+				"description": "Rôle dans une organisation",
+				"type": "string",
+				"enum": [
+					"EDITOR",
+					"ADMINISTRATOR"
+				]
+			},
+			"OrganizationRoleParam": {
 				"description": "Rôle dans une organisation",
 				"type": "string",
 				"enum": [
@@ -332,6 +394,26 @@
 								"type": "array",
 								"items": {
 									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedOrganizationUserMembers": {
+				"description": "Liste paginée des membres d'une organisation enrichis par leur données utilisateur",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Membres d'organisation de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/OrganizationUserMember"
 								}
 							}
 						}
@@ -505,6 +587,20 @@
 				"description": "Date in the ISO 8601 format",
 				"type": "string",
 				"format": "date-time"
+			},
+			"PasswordUpdate": {
+				"description": "Informations nécessaires pour modifier le mot-de-passe d'un compte",
+				"type": "object",
+				"properties": {
+					"oldPassword": {
+						"description": "L'ancien mot de passe",
+						"type": "string"
+					},
+					"newPassword": {
+						"description": "Le nouveau mot-de-passe",
+						"type": "string"
+					}
+				}
 			}
 		}
 	}

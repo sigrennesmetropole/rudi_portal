@@ -1,9 +1,7 @@
 import {from, Observable, of, throwError} from 'rxjs';
-import {OwnerType, Project, ProjektService} from '../../../projekt/projekt-api';
 import {UserService} from '../user.service';
 import {catchError, filter, map, mapTo, mergeMap, reduce, switchMap} from 'rxjs/operators';
 import {AclService, User} from '../../../acl/acl-api';
-import {ApiKeys, ApiKeysType, KonsultService} from '../../../api-konsult';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrganizationService} from '../../../strukture/api-strukture';
 import {ErrorWithCause} from '../../../shared/models/error-with-cause';
@@ -15,6 +13,9 @@ import {SubscriptionRequestResult} from './subscription-request-result';
 import {LinkWithSubscribability} from './link-with-subscribability';
 import {Credentials} from './credentials';
 import {SubscriptionData} from './subscription-data';
+import {ApiKeys, ApiKeysType, KonsultService} from '../../../konsult/konsult-api';
+import {ProjektService} from '../../../projekt/projekt-api';
+import {OwnerType, Project} from '../../../projekt/projekt-model';
 
 /**
  * Nombre maximal de souscriptions qu'on peut appeler en parallèle

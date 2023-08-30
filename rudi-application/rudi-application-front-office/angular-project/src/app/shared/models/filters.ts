@@ -15,4 +15,5 @@ export interface Filters {
 
     /** Global ID du ou des jeux de données */
     globalIds: string[];
+    producerUuid: string,
 }

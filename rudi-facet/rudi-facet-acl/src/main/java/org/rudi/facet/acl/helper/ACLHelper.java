@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.rudi.facet.acl.helper;
 
 import java.util.ArrayList;
@@ -12,13 +9,15 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.net.ssl.SSLException;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.service.exception.AppServiceBadRequestException;
+import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.AccessKeyDto;
@@ -26,26 +25,33 @@ import org.rudi.facet.acl.bean.AddressType;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.bean.ClientRegistrationDto;
 import org.rudi.facet.acl.bean.EmailAddress;
+import org.rudi.facet.acl.bean.PasswordUpdate;
 import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserPageResult;
+import org.rudi.facet.acl.bean.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.UnknownHttpStatusCodeException;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.ROLE_UUIDS_PARAMETER;
+
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
+
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_PASSWORD_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
@@ -59,11 +65,10 @@ public class ACLHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
 
 	private static final String LIMIT_PARAMETER = "limit";
-
 	private static final String ACTIVE_PARAMETER = "active";
-
 	private static final String CODE_PARAMETER = "code";
 
+	public static final String LOGIN_REQUIRED = "login required";
 
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.search.url:/acl/v1/roles}")
@@ -90,8 +95,13 @@ public class ACLHelper {
 	private String registrationByPasswordEndpointURL;
 
 	@Getter
+	@Value("${rudi.facet.acl.endpoint.users.client-registration-by-password.url:/acl/v1/users/{login}/password}")
+	private String updateUserPasswordEndpointUrl;
+
+	@Getter
 	@Value("${rudi.facet.acl.service.url:lb://RUDI-ACL/}")
 	private String aclServiceURL;
+
 
 	@Autowired
 	@Qualifier("rudi_oauth2")
@@ -120,8 +130,8 @@ public class ACLHelper {
 		if (userUuid == null) {
 			throw new IllegalArgumentException("user uuid required");
 		}
-		ClientResponse response = loadBalancedWebClient.delete().uri(buildUsersGetDeleteURL(userUuid)).exchange()
-				.block();
+		ClientResponse response = loadBalancedWebClient.delete().uri(buildUsersGetDeleteURL(userUuid))
+				.exchangeToMono(c -> Mono.just(c)).block();
 		if (response != null && response.statusCode() != HttpStatus.OK) {
 			LOGGER.warn("Failed to delete user :{}", userUuid);
 		}
@@ -135,12 +145,10 @@ public class ACLHelper {
 	@Nullable
 	public User getUserByLogin(String login) {
 		if (login == null) {
-			throw new IllegalArgumentException("login required");
+			throw new IllegalArgumentException(LOGIN_REQUIRED);
 		}
 
-		final var criteria = UserSearchCriteria.builder()
-				.login(login)
-				.build();
+		final var criteria = UserSearchCriteria.builder().login(login).build();
 		return getUser(criteria);
 	}
 
@@ -152,16 +160,13 @@ public class ACLHelper {
 	@Nullable
 	public User getUserByLoginAndPassword(String login, String password) {
 		if (login == null) {
-			throw new IllegalArgumentException("login required");
+			throw new IllegalArgumentException(LOGIN_REQUIRED);
 		}
 		if (password == null) {
 			throw new IllegalArgumentException("password required");
 		}
 
-		final var criteria = UserSearchCriteria.builder()
-				.login(login)
-				.password(password)
-				.build();
+		final var criteria = UserSearchCriteria.builder().login(login).password(password).build();
 		return getUser(criteria);
 	}
 
@@ -172,14 +177,14 @@ public class ACLHelper {
 	private User getUser(UserSearchCriteria criteria) {
 
 		UserPageResult pageResult = loadBalancedWebClient.get()
-				.uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
-						.queryParam(LIMIT_PARAMETER, 1)
-						.queryParam(USER_LOGIN_PARAMETER, criteria.getLogin())
-						.queryParam(USER_PASSWORD_PARAMETER, criteria.getPassword())
-						.queryParam(ROLE_UUIDS_PARAMETER, getRolesCriteria(criteria.getRoleUuids()))
-						.build())
-				.retrieve()
-				.bodyToMono(UserPageResult.class).block();
+				.uri(buildUsersSearchURL(),
+						uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
+								.queryParam(UserSearchCriteria.USER_LOGIN_PARAMETER, criteria.getLogin())
+								.queryParam(UserSearchCriteria.USER_PASSWORD_PARAMETER, criteria.getPassword())
+								.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
+										formatListParameter(criteria.getRoleUuids()))
+								.build())
+				.retrieve().bodyToMono(UserPageResult.class).block();
 		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
 			return pageResult.getElements().get(0);
 		} else {
@@ -188,35 +193,39 @@ public class ACLHelper {
 	}
 
 	@Nullable
-	private String getRolesCriteria(List<UUID> roleUuids) {
-		String roles = null;
-		if (CollectionUtils.isNotEmpty(roleUuids)) {
-			roles = roleUuids.stream().map(UUID::toString).collect(Collectors.joining(","));
+	private String formatListParameter(List<UUID> uuidList) {
+		String result = null;
+		if (CollectionUtils.isNotEmpty(uuidList)) {
+			result = uuidList.stream().map(UUID::toString).collect(Collectors.joining(","));
 		}
 
-		return roles;
+		return result;
 	}
 
 	@Nullable
 	public ClientKey getClientKeyByLogin(String login) {
-		return loadBalancedWebClient.get().uri(buildClientKeyGetURL(), Map.of(USER_LOGIN_PARAMETER, login)).retrieve()
+		return loadBalancedWebClient.get()
+				.uri(buildClientKeyGetURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, login)).retrieve()
 				.bodyToMono(ClientKey.class).block();
 	}
 
 	@Nullable
 	public ClientRegistrationDto getClientRegistrationByLogin(String login) {
-		return loadBalancedWebClient.get().uri(buildClientRegistrationURL(), Map.of(USER_LOGIN_PARAMETER, login)).retrieve()
+		return loadBalancedWebClient.get()
+				.uri(buildClientRegistrationURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, login)).retrieve()
 				.bodyToMono(ClientRegistrationDto.class).block();
 	}
 
 	public void addClientRegistration(String username, AccessKeyDto clientAccessKey) {
-		loadBalancedWebClient.post().uri(buildClientRegistrationURL(), Map.of(USER_LOGIN_PARAMETER, username)).bodyValue(clientAccessKey).retrieve()
-				.bodyToMono(void.class).block();
+		loadBalancedWebClient.post()
+				.uri(buildClientRegistrationURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, username))
+				.bodyValue(clientAccessKey).retrieve().bodyToMono(void.class).block();
 	}
 
 	public ClientRegistrationDto findRegistrationOrRegister(String username, String password) {
-		return loadBalancedWebClient.post().uri(buildClientRegistrationByPasswordURL(), Map.of(USER_LOGIN_PARAMETER, username)).bodyValue(password).retrieve()
-				.bodyToMono(ClientRegistrationDto.class).block();
+		return loadBalancedWebClient.post()
+				.uri(buildClientRegistrationByPasswordURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, username))
+				.bodyValue(password).retrieve().bodyToMono(ClientRegistrationDto.class).block();
 	}
 
 	public User createUser(User user) {
@@ -265,15 +274,52 @@ public class ACLHelper {
 				.bodyToMono(Role[].class).block();
 		if (ArrayUtils.isNotEmpty(roles)) {
 			final var criteria = UserSearchCriteria.builder()
-					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList()))
+					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList())).build();
+			UserPageResult pageResult = loadBalancedWebClient.get()
+					.uri(buildUsersSearchURL(),
+							uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
+									.queryParam(UserSearchCriteria.USER_LOGIN_PARAMETER, criteria.getLogin())
+									.queryParam(UserSearchCriteria.USER_PASSWORD_PARAMETER, criteria.getPassword())
+									.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
+											formatListParameter(criteria.getRoleUuids()))
+									.build())
+					.retrieve().bodyToMono(UserPageResult.class).block();
+			if (pageResult != null && pageResult.getElements() != null) {
+				result.addAll(pageResult.getElements());
+			}
+		}
+		return result;
+	}
+
+
+	@NotNull
+	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText, @Nullable String type) {
+		List<User> result = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(userUuids)) {
+			if (searchText == null) {
+				searchText = "";
+			}
+
+			UserType valueType = null;
+			if (StringUtils.isNotBlank(type)) {
+				try {
+					valueType = UserType.fromValue(type);
+				} catch (IllegalArgumentException e) {
+					// ignore the wrong value no error on call
+				}
+			}
+
+			final var criteria = UserSearchCriteria.builder()
+					.userUuids(userUuids)
+					.loginAndDenomination(searchText)
+					.userType(valueType)
 					.build();
 			UserPageResult pageResult = loadBalancedWebClient
 					.get()
 					.uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
-							.queryParam(LIMIT_PARAMETER, 1)
-							.queryParam(USER_LOGIN_PARAMETER, criteria.getLogin())
-							.queryParam(USER_PASSWORD_PARAMETER, criteria.getPassword())
-							.queryParam(ROLE_UUIDS_PARAMETER, getRolesCriteria(criteria.getRoleUuids()))
+							.queryParam(USER_UUIDS_PARAMETER, formatListParameter(criteria.getUserUuids()))
+							.queryParam(USER_LOGIN_AND_DENOMINATION_PARAMETER, criteria.getLoginAndDenomination())
+							.queryParam(USER_TYPE_PARAMETER, criteria.getUserType() != null ? criteria.getUserType().toString() : null)
 							.build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {
@@ -327,6 +373,12 @@ public class ACLHelper {
 		return urlBuilder.toString();
 	}
 
+	protected String buildUpdateUserPasswordURL() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getUpdateUserPasswordEndpointUrl());
+		return urlBuilder.toString();
+	}
+
 	public String lookupEMailAddress(User user) {
 		String result = null;
 		if (CollectionUtils.isNotEmpty(user.getAddresses())) {
@@ -376,10 +428,35 @@ public class ACLHelper {
 	private User lookupUser(AuthenticatedUser authenticatedUser) throws AppServiceUnauthorizedException {
 		val user = getUserByLogin(authenticatedUser.getLogin());
 		if (user == null) {
-			throw new AppServiceUnauthorizedException(String.format("Authenticated user with login \"%s\" user is unknown", authenticatedUser.getLogin()));
+			throw new AppServiceUnauthorizedException(String
+					.format("Authenticated user with login \"%s\" user is unknown", authenticatedUser.getLogin()));
 		}
 		return user;
 	}
 
+	/**
+	 * Permet la modification du mot de passe d'un utilisateur.
+	 *
+	 * @param login de l'utilisateur
+	 * @param oldPassword contient l'ancien mot de passe
+	 * @param newPassword contient le nouveau mot de passe
+	 */
+	public void updateUserPassword(String login, String oldPassword, String newPassword)
+			throws WebClientResponseException {
+		if (login == null) {
+			throw new IllegalArgumentException(LOGIN_REQUIRED);
+		}
+		if (oldPassword == null) {
+			throw new IllegalArgumentException("old password required");
+		}
+		if (newPassword == null) {
+			throw new IllegalArgumentException("new password required");
+		}
+		PasswordUpdate passwordUpdate = new PasswordUpdate();
+		passwordUpdate.setNewPassword(newPassword);
+		passwordUpdate.setOldPassword(oldPassword);
 
+		loadBalancedWebClient.put().uri(buildUpdateUserPasswordURL(), Map.of(USER_LOGIN_PARAMETER, login))
+				.bodyValue(passwordUpdate).retrieve().toBodilessEntity().block();
+	}
 }

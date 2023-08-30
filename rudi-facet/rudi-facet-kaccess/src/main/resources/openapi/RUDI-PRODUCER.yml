@@ -322,11 +322,9 @@ components:
 
         #——————————————————————————
         'dataset_dates':
-          allOf:
-            - $ref: '#/components/schemas/ReferenceDates' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
-            - description: Dates of the actions performed on the data (creation, publishing, update, deletion...)
-              type: object
-
+          $ref: '#/components/schemas/ReferenceDates' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+          description: Dates of the actions performed on the data (creation, publishing, update, deletion...)
+          
         #——————————————————————————
         'storage_status':
           description: >-
@@ -430,10 +428,9 @@ components:
               $ref: '#/components/schemas/ReferenceDates'
             #......................
             'metadata_provider':
-              allOf:
-                - $ref: '#/components/schemas/Organization' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
-                - description: Description of the organization that produced the metadata
-                  type: object
+              $ref: '#/components/schemas/Organization' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+              description: Description of the organization that produced the metadata
+              
             #......................
             'metadata_contacts':
               description: Addresses to get further information on the metadata
@@ -652,9 +649,9 @@ components:
           format: uri
         #——————————————————————————
         'media_dates':
-          allOf:
-            - $ref: '#/components/schemas/ReferenceDates' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
-            - description: Time of the creation / last update of the Media
+          $ref: '#/components/schemas/ReferenceDates' # On met $ref en 1er car s'il est en 2e, il est ignoré par la génération de code
+          description: Time of the creation / last update of the Media
+
         #——————————————————————————
         'connector':
           $ref: '#/components/schemas/Connector'

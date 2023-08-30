@@ -13,6 +13,7 @@ import {first} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
 import {ResetPasswordErrorBoxComponent} from '../../../shared/reset-password-error-box/reset-password-error-box.component';
+import {PASSWORD_REGEX} from '../../../core/const';
 
 @Component({
     selector: 'app-reset-password-page',
@@ -55,8 +56,9 @@ export class ResetPasswordComponent implements OnInit {
      * Pour savoir si on est en mode mobile ou desktop
      */
     mediaSize: MediaSize;
-    passwordMinLength = 10;
+    passwordMinLength = 12;
     passwordMaxLength = 100;
+
 
     get snackBarParam(): string | null {
         return this.route.snapshot.queryParams.snackBar;
@@ -78,7 +80,7 @@ export class ResetPasswordComponent implements OnInit {
         // Construction du formulaire d'inscription
         this.signupForm = this.formBuilder.group({
                 password: ['', [Validators.required, Validators.minLength(this.passwordMinLength),
-                    Validators.maxLength(this.passwordMaxLength)]],
+                    Validators.maxLength(this.passwordMaxLength),Validators.pattern(PASSWORD_REGEX)]],
                 confirmPassword: ['', [Validators.required]],
             },
             {

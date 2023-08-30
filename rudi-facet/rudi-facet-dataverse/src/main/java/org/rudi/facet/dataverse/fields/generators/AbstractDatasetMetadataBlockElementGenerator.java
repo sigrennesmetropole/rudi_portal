@@ -28,11 +28,8 @@ public abstract class AbstractDatasetMetadataBlockElementGenerator {
 
 	@Nonnull
 	public DatasetMetadataBlockElement generateBlockElement() {
-		final DatasetMetadataBlockElement block = new DatasetMetadataBlockElement()
-				.fields(new ArrayList<>());
-		blockElementSpec.streamLevel1Fields()
-				.map(this::generateField)
-				.filter(Objects::nonNull)
+		final DatasetMetadataBlockElement block = new DatasetMetadataBlockElement().fields(new ArrayList<>());
+		blockElementSpec.streamLevel1Fields().map(this::generateField).filter(Objects::nonNull)
 				.forEach(block::addFieldsItem);
 		return block;
 	}
@@ -65,19 +62,15 @@ public abstract class AbstractDatasetMetadataBlockElementGenerator {
 	}
 
 	private int countChildrenValues(FieldSpec field) {
-		return blockElementSpec.streamChildrenOf(field)
-				.map(childField -> {
-					final Object value = metadatafields.get(childField.getName());
-					return applyIfList(value, List::size);
-				})
-				.filter(Objects::nonNull)
-				.max((count1, count2) -> {
-					if (!count1.equals(count2)) {
-						throw new MismatchedChildrenValuesCount(field, count1, count2);
-					}
-					return count1;
-				})
-				.orElse(0);
+		return blockElementSpec.streamChildrenOf(field).map(childField -> {
+			final Object value = metadatafields.get(childField.getName());
+			return applyIfList(value, List::size);
+		}).filter(Objects::nonNull).max((count1, count2) -> {
+			if (!count1.equals(count2)) {
+				throw new MismatchedChildrenValuesCount(field, count1, count2);
+			}
+			return count1;
+		}).orElse(0);
 
 	}
 
@@ -97,17 +90,16 @@ public abstract class AbstractDatasetMetadataBlockElementGenerator {
 	}
 
 	@Nonnull
-	private Map<String, DatasetMetadataBlockElementField> generateChildrenFields(FieldSpec parentFieldSpec, @Nullable Integer index) {
-		return blockElementSpec.streamChildrenOf(parentFieldSpec)
-				.map(fieldSpec -> {
-					final String stringValue = getStringValue(fieldSpec, index);
-					if (StringUtils.isNotEmpty(stringValue)) {
-						return generateField(fieldSpec, stringValue);
-					} else {
-						return null;
-					}
-				})
-				.filter(Objects::nonNull)
+	private Map<String, DatasetMetadataBlockElementField> generateChildrenFields(FieldSpec parentFieldSpec,
+			@Nullable Integer index) {
+		return blockElementSpec.streamChildrenOf(parentFieldSpec).map(fieldSpec -> {
+			final String stringValue = getStringValue(fieldSpec, index);
+			if (StringUtils.isNotEmpty(stringValue)) {
+				return generateField(fieldSpec, stringValue);
+			} else {
+				return null;
+			}
+		}).filter(Objects::nonNull)
 				.collect(Collectors.toMap(DatasetMetadataBlockElementField::getTypeName, field -> field));
 	}
 
@@ -118,6 +110,7 @@ public abstract class AbstractDatasetMetadataBlockElementGenerator {
 			return Collections.emptyList();
 		}
 		if (value instanceof List) {
+			@SuppressWarnings("unchecked")
 			final List<Object> values = (List<Object>) value;
 			return values.stream().map(Object::toString).collect(Collectors.toList());
 		} else {
@@ -162,7 +155,7 @@ public abstract class AbstractDatasetMetadataBlockElementGenerator {
 	@Nullable
 	private <R> R applyIfList(Object value, Function<List<Object>, R> function) {
 		if (value instanceof List) {
-			//noinspection unchecked
+			// noinspection unchecked
 			final List<Object> values = (List<Object>) value;
 			return function.apply(values);
 		} else {

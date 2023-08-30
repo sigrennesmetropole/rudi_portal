@@ -1,0 +1,12 @@
+[
+	{
+		"label": "Test dataset base layers",
+		"url": "https://public.sig.rennesmetropole.fr/geowebcache/service/wmts",
+		"layerName": "ref_fonds:pvci_simple_gris",
+		"attributions": "Test dataset base layers attributions",
+		"type": "wmts",
+		"srs": "EPSG:3857",
+		"minZoom": "1",
+		"maxZoom": "29"
+	}
+]

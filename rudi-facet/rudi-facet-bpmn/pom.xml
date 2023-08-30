@@ -5,13 +5,12 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-facet</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<artifactId>rudi-facet-bpmn</artifactId>
 
 	<properties>
-		<surefire.plugin.version>2.22.2</surefire.plugin.version>
 		<resource-directory>${project.basedir}</resource-directory>
 		<resource-generation-directory>${project.basedir}
 		</resource-generation-directory>
@@ -56,24 +55,12 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<!-- Activiti -->
 		<!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter -->
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-spring-boot-starter</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.el</groupId>
-					<artifactId>el-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 
@@ -87,7 +74,7 @@
 				<configuration>
 					<modelPackage>org.rudi.bpmn.core.bean</modelPackage>
 					<generatorName>spring</generatorName>
-					<library>spring-mvc</library>
+					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
 					<generateModelDocumentation>false</generateModelDocumentation>
 					<generateSupportingFiles>false</generateSupportingFiles>
@@ -120,7 +107,7 @@
 					<dependency>
 						<groupId>io.swagger.core.v3</groupId>
 						<artifactId>swagger-annotations</artifactId>
-						<version>2.1.4</version>
+						<version>${swagger.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>${project.groupId}</groupId>
@@ -132,7 +119,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>

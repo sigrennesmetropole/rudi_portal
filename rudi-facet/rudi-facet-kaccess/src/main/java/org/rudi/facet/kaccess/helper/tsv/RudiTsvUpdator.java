@@ -1,5 +1,7 @@
 package org.rudi.facet.kaccess.helper.tsv;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,10 +9,6 @@ import java.nio.file.Paths;
 
 import org.rudi.facet.dataverse.helper.tsv.TsvUpdator;
 
-import lombok.extern.slf4j.Slf4j;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
-@Slf4j
 public class RudiTsvUpdator extends TsvUpdator {
 
 	private RudiTsvUpdator() {
@@ -19,7 +17,7 @@ public class RudiTsvUpdator extends TsvUpdator {
 
 	public static void main(String[] args) throws IOException {
 		if (args.length < 1) {
-			throw new RuntimeException("Please specify rudi-facet-kaccess base directory (\"basedir\" in maven).");
+			throw new IOException("Please specify rudi-facet-kaccess base directory (\"basedir\" in maven).");
 		}
 		final var basedir = args[0];
 
@@ -28,10 +26,8 @@ public class RudiTsvUpdator extends TsvUpdator {
 		final var existingTsvPath = Paths.get(basedir, "src/main/resources/metadata/rudi.tsv");
 		final var mergedTsvPath = File.createTempFile(existingTsvPath.getFileName().toString(), ".tmp").toPath();
 
-		try (
-				final var existingTsvInputStream = Files.newInputStream(existingTsvPath);
-				final var mergedTsvOutputStream = Files.newOutputStream(mergedTsvPath);
-		) {
+		try (final var existingTsvInputStream = Files.newInputStream(existingTsvPath);
+				final var mergedTsvOutputStream = Files.newOutputStream(mergedTsvPath);) {
 			tsvUpdator.update(existingTsvInputStream, mergedTsvOutputStream);
 		}
 

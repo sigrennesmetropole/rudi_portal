@@ -28,6 +28,10 @@ import java.util.Set;
 @Setter
 public class OrganizationEntity extends AbstractLongIdEntity {
 
+	public static final String FIELD_MEMBERS = "members";
+
+	private static final long serialVersionUID = -8031214852147803138L;
+
 	@NotNull
 	private String name;
 

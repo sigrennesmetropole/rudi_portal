@@ -3,6 +3,7 @@
  */
 package org.rudi.tools.nodestub.component;
 
+import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -86,7 +87,7 @@ public class KalimHelperConfiguration {
 
 	@Bean(name = "node_oauth2_builder")
 	public WebClient.Builder webClientBuilder(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
-		HttpClient httpClient = HttpClient.create();
+		HttpClient httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
 		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
 				authorizedClientManager);
 		oauthFilter.setDefaultClientRegistrationId(REGISTRATION_ID);

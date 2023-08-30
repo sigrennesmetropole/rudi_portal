@@ -63,10 +63,16 @@ import {RequestDetailHeaderComponent} from './request-detail-header/request-deta
 import {WorkflowFieldAttachmentPopinComponent} from './workflow-field-attachment-popin/workflow-field-attachment-popin.component';
 import {SelfdataProcessDefinitionKeyTranslatePipe} from './pipes/selfdata-process-definition-key-translate.pipe';
 import {BackPaginationComponent} from './back-pagination/back-pagination.component';
-import {DatasetHeadingComponent} from './dataset-heading/dataset-heading.component';
+import {PageHeadingComponent} from './page-heading/page-heading.component';
 import {DocumentationButtonComponent} from './documentation-button/documentation-button.component';
 import {BotDetectCaptchaModule} from 'angular-captcha';
 import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
+import {MapComponent} from './map/map.component';
+import {SearchAutocompleteComponent} from './search-autocomplete/search-autocomplete.component';
+import {MapPopupComponent} from './map-popup/map-popup.component';
+import {DatasetListComponent} from './dataset-list/dataset-list.component';
+import {DataSetCardComponent} from './data-set-card/data-set-card.component';
+import {MemberPopinComponent} from './member-popin/member-popin.component';
 
 @NgModule({
     declarations:
@@ -132,9 +138,15 @@ import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
             FileSizePipe,
             SelfdataProcessDefinitionKeyTranslatePipe,
             BackPaginationComponent,
-            DatasetHeadingComponent,
+            PageHeadingComponent,
             DocumentationButtonComponent,
             RudiCaptchaComponent,
+            MapComponent,
+            SearchAutocompleteComponent,
+            MapPopupComponent,
+            DatasetListComponent,
+            DataSetCardComponent,
+            MemberPopinComponent,
         ],
     imports: [
         CommonModule,
@@ -199,9 +211,14 @@ import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
         FileSizePipe,
         SelfdataProcessDefinitionKeyTranslatePipe,
         BackPaginationComponent,
-        DatasetHeadingComponent,
+        PageHeadingComponent,
         DocumentationButtonComponent,
-        RudiCaptchaComponent
+        RudiCaptchaComponent,
+        MapComponent,
+        RudiCaptchaComponent,
+        DatasetListComponent,
+        DataSetCardComponent,
+        MemberPopinComponent,
     ],
     entryComponents: [],
     providers: [

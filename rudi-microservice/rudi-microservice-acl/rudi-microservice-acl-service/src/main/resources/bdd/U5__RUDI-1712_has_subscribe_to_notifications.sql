@@ -1,4 +1,4 @@
-ALTER TABLE "user"
+ALTER TABLE user_
     DROP COLUMN has_subscribe_to_notifications;
 
 ALTER TABLE account_registration

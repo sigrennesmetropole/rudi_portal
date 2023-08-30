@@ -77,7 +77,7 @@ public class WebSecurityConfig {
 
 		// Url autorisées
 		// 4200 pour les développement | 8080 pour le déploiement
-		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);

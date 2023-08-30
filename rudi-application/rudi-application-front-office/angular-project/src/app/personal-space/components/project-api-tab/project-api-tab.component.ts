@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {map, switchMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {ProjectDependenciesService} from '../../../core/services/asset/project/project-dependencies.service';
-import {OwnerType, Project} from '../../../projekt/projekt-model';
 import {ActivatedRoute} from '@angular/router';
-import {ApiKeys} from '../../../api-konsult';
 import {UserService} from '../../../core/services/user.service';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {TranslateService} from '@ngx-translate/core';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
-import {throwError} from 'rxjs';
 import {KonsultApiAccessService} from '../../../core/services/api-access/konsult/konsult-api-access.service';
+import {OwnerType, Project} from '../../../projekt/projekt-model';
+import {ApiKeys} from '../../../konsult/konsult-api';
 
 @Component({
     selector: 'app-project-api-tab',

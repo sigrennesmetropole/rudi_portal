@@ -3,7 +3,6 @@ package org.rudi.microservice.gateway.facade;
 import org.rudi.common.core.yml.YamlPropertySourceFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -14,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = { "org.rudi.microservice.gateway.facade" })
 @EnableEurekaClient
 @EnableScheduling
-@EnableCircuitBreaker
 @PropertySource(value = { "classpath:gateway/gateway-common.properties" })
 @PropertySource(value = {
 		"classpath:gateway/gateway.yml" }, ignoreResourceNotFound = true, factory = YamlPropertySourceFactory.class)

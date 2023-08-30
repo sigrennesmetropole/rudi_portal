@@ -18,15 +18,18 @@ class FieldUtils {
 	private FieldUtils() {
 	}
 
-	static void setFieldValue(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec, Object fieldValue) {
+	static void setFieldValue(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec,
+			Object fieldValue) {
 		setFieldValue(datasetVersion, parentFieldSpec, fieldSpec, () -> fieldValue, true);
 	}
 
-	static void setFieldValueIfNull(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec, Supplier<Object> fieldValueSupplier) {
+	static void setFieldValueIfNull(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec,
+			Supplier<Object> fieldValueSupplier) {
 		setFieldValue(datasetVersion, parentFieldSpec, fieldSpec, fieldValueSupplier, false);
 	}
 
-	static void setFieldValue(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec, Supplier<Object> fieldValueSupplier, boolean overwrite) {
+	static void setFieldValue(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec,
+			Supplier<Object> fieldValueSupplier, boolean overwrite) {
 		final var fieldOccurrences = getFieldOccurrences(datasetVersion, parentFieldSpec, fieldSpec);
 		final var value = fieldValueSupplier.get();
 		final var stringValue = value != null ? value.toString() : null;
@@ -43,19 +46,21 @@ class FieldUtils {
 	}
 
 	@Nonnull
-	static List<Map<String, Object>> getFieldOccurrences(DatasetVersion datasetVersion, FieldSpec parentFieldSpec, FieldSpec fieldSpec) {
+	static List<Map<String, Object>> getFieldOccurrences(DatasetVersion datasetVersion, FieldSpec parentFieldSpec,
+			FieldSpec fieldSpec) {
 		final var parentField = datasetVersion.getMetadataBlocks().getRudi().getFields().stream()
-				.filter(field -> field.getTypeName().equals(parentFieldSpec.getName()))
-				.findFirst()
+				.filter(field -> field.getTypeName().equals(parentFieldSpec.getName())).findFirst()
 				.orElseThrow(() -> new FieldNotFoundException(parentFieldSpec));
 
 		final List<Map<String, Object>> fieldOccurrences;
 		final var parentFieldValue = parentField.getValue();
 		if (parentFieldValue instanceof Map) {
+			@SuppressWarnings("unchecked")
 			final var parentFieldChildren = (Map<String, Map<String, Object>>) parentFieldValue;
 			final var field = parentFieldChildren.get(fieldSpec.getName());
 			fieldOccurrences = Collections.singletonList(field);
 		} else if (parentFieldValue instanceof List) {
+			@SuppressWarnings("unchecked")
 			final var parentFieldValues = (List<Map<String, Map<String, Object>>>) parentFieldValue;
 			return parentFieldValues.stream().map(parentFieldChildren -> {
 				if (parentFieldChildren.containsKey(fieldSpec.getName())) {

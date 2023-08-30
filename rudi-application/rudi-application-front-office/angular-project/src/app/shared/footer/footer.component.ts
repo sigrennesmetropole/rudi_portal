@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { AppInfo } from 'src/app/acl/acl-api/model/models';
 import {MediaSize} from '../../core/services/breakpoint-observer.service';
-import {AppInfo, MiscellaneousService} from '../../api-konsult';
 import {RedirectService} from '../../core/services/redirect.service';
 import {FooterUtils} from '../utils/footer-utils';
+import {MiscellaneousService} from '../../konsult/konsult-api';
 import {PropertiesMetierService} from '../../core/services/properties-metier.service';
 import {forkJoin} from 'rxjs';
 import {LogService} from '../../core/services/log.service';

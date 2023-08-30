@@ -25,12 +25,13 @@ import lombok.ToString;
 @Table(name = "linked_dataset", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
-@ToString(exclude = { "project" })
+@ToString
 public class LinkedDatasetEntity extends AbstractAssetDescriptionEntity {
 
 	private static final long serialVersionUID = -7654406330206580256L;
 	public static final String FIELD_ID = "id";
 	public static final String DATASET_UUID_FIELD = "datasetUuid";
+	public static final String DATASET_CONFIDENTIALITY_FIELD = "datasetConfidentiality";
 	public static final String STATUS_FIELD = "linkedDatasetStatus";
 	public static final String END_DATE_FIELD = "endDate";
 	public static final String PROJECT_FK = "project_fk";

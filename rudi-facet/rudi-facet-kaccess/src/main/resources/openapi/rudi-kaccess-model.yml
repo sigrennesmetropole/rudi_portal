@@ -278,6 +278,10 @@ components:
           type: array
           items:
             type: string
+        producerUuid:
+          description: Un UUID de producteur (l'uuid du producteur du jeu de données doit correspondre à cet UUID)
+          type: string
+          format: uuid
         dateDebut:
           description: Période temporelle min (temporal_spread.start_date)
           type: string

@@ -1,14 +1,13 @@
 package org.rudi.microservice.acl.service.account.impl;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.rudi.microservice.acl.storage.dao.accountupdate.ResetPasswordRequestDao;
 import org.rudi.microservice.acl.storage.entity.accountupdate.ResetPasswordRequestEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.Getter;
+
 @Component
-@Slf4j
 class UpdatePasswordTokenHelper extends AbstractTokenHelper<ResetPasswordRequestEntity, ResetPasswordRequestDao> {
 
 	/**

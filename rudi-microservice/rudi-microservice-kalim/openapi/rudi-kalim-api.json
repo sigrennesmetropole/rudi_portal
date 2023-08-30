@@ -568,14 +568,14 @@
 				}
 			}
 		},
-		"/admin/repair-resources": {
+		"/admin/warning/dont-use-repair-resources": {
 			"post": {
 				"tags": [
 					"kalim"
 				],
 				"summary": "Répare les jeux de données",
-				"description": "Répare tous les jeux de données qui pourraient avoir des problèmes suite à des manipulations manuelles ou des migrations échouées.",
-				"operationId": "repairResources",
+				"description": "API obsolète à ce jour à ne pas utiliser car le lancement de cette API convertit les selfdata en des jdds ouverts",
+				"operationId": "warningDontUseRepairResources",
 				"responses": {
 					"204": {
 						"description": "OK"

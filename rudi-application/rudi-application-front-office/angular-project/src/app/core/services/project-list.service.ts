@@ -25,9 +25,10 @@ export class ProjectListService {
      * @param offset la page sur laquelle on est
      * @param limit le nombre de projets pour la page
      * @param order la colonne sur léquelles on trie
+     * @param producerUuid UUIDs des organisations ayant déclaré la réutilisation ou soumis le projet
      */
     public searchProjectsCatalog(linkedDatasetsGlobalIds: string[], offset: number, limit: number,
-                                 order = DEFAULT_PROJECT_ORDER): Observable<ProjectCatalogItemPage> {
+                                 order = DEFAULT_PROJECT_ORDER, producerUuid?: string): Observable<ProjectCatalogItemPage> {
 
         // La page renvoyée
         const page = new ProjectCatalogItemPage();
@@ -35,6 +36,7 @@ export class ProjectListService {
         // Tout va partir des projets à récupérer
         const criteria: ProjectSearchCriteria = {
             dataset_uuids: linkedDatasetsGlobalIds,
+            owner_uuids: [producerUuid],
             offset,
             limit
         };

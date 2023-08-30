@@ -1,0 +1,16 @@
+[
+	{
+		"label": "Plan de ville gris",
+		"url": "https://public.sig.rennesmetropole.fr/geowebcache/service/wmts",
+		"layerName": "ref_fonds:pvci_nb",
+		"attributions": "Plan de ville communal et intercommunal - Rennes ville et métropole",
+		"type": "wmts",
+		"srs": "EPSG:3857",
+		"minZoom": "0",
+		"maxZoom": "22",
+		"format": "image/png",
+		"matrixSet": "EPSG:3857",
+		"matrixIdPrefix": "EPSG:3857"
+	}
+]
+

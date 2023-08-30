@@ -36,6 +36,11 @@ import SelfdataAccessEnum = SelfdataContent.SelfdataAccessEnum;
 import SelfdataCatagoriesEnum = SelfdataContent.SelfdataCategoriesEnum;
 import UnitEnum = Period.UnitEnum;
 import TypeEnum = MatchingData.TypeEnum;
+import {DisplayMapService, DEFAULT_VIEW_PROJECTION} from '../../../core/services/data-set/display-map.service';
+import {Geometry, Polygon} from 'ol/geom';
+import {Feature} from 'ol';
+import {LogService} from '../../../core/services/log.service';
+import {LayerInformation} from '../../../konsult/konsult-model';
 
 @Component({
     selector: 'app-data-sets-infos',
@@ -66,10 +71,16 @@ export class DataSetInfosComponent implements OnInit {
     expanded: boolean;
     kindOfData: KindOfData;
     mapMediaIndexSeries: Map<number, number> = new Map<number, number>();
+
     /**
      * La map d'association : Média -> est-ce que j'ai copié son URL dans le presse papier ?
      */
     mapMediaUrlCopied: Map<Media, boolean> = new Map();
+
+    boundingBox: Feature<Polygon>;
+    centeredGeometry: Geometry;
+    baseLayers: LayerInformation[] = [];
+    isMapLoading = false;
 
     constructor(private readonly konsultMetierService: KonsultMetierService,
                 readonly snacbackService: SnackBarService,
@@ -79,7 +90,9 @@ export class DataSetInfosComponent implements OnInit {
                 readonly metaDataFunctions: DetailFunctions,
                 private readonly propertiesMetierService: PropertiesMetierService,
                 private readonly getBackendPropertyPipe: GetBackendPropertyPipe,
-                private readonly clipboard: Clipboard
+                private readonly clipboard: Clipboard,
+                private readonly displayMapService: DisplayMapService,
+                private readonly logService: LogService
     ) {
     }
 
@@ -90,6 +103,23 @@ export class DataSetInfosComponent implements OnInit {
         this.metadata.available_formats.sort(this.mediasSortedFunction);
 
         this.buildMapMediaIndex(this.mapMediaIndexSeries, this.metaDataFunctions.isMediaTypeSeries);
+
+        this.boundingBox = this.displayMapService.getMetadataBoundingBox(this.metadata, DEFAULT_VIEW_PROJECTION);
+        if (this.metadata.geography != null) {
+            this.centeredGeometry = this.displayMapService.getMetadataGeolocation(this.metadata, DEFAULT_VIEW_PROJECTION);
+        }
+
+        this.isMapLoading = true;
+        this.displayMapService.getLocalisationBaseLayers().subscribe({
+            next: (baseLayers: LayerInformation[]) => {
+                this.isMapLoading = false;
+                this.baseLayers = baseLayers;
+            },
+            error: (e) => {
+                this.isMapLoading = false;
+                this.logService.error(e);
+            }
+        });
     }
 
     /**

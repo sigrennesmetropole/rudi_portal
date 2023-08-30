@@ -340,8 +340,19 @@
 					}
 				},
 				"discriminator": {
-					"propertyName": "object_type"
+					"propertyName": "object_type",
+					"mapping": {
+						"DummyAssetDescription": "#/components/schemas/DummyAssetDescription"
+					}
 				}
+			},
+			"DummyAssetDescription": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AssetDescription"
+					}
+				]
 			},
 			"Task": {
 				"type": "object",

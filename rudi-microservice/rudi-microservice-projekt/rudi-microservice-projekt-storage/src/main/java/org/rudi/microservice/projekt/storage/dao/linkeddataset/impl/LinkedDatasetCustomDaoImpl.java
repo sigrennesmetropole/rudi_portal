@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetCustomDao;
+import org.rudi.microservice.projekt.storage.entity.DatasetConfidentiality;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetStatus;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
+import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.DATASET_CONFIDENTIALITY_FIELD;
 import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.DATASET_UUID_FIELD;
 import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.END_DATE_FIELD;
 import static org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity.STATUS_FIELD;
@@ -44,11 +46,20 @@ public class LinkedDatasetCustomDaoImpl extends AbstractCustomDaoImpl<LinkedData
 	@Override
 	protected void addPredicates(LinkedDatasetSearchCriteria searchCriteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<LinkedDatasetEntity> root, List<Predicate> predicates) {
 		predicateStringCriteria(searchCriteria.getDatasetUuid(), DATASET_UUID_FIELD, predicates, builder, root);
-
-		if (isTrue(searchCriteria.getCheckEndDate())) {
-			final var endDateIsNull = root.get(END_DATE_FIELD).isNull();
+   		// Les demandes non expirées
+		if (isTrue(searchCriteria.getEndDateIsNotOver())) {
 			final var endDateIsNotOver = builder.greaterThan(root.get(END_DATE_FIELD), LocalDateTime.now());
-			predicates.add(builder.or(endDateIsNull, endDateIsNotOver));
+			predicates.add(endDateIsNotOver);
+		}
+		// Les demandes expirées
+		if (isTrue(searchCriteria.getEndDateIsOver())) {
+			final var endDateIsOver = builder.lessThan(root.get(END_DATE_FIELD), LocalDateTime.now());
+			predicates.add(endDateIsOver);
+		}
+		// Les demandes n'ayant pas de endDate
+		if (isTrue(searchCriteria.getEndDateIsNull())) {
+			final var endDateIsNull = root.get(END_DATE_FIELD).isNull();
+			predicates.add(endDateIsNull);
 		}
 
 		if (CollectionUtils.isNotEmpty(searchCriteria.getProjectOwnerUuids())) {
@@ -71,8 +82,9 @@ public class LinkedDatasetCustomDaoImpl extends AbstractCustomDaoImpl<LinkedData
 			predicates.add(root.get(LinkedDatasetEntity.DATASET_UUID_FIELD).in(searchCriteria.getDatasetUuid()));
 		}
 
-
+		if (searchCriteria.getDatasetConfidentiality() != null) {
+			DatasetConfidentiality confidentiality = DatasetConfidentiality.valueOf(searchCriteria.getDatasetConfidentiality());
+			predicates.add(root.get(DATASET_CONFIDENTIALITY_FIELD).in(confidentiality));
+		}
 	}
-
-
 }

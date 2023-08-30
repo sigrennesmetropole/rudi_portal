@@ -1,5 +1,6 @@
 package org.rudi.microservice.kalim.service.admin.impl;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +20,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.acl.bean.Role;
@@ -49,7 +49,10 @@ import org.rudi.facet.kaccess.bean.ReferenceDates;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.organization.bean.Organization;
+import org.rudi.facet.organization.bean.OrganizationMember;
+import org.rudi.facet.organization.bean.OrganizationRole;
 import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.AddUserToOrganizationException;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.facet.providers.helper.ProviderHelper;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
@@ -65,12 +68,12 @@ import org.springframework.stereotype.Service;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -107,7 +110,8 @@ public class AdminServiceImpl implements AdminService {
 
 			final var query = resourceRepairer.getQuery();
 
-			final var searchDatasetInfos = SearchElementsUtils.fetchAllElementsUsing(offset -> fetchPageAtOffset(query, offset));
+			final var searchDatasetInfos = SearchElementsUtils
+					.fetchAllElementsUsing(offset -> fetchPageAtOffset(query, offset));
 			log.info(searchDatasetInfos.size() + " resource(s) to repair...");
 			for (final var searchDatasetInfo : searchDatasetInfos) {
 				final var persistentId = searchDatasetInfo.getGlobalId();
@@ -160,12 +164,21 @@ public class AdminServiceImpl implements AdminService {
 				createdUser.setLogin(organizationUuid);
 				createdUser.setPassword(report.getPasswordUsed());
 				createdUser.setType(UserType.ROBOT);
-				List<Role> roles = aclHelper.searchRoles()
-						.stream()
+				List<Role> roles = aclHelper.searchRoles().stream()
 						.filter(element -> defaultOrganizationRoles.contains(element.getCode()))
 						.collect(Collectors.toList());
 				createdUser.setRoles(roles);
 				aclHelper.createUser(createdUser);
+				organizationUser = createdUser;
+			}
+
+			OrganizationMember member = new OrganizationMember().userUuid(organizationUser.getUuid())
+					.role(OrganizationRole.EDITOR)
+					.addedDate(LocalDateTime.now());
+			try {
+				organizationHelper.addMemberToOrganization(member, organization.getUuid());
+			} catch (AddUserToOrganizationException exception) {
+				log.info("L'utilisateur ROBOT existe déjà pour cette organisation");
 			}
 		}
 
@@ -198,12 +211,8 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	private SearchElements<SearchDatasetInfo> fetchPageAtOffset(String query, Integer offset) {
-		final var searchParams = SearchParams.builder()
-				.q(query)
-				.type(EnumSet.of(SearchType.DATASET))
-				.subtree(rudiAlias)
-				.start(offset)
-				.build();
+		final var searchParams = SearchParams.builder().q(query).type(EnumSet.of(SearchType.DATASET)).subtree(rudiAlias)
+				.start(offset).build();
 
 		final SearchElements<SearchDatasetInfo> searchDatasetInfoElements;
 		try {
@@ -218,9 +227,11 @@ public class AdminServiceImpl implements AdminService {
 	/**
 	 * Corriger les champs, si nécessaire, pour permettre la sauvegarde de la ressource précédemment réparée
 	 */
-	private DatasetVersion makeResourceUpdatable(DatasetVersion repairedDatasetVersion, String persistentId) throws DataverseMappingException {
+	private DatasetVersion makeResourceUpdatable(DatasetVersion repairedDatasetVersion, String persistentId)
+			throws DataverseMappingException {
 
-		final var metadata = metadataBLockHelper.datasetMetadataBlockToMetadata(repairedDatasetVersion.getMetadataBlocks(), persistentId);
+		final var metadata = metadataBLockHelper
+				.datasetMetadataBlockToMetadata(repairedDatasetVersion.getMetadataBlocks(), persistentId);
 		boolean modified = false;
 
 		for (final var media : metadata.getAvailableFormats()) {
@@ -242,8 +253,7 @@ public class AdminServiceImpl implements AdminService {
 
 		if (modified) {
 			final var datasetMetadataBlock = metadataBLockHelper.metadataToDatasetMetadataBlock(metadata);
-			return new DatasetVersion()
-					.id(repairedDatasetVersion.getId())
+			return new DatasetVersion().id(repairedDatasetVersion.getId())
 					.datasetId(repairedDatasetVersion.getDatasetId())
 					.datasetPersistentId(repairedDatasetVersion.getDatasetPersistentId())
 					.versionState(repairedDatasetVersion.getVersionState())
@@ -251,27 +261,25 @@ public class AdminServiceImpl implements AdminService {
 					.lastUpdateTime(repairedDatasetVersion.getLastUpdateTime())
 					.versionNumber(repairedDatasetVersion.getVersionNumber())
 					.versionMinorNumber(repairedDatasetVersion.getVersionMinorNumber())
-					.metadataBlocks(datasetMetadataBlock)
-					.files(repairedDatasetVersion.getFiles());
+					.metadataBlocks(datasetMetadataBlock).files(repairedDatasetVersion.getFiles());
 		} else {
 			return repairedDatasetVersion;
 		}
 	}
 
-
 	@Override
 	public void createMissingApis(List<UUID> globalIds) {
 		log.info("Starting createMissingApis...");
-		fetchAllMetadata(globalIds)
-				.map(this::createMissingApis)
-				.blockLast();
+		fetchAllMetadata(globalIds).map(this::createMissingApis).blockLast();
 		log.info("createMissingApis terminated.");
 	}
 
 	@Nonnull
 	private Flux<Metadata> fetchAllMetadata(List<UUID> globalIds) {
-		final Function<MetadataListFacets, List<Metadata>> pageContentGetter = page -> page.getMetadataList().getItems();
-		return MetadataListUtils.fluxAllElementsUsing(offset -> fetchMetadataPage(globalIds, offset), pageContentGetter, this::computeNextPageOffset);
+		final Function<MetadataListFacets, List<Metadata>> pageContentGetter = page -> page.getMetadataList()
+				.getItems();
+		return MetadataListUtils.fluxAllElementsUsing(offset -> fetchMetadataPage(globalIds, offset), pageContentGetter,
+				this::computeNextPageOffset);
 	}
 
 	@Nullable
@@ -285,8 +293,7 @@ public class AdminServiceImpl implements AdminService {
 
 	private Mono<MetadataListFacets> fetchMetadataPage(List<UUID> globalIds, int offset) {
 		final var datasetSearchCriteria = new DatasetSearchCriteria()
-				.globalIds(CollectionUtils.isEmpty(globalIds) ? null : globalIds)
-				.offset(offset);
+				.globalIds(CollectionUtils.isEmpty(globalIds) ? null : globalIds).offset(offset);
 		final List<String> facets = Collections.emptyList();
 		try {
 			log.info("Fetching Datasets at offset {}...", offset);
@@ -352,11 +359,8 @@ public class AdminServiceImpl implements AdminService {
 
 	@Nonnull
 	private UUID getProviderUuid(Metadata metadata) {
-		return ObjectUtils.getFirstNonNull(
-				() -> getProviderUuidFromMetadataInfo(metadata),
-				() -> getProviderUuidFromIntegrationRequest(metadata),
-				providerHelper::getDefaultProviderUuid
-		);
+		return ObjectUtils.getFirstNonNull(() -> getProviderUuidFromMetadataInfo(metadata),
+				() -> getProviderUuidFromIntegrationRequest(metadata), providerHelper::getDefaultProviderUuid);
 	}
 
 	@Nullable
@@ -368,9 +372,7 @@ public class AdminServiceImpl implements AdminService {
 	@Nullable
 	private UUID getProviderUuidFromIntegrationRequest(Metadata metadata) {
 		final var integrationRequestSearchCriteria = IntegrationRequestSearchCriteria.builder()
-				.globalId(metadata.getGlobalId())
-				.integrationStatus(IntegrationStatus.OK)
-				.build();
+				.globalId(metadata.getGlobalId()).integrationStatus(IntegrationStatus.OK).build();
 
 		final var limit = 100;
 		final var pageable = utilPageable.getPageable(0, limit, null);
@@ -384,31 +386,24 @@ public class AdminServiceImpl implements AdminService {
 
 		final var integrationRequest = integrationRequests.getContent().stream()
 				.filter(req -> req.getMethod() == Method.POST || req.getMethod() == Method.PUT)
-				.max(Comparator.comparing(IntegrationRequest::getTreatmentDate))
-				.orElse(null);
+				.max(Comparator.comparing(IntegrationRequest::getTreatmentDate)).orElse(null);
 
 		return integrationRequest != null ? integrationRequest.getNodeProviderId() : null;
 	}
 
 	@Override
 	public void deleteAllApis() {
-		getAllApis()
-				.doOnNext(this::deleteApi)
-				.blockLast();
+		getAllApis().doOnNext(this::deleteApi).blockLast();
 	}
 
 	private Flux<APIInfo> getAllApis() {
-		return PageResultUtils.fluxAllElementsUsing(
-				offset -> {
-					try {
-						return Mono.just(apIsService.searchAPI(new APISearchCriteria()
-								.offset(offset)));
-					} catch (APIsOperationException e) {
-						throw new RuntimeException(e);
-					}
-				},
-				APIList::getList,
-				page -> page.getPagination().getOffset() + page.getPagination().getLimit());
+		return PageResultUtils.fluxAllElementsUsing(offset -> {
+			try {
+				return Mono.just(apIsService.searchAPI(new APISearchCriteria().offset(offset)));
+			} catch (APIsOperationException e) {
+				throw new RuntimeException(e);
+			}
+		}, APIList::getList, page -> page.getPagination().getOffset() + page.getPagination().getLimit());
 	}
 
 	private void deleteApi(APIInfo apiInfo) {

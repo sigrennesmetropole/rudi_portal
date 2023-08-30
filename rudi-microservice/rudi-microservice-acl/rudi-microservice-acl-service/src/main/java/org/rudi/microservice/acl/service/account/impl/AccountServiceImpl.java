@@ -33,6 +33,7 @@ import org.rudi.microservice.acl.service.helper.EmailHelper;
 import org.rudi.microservice.acl.service.helper.PasswordHelper;
 import org.rudi.microservice.acl.service.mapper.AccountRegistrationMapper;
 import org.rudi.microservice.acl.service.mapper.UserMapper;
+import org.rudi.microservice.acl.service.password.AbstractPasswordException;
 import org.rudi.microservice.acl.service.user.UserService;
 import org.rudi.microservice.acl.storage.dao.accountregistration.AccountRegistrationDao;
 import org.rudi.microservice.acl.storage.dao.accountupdate.ResetPasswordRequestDao;
@@ -96,7 +97,8 @@ public class AccountServiceImpl implements AccountService {
 	private UpdatePasswordTokenHelper updatePasswordTokenHelper;
 
 	@Override
-	public void checkAccountCreation(Account account) throws AbstractAccountRegistrationException {
+	public void checkAccountCreation(Account account)
+			throws AbstractAccountRegistrationException, AbstractPasswordException {
 
 		// Check des champs obligatoires
 		boolean missingField = false;
@@ -133,7 +135,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional // (readOnly = false)
 	@Override
-	public void registerAccount(Account account) throws AbstractAccountRegistrationException {
+	public void registerAccount(Account account)
+			throws AbstractAccountRegistrationException, AbstractPasswordException {
 		checkAccountCreation(account);
 		// On crée l'entité accountRegistration
 		AccountRegistrationEntity entity = accountRegistrationMapper.dtoToEntity(account);

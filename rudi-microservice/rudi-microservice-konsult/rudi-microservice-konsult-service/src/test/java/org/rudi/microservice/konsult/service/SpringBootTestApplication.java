@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.rudi.common.storage",
 		"org.rudi.microservice.konsult.service",
 		"org.rudi.facet.acl",
+		"org.rudi.facet.rva",
 		"org.rudi.facet.apimaccess",
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kaccess",

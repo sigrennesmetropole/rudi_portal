@@ -1,13 +1,14 @@
 package org.rudi.common.facade.config.filter;
 
-import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletResponse;
+
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class BearerTokenFilter extends OncePerRequestFilter {

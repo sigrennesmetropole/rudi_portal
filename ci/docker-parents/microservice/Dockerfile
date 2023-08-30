@@ -19,13 +19,14 @@ ADD id_rsa /etc/rudi/config/key/id_rsa
 ADD id_rsa.pub /etc/rudi/config/key/id_rsa.pub
 
 # ansible/roles/rudi/tasks/microservice.yml : {{microservice}} : Copy log4j2.xml
-ADD log4j2.xml /opt/rudi/config/microservice/log4j2.xml
+ADD log4j2.xml /etc/rudi/config/microservice/log4j2.xml
 
 # ansible/roles/rudi/tasks/microservice.yml : {{microservice}} : Copy *.properties
 # Ajouté par un configmap Kubernetes
 
 CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty \
       -Drudi.datadir=/etc/rudi/data/microservice \
+      -Dlogging.config=/etc/rudi/config/microservice/log4j2.xml \
       -Dspring.config.additional-location=file:/etc/rudi/config/microservice/ \
       ${ADD_JAVA_OPTS} \
       -Xmx${XMX:-1G} -Xms${XMX:-1G} \

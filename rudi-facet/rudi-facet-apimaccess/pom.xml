@@ -5,14 +5,13 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>rudi-facet-apimaccess</artifactId>
 
 	<properties>
-		<surefire.plugin.version>2.22.2</surefire.plugin.version>
 		<resource-directory>${project.basedir}/src/main/resources</resource-directory>
 		<resource-generation-directory>${project.basedir}/src/main/resources</resource-generation-directory>
 	</properties>
@@ -68,7 +67,6 @@
 		<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
-			<version>1.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
@@ -81,12 +79,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains</groupId>
@@ -97,7 +89,6 @@
 		<dependency>
 			<groupId>org.rudi</groupId>
 			<artifactId>rudi-facet-dataset</artifactId>
-			<version>1.1.4</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -118,7 +109,7 @@
 							<modelPackage>org.rudi.facet.apimaccess.bean</modelPackage>
 							<inputSpec>${resource-directory}/openapi/rudi-apimaccess-model.json</inputSpec>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
@@ -142,7 +133,7 @@
 							<modelPackage>org.wso2.carbon.apimgt.rest.api.admin</modelPackage>
 							<inputSpec>${project.basedir}/openapi/admin-v1.yml</inputSpec>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
@@ -166,7 +157,7 @@
 							<modelPackage>org.wso2.carbon.apimgt.rest.api.publisher</modelPackage>
 							<inputSpec>${project.basedir}/openapi/publisher-v1.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
@@ -190,7 +181,7 @@
 							<modelPackage>org.wso2.carbon.apimgt.rest.api.devportal</modelPackage>
 							<inputSpec>${project.basedir}/openapi/devportal-v1.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<library>spring-mvc</library>
+							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
@@ -210,7 +201,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.plugin.version}</version>
+				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>

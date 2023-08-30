@@ -721,6 +721,83 @@
             "errorFileSize": "Les données sont trop volumineuses, merci de les télécharger afin de les visualiser.",
             "errorAccess": "Afin de pouvoir visualiser la donnée vous devez avoir été autorisé à la mobiliser dans le cadre d'un projet. Merci d'effectuer une demande d'accès en cliquant sur le bouton \"Demander l'accès\" situé en dessous de la zone de titre du jeu de données.",
             "tableHeadingBtn": "Ce tableau comporte des en-têtes"
+        },
+        "mapData": "Carte",
+        "mapDataTab": {
+            "searchAddressTitle": "Recherche par adresse: ",
+            "searchAddressPlaceholder": "Recherche par nom de lieu"
+        },
+        "administrationTab": {
+            "title": "Administration des membres",
+            "organizationTitle": "Mon organisation",
+            "robotTable": {
+                "name": "Nom",
+                "id": "identifiant",
+                "dash": "",
+                "changePassword": "Modifier le mot de passe"
+            },
+            "membersTable": {
+                "lastName": "Nom",
+                "firstName": "Prénom",
+                "mail": "Adresse e-mail",
+                "lastConnexion": "Dernière connexion",
+                "addDate": "Date d'ajout",
+                "role": "Rôle",
+                "noResult": "Aucun membre n'est rattaché à votre organisation.",
+                "noResultWithFilter": "Aucun Résultat ne correspond à votre recherche.",
+                "resultText": "Membres de l'organisation",
+                "searchbox": "Rechercher ...",
+                "editor": "Éditeur",
+                "administrator": "Administrateur",
+                "errorPagination": "Une erreur est survenue. Merci de relancer la procédure. Si le problème persiste veuillez contacter un administrateur",
+                "update": "Modifier le profil",
+                "delete": "Détacher de l'organisation",
+                "addMember": "Ajouter un membre",
+                "addPopin": {
+                    "title": "Ajouter un membre",
+                    "subTitle": "Attention: seules les personnes ayant déjà créées un compte sur Rudi peuvent ajoutées à une organisation",
+                    "descriptionMail": "Veuillez renseigner l'adresse email du compte Rudi de la personne que vous souhaitez ajouter à votre organisation",
+                    "descriptionRole": "Saisissez le rôle que vous souhaitez attribuer à ce membre. Un éditeur peut agir sur Rudi au nom de cette organisation. Un administrateur peut gérer l'organisation et ses membres",
+                    "success": "L'utilisateur a bien été ajouté à l’organisation."
+                },
+                "updatePopin": {
+                    "title": "Modifier le rôle",
+                    "text": "En tant qu'administrateur, vous pouvez à tout moment modifier le rôle des membres de votre organisation.",
+                    "text2": "Informations obligatoires à renseigner. ",
+                    "mail": "Adresse e-mail",
+                    "descriptionMail": "Veuillez renseigner l’adresse e-mail du membre pour lequel vous souhaitez modifier le rôle",
+                    "role": "Rôle",
+                    "descriptionRole": "Indiquez le nouveau rôle à attribuer à ce membre. Un éditeur peut agir sur Rudi au nom de l'organisation. Un administrateur peut gérer l'organisation et ses membres.",
+                    "success": "Le rôle de l’utilisateur a bien été modifié."
+                },
+                "updatePassword": {
+                    "title": "Modifier le mot de passe",
+                    "text": " Chaque organisation dispose d'un mot de passe, utilisé pour attribuer certaines autorisations sur Rudi. Seuls les administrateurs peuvent modifier le mot de passe.",
+                    "text2": "Informations obligatoires à renseigner. ",
+                    "passwordOld": "Ancien mot de passe ",
+                    "descriptionPasswordOld": "Veuillez renseigner ici votre mot de passe actuel de votre organisation.",
+                    "password": "Nouveau mot de passe ",
+                    "descriptionPassword": "Le nouveau mot de passe de votre organisation doit comporter au minimum 12 caractères et au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
+                    "passwordConfirmation": "Confirmation du mot de passe",
+                    "descriptionPasswordConfirmation": "Veuillez réécrire le mot de passe de votre organisation",
+                    "validate": "Modifier",
+                    "succes": "Le mot de passe de l’organisation a bien été modifié",
+                    "error": "Une erreur est survenue. Veuillez renouveler l'operation .",
+                    "passwordConfirmRequired": "Vous n'avez pas saisi la confirmation de votre mot de passe. Veuillez le renseigner.",
+                    "passwordOldRequired": "Veuillez renseigner votre ancien mot de passe.",
+                    "passwordRequired": "Vous n'avez pas saisi votre Mot de passe. Veuillez le renseigner.",
+                    "errorCaptcha": "Le Captcha est invalide, merci de le saisir à nouveau"
+                },
+                "deletePopin": {
+                    "title": "Détacher de l'organisation",
+                    "text": "Êtes-vous sûr de vouloir détacher cet utilisateur de votre organisation ?",
+                    "text2": "Cette personne ne pourra plus agir au nom de l'organisation et ne pourra plus gérer les contenus de votre organisation. L'utilisateur recevra un e-mail l'informant de cette modification.",
+                    "text3": "Il sera toujours possible d'ajouter à nouveau cette personne à votre organisation.",
+                    "success": "L'utilisateur a bien été détaché de l’organisation."
+                },
+                "error": "Une erreur est survenue. Merci de recharger la page. Si le problème persiste veuillez contacter un administrateur en cliquant ",
+                "here": "ici."
+            }
         }
     },
     "availableFormats": {
@@ -1233,7 +1310,9 @@
                     "text2": "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour ce projet.",
                     "confirmationPopup": {
                         "cancel": "Annuler",
-                        "validate": "Confirmer"
+                        "validate": "Confirmer",
+                        "update": "Modifier",
+                        "addMember": "Ajouter un membre"
                     }
                 }
             },
@@ -1403,5 +1482,15 @@
     },
     "businessException": {
         "tooManyAddressesException": "Erreur lors de la recherche des adresses. Veuillez préciser votre adresse."
+    },
+    "organization": {
+        "label": "Organisation",
+        "noDescription": "L'organisation n'a renseigné aucune description.",
+        "noUrl": "L'organisation n'a renseigné aucune information.",
+        "datasetTotal": "Jeux de donnée",
+        "reusesTotal": "Réutilisation",
+        "noMetadata":  "L'organisation n'a publié aucun jeu de données.",
+        "noReuse": "L'organisation n'a publié aucun projet ou réutilisation.",
+        "description": "Description"
     }
 }
