@@ -5,7 +5,9 @@ import org.rudi.common.service.exception.AppServiceExceptionsStatus;
 
 public abstract class AbstractPasswordException extends AppServiceException {
 
-	public AbstractPasswordException(String message, AppServiceExceptionsStatus status) {
+	private static final long serialVersionUID = -4379250607946795205L;
+
+	protected AbstractPasswordException(String message, AppServiceExceptionsStatus status) {
 		super(message, status);
 	}
 }

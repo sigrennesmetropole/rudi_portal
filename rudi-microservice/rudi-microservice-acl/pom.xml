@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-acl</artifactId>
@@ -19,5 +19,25 @@
 		<module>rudi-microservice-acl-service</module>
 		<module>rudi-microservice-acl-facade</module>
 	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-microservice-acl-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-microservice-acl-storage</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-microservice-acl-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

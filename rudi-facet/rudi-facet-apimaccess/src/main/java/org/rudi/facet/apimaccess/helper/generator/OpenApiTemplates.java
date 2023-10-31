@@ -6,21 +6,22 @@ import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nullable;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateNotFoundException;
 import org.apache.commons.io.FilenameUtils;
+import org.rudi.facet.apimaccess.constant.BeanIds;
 import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
 public class OpenApiTemplates {
 
-	@Cacheable("templatesByInterfaceContract")
+	@Cacheable(value = BeanIds.API_MACCESS_TEMPLATE_BY_INTERFACE_CONTRACT, cacheManager = BeanIds.API_MACCESS_CACHE_MANAGER)
 	public Template findByInterfaceContract(InterfaceContract interfaceContract) throws IOException {
 		final String fileName = getFileNameFromInterfaceContract(interfaceContract);
 		Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
@@ -29,8 +30,16 @@ public class OpenApiTemplates {
 		return getTemplate(interfaceContract, fileName, configuration);
 	}
 
+	@Cacheable(value = BeanIds.API_MACCESS_TEMPLATE_EXISTENCE, cacheManager = BeanIds.API_MACCESS_CACHE_MANAGER)
+	public boolean existsByInterfaceContract(InterfaceContract interfaceContract) {
+		final String fileName = getFileNameFromInterfaceContract(interfaceContract);
+		final URL resource = this.getClass().getResource(fileName);
+		return resource != null;
+	}
+
 	@Nullable
-	private Template getTemplate(InterfaceContract interfaceContract, String fileName, Configuration configuration) throws IOException {
+	private Template getTemplate(InterfaceContract interfaceContract, String fileName, Configuration configuration)
+			throws IOException {
 		try {
 			final String name = FilenameUtils.getName(fileName);
 			return configuration.getTemplate(name);
@@ -42,13 +51,6 @@ public class OpenApiTemplates {
 
 	private String getFileNameFromInterfaceContract(InterfaceContract interfaceContract) {
 		return String.format("/openapi/templates-by-interface-contract/%s.json", interfaceContract.getUrlPath());
-	}
-
-	@Cacheable("templatesExistence")
-	public boolean existsByInterfaceContract(InterfaceContract interfaceContract) {
-		final String fileName = getFileNameFromInterfaceContract(interfaceContract);
-		final URL resource = this.getClass().getResource(fileName);
-		return resource != null;
 	}
 
 }

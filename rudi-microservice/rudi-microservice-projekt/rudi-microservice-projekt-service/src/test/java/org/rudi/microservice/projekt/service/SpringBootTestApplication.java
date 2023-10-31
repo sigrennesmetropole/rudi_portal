@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Classe application pour les tests unitaires de la couche service
  */
 @SpringBootApplication(scanBasePackages = {
-		"org.rudi.common.core.json",
+		"org.rudi.common.core",
 		"org.rudi.common.service",
 		"org.rudi.common.storage",
 		"org.rudi.common.facade",
@@ -19,11 +19,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.rudi.facet.email",
 		"org.rudi.facet.generator",
 		"org.rudi.facet.kaccess",
-		"org.rudi.microservice.projekt.core",
-		"org.rudi.microservice.projekt.service",
-		"org.rudi.microservice.projekt.storage",
 		"org.rudi.facet.apimremote",
 		"org.rudi.facet.apimaccess",
+		"org.rudi.microservice.projekt.core",
+		"org.rudi.microservice.projekt.service",
+		"org.rudi.microservice.projekt.storage"
 })
 public class SpringBootTestApplication {
 }

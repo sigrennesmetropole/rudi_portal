@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceException;
@@ -28,11 +28,17 @@ import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.service.exception.DataverseExternalServiceException;
+import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
 import org.rudi.microservice.projekt.service.mapper.NewDatasetRequestMapper;
 import org.rudi.microservice.projekt.service.mapper.ProjectMapper;
 import org.rudi.microservice.projekt.service.project.ProjectService;
+import org.rudi.microservice.projekt.service.project.impl.fields.AddDatasetToProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.CreateProjectFieldProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.DeleteDatasetFromProjectProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.DeleteMediaFromProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.DeleteProjectFieldProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.UpdateDatasetInProjectProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.UpdateMediaInProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.UpdateProjectFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.newdatasetrequest.CreateNewDatasetRequestFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.newdatasetrequest.DeleteNewDatasetRequestFieldProcessor;
@@ -61,9 +67,16 @@ public class ProjectServiceImpl implements ProjectService {
 	private final List<UpdateProjectFieldProcessor> updateProjectProcessors;
 	private final List<DeleteProjectFieldProcessor> deleteProjectProcessors;
 
+	private final List<DeleteMediaFromProjectProcessor> deleteMediaFromProjectProcessors;
+	private final List<UpdateMediaInProjectProcessor> updateMediaInProjectProcessors;
+
 	private final List<CreateNewDatasetRequestFieldProcessor> createNewDatasetRequestProcessors;
 	private final List<UpdateNewDatasetRequestFieldProcessor> updateNewDatasetRequestProcessors;
 	private final List<DeleteNewDatasetRequestFieldProcessor> deleteNewDatasetRequestProcessors;
+
+	private final List<AddDatasetToProjectProcessor> addDatasetToProjectProcessors;
+	private final List<DeleteDatasetFromProjectProcessor> deleteDatasetFromProjectProcessors;
+	private final List<UpdateDatasetInProjectProcessor> updateDatasetInProjectProcessors;
 
 	private final ProjectMapper projectMapper;
 	private final ProjectDao projectDao;
@@ -77,6 +90,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private final UtilContextHelper utilContextHelper;
 	private final OrganizationHelper organizationHelper;
 	private final ACLHelper aclHelper;
+	private final MyInformationsHelper myInformationsHelper;
 
 	@Override
 	@Transactional // readOnly = false
@@ -122,7 +136,6 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectEntity entity = projectMapper.dtoToEntity(projectToUpdate);
 		val existingProject = getRequiredProjectEntity(projectToUpdate.getUuid());
 
-		// TODO existingProject ou project ?
 		for (final UpdateProjectFieldProcessor processor : updateProjectProcessors) {
 			processor.process(entity, existingProject);
 		}
@@ -172,7 +185,8 @@ public class ProjectServiceImpl implements ProjectService {
 		} catch (DataverseAPIException e) {
 			throw new AppServiceException(
 					String.format("Erreur lors du téléchargement du %s du projet avec projectUuid = %s",
-							kindOfData.getValue(), projectUuid), e);
+							kindOfData.getValue(), projectUuid),
+					e);
 		}
 	}
 
@@ -188,25 +202,36 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public void uploadMedia(UUID projectUuid, KindOfData kindOfData, Resource media) throws AppServiceException {
-		getRequiredProjectEntity(projectUuid);
+		ProjectEntity existingProject = getRequiredProjectEntity(projectUuid);
+
+		// vérification des droits sur le projet
+		for (final UpdateMediaInProjectProcessor processor : updateMediaInProjectProcessors) {
+			processor.process(null, existingProject);
+		}
+
 		try {
 			val tempFile = resourceHelper.copyResourceToTempFile(media);
 			mediaService.setMediaFor(MediaOrigin.PROJECT, projectUuid, kindOfData, tempFile);
 		} catch (final DataverseAPIException | IOException e) {
-			throw new AppServiceException(
-					String.format("Erreur lors de l'upload du %s du projet d'uuid %s", kindOfData.getValue(),
-							projectUuid), e);
+			throw new AppServiceException(String.format("Erreur lors de l'upload du %s du projet d'uuid %s",
+					kindOfData.getValue(), projectUuid), e);
 		}
 	}
 
 	@Override
 	public void deleteMedia(UUID projectUuid, KindOfData kindOfData) throws AppServiceException {
+		ProjectEntity existingProject = getRequiredProjectEntity(projectUuid);
+
+		// vérification des droits sur le projet
+		for (final DeleteMediaFromProjectProcessor processor : deleteMediaFromProjectProcessors) {
+			processor.process(null, existingProject);
+		}
+
 		try {
 			mediaService.deleteMediaFor(MediaOrigin.PROJECT, projectUuid, kindOfData);
 		} catch (final DataverseAPIException e) {
-			throw new AppServiceException(
-					String.format("Erreur lors de la suppression du %s du projet d'uuid %s", kindOfData.getValue(),
-							projectUuid), e);
+			throw new AppServiceException(String.format("Erreur lors de la suppression du %s du projet d'uuid %s",
+					kindOfData.getValue(), projectUuid), e);
 		}
 	}
 
@@ -223,7 +248,16 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional // readOnly = false
 	public NewDatasetRequest createNewDatasetRequest(UUID projectUuid, NewDatasetRequest datasetRequest)
 			throws AppServiceException {
+		// Recuperer le projet pour vérifier son statut
+		ProjectEntity associatedProject = getRequiredProjectEntity(projectUuid);
+
+		// Vérification des droits de l'utilisateur et du statut du projet avant d'ajouter le lien sur le dataset
+		for (final AddDatasetToProjectProcessor processor : addDatasetToProjectProcessors) {
+			processor.process(null, associatedProject);
+		}
+
 		val entity = datasetRequestMapper.dtoToEntity(datasetRequest);
+
 		entity.setUuid(UUID.randomUUID());
 		entity.setCreationDate(LocalDateTime.now());
 		entity.setUpdatedDate(entity.getCreationDate());
@@ -232,8 +266,6 @@ public class ProjectServiceImpl implements ProjectService {
 			createNewDatasetRequestFieldProcessor.process(entity, null);
 		}
 
-		// Recuperer le projet
-		val associatedProject = getRequiredProjectEntity(projectUuid);
 		associatedProject.getDatasetRequests().add(entity);
 		// Enregistrer les 2 entités (mettre tout ça dans le bloc try..catch)
 		val savedEntity = datasetRequestDao.save(entity);
@@ -262,6 +294,12 @@ public class ProjectServiceImpl implements ProjectService {
 	public NewDatasetRequest updateNewDatasetRequest(UUID projectUuid, NewDatasetRequest newDatasetRequest)
 			throws AppServiceException {
 		val project = getRequiredProjectEntity(projectUuid);
+
+		// Vérification des droits de l'utilisateur et du statut du projet avant de modifier le lien sur le dataset
+		for (final UpdateDatasetInProjectProcessor processor : updateDatasetInProjectProcessors) {
+			processor.process(null, project);
+		}
+
 		val entity = datasetRequestMapper.dtoToEntity(newDatasetRequest);
 		if (CollectionUtils.isNotEmpty(project.getDatasetRequests())) {
 			for (NewDatasetRequestEntity newDatasetRequestEntity : project.getDatasetRequests()) {
@@ -285,6 +323,11 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional // readOnly = false
 	public void deleteNewDatasetRequest(UUID projectUuid, UUID requestUuid) throws AppServiceException {
 		val project = getRequiredProjectEntity(projectUuid);
+
+		// Vérification des droits de l'utilisateur et du statut du projet avant de supprimer le lien sur le dataset
+		for (final DeleteDatasetFromProjectProcessor processor : deleteDatasetFromProjectProcessors) {
+			processor.process(null, project);
+		}
 		Iterator<NewDatasetRequestEntity> iterator = project.getDatasetRequests().iterator();
 		NewDatasetRequestEntity currentElement = null;
 		while (iterator.hasNext()) {
@@ -312,20 +355,20 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Integer getNumberOfRequests(UUID projectUuid) throws AppServiceNotFoundException {
 		getRequiredProjectEntity(projectUuid);
-		return projectCustomDao.getNumberOfLinkedDatasets(projectUuid) + projectCustomDao.getNumberOfNewRequests(
-				projectUuid);
+		return projectCustomDao.getNumberOfLinkedDatasets(projectUuid)
+				+ projectCustomDao.getNumberOfNewRequests(projectUuid);
 	}
 
 	@Override
 	public Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable)
 			throws GetOrganizationException {
-		//get user uuid
+		// get user uuid
 		UUID userUuid = null;
 		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
 		if (authenticatedUser != null) {
 			userUuid = aclHelper.getUserByLogin(authenticatedUser.getLogin()).getUuid();
 		}
-		//get user organization uuids
+		// get user organization uuids
 		if (userUuid == null) {
 			return Page.empty();
 		}
@@ -333,13 +376,20 @@ public class ProjectServiceImpl implements ProjectService {
 		List<UUID> organizationsUuid = organizationHelper.getMyOrganizationsUuids(userUuid);
 
 		if (organizationsUuid != null) {
-			//Add userUuid to this list before to searchProjects
+			// Add userUuid to this list before to searchProjects
 			organizationsUuid.add(userUuid);
 		}
 
 		searchCriteria.setOwnerUuids(organizationsUuid);
 
-		//call searchProjects
+		// call searchProjects
 		return this.searchProjects(searchCriteria, pageable);
+	}
+
+	@Override
+	public boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception {
+		var uuids = myInformationsHelper.getMeAndMyOrganizationUuids();
+		final var projectEntity = getRequiredProjectEntity(projectUuid);
+		return CollectionUtils.containsAny(uuids, projectEntity.getOwnerUuid());
 	}
 }

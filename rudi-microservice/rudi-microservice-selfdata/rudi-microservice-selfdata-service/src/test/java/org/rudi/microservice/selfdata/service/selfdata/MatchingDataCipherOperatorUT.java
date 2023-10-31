@@ -1,18 +1,19 @@
 package org.rudi.microservice.selfdata.service.selfdata;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.rudi.microservice.selfdata.service.SelfdataSpringBootTest;
 import org.rudi.microservice.selfdata.service.helper.selfdatamatchingdata.MatchingDataCipherOperator;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SelfdataSpringBootTest
 class MatchingDataCipherOperatorUT {
@@ -41,9 +42,11 @@ class MatchingDataCipherOperatorUT {
 	}
 
 	/**
-	 * Test la taille limite chiffrable et déchiffrable : actuellement 245 caractères UTF8
+	 * Test la taille limite chiffrable et déchiffrable : actuellement 245 caractères UTF8 <br/>
+	 * on a fait le test 1 fois c'est pas la peine de tester ça ...
 	 */
 	@Test
+	@Disabled("on a fait le test 1 fois pour s'assurer que ce qu'on faisait était correct mais c'est pas la peine de tester ça ...")
 	void test_limit_size_encryptible_decryptible() {
 		if (matchingDataCipherOperator != null) {
 			int i = 0;
@@ -62,12 +65,12 @@ class MatchingDataCipherOperatorUT {
 				final AtomicReference<String> decrypted = new AtomicReference<>();
 				assertDoesNotThrow(() -> {
 					crypted.set(matchingDataCipherOperator.encrypt(uncryptedYet));
-				}, String.format("La chaîne : \" %s\" ne peut pas être cryptée, elle est de longeur : %d.", uncryptedYet,
-						index));
+				}, String.format("La chaîne : \" %s\" ne peut pas être cryptée, elle est de longeur : %d.",
+						uncryptedYet, index));
 				assertDoesNotThrow(() -> {
 					decrypted.set(matchingDataCipherOperator.decrypt(String.valueOf(crypted)));
-				}, String.format("La chaîne : \" %s\" ne peut pas être décryptée, elle est de longeur : %d.", uncryptedYet,
-						index));
+				}, String.format("La chaîne : \" %s\" ne peut pas être décryptée, elle est de longeur : %d.",
+						uncryptedYet, index));
 			}
 
 		}

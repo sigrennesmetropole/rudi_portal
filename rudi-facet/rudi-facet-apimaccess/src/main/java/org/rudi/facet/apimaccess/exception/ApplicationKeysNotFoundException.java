@@ -31,6 +31,8 @@ import org.rudi.facet.apimaccess.bean.EndpointKeyType;
  */
 public class ApplicationKeysNotFoundException extends APIManagerException {
 
+	private static final long serialVersionUID = -1743448389180148342L;
+
 	public ApplicationKeysNotFoundException(String applicationId, String username) {
 		super(String.format("Aucune clé trouvée pour l'application %s du user %s",
 				applicationId,

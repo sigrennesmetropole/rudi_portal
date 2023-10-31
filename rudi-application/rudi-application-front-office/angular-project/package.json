@@ -4,7 +4,9 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve --proxy-config proxy.conf.json",
+        "start-https": "ng serve --proxy-config proxys.conf.json",
         "start-prod": "ng serve --prod --proxy-config proxy.conf.json",
+        "start-prod-https": "ng serve --prod --proxy-config proxys.conf.json",
         "build-prod": "ng build --prod",
         "build-dev": "ng build",
         "build-${env}": "ng build",
@@ -82,6 +84,7 @@
         "ngx-smart-popover": "^1.4.0",
         "ngx-translate-messageformat-compiler": "^4.11.0",
         "ol": "^6.6.1",
+        "proj4": "^2.9.0",
         "query-string": "^6.14.0",
         "rxjs": "^6.6.3",
         "sass": "^1.42.1",

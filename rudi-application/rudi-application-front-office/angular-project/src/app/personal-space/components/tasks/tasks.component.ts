@@ -22,6 +22,7 @@ export class TasksComponent implements OnInit {
     restrictedDatasetIcon = 'key_icon_88_blue_definition_key';
     selfdataIcon = 'self_data_icon_definition_key';
     newDatasetRequestIcon = 'nouvelles_donnees_definition_key';
+    projectIcon = 'project_definition_key';
 
     @Input() loading = false;
 
@@ -79,7 +80,10 @@ export class TasksComponent implements OnInit {
             icon = this.newDatasetRequestIcon;
         } else if (value.processDefinitionKey === ProcessDefinitionEnum.SELFDATA_INFORMATION_REQUEST_Process) {
             icon = this.selfdataIcon;
+        } else if (value.processDefinitionKey === ProcessDefinitionEnum.PROJECT_PROCESS) {
+            icon = this.projectIcon;
         }
+
         return icon;
     }
 

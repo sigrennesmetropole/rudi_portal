@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 import {AttachmentAdapter} from './attachment.adapter';
-import {DocumentMetadata} from '../../selfdata/selfdata-api';
+import {DocumentMetadata, SelfdataService} from '../../selfdata/selfdata-api';
 import {ALL_TYPES} from '../models/title-icon-type';
 import {IconRegistryService} from '../../core/services/icon-registry.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import {Observable} from 'rxjs';
 import {DefaultMatDialogConfig} from '../../core/services/default-mat-dialog-config';
 import {AttachmentPopinData} from '../workflow-field-attachment-popin/attachment-popin-data';
 import {WorkflowFieldAttachmentPopinComponent} from '../workflow-field-attachment-popin/workflow-field-attachment-popin.component';
+import {SelfdataRequestAllowedAttachementType} from '../../selfdata/selfdata-model';
 
 @Component({
     selector: 'app-workflow-field-attachment',
@@ -19,12 +20,14 @@ import {WorkflowFieldAttachmentPopinComponent} from '../workflow-field-attachmen
 export class WorkflowFieldAttachmentComponent extends WorkflowFieldComponent implements OnInit {
     attachmentLoading: boolean;
     attachment: DocumentMetadata;
+    fileExtensions: string[] = [];
 
     constructor(
         protected readonly dialog: MatDialog,
         readonly attachmentAdapter: AttachmentAdapter,
         private readonly selfdataAttachmentService: SelfdataAttachmentService,
         private readonly iconRegistryService: IconRegistryService,
+        private readonly selfdataService: SelfdataService,
     ) {
         super();
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
@@ -34,6 +37,7 @@ export class WorkflowFieldAttachmentComponent extends WorkflowFieldComponent imp
         if (this.readonly) {
             this.lookupAttachment();
         }
+        this.loadAllowedFileExtensions();
     }
 
     get attachmentNotFound(): boolean {
@@ -45,6 +49,23 @@ export class WorkflowFieldAttachmentComponent extends WorkflowFieldComponent imp
         this.selfdataAttachmentService.getAttachmentMetadata(this.formControl.value).subscribe({
             next: (result: DocumentMetadata) => {
                 this.attachment = result;
+                this.attachmentLoading = false;
+            },
+            complete: () => {
+                this.attachmentLoading = false;
+            },
+            error: (e) => {
+                this.attachmentLoading = false;
+                console.error(e);
+            }
+        });
+    }
+
+    loadAllowedFileExtensions(): void {
+        this.attachmentLoading = true;
+        this.selfdataService.getAllowedAttachementTypes().subscribe( {
+            next: (result: SelfdataRequestAllowedAttachementType[]) => {
+                result.forEach(attachementType => attachementType.associatedExtensions.forEach(value => this.fileExtensions.push(value)));
                 this.attachmentLoading = false;
             },
             complete: () => {

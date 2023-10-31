@@ -21,6 +21,8 @@ export class ProcessDefinitionKeyTranslatePipe implements PipeTransform {
             result = this.translateService.instant('personalSpace.myNotifications.newRequest');
         } else if (value === ProcessDefinitionEnum.SELFDATA_INFORMATION_REQUEST_Process) {
             result = this.translateService.instant('personalSpace.myNotifications.selfdata');
+        } else if (value === ProcessDefinitionEnum.PROJECT_PROCESS) {
+            result = this.translateService.instant('personalSpace.myNotifications.project');
         } else {
             result = '-';
         }

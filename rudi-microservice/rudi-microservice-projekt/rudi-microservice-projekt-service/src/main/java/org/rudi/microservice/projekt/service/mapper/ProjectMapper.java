@@ -12,7 +12,7 @@ import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { MapperUtils.class,
-		LinkedDatasetMapper.class, NewDatasetRequestMapper.class })
+		LinkedDatasetMapper.class, NewDatasetRequestMapper.class, ReutilisationStatusMapper.class })
 public interface ProjectMapper extends AssetDescriptionMapper<ProjectEntity, Project> {
 
 	@Override
@@ -40,6 +40,7 @@ public interface ProjectMapper extends AssetDescriptionMapper<ProjectEntity, Pro
 	@Mapping(target = "updatedDate", ignore = true)
 	@Mapping(target = "assignee", ignore = true)
 	@Mapping(target = "targetAudiences", ignore = true)
+	@Mapping(target = "reutilisationStatus", ignore = true)
 	void dtoToEntity(Project dto, @MappingTarget ProjectEntity entity);
 
 	@Override

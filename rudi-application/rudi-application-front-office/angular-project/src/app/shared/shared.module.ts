@@ -1,78 +1,94 @@
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OrganizationLogoComponent} from './organization-logo/organization-logo.component';
-import {SplitPipe} from './pipes/split.pipe';
-import {TruncateTextPipe} from './pipes/truncate-text.pipe';
-import {ErrorBoxComponent} from './error-box/error-box.component';
-import {LabelSeparatorComponent} from './label-separator/label-separator.component';
+import {NgModule} from '@angular/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTableModule} from '@angular/material/table';
+import {CoreModule} from '@core/core.module';
+import {ClipboardFieldComponent} from '@shared/clipboard-field/clipboard-field.component';
+import {ToStringPipe} from '@shared/pipes/to-string.pipe';
+import {DatasetTableComponent} from '@shared/project-datasets-tables/dataset-table/dataset-table.component';
+import {
+    ProjectMainInformationDateComponent
+} from '@shared/project-main-informations/project-main-information-date/project-main-information-date.component';
+import {
+    ProjectMainInformationLabelComponent
+} from '@shared/project-main-informations/project-main-information-label/project-main-information-label.component';
+import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
+import {BotDetectCaptchaModule} from 'angular-captcha';
+import {PopoverModule} from 'ngx-smart-popover';
 import {AccountErrorBoxComponent} from './account-error-box/account-error-box.component';
-import {CoreModule} from '../core/core.module';
+import {BackPaginationComponent} from './back-pagination/back-pagination.component';
+import {BannerButtonComponent} from './banner-button/banner-button.component';
+import {BannerComponent} from './banner/banner.component';
+import {BooleanDataBlockComponent} from './boolean-data-block/boolean-data-block.component';
+import {CardComponent} from './card/card.component';
+import {ContactButtonComponent} from './contact-button/contact-button.component';
+import {ContactCardComponent} from './contact-card/contact-card.component';
+import {CopiedButtonComponent} from './copied-button/copied-button.component';
+import {CustomRouterlinkDirective} from './custom-routerlink-directive/custom-routerlink.directive';
+import {DataSetCardComponent} from './data-set-card/data-set-card.component';
+import {DatasetsInfosComponent} from './dataset-infos/dataset-infos.component';
+import {DatasetListComponent} from './dataset-list/dataset-list.component';
+import {DocumentationButtonComponent} from './documentation-button/documentation-button.component';
+import {ErrorBoxComponent} from './error-box/error-box.component';
+import {FileSizePipe} from './file-size-pipe';
 import {FooterComponent} from './footer/footer.component';
 import {HeaderComponent} from './header/header.component';
-import {NotificationTemplateComponent} from './notification-template/notification-template.component';
-import {PasswordStrengthComponent} from './password-strength/password-strength.component';
-import {MaterialModules} from './shared.constant';
-import {PopoverComponent} from './popover/popover.component';
-import {PopoverModule} from 'ngx-smart-popover';
-import {PageTitleComponent} from './page-title/page-title.component';
-import {ProjectListComponent} from './project-list/project-list.component';
-import {ProjectCardComponent} from './project-card/project-card.component';
-import {ContactButtonComponent} from './contact-button/contact-button.component';
+import {LabelSeparatorComponent} from './label-separator/label-separator.component';
 import {LoaderComponent} from './loader/loader.component';
-import {GetBackendPropertyPipe} from './pipes/get-backend-property.pipe';
+import {MapPopupComponent} from './map-popup/map-popup.component';
+import {MapComponent} from './map/map.component';
+import {MemberPopinComponent} from './member-popin/member-popin.component';
 import {MonthYearDatepickerComponent} from './month-year-datepicker/month-year-datepicker.component';
+import {NotificationTemplateComponent} from './notification-template/notification-template.component';
+import {OrganizationLogoComponent} from './organization-logo/organization-logo.component';
+import {PageHeadingComponent} from './page-heading/page-heading.component';
+import {PageSubtitleComponent} from './page-subtitle/page-subtitle.component';
+import {PageTitleComponent} from './page-title/page-title.component';
+import {PageComponent} from './page/page.component';
+import {PaginatorComponent} from './paginator/paginator.component';
+import {ParseIntPipe} from './parse-int.pipe';
+import {PasswordStrengthComponent} from './password-strength/password-strength.component';
+import {PasswordComponent} from './password/password.component';
+import {GetBackendPropertyPipe} from './pipes/get-backend-property.pipe';
+import {ProcessDefinitionKeyTranslatePipe} from './pipes/process-definition-key-translate.pipe';
+import {ReplaceIfNullPipe} from './pipes/replace-if-null.pipe';
+import {SelfdataProcessDefinitionKeyTranslatePipe} from './pipes/selfdata-process-definition-key-translate.pipe';
+import {SplitPipe} from './pipes/split.pipe';
+import {TruncateTextPipe} from './pipes/truncate-text.pipe';
+import {PopoverComponent} from './popover/popover.component';
+import {ProjectCardComponent} from './project-card/project-card.component';
+import {
+    DeletionConfirmationPopinComponent
+} from './project-datasets-tables/deletion-confirmation-popin/deletion-confirmation-popin.component';
+import {NewDatasetRequestTableComponent} from './project-datasets-tables/new-dataset-request-table/new-dataset-request-table.component';
+import {OpenDatasetTableComponent} from './project-datasets-tables/open-dataset-table/open-dataset-table.component';
+import {RestrictedDatasetTableComponent} from './project-datasets-tables/restricted-dataset-table/restricted-dataset-table.component';
+import {ProjectHeadingComponent} from './project-heading/project-heading.component';
+import {ProjectListComponent} from './project-list/project-list.component';
+import {ProjectMainInformationsComponent} from './project-main-informations/project-main-informations.component';
 import {RadioListComponent} from './radio-list/radio-list.component';
 import {ResetPasswordErrorBoxComponent} from './reset-password-error-box/reset-password-error-box.component';
-import {PageComponent} from './page/page.component';
-import {BannerComponent} from './banner/banner.component';
-import {TabComponent} from './tab/tab.component';
+import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
+import {SearchAutocompleteComponent} from './search-autocomplete/search-autocomplete.component';
 import {SearchCountComponent} from './search-count/search-count.component';
-import {TabsComponent} from './tabs/tabs.component';
-import {ReplaceIfNullPipe} from './pipes/replace-if-null.pipe';
-import {TabsLayoutDirective} from './tabs-layout.directive';
+import {MaterialModules} from './shared.constant';
 import {TabContentDirective} from './tab-content.directive';
-import {BannerButtonComponent} from './banner-button/banner-button.component';
-import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
+import {TabComponent} from './tab/tab.component';
+import {TabsLayoutDirective} from './tabs-layout.directive';
+import {TabsComponent} from './tabs/tabs.component';
+import {TaskDetailHeaderComponent} from './task-detail-header/task-detail-header.component';
+import {UploaderComponent} from './uploader/uploader.component';
+import {WorkInProgressComponent} from './work-in-progress/work-in-progress.component';
+import {WorkflowFieldAddressComponent} from './workflow-field-address/workflow-field-address.component';
+import {WorkflowFieldAttachmentPopinComponent} from './workflow-field-attachment-popin/workflow-field-attachment-popin.component';
+import {WorkflowFieldAttachmentComponent} from './workflow-field-attachment/workflow-field-attachment.component';
+import {WorkflowFieldBooleanComponent} from './workflow-field-boolean/workflow-field-boolean.component';
+import {WorkflowFieldTemplateComponent} from './workflow-field-template/workflow-field-template.component';
 import {WorkflowFieldTextComponent} from './workflow-field-text/workflow-field-text.component';
 import {WorkflowFieldComponent} from './workflow-field/workflow-field.component';
-import {WorkflowFieldTemplateComponent} from './workflow-field-template/workflow-field-template.component';
-import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component';
-import {CopiedButtonComponent} from './copied-button/copied-button.component';
-import {PasswordComponent} from './password/password.component';
-import {ProjectMainInformationsComponent} from './project-main-informations/project-main-informations.component';
-import {ProjectHeadingComponent} from './project-heading/project-heading.component';
-import {DatasetsInfosComponent} from './dataset-infos/dataset-infos.component';
-import {WorkInProgressComponent} from './work-in-progress/work-in-progress.component';
-import {PaginatorComponent} from './paginator/paginator.component';
-import {BooleanDataBlockComponent} from './boolean-data-block/boolean-data-block.component';
-import {PageSubtitleComponent} from './page-subtitle/page-subtitle.component';
-import {WorkflowFieldBooleanComponent} from './workflow-field-boolean/workflow-field-boolean.component';
 import {WorkflowFormSubmitSuccessComponent} from './workflow-form-submit-success/workflow-form-submit-success.component';
-import {CardComponent} from './card/card.component';
-import {WorkflowFieldAddressComponent} from './workflow-field-address/workflow-field-address.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {ContactCardComponent} from './contact-card/contact-card.component';
-import {WorkflowFieldAttachmentComponent} from './workflow-field-attachment/workflow-field-attachment.component';
-import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
-import {UploaderComponent} from './uploader/uploader.component';
-import {ParseIntPipe} from './parse-int.pipe';
-import {FileSizePipe} from './file-size-pipe';
-import {ProcessDefinitionKeyTranslatePipe} from './pipes/process-definition-key-translate.pipe';
-import {CustomRouterlinkDirective} from './custom-routerlink-directive/custom-routerlink.directive';
-import {RequestDetailHeaderComponent} from './request-detail-header/request-detail-header.component';
-import {WorkflowFieldAttachmentPopinComponent} from './workflow-field-attachment-popin/workflow-field-attachment-popin.component';
-import {SelfdataProcessDefinitionKeyTranslatePipe} from './pipes/selfdata-process-definition-key-translate.pipe';
-import {BackPaginationComponent} from './back-pagination/back-pagination.component';
-import {PageHeadingComponent} from './page-heading/page-heading.component';
-import {DocumentationButtonComponent} from './documentation-button/documentation-button.component';
-import {BotDetectCaptchaModule} from 'angular-captcha';
-import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
-import {MapComponent} from './map/map.component';
-import {SearchAutocompleteComponent} from './search-autocomplete/search-autocomplete.component';
-import {MapPopupComponent} from './map-popup/map-popup.component';
-import {DatasetListComponent} from './dataset-list/dataset-list.component';
-import {DataSetCardComponent} from './data-set-card/data-set-card.component';
-import {MemberPopinComponent} from './member-popin/member-popin.component';
+import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
+import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component';
 
 @NgModule({
     declarations:
@@ -83,6 +99,7 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
             SplitPipe,
             TruncateTextPipe,
             ReplaceIfNullPipe,
+            ToStringPipe,
             AccountErrorBoxComponent,
             FooterComponent,
             HeaderComponent,
@@ -116,6 +133,8 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
             CopiedButtonComponent,
             PasswordComponent,
             ProjectMainInformationsComponent,
+            ProjectMainInformationDateComponent,
+            ProjectMainInformationLabelComponent,
             ProjectHeadingComponent,
             DatasetsInfosComponent,
             WorkInProgressComponent,
@@ -133,7 +152,7 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
             ProcessDefinitionKeyTranslatePipe,
             CustomRouterlinkDirective,
             ContactCardComponent,
-            RequestDetailHeaderComponent,
+            TaskDetailHeaderComponent,
             WorkflowFieldAttachmentPopinComponent,
             FileSizePipe,
             SelfdataProcessDefinitionKeyTranslatePipe,
@@ -147,6 +166,12 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
             DatasetListComponent,
             DataSetCardComponent,
             MemberPopinComponent,
+            OpenDatasetTableComponent,
+            NewDatasetRequestTableComponent,
+            RestrictedDatasetTableComponent,
+            DeletionConfirmationPopinComponent,
+            DatasetTableComponent,
+            ClipboardFieldComponent
         ],
     imports: [
         CommonModule,
@@ -155,7 +180,8 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
         PopoverModule,
         FilePickerModule,
         MatAutocompleteModule,
-        BotDetectCaptchaModule
+        BotDetectCaptchaModule,
+        MatTableModule
     ],
     exports: [
         MaterialModules,
@@ -165,6 +191,7 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
         SplitPipe,
         TruncateTextPipe,
         ReplaceIfNullPipe,
+        ToStringPipe,
         ErrorBoxComponent,
         FooterComponent,
         HeaderComponent,
@@ -196,6 +223,8 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
         CopiedButtonComponent,
         PasswordComponent,
         ProjectMainInformationsComponent,
+        ProjectMainInformationLabelComponent,
+        ProjectMainInformationDateComponent,
         ProjectHeadingComponent,
         DatasetsInfosComponent,
         WorkInProgressComponent,
@@ -206,7 +235,7 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
         UploaderComponent,
         ProcessDefinitionKeyTranslatePipe,
         ContactCardComponent,
-        RequestDetailHeaderComponent,
+        TaskDetailHeaderComponent,
         CardComponent,
         FileSizePipe,
         SelfdataProcessDefinitionKeyTranslatePipe,
@@ -219,11 +248,15 @@ import {MemberPopinComponent} from './member-popin/member-popin.component';
         DatasetListComponent,
         DataSetCardComponent,
         MemberPopinComponent,
+        OpenDatasetTableComponent,
+        NewDatasetRequestTableComponent,
+        RestrictedDatasetTableComponent,
+        DeletionConfirmationPopinComponent,
+        ClipboardFieldComponent
     ],
-    entryComponents: [],
     providers: [
         {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'},
-        ProcessDefinitionKeyTranslatePipe
+        ProcessDefinitionKeyTranslatePipe,
     ]
 })
 export class SharedModule {

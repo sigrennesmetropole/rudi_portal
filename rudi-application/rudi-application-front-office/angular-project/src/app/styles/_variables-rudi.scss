@@ -44,3 +44,11 @@ $padding-top: 150px;
 
 //**gap ***/
 $gap: 16px;
+
+$grid-breakpoints: (
+    xs: 0,
+    sm: $screen-sm-min,
+    md: $screen-md-min,
+    lg: $screen-lg-min,
+    xl: $screen-xl-min,
+);

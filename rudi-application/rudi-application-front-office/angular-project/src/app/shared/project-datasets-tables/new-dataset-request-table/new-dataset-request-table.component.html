@@ -1,0 +1,11 @@
+<app-dataset-table
+    [title]="'personalSpace.project.tabs.datasets.newDatasets.tableTitle'"
+    [ariaLabel]="'personalSpace.project.tabs.datasets.newDatasets.tableLabel'"
+    [dataSource]="dataSource"
+    [tableLoading]="tableLoading"
+    [hasAddButton]="hasAddButton"
+    [hasDeleteButton]="hasDeleteButton"
+    [disableAddButton]="disableAddButton"
+    (addActionEvent)="openNewDatasetRequestPopin()"
+    (deleteActionEvent)="deleteRequest($event)">
+</app-dataset-table>

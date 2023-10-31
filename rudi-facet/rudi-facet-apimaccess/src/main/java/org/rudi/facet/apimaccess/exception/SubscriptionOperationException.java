@@ -4,6 +4,9 @@ import org.rudi.facet.apimaccess.bean.DevPortalSubscriptionSearchCriteria;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 
 public class SubscriptionOperationException extends APIManagerException {
+
+	private static final long serialVersionUID = -7213181614445376196L;
+
 	public SubscriptionOperationException(Throwable cause) {
 		super(cause);
 	}
@@ -16,7 +19,8 @@ public class SubscriptionOperationException extends APIManagerException {
 		super(String.format("Operation failed for username = %s on subscription : %s", username, subscription), cause);
 	}
 
-	public SubscriptionOperationException(DevPortalSubscriptionSearchCriteria criteria, String username, Throwable cause) {
+	public SubscriptionOperationException(DevPortalSubscriptionSearchCriteria criteria, String username,
+			Throwable cause) {
 		super(String.format("Operation failed for username = %s on criteria : %s", username, criteria), cause);
 	}
 }

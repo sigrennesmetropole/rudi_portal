@@ -9,7 +9,6 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.microservice.konsent.service.treatment.impl.fields.common.TransientEntitiesReplacer;
 import org.rudi.microservice.konsent.storage.dao.data.DictionaryEntryDao;
 import org.rudi.microservice.konsent.storage.entity.data.DictionaryEntryEntity;
 import org.rudi.microservice.konsent.storage.entity.treatmentversion.TreatmentVersionEntity;
@@ -20,16 +19,19 @@ import lombok.RequiredArgsConstructor;
 public abstract class TypeDictionaryEntrySetProcessor {
 	protected final DictionaryEntryDao dictionaryEntryDao;
 
-	protected abstract class TypeDictionaryEntrySetEntityReplacer extends TransientEntitiesReplacer<TreatmentVersionEntity, Set<DictionaryEntryEntity>> {
+	protected abstract class TypeDictionaryEntrySetEntityReplacer
+			extends TransientEntitiesReplacer<TreatmentVersionEntity, Set<DictionaryEntryEntity>> {
 
-
-		public TypeDictionaryEntrySetEntityReplacer(Function<TreatmentVersionEntity, Set<DictionaryEntryEntity>> entitiesGetter, BiConsumer<TreatmentVersionEntity, Set<DictionaryEntryEntity>> entitiesSetter) {
+		protected TypeDictionaryEntrySetEntityReplacer(
+				Function<TreatmentVersionEntity, Set<DictionaryEntryEntity>> entitiesGetter,
+				BiConsumer<TreatmentVersionEntity, Set<DictionaryEntryEntity>> entitiesSetter) {
 			super(entitiesGetter, entitiesSetter);
 		}
 
 		@Nullable
 		@Override
-		protected Set<DictionaryEntryEntity> getPersistentEntities(@Nullable Set<DictionaryEntryEntity> transientEntities) throws AppServiceException {
+		protected Set<DictionaryEntryEntity> getPersistentEntities(
+				@Nullable Set<DictionaryEntryEntity> transientEntities) throws AppServiceException {
 			if (transientEntities == null) {
 				return null;
 			}

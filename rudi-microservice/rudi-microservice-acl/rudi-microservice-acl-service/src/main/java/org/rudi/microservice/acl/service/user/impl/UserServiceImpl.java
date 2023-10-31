@@ -13,17 +13,12 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
-import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.core.security.RoleCodes;
-import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceForbiddenException;
-import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.common.service.util.PageableUtil;
 import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
@@ -66,11 +61,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service de gestion des utilisateurs RUDI
@@ -164,7 +156,8 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
-	private Page<UserEntity> applyNonDaoCriteria(UserSearchCriteria searchCriteria, Page<UserEntity> pagedUserEntities) {
+	private Page<UserEntity> applyNonDaoCriteria(UserSearchCriteria searchCriteria,
+			Page<UserEntity> pagedUserEntities) {
 		final var predicate = nonDaoUserSearchCriteriaMapper.searchCriteriaToPredicate(searchCriteria);
 		return pageableUtil.filter(pagedUserEntities, predicate);
 	}
@@ -184,7 +177,6 @@ public class UserServiceImpl implements UserService {
 		UserEntity user = userDao.findByLogin(login);
 		return userLightMapper.entityToDto(user);
 	}
-
 
 	@Override
 	public User getMe() {
@@ -373,7 +365,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Nullable
-	public ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
+	public ClientKey getClientKeyByLogin(String login)
+			throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
 		ClientKey clientKey = null;
 		if (StringUtils.isEmpty(login)) {
 			throw new IllegalArgumentException(LOGIN_USER_MISSING_MESSAGE);
@@ -382,8 +375,7 @@ public class UserServiceImpl implements UserService {
 
 		// si c'est l'utilisateur anonymous, on crée son client id et client secret
 		if (clientRegistration == null && login.equals(anonymousUsername)) {
-			clientRegistration = rudiClientRegistrationRepository.register(anonymousUsername,
-					anonymousPassword);
+			clientRegistration = rudiClientRegistrationRepository.register(anonymousUsername, anonymousPassword);
 		}
 
 		if (clientRegistration != null) {
@@ -461,11 +453,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public org.rudi.microservice.acl.core.bean.ClientRegistrationDto getClientRegistration(String login) throws Exception {
+	public org.rudi.microservice.acl.core.bean.ClientRegistrationDto getClientRegistration(String login)
+			throws Exception {
 		ClientRegistration registration = null;
 		// Register anonymous et rudi
 		if (login.equals(anonymousUsername)) {
-			registration = rudiClientRegistrationRepository.findRegistrationOrRegister(anonymousUsername, anonymousPassword);
+			registration = rudiClientRegistrationRepository.findRegistrationOrRegister(anonymousUsername,
+					anonymousPassword);
 		} else if (login.equals(rudiUsername)) {
 			registration = rudiClientRegistrationRepository.findRegistrationOrRegister(rudiUsername, rudiPassword);
 		}
@@ -477,13 +471,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ClientRegistrationDto registerClientByPassword(String login, String password) throws Exception {
-		return clientRegistrationMapper.entityToDto(rudiClientRegistrationRepository.findRegistrationOrRegister(login, password));
+		return clientRegistrationMapper
+				.entityToDto(rudiClientRegistrationRepository.findRegistrationOrRegister(login, password));
 	}
 
 	@Override
 	public void addClientRegistration(String login, AccessKeyDto accessKey) {
-		val clientAccessKey = new ClientAccessKey()
-				.setClientId(accessKey.getClientId())
+		val clientAccessKey = new ClientAccessKey().setClientId(accessKey.getClientId())
 				.setClientSecret(accessKey.getClientSecret());
 		rudiClientRegistrationRepository.addClientRegistration(login, clientAccessKey);
 	}
@@ -504,10 +498,10 @@ public class UserServiceImpl implements UserService {
 			throw new IdenticalNewPasswordException();
 		}
 
-		//Vérifie la complexité du nouveau mot de passe.
+		// Vérifie la complexité du nouveau mot de passe.
 		passwordHelper.checkPassword(passwordUpdate.getNewPassword());
 
-		//Changement du mot de passe
+		// Changement du mot de passe
 		user.setPassword(passwordHelper.encodePassword(passwordUpdate.getNewPassword()));
 		userDao.save(user);
 	}

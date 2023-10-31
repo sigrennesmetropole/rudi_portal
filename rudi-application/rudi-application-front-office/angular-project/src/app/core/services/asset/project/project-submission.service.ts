@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ProjektMetierService} from './projekt-metier.service';
 import {RadioListItem} from '../../../../shared/radio-list/radio-list-item';
-import {forkJoin, iif, Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
 import {
     Confidentiality,
@@ -63,7 +63,7 @@ import {AccessStatusFiltersType} from '../../filters/access-status-filters-type'
 import {MetadataUtils} from '../../../../shared/utils/metadata-utils';
 import {AccessConditionConfidentiality} from '../../../../shared/utils/access-condition-confidentiality';
 import {NewDatasetRequestTaskMetierService} from '../../tasks/projekt/new-dataset-request-task-metier.service';
-import {DatasetConfidentiality} from '../../../../projekt/projekt-api';
+import {DatasetConfidentiality, ReutilisationStatus} from '../../../../projekt/projekt-api';
 import { ObjectType } from '../../tasks/object-type.enum';
 
 /**
@@ -94,6 +94,7 @@ export interface FormProjectDependencies {
     territorialScales: TerritorialScale[];
     supports: Support[];
     projectTypes: ProjectType[];
+    reuseStatus: ProjectType[];
     user: User;
     organizations: Organization[];
 }
@@ -239,6 +240,7 @@ export class ProjectSubmissionService {
             publicCible: [''],
             type: ['', Validators.required],
             url: ['', Validators.pattern(/^(http|https|ftp):\/\/.*$/)],
+            reuseStatus: ['', Validators.required]
         });
     }
 
@@ -273,13 +275,16 @@ export class ProjectSubmissionService {
             publicCible: [''],
             echelle: [null],
             territoire: [null],
-            accompagnement: ['', Validators.required],
+            accompagnement: [null],
             type: ['', Validators.required],
+            url: ['', Validators.pattern(/^(http|https|ftp):\/\/.*$/)],
+            reuse_status: ['', Validators.required],
             confidentiality: this.formBuilder.control(DEFAULT_CONFIDENTIALITY_CODE, Validators.required),
         }, {
             // Contrôle cross champs sur la période
             validators: [consistentPeriodValidator({beginControlName: 'begin_date', endControlName: 'end_date'})],
-            updateOn: 'blur'
+            updateOn: 'blur',
+            reuseStatus: ['', Validators.required]
         });
     }
 
@@ -290,12 +295,14 @@ export class ProjectSubmissionService {
      * @param user l'utilisateur connecté
      * @param projectType le type de projet créé
      * @param confidentiality le niveau de confidentialité choisi
+     * @param reuseStatus statut de la réutilisation (réutilisation en cours ou terminé)
      */
     public projectFormGroupToProject(step1FormGroup: FormGroup,
                                      step2FormGroup: FormGroup,
                                      user: User,
                                      projectType: ProjectType,
-                                     confidentiality: Confidentiality): Project {
+                                     confidentiality: Confidentiality,
+                                     reuseStatus: ReutilisationStatus): Project {
         const ownerType = step2FormGroup.get('ownerType').value as OwnerType;
         return {
             title: step1FormGroup.get('title').value,
@@ -307,11 +314,13 @@ export class ProjectSubmissionService {
             confidentiality,
             desired_supports: step1FormGroup.get('accompagnement').value,
             type: projectType,
+            access_url: step1FormGroup.get('url').value === '' ? null : step1FormGroup.get('url').value,
             owner_uuid: ownerType === OwnerType.Organization ? step2FormGroup.get('organizationUuid').value : user.uuid,
             contact_email: step2FormGroup.get('contactEmail').value,
             owner_type: ownerType,
             object_type: ObjectType.PROJECT,
-            target_audiences: step1FormGroup.get('publicCible').value === '' ? null : step1FormGroup.get('publicCible').value
+            target_audiences: step1FormGroup.get('publicCible').value === '' ? null : step1FormGroup.get('publicCible').value,
+            reutilisation_status: reuseStatus
         };
     }
 
@@ -410,6 +419,7 @@ export class ProjectSubmissionService {
             organizations: connectedUser$.pipe(
                 switchMap(connectedUser => this.organizationMetierService.getMyOrganizations(connectedUser.uuid))
             ),
+            reuseStatus: this.projektMetierService.searchReuseStatus()
         };
 
         return forkJoin(dependencies);
@@ -602,7 +612,7 @@ export class ProjectSubmissionService {
         const existingLinkedDataset: Metadata = linkedDatasets.find(linkedDataset => linkedDataset.global_id === metadataUuid);
         if (existingLinkedDataset) {
             this.snackBarService.openSnackBar({
-                message: this.translateService.instant('project.stepper.reuse.step3.linkedDatasets.alreadyAdded'),
+                message: this.translateService.instant('project.stepper.submission.step3.linkedDatasets.alreadyAdded'),
                 level: Level.ERROR
             });
             return true;
@@ -733,18 +743,25 @@ export class ProjectSubmissionService {
      * Créé et démarre le workflow pour les demandes d'accès aux JDDs
      * @param links l'ensemble des demandes d'accès à traiter
      */
-    private createAndStartTaskForLinkedDatasets(links: LinkedDataset[]): Observable<Task[]> {
-        const link$: Observable<Task>[] = links.map(
-            link => {
-                if (link.dataset_confidentiality === DatasetConfidentiality.Restricted) {
-                    return this.linkedDatasetTaskMetierService.createDraft(link).pipe(
-                        switchMap((task: Task) => this.linkedDatasetTaskMetierService.startTask(task))
-                    );
-                }
-                return of(null);
+    private createAndStartTaskForLinkedDatasets(links: LinkedDataset[], createdProject: Project): Observable<Task[]> {
+        const link$: Observable<Task>[] = links.map((link) => {
+            if (link.dataset_confidentiality === DatasetConfidentiality.Restricted) {
+                return this.linkedDatasetTaskMetierService.createDraft(link).pipe(
+                    switchMap((task: Task) => {
+                        if (createdProject.project_status === ProjectStatus.Validated) {
+                            // Only start the task if the project is "Validated"
+                            return this.linkedDatasetTaskMetierService.startTask(task);
+                        } else {
+                            // Return the task without starting if the project isn't "Validated"
+                            return of(task);
+                        }
+                    })
+                );
             }
-        );
-        return forkJoin(link$);
+            return of(null);
+          });
+        
+          return forkJoin(link$);
     }
 
     /**
@@ -780,6 +797,15 @@ export class ProjectSubmissionService {
     }
 
     /**
+     * Recherche d'un statut de réutilisation par code
+     * @param codeStatus le code
+     * @param statuses les statuts
+     */
+    public findCorrespondingReutilisationStatus(codeStatus: string, statuses: ReutilisationStatus[]): ReutilisationStatus {
+        return statuses.find(status => status.code === codeStatus);
+    }
+
+    /**
      * Appel de l'API d'upload d'image
      * @param createdProject le projet possédant l'image
      * @param image l'imag en binaire
@@ -800,15 +826,8 @@ export class ProjectSubmissionService {
 
         // Lier les demandes (la seule en l'occurence) au projet
         return this.projektMetierService.linkProjectToDatasets(createdProject.uuid, [linkToCreate.datasetUuid], map).pipe(
-            // Quand ça se termine on va faire un traitement conditionnel
-            switchMap((linksCreated: LinkedDataset[]) => iif(
-                // Si le projet est déjà soumis
-                () => createdProject.project_status === ProjectStatus.InProgress,
-                // Il faut transmettre la demande créé
-                this.createAndStartLinkedDatasetsAndFallback(linksCreated, createdProject),
-                // Sinon on ne fait rien
-                of([])
-            )),
+            // Quand ça se termine on démarre les taches
+            switchMap((linksCreated: LinkedDataset[]) => this.createAndStartLinkedDatasetsAndFallback(linksCreated, createdProject)),
 
             // Observable mappé sur void
             mapTo(null)
@@ -917,7 +936,7 @@ export class ProjectSubmissionService {
      */
     createAndStartLinkedDatasetsAndFallback(linksCreated: LinkedDataset[], createdProject: Project): Observable<Task[]> {
         const linksAction = new ActionFallbackUtils<Task[]>({
-            action: this.createAndStartTaskForLinkedDatasets(linksCreated),
+            action: this.createAndStartTaskForLinkedDatasets(linksCreated, createdProject),
             fallback: this.projektMetierService.unlinkDatasetsToProject(createdProject.uuid, linksCreated.map(link => link.uuid)),
             fallbackSuccessMessage: 'Une erreur a eu lieu lors du démarrage du workflow de la demande d\'accès',
             fallbackErrorMessage: 'Impossible de supprimer la demande d\'accès alors que son workflow a échoué, ' +
@@ -966,11 +985,11 @@ export class ProjectSubmissionService {
      * @param projectUuid uuid du projet
      * @param requestToAdd demande à ajouter
      */
-    addNewDatasetRequest(projectUuid: string, requestToAdd: NewDatasetRequest): Observable<Task> {
+    addNewDatasetRequest(projectUuid: string, requestToAdd: NewDatasetRequest, createdProject: Project): Observable<Task> {
         return this.projektMetierService.addNewDatasetRequest(projectUuid, requestToAdd).pipe(
             switchMap((requestAdded: NewDatasetRequest) => {
                 const manageNewDatasetRequestWorkflowAction = new ActionFallbackUtils<Task>({
-                    action: this.manageNewDatasetRequestWorkflow(requestAdded),
+                    action: this.manageNewDatasetRequestWorkflow(requestAdded, createdProject),
                     fallback: this.projektMetierService.deleteNewDatasetRequest(projectUuid, requestAdded.uuid),
                     fallbackSuccessMessage: 'Une erreur a eu lieu lors du démarrage du workflow de la demande de nouveaux JDDs',
                     fallbackErrorMessage: 'Erreur lors de la suppression de la demande de nouveaux JDDs après avoir eu une erreur dans le workflow, ' +
@@ -986,10 +1005,17 @@ export class ProjectSubmissionService {
      * @param requestAdded asset de la demande créée auparavant côté back
      * @private
      */
-    private manageNewDatasetRequestWorkflow(requestAdded: NewDatasetRequest): Observable<Task> {
+    private manageNewDatasetRequestWorkflow(requestAdded: NewDatasetRequest, createdProject: Project): Observable<Task> {
         return this.newDatasetRequestTaskMetierService.createDraft(requestAdded).pipe(
+            
             switchMap((associatedTask: Task) => {
-                return this.newDatasetRequestTaskMetierService.startTask(associatedTask);
+                if (createdProject.project_status === ProjectStatus.Validated) {
+                    // Only start the task if the project is "Validated"
+                    return this.newDatasetRequestTaskMetierService.startTask(associatedTask);
+                } else {
+                    // Return the task without starting if the project isn't "Validated"
+                    return of(associatedTask);
+                }
             })
         );
     }

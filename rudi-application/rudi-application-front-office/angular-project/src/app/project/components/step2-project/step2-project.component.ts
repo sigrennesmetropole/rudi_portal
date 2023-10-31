@@ -33,10 +33,10 @@ export class Step2ProjectComponent {
         const ownerType = $event.value as OwnerType;
         if (ownerType === OwnerType.Organization && !this.organizationItems?.length) {
             forkJoin({
-                messageBeforeLink: this.translateService.get('project.stepper.common.step2.ownerType.organization.userHasNoOrganization.messageBeforeLink'),
+                messageBeforeLink: this.translateService.get('project.stepper.submission.step2.ownerType.organization.userHasNoOrganization.messageBeforeLink'),
                 linkHref: this.propertiesMetierService.get('rudidatarennes.contact'),
-                linkLabel: this.translateService.get('project.stepper.common.step2.ownerType.organization.userHasNoOrganization.linkLabel'),
-                messageAfterLink: this.translateService.get('project.stepper.common.step2.ownerType.organization.userHasNoOrganization.messageAfterLink'),
+                linkLabel: this.translateService.get('project.stepper.submission.step2.ownerType.organization.userHasNoOrganization.linkLabel'),
+                messageAfterLink: this.translateService.get('project.stepper.submission.step2.ownerType.organization.userHasNoOrganization.messageAfterLink'),
             }).subscribe(({messageBeforeLink, linkHref, linkLabel, messageAfterLink}) => {
                 this.snackBarService.openSnackBar({
                     message: `${messageBeforeLink}<a href="${linkHref}">${linkLabel}</a>${messageAfterLink}`,

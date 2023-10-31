@@ -2,19 +2,21 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {MyNotificationsComponent} from './pages/my-notifications/my-notifications.component';
-import {RequestDetailComponent} from './pages/request-detail/request-detail.component';
+import {DatasetTaskDetailComponent} from './pages/dataset-task-detail/dataset-task-detail.component';
 import {ProjectDetailComponent} from './components/project-detail/project-detail.component';
 import {CommonModule} from '@angular/common';
 import {MyProjectDetailsComponent} from './pages/my-project-details/my-project-details.component';
 import {
-    SelfdataInformationRequestDetailComponent
-} from './pages/selfdata-information-request-detail/selfdata-information-request-detail.component';
+    SelfdataInformationRequestTaskDetailComponent
+} from './pages/selfdata-information-request-task-detail/selfdata-information-request-task-detail.component';
 import {SelfdataDatasetsComponent} from './pages/selfdata-datasets/selfdata-datasets.component';
 import {SelfdataDatasetDetailsComponent} from './pages/selfdata-dataset-details/selfdata-dataset-details.component';
 import {UserGuardService} from '../core/services/user-guard.service';
 import {AuthGuardService as AuthGuard} from '../core/services/auth-guard.service';
-import {NewRequestDetailComponent} from './pages/new-request-detail/new-request-detail.component';
+import {NewRequestTaskDetailComponent} from './pages/new-request-task-detail/new-request-task-detail.component';
 import {MyActivityComponent} from './pages/my-activity/my-activity.component';
+import {ProjectTaskDetailComponent} from './pages/project-task-detail/project-task-detail.component';
+import {OwnerGuardService} from '../core/services/owner-guard.service';
 
 const routes: Routes = [
     {
@@ -40,21 +42,21 @@ const routes: Routes = [
         canActivate: [AuthGuard, UserGuardService]
     },
     {
-        // Path to see a request detail
-        path: 'request-detail/:taskId',
-        component: RequestDetailComponent,
+        // Path to see a reque st detail
+        path: 'request-task-detail/:taskId',
+        component: DatasetTaskDetailComponent,
         canActivate: [AuthGuard, UserGuardService]
     },
     {
         // Path to see the details of a specific project
         path: 'my-project-details/:projectUuid',
         component: MyProjectDetailsComponent,
-        canActivate: [AuthGuard, UserGuardService]
+        canActivate: [AuthGuard, UserGuardService, OwnerGuardService]
     },
     {
         // Path to see the details of a specific selfdata
-        path: 'selfdata-information-request-detail/:taskId',
-        component: SelfdataInformationRequestDetailComponent,
+        path: 'selfdata-information-request-task-detail/:taskId',
+        component: SelfdataInformationRequestTaskDetailComponent,
         canActivate: [AuthGuard, UserGuardService]
     },
     {
@@ -71,10 +73,16 @@ const routes: Routes = [
     },
     {
         // Path to see a new request detail
-        path: 'new-request-detail/:taskId',
-        component: NewRequestDetailComponent,
+        path: 'new-request-task-detail/:taskId',
+        component: NewRequestTaskDetailComponent,
         canActivate: [AuthGuard, UserGuardService]
     },
+    {
+        // Path to see a project task detail
+        path: 'project-task-detail/:taskId',
+        component: ProjectTaskDetailComponent,
+        canActivate: [AuthGuard, UserGuardService]
+    }
 ];
 
 @NgModule({

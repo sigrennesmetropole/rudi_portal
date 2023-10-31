@@ -24,6 +24,7 @@ import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
+import org.rudi.facet.apimaccess.bean.HasSubscriptionStatus;
 import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APINotFoundException;
@@ -121,9 +122,10 @@ class APIManagerHelperIT {
 		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
-				.thenReturn(false);
+				.thenReturn(HasSubscriptionStatus.NOT_SUBSCRIBED);
 
-		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, ownerUuid)).isFalse();
+		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, ownerUuid)
+				.equals(HasSubscriptionStatus.NOT_SUBSCRIBED)).isTrue();
 	}
 
 	@Test
@@ -141,10 +143,10 @@ class APIManagerHelperIT {
 		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
-				.thenReturn(true);
+				.thenReturn(HasSubscriptionStatus.SUBSCRIBED);
 
-		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, authenticatedUser.getUuid()))
-				.isTrue();
+		assertThat(apiManagerHelper.userHasSubscribeToMetadataMedia(globalId, mediaId, authenticatedUser.getUuid())
+				.equals(HasSubscriptionStatus.NOT_SUBSCRIBED)).isFalse();
 	}
 
 	@Test
@@ -165,7 +167,7 @@ class APIManagerHelperIT {
 		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
-				.thenReturn(true);
+				.thenReturn(HasSubscriptionStatus.SUBSCRIBED);
 		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isEqualTo(authenticatedUser.getLogin());
 	}
@@ -188,7 +190,7 @@ class APIManagerHelperIT {
 		when(aclHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
-				.thenReturn(false);
+				.thenReturn(HasSubscriptionStatus.NOT_SUBSCRIBED);
 		when(metadataDetailsHelper.isRestricted(metadata)).thenReturn(false);
 
 		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media)).isEqualTo(anonymousUsername);
@@ -212,7 +214,7 @@ class APIManagerHelperIT {
 		when(aclHelper.getUserByUUID(any())).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
-				.thenReturn(true);
+				.thenReturn(HasSubscriptionStatus.SUBSCRIBED);
 
 		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
 				.isEqualTo(authenticatedUser.getLogin());
@@ -236,7 +238,7 @@ class APIManagerHelperIT {
 		when(aclHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
-				.thenReturn(false);
+				.thenReturn(HasSubscriptionStatus.NOT_SUBSCRIBED);
 		when(metadataDetailsHelper.isRestricted(metadata)).thenReturn(true);
 
 		assertThatThrownBy(() -> apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
@@ -319,6 +321,7 @@ class APIManagerHelperIT {
 		when(apIsService.searchAPI(any())).thenReturn(apiList);
 
 		final Map<String, String> apiProperties = new HashMap<>();
+		apiProperties.put("test", "test");
 		final API api = new API().id(apiId).additionalProperties(apiProperties);
 		when(apIsService.getAPI(apiId)).thenReturn(api);
 

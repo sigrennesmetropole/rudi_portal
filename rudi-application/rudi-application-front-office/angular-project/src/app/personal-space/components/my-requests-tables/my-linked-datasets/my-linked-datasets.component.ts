@@ -5,7 +5,7 @@ import {AbstractMyRequestTableComponent} from '../abstract-my-request-table.comp
 import {SortTableInterface} from '../../../../shared/back-pagination/sort-table-interface';
 import {map} from 'rxjs/operators';
 import {MyRequestsService} from '../../../../core/services/my-requests/my-requests.service';
-import {PagedLinkedDatasetList} from '../../../../projekt/projekt-model';
+import {DatasetConfidentiality, PagedLinkedDatasetList} from '../../../../projekt/projekt-model';
 import {LinkedDataset, LinkedDatasetSearchCriteria, LinkedDatasetStatus} from '../../../../projekt/projekt-api';
 import {ProcessDefinitionsKeyIconRegistryService} from '../../../../core/services/process-definitions-key-icon-registry.service';
 
@@ -30,10 +30,11 @@ export class MyLinkedDatasetsComponent extends AbstractMyRequestTableComponent i
     }
 
     protected getMyElements(offset: number, limit: number, order: string): Observable<RequestItem[]> {
-        let linkedDatasetSearchCriteria: LinkedDatasetSearchCriteria = {};
+        const linkedDatasetSearchCriteria: LinkedDatasetSearchCriteria = {};
         linkedDatasetSearchCriteria.offset = offset;
         linkedDatasetSearchCriteria.limit = limit;
         linkedDatasetSearchCriteria.order = order;
+        linkedDatasetSearchCriteria.datasetConfidentiality = DatasetConfidentiality.Restricted;
         linkedDatasetSearchCriteria.status = [LinkedDatasetStatus.Validated, LinkedDatasetStatus.Cancelled];
         return this.myRequestsService.searchMyFinishedLinkedDatasets(linkedDatasetSearchCriteria).pipe(
             map((page: PagedLinkedDatasetList) => {

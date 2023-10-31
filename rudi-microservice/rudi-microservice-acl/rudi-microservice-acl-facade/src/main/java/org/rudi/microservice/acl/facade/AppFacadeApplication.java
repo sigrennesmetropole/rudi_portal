@@ -15,10 +15,18 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
-		"org.rudi.common.storage", "org.rudi.microservice.acl.facade", "org.rudi.microservice.acl.service",
-		"org.rudi.microservice.acl.storage", "org.rudi.facet.apimaccess", "org.rudi.facet.email",
-		"org.rudi.facet.generator" })
+@SpringBootApplication(scanBasePackages = { 
+		"org.rudi.common.facade", 
+		"org.rudi.common.service",
+		"org.rudi.common.storage", 
+		"org.rudi.common.core",
+		"org.rudi.microservice.acl.facade", 
+		"org.rudi.microservice.acl.service",
+		"org.rudi.microservice.acl.storage",
+		"org.rudi.facet.apimaccess",
+		"org.rudi.facet.email",
+		"org.rudi.facet.generator"
+		})
 @EnableEurekaClient
 @EnableScheduling
 @EnableAuthorizationServer

@@ -14,10 +14,12 @@ import lombok.RequiredArgsConstructor;
 @Order(2)
 @RequiredArgsConstructor
 public class LinkedDatasetSubscriptionProcessor implements DeleteLinkedDatasetFieldProcessor {
+
 	private final LinkedDatasetSubscriptionHelper linkedDatasetSubscriptionHelper;
 
 	@Override
-	public void process(@Nullable LinkedDatasetEntity linkedDataset, @Nullable LinkedDatasetEntity existingLinkedDataset) throws AppServiceException, APIManagerException {
+	public void process(@Nullable LinkedDatasetEntity linkedDataset,
+			@Nullable LinkedDatasetEntity existingLinkedDataset) throws AppServiceException, APIManagerException {
 		// Tentative de suppression de la souscription accordée par ce linked dataset
 		linkedDatasetSubscriptionHelper.handleUnlinkLinkedDataset(existingLinkedDataset);
 	}

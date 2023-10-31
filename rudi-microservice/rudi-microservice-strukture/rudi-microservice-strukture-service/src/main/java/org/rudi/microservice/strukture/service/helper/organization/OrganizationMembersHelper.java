@@ -21,7 +21,6 @@ import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
 import org.rudi.microservice.strukture.service.exception.UserIsAlreadyOrganizationMemberException;
-import org.rudi.microservice.strukture.service.exception.UserIsNotOrganizationAdministratorException;
 import org.rudi.microservice.strukture.service.exception.UserNotFoundException;
 import org.rudi.microservice.strukture.service.mapper.OrganizationMemberMapper;
 import org.rudi.microservice.strukture.storage.dao.organization.OrganizationDao;
@@ -65,13 +64,12 @@ public class OrganizationMembersHelper {
 
 		User user = aclHelper.getUserByLogin(authenticatedUser.getLogin());
 		if (user == null) {
-			throw new AppServiceUnauthorizedException("Aucun utilisateur correspondant à l'utilisateur connecté dans ACL");
+			throw new AppServiceUnauthorizedException(
+					"Aucun utilisateur correspondant à l'utilisateur connecté dans ACL");
 		}
 
-		return organization.getMembers().stream().anyMatch(
-				member -> member.getUserUuid().equals(user.getUuid())
-						&& member.getRole().equals(OrganizationRole.ADMINISTRATOR)
-		);
+		return organization.getMembers().stream().anyMatch(member -> member.getUserUuid().equals(user.getUuid())
+				&& member.getRole().equals(OrganizationRole.ADMINISTRATOR));
 	}
 
 	/**
@@ -93,23 +91,19 @@ public class OrganizationMembersHelper {
 	}
 
 	/**
-	 * Partitionne les membres de l'organisation fournis entre ceux qui ont un utilisateur ACL correspondant
-	 * et ceux n'en ayant pas
+	 * Partitionne les membres de l'organisation fournis entre ceux qui ont un utilisateur ACL correspondant et ceux n'en ayant pas
 	 *
 	 * @param members les membres de l'organisation
 	 * @param users   les utilisateurs de ACL sensés correspondres
 	 * @return une partition entre les membres avec utilisateurs et les membres sans
 	 */
 	public Map<Boolean, List<OrganizationMemberEntity>> splitMembersHavingCorrespondingUsers(
-			List<OrganizationMemberEntity> members,
-			List<User> users) {
+			List<OrganizationMemberEntity> members, List<User> users) {
 
-		Map<UUID, User> mapUsers = users.stream()
-				.collect(Collectors.toMap(User::getUuid, Function.identity()));
+		Map<UUID, User> mapUsers = users.stream().collect(Collectors.toMap(User::getUuid, Function.identity()));
 
-		return members.stream().collect(
-				Collectors.partitioningBy(member -> mapUsers.get(member.getUserUuid()) != null)
-		);
+		return members.stream()
+				.collect(Collectors.partitioningBy(member -> mapUsers.get(member.getUserUuid()) != null));
 	}
 
 	/**
@@ -119,9 +113,11 @@ public class OrganizationMembersHelper {
 	 * @param searchCriteria critères de recherche initial
 	 * @return une liste d'utilisateurs ACL
 	 */
-	public List<User> searchCorrespondingUsers(List<OrganizationMemberEntity> members, OrganizationMembersSearchCriteria searchCriteria) {
+	public List<User> searchCorrespondingUsers(List<OrganizationMemberEntity> members,
+			OrganizationMembersSearchCriteria searchCriteria) {
 
-		List<UUID> memberUuids = members.stream().map(OrganizationMemberEntity::getUserUuid).collect(Collectors.toList());
+		List<UUID> memberUuids = members.stream().map(OrganizationMemberEntity::getUserUuid)
+				.collect(Collectors.toList());
 
 		String searchText = "";
 		String userType = "";
@@ -135,7 +131,7 @@ public class OrganizationMembersHelper {
 
 	/**
 	 *
-	 * @param login de l'utilisateur
+	 * @param login    de l'utilisateur
 	 * @param userUuid de l'utilsateur
 	 * @return le user correspondant soit au login soit à l'uuid, si les deux sont passés, l'uuid prime
 	 * @throws AppServiceException MissingParameterException ou UserNotFoundException
@@ -157,19 +153,23 @@ public class OrganizationMembersHelper {
 			if (userByUUID != null && userByLogin != null && userByLogin.getUuid().equals(userByUUID.getUuid())) {
 				return userByLogin;
 			} else {
-				throw new UserNotFoundException("Une erreur est survenue. Les informations d'identifications ne sont pas correctes ou cohérentes entre elles", AppServiceExceptionsStatus.NOT_FOUND);
+				throw new UserNotFoundException(
+						"Une erreur est survenue. Les informations d'identifications ne sont pas correctes ou cohérentes entre elles",
+						AppServiceExceptionsStatus.NOT_FOUND);
 			}
 		}
 		// Si seulement le userUuid a été passé
 		if (userUuid != null) {
 			if (userByUUID == null) {
-				throw new UserNotFoundException("L'utilisateur dont l'uuid a été passé n'est pas connu de Rudi", AppServiceExceptionsStatus.NOT_FOUND);
+				throw new UserNotFoundException("L'utilisateur dont l'uuid a été passé n'est pas connu de Rudi",
+						AppServiceExceptionsStatus.NOT_FOUND);
 			}
 			return userByUUID;
 		}
 		// Si seulement le login a été passé
 		if (userByLogin == null) {
-			throw new UserNotFoundException("L'utilisateur dont le login a été passé n'est pas connu de Rudi", AppServiceExceptionsStatus.NOT_FOUND);
+			throw new UserNotFoundException("L'utilisateur dont le login a été passé n'est pas connu de Rudi",
+					AppServiceExceptionsStatus.NOT_FOUND);
 		}
 		return userByLogin;
 	}
@@ -177,12 +177,14 @@ public class OrganizationMembersHelper {
 	/**
 	 * Throw une exception si l'utilisateur est déjà membre ce qui arrête donc le processus d'ajout
 	 *
-	 * @param organizationEntity organisation en cours de traitement
+	 * @param organizationEntity       organisation en cours de traitement
 	 * @param organizationMemberEntity membre à ajouter
 	 * @throws UserIsAlreadyOrganizationMemberException exception levée si utilisateur déjà membre
 	 */
-	public void checkUserIsNotMember(OrganizationEntity organizationEntity, OrganizationMemberEntity organizationMemberEntity) throws UserIsAlreadyOrganizationMemberException {
-		val isMember = organizationEntity.getMembers().stream().anyMatch(element -> element.getUserUuid().equals(organizationMemberEntity.getUserUuid()));
+	public void checkUserIsNotMember(OrganizationEntity organizationEntity,
+			OrganizationMemberEntity organizationMemberEntity) throws UserIsAlreadyOrganizationMemberException {
+		val isMember = organizationEntity.getMembers().stream()
+				.anyMatch(element -> element.getUserUuid().equals(organizationMemberEntity.getUserUuid()));
 		if (isMember) {
 			throw new UserIsAlreadyOrganizationMemberException("L'utilisateur est déjà membre de l'organisation");
 		}

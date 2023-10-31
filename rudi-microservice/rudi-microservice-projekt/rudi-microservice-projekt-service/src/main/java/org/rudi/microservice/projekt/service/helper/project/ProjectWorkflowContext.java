@@ -12,6 +12,7 @@ import javax.script.ScriptContext;
 
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.acl.helper.ACLHelper;
@@ -44,10 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ProjectWorkflowContext
 		extends AbstractProjektWorkflowContext<ProjectEntity, ProjectDao, ProjectAssigmentHelper> {
 
-	private static final String PROJECT_ROUTE = "project";
-
-	private static final String REUSE_ROUTE = "reuse";
-
 	private final TaskService<NewDatasetRequest> newDatasetRequestTaskService;
 
 	private final NewDatasetRequestMapper newDatasetRequestMapper;
@@ -68,11 +65,32 @@ public class ProjectWorkflowContext
 		this.linkedDatasetMapper = linkedDatasetMapper;
 	}
 
+	@Transactional(readOnly = true)
+	public String getReutilisationStatus(ScriptContext scriptContext, ExecutionEntity executionEntity) {
+		String processInstanceBusinessKey = executionEntity.getProcessInstanceBusinessKey();
+		String reutilisationStatusLabel = StringUtils.EMPTY;
+		log.debug("WkC - Get status of reuse {}", processInstanceBusinessKey);
+		if (processInstanceBusinessKey != null) {
+			UUID uuid = UUID.fromString(processInstanceBusinessKey);
+			ProjectEntity assetDescription = getAssetDescriptionDao().findByUuid(uuid);
+			if (assetDescription != null) {
+				reutilisationStatusLabel = assetDescription.getReutilisationStatus().getLabel();
+				log.debug("WkC - Status of reuse {} is {}.", processInstanceBusinessKey, reutilisationStatusLabel);
+			} else {
+				log.debug("WkC - Unknown {} skipped.", processInstanceBusinessKey);
+			}
+		} else {
+			log.debug("WkC - Get reuse status of {} skipped.", processInstanceBusinessKey);
+		}
+		return reutilisationStatusLabel;
+	}
+
 	@Transactional(readOnly = false)
 	public void updateStatus(ScriptContext scriptContext, ExecutionEntity executionEntity, String statusValue,
 			String projectStatusValue, String functionalStatusValue) {
 		String processInstanceBusinessKey = executionEntity.getProcessInstanceBusinessKey();
-		log.debug("WkC - Update {} to status {}", processInstanceBusinessKey, statusValue);
+		log.debug("WkC - Update {} to status {}, {}, {}", processInstanceBusinessKey, statusValue, projectStatusValue,
+				functionalStatusValue);
 		Status status = Status.valueOf(statusValue);
 		ProjectStatus projectStatus = ProjectStatus.valueOf(projectStatusValue);
 		if (processInstanceBusinessKey != null && status != null && functionalStatusValue != null) {
@@ -93,20 +111,6 @@ public class ProjectWorkflowContext
 		}
 	}
 
-	public String computeType(ScriptContext scriptContext, ExecutionEntity executionEntity) {
-		String result = REUSE_ROUTE;
-
-		// Une réutlisation est un projet qui n'a pas de desiredSupport (desiredSupportList.isEmpty())
-		// Un projet qui ne nécessite pas de support (desiredSupport selectionné == AUCUN) est un projet quand même
-		String processInstanceBusinessKey = executionEntity.getProcessInstanceBusinessKey();
-		if (processInstanceBusinessKey != null) {
-			UUID uuid = UUID.fromString(processInstanceBusinessKey);
-			ProjectEntity assetDescription = getAssetDescriptionDao().findByUuid(uuid);
-			return assetDescription.isAReuse() ? REUSE_ROUTE : PROJECT_ROUTE;
-		}
-		return result;
-	}
-
 	/**
 	 * Calcul des potentiels owners pour le gestionnaire de projet et le modérateur
 	 *
@@ -114,18 +118,25 @@ public class ProjectWorkflowContext
 	 * @param executionEntity
 	 * @return
 	 */
-	public List<String> computePotentialProjectManagerAndModerator(ScriptContext scriptContext,
-			ExecutionEntity executionEntity) {
+	@SuppressWarnings("unused") // Utilisé par project-process.bpmn20.xml
+	public List<String> computePotentialProjectOwners(ScriptContext scriptContext, ExecutionEntity executionEntity) {
 		List<String> result = new ArrayList<>();
 		String processInstanceBusinessKey = executionEntity.getProcessInstanceBusinessKey();
 		if (processInstanceBusinessKey != null) {
 			UUID uuid = UUID.fromString(processInstanceBusinessKey);
 			ProjectEntity assetDescription = getAssetDescriptionDao().findByUuid(uuid);
 			if (assetDescription != null) {
-				// pour l'instant on ne met que le demandeur
-				// TODO il faudra pendre en compte les organizations et donc les managers des organisations
+
+				// Ajout du demandeur
 				result.add(assetDescription.getInitiator());
-				getAssignmentHelper().computeAssignee(assetDescription, getAssignmentHelper().getModeratorRoleCode());
+
+				// Ajout de tous les membres de l'organisation
+				CollectionUtils.addAll(result,
+						getAssignmentHelper().computeOrganizationMembers(assetDescription.getOwnerUuid()));
+
+				if (log.isInfoEnabled()) {
+					log.info("Assignees: {}", StringUtils.join(result, ", "));
+				}
 			}
 		}
 		return result;

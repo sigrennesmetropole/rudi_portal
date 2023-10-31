@@ -5,7 +5,7 @@
     },
     "licence": {
         "licence_type": "CUSTOM",
-        "custom_licence_uri": "animals",
+        "custom_licence_uri": "bump::\\_!$()",
         "custom_licence_label": [
             {
                 "lang": "fr-FR",

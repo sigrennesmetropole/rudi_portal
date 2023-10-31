@@ -2,7 +2,9 @@ package org.rudi.facet.oauth2.config;
 
 import java.nio.charset.StandardCharsets;
 
-import io.netty.resolver.DefaultAddressResolverGroup;
+import javax.net.ssl.SSLException;
+
+import org.rudi.common.core.webclient.HttpClientHelper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -36,6 +38,10 @@ public class WebClientConfig {
 	public static final String REGISTRATION_ID = "rudi_module";
 
 	@Getter
+	@Value("${module.oauth2.trust-all-certs:false}")
+	private boolean trustAllCerts;
+
+	@Getter
 	@Value("${module.oauth2.client-id}")
 	private String clientId;
 
@@ -50,6 +56,13 @@ public class WebClientConfig {
 	@Getter
 	@Value("${module.oauth2.scope}")
 	private String[] scopes;
+
+	private HttpClientHelper httpClientHelper;
+
+	public WebClientConfig(HttpClientHelper httpClientHelper) {
+		super();
+		this.httpClientHelper = httpClientHelper;
+	}
 
 	@Bean(name = "rudi_oauth2_repository")
 	public ReactiveClientRegistrationRepository getRegistration() {
@@ -71,15 +84,23 @@ public class WebClientConfig {
 		return new AuthenticatedPrincipalServerOAuth2AuthorizedClientRepository(clientService);
 	}
 
+	@Bean(name = "rudi_oauth2_httpclient")
+	public HttpClient httpClient() throws SSLException {
+		return httpClientHelper.createReactorHttpClient(trustAllCerts, false, false);
+	}
+
 	@Bean(name = "rudi_oauth2_client_manager")
 	public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
 			@Qualifier("rudi_oauth2_repository") ReactiveClientRegistrationRepository clientRegistrationRepository,
 			@Qualifier("rudi_oauth2_client_service") ReactiveOAuth2AuthorizedClientService clientService,
-			@Qualifier("rudi_oauth2_client_repository") ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
+			@Qualifier("rudi_oauth2_client_repository") ServerOAuth2AuthorizedClientRepository authorizedClientRepository,
+			@Qualifier("rudi_oauth2_httpclient") HttpClient httpClient) {
 		WebClientReactiveClientCredentialsTokenResponseClient webClientReactiveClientCredentialsTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();
 		HttpHeaderConverter<OAuth2ClientCredentialsGrantRequest> httpHeaderConverter = new HttpHeaderConverter<>();
 		webClientReactiveClientCredentialsTokenResponseClient
 				.setHeadersConverter(httpHeaderConverter::populateTokenRequestHeaders);
+		webClientReactiveClientCredentialsTokenResponseClient
+				.setWebClient(WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).build());
 
 		ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider = ReactiveOAuth2AuthorizedClientProviderBuilder
 				.builder()
@@ -97,8 +118,8 @@ public class WebClientConfig {
 	@LoadBalanced
 	@Bean(name = "rudi_oauth2_builder")
 	public WebClient.Builder webClientBuilder(
-			@Qualifier("rudi_oauth2_client_manager") ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
-		HttpClient httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
+			@Qualifier("rudi_oauth2_client_manager") ReactiveOAuth2AuthorizedClientManager authorizedClientManager,
+			@Qualifier("rudi_oauth2_httpclient") HttpClient httpClient) throws SSLException {
 		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
 				authorizedClientManager);
 		oauthFilter.setDefaultClientRegistrationId(REGISTRATION_ID);

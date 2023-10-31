@@ -16,6 +16,11 @@ public enum ProjectStatus implements PositionedStatus {
 	IN_PROGRESS(StatusPosition.INTERMEDIATE),
 
 	/**
+	 * Refusé
+	 */
+	REJECTED(StatusPosition.INTERMEDIATE),
+
+	/**
 	 * Validé => le projet est une réutilisation
 	 */
 	VALIDATED(StatusPosition.INTERMEDIATE),

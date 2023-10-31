@@ -36,9 +36,15 @@ import org.rudi.microservice.konsult.service.exception.UnhandledMediaTypeExcepti
 import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.rudi.microservice.konsult.service.metadata.MetadataService;
 import org.rudi.microservice.konsult.service.metadata.impl.checker.AbstractAccessToDatasetChecker;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -260,7 +266,7 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public 	DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws AppServiceException, GetClientRegistrationException, IOException {
+	public DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws AppServiceException, GetClientRegistrationException, IOException {
 		final Metadata metadata = getMetadataById(globalId);
 		final Media media = getMetadataMediaById(metadata, mediaId);
 		final String loginAbleToDownloadMedia = getLoginAbleToDownloadMedia(metadata, media);

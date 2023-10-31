@@ -6,7 +6,7 @@
     <mat-dialog-content>
         <span class="dialog-title">{{'project.dialogEditNewDatasetRequest.title'|translate}}</span>
 
-        <p class="description">{{'project.dialogEditNewDatasetRequest.description' | translate}}</p>
+        <p class="description">{{'project.dialogEditNewDatasetRequest.descriptionFieldHint' | translate}}</p>
         <p class="step-required-information">
             <span class="required-symbol">*</span>
             {{'common.requiredInformation' | translate}}
@@ -16,9 +16,9 @@
             <!-- Title Field-->
             <ng-container>
                 <div class="d-flex">
-                    <mat-label>{{'project.firstStepForm.title'|translate}}</mat-label>
+                    <mat-label>{{'project.dialogEditNewDatasetRequest.titleField'|translate}}</mat-label>
                 </div>
-                <mat-hint class="title-hint">{{'project.dialogEditNewDatasetRequest.titleHint'|translate}}
+                <mat-hint class="title-hint">{{'project.dialogEditNewDatasetRequest.titleFieldHint'|translate}}
                 </mat-hint>
                 <mat-form-field appearance="outline" hideRequiredMarker>
                     <input type="text" formControlName="title" matInput
@@ -33,12 +33,12 @@
             <!-- Description Field-->
             <ng-container>
                 <div class="d-flex">
-                    <mat-label>{{'project.firstStepForm.description'|translate}}</mat-label>
+                    <mat-label>{{'project.dialogEditNewDatasetRequest.descriptionField'|translate}}</mat-label>
                     <span class="ml-1 mat-error">{{'signup.etoile'|translate}}</span>
                 </div>
 
                 <mat-hint
-                    class="title-hint">{{'project.dialogEditNewDatasetRequest.descriptionHint'|translate}}
+                    class="title-hint">{{'project.dialogEditNewDatasetRequest.descriptionFieldHint'|translate}}
                 </mat-hint>
                 <mat-form-field appearance="outline" hideRequiredMarker>
                                         <textarea class="text-area-height" type="text" matInput

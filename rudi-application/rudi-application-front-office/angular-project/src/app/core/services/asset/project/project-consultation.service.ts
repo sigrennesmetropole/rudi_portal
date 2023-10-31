@@ -7,7 +7,7 @@ import {LinkedDataset} from '../../../../projekt/projekt-model';
 import {Metadata} from '../../../../api-kaccess';
 import {KonsultMetierService} from '../../konsult-metier.service';
 import {NewDatasetRequest} from '../../../../projekt/projekt-api';
-import {RowTableData} from '../../../../personal-space/components/project-datasets-tab/dataset.interface';
+import {RowTableData} from '../../../../shared/project-datasets-tables/dataset.interface';
 import {Status} from '../../../../api-bpmn';
 import {Level} from '../../../../shared/notification-template/notification-template.component';
 import {SnackBarService} from '../../snack-bar.service';
@@ -74,7 +74,7 @@ export class ProjectConsultationService {
      * @param rowTableData
      */
     isRowDelatable(rowTableData: RowTableData): boolean {
-        if (rowTableData.status === Status.Completed) {
+        if (rowTableData.status === Status.Completed || rowTableData.status === Status.Draft) {
             return true;
         }
         this.snackBarService.openSnackBar({

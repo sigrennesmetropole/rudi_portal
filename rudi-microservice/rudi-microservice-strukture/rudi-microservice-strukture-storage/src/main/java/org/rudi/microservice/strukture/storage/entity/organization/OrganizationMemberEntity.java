@@ -9,10 +9,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Embeddable
-@Data
+@Getter
+@Setter
+@ToString
 public class OrganizationMemberEntity implements Serializable {
 
 	public static final String FIELD_ID = "id";
@@ -30,14 +34,29 @@ public class OrganizationMemberEntity implements Serializable {
 	private LocalDateTime addedDate;
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getUserUuid() == null) ? 0 : getUserUuid().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
 		}
-		if (!(o instanceof OrganizationMemberEntity)){
+		if (!(obj instanceof OrganizationMemberEntity)) {
 			return false;
 		}
-		final OrganizationMemberEntity that = (OrganizationMemberEntity) o;
-		return userUuid.equals(that.getUserUuid());
+		OrganizationMemberEntity other = (OrganizationMemberEntity) obj;
+		if (getUserUuid() == null) {
+			if (other.getUserUuid() != null) {
+				return false;
+			}
+		} else if (!getUserUuid().equals(other.getUserUuid())) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -32,7 +32,7 @@ public class SectionDefinitionEntity extends AbstractLongIdEntity {
 	@Column(name = "label", length = 150)
 	private String label;
 
-	@Column(name = "help", length = 150)
+	@Column(name = "help", length = 300)
 	private String help;
 
 	/**

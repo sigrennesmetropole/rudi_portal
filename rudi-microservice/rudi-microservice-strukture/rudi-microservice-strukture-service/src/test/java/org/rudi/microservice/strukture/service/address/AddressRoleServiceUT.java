@@ -1,5 +1,11 @@
 package org.rudi.microservice.strukture.service.address;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,19 +17,12 @@ import org.rudi.microservice.strukture.service.StruktureSpringBootTest;
 import org.rudi.microservice.strukture.storage.dao.address.AddressRoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * Class de test du service AddressRoleService
  *
  */
 @StruktureSpringBootTest
-public class AddressRoleServiceUT {
+class AddressRoleServiceUT {
 
 	@Autowired
 	private AddressRoleService addressRoleService;
@@ -100,7 +99,7 @@ public class AddressRoleServiceUT {
 	}
 
 	@Test
-	public void testCRUDAddressRole() {
+	void testCRUDAddressRole() {
 
 		assertNotNull(addressRoleService);
 		assertNotNull(roleMailHotline);

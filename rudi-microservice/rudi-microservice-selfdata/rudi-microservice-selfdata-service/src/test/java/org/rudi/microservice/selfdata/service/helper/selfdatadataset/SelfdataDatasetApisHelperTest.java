@@ -1,5 +1,12 @@
 package org.rudi.microservice.selfdata.service.helper.selfdatadataset;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -54,12 +61,6 @@ import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import lombok.RequiredArgsConstructor;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SelfdataSpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -118,14 +119,16 @@ class SelfdataDatasetApisHelperTest {
 	}
 
 	@Test
-	void test_searchCachedRegistration_null_when_userNotSubscribed() throws AppServiceException, GetClientRegistrationException {
+	void test_searchCachedRegistration_null_when_userNotSubscribed()
+			throws AppServiceException, GetClientRegistrationException {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin("valid@mail.com");
 		assertNull(selfdataDatasetApisHelper.searchCachedRegistration(user));
 	}
 
 	@Test
-	void test_searchCachedRegistration_ok_when_userSubscribed() throws AppServiceException, GetClientRegistrationException {
+	void test_searchCachedRegistration_ok_when_userSubscribed()
+			throws AppServiceException, GetClientRegistrationException {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin(RandomStringUtils.random(6));
 
@@ -262,9 +265,9 @@ class SelfdataDatasetApisHelperTest {
 	}
 
 	@Test
-	public void test_getGdataData_ok()
-			throws AppServiceException, APIsOperationException, ApplicationTokenGenerationException,
-			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException, GetClientRegistrationException {
+	void test_getGdataData_ok() throws AppServiceException, APIsOperationException, ApplicationTokenGenerationException,
+			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException,
+			GetClientRegistrationException {
 		String mock;
 		try {
 			File file = new File("./src/test/resources/gdata-mocked-response.json");
@@ -293,9 +296,9 @@ class SelfdataDatasetApisHelperTest {
 
 	@ParameterizedTest
 	@MethodSource("getValidDateParams")
-	public void test_getTpbcData_ok(OffsetDateTime minimum, OffsetDateTime maximum)
-			throws AppServiceException, APIsOperationException, ApplicationTokenGenerationException,
-			ApplicationKeysNotFoundException, ApplicationOperationException, APIEndpointException, GetClientRegistrationException {
+	void test_getTpbcData_ok(OffsetDateTime minimum, OffsetDateTime maximum) throws AppServiceException,
+			APIsOperationException, ApplicationTokenGenerationException, ApplicationKeysNotFoundException,
+			ApplicationOperationException, APIEndpointException, GetClientRegistrationException {
 
 		String mock;
 		try {
@@ -333,7 +336,7 @@ class SelfdataDatasetApisHelperTest {
 	}
 
 	@Test
-	public void test_getTpbc_400_when_invalidDateParams() {
+	void test_getTpbc_400_when_invalidDateParams() {
 
 		OffsetDateTime minimum = OffsetDateTime.parse("2020-01-01T15:20:30+08:00");
 		OffsetDateTime maximum = OffsetDateTime.parse("2021-01-01T15:20:30+08:00");

@@ -15,7 +15,7 @@
         "experimentalDecorators": true,
         "moduleResolution": "node",
         "importHelpers": true,
-    "skipLibCheck": true, // obligé depuis openlayer 6.6 car les standards typescript ont changé mais pas été propagé dans toutes les deps
+        "skipLibCheck": true, // obligé depuis openlayer 6.6 car les standards typescript ont changé mais pas été propagé dans toutes les deps
         "target": "es2015",
         "module": "es2020",
         "lib": [
@@ -23,11 +23,16 @@
             "es2019",
             "dom"
         ],
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "paths": {
+            "@app/*": ["./src/app/*"],
+            "@shared/*": ["./src/app/shared/*"],
+            "@core/*": ["./src/app/core/*"],
+        }
     },
     "angularCompilerOptions": {
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
-    "strictTemplates": true,
+        "strictTemplates": true,
     }
 }

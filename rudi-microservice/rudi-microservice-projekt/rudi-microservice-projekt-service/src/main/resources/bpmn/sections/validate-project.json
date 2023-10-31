@@ -1,0 +1,11 @@
+{
+	"help": "Vous vous apprêtez à accepter la demande de publication de la réutilisation. Après approbation, celle-ci sera publiée sur le catalogue des réutilisations.",
+	"fieldDefinitions": [
+		{
+			"name": "messageToProjectOwner",
+			"label": "Message à l’attention du porteur de projet",
+			"type": "TEXT",
+			"required": false
+		}
+	]
+}

@@ -7,6 +7,9 @@ package org.rudi.facet.apimaccess.exception;
  * @see org.rudi.facet.apimaccess.constant.APISearchPropertyKey
  */
 public class MissingAPIPropertyException extends APIManagerException {
+
+	private static final long serialVersionUID = 3814060433620240319L;
+
 	/**
 	 * @param apiSearchPropertyKey Nom d'une propriété parmi les constantes de la classe {@link org.rudi.facet.apimaccess.constant.APISearchPropertyKey}
 	 * @see org.rudi.facet.apimaccess.constant.APISearchPropertyKey

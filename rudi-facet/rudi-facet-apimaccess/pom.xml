@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -48,6 +48,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 
+		<!--
+		https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
@@ -83,11 +90,10 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>${jetbrains.annotations.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-dataset</artifactId>
 			<scope>compile</scope>
 		</dependency>
@@ -107,7 +113,8 @@
 						</goals>
 						<configuration>
 							<modelPackage>org.rudi.facet.apimaccess.bean</modelPackage>
-							<inputSpec>${resource-directory}/openapi/rudi-apimaccess-model.json</inputSpec>
+							<inputSpec>
+								${resource-directory}/openapi/rudi-apimaccess-model.json</inputSpec>
 							<generatorName>spring</generatorName>
 							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
@@ -116,7 +123,8 @@
 							<generateApis>false</generateApis>
 							<generateModels>true</generateModels>
 							<generateSupportingFiles>false</generateSupportingFiles>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<templateDirectory>
+								${resource-generation-directory}/openapi/generation/</templateDirectory>
 							<verbose>false</verbose>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
@@ -140,7 +148,8 @@
 							<generateApis>false</generateApis>
 							<generateModels>true</generateModels>
 							<generateSupportingFiles>false</generateSupportingFiles>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<templateDirectory>
+								${resource-generation-directory}/openapi/generation/</templateDirectory>
 							<verbose>false</verbose>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
@@ -154,8 +163,10 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<modelPackage>org.wso2.carbon.apimgt.rest.api.publisher</modelPackage>
-							<inputSpec>${project.basedir}/openapi/publisher-v1.yaml</inputSpec>
+							<modelPackage>
+								org.wso2.carbon.apimgt.rest.api.publisher</modelPackage>
+							<inputSpec>
+								${project.basedir}/openapi/publisher-v1.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
@@ -164,7 +175,8 @@
 							<generateApis>false</generateApis>
 							<generateModels>true</generateModels>
 							<generateSupportingFiles>false</generateSupportingFiles>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<templateDirectory>
+								${resource-generation-directory}/openapi/generation/</templateDirectory>
 							<verbose>false</verbose>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
@@ -178,8 +190,10 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<modelPackage>org.wso2.carbon.apimgt.rest.api.devportal</modelPackage>
-							<inputSpec>${project.basedir}/openapi/devportal-v1.yaml</inputSpec>
+							<modelPackage>
+								org.wso2.carbon.apimgt.rest.api.devportal</modelPackage>
+							<inputSpec>
+								${project.basedir}/openapi/devportal-v1.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<library>spring-boot</library>
 							<generateModelTests>false</generateModelTests>
@@ -188,7 +202,8 @@
 							<generateApis>false</generateApis>
 							<generateModels>true</generateModels>
 							<generateSupportingFiles>false</generateSupportingFiles>
-							<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
+							<templateDirectory>
+								${resource-generation-directory}/openapi/generation/</templateDirectory>
 							<verbose>false</verbose>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
@@ -201,10 +216,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

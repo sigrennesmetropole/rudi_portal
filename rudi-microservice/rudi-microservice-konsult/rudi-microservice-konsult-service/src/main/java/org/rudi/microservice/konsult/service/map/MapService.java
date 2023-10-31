@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.konsult.core.bean.LayerInformation;
+import org.rudi.microservice.konsult.core.bean.Proj4Information;
 import org.rudi.rva.core.bean.Address;
 
 public interface MapService {
@@ -30,4 +31,12 @@ public interface MapService {
 	 * @throws Exception si quelque chose de mal arrive
 	 */
 	List<Address> searchAddresses(String input) throws AppServiceException;
+
+	/**
+	 * Recherche des informations de projection à partir d'un code EPSG
+	 * @param epsgCode au format : EPSG:XXXX
+	 * @return des informations de projection récupérées de EPSG.io
+	 * @throws AppServiceException si problème d'appel de l'API De EPSG.io
+	 */
+	Proj4Information searchProjectionInformation(String epsgCode) throws AppServiceException;
 }

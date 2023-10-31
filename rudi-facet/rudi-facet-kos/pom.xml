@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-facet</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-facet-kos</artifactId>
@@ -17,7 +17,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-oauth2</artifactId>
 		</dependency>
 
@@ -76,26 +76,17 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.swagger.core.v3</groupId>
-						<artifactId>swagger-annotations</artifactId>
-						<version>${swagger.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>${project.groupId}</groupId>
-						<artifactId>rudi-common-core</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

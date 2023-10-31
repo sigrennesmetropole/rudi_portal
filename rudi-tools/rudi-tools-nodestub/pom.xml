@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-tools</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<artifactId>rudi-tools-nodestub</artifactId>
 	<name>rudi-tools-nodestub</name>
@@ -198,13 +198,6 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.swagger.core.v3</groupId>
-						<artifactId>swagger-annotations</artifactId>
-						<version>${swagger.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 
 			<plugin>
@@ -224,7 +217,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.xml</exclude>
-						<exclude>**/nodestub-dev.properties</exclude>
+						<exclude>**/nodestub-dev*.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -244,6 +237,10 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 
 		</plugins>

@@ -1,26 +1,27 @@
 import {Component, Input} from '@angular/core';
-import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {LinkedDatasetFromProject} from '@app/data-set/models/linked-dataset-from-project';
+import {NewDatasetRequest, ProjektService} from '@app/projekt/projekt-api';
+import {Project} from '@app/projekt/projekt-model';
+import {KonsultApiAccessService} from '@core/services/api-access/konsult/konsult-api-access.service';
+import {ProjectConsultationService} from '@core/services/asset/project/project-consultation.service';
 import {
     LinkedDatasetMetadatas,
     ProjectDependenciesFetchers,
     ProjectDependenciesService,
     ProjectWithDependencies
-} from '../../../core/services/asset/project/project-dependencies.service';
-import {of} from 'rxjs';
-import {Project} from '../../../projekt/projekt-model';
-import {DialogSubscribeDatasetsService} from '../../../core/services/dialog-subscribe-datasets.service';
-import {switchMap, tap} from 'rxjs/operators';
-import {KonsultApiAccessService} from '../../../core/services/api-access/konsult/konsult-api-access.service';
-import {NewDatasetRequest} from '../../../projekt/projekt-api';
-import {ProjectSubmissionService} from '../../../core/services/asset/project/project-submission.service';
-import {LinkedDatasetFromProject} from '../../../data-set/models/linked-dataset-from-project';
-import {ProjectConsultationService} from '../../../core/services/asset/project/project-consultation.service';
-import {ALL_TYPES} from '../../../shared/models/title-icon-type';
-import {IconRegistryService} from '../../../core/services/icon-registry.service';
-import {SnackBarService} from '../../../core/services/snack-bar.service';
-import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
-import {Level} from '../../../shared/notification-template/notification-template.component';
+} from '@core/services/asset/project/project-dependencies.service';
+import {ProjectSubmissionService} from '@core/services/asset/project/project-submission.service';
+import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
+import {DataSetActionsAuthorizationService} from '@core/services/data-set/data-set-actions-authorization.service';
+import {DialogSubscribeDatasetsService} from '@core/services/dialog-subscribe-datasets.service';
+import {IconRegistryService} from '@core/services/icon-registry.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
+import {ALL_TYPES} from '@shared/models/title-icon-type';
+import {Level} from '@shared/notification-template/notification-template.component';
+import {injectDependencies} from '@shared/utils/dependencies-utils';
+import {of} from 'rxjs';
+import {switchMap, tap} from 'rxjs/operators';
 
 
 @Component({
@@ -64,6 +65,10 @@ export class ProjectDatasetsTabComponent {
      * S'il y'a eu une erreur pendant la récupération des deps de l'onglet
      */
     initializationError = false;
+
+    addActionAuthorized: boolean = false;
+    deleteActionAuthorized: boolean = false;
+
 
     /**
      * Projet de l'onglet
@@ -132,6 +137,10 @@ export class ProjectDatasetsTabComponent {
                     this.stopLoaders();
                 }
             });
+            this.projektService.isAuthenticatedUserProjectOwner(this._project.uuid).subscribe(isOwner => {
+                this.addActionAuthorized = isOwner && this.dataSetActionsAuthorizationService.canAddDatasetFromProject(this._project);
+                this.deleteActionAuthorized = isOwner && this.dataSetActionsAuthorizationService.canDeleteDatasetFromProject(this._project);
+            });
         }
     }
 
@@ -144,6 +153,8 @@ export class ProjectDatasetsTabComponent {
                 private readonly projektMetierService: ProjektMetierService,
                 private readonly snackBarService: SnackBarService,
                 private readonly translateService: TranslateService,
+                private readonly projektService: ProjektService,
+                private readonly dataSetActionsAuthorizationService: DataSetActionsAuthorizationService,
                 iconRegistryService: IconRegistryService,
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
@@ -217,7 +228,7 @@ export class ProjectDatasetsTabComponent {
         this.updateAddButtonStatus(true);
         const projectUuid = this._project.uuid;
         this.newLinkedDatasetLoading = true;
-        this.projectSubmissionService.addNewDatasetRequest(projectUuid, linkToCreate).pipe(
+        this.projectSubmissionService.addNewDatasetRequest(projectUuid, linkToCreate, this._project).pipe(
             // Reload dependencies
             switchMap(() => this.projectConsultService.getNewDatasetsRequest(projectUuid)),
             tap((values: NewDatasetRequest[]) => {

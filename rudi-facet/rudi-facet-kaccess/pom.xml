@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -25,7 +25,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-dataset</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -128,7 +127,7 @@
 								par la $ref :
 								https://app.swaggerhub.com/apiproxy/registry/OlivierMartineau/RUDI-PRODUCER/1.4.0#/components/schemas/DictionaryEntry -->
 								<typeMapping>
-									DictionaryEntry1=org.rudi.facet.kaccess.bean.DictionaryEntry</typeMapping>
+									DictionaryEntry1=DictionaryEntry</typeMapping>
 							</typeMappings>
 							<generatorName>spring</generatorName>
 							<library>spring-boot</library>
@@ -156,6 +155,10 @@
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

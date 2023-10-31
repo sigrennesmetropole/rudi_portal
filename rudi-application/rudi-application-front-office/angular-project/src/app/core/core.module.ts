@@ -7,6 +7,7 @@ import {WorkerLinkedDatasetService} from './services/tasks-aggregator/projekt/wo
 import {WorkerSelfdataInformationRequestService} from './services/tasks-aggregator/selfdata/worker-selfdata-information-request.service';
 import {WorkerNewDatasetRequestService} from './services/tasks-aggregator/projekt/worker-new-dataset-request.service';
 import {GetBackendPropertyPipe} from '../shared/pipes/get-backend-property.pipe';
+import {WorkerProjectService} from './services/tasks-aggregator/projekt/worker-project.service';
 
 /**
  * Clé d'injection pour les workers de l'aggrégateur des tasks (affichage bannette)
@@ -25,6 +26,7 @@ export const WORKERS_AGGREGATOR_TASKS = new InjectionToken<Worker>('tasksWorker'
         {provide: WORKERS_AGGREGATOR_TASKS, useClass: WorkerLinkedDatasetService, multi: true},
         {provide: WORKERS_AGGREGATOR_TASKS, useClass: WorkerSelfdataInformationRequestService, multi: true},
         {provide: WORKERS_AGGREGATOR_TASKS, useClass: WorkerNewDatasetRequestService, multi: true},
+        {provide: WORKERS_AGGREGATOR_TASKS, useClass: WorkerProjectService, multi: true},
         {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'},
         {
             provide: MatSnackBarRef,

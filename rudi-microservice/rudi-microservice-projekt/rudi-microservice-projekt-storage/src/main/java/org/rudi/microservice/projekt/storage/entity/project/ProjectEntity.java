@@ -20,13 +20,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.rudi.common.storage.entity.SkosConceptCodeColumn;
 import org.rudi.facet.bpmn.entity.workflow.AbstractAssetDescriptionEntity;
 import org.rudi.microservice.projekt.core.common.SchemaConstants;
 import org.rudi.microservice.projekt.storage.entity.ConfidentialityEntity;
 import org.rudi.microservice.projekt.storage.entity.OwnerType;
 import org.rudi.microservice.projekt.storage.entity.ProjectTypeEntity;
+import org.rudi.microservice.projekt.storage.entity.ReutilisationStatusEntity;
 import org.rudi.microservice.projekt.storage.entity.SupportEntity;
 import org.rudi.microservice.projekt.storage.entity.TargetAudienceEntity;
 import org.rudi.microservice.projekt.storage.entity.TerritorialScaleEntity;
@@ -52,7 +52,6 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 	public static final String FIELD_DATASET_REQUESTS = "datasetRequests";
 	public static final String FIELD_LINKED_DATASET = "linkedDatasets";
 	public static final String FIELD_ID = "id";
-
 
 	/**
 	 * Titre
@@ -168,6 +167,13 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 	private OwnerType ownerType;
 
 	/**
+	 * Status de la réutilisation
+	 */
+	@ManyToOne
+	@JoinColumn(name = "reutilisation_status_fk", nullable = false)
+	private ReutilisationStatusEntity reutilisationStatus;
+
+	/**
 	 * Liste des datasets liés (ou demandés à être lié pour jdd restreint) au projet
 	 */
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -202,9 +208,12 @@ public class ProjectEntity extends AbstractAssetDescriptionEntity {
 	 */
 	@Transient
 	public boolean isAReuse() {
-		// Les types d’accompagnement souhaités sont obligatoires pour un projet
-		// On considère donc que s'ils sont vides, alors le projet est une réutilisation
-		return CollectionUtils.isEmpty(getDesiredSupports());
+		// FIXME Redéfinir les règles de gestion en fonction du ProjectStatus et du ReutilisationStatus et du type de JDD concerné
+		// Le booleen restrictedLinkeddatasetModificationAllowed de ReutilisationStatus est utilisable pour déterminer une partie des critères
+		// TODO Renommer ce booleen "is_a_reuse" pour qu'il ne soit plus ambigu
+
+		// false => toutes les réutilisations sont vues comme des projets et pas des réutilisations terminées.
+		return false;
 	}
 
 	// Utilisé par le mapper MapStruct ProjectMapper

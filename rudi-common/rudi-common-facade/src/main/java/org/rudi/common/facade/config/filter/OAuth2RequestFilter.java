@@ -36,8 +36,6 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2RequestFilter.class);
 
-	private RestTemplate restTemplate = new RestTemplate();
-
 	// Controle des patterns des URL
 	private AntPathMatcher pathMatcher;
 
@@ -46,9 +44,9 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 
 	private String checkTokenUri;
 
-	public OAuth2RequestFilter(final String[] excludeUrlPatterns, String checkTokenUri,
-			final UtilContextHelper utilContextHelper) {
-		super(utilContextHelper);
+	public OAuth2RequestFilter(final String[] excludeUrlPatterns,
+			String checkTokenUri, final UtilContextHelper utilContextHelper, final RestTemplate oAuth2RestTemplate) {
+		super(utilContextHelper, oAuth2RestTemplate);
 		this.excludeUrlPatterns = Arrays.asList(excludeUrlPatterns);
 		pathMatcher = new AntPathMatcher();
 		this.checkTokenUri = checkTokenUri;
@@ -82,7 +80,7 @@ public class OAuth2RequestFilter extends BearerTokenFilter {
 	private void handleToken(final HttpServletResponse response, final String tokenJwt) {
 		try {
 			HttpEntity<MultiValueMap<String, String>> request = EntityHelper.buildFomEntity("token", tokenJwt);
-			ResponseEntity<OAuth2TokenData> checkToken = restTemplate.postForEntity(checkTokenUri, request,
+			ResponseEntity<OAuth2TokenData> checkToken = oAuth2RestTemplate.postForEntity(checkTokenUri, request,
 					OAuth2TokenData.class);
 			if (checkToken.getStatusCode() == HttpStatus.OK) {
 				handleToken(checkToken, response);

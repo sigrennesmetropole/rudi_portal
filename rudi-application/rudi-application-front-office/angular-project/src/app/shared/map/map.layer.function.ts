@@ -10,7 +10,7 @@ import {LINE_STYLE, POINT_STYLE, POLYGON_STYLE} from './map.style.function';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import {get, Projection} from 'ol/proj';
 import {getTopLeft, getWidth} from 'ol/extent';
-import {DisplayMapService, DEFAULT_VIEW_PROJECTION} from '../../core/services/data-set/display-map.service';
+import {DEFAULT_VIEW_PROJECTION, DisplayMapService} from '../../core/services/data-set/display-map.service';
 import {Injectable} from '@angular/core';
 import {Media} from '../../api-kaccess';
 import {Observable} from 'rxjs';
@@ -18,7 +18,16 @@ import {map, tap} from 'rxjs/operators';
 import {Style} from 'ol/style';
 import {LogService} from '../../core/services/log.service';
 import {LayerInformation} from '../../konsult/konsult-model';
-import {getFormat, getLayerName, getMatrixIdPrefix, getMatrixSet, getMaxZoom} from './map.media.layer.function';
+import {
+    getDefaultCrs,
+    getFormat,
+    getLayerName,
+    getMatrixIdPrefix,
+    getMatrixSet,
+    getMaxZoom,
+    getStyles,
+    getVersion
+} from './map.media.layer.function';
 
 /**
  * Construction d'un TileGrid pour afficher un layer WMTS dans une projection donnée
@@ -144,13 +153,15 @@ export class MapLayerFunction {
     createWmsDataLayer(globalId: string, media: Media): BaseLayer {
         const url = this.displayMapService.getServiceUrl(globalId, media.media_id);
         const layerName = getLayerName(media);
+        const projection = getDefaultCrs(media);
+        const version = getVersion(media);
 
         const options = {
             url,
             tileLoadFunction: (tile, src) => this.loadTile(globalId, media, tile, src),
             layer: layerName,
-            projection: DEFAULT_VIEW_PROJECTION,
-            params: {LAYERS: layerName}
+            projection,
+            params: {LAYERS: layerName, VERSION: version}
         };
 
         return new TileLayer({
@@ -169,12 +180,12 @@ export class MapLayerFunction {
         const maxZoom = Number(getMaxZoom(media));
 
         const options = {
-            style: 'default',
+            style: getStyles(media),
             url,
             tileLoadFunction: (tile, src) => this.loadTile(globalId, media, tile, src),
             layer: getLayerName(media),
             matrixSet: getMatrixSet(media),
-            projection: DEFAULT_VIEW_PROJECTION,
+            projection: getDefaultCrs(media),
             format: getFormat(media),
             tileGrid: getWmtsTileGrid(DEFAULT_VIEW_PROJECTION, maxZoom, getMatrixIdPrefix(media))
         };
@@ -191,12 +202,14 @@ export class MapLayerFunction {
      */
     createWfsDataLayer(globalId: string, media: Media): BaseLayer {
         const layerName = getLayerName(media);
+        const format = getFormat(media);
+        const version = getVersion(media);
         const vectorSource = new VectorSource({
             format: new GeoJSON(),
             loader: (extent: number[], resolution: number, projection: Projection) => {
-                const src = '?service=WFS&version=1.0.0&request=GetFeature&typename=' + layerName + '&' +
-                    'outputFormat=application/json&srsname=' +
-                    projection.getCode() + '&bbox=' + extent.join(',') + ',' + projection.getCode();
+                const src = '?service=WFS&version=' + version + '&request=GetFeature&typename=' + layerName + '&' +
+                    'outputFormat=' + format + '&srsname=' + projection.getCode() + '&bbox=' + extent.join(',') +
+                    ',' + projection.getCode();
                 this.displayMapService.getFeatureLayerContent(globalId, media.media_id, src).pipe(
                     tap((geojsonObject: JSON) => {
                         const features = new GeoJSON().readFeatures(geojsonObject);

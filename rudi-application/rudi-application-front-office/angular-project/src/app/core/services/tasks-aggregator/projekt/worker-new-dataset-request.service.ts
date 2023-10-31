@@ -29,7 +29,7 @@ export class WorkerNewDatasetRequestService
     mapToRequestToStudy(task: Task, assetDescription: NewDatasetRequest, dependencies: SelfdataInformationRequestDependencies)
         : RequestToStudy {
         const requestToStudy = super.mapToRequestToStudy(task, assetDescription, dependencies);
-        requestToStudy.url = 'new-request-detail';
+        requestToStudy.url = 'new-request-task-detail';
         return requestToStudy;
     }
 }

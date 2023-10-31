@@ -4,9 +4,9 @@ import static org.rudi.common.service.helper.ResourceHelper.DEFAULT_MIME_TYPE;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.net.ssl.SSLException;
 
-import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.bean.APIDescription;
@@ -82,6 +82,7 @@ public class APIManagerHelper {
 		final List<Media> medias = getValidMedias(metadata);
 		final List<API> apiList = new ArrayList<>(medias.size());
 		for (Media media : medias) {
+			log.info("Create API Add media {}", media.getMediaId());
 			apiList.add(createApiForMedia(metadata, media, integrationRequest.getNodeProviderId()));
 		}
 
@@ -112,16 +113,19 @@ public class APIManagerHelper {
 
 		// Maj des APIs
 		for (Media mediaUpdated : modified) {
+			log.info("Update API Update media {}", mediaUpdated.getMediaId());
 			updateApiForMedia(metadata, mediaUpdated, integrationRequest);
 		}
 
 		// Création des APIs
 		for (Media mediaAdded : added) {
+			log.info("Update API Add media {}", mediaAdded.getMediaId());
 			createApiForMedia(metadata, mediaAdded, integrationRequest.getNodeProviderId());
 		}
 
 		// Archivage des APIs
 		for (Media mediaDeleted : deleted) {
+			log.info("Update API Delete media {}", mediaDeleted.getMediaId());
 			archiveApiForMedia(mediaDeleted, integrationRequest);
 		}
 	}
@@ -147,6 +151,7 @@ public class APIManagerHelper {
 	private void archiveAPI(APIInfo apiInfo) throws APIManagerException {
 		// Certaines API sont peut-être déjà archivées, on n'archive donc que celles qui sont au statut PUBLISHED
 		if (checkStatus(apiInfo, APILifecycleStatusState.PUBLISHED)) {
+			log.info("archiveAPI {}", apiInfo.getContext());
 			apIsService.archiveAPI(apiInfo.getId());
 		}
 	}
@@ -163,6 +168,7 @@ public class APIManagerHelper {
 
 	public void deleteAPI(APIInfo apiInfo) throws APIManagerException {
 		final var id = apiInfo.getId();
+		log.info("deleteAPI {}", apiInfo.getContext());
 		if (checkStatus(apiInfo, APILifecycleStatusState.PUBLISHED, APILifecycleStatusState.BLOCKED)) {
 			this.retireAPIToDeleteAllSubscriptions(id);
 		}
@@ -193,6 +199,7 @@ public class APIManagerHelper {
 		final var apiInfoList = searchApiInfosByDatasetUUid(apiSearchCriteria);
 
 		for (APIInfo apiInfo : apiInfoList) {
+			log.info("processAllAPI {}", apiInfo.getContext());
 			processor.process(apiInfo);
 		}
 	}
@@ -384,7 +391,7 @@ public class APIManagerHelper {
 		// Construction de la nouvelle description de l'API puis MAJ chez WSO2
 		APIDescription apiDescription = buildAPIDescriptionByMetadataIntegration(metadata, nodeProvider, provider,
 				media);
-		apIsService.updateAPIByName(apiDescription);
+		apIsService.createOrUpdateAPIByName(apiDescription);
 	}
 
 	private void archiveApiForMedia(Media media, IntegrationRequestEntity integrationRequest)
@@ -429,20 +436,7 @@ public class APIManagerHelper {
 	 * @return la liste des média qui sont modifiés
 	 */
 	private List<Media> getModifiedMedias(List<Media> previousMedias, List<Media> nextMedias) {
-
-		// la liste des média : modifiés CAD pas nouveaux ni supprimés mais différents
-		List<Media> modified = new ArrayList<>();
-
-		// pour chaque vieux média
-		for (Media previousMedia : previousMedias) {
-
-			// On regarde si il a été modifié dans la liste suivante
-			Optional<Media> modifiedMediaContainer = nextMedias.stream()
-					.filter(media -> isModification(previousMedia, media)).findFirst();
-			modifiedMediaContainer.ifPresent(modified::add);
-		}
-
-		return modified;
+		return intersects(previousMedias, nextMedias);
 	}
 
 	/**
@@ -460,7 +454,26 @@ public class APIManagerHelper {
 		List<String> apiNamesFirst = first.stream().map(this::buildAPIName).collect(Collectors.toList());
 		List<String> apiNamesSecond = second.stream().map(this::buildAPIName).collect(Collectors.toList());
 
-		List<String> apiNamesInFirstNotInSecond = ListUtils.subtract(apiNamesFirst, apiNamesSecond);
+		Collection<String> apiNamesInFirstNotInSecond = CollectionUtils.subtract(apiNamesFirst, apiNamesSecond);
+		return apiNamesInFirstNotInSecond.stream().map(nameMediaMapFirst::get).collect(Collectors.toList());
+	}
+
+	/**
+	 * Récupère l'intersection entre les 2 listes de médias
+	 * 
+	 * @param first
+	 * @param second
+	 * @return
+	 */
+	private List<Media> intersects(List<Media> first, List<Media> second) {
+
+		Map<String, Media> nameMediaMapFirst = first.stream()
+				.collect(Collectors.toMap(this::buildAPIName, Function.identity()));
+
+		List<String> apiNamesFirst = first.stream().map(this::buildAPIName).collect(Collectors.toList());
+		List<String> apiNamesSecond = second.stream().map(this::buildAPIName).collect(Collectors.toList());
+
+		Collection<String> apiNamesInFirstNotInSecond = CollectionUtils.intersection(apiNamesFirst, apiNamesSecond);
 		return apiNamesInFirstNotInSecond.stream().map(nameMediaMapFirst::get).collect(Collectors.toList());
 	}
 
@@ -488,23 +501,5 @@ public class APIManagerHelper {
 
 		// Les ajoutés sont ceux qui sont dans la liste après et ABSENT de la liste d'avant
 		return substractSecondMediasInFirst(nextMedias, previousMedias);
-	}
-
-	/**
-	 * Indique si le média next représente une modification du média previous
-	 *
-	 * @param previous l'ancienne version du média
-	 * @param next     la nouvelle version du média
-	 * @return si ils sont une modification l'un de l'autre
-	 */
-	private boolean isModification(Media previous, Media next) {
-
-		// Connecteurs égaux si ils ont la même URL et le même interface contract
-		boolean sameConnector = previous.getConnector().getInterfaceContract()
-				.equals(next.getConnector().getInterfaceContract())
-				&& previous.getConnector().getUrl().equals(next.getConnector().getUrl());
-
-		// Modification si noms identiques mais connecteurs différents ou attributs différents
-		return buildAPIName(previous).equals(buildAPIName(next)) && (!sameConnector || !previous.equals(next));
 	}
 }

@@ -1,6 +1,11 @@
 package org.rudi.facet.dataverse.api.dataset;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.rudi.common.core.DocumentContent;
@@ -29,10 +34,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Ensemble des opérations sur les datasets, avec l'API du dataverse
@@ -73,7 +75,8 @@ public class DatasetOperationAPI extends AbstractSearchOperationAPI<SearchDatase
 
 				// charger le fichier
 				File file = getDatasetFile(dataFile.getId());
-				documentContent = new DocumentContent(dataFile.getFilename(), dataFile.getContentType(), dataFile.getFilesize(), file);
+				documentContent = new DocumentContent(dataFile.getFilename(), dataFile.getContentType(),
+						dataFile.getFilesize(), file);
 			}
 		}
 
@@ -153,8 +156,7 @@ public class DatasetOperationAPI extends AbstractSearchOperationAPI<SearchDatase
 		HttpEntity<String> entity = createHttpEntity("");
 		ParameterizedTypeReference<DataverseResponse<MessageResponse>> type = new ParameterizedTypeReference<>() {
 		};
-		getRestTemplate().exchange(url, HttpMethod.POST,
-				entity, type);
+		getRestTemplate().exchange(url, HttpMethod.POST, entity, type);
 	}
 
 	public void deleteDataset(String persistentId) throws DataverseAPIException {
@@ -164,8 +166,7 @@ public class DatasetOperationAPI extends AbstractSearchOperationAPI<SearchDatase
 		HttpEntity<String> entity = createHttpEntity("");
 		ParameterizedTypeReference<DataverseResponse<MessageResponse>> type = new ParameterizedTypeReference<>() {
 		};
-		getRestTemplate().exchange(url, HttpMethod.DELETE,
-				entity, type);
+		getRestTemplate().exchange(url, HttpMethod.DELETE, entity, type);
 	}
 
 	private HttpEntity<String> createHttpEntity(String body) {

@@ -15,6 +15,9 @@ public class CaptchaProperties {
 	public static final String REGISTRATION_ID = "captchetat";
 	public static final String PISTE_ENDPOINT = "/api/simple-captcha-endpoint";
 	public static final String RUDI_ENDPOINT = "/acl/v1/kaptcha";
+
+	private boolean trustAllCerts = false;
+
 	/**
 	 * URL d'obtention d'un token pour accéder à l'API
 	 */
@@ -42,5 +45,5 @@ public class CaptchaProperties {
 	private String clientSecret;
 	private String clientName;
 
-	private String[] scopes = new String[]{ "piste.captchetat" };
+	private String[] scopes = new String[] { "piste.captchetat" };
 }

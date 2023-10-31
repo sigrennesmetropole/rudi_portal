@@ -16,6 +16,9 @@ import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataFacets;
 import org.rudi.facet.kaccess.bean.MetadataList;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
 public interface MetadataService {
 
@@ -114,9 +117,8 @@ public interface MetadataService {
 	Integer getNumberOfDatasetsOnTheSameTheme(UUID globalId) throws AppServiceException;
 
 	/**
-	 *
-	 * @param globalId uuid du JDD ayant les données carto
-	 * @param mediaId uuid du média
+	 * @param globalId   uuid du JDD ayant les données carto
+	 * @param mediaId    uuid du média
 	 * @param parameters paramètres d'appels du service (autant qu'on en a besoin)
 	 * @return
 	 * @throws AppServiceException

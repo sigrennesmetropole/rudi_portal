@@ -64,16 +64,21 @@ DOCKER_TAG_NAME=${RUDI_VERSION}
 #'echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USER --password-stdin $DOCKER_REGISTRY'
 
 # JAR pour WSO2
-log "Copy wso2 jar" 
+log "Copy wso2 jar"
+
+mkdir -p ${CI_DIR}/docker/apim
+mkdir -p ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/dropins
+mkdir -p ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib
+ 
 cp rudi-tools/rudi-tools-wso2/target/org.rudi.wso2.userstore.jar                       ${CI_DIR}/docker/apim/org.rudi.wso2.userstore.jar
 cp rudi-tools/rudi-tools-wso2-handler/target/org.rudi.wso2.handler-${RUDI_VERSION}.jar ${CI_DIR}/docker/apim/org.rudi.wso2.handler.jar
 cp rudi-facet/rudi-facet-crypto/target/rudi-facet-crypto-${RUDI_VERSION}.jar           ${CI_DIR}/docker/apim/rudi-facet-crypto.jar
-cp rudi-common/rudi-comon-core/target/rudi-common-core-${RUDI_VERSION}.jar             ${CI_DIR}/docker/apim/rudi-common.jar
+cp rudi-common/rudi-common-core/target/rudi-common-core-${RUDI_VERSION}.jar            ${CI_DIR}/docker/apim/rudi-common.jar
 
 cp rudi-tools/rudi-tools-wso2/target/org.rudi.wso2.userstore.jar                       ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/dropins/org.rudi.wso2.userstore.jar
 cp rudi-tools/rudi-tools-wso2-handler/target/org.rudi.wso2.handler-${RUDI_VERSION}.jar ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/org.rudi.wso2.handler.jar
 cp rudi-facet/rudi-facet-crypto/target/rudi-facet-crypto-${RUDI_VERSION}.jar           ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/rudi-facet-crypto.jar
-cp rudi-common/rudi-comon-core/target/rudi-common-core-${RUDI_VERSION}.jar             ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/rudi-common-core.jar
+cp rudi-common/rudi-common-core/target/rudi-common-core-${RUDI_VERSION}.jar            ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/rudi-common-core.jar
 
 # JAR Dataverse
 #export SERVICE_BASIC=`printf "${SERVICE_LOGIN}:${SERVICE_PWD}" | base64`
@@ -83,7 +88,7 @@ cp rudi-common/rudi-comon-core/target/rudi-common-core-${RUDI_VERSION}.jar      
 
 log "Create config directories..."
 
-find $dir -type f -name "Dockerfile" | while read line; do
+find "${ROOT_DIR}/docker" -type f -name "Dockerfile" | while read line; do
 	MICROSERVICE_NAME=$(basename $(dirname $line))
 	log "Handle ${MICROSERVICE_NAME}..."
 	mkdir -p ${ROOT_DIR}/ci/docker-compose/portal/config/${MICROSERVICE_NAME}

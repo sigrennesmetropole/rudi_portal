@@ -1,5 +1,17 @@
 package org.rudi.microservice.strukture.service.provider;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,24 +35,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * Class de test du service des Providers
  */
 
 @StruktureSpringBootTest
-public class ProviderServiceUT {
+class ProviderServiceUT {
 
 	@Autowired
 	private ProviderService providerService;
@@ -204,7 +204,7 @@ public class ProviderServiceUT {
 	}
 
 	@Test
-	public void testCRUDProviders() throws AppServiceException {
+	void testCRUDProviders() throws AppServiceException {
 
 		assertNotNull(providerService);
 		long nbProvider = providerDao.count();
@@ -336,7 +336,7 @@ public class ProviderServiceUT {
 	}
 
 	@Test
-	public void testCRUDAddresses() throws AppServiceException {
+	void testCRUDAddresses() throws AppServiceException {
 
 		assertNotNull(transportProvider);
 		assertNotNull(roleSiteWebProjet);
@@ -467,7 +467,7 @@ public class ProviderServiceUT {
 	}
 
 	@Test
-	public void testCRUDNodeProvider() throws AppServiceException {
+	void testCRUDNodeProvider() throws AppServiceException {
 
 		assertNotNull(gazProvider);
 

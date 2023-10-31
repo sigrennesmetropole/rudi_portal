@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-selfdata</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-selfdata-service</artifactId>
@@ -19,13 +19,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-selfdata-storage</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-selfdata-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -103,17 +101,17 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-kaccess</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-oauth2</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-providers</artifactId>
 		</dependency>
 
@@ -127,20 +125,20 @@
 			<artifactId>rudi-facet-generator-text</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-organization</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-apimaccess</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-dataset</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-apimremote</artifactId>
 		</dependency>
 	</dependencies>

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.email.EMailService;
-import org.rudi.facet.email.StarterSpringBootTestApplication;
+import org.rudi.facet.email.SpringBootTestApplication;
 import org.rudi.facet.email.exception.EMailException;
 import org.rudi.facet.email.model.EMailDescription;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 //@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(classes = { StarterSpringBootTestApplication.class })
+@SpringBootTest(classes = { SpringBootTestApplication.class })
 class EMailServiceIT {
 
 	@Autowired

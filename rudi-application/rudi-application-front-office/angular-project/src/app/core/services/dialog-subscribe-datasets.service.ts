@@ -11,7 +11,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {Injectable} from '@angular/core';
 import {
     DeletionConfirmationPopinComponent
-} from '../../personal-space/components/project-datasets-tab/deletion-confirmation-popin/deletion-confirmation-popin.component';
+} from '../../shared/project-datasets-tables/deletion-confirmation-popin/deletion-confirmation-popin.component';
 
 
 @Injectable({
@@ -45,7 +45,7 @@ export class DialogSubscribeDatasetsService {
      * Ouverture d'une dialog permettant de supprimer un jdd de notre projet
      * @param requestUuid
      */
-    public openDialogDeletionConfirmation(requestUuid:string): Observable<DialogClosedData<string>> {
+    public openDialogDeletionConfirmation(requestUuid: string): Observable<DialogClosedData<string>> {
         const dialogConfig = new DefaultMatDialogConfig<string>();
         dialogConfig.data = requestUuid;
         const dialogRef = this.dialog.open(DeletionConfirmationPopinComponent, dialogConfig);

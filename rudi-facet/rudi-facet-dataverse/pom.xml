@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -96,6 +96,10 @@
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

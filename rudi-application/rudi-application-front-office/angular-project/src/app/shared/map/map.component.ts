@@ -12,22 +12,22 @@ import {OSM} from 'ol/source';
 import View from 'ol/View';
 import {Attribution, ScaleLine} from 'ol/control';
 import BaseLayer from 'ol/layer/Base';
-import {DisplayMapService, GPS_PROJECTION, DEFAULT_VIEW_PROJECTION} from '../../core/services/data-set/display-map.service';
+import {DEFAULT_VIEW_PROJECTION, DisplayMapService, GPS_PROJECTION} from '../../core/services/data-set/display-map.service';
 import {SearchAutocompleteItem} from '../search-autocomplete/search-autocomplete-item.interface';
 import {Address} from '../../api-rva';
 import {LogService} from '../../core/services/log.service';
-import {getCenter} from 'ol/extent';
-import {
-    ADDRESS_STYLE, getHoveredStyle,
-    LINE_STYLE,
-    POINT_STYLE,
-    POLYGON_STYLE
-} from './map.style.function';
+import {boundingExtent, Extent, getCenter} from 'ol/extent';
+import {ADDRESS_STYLE, getHoveredStyle, LINE_STYLE, POINT_STYLE, POLYGON_STYLE} from './map.style.function';
 import {createWmtsBaseLayer, MapLayerFunction} from './map.layer.function';
 import {Media, MediaFile, MediaType, Metadata} from '../../api-kaccess';
 import {MAP_PROTOCOLS} from '../../core/services/map/map-protocols';
-import MediaTypeEnum = Media.MediaTypeEnum;
 import {LayerInformation} from '../../konsult/konsult-model';
+import {get, Projection} from 'ol/proj';
+import {tap} from 'rxjs/operators';
+import MediaTypeEnum = Media.MediaTypeEnum;
+import {getDefaultCrs} from './map.media.layer.function';
+import {Observable, of} from 'rxjs';
+import proj4 from 'proj4';
 
 /**
  * Le nombre de pixels de "padding" autour d'une extent de géoémtrie sur laquelle la vue se centre
@@ -45,9 +45,11 @@ const MAX_ZOOM_EXTENT = 11;
 const DEFAULT_ZOOM = 13;
 
 /**
- * Coordonnées de Rennes en EPSG 3857
+ * Coordonnées du point de centrage de la carte en WGS84 (ici Rennes)
  */
-const RENNES_CENTER = [-187387.4384370412, 6120728.866934362];
+const MAP_CENTER = [-1.662712, 48.114767];
+const MAP_CENTER_TOP_LEFT = [-1.751289, 48.168261];
+const MAP_CENTER_BOTTOM_RIGHT = [-1.534996, 48.062135];
 
 @Component({
     selector: 'app-map',
@@ -156,11 +158,50 @@ export class MapComponent implements AfterViewInit {
 
     currentHoverStyle: Style[];
 
+    centeredPoint: number[];
+    initExtent: Extent;
+    viewProjectionString: string;
+
     ngAfterViewInit(): void {
         if (this.map == null) {
-            this.initMap();
-            this.initPopup();
-            this.map.updateSize();
+            let projection: Observable<Projection>;
+
+            // Affichage de données cartographiques d'un JDD récupération de la projection et register avec proj4
+            if (this.media != null) {
+                const projectionString = getDefaultCrs(this.media);
+                this.viewProjectionString = projectionString;
+                projection = this.displayMapService.registerAndGetProjection(projectionString).pipe(
+                    tap(() => {
+                        this.centeredPoint = proj4(GPS_PROJECTION, projectionString, MAP_CENTER);
+                        const topLeft = proj4(GPS_PROJECTION, projectionString, MAP_CENTER_TOP_LEFT);
+                        const bottomRight = proj4(GPS_PROJECTION, projectionString, MAP_CENTER_BOTTOM_RIGHT);
+                        this.initExtent = boundingExtent([topLeft, bottomRight]);
+                    })
+                );
+            }
+            // Affichage d'une carte quelconque : EPSG:3857
+            else {
+                projection = of(get(DEFAULT_VIEW_PROJECTION)).pipe(
+                    tap(() => {
+                        this.centeredPoint = proj4(GPS_PROJECTION, DEFAULT_VIEW_PROJECTION, MAP_CENTER);
+                        const topLeft = proj4(GPS_PROJECTION, DEFAULT_VIEW_PROJECTION, MAP_CENTER_TOP_LEFT);
+                        const bottomRight = proj4(GPS_PROJECTION, DEFAULT_VIEW_PROJECTION, MAP_CENTER_BOTTOM_RIGHT);
+                        this.initExtent = boundingExtent([topLeft, bottomRight]);
+                    })
+                );
+            }
+
+            projection.pipe(
+                tap((usedProjection: Projection) => {
+                    this.initMap(usedProjection);
+                    this.initPopup();
+                    this.map.updateSize();
+                })
+            ).subscribe({
+                error: (err) => {
+                    console.error(err);
+                }
+            });
         }
     }
 
@@ -260,8 +301,9 @@ export class MapComponent implements AfterViewInit {
 
     /**
      *  Création de la map Openlayers
+     *  @param usedProjection projection utilisée pour l'affichage
      */
-    initMap(): void {
+    initMap(usedProjection: Projection): void {
 
         // On initialise les layers
         this.initLayers();
@@ -295,9 +337,10 @@ export class MapComponent implements AfterViewInit {
                 this.addressLayer
             ],
             view: new View({
-                projection: DEFAULT_VIEW_PROJECTION,
-                center: RENNES_CENTER,
-                zoom: this.defaultZoom
+                center: this.centeredPoint,
+                projection: usedProjection,
+                extent: usedProjection.getExtent(),
+                zoom: 0
             }),
             controls: [
                 new ScaleLine(),
@@ -322,6 +365,16 @@ export class MapComponent implements AfterViewInit {
         }
         // Sinon on se centre pas
 
+        // Chargement des dépendances
+        this.handleLoadLayers();
+        this.handleMapEvents();
+
+        if (this.initExtent != null) {
+            this.map.getView().fit(this.initExtent);
+        }
+    }
+
+    private handleLoadLayers(): void {
         // Gestion chargement des données du JDD
         if (this.metadata != null && this.media != null) {
             let layer;
@@ -349,6 +402,9 @@ export class MapComponent implements AfterViewInit {
             }
         }
 
+    }
+
+    private handleMapEvents(): void {
         // Gestion de l'evenement de mouvement de pointeur
         this.map.on('pointermove', (e) => {
             if (this.hoveredFeature != null) {
@@ -409,7 +465,7 @@ export class MapComponent implements AfterViewInit {
     handleClickCentrage(): void {
         let centeredElement = this.centeredExtent;
         if (centeredElement == null) {
-            centeredElement = new Point(RENNES_CENTER);
+            centeredElement = this.initExtent;
         }
         this.map.getView().fit(
             centeredElement,
@@ -457,7 +513,10 @@ export class MapComponent implements AfterViewInit {
         if (this.autocompletePin != null) {
             this.addressSource.removeFeature(this.autocompletePin);
         }
-        const point = new Point([Number(item.x), Number(item.y)]).transform(GPS_PROJECTION, DEFAULT_VIEW_PROJECTION) as Point;
+
+        const destination = this.viewProjectionString != null ? this.viewProjectionString : DEFAULT_VIEW_PROJECTION;
+
+        const point = new Point([Number(item.x), Number(item.y)]).transform(GPS_PROJECTION, destination) as Point;
         this.autocompletePin = new Feature<Point>(point);
         this.autocompletePin.setStyle(ADDRESS_STYLE);
         this.map.getView().fit(

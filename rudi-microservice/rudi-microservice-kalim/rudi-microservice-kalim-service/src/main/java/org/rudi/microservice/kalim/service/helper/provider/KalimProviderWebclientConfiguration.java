@@ -3,10 +3,13 @@
  */
 package org.rudi.microservice.kalim.service.helper.provider;
 
-import io.netty.resolver.DefaultAddressResolverGroup;
+import javax.net.ssl.SSLException;
+
+import org.rudi.common.core.webclient.HttpClientHelper;
 import org.rudi.facet.oauth2.config.WebClientConfig;
 import org.rudi.facet.providers.helper.ProviderHelperConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -30,15 +33,21 @@ import reactor.netty.http.client.HttpClient;
 @RequiredArgsConstructor
 public class KalimProviderWebclientConfiguration {
 
+	@Value("${rudi.kalim.provider.trust-all-certs:false}")
+	private boolean trustAllCerts;
+
 	private final ProviderHelperConfiguration providerHelperConfiguration;
 
 	private final ObjectMapper objectMapper;
 
+	private final HttpClientHelper httpClientHelper;
+
 	@Bean(name = "rudi_kalim_oauth2_builder")
-	public WebClient.Builder webClientBuilder(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+	public WebClient.Builder webClientBuilder(ReactiveOAuth2AuthorizedClientManager authorizedClientManager)
+			throws SSLException {
 
 		// Le client HTTP utilisé par WebClient
-		HttpClient httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE).wiretap(true);
+		HttpClient httpClient = httpClientHelper.createReactorHttpClient(trustAllCerts, false, true);
 
 		// Oauth2 authent pour le webclient
 		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(

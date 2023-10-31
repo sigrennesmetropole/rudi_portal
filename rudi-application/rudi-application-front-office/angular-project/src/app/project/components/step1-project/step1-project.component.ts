@@ -5,6 +5,7 @@ import {ProjectType, Support, TargetAudience, TerritorialScale} from '../../../p
 import {AdapterWithoutBackend} from '../../../shared/uploader/adapter-without-backend';
 import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {DataSize} from '../../../shared/models/data-size';
+import {ReutilisationStatus} from '../../../projekt/projekt-api';
 
 @Component({
     selector: 'app-step1-project',
@@ -33,6 +34,9 @@ export class Step1ProjectComponent implements OnInit {
 
     @Input()
     public publicCible: TargetAudience[];
+
+    @Input()
+    public reuseStatus: ReutilisationStatus[];
 
     @Output()
     public imageModified: EventEmitter<Blob> = new EventEmitter<Blob>();

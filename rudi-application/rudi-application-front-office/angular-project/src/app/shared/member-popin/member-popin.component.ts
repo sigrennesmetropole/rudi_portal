@@ -33,7 +33,7 @@ export class MemberPopinComponent {
         this.role = this.organizationMemberDialogData.organizationUserMember?.role ?? this.roles[0];
         this.loginValue = organizationMemberDialogData.organizationUserMember?.login ?? '';
         // Si on n'a aucun membre passé à la popin => On est en ajout et non en édition ou suppression
-        this.disableLoginField = !!organizationMemberDialogData.organizationUserMember;
+        this.disableLoginField = Boolean(organizationMemberDialogData.organizationUserMember);
         this.confirmationPopinText = this.disableLoginField ? this.translateService.instant('personalSpace.project.tabs.deletion.confirmationPopup.update')
             : this.translateService.instant('personalSpace.project.tabs.deletion.confirmationPopup.addMember');
     }

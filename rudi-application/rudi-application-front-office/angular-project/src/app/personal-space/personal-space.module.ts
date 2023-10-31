@@ -7,14 +7,14 @@ import {TasksComponent} from './components/tasks/tasks.component';
 import {MatTableModule} from '@angular/material/table';
 import {MyNotificationsComponent} from './pages/my-notifications/my-notifications.component';
 import {ProjectDetailComponent} from './components/project-detail/project-detail.component';
-import {SharedModule} from '../shared/shared.module';
+import {SharedModule} from '@shared/shared.module';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
-import {CoreModule} from '../core/core.module';
+import {CoreModule} from '@core/core.module';
 import {AccesDetailsTable3Component} from './components/project-detail/acces-details-table3/acces-details-table3.component';
 import {AccesDetailsTable2Component} from './components/project-detail/acces-details-table2/acces-details-table2.component';
 import {AccesDetailsTable1Component} from './components/project-detail/acces-details-table1/acces-details-table1.component';
-import {RequestDetailComponent} from './pages/request-detail/request-detail.component';
+import {DatasetTaskDetailComponent} from './pages/dataset-task-detail/dataset-task-detail.component';
 import {TaskDetailComponent} from './components/task-detail/task-detail.component';
 import {ProjectOwnerDetailComponent} from './components/project-owner-detail/project-owner-detail.component';
 import {ReusesComponent} from './components/reuses/reuses.component';
@@ -27,8 +27,8 @@ import {ProjectTasksComponent} from './components/project-tasks/project-tasks.co
 import {LinkedDatasetHistoryComponent} from './components/linked-dataset-history/linked-dataset-history.component';
 import {ProjectInformationComponent} from './components/project-information/project-information.component';
 import {
-    SelfdataInformationRequestDetailComponent
-} from './pages/selfdata-information-request-detail/selfdata-information-request-detail.component';
+    SelfdataInformationRequestTaskDetailComponent
+} from './pages/selfdata-information-request-task-detail/selfdata-information-request-task-detail.component';
 import {SelfdataMainInformationComponent} from './components/selfdata-main-information/selfdata-main-information.component';
 import {SelfdataDatasetsComponent} from './pages/selfdata-datasets/selfdata-datasets.component';
 import {SelfdataDatasetsTableComponent} from './components/selfdata-datasets-table/selfdata-datasets-table.component';
@@ -41,34 +41,26 @@ import {GenericDataComponent} from './components/generic-data/generic-data.compo
 import {TemporalBarchartDataComponent} from './components/temporal-barchart-data/temporal-barchart-data.component';
 import {D3LineAndPlotChartComponent} from './components/d3-line-and-plot-chart/d3-line-and-plot-chart.component';
 import {D3BarChartComponent} from './components/d3-bar-chart/d3-bar-chart.component';
-import {NewRequestDetailComponent} from './pages/new-request-detail/new-request-detail.component';
+import {NewRequestTaskDetailComponent} from './pages/new-request-task-detail/new-request-task-detail.component';
 import {MatchingDataCardComponent} from './components/matching-data-card/matching-data-card.component';
-import {OpenDatasetTableComponent} from './components/project-datasets-tab/open-dataset-table/open-dataset-table.component';
-import {
-    NewDatasetRequestTableComponent
-} from './components/project-datasets-tab/new-dataset-request-table/new-dataset-request-table.component';
-import {
-    RestrictedDatasetTableComponent
-} from './components/project-datasets-tab/restricted-dataset-table/restricted-dataset-table.component';
-import {
-    DeletionConfirmationPopinComponent
-} from './components/project-datasets-tab/deletion-confirmation-popin/deletion-confirmation-popin.component';
 import {PopoverModule} from 'ngx-smart-popover';
 import {MyActivityComponent} from './pages/my-activity/my-activity.component';
-import { MyRequestsComponent } from './components/my-requests/my-requests.component';
-import { MyNewDatasetRequestsComponent } from './components/my-requests-tables/my-new-dataset-requests/my-new-dataset-requests.component';
-import { MySelfdataRequestsComponent } from './components/my-requests-tables/my-selfdata-requests/my-selfdata-requests.component';
+import {MyRequestsComponent} from './components/my-requests/my-requests.component';
+import {MyNewDatasetRequestsComponent} from './components/my-requests-tables/my-new-dataset-requests/my-new-dataset-requests.component';
+import {MySelfdataRequestsComponent} from './components/my-requests-tables/my-selfdata-requests/my-selfdata-requests.component';
 import {MyLinkedDatasetsComponent} from './components/my-requests-tables/my-linked-datasets/my-linked-datasets.component';
 import {MyProfilComponent} from './components/my-profil/my-profil.component';
 import {OrganizationTabComponent} from './components/organization-tab/organization-tab.component';
 import {OrganizationCardComponent} from './components/organization-card/organization-card.component';
+import {ProjectTaskDetailComponent} from './pages/project-task-detail/project-task-detail.component';
+import {ProjectModule} from '../project/project.module';
 
 @NgModule({
     declarations: [
         MyAccountComponent,
         MyNotificationsComponent,
         TasksComponent,
-        RequestDetailComponent,
+        DatasetTaskDetailComponent,
         ProjectDetailComponent,
         AccesDetailsTable1Component,
         AccesDetailsTable2Component,
@@ -85,7 +77,7 @@ import {OrganizationCardComponent} from './components/organization-card/organiza
         ProjectTasksComponent,
         LinkedDatasetHistoryComponent,
         ProjectInformationComponent,
-        SelfdataInformationRequestDetailComponent,
+        SelfdataInformationRequestTaskDetailComponent,
         SelfdataMainInformationComponent,
         SelfdataDatasetsComponent,
         SelfdataDatasetsTableComponent,
@@ -98,12 +90,8 @@ import {OrganizationCardComponent} from './components/organization-card/organiza
         TemporalBarchartDataComponent,
         D3BarChartComponent,
         D3LineAndPlotChartComponent,
-        NewRequestDetailComponent,
+        NewRequestTaskDetailComponent,
         MatchingDataCardComponent,
-        OpenDatasetTableComponent,
-        NewDatasetRequestTableComponent,
-        RestrictedDatasetTableComponent,
-        DeletionConfirmationPopinComponent,
         MyActivityComponent,
         MyRequestsComponent,
         MyLinkedDatasetsComponent,
@@ -111,7 +99,8 @@ import {OrganizationCardComponent} from './components/organization-card/organiza
         MySelfdataRequestsComponent,
         MyProfilComponent ,
         OrganizationTabComponent,
-        OrganizationCardComponent
+        OrganizationCardComponent,
+        ProjectTaskDetailComponent,
     ],
     imports: [
         CommonModule,
@@ -122,6 +111,7 @@ import {OrganizationCardComponent} from './components/organization-card/organiza
         MatPaginatorModule,
         MatSortModule,
         PopoverModule,
+        ProjectModule,
     ]
     ,
     providers:

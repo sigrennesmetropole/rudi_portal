@@ -55,7 +55,6 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.renderer.addClass(document.body, 'menu');
         this.mediaSize = this.breakpointObserver.getMediaSize();
         this.sidenavOpeningsService.sideNavOpening$.pipe(takeUntil(this.isDestroyed$)).subscribe(() => {
             this.sidenav.open();

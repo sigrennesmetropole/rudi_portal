@@ -6,7 +6,6 @@ package org.rudi.microservice.gateway.facade.config;
 import java.util.Arrays;
 
 import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.boot.actuate.health.HealthEndpoint;
@@ -18,15 +17,19 @@ import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.server.WebFilter;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author FNI18300
  */
 @Component
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
 	private static final String[] SB_PERMIT_ALL_URL = {
@@ -42,8 +45,9 @@ public class WebSecurityConfig {
 	@Value("${rudi.gateway.security.authentication.disabled:false}")
 	private boolean disableAuthentification = false;
 
-	@Autowired
-	private AbstractJwtTokenUtil jwtTokenUtil;
+	private final AbstractJwtTokenUtil jwtTokenUtil;
+
+	private final RestTemplate internalRestTemplate;
 
 	@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
@@ -61,8 +65,7 @@ public class WebSecurityConfig {
 		http.httpBasic(Customizer.withDefaults());
 		http.formLogin(Customizer.withDefaults());
 		http.csrf().disable();
-		http.exceptionHandling()
-				.authenticationEntryPoint(new HttpBearerServerAuthenticationEntryPoint());
+		http.exceptionHandling().authenticationEntryPoint(new HttpBearerServerAuthenticationEntryPoint());
 		return http.build();
 	}
 
@@ -91,7 +94,7 @@ public class WebSecurityConfig {
 	}
 
 	private WebFilter createOAuth2Filter() {
-		return new OAuth2WebFilter(SB_PERMIT_ALL_URL, checkTokenUri);
+		return new OAuth2WebFilter(SB_PERMIT_ALL_URL, checkTokenUri, internalRestTemplate);
 	}
 
 	public WebFilter createJwtRequestFilter() {

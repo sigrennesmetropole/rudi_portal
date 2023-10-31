@@ -1,0 +1,66 @@
+{
+	"interface_contract": "wfs",
+	"url": "https://public.sig.rennesmetropole.fr/geoserver/urba_fonc/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=urba_fonc%3Av_zac",
+	"connector_parameters": [
+		{
+			"key": "layer",
+			"value": "",
+			"type": "STRING",
+			"usage": "Couche utilisée"
+		},
+		{
+			"key": "versions",
+			"value": "1.2.0.5",
+			"type": "STRING",
+			"usage": "La version du service supporté"
+		},
+		{
+			"key": "formats",
+			"value": "format/incorrect/donc ça plante",
+			"type": "STRING",
+			"usage": "Couche utilisée"
+		},
+		{
+			"key": "default_crs",
+			"value": "EPSG:4326s",
+			"type": "STRING",
+			"usage": "La version du service supporté"
+		},
+		{
+			"key": "other_crss",
+			"value": "EPSGF:4326",
+			"type": "STRING",
+			"usage": "other_crss utilisé"
+		},
+		{
+			"key": "max_features",
+			"value": "15b",
+			"type": "LONG",
+			"usage": "A trouver"
+		},
+		{
+			"key": "transparent",
+			"value": "vrai",
+			"type": "BOOLEAN",
+			"usage": "Booleen oui, mais en anglais please"
+		},
+		{
+			"key": "max_zoom",
+			"value": "123456a",
+			"type": "LONG",
+			"usage": "A trouver"
+		},
+		{
+			"key": "matrix_set",
+			"value": "",
+			"type": "STRING",
+			"usage": "Should'nt be blank"
+		},
+		{
+			"key": "styles",
+			"value": "Blablabla pookie",
+			"type": "STRING",
+			"usage": "Should have comma separeted values"
+		}
+	]
+}

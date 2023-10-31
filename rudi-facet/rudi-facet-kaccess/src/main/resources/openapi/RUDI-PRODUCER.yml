@@ -229,7 +229,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Language'
-          default: [fr]
+        #—•—•—•—•—•—•—•—•—•—•—•—•—•
+        #--default: [fr]
+        # this block is comment to ensure previous behavior 
+        # openapi generator does not provide real default value before 7.0.1
 
         #——————————————————————————
         'temporal_spread':
@@ -463,7 +466,6 @@ components:
                   # JSON object of the metadata in "1.0.0self" format that describes the self-data
                   # This is sent to the Portal but not stored in the Producer Node.
                   # A version of metadata that has such a field is referenced as "1.4.0ext".
-                  type: object
                   $ref: './RUDI-PRODUCER-ext_selfdata_content.yml#/components/schemas/SelfdataContent'
 
     #---------------------------------------------------------------------------
@@ -615,6 +617,7 @@ components:
               description: URL towards the custom licence
               type: string
               format: uri
+              x-constraints: "@org.rudi.common.core.validator.URI" 
 
     #---------------------------------------------------------------------------
     'Media':

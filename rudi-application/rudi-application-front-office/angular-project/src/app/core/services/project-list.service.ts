@@ -3,7 +3,7 @@ import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from './asset/project/proje
 import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {PagedProjectList, Project, ProjectSearchCriteria} from '../../projekt/projekt-model';
+import {PagedProjectList, Project, ProjectSearchCriteria, ProjectStatus} from '../../projekt/projekt-model';
 import {ProjectDependenciesFetchers, ProjectWithDependencies} from './asset/project/project-dependencies.service';
 import {mapEach} from '../../shared/utils/ObservableUtils';
 import {injectDependenciesEach} from '../../shared/utils/dependencies-utils';
@@ -37,6 +37,7 @@ export class ProjectListService {
         const criteria: ProjectSearchCriteria = {
             dataset_uuids: linkedDatasetsGlobalIds,
             owner_uuids: [producerUuid],
+            status: [ProjectStatus.Validated],
             offset,
             limit
         };

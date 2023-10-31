@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +18,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-common-service</artifactId>
 		</dependency>
 		<dependency>
@@ -30,11 +30,11 @@
 			<artifactId>rudi-facet-oauth2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-strukture-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-acl</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -79,18 +79,6 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.swagger.core.v3</groupId>
-						<artifactId>swagger-annotations</artifactId>
-						<version>${swagger.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>${project.groupId}</groupId>
-						<artifactId>rudi-common-core</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -98,6 +86,10 @@
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

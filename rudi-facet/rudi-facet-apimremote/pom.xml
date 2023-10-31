@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -18,11 +18,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-acl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-apimaccess</artifactId>
 		</dependency>
 	</dependencies>
@@ -32,7 +32,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>

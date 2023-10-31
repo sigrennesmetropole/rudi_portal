@@ -28,6 +28,7 @@ import lombok.val;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LinkedDatasetSubscriptionHelper {
 	private final ACLHelper aclHelper;
 	private final ApplicationService applicationService;
@@ -36,7 +37,26 @@ public class LinkedDatasetSubscriptionHelper {
 	private final UtilPageable utilPageable;
 	private final ProjectCustomDao projectCustomDao;
 
-	public void handleUnlinkLinkedDataset(LinkedDatasetEntity existingLinkedDataset) throws AppServiceException, APIManagerException {
+	@Transactional // true
+	public void cleanLinkedDatasetExpired(LinkedDatasetEntity existingLinkedDataset)
+			throws AppServiceException, APIManagerException {
+		val project = getProject(existingLinkedDataset);
+		val ownerName = getSubscriptionOwnerName(project);
+		// Recup de toutes les demandes de ce owner pour s'assurer qu'une autre demande ne donne pas accès à ce JDD
+		val ownerLinkedDatasets = new ArrayList<LinkedDatasetEntity>();
+		getOwnerAllRequests(List.of(project.getOwnerUuid()), 0, ownerLinkedDatasets);
+		val datasetUuid = existingLinkedDataset.getDatasetUuid();
+		boolean hasNotAccess = !hasAccessThroughAnotherRequest(ownerLinkedDatasets, datasetUuid);
+		if (hasNotAccess) { // Aucun autre linkedDataset ne donne accès au JDD => Désouscription
+			blockSubscription(existingLinkedDataset, ownerName);
+		} else { // Il existe un autre linkedDataset qui donne accès au JDD => Archivage du linkedDataset actuel expiré mais sans désouscription
+			archivedLinkedDataset(existingLinkedDataset);
+		}
+	}
+
+	@Transactional // true
+	public void handleUnlinkLinkedDataset(LinkedDatasetEntity existingLinkedDataset)
+			throws AppServiceException, APIManagerException {
 		val project = getProject(existingLinkedDataset);
 		val ownerName = getSubscriptionOwnerName(project);
 		// Recup de toutes les demandes de ce owner pour s'assurer qu'une autre demande ne donne pas accès à ce JDD
@@ -55,8 +75,7 @@ public class LinkedDatasetSubscriptionHelper {
 	 *
 	 * @param existingLinkedDataset link à archiver
 	 */
-	@Transactional
-	public void archivedLinkedDataset(LinkedDatasetEntity existingLinkedDataset) {
+	protected void archivedLinkedDataset(LinkedDatasetEntity existingLinkedDataset) {
 		existingLinkedDataset.setLinkedDatasetStatus(LinkedDatasetStatus.ARCHIVED);
 		linkedDatasetDao.save(existingLinkedDataset);
 	}
@@ -64,12 +83,25 @@ public class LinkedDatasetSubscriptionHelper {
 	/**
 	 *
 	 * @param existingLinkedDataset link à archiver
-	 * @param ownerName nom auquel la souscription au jdd a été faite
-	 * @param datasetUuid uuid du jdd
+	 * @param ownerName             nom auquel la souscription au jdd a été faite
+	 * @param datasetUuid           uuid du jdd
 	 * @throws APIManagerException Execption WSO2
 	 */
-	public void deleteSubscription(LinkedDatasetEntity existingLinkedDataset, String ownerName, UUID datasetUuid) throws APIManagerException {
+	protected void deleteSubscription(LinkedDatasetEntity existingLinkedDataset, String ownerName, UUID datasetUuid)
+			throws APIManagerException {
 		applicationService.deleteUserSubscriptionsForDatasetAPIs(ownerName, datasetUuid);
+		archivedLinkedDataset(existingLinkedDataset);
+	}
+
+	/**
+	 *
+	 * @param existingLinkedDataset link à archiver
+	 * @param ownerName             nom auquel la souscription au jdd a été faite
+	 * @throws APIManagerException Execption WSO2
+	 */
+	protected void blockSubscription(LinkedDatasetEntity existingLinkedDataset, String ownerName)
+			throws APIManagerException {
+		applicationService.blockUserSubscriptionsForDatasetAPIs(ownerName, existingLinkedDataset.getDatasetUuid());
 		archivedLinkedDataset(existingLinkedDataset);
 	}
 
@@ -80,7 +112,8 @@ public class LinkedDatasetSubscriptionHelper {
 	 * @param offset                  indice à partir duquel remonter des infos
 	 * @param linkedDatasetEntityList conteneur de tous les éléments remontés dans chaque page
 	 */
-	public void getOwnerAllRequests(List<UUID> ownerList, int offset, List<LinkedDatasetEntity> linkedDatasetEntityList) {
+	public void getOwnerAllRequests(List<UUID> ownerList, int offset,
+			List<LinkedDatasetEntity> linkedDatasetEntityList) {
 		val pageable = utilPageable.getPageable(offset, null, null);
 		val searchCriteria = new LinkedDatasetSearchCriteria().projectOwnerUuids(ownerList);
 		val pageResult = linkedDatasetCustomDao.searchLinkedDatasets(searchCriteria, pageable);
@@ -94,7 +127,10 @@ public class LinkedDatasetSubscriptionHelper {
 	 * Permet de savoir si le owner a accès à ce JDD via une autre demande
 	 */
 	public boolean hasAccessThroughAnotherRequest(List<LinkedDatasetEntity> linkedDatasetEntityList, UUID datasetUuid) {
-		return linkedDatasetEntityList.stream().filter(linkedDatasetEntity -> linkedDatasetEntity.getDatasetUuid().equals(datasetUuid) && linkedDatasetEntity.getLinkedDatasetStatus() == LinkedDatasetStatus.VALIDATED).count() > 1;
+		return linkedDatasetEntityList.stream()
+				.filter(linkedDatasetEntity -> linkedDatasetEntity.getDatasetUuid().equals(datasetUuid)
+						&& linkedDatasetEntity.getLinkedDatasetStatus() == LinkedDatasetStatus.VALIDATED)
+				.count() > 1;
 	}
 
 	/**

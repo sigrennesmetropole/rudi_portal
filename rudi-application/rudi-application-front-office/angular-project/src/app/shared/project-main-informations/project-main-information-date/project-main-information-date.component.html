@@ -1,0 +1,25 @@
+<div>
+    <!-- Cas d'un période (avec date de début et fin) -->
+    <div *ngIf="startDate && endDate">
+        <app-project-main-information-label
+            [label]="'personalSpace.project.periodRealization'|translate"
+            [value]="(startDate | date:'MM/YYYY') + ' - ' + ( endDate | date:'MM/YYYY')"
+        ></app-project-main-information-label>
+    </div>
+
+    <!-- Cas uniquement date de début -->
+    <div *ngIf="startDate && !endDate">
+        <app-project-main-information-label
+            [label]="'personalSpace.project.startDateRealization'|translate"
+            [value]="startDate | date:'MM/YYYY'"
+        ></app-project-main-information-label>
+    </div>
+
+    <!-- Cas uniquement date de fin -->
+    <div *ngIf="!startDate && endDate">
+        <app-project-main-information-label
+            [label]="'personalSpace.project.endDateRealization'|translate"
+            [value]="endDate | date:'MM/YYYY'"
+        ></app-project-main-information-label>
+    </div>
+</div>

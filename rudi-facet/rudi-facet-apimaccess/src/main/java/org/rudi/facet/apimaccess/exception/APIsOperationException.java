@@ -1,9 +1,11 @@
 package org.rudi.facet.apimaccess.exception;
 
-import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
+import org.wso2.carbon.apimgt.rest.api.publisher.API;
 
 public class APIsOperationException extends APIManagerException {
+
+	private static final long serialVersionUID = 7790372015026801582L;
 
 	public APIsOperationException(API api, Throwable cause) {
 		super(message(api), cause);

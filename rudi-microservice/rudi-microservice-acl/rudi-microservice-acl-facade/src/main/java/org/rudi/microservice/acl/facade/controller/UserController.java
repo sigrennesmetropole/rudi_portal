@@ -1,5 +1,18 @@
 package org.rudi.microservice.acl.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -19,24 +32,11 @@ import org.rudi.microservice.acl.facade.controller.api.UsersApi;
 import org.rudi.microservice.acl.service.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
 
 /**
  * Controleur pour la gestion des utilisateurs RUDI
@@ -52,8 +52,9 @@ public class UserController implements UsersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE + ")")
-	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String password, @Valid String lastname,
-			@Valid String firstname, @Valid String company, @Valid UserType type, @Valid List<UUID> roleUuids, @Valid List<UUID> userUuids, @Valid String loginAndDenomination,
+	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String password,
+			@Valid String lastname, @Valid String firstname, @Valid String company, @Valid UserType type,
+			@Valid List<UUID> roleUuids, @Valid List<UUID> userUuids, @Valid String loginAndDenomination,
 			@Valid Integer offset, @Valid Integer limit, @Valid String order) {
 
 		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().login(login).password(password)
@@ -142,20 +143,25 @@ public class UserController implements UsersApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", " + MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", "
+			+ MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", "
+			+ MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
 	public ResponseEntity<ClientRegistrationDto> getClientRegistration(String login) throws Exception {
 		return ResponseEntity.ok(userService.getClientRegistration(login));
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", " + MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", "
+			+ MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", "
+			+ MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> addClientRegistration(String login, AccessKeyDto accessKeyDto) throws Exception {
 		userService.addClientRegistration(login, accessKeyDto);
 		return ResponseEntity.ok().build();
 	}
 
 	@Override
-	public ResponseEntity<ClientRegistrationDto> registerClientByPassword(String login, String password) throws Exception {
+	public ResponseEntity<ClientRegistrationDto> registerClientByPassword(String login, String password)
+			throws Exception {
 		return ResponseEntity.ok(userService.registerClientByPassword(login, password));
 	}
 

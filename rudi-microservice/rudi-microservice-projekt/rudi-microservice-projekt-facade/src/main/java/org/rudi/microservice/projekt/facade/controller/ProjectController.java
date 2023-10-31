@@ -136,12 +136,16 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<LinkedDataset> updateLinkedDataset(UUID projectUuid, LinkedDataset linkedDataset)
 			throws Exception {
 		return ResponseEntity.ok(linkedDatasetService.updateLinkedDataset(projectUuid, linkedDataset));
 	}
 
 	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<Void> unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUUID)
 			throws AppServiceException, APIManagerException {
 		linkedDatasetService.unlinkProjectToDataset(projectUuid, linkedDatasetUUID);
@@ -255,5 +259,10 @@ public class ProjectController implements ProjectsApi {
 		Pageable pageable = utilPageable.getPageable(offset, limit, order);
 		val page = projectService.getMyProjects(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedProjectList().total(page.getTotalElements()).elements(page.getContent()));
+	}
+
+	@Override
+	public ResponseEntity<Boolean> isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception {
+		return ResponseEntity.ok(projectService.isAuthenticatedUserProjectOwner(projectUuid));
 	}
 }

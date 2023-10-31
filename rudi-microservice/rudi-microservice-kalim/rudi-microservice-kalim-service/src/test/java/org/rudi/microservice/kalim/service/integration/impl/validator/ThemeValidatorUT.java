@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.facet.kaccess.constant.RudiMetadataField;
-import org.rudi.facet.kos.helper.KOSHelper;
+import org.rudi.facet.kos.helper.KosHelper;
 import org.rudi.microservice.kalim.service.IntegrationError;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 
@@ -23,7 +23,7 @@ public class ThemeValidatorUT {
 	private ThemeValidator themeValidator;
 
 	@Mock
-	private KOSHelper kosHelper;
+	private KosHelper kosHelper;
 
 	@Test
 	@DisplayName("Test de la validation d'un thème inconnu dans skos")

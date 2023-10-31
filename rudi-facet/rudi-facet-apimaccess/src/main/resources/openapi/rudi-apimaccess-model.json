@@ -125,6 +125,14 @@
 				],
 				"example": "UNBLOCKED"
 			},
+			"HasSubscriptionStatus": {
+				"type": "string",
+				"enum": [
+					"NOT_SUBSCRIBED",
+					"SUBSCRIBED",
+					"SUBSCRIBED_AND_BLOCKED"
+				]
+			},
 			"SearchCriteria": {
 				"properties": {
 					"limit": {

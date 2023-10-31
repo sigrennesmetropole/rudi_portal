@@ -1,0 +1,66 @@
+{
+		"interface_contract": "wfs",
+		"url": "https://public.sig.rennesmetropole.fr/geoserver/urba_fonc/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=urba_fonc%3Av_zac",
+		"connector_parameters": [
+			{
+				"key": "layer",
+				"value": "app:sv_sitorg_administration",
+				"type": "STRING",
+				"usage": "Couche utilisée"
+			},
+			{
+				"key": "versions",
+				"value": "1.2.0",
+				"type": "STRING",
+				"usage": "La version du service supportée"
+			},
+			{
+				"key": "formats",
+				"value": "application/json",
+				"type": "STRING",
+				"usage": "Format utilisé"
+			},
+			{
+				"key": "default_crs",
+				"value": "EPSG:4326",
+				"type": "STRING",
+				"usage": "default_crs utilisé"
+			},
+			{
+				"key": "other_crss",
+				"value": "EPSG:4326",
+				"type": "STRING",
+				"usage": "other_crss utilisé"
+			},
+			{
+				"key": "max_features",
+				"value": "15",
+				"type": "LONG",
+				"usage": "A trouver"
+			},
+			{
+				"key": "transparent",
+				"value": "false",
+				"type": "BOOLEAN",
+				"usage": "A trouver"
+			},
+			{
+				"key": "max_zoom",
+				"value": "123456",
+				"type": "LONG",
+				"usage": "A trouver"
+			},
+			{
+				"key": "matrix_set",
+				"value": "Should'nt be blank",
+				"type": "STRING",
+				"usage": "A trouver"
+			},
+			{
+				"key": "styles",
+				"value": "value2",
+				"type": "STRING",
+				"usage": "A trouver"
+			}
+		]
+}

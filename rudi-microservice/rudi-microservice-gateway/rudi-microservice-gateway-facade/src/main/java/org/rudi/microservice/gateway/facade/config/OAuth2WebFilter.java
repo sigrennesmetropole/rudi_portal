@@ -37,13 +37,14 @@ public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2WebFilter.class);
 
-	private RestTemplate restTemplate = new RestTemplate();
+	private RestTemplate restTemplate = null;
 
 	private String checkTokenUri;
 
-	public OAuth2WebFilter(final String[] excludeUrlPatterns, String checkTokenUri) {
+	public OAuth2WebFilter(final String[] excludeUrlPatterns, String checkTokenUri, RestTemplate restTemplate) {
 		super(excludeUrlPatterns);
 		this.checkTokenUri = checkTokenUri;
+		this.restTemplate = restTemplate;
 	}
 
 	protected Mono<Authentication> handleToken(final String token) {

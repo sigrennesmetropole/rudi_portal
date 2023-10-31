@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-tools</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<artifactId>org.rudi.wso2.handler</artifactId>
 
@@ -45,7 +45,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-crypto</artifactId>
 		</dependency>
 

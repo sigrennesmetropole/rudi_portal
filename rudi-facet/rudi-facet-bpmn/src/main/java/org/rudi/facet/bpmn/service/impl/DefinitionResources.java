@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 class DefinitionResources {
-	private static final String FORM_DEFINITION_FILE_NAME_SEPARATOR = "__";
 
 	private final ResourceHelper resourceHelper;
 	private final JsonResourceReader jsonResourceReader;
@@ -72,11 +71,10 @@ class DefinitionResources {
 	}
 
 	private Map<String, FormManualDefinition> loadForms() throws IOException {
-		final Resource[] jsonResources = resourceHelper.getResourcesFromAdditionalLocationOrFromClasspath("bpmn/forms/*.json");
+		final Resource[] jsonResources = resourceHelper
+				.getResourcesFromAdditionalLocationOrFromClasspath("bpmn/forms/*.json");
 
-		return Arrays.stream(jsonResources)
-				.map(this::readFormManualDefinitionEntry)
-				.filter(Objects::nonNull)
+		return Arrays.stream(jsonResources).map(this::readFormManualDefinitionEntry).filter(Objects::nonNull)
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
@@ -88,19 +86,17 @@ class DefinitionResources {
 	}
 
 	private Collection<SectionDefinition> loadSections() throws IOException {
-		final var referencedSectionNames = getForms().values().stream()
-				.flatMap(form -> form.getSections().stream())
-				.map(SectionReference::getName)
-				.collect(Collectors.toSet());
+		final var referencedSectionNames = getForms().values().stream().flatMap(form -> form.getSections().stream())
+				.map(SectionReference::getName).collect(Collectors.toSet());
 
 		final Collection<SectionDefinition> sectionsByName = new ArrayList<>(referencedSectionNames.size());
 		for (final var referencedSectionName : referencedSectionNames) {
-			final var jsonForSectionDefinition = getJsonForSectionDefinition("bpmn/sections/" + referencedSectionName + ".json");
-			final var sectionManualDefinition = jsonResourceReader.getObjectMapper().readValue(jsonForSectionDefinition, SectionManualDefinition.class);
-			final var sectionDefinition = new SectionDefinition()
-					.name(referencedSectionName)
-					.label(sectionManualDefinition.getLabel())
-					.help(sectionManualDefinition.getHelp())
+			final var jsonForSectionDefinition = getJsonForSectionDefinition(
+					"bpmn/sections/" + referencedSectionName + ".json");
+			final var sectionManualDefinition = jsonResourceReader.getObjectMapper().readValue(jsonForSectionDefinition,
+					SectionManualDefinition.class);
+			final var sectionDefinition = new SectionDefinition().name(referencedSectionName)
+					.label(sectionManualDefinition.getLabel()).help(sectionManualDefinition.getHelp())
 					.definition(jsonForSectionDefinition);
 			sectionsByName.add(sectionDefinition);
 		}

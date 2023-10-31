@@ -1,5 +1,13 @@
 package org.rudi.facet.kmedia.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -9,17 +17,11 @@ import org.rudi.common.core.DocumentContent;
 import org.rudi.common.test.UUIDUtils;
 import org.rudi.facet.dataverse.api.dataset.DatasetOperationAPI;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.kmedia.KmediaSpringBootIT;
 import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.kmedia.bean.MediaDataset;
 import org.rudi.facet.kmedia.bean.MediaOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @KmediaSpringBootIT
 class MediaServiceIT {
@@ -57,14 +59,15 @@ class MediaServiceIT {
 	}
 
 	@Test
-		// RUDI-576 : La recherche de media doit être plus stricte et doit se faire sur le providerId complet
+	// RUDI-576 : La recherche de media doit être plus stricte et doit se faire sur le providerId complet
 	void rechercheProviderNonExistant() throws DataverseAPIException {
 		uploaderLogoParDefaut();
 
-		final DocumentContent singleMediaFile = mediaService.getMediaFor(MediaOrigin.PROVIDER, nonExistingProviderId, KindOfData.LOGO);
+		final DocumentContent singleMediaFile = mediaService.getMediaFor(MediaOrigin.PROVIDER, nonExistingProviderId,
+				KindOfData.LOGO);
 
-		assertThat(singleMediaFile).as("On ne doit pas trouver de résultat si un fragment d'UUID n'est pas celui attendu")
-				.isNull();
+		assertThat(singleMediaFile)
+				.as("On ne doit pas trouver de résultat si un fragment d'UUID n'est pas celui attendu").isNull();
 	}
 
 	@Test
@@ -75,17 +78,11 @@ class MediaServiceIT {
 		// téléchargement du logo du fournisseur
 		final DocumentContent documentContent = telechargerLogo();
 
-		assertThat(documentContent)
-				.isNotNull()
-				.as("Le document téléchargé a les propriétés attendues")
-				.hasFieldOrPropertyWithValue("contentType", "image/png")
-				.hasFieldOrPropertyWithValue("fileSize", 33505L)
-				.hasNoNullFieldsOrPropertiesExcept("url", "fileStream")
-		;
-		assertThat(documentContent.getFileName()).as("L'extension du fichier n'a pas changé")
-				.endsWith(".png");
-		assertThat(documentContent.getFile())
-				.as("Le fichier téléchargé a le même contenu que celui téléversé")
+		assertThat(documentContent).isNotNull().as("Le document téléchargé a les propriétés attendues")
+				.hasFieldOrPropertyWithValue("contentType", "image/png").hasFieldOrPropertyWithValue("fileSize", 33505L)
+				.hasNoNullFieldsOrPropertiesExcept("url", "fileStream");
+		assertThat(documentContent.getFileName()).as("L'extension du fichier n'a pas changé").endsWith(".png");
+		assertThat(documentContent.getFile()).as("Le fichier téléchargé a le même contenu que celui téléversé")
 				.hasSameBinaryContentAs(file);
 	}
 
@@ -117,17 +114,11 @@ class MediaServiceIT {
 		// téléchargement du logo pour vérifier son contenu
 		final DocumentContent documentContent = telechargerLogo();
 
-		assertThat(documentContent)
-				.isNotNull()
-				.as("Le document téléchargé a les propriétés attendues")
-				.hasFieldOrPropertyWithValue("contentType", "image/png")
-				.hasFieldOrPropertyWithValue("fileSize", 33505L)
-				.hasNoNullFieldsOrPropertiesExcept("url", "fileStream")
-		;
-		assertThat(documentContent.getFileName()).as("L'extension du fichier n'a pas changé")
-				.endsWith(".png");
-		assertThat(documentContent.getFile())
-				.as("Le fichier téléchargé a le même contenu que celui téléversé")
+		assertThat(documentContent).isNotNull().as("Le document téléchargé a les propriétés attendues")
+				.hasFieldOrPropertyWithValue("contentType", "image/png").hasFieldOrPropertyWithValue("fileSize", 33505L)
+				.hasNoNullFieldsOrPropertiesExcept("url", "fileStream");
+		assertThat(documentContent.getFileName()).as("L'extension du fichier n'a pas changé").endsWith(".png");
+		assertThat(documentContent.getFile()).as("Le fichier téléchargé a le même contenu que celui téléversé")
 				.hasSameBinaryContentAs(file);
 	}
 
@@ -143,17 +134,11 @@ class MediaServiceIT {
 		// téléchargement du logo pour vérifier son contenu
 		final DocumentContent documentContent = telechargerLogo();
 
-		assertThat(documentContent)
-				.isNotNull()
-				.as("Le document téléchargé a les propriétés attendues")
-				.hasFieldOrPropertyWithValue("contentType", "image/png")
-				.hasFieldOrPropertyWithValue("fileSize", 2597L)
-				.hasNoNullFieldsOrPropertiesExcept("url", "fileStream")
-		;
-		assertThat(documentContent.getFileName()).as("L'extension du fichier n'a pas changé")
-				.endsWith(".png");
-		assertThat(documentContent.getFile())
-				.as("Le fichier téléchargé a le même contenu que celui téléversé")
+		assertThat(documentContent).isNotNull().as("Le document téléchargé a les propriétés attendues")
+				.hasFieldOrPropertyWithValue("contentType", "image/png").hasFieldOrPropertyWithValue("fileSize", 2597L)
+				.hasNoNullFieldsOrPropertiesExcept("url", "fileStream");
+		assertThat(documentContent.getFileName()).as("L'extension du fichier n'a pas changé").endsWith(".png");
+		assertThat(documentContent.getFile()).as("Le fichier téléchargé a le même contenu que celui téléversé")
 				.hasSameBinaryContentAs(logoV2);
 	}
 

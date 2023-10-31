@@ -1,5 +1,9 @@
 package org.rudi.facet.apimaccess.service.impl;
 
+import static org.rudi.facet.apimaccess.constant.QueryParameterKey.DEFAULT_API_VERSION;
+import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
+import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.buildAPIContext;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,9 +41,6 @@ import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.facet.apimaccess.constant.QueryParameterKey.DEFAULT_API_VERSION;
-import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
-import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.buildAPIContext;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +78,8 @@ public class APIsServiceImpl implements APIsService {
 		final var apiResult = apIsOperationAPI.createAPI(api);
 
 		// mise à jour de la définition openapi de l'api
-		apIsOperationAPI.updateAPIOpenapiDefinition(openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
+		apIsOperationAPI.updateAPIOpenapiDefinition(
+				openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
 		// publication de l'api
 		updateAPILifecycleStatus(apiResult.getId(), APILifecycleStatusAction.PUBLISH);
 
@@ -104,16 +106,29 @@ public class APIsServiceImpl implements APIsService {
 		buildAPIToSave(apiDescription, apiToUpdated);
 		val apiResult = apIsOperationAPI.updateAPI(apiToUpdated);
 
-		apIsOperationAPI.updateAPIOpenapiDefinition(openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
+		apIsOperationAPI.updateAPIOpenapiDefinition(
+				openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
 	}
 
 	@Override
-	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws UpdateAPILifecycleStatusException {
+	public void createOrUpdateAPIByName(APIDescription apiDescription) throws APIManagerException {
+		val apiList = searchAPIByName(apiDescription);
+		if (apiList.getCount() > 0) {
+			updateAPIByName(apiDescription);
+		} else {
+			createOrUnarchiveAPI(apiDescription);
+		}
+	}
+
+	@Override
+	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction)
+			throws UpdateAPILifecycleStatusException {
 		return apIsOperationAPI.updateAPILifecycleStatus(apiId, apiLifecycleStatusAction);
 	}
 
 	@Override
-	public API archiveAPIByName(APIDescription apiDescription) throws UpdateAPILifecycleStatusException, APIsOperationException, APINotFoundException, APIsOperationWithIdException {
+	public API archiveAPIByName(APIDescription apiDescription) throws UpdateAPILifecycleStatusException,
+			APIsOperationException, APINotFoundException, APIsOperationWithIdException {
 		final var api = getAPIByName(apiDescription);
 		archiveAPI(api.getId());
 		return api;
@@ -134,7 +149,8 @@ public class APIsServiceImpl implements APIsService {
 		apIsOperationAPI.deleteAPI(apiId);
 	}
 
-	private API getAPIByName(APIDescription apiDescription) throws APINotFoundException, APIsOperationException, APIsOperationWithIdException {
+	private API getAPIByName(APIDescription apiDescription)
+			throws APINotFoundException, APIsOperationException, APIsOperationWithIdException {
 		val apis = searchAPIByName(apiDescription);
 		if (apis.getCount() == 0) {
 			throw new APINotFoundException(apiDescription);
@@ -151,10 +167,8 @@ public class APIsServiceImpl implements APIsService {
 		setAPIDefaultValues(apiDescription);
 
 		// recherche de l'api par son nom
-		val apiSearchCriteria = new APISearchCriteria()
-				.globalId(apiDescription.getGlobalId())
-				.providerUuid(apiDescription.getProviderUuid())
-				.providerCode(apiDescription.getProviderCode())
+		val apiSearchCriteria = new APISearchCriteria().globalId(apiDescription.getGlobalId())
+				.providerUuid(apiDescription.getProviderUuid()).providerCode(apiDescription.getProviderCode())
 				.name(apiDescription.getName());
 		return searchAPI(apiSearchCriteria);
 	}
@@ -181,7 +195,8 @@ public class APIsServiceImpl implements APIsService {
 			apiSearchCriteria = new APISearchCriteria();
 		}
 		if (apiSearchCriteria.getLimit() != null && apiSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
-			LOGGER.warn("Le nombre d'API demandé dépasse le nombre d'élément maximum autorisé: {} > {}", apiSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
+			LOGGER.warn("Le nombre d'API demandé dépasse le nombre d'élément maximum autorisé: {} > {}",
+					apiSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
 			apiSearchCriteria.setLimit(LIMIT_MAX_VALUE);
 		}
 		apiSearchCriteria.setQuery(queryBuilder.buildFrom(apiSearchCriteria));
@@ -202,11 +217,13 @@ public class APIsServiceImpl implements APIsService {
 		}
 	}
 
-	API buildAPIToSave(APIDescription apiDescription) throws ThrottlingPolicyOperationException, AdminOperationException {
+	API buildAPIToSave(APIDescription apiDescription)
+			throws ThrottlingPolicyOperationException, AdminOperationException {
 		// get actual subscription policies (pour le moment on récupère toutes les subscriptions policies)
 		final var searchCriteria = new SearchCriteria().offset(0);
 		final var policyLevel = PolicyLevel.SUBSCRIPTION;
-		final var limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(searchCriteria, policyLevel);
+		final var limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(searchCriteria,
+				policyLevel);
 		if (limitingPolicies == null || limitingPolicies.getCount() == 0) {
 			throw new ThrottlingPolicyOperationException(searchCriteria, policyLevel);
 		}
@@ -220,14 +237,12 @@ public class APIsServiceImpl implements APIsService {
 		if (!apiCategoriesCreated) {
 			final var apiCategoriesNamesToCreate = List.of(apiCategories);
 			final var existingApiCategories = adminOperationAPI.getApiCategories();
-			final var existingCategoriesNames = existingApiCategories.getList().stream()
-					.map(APICategory::getName)
+			final var existingCategoriesNames = existingApiCategories.getList().stream().map(APICategory::getName)
 					.collect(Collectors.toList());
 
 			for (final String apiCategoryNameToCreate : apiCategoriesNamesToCreate) {
 				if (!existingCategoriesNames.contains(apiCategoryNameToCreate)) {
-					adminOperationAPI.createApiCategory(new APICategory()
-							.name(apiCategoryNameToCreate));
+					adminOperationAPI.createApiCategory(new APICategory().name(apiCategoryNameToCreate));
 				}
 			}
 
@@ -244,13 +259,10 @@ public class APIsServiceImpl implements APIsService {
 	public boolean existsApi(UUID globalId, UUID mediaId) throws APIsOperationException {
 
 		// On regarde s'il y'a une API via une requête de recherche
-		final var apiList = searchAPI(new APISearchCriteria()
-				.globalId(globalId)
-				.mediaUuid(mediaId));
+		final var apiList = searchAPI(new APISearchCriteria().globalId(globalId).mediaUuid(mediaId));
 
 		// OK si taille retour pas 0
-		return apiList.getCount() != 0;
+		return apiList != null && apiList.getCount() != 0;
 	}
-
 
 }

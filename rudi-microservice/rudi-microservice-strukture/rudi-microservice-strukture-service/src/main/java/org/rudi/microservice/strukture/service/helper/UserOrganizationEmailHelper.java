@@ -10,7 +10,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.DocumentContent;
-import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.email.EMailService;
 import org.rudi.facet.email.model.EMailDescription;
@@ -45,8 +44,8 @@ public class UserOrganizationEmailHelper {
 	@Autowired
 	private TemplateGeneratorImpl templateGenerator;
 
-	public void sendUserOrganizationUpdatePasswordConfirmation(
-			OrganizationEntity organizaton, List<User> users, Locale locale) {
+	public void sendUserOrganizationUpdatePasswordConfirmation(OrganizationEntity organizaton, List<User> users,
+			Locale locale) {
 
 		if (organizaton == null || locale == null) {
 			throw new IllegalArgumentException("Argument(s) obligatoire(s) manquant(s) : organization et locale");
@@ -58,8 +57,8 @@ public class UserOrganizationEmailHelper {
 		}
 
 		// Construction de la liste des destinataires
-		List<String> receivers = users.stream().map(this::getAndCheckEmail)
-				.filter(StringUtils::isNotBlank).collect(Collectors.toList());
+		List<String> receivers = users.stream().map(this::getAndCheckEmail).filter(StringUtils::isNotBlank)
+				.collect(Collectors.toList());
 
 		// Aucun destinataire ? On fait rien
 		if (receivers.isEmpty()) {
@@ -79,8 +78,8 @@ public class UserOrganizationEmailHelper {
 			DocumentContent body = templateGenerator.generateDocument(dataModelBody);
 
 			// Création du model de courrier
-			EMailDescription emailDescription = new EMailDescription(receivers, FileUtils.readFileToString(
-					subject.getFile(), StandardCharsets.UTF_8), body);
+			EMailDescription emailDescription = new EMailDescription(receivers,
+					FileUtils.readFileToString(subject.getFile(), StandardCharsets.UTF_8), body);
 
 			// Envoi du mail à tous les destinataires
 			emailService.sendMailAndCatchException(emailDescription);

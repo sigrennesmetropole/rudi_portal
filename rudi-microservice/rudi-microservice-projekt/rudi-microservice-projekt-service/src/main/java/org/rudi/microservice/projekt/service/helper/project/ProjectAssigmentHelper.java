@@ -3,28 +3,42 @@
  */
 package org.rudi.microservice.projekt.service.helper.project;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.bpmn.helper.workflow.AbstractAssignmentHelper;
+import org.rudi.facet.organization.bean.OrganizationMember;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationMembersException;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
  *
  */
 @Component
+@Slf4j
 public class ProjectAssigmentHelper extends AbstractAssignmentHelper<ProjectEntity> {
 
 	@Value("${application.role.moderator.code}")
 	@Getter
 	private String moderatorRoleCode;
+
+	@Autowired
+	@Getter(value = AccessLevel.PROTECTED)
+	private OrganizationHelper organizationHelper;
 
 	@Override
 	public List<String> computeAssignees(ProjectEntity assetDescription, String roleCode) {
@@ -40,6 +54,27 @@ public class ProjectAssigmentHelper extends AbstractAssignmentHelper<ProjectEnti
 		} else {
 			return null;
 		}
+	}
+
+	public List<String> computeOrganizationMembers(UUID organizationUuid) {
+		List<String> membersLogins = new ArrayList<>();
+
+		try {
+			Collection<OrganizationMember> members = getOrganizationHelper().getOrganizationMembers(organizationUuid);
+			if (CollectionUtils.isNotEmpty(members)) {
+				for (OrganizationMember member : members) {
+					final var user = getAclHelper().getUserByUUID(member.getUserUuid());
+					if (user != null) {
+						membersLogins.add(user.getLogin());
+					} else {
+						log.warn("Member with user uuid \"{}\" does not exist as user in ACL", member.getUserUuid());
+					}
+				}
+			}
+		} catch (GetOrganizationMembersException e) {
+			log.error("Erreur de récupération des membres de l'organization {}", organizationUuid, e);
+		}
+		return membersLogins;
 	}
 
 }

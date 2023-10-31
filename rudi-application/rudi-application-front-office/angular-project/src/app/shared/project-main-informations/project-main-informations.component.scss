@@ -1,34 +1,13 @@
 @import "src/app/styles/variables-rudi";
 @import "src/app/styles/common-style";
 
-.project-container {
-    .card-label {
-        color: $secondary-text;
-        font-size: 18px;
-        font-weight: bold;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: 1.72;
-    }
-    .project-detail-label {
-        color: $primary-color;
-        font-size: 13px;
-        font-weight: 600;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.54;
-        letter-spacing: normal;
-    }
-    .project-detail-subtitle {
-        color: black;
-        width: 755px;
-        font-size: 16px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.31;
-        letter-spacing: normal;
-    }
+.card-title {
+    color: $secondary-text;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.72;
 }
 
 .periode-container {

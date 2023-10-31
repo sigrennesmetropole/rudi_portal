@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.MissingParameterException;
@@ -30,15 +29,6 @@ class DesiredSupportsProcessor implements CreateProjectFieldProcessor, UpdatePro
 			return;
 		}
 
-		// Les types de support sont obligatoires pour les projets qui ne sont pas des réutilisations
-		if (CollectionUtils.isEmpty(project.getDesiredSupports())) {
-			if (project.isAReuse()) {
-				return;
-			} else {
-				throw new MissingParameterException("desired_supports manquant");
-			}
-		}
-
 		desiredSupportsEntityReplacer.replaceTransientEntitiesWithPersistentEntities(project, existingProject);
 	}
 
@@ -50,7 +40,8 @@ class DesiredSupportsProcessor implements CreateProjectFieldProcessor, UpdatePro
 
 		@Nullable
 		@Override
-		protected Set<SupportEntity> getPersistentEntities(@Nullable Set<SupportEntity> desiredSupports) throws AppServiceException {
+		protected Set<SupportEntity> getPersistentEntities(@Nullable Set<SupportEntity> desiredSupports)
+				throws AppServiceException {
 			if (desiredSupports == null) {
 				return null;
 			}

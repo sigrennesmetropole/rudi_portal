@@ -1,6 +1,7 @@
 package org.rudi.facet.dataverse.api.search;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.EnumSet;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,11 +19,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.EnumSet;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractSearchOperationAPI<T extends SearchItemInfo> extends AbstractDataverseAPI {
 
-	public AbstractSearchOperationAPI(ObjectMapper objectMapper) {
+	protected AbstractSearchOperationAPI(ObjectMapper objectMapper) {
 		super(objectMapper);
 	}
 
@@ -32,13 +33,16 @@ public abstract class AbstractSearchOperationAPI<T extends SearchItemInfo> exten
 
 		ParameterizedTypeReference<DataverseResponse<SearchElements<T>>> type = new ParameterizedTypeReference<>() {
 		};
-		ResponseEntity<DataverseResponse<SearchElements<T>>> resp = getRestTemplate().exchange(url, HttpMethod.GET, createHttpEntity(), type);
+		ResponseEntity<DataverseResponse<SearchElements<T>>> resp = getRestTemplate().exchange(url, HttpMethod.GET,
+				createHttpEntity(), type);
 		return getDataBody(resp);
 	}
 
 	protected void validateSearchParams(SearchParams searchParams, SearchType expected) {
-		if (CollectionUtils.isEmpty(searchParams.getType()) || searchParams.getType().size() != 1 || !searchParams.getType().contains(expected)) {
-			throw new IllegalArgumentException(String.format("Search must be configured to search only  %ss", expected.name()));
+		if (CollectionUtils.isEmpty(searchParams.getType()) || searchParams.getType().size() != 1
+				|| !searchParams.getType().contains(expected)) {
+			throw new IllegalArgumentException(
+					String.format("Search must be configured to search only  %ss", expected.name()));
 		}
 	}
 

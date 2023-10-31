@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
@@ -24,6 +24,9 @@ import org.rudi.microservice.projekt.core.bean.PagedLinkedDatasetList;
 import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
 import org.rudi.microservice.projekt.service.mapper.LinkedDatasetMapper;
 import org.rudi.microservice.projekt.service.project.LinkedDatasetService;
+import org.rudi.microservice.projekt.service.project.impl.fields.AddDatasetToProjectProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.DeleteDatasetFromProjectProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.UpdateDatasetInProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.CreateLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.DeleteLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.UpdateLinkedDatasetFieldProcessor;
@@ -49,6 +52,10 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	private final List<UpdateLinkedDatasetFieldProcessor> updateLinkedDatasetProcessors;
 	private final List<DeleteLinkedDatasetFieldProcessor> deleteLinkedDatasetProcessors;
 
+	private final List<AddDatasetToProjectProcessor> addDatasetToProjectProcessors;
+	private final List<DeleteDatasetFromProjectProcessor> deleteDatasetFromProjectProcessors;
+	private final List<UpdateDatasetInProjectProcessor> updateDatasetInProjectProcessors;
+
 	private final ProjectDao projectDao;
 	private final LinkedDatasetMapper linkedDatasetMapper;
 	private final LinkedDatasetCustomDao linkedDatasetCustomDao;
@@ -56,14 +63,19 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	private final MetadataDetailsHelper metadataDetailsHelper;
 	private final MyInformationsHelper myInformationsHelper;
 
-
 	@Override
 	@Transactional // readOnly = false
 	public LinkedDataset linkProjectToDataset(UUID projectUuid, LinkedDataset linkedDataset)
 			throws AppServiceException, APIManagerException {
 
 		// 1) traduction DTO en entité
-		val project = getRequiredProjectEntity(projectUuid);
+		ProjectEntity project = getRequiredProjectEntity(projectUuid);
+
+		// Vérification des droits de l'utilisateur et du statut du projet avant d'ajouter le lien sur le dataset
+		for (final AddDatasetToProjectProcessor processor : addDatasetToProjectProcessors) {
+			processor.process(null, project);
+		}
+
 		val linkedDatasetEntity = linkedDatasetMapper.dtoToEntity(linkedDataset);
 
 		// 2) on a besoin de récupérer le niveau de confidentialité de JDD qu'on veut lier
@@ -72,10 +84,6 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 			var metadata = datasetService.getDataset(linkedDataset.getDatasetUuid());
 
 			final var accessConditionConfidentiality = getAccessConditionConfidentiality(metadata);
-			// On interdit l'ajout d'un jdd restreint et d'un jdd selfdata à une réutilisation
-			if (project.isAReuse() && accessConditionConfidentiality != DatasetConfidentiality.OPENED) {
-				throw new AppServiceException("Cannot associate selfdata or restricted dataset to a project which is a reuse");
-			}
 
 			linkedDatasetEntity.setDescription(metadata.getResourceTitle());
 			linkedDatasetEntity.setDatasetConfidentiality(accessConditionConfidentiality);
@@ -110,7 +118,6 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	}
 
-
 	@Override
 	public List<LinkedDataset> getLinkedDatasets(UUID projectUuid, LinkedDatasetStatus status)
 			throws AppServiceNotFoundException {
@@ -138,8 +145,16 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	@Override
 	@Transactional
-	public LinkedDataset updateLinkedDataset(UUID projectUuid, LinkedDataset linkedDataset) throws AppServiceException, APIManagerException {
+	public LinkedDataset updateLinkedDataset(UUID projectUuid, LinkedDataset linkedDataset)
+			throws AppServiceException, APIManagerException {
+
 		val project = getRequiredProjectEntity(projectUuid);
+
+		// Vérification des droits de l'utilisateur et du statut du projet avant de modifier le lien sur le dataset
+		for (final UpdateDatasetInProjectProcessor processor : updateDatasetInProjectProcessors) {
+			processor.process(null, project);
+		}
+
 		val entity = linkedDatasetMapper.dtoToEntity(linkedDataset);
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
 			Iterator<LinkedDatasetEntity> it = project.getLinkedDatasets().iterator();
@@ -162,8 +177,15 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 	@Override
 	@Transactional // readOnly = false
-	public void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid) throws AppServiceException, APIManagerException {
+	public void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid)
+			throws AppServiceException, APIManagerException {
 		val project = getRequiredProjectEntity(projectUuid);
+
+		// Vérification des droits de l'utilisateur et du statut du projet avant de supprimer le lien sur le dataset
+		for (final DeleteDatasetFromProjectProcessor processor : deleteDatasetFromProjectProcessors) {
+			processor.process(null, project);
+		}
+
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
 			Iterator<LinkedDatasetEntity> it = project.getLinkedDatasets().iterator();
 			while (it.hasNext()) {
@@ -190,23 +212,19 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	}
 
 	@Override
-	public PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable) throws AppServiceNotFoundException, AppServiceException {
-		//Récupération des UUIDs du connectedUser et de ses organisations.
+	public PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable)
+			throws AppServiceNotFoundException, AppServiceException {
+		// Récupération des UUIDs du connectedUser et de ses organisations.
 
 		List<UUID> uuids = myInformationsHelper.getMeAndMyOrganizationUuids();
 		if (CollectionUtils.isEmpty(uuids)) {
 			return new PagedLinkedDatasetList().total(0L).elements(List.of());
 		}
 
-		//Création d'un custom criteria contenant cette liste d'UUIDs
-		LinkedDatasetSearchCriteria customCriteria = new LinkedDatasetSearchCriteria();
-		customCriteria.setLimit(criteria.getLimit());
-		customCriteria.setOffset(criteria.getOffset());
-		customCriteria.setProjectOwnerUuids(uuids);
-		customCriteria.status(criteria.getStatus());
+		// Rajout des owner uuid dans le criteria
+		criteria.setProjectOwnerUuids(uuids);
 
-
-		Page<LinkedDatasetEntity> pages = linkedDatasetCustomDao.searchLinkedDatasets(customCriteria, pageable);
+		Page<LinkedDatasetEntity> pages = linkedDatasetCustomDao.searchLinkedDatasets(criteria, pageable);
 		List<LinkedDataset> request = linkedDatasetMapper.entitiesToDto(pages.getContent());
 
 		return new PagedLinkedDatasetList().total(pages.getTotalElements()).elements(request);

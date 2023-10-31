@@ -95,7 +95,7 @@ public class PasswordHelper {
 	/**
 	 * @return true si le mot-de-passe brut (raw) correspond au mot-de-passe encodé (encoded)
 	 */
-	private boolean matches(CharSequence rawPassword, String encodedPassword) {
+	public boolean matches(CharSequence rawPassword, String encodedPassword) {
 		// On ne peut pas faire un userPasswordEncoder.encode() puis un equals car l'encodage d'un même mot-de-passe
 		// ne produit pas toujours le même résultat
 		return userPasswordEncoder.matches(rawPassword, encodedPassword);

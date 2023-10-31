@@ -14,6 +14,7 @@ export type TitleIconType =
     'key_icon_88_blue_definition_key' |
     'self_data_icon_definition_key' |
     'nouvelles_donnees_definition_key' |
+    'project_definition_key' |
     'bouton_telecharger' |
     'attachment' |
     'icone_archives' |
@@ -33,7 +34,10 @@ export type TitleIconType =
     'map'|
     'icon-consentement'|
     'icon-administration-tab'|
-    'dashes';
+    'dashes' |
+    'copy-to-clipboard'|
+    'icon-reutilisation'|
+    'icon-historique';
 
 
 export const ALL_TYPES: TitleIconType[] = [
@@ -68,11 +72,15 @@ export const ALL_TYPES: TitleIconType[] = [
     'map',
     'icon-consentement',
     'icon-administration-tab',
-    'dashes'
+    'dashes',
+    'copy-to-clipboard',
+    'icon-reutilisation',
+    'icon-historique'
 ];
 
 export const PROCESS_DEFINITION_KEY_TYPES: TitleIconType[] = [
     'key_icon_88_blue_definition_key',
     'self_data_icon_definition_key',
     'nouvelles_donnees_definition_key',
+    'project_definition_key',
 ];

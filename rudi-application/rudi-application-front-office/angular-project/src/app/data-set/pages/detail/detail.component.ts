@@ -17,7 +17,7 @@ import {DetailFunctions} from './detail-functions';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ObservableUtils} from '../../../shared/utils/ObservableUtils';
-import {Project} from '../../../projekt/projekt-model';
+import {Project, ProjectStatus} from '../../../projekt/projekt-model';
 import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
 import {PageResultUtils} from '../../../shared/utils/page-result-utils';
 import {catchError, defaultIfEmpty, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
@@ -40,9 +40,9 @@ import * as moment from 'moment';
 import {IconRegistryService} from '../../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../../../shared/models/title-icon-type';
 import {MetadataUtils} from '../../../shared/utils/metadata-utils';
+import {MAP_PROTOCOLS_SUPPORTED} from '../../../core/services/map/map-protocols';
 import MediaTypeEnum = Media.MediaTypeEnum;
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
-import {MAP_PROTOCOLS_SUPPORTED} from '../../../core/services/map/map-protocols';
 
 const actionOnStartCreateLinkedDataset = 'ON_START_CREATE_LINKED_DATASET';
 
@@ -396,6 +396,7 @@ export class DetailComponent implements OnInit {
             .fetchAllElementsUsing(offset =>
                 this.projektMetierService.searchProjects({
                     dataset_uuids: [metadata.global_id],
+                    status: [ProjectStatus.Validated],
                     offset
                 }))
             .subscribe(projects => this.linkedProjects = projects as Project[]);
@@ -431,7 +432,7 @@ export class DetailComponent implements OnInit {
     }
 
     clickDeclareReuse(): Observable<boolean> {
-        return from(this.router.navigate(['/projets/declarer-une-reutilisation'], {
+        return from(this.router.navigate(['/projets/soumettre-un-projet'], {
             queryParams: {linkedDataset: this.metadata.global_id}
         }));
     }

@@ -1,12 +1,16 @@
 package org.rudi.facet.apimaccess.exception;
 
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NotNull;
 import org.rudi.facet.apimaccess.bean.APIDescription;
 
-import javax.annotation.Nullable;
-import java.util.UUID;
-
 public class APINotFoundException extends APIManagerException {
+
+	private static final long serialVersionUID = -345692680613837943L;
+
 	public APINotFoundException(APIDescription apiDescription) {
 		super("Aucune API ne possède le nom " + apiDescription.getName());
 	}

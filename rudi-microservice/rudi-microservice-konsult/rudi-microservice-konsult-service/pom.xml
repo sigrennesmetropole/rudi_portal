@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsult</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsult-service</artifactId>
@@ -19,7 +19,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-konsult-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -101,23 +100,23 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-projekt</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-selfdata</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-organization</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-apimremote</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-rva</artifactId>
 		</dependency>
 	</dependencies>

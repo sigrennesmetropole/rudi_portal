@@ -1,0 +1,9 @@
+{
+	"code":"PROJECT",
+	"label":"Réutilisation en projet",
+	"uuid":"08e3955b-3712-4a41-a77c-9e10916baac6",
+	"opening_date":"2010-01-01T23:59:59.456Z",
+	"closing_date":"2030-01-01T23:59:59.456Z",
+	"order":"1",
+	"dataset_set_modification_allowed":"true"
+}

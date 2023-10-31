@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.facet.kaccess.bean.Licence;
 import org.rudi.facet.kaccess.bean.LicenceStandard;
 import org.rudi.facet.kaccess.constant.RudiMetadataField;
-import org.rudi.facet.kos.helper.KOSHelper;
+import org.rudi.facet.kos.helper.KosHelper;
 import org.rudi.microservice.kalim.service.IntegrationError;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 
@@ -26,7 +26,7 @@ class LicenceStandardValidatorUT {
 	private LicenceStandardValidator licenceStandardValidator;
 
 	@Mock
-	private KOSHelper kosHelper;
+	private KosHelper kosHelper;
 
 	@Test
 	@DisplayName("Test de la validation d'une licence standard avec un label vide")

@@ -34,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -91,6 +92,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UtilContextHelper utilContextHelper;
+
+	@Autowired
+	private RestTemplate oAuth2RestTemplate;
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
@@ -160,7 +164,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public JwtRequestFilter createJwtRequestFilter() {
 		return new JwtRequestFilter(ArrayUtils.addAll(SB_PERMIT_ALL_URL, AUTHENTICATION_PERMIT_URL), LOGOUT_URL,
-				utilContextHelper);
+				utilContextHelper, oAuth2RestTemplate);
 	}
 
 	@Bean
@@ -176,7 +180,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	private Filter createOAuth2Filter() {
-		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri, utilContextHelper);
+		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri, utilContextHelper, oAuth2RestTemplate);
 	}
 
 	protected Filter createPreAuthenticationFilter() {

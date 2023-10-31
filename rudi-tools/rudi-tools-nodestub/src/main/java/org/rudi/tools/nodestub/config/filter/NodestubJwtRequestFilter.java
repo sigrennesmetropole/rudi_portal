@@ -3,6 +3,7 @@ package org.rudi.tools.nodestub.config.filter;
 import org.rudi.common.facade.config.filter.JwtRequestFilter;
 import org.rudi.common.facade.config.filter.JwtTokenData;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.springframework.web.client.RestTemplate;
 
 public class NodestubJwtRequestFilter extends JwtRequestFilter {
 
@@ -11,8 +12,9 @@ public class NodestubJwtRequestFilter extends JwtRequestFilter {
 	public NodestubJwtRequestFilter(
 			String[] excludeUrlPatterns,
 			UtilContextHelper utilContextHelper,
-			NodestubJwtTokenUtil nodestubJwtTokenUtil) {
-		super(excludeUrlPatterns, utilContextHelper);
+			NodestubJwtTokenUtil nodestubJwtTokenUtil,
+			RestTemplate oAuth2RestTemplate) {
+		super(excludeUrlPatterns, utilContextHelper, oAuth2RestTemplate);
 		this.nodestubJwtTokenUtil = nodestubJwtTokenUtil;
 	}
 

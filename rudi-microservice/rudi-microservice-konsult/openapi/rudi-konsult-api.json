@@ -6,7 +6,7 @@
 		"title": "rudi-konsult-api",
 		"termsOfService": "http://swagger.io/terms/",
 		"contact": {
-			"email": "ca.marchand@rennesmetropole.fr"
+			"email": "rudi@datarennes.fr"
 		},
 		"license": {
 			"name": "Apache 2.0",
@@ -855,6 +855,41 @@
 									"items": {
 										"$ref": "./rudi-konsult-model.json#/components/schemas/LayerInformation"
 									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/map/proj4-information": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Récupération des informations sur un code EPSG",
+				"description": "Les informations récupérées exploitent l'API EPSG.io pour alimenter proj4 dans le front",
+				"operationId": "getProj4Information",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"description": "le code EPSG souhaité au format : EPSG:XXXX",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Informations pour Proj4 extraites de EPSG.io",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-konsult-model.json#/components/schemas/Proj4Information"
 								}
 							}
 						}

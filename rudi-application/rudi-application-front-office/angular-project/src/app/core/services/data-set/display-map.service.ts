@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Media, Metadata, MetadataGeographyBoundingBox} from '../../../api-kaccess';
+import {Metadata, MetadataGeographyBoundingBox} from '../../../api-kaccess';
 import {Feature} from 'ol';
 import {Geometry, Polygon} from 'ol/geom';
-import {get, getTransform} from 'ol/proj';
+import {get, getTransform, Projection} from 'ol/proj';
 import GeoJSON from 'ol/format/GeoJSON';
 import {Observable, of} from 'rxjs';
 import {SearchAutocompleteItem} from '../../../shared/search-autocomplete/search-autocomplete-item.interface';
@@ -11,7 +11,10 @@ import {KonsultRvaService} from '../rva/konsult/konsult-rva.service';
 import {Address} from '../../../api-rva';
 import {readFile} from './display.function';
 import {KonsultService} from '../../../konsult/konsult-api';
-import {LayerInformation} from '../../../konsult/konsult-model';
+import {LayerInformation, Proj4Information} from '../../../konsult/konsult-model';
+import {register} from 'ol/proj/proj4';
+import {applyTransform} from 'ol/extent';
+import proj4 from 'proj4';
 
 /**
  * Projection utilisée par la vue OpenLayers par défaut
@@ -230,6 +233,38 @@ export class DisplayMapService {
     getServiceUrl(globalId: string, mediaId: string): string {
         const prefix = this.KONSULT_SERVICE_BASEPATH;
         return prefix + '/datasets/' + globalId + '/media/' + mediaId + '/call-service';
+    }
+
+    /**
+     * Récupération d'une projection à l'aide d'EPSG.io pour affichage
+     * @param projectionString chaîne de caractère qui représente la projection cherchée
+     */
+    registerAndGetProjection(projectionString: string): Observable<Projection> {
+
+        return this.konsultService.getProj4Information(projectionString).pipe(
+            map((proj4Information: Proj4Information) => {
+                const proj4String = proj4Information.proj4;
+                const epsgDigits = proj4Information.code;
+                const epsgString = 'EPSG:' + epsgDigits;
+
+                // ça c'est bbox, mais attention le format voulu par OL c'est [minlon, minlat, maxlon, maxlat]
+                const worldExtent = [
+                    proj4Information.bbox.west_longitude,
+                    proj4Information.bbox.south_latitude,
+                    proj4Information.bbox.east_longitude,
+                    proj4Information.bbox.north_latitude
+                ];
+
+                proj4.defs(epsgString, proj4String);
+                register(proj4);
+                const customProjection = get(epsgString);
+                const from4326ToCustomProjection = getTransform(GPS_PROJECTION, epsgString);
+                customProjection.setWorldExtent(worldExtent);
+                const extent = applyTransform(worldExtent, from4326ToCustomProjection, undefined, 8);
+                customProjection.setExtent(extent);
+                return customProjection;
+            })
+        );
     }
 
     /**

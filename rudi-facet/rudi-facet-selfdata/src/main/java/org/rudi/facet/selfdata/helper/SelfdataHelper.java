@@ -12,7 +12,9 @@ import lombok.val;
 @Component
 @RequiredArgsConstructor
 public class SelfdataHelper {
+	
 	private final WebClient selfdataWebClient;
+	
 	private final SelfdataProperties selfdataProperties;
 
 	/**

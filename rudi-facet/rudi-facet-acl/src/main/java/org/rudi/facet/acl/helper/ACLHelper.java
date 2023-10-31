@@ -1,5 +1,9 @@
 package org.rudi.facet.acl.helper;
 
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -309,17 +313,14 @@ public class ACLHelper {
 				}
 			}
 
-			final var criteria = UserSearchCriteria.builder()
-					.userUuids(userUuids)
-					.loginAndDenomination(searchText)
-					.userType(valueType)
-					.build();
-			UserPageResult pageResult = loadBalancedWebClient
-					.get()
+			final var criteria = UserSearchCriteria.builder().userUuids(userUuids).loginAndDenomination(searchText)
+					.userType(valueType).build();
+			UserPageResult pageResult = loadBalancedWebClient.get()
 					.uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
 							.queryParam(USER_UUIDS_PARAMETER, formatListParameter(criteria.getUserUuids()))
 							.queryParam(USER_LOGIN_AND_DENOMINATION_PARAMETER, criteria.getLoginAndDenomination())
-							.queryParam(USER_TYPE_PARAMETER, criteria.getUserType() != null ? criteria.getUserType().toString() : null)
+							.queryParam(USER_TYPE_PARAMETER,
+									criteria.getUserType() != null ? criteria.getUserType().toString() : null)
 							.build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {

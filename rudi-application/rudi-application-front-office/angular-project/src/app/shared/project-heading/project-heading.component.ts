@@ -31,6 +31,7 @@ export class ProjectHeadingComponent implements OnInit {
     @Input()
     status: string;
 
+
     constructor() {
     }
 

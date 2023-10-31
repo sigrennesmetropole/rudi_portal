@@ -15,12 +15,14 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 class FieldSpecFromJavaField extends ChildFieldSpec {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldSpecFromJavaField.class);
@@ -50,14 +52,23 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 		try {
 			return javaFieldClass.getDeclaredField(javaFieldName);
 		} catch (Exception e) {
-			throw new IllegalArgumentException(String.format("La classe %s ne possède pas de champ %s", javaFieldClass, javaFieldName));
+			throw new IllegalArgumentException(
+					String.format("La classe %s ne possède pas de champ %s", javaFieldClass, javaFieldName));
 		}
 	}
 
 	@Nullable
 	@Override
 	public String getLocalName() {
-		final var jsonProperty = javaField.getAnnotation(JsonProperty.class);
+		var jsonProperty = javaField.getAnnotation(JsonProperty.class);
+		if (jsonProperty == null) {
+			try {
+				Method m = javaField.getDeclaringClass().getMethod("get" + StringUtils.capitalize(javaField.getName()));
+				jsonProperty = m.getAnnotation(JsonProperty.class);
+			} catch (Exception e) {
+				// rien
+			}
+		}
 		if (jsonProperty != null && StringUtils.isNotEmpty(jsonProperty.value())) {
 			return jsonProperty.value();
 		} else {
@@ -109,8 +120,10 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof FieldSpecFromJavaField)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof FieldSpecFromJavaField))
+			return false;
 		return super.equals(o);
 	}
 
@@ -166,29 +179,9 @@ class FieldSpecFromJavaField extends ChildFieldSpec {
 			final var propertyDescriptors = Introspector.getBeanInfo(javaFieldClass).getPropertyDescriptors();
 			return Arrays.stream(propertyDescriptors)
 					.filter(propertyDescriptor -> propertyDescriptor.getName().equals(javaField.getName()))
-					.map(PropertyDescriptor::getReadMethod)
-					.filter(Objects::nonNull)
-					.findFirst()
-					.orElse(null);
+					.map(PropertyDescriptor::getReadMethod).filter(Objects::nonNull).findFirst().orElse(null);
 		} catch (IntrospectionException e) {
 			throw new RuntimeException("Cannot find getters for class " + javaFieldClass, e);
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

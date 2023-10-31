@@ -4,7 +4,8 @@ import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_WEBCLIENT;
 
 import javax.net.ssl.SSLException;
 
-import io.netty.resolver.DefaultAddressResolverGroup;
+import org.rudi.common.core.webclient.HttpClientHelper;
+import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -23,9 +24,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -36,17 +34,18 @@ public class WebClientHelper {
 
 	private final RudiClientRegistrationRepository rudiClientRegistrationRepository;
 
+	private final HttpClientHelper httpClientHelper;
+
+	private final APIManagerProperties properties;
+
 	@Bean
 	WebClient.Builder apimWebClientBuilder(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder)
 			throws SSLException {
 		ReactiveOAuth2AuthorizedClientService reactiveOAuth2AuthorizedClientService = new InMemoryReactiveOAuth2AuthorizedClientService(
 				rudiClientRegistrationRepository);
 
-		final SslContext sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE)
-				.build();
-		final HttpClient httpClient = HttpClient.create()
-				.resolver(DefaultAddressResolverGroup.INSTANCE)
-				.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+		final HttpClient httpClient = httpClientHelper.createReactorHttpClient(properties.isTrustAllCerts(), false,
+				false);
 
 		final var clientCredentialsReactiveOAuth2AuthorizedClientProvider = new ClientCredentialsReactiveOAuth2AuthorizedClientProvider();
 		final var webClientReactiveClientCredentialsTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();

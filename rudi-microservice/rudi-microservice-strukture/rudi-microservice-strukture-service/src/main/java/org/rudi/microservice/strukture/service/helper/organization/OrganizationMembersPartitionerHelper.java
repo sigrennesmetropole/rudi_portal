@@ -13,9 +13,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
-import org.rudi.facet.acl.bean.User;
-import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
 import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriteria;
+import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
 import org.rudi.microservice.strukture.service.helper.organization.comparator.OrganizationMemberAddedDateComparator;
 import org.rudi.microservice.strukture.service.helper.organization.comparator.OrganizationMemberFirstNameComparator;
 import org.rudi.microservice.strukture.service.helper.organization.comparator.OrganizationMemberLastConnexionComparator;
@@ -40,8 +39,8 @@ import lombok.val;
 @RequiredArgsConstructor
 public class OrganizationMembersPartitionerHelper {
 
-	static Map<OrganizationMemberSort, Comparator<OrganizationUserMember>> comparators
-			= new EnumMap<>(OrganizationMemberSort.class);
+	static Map<OrganizationMemberSort, Comparator<OrganizationUserMember>> comparators = new EnumMap<>(
+			OrganizationMemberSort.class);
 
 	private final OrganizationMembersHelper organizationMembersHelper;
 	private final OrganizationMemberCustomDao organizationMemberCustomDao;
@@ -63,14 +62,15 @@ public class OrganizationMembersPartitionerHelper {
 	 * @param partitionSize  la taille d'une partition
 	 * @return un ensemble de partitions
 	 */
-	public List<Pageable> getOrganizationMembersPartition(OrganizationMembersSearchCriteria searchCriteria, int partitionSize) {
+	public List<Pageable> getOrganizationMembersPartition(OrganizationMembersSearchCriteria searchCriteria,
+			int partitionSize) {
 
 		if (searchCriteria == null) {
 			return Collections.emptyList();
 		}
 
-		Page<OrganizationMemberEntity> page = organizationMemberCustomDao
-				.searchOrganizationMembers(searchCriteria, PageRequest.of(0, 1));
+		Page<OrganizationMemberEntity> page = organizationMemberCustomDao.searchOrganizationMembers(searchCriteria,
+				PageRequest.of(0, 1));
 
 		long totalElements = page.getTotalElements();
 		long numberOfPartitions;
@@ -89,19 +89,21 @@ public class OrganizationMembersPartitionerHelper {
 	}
 
 	/**
-	 * Récupère une liste de membres enrichis à l'aide d'une partition et de critères de filtrages
-	 * les éléments renvoyés sont les membres correspondant au filtrage et ayant un user ACL correspondant
+	 * Récupère une liste de membres enrichis à l'aide d'une partition et de critères de filtrages les éléments renvoyés sont les membres correspondant au
+	 * filtrage et ayant un user ACL correspondant
 	 *
 	 * @param partition      la partition des membres à aller convertir
 	 * @param searchCriteria les critères de filtres
 	 * @return une liste de membres enrichis
 	 */
-	public List<OrganizationUserMember> partitionToEnrichedMembers(Pageable partition, OrganizationMembersSearchCriteria searchCriteria) {
+	public List<OrganizationUserMember> partitionToEnrichedMembers(Pageable partition,
+			OrganizationMembersSearchCriteria searchCriteria) {
 		val basicMembers = organizationMemberCustomDao.searchOrganizationMembers(searchCriteria, partition);
-		val correspondingUsers = organizationMembersHelper.searchCorrespondingUsers(basicMembers.getContent(), searchCriteria);
+		val correspondingUsers = organizationMembersHelper.searchCorrespondingUsers(basicMembers.getContent(),
+				searchCriteria);
 
-		Map<Boolean, List<OrganizationMemberEntity>> partitionedMembers =
-				organizationMembersHelper.splitMembersHavingCorrespondingUsers(basicMembers.getContent(), correspondingUsers);
+		Map<Boolean, List<OrganizationMemberEntity>> partitionedMembers = organizationMembersHelper
+				.splitMembersHavingCorrespondingUsers(basicMembers.getContent(), correspondingUsers);
 
 		List<OrganizationMemberEntity> wantedMembers = partitionedMembers.get(true);
 		return organizationMembersHelper.mergeMembersAndUsers(wantedMembers, correspondingUsers);
@@ -143,7 +145,8 @@ public class OrganizationMembersPartitionerHelper {
 	 * @return un comparateur pour faire le tri
 	 * @throws AppServiceBadRequestException erreur si un critère est invalide
 	 */
-	private Comparator<OrganizationUserMember> getSortingComparator(Pageable pageable) throws AppServiceBadRequestException {
+	private Comparator<OrganizationUserMember> getSortingComparator(Pageable pageable)
+			throws AppServiceBadRequestException {
 
 		List<Sort.Order> orders = pageable.getSort().get().collect(Collectors.toList());
 		if (CollectionUtils.isEmpty(orders)) {

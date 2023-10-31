@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.generator.exception.GenerationException;
 import org.rudi.facet.generator.exception.GenerationModelNotFoundException;
-import org.rudi.facet.generator.text.StarterSpringBootTestApplication;
+import org.rudi.facet.generator.text.SpringBootTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -26,7 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  *
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { StarterSpringBootTestApplication.class })
+@SpringBootTest(classes = { SpringBootTestApplication.class })
 class TemplateGeneratorUT {
 
 	@Autowired

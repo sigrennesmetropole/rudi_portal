@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-strukture</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-strukture-service</artifactId>
@@ -20,13 +20,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-strukture-storage</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-strukture-core</artifactId>
-			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>io.springfox</groupId>
@@ -104,16 +102,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-projekt</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-email</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-generator-text</artifactId>
 		</dependency>
 	</dependencies>

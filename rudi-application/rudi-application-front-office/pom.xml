@@ -7,8 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-application</artifactId>
-		<version>1.2.0</version>
-		<relativePath>../</relativePath>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-application-front-office</artifactId>
@@ -30,7 +29,7 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.12.0</version>
+				<version>1.14.2</version>
 				<configuration>
 					<workingDirectory>${angular.project.location}</workingDirectory>
 					<installDirectory>${angular.project.nodeinstallation}</installDirectory>
@@ -148,7 +147,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<npmicommand>install</npmicommand>
+				<npmicommand>ci</npmicommand>
 				<npmcommand>run build-dev</npmcommand>
 				<spring.profiles.active>dev</spring.profiles.active>
 			</properties>
@@ -159,7 +158,7 @@
 		<profile>
 			<id>prod</id>
 			<properties>
-				<npmicommand>install</npmicommand>
+				<npmicommand>ci</npmicommand>
 				<npmcommand>run build-prod</npmcommand>
 				<spring.profiles.active>prod</spring.profiles.active>
 			</properties>

@@ -3,6 +3,7 @@
  */
 package org.rudi.facet.acl.helper;
 
+import org.rudi.common.core.webclient.HttpClientHelper;
 import org.rudi.facet.oauth2.config.WebClientConfig;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.context.annotation.Configuration;
@@ -14,5 +15,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @LoadBalancerClient(name = "acl")
 public class ACLHelperConfiguration extends WebClientConfig {
+
+	public ACLHelperConfiguration(HttpClientHelper httpClientHelper) {
+		super(httpClientHelper);
+	}
 
 }

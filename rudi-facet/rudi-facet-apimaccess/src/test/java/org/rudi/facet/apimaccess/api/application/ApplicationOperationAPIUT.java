@@ -1,12 +1,10 @@
 package org.rudi.facet.apimaccess.api.application;
 
-import java.io.IOException;
-import java.util.HashMap;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import org.apache.commons.collections.map.HashedMap;
+import java.io.IOException;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +25,12 @@ import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationOperationAPIUT {
@@ -56,7 +55,8 @@ class ApplicationOperationAPIUT {
 
 	@BeforeEach
 	void setUp() {
-		applicationOperationAPI = new ApplicationOperationAPI(webClientBuilder, exceptionFactory, APIManagerProperties, System.getProperty("java.io.tmpdir"));
+		applicationOperationAPI = new ApplicationOperationAPI(webClientBuilder, exceptionFactory, APIManagerProperties,
+				System.getProperty("java.io.tmpdir"));
 	}
 
 	@Test
@@ -66,38 +66,27 @@ class ApplicationOperationAPIUT {
 		final String applicationId = "265523a7-080e-4085-9975-bc3ed523c80c";
 		final String username = "anonymous";
 
-		final ApplicationKeys applicationKeys = new ApplicationKeys()
-				.count(1)
-				.addListItem(new ApplicationKey()
-						.keyMappingId("ce0cd2e3-869e-4a3e-a07a-f659803df264")
-						.keyType(EndpointKeyType.PRODUCTION)
-						.consumerSecret("f3fk3ChLYeO6NWsJql9cXRyBhWwa")
-				);
+		final ApplicationKeys applicationKeys = new ApplicationKeys().count(1)
+				.addListItem(new ApplicationKey().keyMappingId("ce0cd2e3-869e-4a3e-a07a-f659803df264")
+						.keyType(EndpointKeyType.PRODUCTION).consumerSecret("f3fk3ChLYeO6NWsJql9cXRyBhWwa"));
 		final ApplicationToken applicationToken = new ApplicationToken();
 		final String jsonDocumentContent = "{}";
 
 		when(APIManagerProperties.getServerUrl()).thenReturn("http://localhost:" + mockWebServer.getPort());
 		when(APIManagerProperties.getServerGatewayUrl()).thenReturn("http://localhost:" + mockWebServer.getPort());
-		mockWebServer.enqueue(
-				new MockResponse().setResponseCode(200)
-						.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-						.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationKeys))
-		);
-		mockWebServer.enqueue(
-				new MockResponse().setResponseCode(200)
-						.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-						.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationToken))
-		);
-		mockWebServer.enqueue(
-				new MockResponse().setResponseCode(200)
-						.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-						.setBody(jsonDocumentContent)
-		);
+		mockWebServer.enqueue(new MockResponse().setResponseCode(200)
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationKeys)));
+		mockWebServer.enqueue(new MockResponse().setResponseCode(200)
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationToken)));
+		mockWebServer.enqueue(new MockResponse().setResponseCode(200)
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).setBody(jsonDocumentContent));
 
-		final DocumentContent apiContent = applicationOperationAPI.getAPIContent(context, version, applicationId, username, null);
+		final DocumentContent apiContent = applicationOperationAPI.getAPIContent(context, version, applicationId,
+				username, null);
 
-		RudiAssertions.assertThat(apiContent)
-				.hasContentType(MediaType.APPLICATION_JSON_VALUE)
+		RudiAssertions.assertThat(apiContent).hasContentType(MediaType.APPLICATION_JSON_VALUE)
 				.hasFileContent(jsonDocumentContent);
 	}
 
@@ -108,39 +97,27 @@ class ApplicationOperationAPIUT {
 		final String applicationId = "265523a7-080e-4085-9975-bc3ed523c80c";
 		final String username = "anonymous";
 
-		final ApplicationKeys applicationKeys = new ApplicationKeys()
-				.count(1)
-				.addListItem(new ApplicationKey()
-						.keyMappingId("ce0cd2e3-869e-4a3e-a07a-f659803df264")
-						.keyType(EndpointKeyType.PRODUCTION)
-						.consumerSecret("f3fk3ChLYeO6NWsJql9cXRyBhWwa")
-				);
+		final ApplicationKeys applicationKeys = new ApplicationKeys().count(1)
+				.addListItem(new ApplicationKey().keyMappingId("ce0cd2e3-869e-4a3e-a07a-f659803df264")
+						.keyType(EndpointKeyType.PRODUCTION).consumerSecret("f3fk3ChLYeO6NWsJql9cXRyBhWwa"));
 		final ApplicationToken applicationToken = new ApplicationToken();
-		final String jsonDocumentContent = "{\n" +
-				"  \"error\": \"Unknown dataset: cimetieres-sur-rennes-metropole\"\n" +
-				"}";
+		final String jsonDocumentContent = "{\n" + "  \"error\": \"Unknown dataset: cimetieres-sur-rennes-metropole\"\n"
+				+ "}";
 
 		when(APIManagerProperties.getServerUrl()).thenReturn("http://localhost:" + mockWebServer.getPort());
 		when(APIManagerProperties.getServerGatewayUrl()).thenReturn("http://localhost:" + mockWebServer.getPort());
-		mockWebServer.enqueue(
-				new MockResponse().setResponseCode(200)
-						.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-						.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationKeys))
-		);
-		mockWebServer.enqueue(
-				new MockResponse().setResponseCode(200)
-						.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-						.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationToken))
-		);
-		mockWebServer.enqueue(
-				new MockResponse().setResponseCode(404)
-						.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-						.setBody(jsonDocumentContent)
-		);
+		mockWebServer.enqueue(new MockResponse().setResponseCode(200)
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationKeys)));
+		mockWebServer.enqueue(new MockResponse().setResponseCode(200)
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.setBody(jsonResourceReader.getObjectMapper().writeValueAsString(applicationToken)));
+		mockWebServer.enqueue(new MockResponse().setResponseCode(404)
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).setBody(jsonDocumentContent));
 
 		assertThatThrownBy(() -> applicationOperationAPI.getAPIContent(context, version, applicationId, username, null))
-				.isInstanceOf(APIEndpointException.class)
-				.hasMessage("HTTP 404 NOT_FOUND reçu du endpoint de l'API http://localhost:%s/datasets/659ad57a-d2b0-442c-af4d-9b57ede31224/dwnl/1.0.0. Si l'erreur HTTP renvoyée par WSO2 n'est pas reproduite en interrogeant directement le endpoint alors WSO2 est la cause du problème. Il peut être nécessaire d'exécuter le script re-deploy-all-apis.sh sur la machine hébergeant WSO2 (cf RUDI-1938).", mockWebServer.getPort())
-		;
+				.isInstanceOf(APIEndpointException.class).hasMessage(
+						"HTTP 404 NOT_FOUND reçu du endpoint de l'API http://localhost:%s/datasets/659ad57a-d2b0-442c-af4d-9b57ede31224/dwnl/1.0.0. Si l'erreur HTTP renvoyée par WSO2 n'est pas reproduite en interrogeant directement le endpoint alors WSO2 est la cause du problème. Il peut être nécessaire d'exécuter le script re-deploy-all-apis.sh sur la machine hébergeant WSO2 (cf RUDI-1938).",
+						mockWebServer.getPort());
 	}
 }

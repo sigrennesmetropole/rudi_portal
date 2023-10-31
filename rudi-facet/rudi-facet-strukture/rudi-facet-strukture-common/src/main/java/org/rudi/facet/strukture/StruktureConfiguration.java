@@ -9,10 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class StruktureConfiguration {
 
 	@Bean
-	public WebClient struktureWebClient(
-			@Qualifier("rudi_oauth2_builder") WebClient.Builder webClientBuilder,
-			StruktureProperties struktureProperties
-	) {
+	public WebClient struktureWebClient(@Qualifier("rudi_oauth2_builder") WebClient.Builder webClientBuilder,
+			StruktureProperties struktureProperties) {
 		return webClientBuilder.baseUrl(struktureProperties.getServiceBaseUrl()).build();
 	}
 

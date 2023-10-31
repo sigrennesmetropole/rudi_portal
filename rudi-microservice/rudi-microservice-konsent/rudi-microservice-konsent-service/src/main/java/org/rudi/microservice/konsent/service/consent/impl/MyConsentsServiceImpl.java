@@ -33,8 +33,7 @@ public class MyConsentsServiceImpl implements MyConsentsService {
 		}
 		searchCriteria.setUserUuids(List.of(userUuid));
 		val myConsentsPage = consentCustomDao.searchMyConsents(searchCriteria, pageable);
-		return new PagedConsentList()
-				.total(myConsentsPage.getTotalElements())
+		return new PagedConsentList().total(myConsentsPage.getTotalElements())
 				.elements(consentsMapper.entitiesToDto(myConsentsPage.getContent()));
 	}
 }

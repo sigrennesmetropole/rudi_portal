@@ -17,6 +17,6 @@ import java.lang.annotation.Target;
 @Inherited
 @SpringBootTest
 @TestPropertySource(properties = "spring.config.name = acl")
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = { "test", "${spring.profiles.test:test-env" })
 public @interface AclSpringBootTest {
 }

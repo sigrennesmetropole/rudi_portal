@@ -4,6 +4,9 @@ import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationSearchCriteria;
 
 public class ApplicationOperationException extends APIManagerException {
+
+	private static final long serialVersionUID = -4297119145025102738L;
+
 	public ApplicationOperationException(ApplicationSearchCriteria criteria, String username, Throwable cause) {
 		super(String.format("Operation failed for username = %s on criteria : %s", username, criteria), cause);
 	}

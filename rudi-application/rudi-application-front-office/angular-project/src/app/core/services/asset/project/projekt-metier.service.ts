@@ -15,7 +15,7 @@ import {
     TargetAudience,
     TerritorialScale
 } from '../../../../projekt/projekt-model';
-import {DatasetConfidentiality, OwnerInfo, ProjektService} from '../../../../projekt/projekt-api';
+import {DatasetConfidentiality, OwnerInfo, ProjektService, ReutilisationStatusSearchCriteria} from '../../../../projekt/projekt-api';
 import {KindOfData} from '../../../../api-kmedia';
 import {Base64EncodedLogo, ImageLogoService} from '../../image-logo.service';
 import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
@@ -194,6 +194,21 @@ export class ProjektMetierService {
     searchProjectPublicCible(): Observable<TargetAudience[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
             this.projektService.searchTargetAudiences(null, offset, DEFAULT_ORDER)
+        );
+    }
+
+    /**
+     * Appel API : récupération de tous les statuts (plusieurs appels back au besoin)
+     */
+    searchReuseStatus(): Observable<TargetAudience[]> {
+        return PageResultUtils.fetchAllElementsUsing(offset =>
+            {
+                const criteria : ReutilisationStatusSearchCriteria = {
+                    offset: offset,
+                    order: DEFAULT_ORDER
+                }
+                return this.projektService.searchReutilisationStatus(criteria)
+            }
         );
     }
 

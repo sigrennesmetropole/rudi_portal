@@ -6,7 +6,7 @@
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 
@@ -28,7 +28,7 @@
 		<spring-cloud-security.version>2.2.5.RELEASE</spring-cloud-security.version>
 		<spring-cloud-loadbalancer.version>2.2.9.RELEASE</spring-cloud-loadbalancer.version>
 
-		<commons.io.version>2.13.0</commons.io.version>
+		<commons.io.version>2.15.0</commons.io.version>
 		<commons.collections4.version>4.4</commons.collections4.version>
 		<commons.lang3.version>3.13.0</commons.lang3.version>
 		<commons.text.version>1.10.0</commons.text.version>
@@ -38,35 +38,35 @@
 		<json.simple.version>1.1</json.simple.version>
 		<javax.validation.version>2.0.1.Final</javax.validation.version>
 		<springfox.version>3.0.0</springfox.version>
-		<openapi.version>1.6.14</openapi.version>
-		<openapi.plugin.version>6.4.0</openapi.plugin.version>
+		<openapi.version>1.7.0</openapi.version>
+		<openapi.plugin.version>7.0.1</openapi.plugin.version>
 		<openapi.jackson.version>0.2.6</openapi.jackson.version>
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
-		<jackson-core.version>2.15.2</jackson-core.version>
-		<apache.directory.api.version>2.1.3</apache.directory.api.version>
+		<jackson-core.version>2.15.3</jackson-core.version>
+		<apache.directory.api.version>2.1.5</apache.directory.api.version>
 		<google.maps.version>0.2.7</google.maps.version>
 		<jasig.cas.client.version>3.6.4</jasig.cas.client.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<lombok.version>1.18.20</lombok.version>
 		<swagger.codegen.version>3.0.21</swagger.codegen.version>
-		<swagger.version>2.2.8</swagger.version>
+		<swagger.version>2.2.18</swagger.version>
 		<flyway.version>9.19.4</flyway.version>
 		<freemarker.version>2.3.32</freemarker.version>
-		<jetbrains.annotations.version>20.0.0</jetbrains.annotations.version>
-		<mockwebserver.version>4.9.1</mockwebserver.version>
-		<nimbus.jose.jwt.version>9.31</nimbus.jose.jwt.version>
+		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
+		<mockwebserver.version>4.12.0</mockwebserver.version>
+		<nimbus.jose.jwt.version>9.37</nimbus.jose.jwt.version>
 		<freemarker.version>2.3.31</freemarker.version>
-		<jsoup.version>1.16.1</jsoup.version>
+		<jsoup.version>1.16.2</jsoup.version>
 		<activiti.version>7.1.0.M6</activiti.version>
-		<log4j.version>2.17.0</log4j.version>
+		<log4j.version>2.21.1</log4j.version>
 		<jaxb-api.version>2.3.1</jaxb-api.version>
-		<tika.version>2.9.0</tika.version>
+		<tika.version>2.9.1</tika.version>
 		<s3.version>2.5.0</s3.version>
 		<gson.version>2.8.9</gson.version>
 		<xdocreport.version>2.0.4</xdocreport.version>
-		<apache.poi.version>5.2.3</apache.poi.version>
-		<pdf.box.version>2.0.27</pdf.box.version>
-		<xmpbox.version>3.0.0</xmpbox.version>
+		<apache.poi.version>5.2.4</apache.poi.version>
+		<pdf.box.version>2.0.29</pdf.box.version>
+		<xmpbox.version>2.0.29</xmpbox.version>
 		<ghost4j.version>1.0.1</ghost4j.version>
 		<guice.version>5.0.1</guice.version>
 		<servlet.api.version>2.5</servlet.api.version>
@@ -74,27 +74,28 @@
 		<jsonassert.version>1.5.1</jsonassert.version>
 		<boucycastle.version>1.76</boucycastle.version>
 		<activation.version>1.1</activation.version>
-		<reactor-test.version>3.5.9</reactor-test.version>
+		<reactor-test.version>3.5.11</reactor-test.version>
 
 		<maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 		<compiler.plugin.version>3.11.0</compiler.plugin.version>
-		<version-maven-plugin.version>2.9.0</version-maven-plugin.version>
+		<version-maven-plugin.version>2.16.1</version-maven-plugin.version>
 		<!-- avec surefire 2.12.4, le test du microservice provider n'est pas
 		lancé -->
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
-		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.6.0</maven-javadoc-plugin.version>
 		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-		<frontend-maven-plugin.version>1.13.4</frontend-maven-plugin.version>
+		<frontend-maven-plugin.version>1.14.2</frontend-maven-plugin.version>
 		<ant.plugin.version>3.1.0</ant.plugin.version>
-		<flyway-plugin.version>6.5.5</flyway-plugin.version>
+		<flyway-plugin.version>9.22.3</flyway-plugin.version>
 		<maven-scr-plugin.version>1.0.10</maven-scr-plugin.version>
+		<build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
 
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
 		<sonar.projectName>${project.artifactId}</sonar.projectName>
-		<jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 
 		<sonar.coverage.exclusions>
@@ -126,25 +127,19 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-common-facade</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-common-service</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-common-storage</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
@@ -154,197 +149,145 @@
 
 			<!-- Modules facets -->
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-acl</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-apimaccess</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-apimremote</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-bpmn</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-bucket-s3</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-core</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-crypto</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-dataverse</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					org.rudi</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-dataset</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-doks</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-email</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-generator</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-generator-text</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-generator-docx</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-generator-pdf</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-kaccess</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-kmedia</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-kos</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-organization</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-oauth2</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-projekt</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-providers</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-rva</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-selfdata</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-strukture</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					${project.groupId}</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-strukture-common</artifactId>
-				<version>
-					${project.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<!-- h2 -->
@@ -361,19 +304,15 @@
 
 			<!-- Modules tiers -->
 			<dependency>
-				<groupId>
-					javax.servlet</groupId>
+				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
-				<version>
-					${servlet.api.version}</version>
+				<version>${servlet.api.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.jetbrains</groupId>
+				<groupId>org.jetbrains</groupId>
 				<artifactId>annotations</artifactId>
-				<version>
-					${jetbrains.annotations.version}</version>
+				<version>${jetbrains.annotations.version}</version>
 			</dependency>
 
 			<!-- Spring cloud -->
@@ -388,24 +327,21 @@
 			<!--
 			https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-circuitbreaker-resilience4j -->
 			<dependency>
-				<groupId>
-					org.springframework.cloud</groupId>
+				<groupId>org.springframework.cloud</groupId>
 				<artifactId>
 					spring-cloud-circuitbreaker-resilience4j</artifactId>
 				<version>${spring-cloud-deps.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.springframework.cloud</groupId>
+				<groupId>org.springframework.cloud</groupId>
 				<artifactId>
 					spring-cloud-starter-loadbalancer</artifactId>
 				<version>${spring-cloud-loadbalancer.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.springframework.cloud</groupId>
+				<groupId>org.springframework.cloud</groupId>
 				<artifactId>
 					spring-cloud-starter-security</artifactId>
 				<version>${spring-cloud-security.version}</version>
@@ -413,65 +349,53 @@
 
 			<!-- Spring Boot -->
 			<dependency>
-				<groupId>
-					org.springframework.boot</groupId>
+				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter</artifactId>
 				<exclusions>
 					<exclusion>
-						<groupId>
-							org.springframework.boot</groupId>
+						<groupId>org.springframework.boot</groupId>
 						<artifactId>
 							spring-boot-starter-logging</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>
-					org.springframework.boot</groupId>
+				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>
-					${springframework.boot.version}</version>
+				<version>${springframework.boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 				<exclusions>
 					<exclusion>
-						<groupId>
-							org.springframework.boot</groupId>
+						<groupId>org.springframework.boot</groupId>
 						<artifactId>
 							spring-boot-starter-logging</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>
-					org.springframework.boot</groupId>
+				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-log4j2</artifactId>
-				<version>
-					${springframework.boot.version}</version>
+				<version>${springframework.boot.version}</version>
 				<exclusions>
 					<exclusion>
-						<groupId>
-							org.apache.logging.log4j</groupId>
+						<groupId>org.apache.logging.log4j</groupId>
 						<artifactId>log4j-to-slf4j</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							org.apache.logging.log4j</groupId>
+						<groupId>org.apache.logging.log4j</groupId>
 						<artifactId>log4j-slf4j-impl</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							org.apache.logging.log4j</groupId>
+						<groupId>org.apache.logging.log4j</groupId>
 						<artifactId>log4j-core</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							org.apache.logging.log4j</groupId>
+						<groupId>org.apache.logging.log4j</groupId>
 						<artifactId>log4j-api</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							org.apache.logging.log4j</groupId>
+						<groupId>org.apache.logging.log4j</groupId>
 						<artifactId>log4j-jul</artifactId>
 					</exclusion>
 				</exclusions>
@@ -480,43 +404,33 @@
 			<!--
 			https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
 			<dependency>
-				<groupId>
-					org.apache.logging.log4j</groupId>
+				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
-				<version>
-					${log4j.version}</version>
+				<version>${log4j.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.apache.logging.log4j</groupId>
+				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-core</artifactId>
-				<version>
-					${log4j.version}</version>
+				<version>${log4j.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.apache.logging.log4j</groupId>
+				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
-				<version>
-					${log4j.version}</version>
+				<version>${log4j.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.apache.logging.log4j</groupId>
+				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-jul</artifactId>
-				<version>
-					${log4j.version}</version>
+				<version>${log4j.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.springframework.boot</groupId>
+				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-test</artifactId>
-				<version>
-					${springframework.boot.version}</version>
+				<version>${springframework.boot.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>junit</groupId>
@@ -524,13 +438,11 @@
 							junit</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							org.junit.vintage</groupId>
+						<groupId>org.junit.vintage</groupId>
 						<artifactId>junit-vintage-engine</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							org.springframework.boot</groupId>
+						<groupId>org.springframework.boot</groupId>
 						<artifactId>
 							spring-boot-starter-logging</artifactId>
 					</exclusion>
@@ -539,15 +451,13 @@
 
 			<!-- Commons dependencies -->
 			<dependency>
-				<groupId>
-					commons-io</groupId>
+				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons.io.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.apache.commons</groupId>
+				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons.lang3.version}</version>
 			</dependency>
@@ -555,36 +465,28 @@
 			<!--
 			https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
 			<dependency>
-				<groupId>
-					org.apache.commons</groupId>
+				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-text</artifactId>
-				<version>
-					${commons.text.version}</version>
+				<version>${commons.text.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					org.apache.commons</groupId>
+				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
-				<version>
-					${commons.collections4.version}</version>
+				<version>${commons.collections4.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>
-					commons-validator</groupId>
+				<groupId>commons-validator</groupId>
 				<artifactId>commons-validator</artifactId>
-				<version>
-					${common.validator.version}</version>
+				<version>${common.validator.version}</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
 			<dependency>
-				<groupId>
-					org.flywaydb</groupId>
+				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-core</artifactId>
-				<version>
-					${flyway.version}</version>
+				<version>${flyway.version}</version>
 			</dependency>
 
 			<!-- Swagger dependencies -->
@@ -613,11 +515,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>
-					io.springfox</groupId>
+				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger-ui</artifactId>
-				<version>
-					${springfox.version}</version>
+				<version>${springfox.version}</version>
 			</dependency>
 
 			<dependency>
@@ -713,8 +613,7 @@
 			<dependency>
 				<groupId>com.squareup.okhttp3</groupId>
 				<artifactId>mockwebserver</artifactId>
-				<version>
-					${mockwebserver.version}</version>
+				<version>${mockwebserver.version}</version>
 			</dependency>
 
 			<dependency>
@@ -751,8 +650,7 @@
 						<artifactId>spring-boot-starter-logging</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>
-							javax.el</groupId>
+						<groupId>javax.el</groupId>
 						<artifactId>el-api</artifactId>
 					</exclusion>
 				</exclusions>
@@ -819,52 +717,40 @@
 			<!--
 			https://mvnrepository.com/artifact/fr.opensagres.xdocreport/fr.opensagres.xdocreport.document -->
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.xdocreport.document</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.xdocreport.document.docx</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.xdocreport.template.freemarker</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.odfdom.converter.pdf</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.odfdom.converter.core</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>xml-apis</groupId>
@@ -873,53 +759,42 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>
-					fr.opensagres.xdocreport</groupId>
+				<groupId>fr.opensagres.xdocreport</groupId>
 				<artifactId>
 					fr.opensagres.poi.xwpf.converter.pdf</artifactId>
-				<version>
-					${xdocreport.version}</version>
+				<version>${xdocreport.version}</version>
 			</dependency>
 
 			<!-- apache poi -->
 			<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 			<dependency>
-				<groupId>
-					org.apache.poi</groupId>
+				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml</artifactId>
-				<version>
-					${apache.poi.version}</version>
+				<version>${apache.poi.version}</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
 			<dependency>
-				<groupId>
-					org.apache.pdfbox</groupId>
+				<groupId>org.apache.pdfbox</groupId>
 				<artifactId>pdfbox</artifactId>
-				<version>
-					${pdf.box.version}</version>
+				<version>${pdf.box.version}</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/xmpbox -->
 			<dependency>
-				<groupId>
-					org.apache.pdfbox</groupId>
+				<groupId>org.apache.pdfbox</groupId>
 				<artifactId>xmpbox</artifactId>
-				<version>
-					${xmpbox.version}</version>
+				<version>${xmpbox.version}</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/preflight -->
 			<dependency>
-				<groupId>
-					org.apache.pdfbox</groupId>
+				<groupId>org.apache.pdfbox</groupId>
 				<artifactId>preflight</artifactId>
-				<version>
-					${pdf.box.version}</version>
+				<version>${pdf.box.version}</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.ghost4j/ghost4j -->
 			<dependency>
-				<groupId>
-					org.ghost4j</groupId>
+				<groupId>org.ghost4j</groupId>
 				<artifactId>ghost4j</artifactId>
 				<version>${ghost4j.version}</version>
 			</dependency>
@@ -951,6 +826,19 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>wso2-nexus</id>
+			<name>WSO2 internal Repository</name>
+			<url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+		</repository>
+	</repositories>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -971,11 +859,6 @@
 							<groupId>io.swagger.core.v3</groupId>
 							<artifactId>swagger-annotations</artifactId>
 							<version>${swagger.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>rudi-common-core</artifactId>
-							<version>${project.version}</version>
 						</dependency>
 						<dependency>
 							<groupId>com.fasterxml.jackson.core</groupId>
@@ -1107,6 +990,25 @@
 					<version>${maven-scr-plugin.version}</version>
 				</plugin>
 
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper-maven-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>add-source</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>add-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 
 		</pluginManagement>

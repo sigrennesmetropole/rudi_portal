@@ -15,19 +15,17 @@
         "confidentiality": {
             "CONFIDENTIAL": {
                 "label": "Confidentiel",
-                "description": "Si vous cochez cette case, votre projet ne sera pas visible dans le catalogue Rudi. Seuls vous et l'animateur Rudi pourront le consulter."
+                "description": "Si vous cochez cette case, votre réutilisation ne sera pas visible dans le catalogue Rudi. Seuls vous et l'animateur Rudi pourront le consulter."
             },
             "OPEN": {
                 "label": "Visible en ligne",
-                "description": "Si vous cochez cette case, votre projet sera visible dans le catalogue Rudi. Tous les visiteurs de Rudi pourront le consulter."
+                "description": "Si vous cochez cette case, votre réutilisation sera visible dans le catalogue Rudi. Tous les visiteurs de Rudi pourront consulter : votre réutilisation, les contacts renseignés ainsi que les jeux de données mobilisés."
             }
         },
         "catalogue": "Catalogue",
         "reutilisations": " des réutilisations",
-        "declarerReutilisation": "Declarer une réutilisation",
         "buttonPopover": {
-            "declareReuse": "Déclarer une réutilisation",
-            "submitProject": "Soumettre un projet",
+            "submitProject": "Soumettre une réutilisation",
             "genericUnauthorizedMessage": "Veuillez vous connecter ou vous inscrire pour accéder à cette page."
         },
         "datasetButton": {
@@ -35,15 +33,15 @@
             "askData": "Ajouter un jeu de données"
         },
         "dialogEditNewDatasetRequest": {
-            "descriptionHint": "Présentez votre besoin en données en essayant d'être le plus précis possible (attributs nécessaires, granularité temporelle / spatiale du jeu de données, période temporelle nécessaire, contexte d'utilisation du jeu de données, spécificités des traitements que vous souhaitez réaliser sur le jeu de données, ce jeu de données sera-t-il croisé avec un jeu de données existant, etc…).",
             "title": "Nouvelle demande de données",
-            "titleHint": "Le titre doit vous permettre d'identifier rapidement votre demande. Si vous n'indiquez pas de titre, le titre de votre demande sera de la forme : \"Nouvelle demande (X)\".",
-            "description": "Vous n'avez pas trouvé le jeu de données dont vous avez besoin pour réaliser votre projet ? Expliquer votre besoin en complétant ce formulaire. Votre demande sera ensuite étudiée afin d'y répondre au mieux. Vous serez contacté par l'animateur via votre adresse mail de contact."
+            "descriptionHint": "Présentez votre besoin en données en essayant d'être le plus précis possible (attributs nécessaires, granularité temporelle / spatiale du jeu de données, période temporelle nécessaire, contexte d'utilisation du jeu de données, spécificités des traitements que vous souhaitez réaliser sur le jeu de données, ce jeu de données sera-t-il croisé avec un jeu de données existant, etc…).",
+            "titleField": "Titre",
+            "titleFieldHint": "Le titre doit vous permettre d'identifier rapidement votre demande. Si vous n'indiquez pas de titre, le titre de votre demande sera de la forme : \"Nouvelle demande (X)\".",
+            "descriptionField": "Description",
+            "descriptionFieldHint": "Vous n'avez pas trouvé le jeu de données dont vous avez besoin pour réaliser votre réutilisation ? Expliquer votre besoin en complétant ce formulaire. Votre demande sera ensuite étudiée afin d'y répondre au mieux. Vous serez contacté par l'animateur via votre adresse mail de contact."
         },
-        "buttonReutilisationParagraph1": "Vous avez créé un nouveau service en utilisant des jeux de données disponibles depuis Rudi ?",
-        "buttonReutilisationParagraph2": "Déclarez votre réutilisation afin de la rendre visible et accessible pour tous.",
-        "buttonSubmitParagraph1": "Vous préparez un projet et vous avez besoin d'accompagnement ou de données spécifiques pour le mettre en œuvre ?",
-        "buttonSubmitParagraph2": "Soumettez votre projet afin de prendre contact avec nous.",
+        "buttonSubmitParagraph1": "Vous préparez une réutilisation et vous avez besoin d'accompagnement ou de données spécifiques pour la mettre en œuvre ? \nVotre réutilisation est finalisée et vous avez mobilisé de la donnée provenant de RUDI ?",
+        "buttonSubmitParagraph2": "Cliquez ici pour commencer la soumission de votre réutilisation.",
         "addDatasetPopup": {
             "title1": "Ajouter un jeu de données",
             "validate": "Valider",
@@ -53,36 +51,68 @@
             "ajouterImage": "Ajouter une image",
             "formatImage": "au format png ou jpg. {fileMaxSize} Mo maximum."
         },
-        "firstStepForm": {
-            "reuseDescription": "Décrivez votre réutilisation en saisissant les informations ci-dessous.",
-            "title": "Titre",
-            "titleHint": "Définissez votre réutilisation en quelques mots. Le titre est visible depuis le catalogue.",
-            "description": "Description",
-            "descriptionHint": "Présentez l’objectif de votre réutilisation en une phrase. Puis expliquez comment vous avez réalisé votre réutilisation (outils utilisés, traitements réalisés…), et quelles en sont les conclusions. Ce résumé est visible depuis le catalogue et depuis la page de présentation de votre réutilisation. 3000 signes maximum sont autorisés.",
-            "image": "Image",
-            "imageHint": "Nous vous conseillons de choisir une image représentant concrètement votre réutilisation (par exemple : capture d’écran). Cette image est visible depuis le catalogue des réutilisations. Si vous n'en avez pas, une image par défaut sera utilisée.",
-            "reuseType": "Type de réutilisation",
-            "reuseTypeHint": "Le type nous permet de catégoriser votre réutilisation.",
-            "publicCible": "Public cible",
-            "publicCibleHint": "Le public cible est le public à destination de votre projet. Vous pouvez sélectionner plusieurs options.",
-            "publicCiblePlaceholder": "Cocher une ou plusieurs options",
-            "accessUrl": "URL d'accès",
-            "accessUrlHint": "Cette url est le chemin d'accès à votre réutilisation. Elle est accessible depuis le détail de votre réutilisation.",
-            "errorFieldRequired": "Ce champ est obligatoire, veuillez le renseigner.",
-            "errorFieldMaxLength": {
-                "before": "Ce champ est limité à ",
-                "after": " signes."
-            },
-            "errorPattern": "Veuillez renseigner l'url au bon format",
-            "errorImage": "Veuiller vérifier le format ou la taille de l'image"
-        },
         "stepper": {
-            "common": {
+            "noName": "Non renseigné",
+            "submission": {
+                "title": {
+                    "1": "Nouvelle",
+                    "2": "réutilisation"
+                },
+                "description": "Renseignez le formulaire ci-dessous afin de soumettre votre réutilisation à l'équipe Rudi. Les 2 premières étapes vous permettent de contextualiser votre réutilisation. La dernière étape vous permet de demander l'accès à des jeux de données. Une fois créée, votre réutilisation sera envoyée en modération aux équipes RUDI.",
+                "step1": {
+                    "label": "Réutilisation",
+                    "header-title": "Réutilisation",
+                    "header-description": "Décrivez votre réutilisation en saisissant les informations ci-dessous",
+                    "requiredInformation": "Informations obligatoires à renseigner",
+                    "title": "Titre",
+                    "titleHint": "Définissez votre réutilisation en quelques mots. Le titre est visible depuis le catalogue.",
+                    "description": "Description",
+                    "descriptionHint": "Présentez votre réutilisation (objectifs, outils, traitements envisagés…). Ce résumé pourra être visible depuis le catalogue des réutilisations et depuis la page de présentation de votre réutilisation. 3000 signes maximum sont autorisés.",
+                    "image": "Image",
+                    "imageHint": "Nous vous conseillons de choisir une image représentant votre réutilisation. Cette image est visible depuis le catalogue. Si vous n'en avez pas, une image par défaut sera utilisée.",
+                    "periode": "Date de réalisation",
+                    "periodeHint": "Le mois et l'année sélectionnés ici, correspondent à la date de début et de fin de votre réutilisation. Format attendu MM/AAAA.",
+                    "periodeBeginPlaceholder": "Date de début",
+                    "periodeEndPlaceholder": "Date de fin",
+                    "periodeBeginError": "Date de début de période saisie invalide",
+                    "periodeEndError": "Date de fin de période saisie invalide",
+                    "echelle": "Échelle",
+                    "echelleHint": "L'échelle indique le périmètre géographique de votre réutilisation.",
+                    "selectOption": "Sélectionner une option",
+                    "selectOptions": "Cocher une ou plusieurs options",
+                    "accessUrl": "URL d'accès",
+                    "accessUrlHint": "Cette url est le chemin d'accès à votre réutilisation. Elle sera accessible depuis le détail de votre réutilisation.",
+                    "errorPattern": "Veuillez renseigner une url au bon format.",
+                    "territoireConcerne": "Territoire concerné",
+                    "territoireConcerneHint": "Ce champ vous permet de préciser le territoire où se déroule votre réutilisation en listant le(s) quartier(s), la(les) commune(s), la(les) métropole(s) concerné(s).",
+                    "targetAudience": "Public cible",
+                    "targetAudienceHint": "Le public cible est le public à destination de votre réutilisation. Vous pouvez sélectionner plusieurs options.",
+                    "reuseType": "Type de réutilisation",
+                    "reuseTypeHint": "Le type de réutilisation définit le type de service que votre réutilisation permettra de mettre en oeuvre.",
+                    "accompagnementSouhaite": "Accompagnement souhaité",
+                    "accompagnementSouhaiteHint": "Le type d'accompagnement nous indique dans quelle mesure Rudi pourra vous aider. Vous pouvez sélectionner plusieurs options.",
+                    "projectConfidentiality": "Confidentialité de la réutilisation",
+                    "errorFieldRequired": "Ce champ est requis",
+                    "reuseStatus": "Statut de votre réutilisation",
+                    "reuseStatusHint": "Veuillez préciser le statut d'avancement de votre réutilisation."
+                },
                 "step2": {
+                    "label": "Identité",
+                    "title": "Identité",
+                    "description": "Qui soumet la réutilisation ? Vous pouvez soumettre votre réutilisation en votre nom ou au nom d’une organisation à laquelle vous appartenez. \nLes informations ci-dessous sont reprises de votre compte.",
+                    "requiredInformation": "Informations obligatoires à renseigner.",
                     "ownerType": {
+                        "title": "Identité du porteur de projet",
+                        "description": "Le porteur de projet est la personne qui gère la réutilisation.",
+                        "firstname": "Prénom",
+                        "lastname": "Nom",
+                        "user": {
+                            "label": "Individuel",
+                            "description": "Vous réalisez la réutilisation en votre nom. Votre identité, telle que nous la connaissons, sera visible depuis votre réutilisation."
+                        },
                         "organization": {
                             "label": "Organisation",
-                            "description": "Vous avez réalisé cette réutilisation au sein d’une organisation. Le nom de l’organisation apparaitra depuis votre réutilisation.",
+                            "description": "Vous réalisez cette réutilisation au sein d'une organisation. Les coordonnées de votre organisation seront visibles depuis votre réutilisation.",
                             "name": {
                                 "label": "Nom de l’organisation",
                                 "placeholder": "Sélectionner une option"
@@ -93,140 +123,20 @@
                                 "messageAfterLink": ", afin de paramétrer votre compte."
                             }
                         }
-                    }
-                },
-                "noName": "Non renseigné"
-            },
-            "reuse": {
-                "title": {
-                    "1": "Nouvelle",
-                    "2": "réutilisation"
-                },
-                "description": "Renseignez le formulaire ci-dessous pour rendre votre réutilisation visible et accessible depuis Rudi. Une fois les 3 étapes renseignées, votre réutilisation sera visible depuis le catalogue des réutilisations. Vous pourrez la modifier à tout moment depuis votre espace personnel.",
-                "step1": {
-                    "label": "Réutilisation",
-                    "title": "Réutilisation",
-                    "description": "Décrivez votre réutilisation en saisissant les informations ci-dessous.",
-                    "requiredInformation": "Informations obligatoires à renseigner."
-                },
-                "step2": {
-                    "label": "Identité",
-                    "title": "Identité",
-                    "description": "Qui déclare la réutilisation ? Vous pouvez déclarer une réutilisation en votre nom ou au nom d’une organisation à laquelle vous appartenez. \nLes informations ci-dessous sont reprises de votre compte.",
-                    "requiredInformation": "Informations obligatoires à renseigner.",
-                    "ownerType": {
-                        "title": "Identité du réutilisateur",
-                        "description": "Le réutilisateur est la personne qui a réalisé la réutilisation.",
-                        "firstname": "Prénom",
-                        "lastname": "Nom",
-                        "user": {
-                            "label": "Individuel",
-                            "description": "Vous avez réalisé cette réutilisation tout seul. Votre identité, telle que nous la connaissons, sera visible depuis votre réutilisation."
-                        }
                     },
                     "contactEmail": {
                         "title": "Adresse e-mail de contact pour cette réutilisation",
-                        "description": "Cette adresse sera accessible dans le catalogue des réutilisations. Vous pouvez indiquer une adresse spécifique sur laquelle vous souhaitez être contacté."
-                    }
-                },
-                "step3": {
-                    "label": "Jeux de données",
-                    "title": "Jeux de données utilisés",
-                    "description": "Les jeux de données à lister ici sont tous les jeux de données que vous avez utilisés pour réaliser votre réutilisation. Vous pouvez en sélectionner autant que vous le souhaitez. Si votre réutilisation, vous a amené à créer de nouveaux jeux de données, pensez à les publier dans le catalogue de données.",
-                    "requiredInformation": "Au moins un jeu de données doit être sélectionné.",
-                    "uuid": {
-                        "title": "Uuid",
-                        "description": "Le uuid est défini dans l'url de détail d'un jdd. Pour le récupérer, veuillez accéder à l'écran de détail du jdd concerné et copier le dernier élément de l'url. (Par exemple dans https://rudi.bzh/detail/111f22c3-c888-55ab-45f9-e11azer99b11 , le uuid est 111f22c3-c888-55ab-45f9-e11azer99b11)",
-                        "add-button": "Ajouter un jeu de données"
-                    },
-                    "linkedDatasets": {
-                        "count": "jeu{count, plural, one{} other{x}} de données",
-                        "alreadyAdded": "Le jeu de données sélectionné a déjà été ajouté"
-                    }
-                },
-                "publish": {
-                    "button": "Publier",
-                    "enregistrer": "Enregistrer",
-                    "error": "Une erreur est survenue lors de la création de la réutilisation. Veuillez contacter un administrateur.",
-                    "ok": {
-                        "title": "Votre réutilisation a bien été publiée sur le portail.",
-                        "description": "Vous pouvez la modifier à tout moment, depuis votre espace personnel.",
-                        "see": "Voir ma réutilisation"
-                    }
-                },
-                "submit": {
-                    "ok": {
-                        "title": "Votre projet a bien été soumis.",
-                        "description1": "Si vous avez fait des demandes, celles-ci viennent d'être transmises à l'animateur et aux producteurs de données.",
-                        "description2": "Vous pouvez le consulter à tout moment depuis votre espace personnel.",
-                        "description3": "Vous pouvez également lui ajouter de nouvelles demandes d'accès.",
-                        "see": "Voir mon projet"
-                    }
-                }
-            },
-            "submission": {
-                "title": {
-                    "1": "Nouveau",
-                    "2": "projet"
-                },
-                "description": "Renseignez le formulaire ci-dessous afin de soumettre votre projet à l'équipe Rudi. Les 2 premières étapes vous permettent de contextualiser votre projet. La dernière étape vous permet de demander l'accès à des jeux de données. Une fois créé, votre projet sera visible depuis le catalogue (sauf mention contraire).",
-                "step1": {
-                    "label": "Projet",
-                    "header-title": "Projet",
-                    "header-description": "Décrivez votre projet en saisissant les informations ci-dessous",
-                    "requiredInformation": "Informations obligatoires à renseigner",
-                    "title": "Titre",
-                    "titleHint": "Définissez votre projet en quelques mots. Le titre est visible depuis le catalogue.",
-                    "description": "Description",
-                    "descriptionHint": "Présentez votre projet (objectifs, outils, traitements envisagés...). Ce résumé est visible depuis le catalogue des réutilisations et depuis la page de présentation de votre projet. 3000 signes maximum sont autorisés.",
-                    "image": "Image",
-                    "imageHint": "Nous vous conseillons de choisir une image représentant votre projet. Cette image est visible depuis le catalogue. Si vous n'en avez pas, une image par défaut sera utilisée.",
-                    "periode": "Période de réalisation envisagée",
-                    "periodeHint": "Les mois et années sélectionnés ici définissent la période envisagée pour la réalisation de votre projet. Format attendu MM/AAAA.",
-                    "periodeBeginPlaceholder": "Date de début",
-                    "periodeEndPlaceholder": "Date de fin",
-                    "periodeBeginError": "Date de début de période saisie invalide",
-                    "periodeEndError": "Date de fin de période saisie invalide",
-                    "echelle": "Échelle",
-                    "echelleHint": "L'échelle indique le périmètre géographique de votre projet.",
-                    "select-option": "Sélectionner une option",
-                    "select-options": "Cocher une ou plusieurs options",
-                    "territoireConcerne": "Territoire concerné",
-                    "territoireConcerneHint": "Ce champ vous permet de préciser le territoire où se déroule votre projet en listant le(s) quartier(s), la(les) commune(s), la(les) métropole(s) concerné(s).",
-                    "reuseType": "Type de réutilisation",
-                    "reuseTypeHint": "Le type de réutilisation définit le type de service que votre projet permettra de mettre en oeuvre.",
-                    "accompagnementSouhaite": "Accompagnement souhaité",
-                    "accompagnementSouhaiteHint": "Le type d'accompagnement nous indique dans quelle mesure Rudi pourra vous aider. Vous pouvez sélectionner plusieurs options.",
-                    "projectConfidentiality": "Confidentialité du projet"
-                },
-                "step2": {
-                    "label": "Identité",
-                    "title": "Identité",
-                    "description": "Qui soumet le projet ? Vous pouvez soumettre votre projet en votre nom ou au nom d’une organisation à laquelle vous appartenez. \nLes informations ci-dessous sont reprises de votre compte.",
-                    "requiredInformation": "Informations obligatoires à renseigner.",
-                    "ownerType": {
-                        "title": "Identité du porteur de projet",
-                        "description": "Le porteur de projet est la personne qui gère le projet",
-                        "firstname": "Prénom",
-                        "lastname": "Nom",
-                        "user": {
-                            "label": "Individuel",
-                            "description": "Vous réalisez ce projet tout seul. Votre identité, telle que nous la connaissons, sera visible depuis votre projet."
-                        }
-                    },
-                    "contactEmail": {
-                        "title": "Adresse e-mail de contact pour ce projet",
-                        "description": "Cette adresse sera accessible depuis le catalogue sauf si votre projet est confidentiel. Vous pouvez indiquer une adresse spécifique sur laquelle vous souhaitez être contacté."
+                        "description": "Cette adresse sera accessible depuis le catalogue. Vous pouvez indiquer une adresse spécifique sur laquelle vous souhaitez être contacté."
                     }
                 },
                 "step3": {
                     "label": "Jeux de données",
                     "title": "Jeux de données",
-                    "description": "Indiquez ici les jeux de données utilisés pour la mise en oeuvre de votre projet. Dans le cas de données en accès restreint, les demandes seront transmises au producteur de données.",
+                    "description": "Indiquez ici les jeux de données utilisés pour la mise en œuvre de votre réutilisation. Dans le cas de données en accès restreint, les demandes seront transmises au producteur de données. Dans le cas de données personnelles, un complément d'information vous sera demandé à la page suivante.",
                     "requiredInformation": "Informations obligatoires à renseigner",
                     "uuid": {
                         "title": "Uuid",
-                        "description": "Le uuid est défini dans l'url de détail d'un jdd. Pour le récupérer, veuillez accéder à l'écran de détail du jdd concerné et copier le dernier élément de l'url. (Par exemple dans https://rudi.bzh/detail/111f22c3-c888-55ab-45f9-e11azer99b11 , le uuid est 111f22c3-c888-55ab-45f9-e11azer99b11)",
+                        "description": "L'uuid est défini dans l'url de détail d'un jdd. Pour le récupérer, veuillez accéder à l'écran de détail du jdd concerné et copier le dernier élément de l'url. (Par exemple dans https://rudi.bzh/detail/111f22c3-c888-55ab-45f9-e11azer99b11 , le uuid est 111f22c3-c888-55ab-45f9-e11azer99b11)",
                         "add-open": "Ajouter un jeu de données ouvert",
                         "add-restricted": "Demander l'accès à un jeu de données"
                     },
@@ -237,16 +147,14 @@
                 },
                 "publish": {
                     "button": "Publier",
-                    "enregistrer": "Enregistrer",
                     "submit": "Soumettre",
-                    "error-update": "Une erreur est survenue lors de la mise à jour du projet. Veuillez contacter un administrateur.",
-                    "error": "Une erreur est survenue lors de la création du projet. Veuillez contacter un administrateur.",
+                    "error-update": "Une erreur est survenue lors de la mise à jour de la  réutilisation. Veuillez contacter un administrateur.",
+                    "error": "Une erreur est survenue lors de la création de la réutilisation. Veuillez contacter un administrateur.",
                     "ok": {
-                        "title": "Votre projet a bien été sauvegardé.",
-                        "title-info": "Les demandes associées n'ont pas encore été transmises à l'animateur et aux producteurs de données concernés.",
-                        "description1": "Pour transmettre vos demandes, vous devez soumettre votre projet depuis votre ",
-                        "description2": "espace personnel",
-                        "description3": ". Vous pouvez également le modifier depuis cet espace et lui ajouter de nouvelles demandes d'accès."
+                        "title" : "Votre réutilisation a bien été soumise.",
+                        "description1" : "Vos demandes seront transmises aux producteurs dès qu'un animateur aura validé votre demande de publication. Vous serez averti par mail des avancées de celle-ci.",
+                        "description2": "Vous pouvez la consulter à tout moment depuis votre espace personnel.",
+                        "see": "Voir ma réutilisation"
                     }
                 }
             },
@@ -280,7 +188,7 @@
             "comment": "Commentaire",
             "commentHint": "Vous avez la possibilité d'ajouter un commentaire sur le jeu de données sélectionné, notamment si certaines de ses caractéristiques ne vous conviennent pas tout à fait ou que vous souhaitez apporter des précisions sur son utilisation. 3000 signes maximum sont autorisés",
             "date": "Date de fin d'accès souhaitée",
-            "dateHint": "Cette date correspond à la date jusqu'à laquelle vous souhaitez utiliser ce jeu de données dans le cadre de ce projet",
+            "dateHint": "Cette date correspond à la date jusqu'à laquelle vous souhaitez utiliser ce jeu de données dans le cadre de cette réutilisation",
             "dateError": "la date de fin d'accès est obligatoire"
         }
     },
@@ -388,7 +296,7 @@
         "et": "et",
         "echec": "Echec du téléchargement. Veuillez contacter un administrateur en cliquant",
         "fileValidationError": {
-            "EXTENSIONS": "Veuillez ajouter au image au bon format.",
+            "EXTENSIONS": "Veuillez ajouter une image au bon format (.pdf, .png, .jpg ou .tiff). ",
             "FILE_MAX_COUNT": "Nombre maximal de fichiers atteint.",
             "FILE_MAX_SIZE": "Taille maximale pour un fichier atteinte."
         },
@@ -647,13 +555,13 @@
         "error-project-already-linked": "Le projet sélectionné possède déjà une demande d'accès vers ce jeu de données.",
         "restrictedDatasetRequestDialog": {
             "title": "Demande d'accès",
-            "description": "Une demande d’accès doit obligatoirement être réalisée dans le cadre d’un projet. Vous n'avez pas encore créé de projet ?",
+            "description": "Une demande d’accès doit obligatoirement être réalisée dans le cadre d’une réutilisation. Vous n'avez pas encore créé de réutilisation ?",
             "description-2": "Cliquez-ici",
-            "selectProject": "Sélectionner un projet existant",
-            "chooseProject": "Choisir un projet",
+            "selectProject": "Sélectionner une réutilisation existante",
+            "chooseProject": "Choisir une réutilisation",
             "ok": {
                 "title": "Votre demande d'accès a bien été envoyée.",
-                "description1": "La demande a bien été ajoutée au projet. Elle sera envoyée quand votre projet sera soumis. Vous pouvez soumettre votre projet depuis votre",
+                "description1": "La demande a bien été ajoutée à la réutilisation. Elle sera envoyée quand votre réutilisation sera soumise. Vous pouvez soumettre votre réutilisation depuis votre",
                 "description2": "espace personnel.",
                 "see": "Voir ma demande"
             }
@@ -719,7 +627,7 @@
         "tabulatedDataTab": {
             "errorDownloading": "Erreur lors du chargement des données",
             "errorFileSize": "Les données sont trop volumineuses, merci de les télécharger afin de les visualiser.",
-            "errorAccess": "Afin de pouvoir visualiser la donnée vous devez avoir été autorisé à la mobiliser dans le cadre d'un projet. Merci d'effectuer une demande d'accès en cliquant sur le bouton \"Demander l'accès\" situé en dessous de la zone de titre du jeu de données.",
+            "errorAccess": "Afin de pouvoir visualiser la donnée vous devez avoir été autorisé à la mobiliser dans le cadre d'une réutilisation. Merci d'effectuer une demande d'accès en cliquant sur le bouton \"Demander l'accès\" situé en dessous de la zone de titre du jeu de données.",
             "tableHeadingBtn": "Ce tableau comporte des en-têtes"
         },
         "mapData": "Carte",
@@ -732,7 +640,7 @@
             "organizationTitle": "Mon organisation",
             "robotTable": {
                 "name": "Nom",
-                "id": "identifiant",
+                "id": "Identifiant",
                 "dash": "",
                 "changePassword": "Modifier le mot de passe"
             },
@@ -750,12 +658,12 @@
                 "editor": "Éditeur",
                 "administrator": "Administrateur",
                 "errorPagination": "Une erreur est survenue. Merci de relancer la procédure. Si le problème persiste veuillez contacter un administrateur",
-                "update": "Modifier le profil",
+                "update": "Modifier le rôle",
                 "delete": "Détacher de l'organisation",
                 "addMember": "Ajouter un membre",
                 "addPopin": {
                     "title": "Ajouter un membre",
-                    "subTitle": "Attention: seules les personnes ayant déjà créées un compte sur Rudi peuvent ajoutées à une organisation",
+                    "subTitle": "Attention : seules les personnes ayant déjà créé un compte sur Rudi peuvent être ajoutées à une organisation.",
                     "descriptionMail": "Veuillez renseigner l'adresse email du compte Rudi de la personne que vous souhaitez ajouter à votre organisation",
                     "descriptionRole": "Saisissez le rôle que vous souhaitez attribuer à ce membre. Un éditeur peut agir sur Rudi au nom de cette organisation. Un administrateur peut gérer l'organisation et ses membres",
                     "success": "L'utilisateur a bien été ajouté à l’organisation."
@@ -1203,8 +1111,15 @@
             "access": "Accès",
             "newRequest": "Nouvelles données",
             "selfdata": "Données personnelles",
-            "explainationText": "Vous trouverez sur cette page l'ensemble des demandes qui vous ont été adressées et qui nécessitent une action de votre part : demande d'accès à vos données, notifications sur vos projets ou suites à vos demandes envoyées.",
-            "linkText": "Cliquez ici pour en savoir plus."
+            "explainationText": "Vous trouverez sur cette page l'ensemble des demandes qui vous ont été adressées et qui nécessitent une action de votre part : demande d'accès à vos données, notifications sur vos réutilisations ou suites à vos demandes envoyées.",
+            "linkText": "Cliquez ici pour en savoir plus.",
+            "project": "Réutilisation"
+        },
+        "projectDetails": {
+            "headerTitle": "Demande de publication",
+            "projectTab": "Réutilisation",
+            "projectHistorique": "Historique",
+            "projectOwner": "Porteur de projet"
         },
         "myRequests": {
             "dateTableHeader": "Date",
@@ -1250,26 +1165,28 @@
             "confidentiality": "Confidentialité",
             "status": "Statut du projet",
             "numberOfDataset": "Jeux de données",
-            "noResult": "Vous n'avez pas encore créé de projet ou de réutilisation dans Rudi. Les formulaires de création de projet ou de réutilisation sont accessibles en cliquant ",
+            "noResult": "Vous n'avez pas encore créé de réutilisation dans Rudi. Les formulaires de création de réutilisation sont accessibles en cliquant ",
             "here": " ici",
             "isReuse": "Réutilisation - ",
             "isProject": "Projet - ",
             "resultTilte": "réutilisation(s)"
         },
         "project": {
-            "project": "Projet",
-            "projectTitle": "Titre du projet",
+            "reutilisation": "Réutilisation",
+            "reutilisationTitle": "Titre de la réutilisation",
             "description": "Description",
             "periodRealization": "Période de réalisation envisagée",
+            "startDateRealization": "Date de début envisagée",
+            "endDateRealization": "Date de fin envisagée",
             "beginDate": "Date de début :",
             "endDate": "Date de fin :",
             "targetAudience": "Public cible",
             "scale": "Echelle",
+            "reuseStatus": "Statut de la réutilisation",
             "territorialScale": "Territoire concerné",
             "desiredSupport": "Accompagnement souhaité",
             "confidentiality": "Confidentialité",
             "re-use": "Type de réutilisation",
-            "infosProject": "Informations du projet",
             "basicInfos": {
                 "projectType": "Type de réutilisation",
                 "creationDate": "Date de création",
@@ -1300,6 +1217,13 @@
                         "columnAddedData": "Ajouté le",
                         "columnRequest": "Demande",
                         "columnStatus": "Statut"
+                    },
+                    "linkedDatasetStatus": {
+                        "draft": "Brouillon",
+                        "in_progress": "En cours",
+                        "validated":  "Validé",
+                        "cancelled": "Annulé",
+                        "archived":  "Archivé"
                     }
                 },
                 "information": "Information",
@@ -1315,9 +1239,6 @@
                         "addMember": "Ajouter un membre"
                     }
                 }
-            },
-            "heading": {
-                "projectStatusPrefix": "Projet ⠂"
             },
             "details": {
                 "othersFromOtherProducers": "+ {x} autres demandes formulées auprès de {n} producteurs",

@@ -10,10 +10,21 @@ import org.springframework.context.annotation.PropertySource;
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
-		"org.rudi.common.storage", "org.rudi.facet.acl", "org.rudi.facet.dataverse", "org.rudi.facet.kmedia",
-		"org.rudi.microservice.strukture.facade", "org.rudi.microservice.strukture.service",
-		"org.rudi.microservice.strukture.storage", "org.rudi.facet.projekt.helper", "org.rudi.facet.email","org.rudi.facet.generator"  })
+@SpringBootApplication(scanBasePackages = { 
+		"org.rudi.common.facade", 
+		"org.rudi.common.service",
+		"org.rudi.common.storage", 
+		"org.rudi.common.core", 
+		"org.rudi.facet.acl", 
+		"org.rudi.facet.dataverse",
+		"org.rudi.facet.kmedia", 
+		"org.rudi.facet.email", 
+		"org.rudi.facet.projekt.helper",
+		"org.rudi.facet.generator",
+		"org.rudi.microservice.strukture.facade",
+		"org.rudi.microservice.strukture.service", 
+		"org.rudi.microservice.strukture.storage"
+		})
 @EnableEurekaClient
 @PropertySource(value = { "classpath:strukture/strukture-common.properties" })
 @PropertySource(value = { "classpath:strukture/strukture-email.properties" })

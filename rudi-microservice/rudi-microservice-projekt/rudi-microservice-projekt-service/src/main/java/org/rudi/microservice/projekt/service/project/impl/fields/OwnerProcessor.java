@@ -26,7 +26,9 @@ import lombok.val;
 
 @Component
 @RequiredArgsConstructor
-class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldProcessor, DeleteProjectFieldProcessor {
+class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldProcessor, DeleteProjectFieldProcessor,
+		AddDatasetToProjectProcessor, UpdateDatasetInProjectProcessor, DeleteDatasetFromProjectProcessor,
+		UpdateMediaInProjectProcessor, DeleteMediaFromProjectProcessor {
 	private final UtilContextHelper utilContextHelper;
 	private final ACLHelper aclHelper;
 
@@ -79,8 +81,8 @@ class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldP
 		val projectManagerUuid = projectManager.getUuid();
 		val authenticatedUser = getUserByUUID(authenticatedUserUuid);
 
-		if (!projectManagerUuid.equals(authenticatedUserUuid) && !rolesHelper.hasAnyRole(authenticatedUser,
-				Role.MODERATOR)) {
+		if (!projectManagerUuid.equals(authenticatedUserUuid)
+				&& !rolesHelper.hasAnyRole(authenticatedUser, Role.MODERATOR)) {
 			throw new AppServiceForbiddenException(errorMessage);
 		}
 	}

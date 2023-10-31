@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-selfdata</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-selfdata-core</artifactId>
@@ -104,10 +104,17 @@
 					<generateModels>true</generateModels>
 					<templateDirectory>${resource-generation-directory}/openapi/generation/</templateDirectory>
 					<verbose>false</verbose>
+					<!--configHelp>true</configHelp-->
 					<typeMappings>
 						<typeMapping>java.time.LocalDateTime=OffsetDateTime</typeMapping>
 					</typeMappings>
-					<schemaMappings>AssetDescription=org.rudi.bpmn.core.bean.AssetDescription,DictionaryEntry=org.rudi.facet.kaccess.bean.DictionaryEntry,Credentials=org.rudi.facet.apimaccess.bean.Credentials</schemaMappings>
+					<importMappings>
+						DictionaryEntry=org.rudi.facet.kaccess.bean.DictionaryEntry,
+						Credentials=org.rudi.facet.apimaccess.bean.Credentials
+					</importMappings>
+					<schemaMappings>
+						AssetDescription=org.rudi.bpmn.core.bean.AssetDescription
+					</schemaMappings>
 					<configOptions>
 						<dateLibrary>java8</dateLibrary>
 					</configOptions>
@@ -150,18 +157,10 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.swagger.core.v3</groupId>
-						<artifactId>swagger-annotations</artifactId>
-						<version>${swagger.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>${project.groupId}</groupId>
-						<artifactId>rudi-common-core</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.constant.RudiMetadataField;
-import org.rudi.facet.kos.helper.KOSHelper;
+import org.rudi.facet.kos.helper.KosHelper;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 class ThemeValidator extends AbstractMetadataValidator<String> {
 
-	private final KOSHelper kosHelper;
+	private final KosHelper kosHelper;
 
 	@Override
 	public Set<IntegrationRequestErrorEntity> validate(String theme) {

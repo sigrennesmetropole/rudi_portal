@@ -64,9 +64,6 @@ public class AddressRoleServiceImpl implements AddressRoleService {
 			throw new IllegalArgumentException("UUID manquant");
 		}
 		AddressRoleEntity entity = addressRoleDao.findByUUID(addressRole.getUuid());
-		if (entity == null) {
-			throw new IllegalArgumentException("Resource inexistante:" + addressRole.getUuid());
-		}
 		addressRoleMapper.dtoToEntity(addressRole, entity);
 		entity = addressRoleDao.save(entity);
 		return addressRoleMapper.entityToDto(entity);

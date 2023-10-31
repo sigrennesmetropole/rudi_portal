@@ -139,4 +139,14 @@ public interface ProjectService {
 	 * @throws GetOrganizationException si erreur
 	 */
 	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException;
+
+
+	/**
+	 * Détermine si l'utilisateur connecté est owner du projet passé en paramètre.
+	 *
+	 * @param projectUuid UUID du projet
+	 * @return true si l'authenticatedUser est owner du projet, false sinon
+	 * @throws Exception
+	 */
+	boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception;
 }

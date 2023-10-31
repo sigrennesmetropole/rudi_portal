@@ -7,8 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-common</artifactId>
-		<version>1.2.0</version>
-		<relativePath>../</relativePath>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-common-facade</artifactId>
@@ -101,6 +100,14 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
 		</dependency>
 
 	</dependencies>

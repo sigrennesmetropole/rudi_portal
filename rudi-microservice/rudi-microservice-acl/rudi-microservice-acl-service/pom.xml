@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-acl</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-acl-service</artifactId>
@@ -19,25 +19,21 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-acl-storage</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-acl-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-generator-text</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-email</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

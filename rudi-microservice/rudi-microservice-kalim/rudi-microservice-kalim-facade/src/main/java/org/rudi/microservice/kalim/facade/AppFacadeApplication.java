@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 		"org.rudi.common.facade",
 		"org.rudi.common.service",
 		"org.rudi.common.storage",
+		"org.rudi.common.core",
 		"org.rudi.facet.apimaccess",
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kaccess",

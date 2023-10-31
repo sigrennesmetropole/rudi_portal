@@ -6,7 +6,7 @@
 		"title": "rudi-projekt-api",
 		"termsOfService": "https://swagger.io/terms/",
 		"contact": {
-			"email": "ca.marchand@rennesmetropole.fr"
+			"email": "rudi@datarennes.fr"
 		},
 		"license": {
 			"name": "Apache 2.0",
@@ -63,6 +63,75 @@
 					},
 					"matrixIdPrefix": {
 						"type": "string"
+					}
+				}
+			},
+			"EpsgIoResponse": {
+				"type": "object",
+				"properties": {
+					"number_results": {
+						"type": "number"
+					},
+					"results": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/EpsgIoProjection"
+						}
+					},
+					"status": {
+						"type": "string"
+					}
+				}
+			},
+			"EpsgIoProjection": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"bbox": {
+						"type": "array",
+						"items": {
+							"type": "number"
+						}
+					},
+					"proj4": {
+						"type": "string"
+					}
+				}
+			},
+			"Proj4Information":  {
+				"description": "Informations nécessaires pour récupérer les informations sur une projection (genre EPSG:3948)",
+				"type": "object",
+				"properties": {
+					"code": {
+						"description": "le code EPSG",
+						"type": "string"
+					},
+					"proj4": {
+						"description": "la chaîne de caractère qui représente la projection proj4 à ajouter dans OpenLayers",
+						"type": "string"
+					},
+					"bbox": {
+						"$ref": "#/components/schemas/Bbox"
+					}
+				}
+			},
+			"Bbox": {
+				"description": "Représente une BBOX (Bounding box) ou boîte englobante. Il s'agit de deux points dans l'espace qui permettent de définir un rectangle, les BBOX sont normées pour utiliser des points dans le système de coordonnées EPSG:4326 WGS84 ou les coordonnées GPS longitude et latitude",
+				"type": "object",
+				"properties": {
+					"west_longitude": {
+						"type": "number"
+					},
+					"south_latitude": {
+						"type": "number"
+					},
+					"east_longitude": {
+						"type": "number"
+					},
+					"north_latitude": {
+						"type": "number"
 					}
 				}
 			}

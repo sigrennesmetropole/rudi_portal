@@ -7,8 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-acl</artifactId>
-		<version>1.2.0</version>
-		<relativePath>../</relativePath>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-acl-core</artifactId>
@@ -112,18 +111,10 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.swagger.core.v3</groupId>
-						<artifactId>swagger-annotations</artifactId>
-						<version>${swagger.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>${project.groupId}</groupId>
-						<artifactId>rudi-common-core</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

@@ -8,13 +8,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.bean.APILifecycleStatusState;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
+import org.rudi.facet.apimaccess.bean.HasSubscriptionStatus;
 import org.rudi.facet.apimaccess.constant.APISearchPropertyKey;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.APINotFoundException;
@@ -30,14 +31,13 @@ import org.rudi.facet.organization.bean.Organization;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
-import org.rudi.microservice.konsult.service.exception.ClientKeyNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -51,11 +51,10 @@ public class APIManagerHelper {
 	private final OrganizationHelper organizationHelper;
 	private final ProjektHelper projektHelper;
 
-	public APIManagerHelper(
-			APIsService apIsService, ApplicationService applicationService,
+	public APIManagerHelper(APIsService apIsService, ApplicationService applicationService,
 			MetadataDetailsHelper metadataDetailsHelper,
-			@Value("${apimanager.oauth2.client.anonymous.username}") String anonymousUsername,
-			ACLHelper aclHelper, OrganizationHelper organizationHelper, ProjektHelper projektHelper) {
+			@Value("${apimanager.oauth2.client.anonymous.username}") String anonymousUsername, ACLHelper aclHelper,
+			OrganizationHelper organizationHelper, ProjektHelper projektHelper) {
 		this.apIsService = apIsService;
 		this.applicationService = applicationService;
 		this.metadataDetailsHelper = metadataDetailsHelper;
@@ -65,23 +64,28 @@ public class APIManagerHelper {
 		this.projektHelper = projektHelper;
 	}
 
-	public boolean userHasSubscribedToEachMediaOfDataset(UUID globalId, UUID ownerUuid) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
-		return doForEachMediaOfDataset(globalId, ownerUuid, (apiInfo, username) -> null);
+	public boolean userHasSubscribedToEachMediaOfDataset(UUID globalId, UUID ownerUuid) throws APIManagerException {
+		return doForEachMediaOfDataset(globalId, ownerUuid, (apiInfo, username) -> null,
+				List.of(HasSubscriptionStatus.NOT_SUBSCRIBED, HasSubscriptionStatus.SUBSCRIBED_AND_BLOCKED));
 	}
 
-	public void subscribeToEachMediaOfDataset(UUID globalId, UUID uuidToSubscribe) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
-		doForEachMediaOfDataset(globalId, uuidToSubscribe, (apiInfo, username) -> applicationService.subscribeAPIToDefaultUserApplication(apiInfo.getId(), username));
+	public void subscribeToEachMediaOfDataset(UUID globalId, UUID uuidToSubscribe) throws APIManagerException {
+		doForEachMediaOfDataset(globalId, uuidToSubscribe,
+				(apiInfo, username) -> applicationService.subscribeAPIToDefaultUserApplication(apiInfo.getId(),
+						username),
+				List.of(HasSubscriptionStatus.NOT_SUBSCRIBED, HasSubscriptionStatus.SUBSCRIBED_AND_BLOCKED));
 	}
 
-	private boolean doForEachMediaOfDataset(UUID globalId, UUID ownerUuid, ForEachMediaFunction mediaFunction) throws ClientKeyNotFoundException, APIManagerException, AppServiceNotFoundException {
+	private boolean doForEachMediaOfDataset(UUID globalId, UUID ownerUuid, ForEachMediaFunction mediaFunction,
+			List<HasSubscriptionStatus> statusFilter) throws APIManagerException {
 		final String username = getUsernameToSubscribe(ownerUuid);
 
-		final var searchCriteria = new APISearchCriteria()
-				.globalId(globalId)
-				.status(APILifecycleStatusState.PUBLISHED);
+		final var searchCriteria = new APISearchCriteria().globalId(globalId).status(APILifecycleStatusState.PUBLISHED);
 		final var mediasOfDataset = apIsService.searchAPI(searchCriteria);
 		for (final var api : mediasOfDataset.getList()) {
-			if (!applicationService.hasSubscribeAPIToDefaultUserApplication(api.getId(), username)) {
+			HasSubscriptionStatus subscriptionStatus = applicationService
+					.hasSubscribeAPIToDefaultUserApplication(api.getId(), username);
+			if (CollectionUtils.isEmpty(statusFilter) || statusFilter.contains(subscriptionStatus)) {
 				final var continueObject = mediaFunction.apply(api, username);
 				if (continueObject == null) {
 					return false;
@@ -100,15 +104,17 @@ public class APIManagerHelper {
 	 * @return true si le user a souscrit
 	 * @throws AppServiceException Erreur de récupération de l'api ou de la souscription
 	 */
-	public boolean userHasSubscribeToMetadataMedia(UUID globalId, UUID mediaId, UUID uuid) throws AppServiceException {
+	public HasSubscriptionStatus userHasSubscribeToMetadataMedia(UUID globalId, UUID mediaId, UUID uuid)
+			throws AppServiceException {
 		final String username = getUsernameToSubscribe(uuid);
 
 		try {
 			val apiInfo = getApiInfo(globalId, mediaId);
 			return applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), username);
 		} catch (APIManagerException e) {
-			throw new AppServiceException(
-					String.format("Erreur lors de la récupération de la souscription à l'api globalId = %s et mediaId = %s", globalId, mediaId), e);
+			throw new AppServiceException(String.format(
+					"Erreur lors de la récupération de la souscription à l'api globalId = %s et mediaId = %s", globalId,
+					mediaId), e);
 		}
 	}
 
@@ -128,7 +134,9 @@ public class APIManagerHelper {
 			apiList = apIsService.searchAPI(new APISearchCriteria().globalId(globalId).mediaUuid(mediaId));
 		} catch (APIManagerException e) {
 			throw new APIManagerException(
-					String.format("Erreur lors de la récupération des apis liées au global_id = %s et media_id = %s", globalId, mediaId), e);
+					String.format("Erreur lors de la récupération des apis liées au global_id = %s et media_id = %s",
+							globalId, mediaId),
+					e);
 		}
 
 		final var list = apiList.getList();
@@ -159,9 +167,10 @@ public class APIManagerHelper {
 		}
 
 		if (!metadataDetailsHelper.isRestricted(metadata)) {
-			log.warn("L'utilisateur connecté n'a pas souscrit au jeu de données {}, " +
-							"on utilise donc le login {} pour télécharger le média {}", metadata.getGlobalId(),
-					anonymousUsername, media.getMediaId());
+			log.warn(
+					"L'utilisateur connecté n'a pas souscrit au jeu de données {}, "
+							+ "on utilise donc le login {} pour télécharger le média {}",
+					metadata.getGlobalId(), anonymousUsername, media.getMediaId());
 			return anonymousUsername;
 		} else {
 			// le JDD est restreint et l'utilisateur connecté n'y a pas souscrit => il ne peut pas télécharger le média
@@ -178,7 +187,7 @@ public class APIManagerHelper {
 		final var apiInfo = getApiInfo(null, mediaId);
 		final var api = apIsService.getAPI(apiInfo.getId());
 		final var additionalProperties = api.getAdditionalProperties();
-		if (additionalProperties == null) {
+		if (MapUtils.isEmpty(additionalProperties)) {
 			throw new MissingAPIPropertiesException(apiInfo.getId());
 		}
 		final var globalIdProperty = additionalProperties.get(APISearchPropertyKey.GLOBAL_ID);
@@ -203,13 +212,13 @@ public class APIManagerHelper {
 		for (UUID organizationUuid : organizationUuids) {
 			Organization organization = organizationHelper.getOrganization(organizationUuid);
 			if (organization == null) {
-				throw new AppServiceException
-						("Une organisation devrait exister mais n'est pas récupérable, UUID : " + organizationUuid);
+				throw new AppServiceException(
+						"Une organisation devrait exister mais n'est pas récupérable, UUID : " + organizationUuid);
 			}
 			User organizationUser = aclHelper.getUserByLogin(organization.getUuid().toString());
 			if (organizationUser == null) {
-				throw new AppServiceException("l'user correspondant à l'organisation "
-						+ organizationUuid + " n'existe pas");
+				throw new AppServiceException(
+						"l'user correspondant à l'organisation " + organizationUuid + " n'existe pas");
 			}
 			if (projektHelper.hasAccessToDataset(organization.getUuid(), globalId)) {
 				ownersList.add(organizationUser);
@@ -257,7 +266,8 @@ public class APIManagerHelper {
 		boolean userHasSubscribed = false;
 
 		try {
-			userHasSubscribed = userHasSubscribeToMetadataMedia(globalId, mediaId, user.getUuid());
+			userHasSubscribed = !HasSubscriptionStatus.NOT_SUBSCRIBED
+					.equals(userHasSubscribeToMetadataMedia(globalId, mediaId, user.getUuid()));
 		} catch (AppServiceException e) {
 			log.error("Erreur lors de la vérification de la souscription de l'utilisateur " + user.getLogin()
 					+ " au média " + mediaId + " du JDD " + globalId, e);

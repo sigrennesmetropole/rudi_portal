@@ -43,7 +43,6 @@ import org.rudi.microservice.strukture.service.organization.impl.fields.UpdateOr
 import org.rudi.microservice.strukture.storage.dao.organization.OrganizationCustomDao;
 import org.rudi.microservice.strukture.storage.dao.organization.OrganizationDao;
 import org.rudi.microservice.strukture.storage.entity.organization.OrganizationEntity;
-import org.rudi.microservice.strukture.storage.entity.organization.OrganizationMemberEntity;
 import org.rudi.microservice.strukture.storage.entity.organization.OrganizationRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -56,8 +55,8 @@ import org.springframework.web.reactive.function.client.UnknownHttpStatusCodeExc
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
@@ -141,7 +140,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	@Transactional //(readOnly = false)
+	@Transactional // (readOnly = false)
 	public Organization createOrganization(Organization organization) throws AppServiceBadRequestException {
 		val entity = organizationMapper.dtoToEntity(organization);
 		for (final CreateOrganizationFieldProcessor processor : createOrganizationFieldProcessors) {
@@ -153,8 +152,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 				.createUser(this.createUser(organizationCreated.getUuid().toString(), organization.getPassword()));
 		// Add user to organization
 		OrganizationMember member = new OrganizationMember().userUuid(userCreated.getUuid())
-				.role(org.rudi.microservice.strukture.core.bean.OrganizationRole.EDITOR)
-				.addedDate(LocalDateTime.now());
+				.role(org.rudi.microservice.strukture.core.bean.OrganizationRole.EDITOR).addedDate(LocalDateTime.now());
 		organizationCreated.getMembers().add(organizationMemberMapper.dtoToEntity(member));
 		return organizationMapper.entityToDto(entity);
 	}
@@ -164,10 +162,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 		user.setLogin(uuidOrganization);
 		user.setPassword(password);
 		user.setType(UserType.ROBOT);
-		List<Role> roles = aclHelper.searchRoles()
-				.stream()
-				.filter(element -> defaultOrganizationRoles.contains(element.getCode()))
-				.collect(Collectors.toList());
+		List<Role> roles = aclHelper.searchRoles().stream()
+				.filter(element -> defaultOrganizationRoles.contains(element.getCode())).collect(Collectors.toList());
 		if (CollectionUtils.isNotEmpty(roles)) { // On part du principe que le rôle de chaque module a été créé via flyway
 			user.setRoles(roles);
 		}
@@ -175,7 +171,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	@Transactional //(readOnly = false)
+	@Transactional // (readOnly = false)
 	public void updateOrganization(Organization organization) throws AppServiceException {
 		val existingEntity = getOrganizationEntity(organization.getUuid());
 		for (final UpdateOrganizationFieldProcessor processor : updateOrganizationFieldProcessors) {
@@ -185,7 +181,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	@Transactional //(readOnly = false)
+	@Transactional // (readOnly = false)
 	public void deleteOrganization(UUID uuid) throws AppServiceNotFoundException {
 		val entity = getOrganizationEntity(uuid);
 		organizationDao.delete(entity);
@@ -202,17 +198,17 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public OrganizationMember addOrganizationMember(UUID organizationUuid, OrganizationMember organizationMember)
 			throws Exception {
 		// Verifier que l'utilisateur connecté a le droit d'agir
-		if (!(
-				utilContextHelper.hasRole(RoleCodes.ADMINISTRATOR) ||
-				utilContextHelper.hasRole(RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR) ||
-				utilContextHelper.hasRole(RoleCodes.MODULE_KALIM) ||
-				isConnectedUserOrganizationAdministrator(organizationUuid)
-				)) {
-			throw new UserIsNotOrganizationAdministratorException(String.format("L'utilisateur connecté n'est pas autorisé à agir sur l'organisation %s", organizationUuid));
+		if (!(utilContextHelper.hasRole(RoleCodes.ADMINISTRATOR)
+				|| utilContextHelper.hasRole(RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR)
+				|| utilContextHelper.hasRole(RoleCodes.MODULE_KALIM)
+				|| isConnectedUserOrganizationAdministrator(organizationUuid))) {
+			throw new UserIsNotOrganizationAdministratorException(String.format(
+					"L'utilisateur connecté n'est pas autorisé à agir sur l'organisation %s", organizationUuid));
 		}
 		val organizationEntity = getOrganizationEntity(organizationUuid);
 		// Verifier que le membre qu'on ajoute est user ACL
-		val correspondingUser = organizationMembersHelper.getUserByLoginOrByUuid(organizationMember.getLogin(), organizationMember.getUserUuid());
+		val correspondingUser = organizationMembersHelper.getUserByLoginOrByUuid(organizationMember.getLogin(),
+				organizationMember.getUserUuid());
 		organizationMember.setUserUuid(correspondingUser.getUuid()); // Utile si le DTO ne contenait que le login
 		val organizationMemberEntity = organizationMemberMapper.dtoToEntity(organizationMember);
 		organizationMemberEntity.setAddedDate(LocalDateTime.now());
@@ -238,11 +234,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	@Transactional(rollbackFor = { CannotRemoveLastAdministratorException.class, RuntimeException.class })
 	// readOnly = false
-	public void removeOrganizationMembers(UUID organizationUuid, UUID userUuid)
-			throws AppServiceException {
+	public void removeOrganizationMembers(UUID organizationUuid, UUID userUuid) throws AppServiceException {
 		// Vérification des droits pour l'utilisation de cette fonction
-		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid)
-				&& !utilContextHelper.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
+		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid) && !utilContextHelper
+				.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de manipuler cette organisation");
 		}
@@ -261,7 +256,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 					"Il n'est pas possible de supprimer le dernier administrateur (userUuid = %s) de l'organisation %s",
 					userUuid, organizationUuid));
 
-			throw new CannotRemoveLastAdministratorException("Il n'est pas possible de supprimer le dernier administrateur.");
+			throw new CannotRemoveLastAdministratorException(
+					"Il n'est pas possible de supprimer le dernier administrateur.");
 		}
 
 		// Permet d'attendre la suppression effective du user à l'organisation avant d'envoyer la notif à projekt
@@ -276,15 +272,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public Page<OrganizationUserMember> searchOrganizationMembers(OrganizationMembersSearchCriteria searchCriteria, Pageable pageable) throws AppServiceException {
+	public Page<OrganizationUserMember> searchOrganizationMembers(OrganizationMembersSearchCriteria searchCriteria,
+			Pageable pageable) throws AppServiceException {
 
 		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(searchCriteria.getOrganizationUuid())) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de chercher des membres pour cette organisation");
 		}
 
-		List<Pageable> partitions = organizationMembersPartitionerHelper
-				.getOrganizationMembersPartition(searchCriteria, MAX_AMOUNT_OF_ORGANIZATION_MEMBERS);
+		List<Pageable> partitions = organizationMembersPartitionerHelper.getOrganizationMembersPartition(searchCriteria,
+				MAX_AMOUNT_OF_ORGANIZATION_MEMBERS);
 
 		List<OrganizationUserMember> members = new ArrayList<>();
 		for (Pageable partition : partitions) {
@@ -301,9 +298,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	@Transactional
-	public OrganizationMember updateOrganizationMember(UUID organizationUuid, UUID userUuid, OrganizationMember organizationMember) throws AppServiceException {
+	public OrganizationMember updateOrganizationMember(UUID organizationUuid, UUID userUuid,
+			OrganizationMember organizationMember) throws AppServiceException {
 
-		//Vérifie que l'utilisateur connecté est bien administrateur de l'organisation
+		// Vérifie que l'utilisateur connecté est bien administrateur de l'organisation
 		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid)) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de chercher des membres pour cette organisation");
@@ -316,25 +314,29 @@ public class OrganizationServiceImpl implements OrganizationService {
 		var member = existingOrganization.getMembers().stream()
 				.filter(orgaMember -> orgaMember.getUserUuid().equals(userUuid)).findFirst().orElse(null);
 		if (member == null) {
-			throw new AppServiceBadRequestException("Les paramètres fournis ne permettent pas de réaliser une opération logique");
+			throw new AppServiceBadRequestException(
+					"Les paramètres fournis ne permettent pas de réaliser une opération logique");
 		}
 
 		// Vérifier la cohérence entre les paramètres passés.
-		if (!organizationUuid.equals(organizationMember.getUuid()) || !userUuid.equals(organizationMember.getUserUuid())) {
-			throw new AppServiceBadRequestException("Les paramètres fournis ne permettent pas de réaliser une opération logique");
+		if (!organizationUuid.equals(organizationMember.getUuid())
+				|| !userUuid.equals(organizationMember.getUserUuid())) {
+			throw new AppServiceBadRequestException(
+					"Les paramètres fournis ne permettent pas de réaliser une opération logique");
 		}
 
-		//Vérifier qu'on modifie bien le role.
+		// Vérifier qu'on modifie bien le role.
 		if (member.getRole().equals(organizationMember.getRole())) {
-			return organizationMemberMapper.entityToDto(member); //throw exception ?
+			return organizationMemberMapper.entityToDto(member); // throw exception ?
 		}
 
-		//Vérifier que l'on ne modifie pas le dernier administrateur.
+		// Vérifier que l'on ne modifie pas le dernier administrateur.
 		if (isLastAdministrator(existingOrganization, userUuid)) {
 			log.debug(String.format(
 					"Il n'est pas possible de modifier le dernier administrateur (userUuid = %s) de l'organisation %s en éditeur",
 					userUuid, organizationUuid));
-			throw new CannotRemoveLastAdministratorException("Il n'est pas possible de supprimer le dernier administrateur.");
+			throw new CannotRemoveLastAdministratorException(
+					"Il n'est pas possible de supprimer le dernier administrateur.");
 		}
 
 		organizationMemberMapper.dtoToEntity(organizationMember, member);
@@ -346,24 +348,27 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	private boolean isLastAdministrator(OrganizationEntity organization, UUID userUuid) {
-		val adminMembers = organization.getMembers().stream().filter(
-				orgaMember -> OrganizationRole.ADMINISTRATOR.equals(orgaMember.getRole())).collect(Collectors.toList());
+		val adminMembers = organization.getMembers().stream()
+				.filter(orgaMember -> OrganizationRole.ADMINISTRATOR.equals(orgaMember.getRole()))
+				.collect(Collectors.toList());
 		return adminMembers.size() == 1 && adminMembers.get(0).getUserUuid().equals(userUuid);
 	}
 
 	@Override
-	public void updateUserOrganizationPassword(UUID organizationUuid, PasswordUpdate passwordUpdate) throws AppServiceException {
+	public void updateUserOrganizationPassword(UUID organizationUuid, PasswordUpdate passwordUpdate)
+			throws AppServiceException {
 
 		// vérification que l'utilisateur connecté a bien le droit de faire ça
 		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid)) {
-			throw new AppServiceForbiddenException("L'utilisateur connecté n'a pas le droit de modifier le mot de passe.");
+			throw new AppServiceForbiddenException(
+					"L'utilisateur connecté n'a pas le droit de modifier le mot de passe.");
 		}
 
 		// Récupération de l'organisation
 		OrganizationEntity organization = organizationDao.findByUuid(organizationUuid);
 
 		// Modification du mot de passe de l'utilisateur robot (son login = UUID de l'organisation)
-		try{
+		try {
 			aclHelper.updateUserPassword(organization.getUuid().toString(), passwordUpdate.getOldPassword(),
 					passwordUpdate.getNewPassword());
 		} catch (UnknownHttpStatusCodeException e) {
@@ -374,17 +379,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 		// Récupération de tous les administrateurs de l'organisation pour leur envoyer un mail
 		List<User> userAdministrators = organizationHelper.searchUserAdministrators(organization.getUuid());
-		userOrganizationEmailHelper.sendUserOrganizationUpdatePasswordConfirmation(organization, userAdministrators, Locale.FRENCH);
+		userOrganizationEmailHelper.sendUserOrganizationUpdatePasswordConfirmation(organization, userAdministrators,
+				Locale.FRENCH);
 	}
 
 	private AppServiceException handleAclCustomError(UnknownHttpStatusCodeException e) {
 		if (e.getRawStatusCode() < 400 || e.getRawStatusCode() >= 500) {
-			return new AppServiceException("Un code d'erreur non géré dans strukture a été lancé par ACL lors de " +
-					"la modification du mot de passe de l'utilisateur d'organisation");
+			return new AppServiceException("Un code d'erreur non géré dans strukture a été lancé par ACL lors de "
+					+ "la modification du mot de passe de l'utilisateur d'organisation");
 		}
 
 		if (e.getRawStatusCode() == PASSWORD_LENGTH_ERROR_CODE) {
-			return new AppServiceBadRequestException("Le nouveau mot de passe ne respecte pas le nombre de caractères requis.");
+			return new AppServiceBadRequestException(
+					"Le nouveau mot de passe ne respecte pas le nombre de caractères requis.");
 		} else if (e.getRawStatusCode() == MISSING_FIELD_PASSWORD_CHANGE) {
 			return new AppServiceBadRequestException("Le nouveau mot de passe est absent.");
 		} else if (e.getRawStatusCode() == PASSWORD_NOT_SECURE_ENOUGH) {
@@ -392,12 +399,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 		} else if (e.getRawStatusCode() == INVALID_CREDENTIALS) {
 			return new AppServiceBadRequestException("L'ancien mot de passe saisi est incorrect.");
 		} else if (e.getRawStatusCode() == IDENTICAL_NEW_PASSWORD) {
-			return new AppServiceBadRequestException("Le nouveau mot de passe ne peut pas être identique à " +
-					"l'ancien mot de passe.");
+			return new AppServiceBadRequestException(
+					"Le nouveau mot de passe ne peut pas être identique à " + "l'ancien mot de passe.");
 		}
 
-		return new AppServiceException("Une erreur inconnue s'est produite " +
-				"lors de la modification du mot de passe de l'utilisateur d'organisation dans ACL", e);
+		return new AppServiceException("Une erreur inconnue s'est produite "
+				+ "lors de la modification du mot de passe de l'utilisateur d'organisation dans ACL", e);
 	}
 
 	private AppServiceException handleAclError(WebClientResponseException e) {
@@ -407,7 +414,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			return new AppServiceForbiddenException("Vous n'avez plus les droits pour effectuer cette action.");
 		}
 
-		return new AppServiceException("Une erreur s'est produite " +
-				"lors de la modification du mot de passe de l'utilisateur d'organisation dans ACL", e);
+		return new AppServiceException("Une erreur s'est produite "
+				+ "lors de la modification du mot de passe de l'utilisateur d'organisation dans ACL", e);
 	}
 }

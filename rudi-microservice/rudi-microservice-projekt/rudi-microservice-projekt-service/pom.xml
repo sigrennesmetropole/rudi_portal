@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-projekt</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-projekt-service</artifactId>
@@ -19,13 +19,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-projekt-storage</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-microservice-projekt-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -46,13 +44,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-generator-text</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-email</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -125,11 +121,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-kaccess</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rudi</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-apimremote</artifactId>
 		</dependency>
 

@@ -1,5 +1,14 @@
 package org.rudi.microservice.konsult.service.metadata;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,21 +42,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
-
 /**
  * Class de test de MetadataService
  */
 @KonsultSpringBootTest
-public class MetadataServiceIT {
+class MetadataServiceIT {
 
 	private static final JsonResourceReader JSON_RESOURCE_READER = new JsonResourceReader();
 	private static final UUID firstProducerUUID = UUID.fromString("acdccf43-566b-4134-b39e-ddf46c801242");
@@ -89,7 +88,7 @@ public class MetadataServiceIT {
 	}
 
 	@Test
-	public void testDownloadJddOuvert() throws AppServiceException, IOException, DataverseAPIException, APIManagerException {
+	void testDownloadJddOuvert() throws AppServiceException, IOException, DataverseAPIException, APIManagerException {
 
 		mockUserData(anonymousUsername);
 
@@ -98,20 +97,19 @@ public class MetadataServiceIT {
 
 		mockBuildAPIAccessUrls(jddOuvert);
 
-		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert), argThatAsSameMediaIdAs(media)))
-				.thenReturn(anonymousUsername);
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert),
+				argThatAsSameMediaIdAs(media))).thenReturn(anonymousUsername);
 
 		DocumentContent mediaTelechargeJdd = new DocumentContent("test", "mediaType", new File("null"));
 
-		when(applicationService.downloadAPIContent(eq(jddOuvert.getGlobalId()), eq(media.getMediaId()), anyString(), any()))
-				.thenReturn(mediaTelechargeJdd);
+		when(applicationService.downloadAPIContent(eq(jddOuvert.getGlobalId()), eq(media.getMediaId()), anyString(),
+				any())).thenReturn(mediaTelechargeJdd);
 
 		DocumentContent mediaTelechargeJddOuvert = metadataService.downloadMetadataMedia(jddOuvert.getGlobalId(),
 				media.getMediaId());
 
 		assertThat(mediaTelechargeJddOuvert).as("vérifier contenu ne soit pas vide").isNotNull();
-		assertThat(mediaTelechargeJddOuvert.getFileName()).as("vérifier nom fichier n'est pas vide")
-				.isNotBlank();
+		assertThat(mediaTelechargeJddOuvert.getFileName()).as("vérifier nom fichier n'est pas vide").isNotBlank();
 	}
 
 	private Metadata argThatAsSameGlobalIdAs(Metadata expectedMetadata) {
@@ -130,8 +128,8 @@ public class MetadataServiceIT {
 	}
 
 	@Test
-	public void testDownloadJddWhenMediaIsNotFile() throws DataverseAPIException,
-			IOException, AppServiceException, APIManagerException {
+	void testDownloadJddWhenMediaIsNotFile()
+			throws DataverseAPIException, IOException, AppServiceException, APIManagerException {
 
 		mockUserData(anonymousUsername);
 
@@ -140,18 +138,17 @@ public class MetadataServiceIT {
 
 		mockBuildAPIAccessUrls(jddOuvert);
 
-		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert), argThatAsSameMediaIdAs(media)))
-				.thenReturn(anonymousUsername);
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddOuvert),
+				argThatAsSameMediaIdAs(media))).thenReturn(anonymousUsername);
 
 		assertThatThrownBy(() -> metadataService.downloadMetadataMedia(jddOuvert.getGlobalId(), media.getMediaId()))
 				.isInstanceOf(AppServiceException.class)
-				.hasMessageStartingWith("Type de média %s non pris en charge",
-						media.getMediaType());
+				.hasMessageStartingWith("Type de média %s non pris en charge", media.getMediaType());
 	}
 
 	@Test
-	public void testDownloadJddRestreintWhenUserHasNoAccess() throws DataverseAPIException,
-			IOException, AppServiceException, APIManagerException {
+	void testDownloadJddRestreintWhenUserHasNoAccess()
+			throws DataverseAPIException, IOException, AppServiceException, APIManagerException {
 
 		mockUserData(anonymousUsername);
 
@@ -160,16 +157,16 @@ public class MetadataServiceIT {
 
 		mockBuildAPIAccessUrls(jddRestreint);
 
-		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint), argThatAsSameMediaIdAs(media)))
-				.thenThrow(AccessDeniedMetadataMediaException.class);
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint),
+				argThatAsSameMediaIdAs(media))).thenThrow(AccessDeniedMetadataMediaException.class);
 
 		assertThatThrownBy(() -> metadataService.downloadMetadataMedia(jddRestreint.getGlobalId(), media.getMediaId()))
 				.isInstanceOf(AccessDeniedMetadataMediaException.class);
 	}
 
 	@Test
-	public void testDownloadJddRestreintWhenUserHasAccess() throws APIManagerException, DataverseAPIException,
-			IOException, AppServiceException {
+	void testDownloadJddRestreintWhenUserHasAccess()
+			throws APIManagerException, DataverseAPIException, IOException, AppServiceException {
 
 		String username = "rudi";
 		mockUserData(username);
@@ -179,35 +176,34 @@ public class MetadataServiceIT {
 
 		mockBuildAPIAccessUrls(jddRestreint);
 
-		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint), argThatAsSameMediaIdAs(media)))
-				.thenReturn(username);
+		when(apiManagerHelper.getLoginAbleToDownloadMedia(argThatAsSameGlobalIdAs(jddRestreint),
+				argThatAsSameMediaIdAs(media))).thenReturn(username);
 
 		DocumentContent mediaTelechargeJdd = new DocumentContent("test", "mediaType", new File("null"));
 
-		when(applicationService.downloadAPIContent(eq(jddRestreint.getGlobalId()), eq(media.getMediaId()), anyString(), any()))
-				.thenReturn(mediaTelechargeJdd);
+		when(applicationService.downloadAPIContent(eq(jddRestreint.getGlobalId()), eq(media.getMediaId()), anyString(),
+				any())).thenReturn(mediaTelechargeJdd);
 
 		DocumentContent mediaTelechargeJddRestreint = metadataService.downloadMetadataMedia(jddRestreint.getGlobalId(),
 				media.getMediaId());
 
 		assertThat(mediaTelechargeJddRestreint).as("vérifier contenu ne soit pas vide").isNotNull();
-		assertThat(mediaTelechargeJddRestreint.getFileName()).as("vérifier nom fichier n'est pas vide")
-				.isNotBlank();
+		assertThat(mediaTelechargeJddRestreint.getFileName()).as("vérifier nom fichier n'est pas vide").isNotBlank();
 	}
 
 	@Test
-	public void testSearchMetadata_searchByProducerUUID() throws  DataverseAPIException, IOException {
+	void testSearchMetadata_searchByProducerUUID() throws DataverseAPIException, IOException {
 		String username = "rudi";
 		mockUserData(username);
 
-		//Bon producer UUID
+		// Bon producer UUID
 		final Metadata firstJddOuvert = creerJddOuvert(true);
 		final Metadata jddRestreint = creerJddRestreint();
 
-		//Mauvais producer UUID
+		// Mauvais producer UUID
 		final Metadata secondJddOuvert = creerJddOuvert(false);
 
-		List<Metadata> listOK = List.of(firstJddOuvert,jddRestreint);
+		List<Metadata> listOK = List.of(firstJddOuvert, jddRestreint);
 
 		DatasetSearchCriteria searchCriteria = new DatasetSearchCriteria().producerUuid(firstProducerUUID);
 		MetadataList metadataList = metadataService.searchMetadatas(searchCriteria);
@@ -215,10 +211,14 @@ public class MetadataServiceIT {
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas nulle").isNotNull();
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas vide").isNotEmpty();
 
-		assertThat(metadataList.getItems().containsAll(listOK)).as("Vérifier que la liste retournée contient bien les deux bons JDDs").isTrue();
-		assertThat(metadataList.getItems().size()).as("Vérifier que la liste retournée contient bien seulement les deux bon JDDs").isEqualTo(listOK.size());
+		assertThat(metadataList.getItems().containsAll(listOK))
+				.as("Vérifier que la liste retournée contient bien les deux bons JDDs").isTrue();
+		assertThat(metadataList.getItems().size())
+				.as("Vérifier que la liste retournée contient bien seulement les deux bon JDDs")
+				.isEqualTo(listOK.size());
 
-		assertThat(metadataList.getItems().contains(secondJddOuvert)).as("Vérifier que la liste ne contient pas le JDD ne correspondant pas au filtre.").isFalse();
+		assertThat(metadataList.getItems().contains(secondJddOuvert))
+				.as("Vérifier que la liste ne contient pas le JDD ne correspondant pas au filtre.").isFalse();
 
 		searchCriteria = new DatasetSearchCriteria().producerUuid(secondProducerUUID);
 		metadataList = metadataService.searchMetadatas(searchCriteria);
@@ -226,7 +226,8 @@ public class MetadataServiceIT {
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas nulle").isNotNull();
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas vide").isNotEmpty();
 
-		assertThat(metadataList.getItems().contains(secondJddOuvert) && metadataList.getItems().size() ==1).as("Vérifier que la liste ne contient bien qu'un seul JDD et le bon").isTrue();
+		assertThat(metadataList.getItems().contains(secondJddOuvert) && metadataList.getItems().size() == 1)
+				.as("Vérifier que la liste ne contient bien qu'un seul JDD et le bon").isTrue();
 	}
 
 	private void supprimerJdd(Metadata jddASupprimer) throws DataverseAPIException {

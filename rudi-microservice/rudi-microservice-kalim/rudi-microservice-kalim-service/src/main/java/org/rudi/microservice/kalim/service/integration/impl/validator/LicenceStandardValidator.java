@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.kaccess.bean.LicenceStandard;
 import org.rudi.facet.kaccess.constant.RudiMetadataField;
-import org.rudi.facet.kos.helper.KOSHelper;
+import org.rudi.facet.kos.helper.KosHelper;
 import org.rudi.microservice.kalim.service.IntegrationError;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class LicenceStandardValidator implements ElementValidator<LicenceStandard> {
 
-	private final KOSHelper kosHelper;
+	private final KosHelper kosHelper;
 
 	@Override
 	public Set<IntegrationRequestErrorEntity> validate(LicenceStandard licenceStandard) {

@@ -9,6 +9,7 @@ import org.rudi.facet.doks.exceptions.DocumentNotFoundException;
 import org.rudi.facet.doks.helper.DocumentContentHelper;
 import org.rudi.facet.doks.helper.DocumentMetadataHelper;
 import org.rudi.microservice.selfdata.facade.controller.api.AttachmentsApi;
+import org.rudi.microservice.selfdata.service.helper.selfdatainformationrequest.SelfdataInformationRequestHelper;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,11 +30,15 @@ public class AttachmentsController implements AttachmentsApi {
 	private final AttachmentAuthorizationPolicy authorizationPolicy;
 	private final ACLHelper aclHelper;
 	private final DocumentMetadataHelper documentMetadataHelper;
+	private final SelfdataInformationRequestHelper selfdataInformationRequestHelper;
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODERATOR + "," + USER + ")")
 	public ResponseEntity<UUID> uploadAttachment(MultipartFile file) throws Exception {
 		final var authenticatedUserUuid = aclHelper.getAuthenticatedUserUuid();
+		//Vérifie les types des atachements
+		selfdataInformationRequestHelper.checkMediaType(file.getContentType());
+
 		val documentContent = controllerHelper.documentContentFrom(file);
 		val uuid = documentContentHelper.createDocumentContent(documentContent, true, authenticatedUserUuid);
 		return controllerHelper.uploadResponseEntity(uuid);
@@ -57,4 +62,5 @@ public class AttachmentsController implements AttachmentsApi {
 	public ResponseEntity<DocumentMetadata> getAttachmentMetadata(UUID uuid) throws DocumentNotFoundException {
 		return ResponseEntity.ok(documentMetadataHelper.getDocumentMetadata(uuid));
 	}
+
 }

@@ -18,10 +18,6 @@ public class ProjektProperties {
 	private String serviceBaseUrl = "lb://RUDI-PROJEKT/projekt/v1/";
 
 	private String notificationsPath = "/notify/organization/{organizationUuid}/member/{userUuid}";
-	/**
-	 * URL de base de l'API projekt (cf basePath dans le fichier rudi-projekt-api.json)
-	 */
-	private String baseUrl = "lb://RUDI-PROJEKT/projekt/v1";
 
 	private String hasAccessToDatasetPath = "/owner-info/{ownerUuid}/dataset-access/{datasetUuid}";
 

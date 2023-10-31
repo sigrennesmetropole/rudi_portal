@@ -20,7 +20,9 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 		"org.rudi.facet.kos",
 		"org.rudi.facet.providers",
 		"org.rudi.microservice.kalim.service",
-		"org.rudi.microservice.kalim.storage" })
+		"org.rudi.microservice.kalim.storage",
+		"org.rudi.facet.organization"
+})
 public class SpringBootTestApplication {
 
 	@Bean

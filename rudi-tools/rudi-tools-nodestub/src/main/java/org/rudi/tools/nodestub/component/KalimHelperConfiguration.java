@@ -3,7 +3,9 @@
  */
 package org.rudi.tools.nodestub.component;
 
-import io.netty.resolver.DefaultAddressResolverGroup;
+import javax.net.ssl.SSLException;
+
+import org.rudi.common.core.webclient.HttpClientHelper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import reactor.netty.http.client.HttpClient;
 
 /**
@@ -32,6 +35,7 @@ import reactor.netty.http.client.HttpClient;
  *
  */
 @Configuration
+@RequiredArgsConstructor
 public class KalimHelperConfiguration {
 
 	public static final String REGISTRATION_ID = "node_module";
@@ -51,6 +55,8 @@ public class KalimHelperConfiguration {
 	@Getter
 	@Value("${module.oauth2.scope}")
 	private String[] scopes;
+
+	private final HttpClientHelper httpClientHelper;
 
 	@Bean
 	public ReactiveClientRegistrationRepository getRegistration() {
@@ -86,8 +92,9 @@ public class KalimHelperConfiguration {
 	}
 
 	@Bean(name = "node_oauth2_builder")
-	public WebClient.Builder webClientBuilder(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
-		HttpClient httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
+	public WebClient.Builder webClientBuilder(ReactiveOAuth2AuthorizedClientManager authorizedClientManager)
+			throws SSLException {
+		HttpClient httpClient = httpClientHelper.createReactorHttpClient(false, false, false);
 		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
 				authorizedClientManager);
 		oauthFilter.setDefaultClientRegistrationId(REGISTRATION_ID);

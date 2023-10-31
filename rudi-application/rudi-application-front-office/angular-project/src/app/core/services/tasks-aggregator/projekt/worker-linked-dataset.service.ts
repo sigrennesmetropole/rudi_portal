@@ -7,7 +7,8 @@ import {LinkedDataset} from '../../../../projekt/projekt-model';
 import {
     LinkedDatasetDependencies,
     LinkedDatasetTask,
-    LinkedDatasetTaskDependenciesService, LinkedDatasetTaskDependencyFetchers
+    LinkedDatasetTaskDependenciesService,
+    LinkedDatasetTaskDependencyFetchers
 } from '../../tasks/projekt/linked-dataset-task-dependencies.service';
 import {ProjektTaskSearchCriteria} from '../../tasks/projekt/projekt-task-search-criteria.interface';
 
@@ -24,7 +25,7 @@ export class WorkerLinkedDatasetService
 
     mapToRequestToStudy(task: Task, assetDescription: LinkedDataset, dependencies: LinkedDatasetDependencies): RequestToStudy {
         const requestToStudy = super.mapToRequestToStudy(task, assetDescription, dependencies);
-        requestToStudy.url = 'request-detail';
+        requestToStudy.url = 'request-task-detail';
         return requestToStudy;
     }
 }

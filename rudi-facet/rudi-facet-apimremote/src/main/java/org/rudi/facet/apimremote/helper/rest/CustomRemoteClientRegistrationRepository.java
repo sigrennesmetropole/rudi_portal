@@ -20,11 +20,13 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "apimanager.oauth2.client.registration.internal", havingValue = "false")
+@Slf4j
 public class CustomRemoteClientRegistrationRepository implements RudiClientRegistrationRepository {
 
 	private final ACLHelper aclHelper;
@@ -73,11 +75,7 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	public Mono<ClientRegistration> findByRegistrationId(String registrationId) {
 		val registration = aclHelper.getClientRegistrationByLogin(registrationId);
 		if (registration == null) {
-			try {
-				throw new GetClientRegistrationException(registrationId, new NullPointerException());
-			} catch (GetClientRegistrationException e) {
-				e.printStackTrace();
-			}
+			log.warn("RegistrationId non trouvé pour le login {}", registrationId);
 		}
 		return Mono.justOrEmpty(convertToEntity(registration));
 	}
@@ -89,6 +87,9 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	 * @return
 	 */
 	private ClientRegistration convertToEntity(ClientRegistrationDto registrationDto) {
+		if (registrationDto == null) {
+			return null;
+		}
 		val builder = ClientRegistration.withRegistrationId(registrationDto.getRegistrationId())
 				.clientId(registrationDto.getClientId()).clientSecret(registrationDto.getClientSecret())
 				.clientName(registrationDto.getClientName()).scope(registrationDto.getScopes())
@@ -125,9 +126,11 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 		ClientAuthenticationMethod authenticationMethod;
 		switch (registrationDto.getClientAuthenticationMethod().getValue()) {
 		case BASIC:
+		case CLIENT_SECRET_BASIC:
 			authenticationMethod = ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
 			break;
 		case POST:
+		case CLIENT_SECRET_POST:
 			authenticationMethod = ClientAuthenticationMethod.CLIENT_SECRET_POST;
 			break;
 		default:

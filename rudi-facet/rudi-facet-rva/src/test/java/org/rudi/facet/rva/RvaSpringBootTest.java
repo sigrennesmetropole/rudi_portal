@@ -17,6 +17,6 @@ import org.springframework.test.context.TestPropertySource;
 @Inherited
 @SpringBootTest
 @TestPropertySource(properties = "spring.config.name = facetrva")
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = { "test", "${spring.profiles.test:test-env" })
 public @interface RvaSpringBootTest {
 }

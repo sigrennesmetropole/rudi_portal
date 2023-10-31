@@ -3,8 +3,7 @@
     <div class="card-description-keyword">
         <app-loader [active]="loading" [allPage]="false" [noText]="true" [isLight]="true"></app-loader>
         <mat-card class="project-card project-card-description" *ngIf="!loading">
-            <app-project-main-informations [project]="dependencies.project"
-                                           [isProject]="true"></app-project-main-informations>
+            <app-project-main-informations [project]="dependencies.project"></app-project-main-informations>
             <!-- Tableau des autres demandes -->
             <app-acces-details-table1
                 [otherIndicators]="dependencies?.otherIndicators"

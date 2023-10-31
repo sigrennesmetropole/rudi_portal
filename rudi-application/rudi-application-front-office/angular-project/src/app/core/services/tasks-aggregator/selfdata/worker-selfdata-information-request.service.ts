@@ -6,7 +6,9 @@ import {WorkerService} from '../worker.service';
 import {SelfdataInformationRequest} from '../../../../selfdata/selfdata-model';
 import {
     SelfdataInformationRequestDependencies,
-    SelfdataInformationRequestTask, SelfdataInformationRequestTaskDependenciesService, SelfdataInformationRequestTaskDependencyFetchers
+    SelfdataInformationRequestTask,
+    SelfdataInformationRequestTaskDependenciesService,
+    SelfdataInformationRequestTaskDependencyFetchers
 } from '../../tasks/selfdata/selfdata-information-request-task-dependencies.service';
 import {SelfdataTaskSearchCriteria} from '../../tasks/selfdata/selfdata-task-search-criteria.interface';
 
@@ -26,7 +28,7 @@ export class WorkerSelfdataInformationRequestService
     mapToRequestToStudy(task: Task, assetDescription: SelfdataInformationRequest, dependencies: SelfdataInformationRequestDependencies)
         : RequestToStudy {
         const requestToStudy = super.mapToRequestToStudy(task, assetDescription, dependencies);
-        requestToStudy.url = 'selfdata-information-request-detail';
+        requestToStudy.url = 'selfdata-information-request-task-detail';
         return requestToStudy;
     }
 }

@@ -6,6 +6,7 @@ import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public abstract class BearerTokenFilter extends OncePerRequestFilter {
 
 	private static final int INVALID_TOKEN_STATUS = HttpServletResponse.SC_UNAUTHORIZED;
 	private final UtilContextHelper utilContextHelper;
+	protected final RestTemplate oAuth2RestTemplate;
 
 	/**
 	 * <b>Avant d'utiliser cette méthode, il faut être sûr de l'ordre des filtres configuré dans la classe WebSecurityConfig du microservice</b>

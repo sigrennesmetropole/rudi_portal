@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Filtre pour les tokens JWT
@@ -59,15 +60,16 @@ public class JwtRequestFilter extends BearerTokenFilter {
 
 	private String logoutUrl;
 
-	public JwtRequestFilter(final String[] excludeUrlPatterns, final UtilContextHelper utilContextHelper) {
-		super(utilContextHelper);
+	public JwtRequestFilter(final String[] excludeUrlPatterns,
+			final UtilContextHelper utilContextHelper, final RestTemplate oAuth2RestTemplate) {
+		super(utilContextHelper, oAuth2RestTemplate);
 		this.excludeUrlPatterns = Arrays.asList(excludeUrlPatterns);
 		pathMatcher = new AntPathMatcher();
 	}
 
 	public JwtRequestFilter(final String[] excludeUrlPatterns, final String logoutUrl,
-			final UtilContextHelper utilContextHelper) {
-		super(utilContextHelper);
+			final UtilContextHelper utilContextHelper, final RestTemplate oAuth2RestTemplate) {
+		super(utilContextHelper, oAuth2RestTemplate);
 		this.excludeUrlPatterns = Arrays.asList(excludeUrlPatterns);
 		pathMatcher = new AntPathMatcher();
 		this.logoutUrl = logoutUrl;

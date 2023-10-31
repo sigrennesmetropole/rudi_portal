@@ -6,7 +6,7 @@
 		"title": "rudi-projekt-api",
 		"termsOfService": "https://swagger.io/terms/",
 		"contact": {
-			"email": "ca.marchand@rennesmetropole.fr"
+			"email": "rudi@datarennes.fr"
 		},
 		"license": {
 			"name": "Apache 2.0",
@@ -92,6 +92,7 @@
 				"enum": [
 					"DRAFT",
 					"IN_PROGRESS",
+					"REJECTED",
 					"VALIDATED",
 					"CANCELLED",
 					"DISENGAGED"
@@ -234,6 +235,9 @@
 								"description": "true si le projet est en fait une réutilisation",
 								"type": "boolean",
 								"readOnly": true
+							},
+							"reutilisation_status": {
+								"$ref": "#/components/schemas/ReutilisationStatus"
 							}
 						}
 					}
@@ -540,7 +544,7 @@
 								"description": "Vérifie que la date de fin de la demande est expirée",
 								"type": "boolean"
 							},
-							"dataset_confidentiality": {
+							"datasetConfidentiality": {
 								"description": "Cherche les linked dataset en lien avec avec des jdd d'une confidentialité donnée",
 								"type": "string"
 							}
@@ -1060,6 +1064,51 @@
 						}
 					}
 				}
+			},
+			"ReutilisationStatus": {
+				"description": "Statut de réutilisation",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					},
+					{
+						"properties": {
+							"dataset_set_modification_allowed": {
+								"type": "boolean"
+							}
+						}
+					}
+				]
+			},
+			"PagedReutilisationStatusList": {
+				"description": "Liste paginée de statuts de réutilisation",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Types de projet de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/ReutilisationStatus"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ReutilisationStatusSearchCriteria": {
+				"description": "Critère de recherche d'un statut de réutilisation",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SearchCriteria"
+					}
+				]
 			}
 		}
 	}

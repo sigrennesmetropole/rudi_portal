@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsent</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsent-facade</artifactId>
@@ -239,7 +239,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.xml</exclude>
-						<exclude>**/konsent-dev.properties</exclude>
+						<exclude>**/konsent-dev*.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -265,6 +265,10 @@
 			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 
 		</plugins>
@@ -306,6 +310,36 @@
 										<copy file="target/${project.artifactId}.jar"
 												todir="${project.basedir}/../../../docker/konsent"
 												overwrite="true"/>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>https</id>
+			<properties>
+				<spring.profiles.active>devs</spring.profiles.active>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-https-jks</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<echo>ANT TASK - copying https jks....</echo>
+										<copy file="${project.basedir}/../../../ansible/keystore/dev/rudi-https-certificate.jks"
+												todir="${project.basedir}/src/main/resources/keystore" overwrite="true"/>
 									</target>
 								</configuration>
 							</execution>

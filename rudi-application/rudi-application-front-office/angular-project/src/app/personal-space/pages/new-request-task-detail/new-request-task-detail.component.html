@@ -1,0 +1,40 @@
+<app-page>
+    <!-- Header --->
+    <app-task-detail-header [headingLoading]="headingLoading"
+                               [pageSubTitle]="dependencies?.datasetTitle"
+                               [pageTitle]="'personalSpace.project.details.new-data' | translate"
+                               [status]="dependencies?.taskStatus"
+                               [icon]="'nouvelles_donnees_definition_key'"
+    ></app-task-detail-header>
+
+    <!--Onglets-->
+    <app-tabs *ngIf="task">
+        <app-tab [label]="'personalSpace.requestDetail.tabs.demand' | translate" [icon]="'key_icon_circle'">
+            <ng-template>
+                <app-task-detail [isNewRequest]="true"></app-task-detail>
+            </ng-template>
+        </app-tab>
+        <app-tab [label]="'personalSpace.requestDetail.tabs.project' | translate" [icon]="'projet'">
+            <ng-template>
+                <app-project-detail [isNewRequest]="true"></app-project-detail>
+            </ng-template>
+        </app-tab>
+        <app-tab [label]="'personalSpace.requestDetail.tabs.history' | translate" [icon]="'historique'">
+            <ng-template>
+                <app-linked-dataset-history></app-linked-dataset-history>
+            </ng-template>
+        </app-tab>
+        <app-banner-button *ngFor="let action of actions"
+                           (click)="openPopinForAction(action)">{{action.label}}</app-banner-button>
+        <ng-container appTabsLayout>
+            <div class="detail-wrapper">
+                <div class="onglet-wrapper">
+                    <ng-container appTabContent></ng-container>
+                </div>
+                <div class="project-owner-wrapper">
+                    <app-project-owner-detail [isNewRequest]="true"></app-project-owner-detail>
+                </div>
+            </div>
+        </ng-container>
+    </app-tabs>
+</app-page>

@@ -5,7 +5,7 @@ info:
   title: rudi-template-api
   termsOfService: 'http://swagger.io/terms/'
   contact:
-    email: ca.marchand@rennesmetropole.fr
+    email: rudi@datarennes.fr
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'

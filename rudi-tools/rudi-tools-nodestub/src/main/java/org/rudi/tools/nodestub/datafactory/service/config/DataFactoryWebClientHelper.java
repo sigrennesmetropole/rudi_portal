@@ -2,7 +2,7 @@ package org.rudi.tools.nodestub.datafactory.service.config;
 
 import javax.net.ssl.SSLException;
 
-import io.netty.resolver.DefaultAddressResolverGroup;
+import org.rudi.common.core.webclient.HttpClientHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -18,10 +18,7 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.RequiredArgsConstructor;
-import reactor.netty.http.client.HttpClient;
 
 @Component
 @RequiredArgsConstructor
@@ -31,16 +28,15 @@ public class DataFactoryWebClientHelper {
 
 	private final DataFactoryClientRegistrationRepository customClientRegistrationRepository;
 
+	private final HttpClientHelper httpClientHelper;
+
 	@Bean
 	WebClient.Builder dataDactoryWebClientBuilder(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder)
 			throws SSLException {
 		ReactiveOAuth2AuthorizedClientService reactiveOAuth2AuthorizedClientService = new InMemoryReactiveOAuth2AuthorizedClientService(
 				customClientRegistrationRepository);
 
-		final var sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-		final var httpClient = HttpClient.create()
-				.resolver(DefaultAddressResolverGroup.INSTANCE)
-				.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+		final var httpClient = httpClientHelper.createReactorHttpClient(true, false, false);
 
 		final var clientCredentialsReactiveOAuth2AuthorizedClientProvider = new ClientCredentialsReactiveOAuth2AuthorizedClientProvider();
 		final var webClientReactiveClientCredentialsTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();

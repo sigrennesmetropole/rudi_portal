@@ -22,9 +22,10 @@ import {RedirectService} from '../../../core/services/redirect.service';
 import {CloseEvent, DialogClosedData} from '../../../data-set/models/dialog-closed-data';
 import {AuthenticationService} from '../../../core/services/authentication.service';
 import {AccessStatusFiltersType} from '../../../core/services/filters/access-status-filters-type';
+import {ReutilisationStatus} from '../../../projekt/projekt-api';
 
 @Component({
-    selector: 'app-submission-project',
+    selector: 'app-submission-reuse',
     templateUrl: './submission-project.component.html',
     styleUrls: ['./submission-project.component.scss']
 })
@@ -42,6 +43,8 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
     user: User;
 
     private confidentialities: Confidentiality[];
+
+    public reuseStatus: ReutilisationStatus[];
 
     /**
      * L'image du projet qui a été sauvegardée, pour savoir si une mise à jour a eu lieu
@@ -93,6 +96,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
                 this.projectType = dependencies.projectTypes;
                 this.supports = dependencies.supports;
                 this.user = dependencies.user;
+                this.reuseStatus = dependencies.reuseStatus;
                 if (this.user) {
                     this.step2FormGroup.setValue({
                         ownerType: OwnerType.User,
@@ -254,6 +258,9 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
             ),
             this.projectSubmissionService.searchConfidentiality(
                 this.step1FormGroup.get('confidentiality').value, this.confidentialities
+            ),
+            this.projectSubmissionService.findCorrespondingReutilisationStatus(
+                this.step1FormGroup.get('reuse_status').value.code, this.reuseStatus
             )
         );
     }
@@ -285,7 +292,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
             image = this.step1FormGroup.get('image').value.file;
         }
 
-        // Si projet existant on mets à jour
+        // Si projet existant on met à jour
         if (this.createdProject) {
             this.updateProjectFromForm();
             this.isLoading = true;
@@ -370,20 +377,9 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
             createOrUpdate = this.projectSubmissionService.updateProject(this.createdProject, this.linkedDatasets, this.datasetRequests,
                 this.mapRequestDetailsByDatasetUuid, image, this.updateImageAction);
         }
-        // Sinon on créé le projet en + des liens
+        // Sinon on crée le projet en + des liens
         else {
-            const project: Project = this.projectSubmissionService.projectFormGroupToProject(
-                this.step1FormGroup,
-                this.step2FormGroup,
-                this.user,
-                this.projectSubmissionService.searchProjectType(
-                    this.step1FormGroup.get('type').value,
-                    this.projectType
-                ),
-                this.projectSubmissionService.searchConfidentiality(
-                    this.step1FormGroup.get('confidentiality').value, this.confidentialities
-                )
-            );
+            const project: Project = this.createProjectFromForm();
             createOrUpdate = this.projectSubmissionService.createProject(project, this.linkedDatasets, this.datasetRequests,
                 image, this.mapRequestDetailsByDatasetUuid).pipe(
                 tap(created => this.createdProject = created)

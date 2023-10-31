@@ -33,12 +33,12 @@
 }
 
 .table-header {
-    font-family: OpenSans;
+    text-align: center;
     font-size: 13px;
     font-weight: 600;
     color: $primary-text;
     //overide the mat table margin css
-    padding: 0px !important
+    padding: 0 !important
 }
 
 .table-header:first-child {
@@ -64,11 +64,6 @@
     width: 50%;
 }
 
-.table-header:nth-last-child(2){
-    display: flex;
-    justify-content: center;
-    height: inherit;
-}
 
 .add-link-button {
     width: 150px;

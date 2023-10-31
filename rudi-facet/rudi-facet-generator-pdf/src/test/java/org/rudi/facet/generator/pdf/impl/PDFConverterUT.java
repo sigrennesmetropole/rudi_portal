@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.generator.model.GenerationFormat;
 import org.rudi.facet.generator.pdf.PDFConvertor;
-import org.rudi.facet.generator.pdf.StarterSpringBootTestApplication;
+import org.rudi.facet.generator.pdf.SpringBootTestApplication;
 import org.rudi.facet.generator.pdf.model.ValidationResult;
 import org.rudi.facet.generator.pdf.model.ValidationResultItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { StarterSpringBootTestApplication.class })
+@SpringBootTest(classes = { SpringBootTestApplication.class })
 class PDFConverterUT {
 
 	@Autowired

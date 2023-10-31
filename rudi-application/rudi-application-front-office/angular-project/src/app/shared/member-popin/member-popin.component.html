@@ -22,8 +22,8 @@
         <div
             class="description1">{{organizationMemberDialogData.fieldRoleDescription}}</div>
         <div>
-            <mat-form-field>
-                <mat-select [(value)]="role" class="mat-form-input" disableOptionCentering>
+            <mat-form-field  appearance="outline">
+                <mat-select [(value)]="role">
                     <mat-option *ngFor="let role of roles" [value]="role">
                         {{computeRoleLabel(role)}}
                     </mat-option>

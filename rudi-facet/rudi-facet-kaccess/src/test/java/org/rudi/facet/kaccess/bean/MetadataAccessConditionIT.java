@@ -12,10 +12,10 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
+import org.rudi.common.core.validator.URI;
 
 class MetadataAccessConditionIT {
 
@@ -75,12 +75,9 @@ class MetadataAccessConditionIT {
 		final MetadataAccessCondition metadataAccessCondition = jsonResourceReader
 				.read("metadata/accessCondition/invalid_custom_licence_uri.json", MetadataAccessCondition.class);
 		Set<ConstraintViolation<MetadataAccessCondition>> violations = validator.validate(metadataAccessCondition);
-		assertTrue(violations.stream()
-				.anyMatch(violation -> violation.getPropertyPath() instanceof PathImpl
-						&& ((PathImpl) (violation.getPropertyPath())).getLeafNode().asString()
-								.equals("customLicenceUri") // vérification que l'erreur concerne bien l'attribut customLicenceUri
-						&& violation.getConstraintDescriptor().getAnnotation().annotationType()
-								.isAssignableFrom(org.hibernate.validator.constraints.URL.class))); // vérification que l'erreur est du à la validation @URL
+		assertTrue(violations.stream().anyMatch(violation -> violation.getPropertyPath() instanceof PathImpl
+				&& ((PathImpl) (violation.getPropertyPath())).getLeafNode().asString().equals("customLicenceUri") // vérification que l'erreur concerne bien l'attribut customLicenceUri
+				&& violation.getConstraintDescriptor().getAnnotation().annotationType().isAssignableFrom(URI.class))); // vérification que l'erreur est du à la validation @URL
 	}
 
 }

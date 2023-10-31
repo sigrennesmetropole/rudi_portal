@@ -13,9 +13,13 @@ import java.text.ParseException;
  */
 @Getter
 public class ApplicationAlreadyExistException extends APIManagerHttpException {
+
+	private static final long serialVersionUID = 1L;
+	
 	private static final HttpStatus STATUS_CODE = HttpStatus.BAD_REQUEST;
-	private static final String ERROR = "invalid_client_metadata";
+	
 	private static final MessageFormat ERROR_DESCRIPTION_FORMAT = new MessageFormat("Application with the name {0} already exist in the system");
+	
 	private final String clientName;
 
 	private ApplicationAlreadyExistException(String originalErrorBody, String clientName) {

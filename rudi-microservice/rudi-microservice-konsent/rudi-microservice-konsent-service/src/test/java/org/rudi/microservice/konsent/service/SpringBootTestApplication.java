@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Classe application pour les tests unitaires de la couche service
  */
 @SpringBootApplication(scanBasePackages = {
-		"org.rudi.common.core.json",
+		"org.rudi.common.core",
 		"org.rudi.common.facade",
 		"org.rudi.common.service",
 		"org.rudi.common.storage",

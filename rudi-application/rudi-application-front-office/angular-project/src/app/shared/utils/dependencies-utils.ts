@@ -9,7 +9,7 @@ export interface DependencyFetcher<I, V> {
 
     /**
      * Est-ce que la dépendance a ce qu'il faut en input pour se charger ?
-     * @param input les données ent entrées nécessaires pour charger la dépendance
+     * @param input les données en entrées nécessaires pour charger la dépendance
      */
     hasPrerequisites(input: I): boolean;
 

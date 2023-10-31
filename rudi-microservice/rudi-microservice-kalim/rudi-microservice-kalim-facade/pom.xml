@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-kalim</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-kalim-facade</artifactId>
@@ -195,6 +195,9 @@
 					</delimiters>
 					<useDefaultDelimiters>false</useDefaultDelimiters>
 					<encoding>${project.build.sourceEncoding}</encoding>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>jks</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
 				</configuration>
 			</plugin>
 
@@ -204,7 +207,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/log4j2.xml</exclude>
-						<exclude>**/kalim-dev.properties</exclude>
+						<exclude>**/kalim-dev*.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -234,6 +237,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 
 		</plugins>
@@ -274,6 +281,36 @@
 										<echo>ANT TASK - copying kalim jar file....</echo>
 										<copy file="target/${project.artifactId}.jar"
 												todir="${project.basedir}/../../../docker/kalim" overwrite="true"/>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>https</id>
+			<properties>
+				<spring.profiles.active>devs</spring.profiles.active>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-https-jks</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<echo>ANT TASK - copying https jks....</echo>
+										<copy file="${project.basedir}/../../../ansible/keystore/dev/rudi-https-certificate.jks"
+												todir="${project.basedir}/src/main/resources/keystore" overwrite="true"/>
 									</target>
 								</configuration>
 							</execution>

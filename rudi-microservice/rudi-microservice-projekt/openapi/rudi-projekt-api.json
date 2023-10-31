@@ -6,7 +6,7 @@
 		"title": "rudi-projekt-api",
 		"termsOfService": "https://swagger.io/terms/",
 		"contact": {
-			"email": "ca.marchand@rennesmetropole.fr"
+			"email": "rudi@datarennes.fr"
 		},
 		"license": {
 			"name": "Apache 2.0",
@@ -1934,7 +1934,7 @@
 				}
 			}
 		},
-		"/projects/{projectUuid}/numberOfDataset": {
+		"/projects/{projectUuid}/number-of-datasets": {
 			"get": {
 				"tags": [
 					"projekt"
@@ -1971,6 +1971,40 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{projectUuid}/is-owner": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Détermine si l'utilisateur connecté est owner du projet ou non",
+				"description": "Retourne true si l'utilisateur connecté est owner du projet, false sinon.",
+				"operationId": "isAuthenticatedUserProjectOwner",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Renvoie true si l'utilisateur connecté est owner du projet, false sinon.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
 								}
 							}
 						}
@@ -4572,6 +4606,195 @@
 					},
 					"503": {
 						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/reutilisation-status": {
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Crée un statut de réutilisation",
+				"description": "Crée un statut de réutilisation",
+				"operationId": "createReutilisationStatus",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/ReutilisationStatus"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Staut de réutilisation créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/ReutilisationStatus"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Recherche de statut de réutilisation",
+				"description": "Recherche de statut de réutilisation",
+				"operationId": "searchReutilisationStatus",
+				"parameters": [
+					{
+						"name": "criteria",
+						"in": "query",
+						"description": "critères de recherches",
+						"required": true,
+						"schema": {
+							"$ref": "./rudi-projekt-model.json#/components/schemas/ReutilisationStatusSearchCriteria"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/PagedReutilisationStatusList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/reutilisation-status/{uuid}": {
+			"put": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Modifie un status de réutilisation",
+				"description": "Modifie un status de réutilisation",
+				"operationId": "updateReutilisationStatus",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/ReutilisationStatus"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Statut de réutilisation modifié avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/ReutilisationStatus"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Récupère un status de réutilisation donné",
+				"description": "Récupère un status de réutilisation donné via son UUID",
+				"operationId": "getReutilisationStatus",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/ReutilisationStatus"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}

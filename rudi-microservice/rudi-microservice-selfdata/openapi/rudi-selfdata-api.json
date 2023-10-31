@@ -6,7 +6,7 @@
 		"title": "rudi-selfdata-api",
 		"termsOfService": "https://swagger.io/terms/",
 		"contact": {
-			"email": "ca.marchand@rennesmetropole.fr"
+			"email": "rudi@datarennes.fr"
 		},
 		"license": {
 			"name": "Apache 2.0",
@@ -1243,6 +1243,31 @@
 							"application/json": {
 								"schema": {
 									"$ref": "rudi-selfdata-model.json#/components/schemas/FrontOfficeProperties"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/properties/allowed-attachements-types": {
+			"get": {
+				"tags": [
+					"selfdata"
+				],
+				"summary": "Propriété permettant d'obtenir les types d'attachments autorisés",
+				"description": "Toutes les extensiosns d'attachement autorisés",
+				"operationId": "getAllowedAttachementTypes",
+				"responses": {
+					"200": {
+						"description": "Propriétés au format JSON.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-selfdata-model.json#/components/schemas/SelfdataRequestAllowedAttachementTypes"
 								}
 							}
 						}

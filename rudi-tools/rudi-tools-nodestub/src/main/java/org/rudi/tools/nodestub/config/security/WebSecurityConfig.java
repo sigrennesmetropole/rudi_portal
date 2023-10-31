@@ -19,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,6 +42,7 @@ public class WebSecurityConfig {
 	private boolean disableAuthentification = false;
 
 	private final UtilContextHelper utilContextHelper;
+	private final RestTemplate oAuth2RestTemplate;
 	private final NodestubJwtTokenUtil nodestubJwtTokenUtil;
 
 	@Bean
@@ -81,11 +83,11 @@ public class WebSecurityConfig {
 
 	@Bean
 	public JwtRequestFilter createJwtRequestFilter() {
-		return new NodestubJwtRequestFilter(SB_PERMIT_ALL_URL, utilContextHelper, nodestubJwtTokenUtil);
+		return new NodestubJwtRequestFilter(SB_PERMIT_ALL_URL, utilContextHelper, nodestubJwtTokenUtil, oAuth2RestTemplate);
 	}
 
 	private Filter createOAuth2Filter() {
-		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri, utilContextHelper);
+		return new OAuth2RequestFilter(SB_PERMIT_ALL_URL, checkTokenUri, utilContextHelper, oAuth2RestTemplate);
 	}
 
 	private Filter createPreAuthenticationFilter() {

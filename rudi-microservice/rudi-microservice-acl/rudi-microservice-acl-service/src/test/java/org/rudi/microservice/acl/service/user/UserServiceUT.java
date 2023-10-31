@@ -1,5 +1,13 @@
 package org.rudi.microservice.acl.service.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -9,7 +17,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AddressRole;
@@ -25,6 +32,9 @@ import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.core.bean.UserType;
 import org.rudi.microservice.acl.service.AclSpringBootTest;
 import org.rudi.microservice.acl.service.address.AddressRoleService;
+import org.rudi.microservice.acl.service.password.IdenticalNewPasswordException;
+import org.rudi.microservice.acl.service.password.InvalidCredentialsException;
+import org.rudi.microservice.acl.service.password.PasswordLengthException;
 import org.rudi.microservice.acl.service.role.RoleService;
 import org.rudi.microservice.acl.storage.dao.address.AbstractAddressDao;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleDao;
@@ -36,13 +46,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import lombok.val;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * Class de test de la couche service de user
@@ -535,9 +538,8 @@ class UserServiceUT {
 		passwordUpdate.setNewPassword(newPassword);
 		passwordUpdate.setOldPassword("rudi@132");
 
-		assertThrows(AppServiceBadRequestException.class, ()->
-				userService.updateUserPassword(user.getLogin(), passwordUpdate)
-		);
+		assertThrows(InvalidCredentialsException.class,
+				() -> userService.updateUserPassword(user.getLogin(), passwordUpdate));
 	}
 
 	@Test
@@ -552,9 +554,8 @@ class UserServiceUT {
 		passwordUpdate.setNewPassword(password);
 		passwordUpdate.setOldPassword(password);
 
-		assertThrows(AppServiceBadRequestException.class, ()->
-				userService.updateUserPassword(user.getLogin(), passwordUpdate)
-		);
+		assertThrows(IdenticalNewPasswordException.class,
+				() -> userService.updateUserPassword(user.getLogin(), passwordUpdate));
 	}
 
 	@Test
@@ -570,9 +571,7 @@ class UserServiceUT {
 		passwordUpdate.setNewPassword(newPassword);
 		passwordUpdate.setOldPassword(password);
 
-		assertThrows(AppServiceBadRequestException.class, ()->
-				userService.updateUserPassword(null, passwordUpdate)
-		);
+		assertThrows(InvalidCredentialsException.class, () -> userService.updateUserPassword(null, passwordUpdate));
 	}
 
 	@Test
@@ -581,15 +580,14 @@ class UserServiceUT {
 		AuthenticatedUser authorizedUser = new AuthenticatedUser();
 		when(mockedUtilContextHelper.getAuthenticatedUser()).thenReturn(authorizedUser);
 
-		initUserEntityCitoyen();
+		val user = initUserEntityCitoyen();
 
 		String newPassword = "Hello";
 		val passwordUpdate = new PasswordUpdate();
 		passwordUpdate.setNewPassword(newPassword);
 		passwordUpdate.setOldPassword(password);
 
-		assertThrows(AppServiceBadRequestException.class, ()->
-				userService.updateUserPassword(null, passwordUpdate)
-		);
+		assertThrows(PasswordLengthException.class,
+				() -> userService.updateUserPassword(user.getLogin(), passwordUpdate));
 	}
 }

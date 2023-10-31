@@ -1,0 +1,11 @@
+{
+	"help": "Vous vous apprêtez à refuser la demande de publication de la réutilisation. Merci d’indiquer ci-dessous la raison du refus. Le porteur de projet pourra corriger sa demande et la soumettre à nouveau.",
+	"fieldDefinitions": [
+		{
+			"name": "messageToProjectOwner",
+			"label": "Message à l’attention du porteur de projet",
+			"type": "TEXT",
+			"required": true
+		}
+	]
+}

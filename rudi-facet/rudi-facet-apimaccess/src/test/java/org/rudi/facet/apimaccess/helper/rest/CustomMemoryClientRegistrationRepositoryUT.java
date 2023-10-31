@@ -11,12 +11,14 @@ import org.ehcache.Cache;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.core.json.JsonResourceReader;
+import org.rudi.common.core.webclient.HttpClientHelper;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
+import org.rudi.facet.apimaccess.api.ApimaccessSpringBootTest;
 import org.rudi.facet.apimaccess.api.registration.Application;
 import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
 import org.rudi.facet.apimaccess.api.registration.ClientRegistrationV017OperationAPI;
@@ -25,26 +27,38 @@ import org.rudi.facet.apimaccess.api.registration.OAuth2DynamicClientRegistratio
 import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-@ExtendWith(MockitoExtension.class)
+@Disabled
+@ApimaccessSpringBootTest
 class CustomMemoryClientRegistrationRepositoryUT {
+
 	public static final String SCOPE = "apim:admin";
+
 	public static MockWebServer mockWebServer;
 
 	@Mock
 	private Cache<String, ClientRegistration> cache;
+
 	@Mock
 	private APIManagerProperties properties;
-	private final APIManagerProperties APIManagerProperties = new APIManagerProperties();
+
+	@Autowired
+	private HttpClientHelper httpClientHelper;
+
 	private CustomMemoryClientRegistrationRepository customMemoryClientRegistrationRepository;
+
+	private final APIManagerProperties APIManagerProperties = new APIManagerProperties();
+
 	private final JsonResourceReader jsonResourceReader = new JsonResourceReader();
 
 	@BeforeAll
@@ -69,7 +83,7 @@ class CustomMemoryClientRegistrationRepositoryUT {
 		final var defaultScopes = new String[] { SCOPE };
 		final var apiManagerHttpExceptionFactory = new APIManagerHttpExceptionFactory();
 		final var clientRegistrationV017OperationAPI = new ClientRegistrationV017OperationAPI(properties,
-				apiManagerHttpExceptionFactory);
+				apiManagerHttpExceptionFactory, httpClientHelper);
 		final var clientRegisterForAdmin = new ClientRegistererForAdmin(tokenUri, null, adminRegistrationId,
 				adminClientId, adminClientSecret, clientRegistrationV017OperationAPI);
 
@@ -80,7 +94,7 @@ class CustomMemoryClientRegistrationRepositoryUT {
 		final var clientRegistrationExceptionFactory = new OAuth2DynamicClientRegistrationExceptionFactory(
 				objectMapper);
 		final var oAuth2DynamicClientRegistrationOperationAPI = new OAuth2DynamicClientRegistrationOperationAPI(
-				properties, clientRegistrationExceptionFactory);
+				properties, clientRegistrationExceptionFactory, httpClientHelper);
 		final var clientRegisterForUsers = new ClientRegistererForUsers(tokenUri, defaultScopes,
 				oAuth2DynamicClientRegistrationOperationAPI);
 

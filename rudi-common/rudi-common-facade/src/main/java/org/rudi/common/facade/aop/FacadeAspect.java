@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -42,7 +41,7 @@ public class FacadeAspect {
 	@Autowired(required = false)
 	private List<FacadAspectFormater> aspectFormaters;
 
-	private static Map<Class<?>, Method> UUID_METHODS = new HashMap<>();
+	private static final Map<Class<?>, Method> UUID_METHODS = new HashMap<>();
 
 	// Pour chaque entrée dans un controller
 	@Pointcut("within(@org.springframework.web.bind.annotation.RestController *) || within(@org.springframework.stereotype.Controller *)")
@@ -154,7 +153,7 @@ public class FacadeAspect {
 			result = "Resource@" + ((Resource) arg).getFilename();
 		} else {
 			Method m = getUUidMethod(arg.getClass());
-			if(m!=null){
+			if (m != null) {
 				result = callMethod(m, arg);
 				result = arg.getClass().getSimpleName() + "(" + result + ")";
 			}
@@ -183,7 +182,7 @@ public class FacadeAspect {
 			m = UUID_METHODS.get(clazz);
 		} else {
 			try {
-				m = clazz.getMethod("getUuid", new Class<?>[0]);
+				m = clazz.getMethod("getUuid");
 			} catch (Exception e) {
 				log.warn("Failed to get uuid method {}", clazz);
 			}
@@ -196,7 +195,7 @@ public class FacadeAspect {
 		Object result = null;
 		if (m != null) {
 			try {
-				result = m.invoke(arg, new Object[0]);
+				result = m.invoke(arg);
 			} catch (Exception e) {
 				log.warn("Failed to call uuid method {}", arg.getClass());
 			}
@@ -204,17 +203,20 @@ public class FacadeAspect {
 		return result;
 	}
 
-	private String handleHiddenClasses(Object arg, Class<?> clazz){
+	private String handleHiddenClasses(Object arg, Class<?> clazz) {
 		String result = null;
 		// on exclue les classes cachées
 		if (hiddenClasses.contains(clazz.getName())) {
 			result = clazz.getSimpleName() + "@xxx";
 		}
-		if(arg instanceof Collection && !((Collection<?>) arg).isEmpty() && ((Collection<?>) arg).stream().findFirst().isPresent()){
-			String subClass = ((Collection<?>) arg).stream().findFirst().get().getClass().getName();
-			int size = ((Collection<?>) arg).size();
-			if(hiddenClasses.contains(subClass)){
-				result =String.format("%s<%s>@xxx - Size %d",clazz.getName(), subClass, size);
+		if (arg instanceof Collection && !((Collection<?>) arg).isEmpty()) {
+			Object item = ((Collection<?>) arg).stream().findFirst().orElse(null);
+			if (item != null) {
+				String subClassName = item.getClass().getName();
+				int size = ((Collection<?>) arg).size();
+				if (hiddenClasses.contains(subClassName)) {
+					result = String.format("%s<%s>@xxx - Size %d", clazz.getName(), subClassName, size);
+				}
 			}
 		}
 		return result;

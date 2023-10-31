@@ -1,0 +1,11 @@
+<app-dataset-table
+    [title]="'personalSpace.project.tabs.datasets.restrictedDatasets.tableTitle'"
+    [ariaLabel]="'personalSpace.project.tabs.datasets.restrictedDatasets.tableLabel'"
+    [dataSource]="dataSource"
+    [tableLoading]="tableLoading"
+    [hasAddButton]="hasAddButton"
+    [hasDeleteButton]="hasDeleteButton"
+    [disableAddButton]="disableAddButton"
+    (addActionEvent)="openRestrictedDatasetsPopin()"
+    (deleteActionEvent)="deleteRequest($event)">
+</app-dataset-table>

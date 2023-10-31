@@ -33,6 +33,14 @@ public interface APIsService {
 	void updateAPIByName(APIDescription apiDescription) throws APIManagerException;
 
 	/**
+	 * Mise à jour d'une API en se basant sur son nom
+	 *
+	 * @param apiDescription paramètres de l'API
+	 * @throws APIManagerException Erreur lors de la mise à jour
+	 */
+	void createOrUpdateAPIByName(APIDescription apiDescription) throws APIManagerException;
+
+	/**
 	 * Modifier le cycle de vie d'une API
 	 *
 	 * @param apiId                    Identifiant de l'API
@@ -40,11 +48,12 @@ public interface APIsService {
 	 * @return APIWorkflowResponse
 	 * @throws APIManagerException Erreur lors du changement de status
 	 */
-	APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction) throws APIManagerException;
+	APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction)
+			throws APIManagerException;
 
 	/**
-	 * Archivage d'une API par son nom avant suppression définitive.
-	 * L'API est automatiquement désarchivée lorsqu'on la recrée avec {@link #createOrUnarchiveAPI(APIDescription)}.
+	 * Archivage d'une API par son nom avant suppression définitive. L'API est automatiquement désarchivée lorsqu'on la recrée avec
+	 * {@link #createOrUnarchiveAPI(APIDescription)}.
 	 *
 	 * @param apiDescription identifiant de l'API
 	 * @return l'API archivée
@@ -55,8 +64,8 @@ public interface APIsService {
 	API archiveAPIByName(APIDescription apiDescription) throws APIManagerException;
 
 	/**
-	 * Archivage d'une API avant suppression définitive.
-	 * L'API est automatiquement désarchivée lorsqu'on la recrée avec {@link #createOrUnarchiveAPI(APIDescription)}.
+	 * Archivage d'une API avant suppression définitive. L'API est automatiquement désarchivée lorsqu'on la recrée avec
+	 * {@link #createOrUnarchiveAPI(APIDescription)}.
 	 *
 	 * @param apiId identifiant de l'API
 	 * @throws APIManagerException Erreur lors du changement de statut
@@ -74,9 +83,8 @@ public interface APIsService {
 	void unarchiveAPI(String apiId) throws APIManagerException;
 
 	/**
-	 * Suppression définitive d'une API.
-	 * Possible seulement si toutes les souscriptions ont été supprimées,
-	 * par exemple via {@link org.rudi.facet.apimaccess.service.ApplicationService#deleteAllSubscriptionsWithoutRetiringAPI(String)}.
+	 * Suppression définitive d'une API. Possible seulement si toutes les souscriptions ont été supprimées, par exemple via
+	 * {@link org.rudi.facet.apimaccess.service.ApplicationService#deleteAllSubscriptionsWithoutRetiringAPI(String)}.
 	 *
 	 * @param apiId identifiant de l'API
 	 * @throws APIManagerException Erreur lors du changement de statut

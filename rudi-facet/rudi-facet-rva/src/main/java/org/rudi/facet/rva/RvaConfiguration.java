@@ -6,10 +6,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class RvaConfiguration {
+
 	@Bean
 	public WebClient rvaWebClient(RvaProperties rvaProperties) {
-		return WebClient.builder()
-				.baseUrl(rvaProperties.getUrl())
-				.build();
+		return WebClient.builder().baseUrl(rvaProperties.getUrl()).build();
 	}
 }

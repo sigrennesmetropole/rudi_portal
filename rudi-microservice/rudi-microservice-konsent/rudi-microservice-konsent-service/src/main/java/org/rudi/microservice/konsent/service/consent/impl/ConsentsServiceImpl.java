@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import javax.persistence.NoResultException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.util.UtilPageable;
@@ -41,9 +40,9 @@ import org.rudi.microservice.konsent.core.bean.ConsentSearchCriteria;
 import org.rudi.microservice.konsent.core.bean.PagedConsentList;
 import org.rudi.microservice.konsent.core.bean.TreatmentStatus;
 import org.rudi.microservice.konsent.core.bean.TreatmentVersionSearchCriteria;
-import org.rudi.microservice.konsent.service.exception.KonsentUnauthorizedException;
 import org.rudi.microservice.konsent.service.consent.ConsentsService;
 import org.rudi.microservice.konsent.service.consent.utils.ConsentsUtils;
+import org.rudi.microservice.konsent.service.exception.KonsentUnauthorizedException;
 import org.rudi.microservice.konsent.service.mapper.consent.ConsentsMapper;
 import org.rudi.microservice.konsent.storage.dao.consent.ConsentCustomDao;
 import org.rudi.microservice.konsent.storage.dao.consent.ConsentDao;
@@ -60,9 +59,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
@@ -120,7 +121,7 @@ public class ConsentsServiceImpl implements ConsentsService {
 	}
 
 	@Override
-	@Transactional(readOnly = false, rollbackFor=Exception.class)
+	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public Consent createConsent(UUID treatmentVersionUuid) throws AppServiceException {
 		// Vérifications utiles
 		val consentor = aclHelper.getAuthenticatedUser();
@@ -131,9 +132,8 @@ public class ConsentsServiceImpl implements ConsentsService {
 		try {
 			treatmentEntity = treatmentsCustomDao.getTreatmentByVersionUuid(treatmentVersionUuid);
 		} catch (NoResultException e) {
-			throw new AppServiceException(
-					String.format("Aucun traitement ne correspond à la version de traitement: %s", treatmentVersionUuid), e
-			);
+			throw new AppServiceException(String.format("Aucun traitement ne correspond à la version de traitement: %s",
+					treatmentVersionUuid), e);
 		}
 		val searchCriteria = new TreatmentVersionSearchCriteria().treatmentUuid(treatmentEntity.getUuid())
 				.status(TreatmentStatus.VALIDATED);
@@ -144,10 +144,11 @@ public class ConsentsServiceImpl implements ConsentsService {
 					"Le traitement %s n'a pas de version valide à laquelle consentir.", treatmentEntity.getUuid()));
 		}
 		val treatmentVersion = treatmentVersions.getContent().get(0);
-		if (!treatmentVersion.getUuid().equals(treatmentVersionUuid) || treatmentVersion.getObsoleteDate().isBefore(OffsetDateTime.now())) { // La version à laquelle on veut consentir n'est pas la dernière validée
+		if (!treatmentVersion.getUuid().equals(treatmentVersionUuid)
+				|| treatmentVersion.getObsoleteDate().isBefore(OffsetDateTime.now())) { // La version à laquelle on veut consentir n'est pas la dernière validée
 			throw new KonsentUnauthorizedException(
-					String.format("La version %s est une version obsolète du traitement %s.", treatmentVersionUuid, treatmentEntity.getUuid())
-			);
+					String.format("La version %s est une version obsolète du traitement %s.", treatmentVersionUuid,
+							treatmentEntity.getUuid()));
 		}
 
 		ConsentEntity consent = null;
@@ -169,7 +170,8 @@ public class ConsentsServiceImpl implements ConsentsService {
 	}
 
 	@Override
-	public PagedConsentList searchMyTreatmentsConsents(ConsentSearchCriteria searchCriteria) throws AppServiceException {
+	public PagedConsentList searchMyTreatmentsConsents(ConsentSearchCriteria searchCriteria)
+			throws AppServiceException {
 		if (searchCriteria == null) {
 			searchCriteria = new ConsentSearchCriteria();
 		}
