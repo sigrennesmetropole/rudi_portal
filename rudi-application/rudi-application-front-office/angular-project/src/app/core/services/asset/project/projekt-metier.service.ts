@@ -34,7 +34,7 @@ const {firstElementOrThrow} = PageResultUtils;
 
 export type Order = 'title' | '-title' | 'updatedDate' | '-updatedDate' | 'code' | '-code' | 'order_';
 export const ORDERS: Order[] = ['title', '-title', 'updatedDate', '-updatedDate'];
-export const DEFAULT_PROJECT_ORDER: Order = 'title';
+export const DEFAULT_PROJECT_ORDER: Order = '-updatedDate';
 
 const DEFAULT_LINKED_DATASET_STATUS: LinkedDatasetStatus = 'VALIDATED';
 const RESTRICTED_LINKED_DATASET_STATUS: LinkedDatasetStatus = 'DRAFT';

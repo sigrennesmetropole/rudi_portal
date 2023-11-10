@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.net.ssl.SSLException;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -80,8 +82,12 @@ public class ACLHelper {
 	private String clientKeyEndpointURL;
 
 	@Getter
-	@Value("${rudi.facet.acl.endpoint.users.client-registration.url:/acl/v1/users/{login}/client-registration}")
+	@Value("${rudi.facet.acl.endpoint.users.client-registration.url:/acl/v1/users/{login}/client-registration-access-key}")
 	private String clientRegistrationEndpointURL;
+
+	@Getter
+	@Value("${rudi.facet.acl.endpoint.users.client-registration-by-password.url:/acl/v1/users/{login}/client-registration-password}")
+	private String registrationByPasswordEndpointURL;
 
 	@Getter
 	@Value("${rudi.facet.acl.service.url:lb://RUDI-ACL/}")
@@ -208,6 +214,11 @@ public class ACLHelper {
 				.bodyToMono(void.class).block();
 	}
 
+	public ClientRegistrationDto findRegistrationOrRegister(String username, String password) {
+		return loadBalancedWebClient.post().uri(buildClientRegistrationByPasswordURL(), Map.of(USER_LOGIN_PARAMETER, username)).bodyValue(password).retrieve()
+				.bodyToMono(ClientRegistrationDto.class).block();
+	}
+
 	public User createUser(User user) {
 		User result = null;
 		if (user == null) {
@@ -307,6 +318,12 @@ public class ACLHelper {
 	protected String buildClientRegistrationURL() {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(getAclServiceURL()).append(getClientRegistrationEndpointURL());
+		return urlBuilder.toString();
+	}
+
+	protected String buildClientRegistrationByPasswordURL() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getRegistrationByPasswordEndpointURL());
 		return urlBuilder.toString();
 	}
 

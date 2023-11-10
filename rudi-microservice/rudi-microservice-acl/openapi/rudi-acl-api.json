@@ -1043,7 +1043,7 @@
 				}
 			}
 		},
-		"/users/{login}/client-registration": {
+		"/users/{login}/client-registration-access-key": {
 			"get": {
 				"tags": [
 					"acl"
@@ -1117,6 +1117,60 @@
 				"responses": {
 					"204": {
 						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{login}/client-registration-password": {
+			"post": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Fais la registration du user",
+				"description": "Lance la registration du user dans WSO2 par ACL",
+				"operationId": "registerClientByPassword",
+				"parameters": [
+					{
+						"name": "login",
+						"in": "path",
+						"description": "Login de l'utilisateur'",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Password du user",
+					"required": true,
+					"content": {
+						"text/plain": {
+							"schema": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-acl-model.json#/components/schemas/ClientRegistrationDto"
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "Internal server error",

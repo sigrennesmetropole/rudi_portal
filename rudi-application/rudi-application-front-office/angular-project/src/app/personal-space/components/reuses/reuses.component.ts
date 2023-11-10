@@ -11,7 +11,6 @@ import {PagedProjectList} from '../../../projekt/projekt-model';
 import {mapEach} from '../../../shared/utils/ObservableUtils';
 import {BackPaginationSort} from '../../../shared/back-pagination/back-pagination-sort';
 import {SortTableInterface} from '../../../shared/back-pagination/sort-table-interface';
-import {Status} from '../../../api-bpmn';
 import {TranslateService} from '@ngx-translate/core';
 
 export interface ProjectSummary {
@@ -60,7 +59,7 @@ export class ReusesComponent implements OnInit {
 
     ngOnInit(): void {
         // Permet de trier par défaut les projets par ordre décroissant
-        let defaultSortTable: SortTableInterface = {order: DEFAULT_SORT_ORDER, page: 1};
+        const defaultSortTable: SortTableInterface = {order: DEFAULT_SORT_ORDER, page: 1};
         this.loadProjects(defaultSortTable);
     }
 
@@ -83,7 +82,9 @@ export class ReusesComponent implements OnInit {
         }
         // Observable de récupération des projets pipé sur la récupération du total d'éléments
         const observableMyProjects: Observable<PagedProjectList> = this.projectMetierService
-            .getMyAndOrganizationsProjects((this.page - 1) >= 0 ? (this.page - 1) * this.ITEMS_PER_PAGE : 0, this.ITEMS_PER_PAGE, sortTableInterface.order)
+            .getMyAndOrganizationsProjects((this.page - 1) >= 0 ?
+                (this.page - 1) * this.ITEMS_PER_PAGE :
+                0, this.ITEMS_PER_PAGE, sortTableInterface.order)
             .pipe(
                 tap((result) => {
                     this.total = result.total;
@@ -99,7 +100,7 @@ export class ReusesComponent implements OnInit {
                 mapEach(({project, dependencies}) => ({
                     uuid: project.uuid,
                     updatedDate: new Date(project.updated_date),
-                    projectTitle: this.computeTitleProject(project.status) + project.title,
+                    projectTitle: this.computeTitleProject(project.is_a_reuse) + project.title,
                     confidentiality: project.confidentiality.label,
                     status: project.functional_status,
                     numberOfDatasets: dependencies.numberOfRequests
@@ -134,14 +135,13 @@ export class ReusesComponent implements OnInit {
 
     /**
      * Méthode qui permet de rajouter au titre du projet le bon prefixe en fonction de son statut
-     * @param status
+     * @param isReuse : boolean permettant de désigner s'il s'agit d'une reutilisation ou non
      */
-    computeTitleProject(status: Status): string {
-        if (status === Status.Completed) {
+    computeTitleProject(isReuse: boolean): string {
+        if (isReuse) {
             return this.translateService.instant('personalSpace.myReuses.isReuse') + ' ';
         } else {
             return this.translateService.instant('personalSpace.myReuses.isProject') + ' ';
         }
-
     }
 }

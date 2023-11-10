@@ -5,6 +5,7 @@ import javax.net.ssl.SSLException;
 import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.facet.apimaccess.bean.Credentials;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 
 public interface ApimService {
@@ -25,5 +26,5 @@ public interface ApimService {
 	 * @return vrai/faux activation des APIs ?
 	 * @throws SSLException erreur SSL
 	 */
-	boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException;
+	boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException, BuildClientRegistrationException;
 }

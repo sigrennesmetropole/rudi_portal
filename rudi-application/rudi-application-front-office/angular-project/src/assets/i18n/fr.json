@@ -307,7 +307,7 @@
         "logIn": "Se connecter",
         "logOut": "Se déconnecter",
         "logOutSuccess": "Vous avez été correctement déconnecté. À bientôt sur Rudi !",
-        "logOutError": "Une erreur est survenue lors de la connexion, veuillez reessayer plustard.",
+        "logOutError": "Une erreur est survenue lors de la connexion, veuillez reessayer plus tard.",
         "accountMenu": {
             "myAccount": "Mon compte",
             "myActivity": "Mon activité",
@@ -566,7 +566,8 @@
             "myOrganizations": "Mes organisations",
             "noOrganizations": "Vous n'avez pas encore d'organisations.",
             "img": "Pictogramme d'organisation",
-            "errorLoading": "Une erreur est survenue lors du chargement de vos organisations. Merci de recharger la page. Si le problème persiste, veuillez contacter un administrateur en cliquant ici."
+            "errorLoading": "Une erreur est survenue lors du chargement de vos organisations. Merci de recharger la page. Si le problème persiste, veuillez contacter un administrateur en cliquant ",
+            "here": "ici."
         }
     },
     "metaData": {
@@ -1116,7 +1117,7 @@
             "title1": "Mes notifications",
             "tab1": "À traiter",
             "tab2": "Toutes les demandes",
-            "noResult": "Vous n'avez pas de nouvelle demande. Vous pouvez consulter l'historique de vos demandes dans l'onglet \"Toutes les demandes\".",
+            "noResult": " Vous n'avez pas de nouvelle demande. Vous pouvez consulter l'historique de vos demandes depuis votre espace  \"Mon activité\" dans l'onglet  \"Mes demandes\".",
             "receivedDate": "Reçue le",
             "description": "Description",
             "ownerName": "Demandeur",

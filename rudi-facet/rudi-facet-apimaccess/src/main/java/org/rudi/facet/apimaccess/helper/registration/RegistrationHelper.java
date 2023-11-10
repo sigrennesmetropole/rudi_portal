@@ -36,7 +36,7 @@ public class RegistrationHelper {
 		return applicationService.getOrCreateDefaultApplication(login);
 	}
 
-	public ClientRegistration findRegistrationForUser(String login, String password) throws SSLException, GetClientRegistrationException {
+	public ClientRegistration findRegistrationForUser(String login, String password) throws SSLException, GetClientRegistrationException, BuildClientRegistrationException {
 		return rudiClientRegistrationRepository.findByUsernameAndPassword(login, password);
 	}
 }

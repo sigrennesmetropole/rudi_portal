@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Component
 @RequiredArgsConstructor
@@ -78,24 +80,35 @@ public class SelfdataPairingUtils {
 	 * @param matchingDataList      Liste des données pivots requises par le JDD
 	 * @return Map des données pivots uniquement
 	 */
-	public List<MatchingField> extractMatchingDataFromFormData(Map<String, Object> informationRequestMap, List<MatchingData> matchingDataList) {
+	public List<MatchingField> extractMatchingDataFromFormData(Map<String, Object> informationRequestMap, List<MatchingData> matchingDataList) throws AppServiceException {
 		List<MatchingField> matchingDataFields = new ArrayList<>();
 		for (MatchingData matchingData : matchingDataList) { // Extraire l'entrée de chaque matchingData dans la map principale
-			MatchingField field = createFieldForMatchingData(informationRequestMap, matchingData.getCode());
-			matchingDataFields.add(field);
+			MatchingField field = createFieldForMatchingData(informationRequestMap, matchingData.getCode(), matchingData.getRequired());
+			if (field != null) {
+				matchingDataFields.add(field);
+			}
 		}
 		return matchingDataFields;
 	}
 
 	/**
-	 * @param informationRequestMap
-	 * @param matchingDataCode
+	 * @param informationRequestMap map des données de formulaire
+	 * @param matchingDataCode      clé de la donnée pivot
+	 * @param isRequired            indique si la donnée pivot est réquise ou pas dans sa description dans le JDD
 	 * @return le MatchingField correspondant au matchingDataCode qui lui est passé
 	 */
-	private MatchingField createFieldForMatchingData(Map<String, Object> informationRequestMap, String matchingDataCode) {
+	private MatchingField createFieldForMatchingData(Map<String, Object> informationRequestMap, String matchingDataCode, Boolean isRequired) throws AppServiceException {
+		LOGGER.info(String.format("Donnée pivot en cours de traitement: %s", matchingDataCode));
+		val matchingDataValue = informationRequestMap.get(matchingDataCode);
+		if (Boolean.TRUE.equals(isRequired) && matchingDataValue == null) { // Donnée pivot requise non renseignée => incohérence
+			throw new AppServiceException("Une donnée pivot obligatoire n'a pas été retrouvée");
+		}
+		if (matchingDataValue == null) {
+			return null; // Correspond à une donnée pivot facultative non renseignée
+		}
 		MatchingField field = new MatchingField();
 		field.setCode(matchingDataCode);
-		field.setValue(informationRequestMap.get(matchingDataCode).toString());
+		field.setValue(matchingDataValue.toString());
 		return field;
 	}
 
@@ -119,7 +132,12 @@ public class SelfdataPairingUtils {
 	 * @throws AppServiceUnauthorizedException
 	 */
 	private void deleteAttachment(MatchingData matchingData, Map<String, Object> informationRequestMap) throws AppServiceNotFoundException, AppServiceForbiddenException, AppServiceUnauthorizedException {
-		String UUIDString = informationRequestMap.get(matchingData.getCode()).toString();
+		final Object matchingDataValue = informationRequestMap.get(matchingData.getCode());
+		// Si le matchingData est optionnel, sa valeur peut ne pas avoir été renseignée => Pas de tentative de suppression
+		if (matchingDataValue == null) {
+			return;
+		}
+		String UUIDString = matchingDataValue.toString();
 		if (UUIDString.startsWith(SelfdataMatchingDataHelper.SELFDATA_CRYPTED_VALUE_IDENTIFIER)) {
 			UUIDString = selfdataMatchingDataHelper.decrypt(UUIDString);
 		}
@@ -128,7 +146,7 @@ public class SelfdataPairingUtils {
 		try {
 			documentContentHelper.deleteAttachment(attachmentUuid, authorizationPolicy);
 		} catch (AppServiceNotFoundException | AppServiceForbiddenException |
-				 AppServiceUnauthorizedException exception) {
+				AppServiceUnauthorizedException exception) {
 			LOGGER.error("Une erreur est survenue lors de la suppression d'une pièce jointe. {}", exception);
 		}
 	}

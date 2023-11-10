@@ -2,6 +2,7 @@
 @import "src/app/styles/common-style";
 
 .organization-card {
+
     box-shadow: none;
     border: solid 1.1px $blocks-and-menus-outline;
     cursor: pointer;
@@ -9,15 +10,6 @@
     overflow: hidden;
     width: 400px;
     margin-bottom: 1em;
-
-    .producteur-img-box {
-        min-width: 70px;
-        height: 70px;
-        padding: 10px 4px 10px 4px;
-        border-radius: 3.4px;
-        border: solid 0.9px $blocks-and-menus-outline;
-        justify-content: center;
-    }
 
     .resource_title {
         font-family: OpenSans, sans-serif;

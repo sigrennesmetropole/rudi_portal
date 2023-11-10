@@ -1,8 +1,8 @@
 <div class="d-flex my-3" (click)="handleClickOnDatasetCard(currentJddId)">
-    <div class="align-items-center producteur-img-box" *ngIf="showLogo">
+    <div class=" d-flex align-items-center" *ngIf="showLogo">
         <app-organization-logo [organizationId]="organizationId"
                                [isANewRequest]="isANewRequest"
-                               cssClass="producteur-img"
+                               cssClass="with-border"
                                organizationType="producer"
         ></app-organization-logo>
     </div>

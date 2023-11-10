@@ -6,6 +6,7 @@ import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.apimaccess.bean.Credentials;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.registration.RegistrationHelper;
 import org.rudi.microservice.selfdata.service.apim.ApimService;
@@ -29,7 +30,7 @@ public class ApimServiceImpl implements ApimService {
 	}
 
 	@Override
-	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException {
+	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException, BuildClientRegistrationException {
 		checkCredentials(credentials);
 		return registrationHelper.findRegistrationForUser(credentials.getLogin(), credentials.getPassword()) != null;
 	}

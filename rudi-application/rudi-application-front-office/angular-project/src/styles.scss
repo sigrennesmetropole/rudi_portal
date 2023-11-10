@@ -95,6 +95,15 @@ body {
 .gray-background {
     background-color: $blocks-and-menus-outline;
 }
+
 .cdk-global-scrollblock {
     top: 0 !important;
 }
+
+.menu {
+    .cdk-overlay-container {
+        z-index: 1 !important;
+    }
+}
+
+

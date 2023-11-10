@@ -149,4 +149,9 @@ public class UserController implements UsersApi {
 		userService.addClientRegistration(login, accessKeyDto);
 		return ResponseEntity.ok().build();
 	}
+
+	@Override
+	public ResponseEntity<ClientRegistrationDto> registerClientByPassword(String login, String password) throws Exception {
+		return ResponseEntity.ok(userService.registerClientByPassword(login, password));
+	}
 }

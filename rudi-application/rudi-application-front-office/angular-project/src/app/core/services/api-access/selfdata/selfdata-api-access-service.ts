@@ -43,10 +43,16 @@ export class SelfdataApiAccessService extends AbstractApiAccessService {
     }
 
     hasSubscribedToDataset(subscriptionData: SubscriptionData): Observable<boolean> {
-        return throwError(new Error('Attente de l\'API de souscription selfdata'));
+        if (subscriptionData.metadata == null) {
+            return throwError(Error('Impossible de vérifier la souscription si on ne propose pas de JDD'));
+        }
+        return this.konsultService.hasSubscribeToSelfdataDataset(subscriptionData.metadata.global_id);
     }
 
     subscribeToDataset(subscriptionData: SubscriptionData): Observable<unknown> {
-        return throwError(new Error('Attente de l\'API de souscription selfdata'));
+        if (subscriptionData.metadata == null) {
+            return throwError(Error('Impossible de souscrire si on ne propose pas de JDD'));
+        }
+        return this.konsultService.subscribeToSelfdataDataset(subscriptionData.metadata.global_id);
     }
 }

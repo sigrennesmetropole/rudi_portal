@@ -1109,6 +1109,12 @@
 							},
 							"tableDisplayMaxFileSize": {
 								"type": "number"
+							},
+							"twitter": {
+								"type": "string"
+							},
+							"linkedin": {
+								"type": "string"
 							}
 						}
 					}

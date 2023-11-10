@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {of, Subject} from 'rxjs';
 import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
 import {OrderValue} from '../../../core/services/filters/order-filter';
@@ -50,10 +50,12 @@ export class ListComponent implements OnInit, OnDestroy {
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly providersMetierService: ProvidersMetierService,
         private readonly sidenavOpeningsService: SidenavOpeningsService,
+        private readonly renderer: Renderer2
     ) {
     }
 
     ngOnInit(): void {
+        this.renderer.addClass(document.body, 'menu');
         this.mediaSize = this.breakpointObserver.getMediaSize();
         this.sidenavOpeningsService.sideNavOpening$.pipe(takeUntil(this.isDestroyed$)).subscribe(() => {
             this.sidenav.open();
@@ -70,6 +72,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.isDestroyed$.next();
+        this.renderer.removeClass(document.body, 'menu');
     }
 
     submitFilters(): void {

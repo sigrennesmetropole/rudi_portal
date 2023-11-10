@@ -27,6 +27,7 @@ import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AccessKeyDto;
 import org.rudi.microservice.acl.core.bean.ClientKey;
+import org.rudi.microservice.acl.core.bean.ClientRegistrationDto;
 import org.rudi.microservice.acl.core.bean.Role;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
@@ -460,6 +461,11 @@ public class UserServiceImpl implements UserService {
 			registration = rudiClientRegistrationRepository.findByUsername(login);
 		}
 		return clientRegistrationMapper.entityToDto(registration);
+	}
+
+	@Override
+	public ClientRegistrationDto registerClientByPassword(String login, String password) throws Exception {
+		return clientRegistrationMapper.entityToDto(rudiClientRegistrationRepository.findRegistrationOrRegister(login, password));
 	}
 
 	@Override

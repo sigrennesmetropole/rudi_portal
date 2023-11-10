@@ -13,7 +13,7 @@ export interface OrderItem extends Item {
     value: OrderValue;
 }
 
-const DEFAULT_ORDER: OrderValue = 'resource_title';
+const DEFAULT_ORDER: OrderValue = '-dataset_dates.updated';
 
 @Component({
     selector: 'app-order-filter-form',

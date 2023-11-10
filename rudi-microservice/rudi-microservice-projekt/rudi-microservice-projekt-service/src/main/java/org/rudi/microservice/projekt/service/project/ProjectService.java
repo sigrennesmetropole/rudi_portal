@@ -129,7 +129,6 @@ public interface ProjectService {
 	 */
 	Integer getNumberOfRequests(UUID projectUuid) throws AppServiceNotFoundException;
 
-
 	/**
 	 * Recherche mes projets et ceux de mon organisation
 	 *
@@ -138,5 +137,15 @@ public interface ProjectService {
 	 * @return Une page de project (limit max sinon 10)
 	 * @throws GetOrganizationException si erreur
 	 */
-	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException;
+	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable)
+			throws GetOrganizationException;
+
+	/**
+	 * Détermine si l'utilisateur connecté est owner du projet passé en paramètre.
+	 *
+	 * @param projectUuid UUID du projet
+	 * @return true si l'authenticatedUser est owner du projet, false sinon
+	 * @throws Exception
+	 */
+	boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception;
 }

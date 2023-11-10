@@ -15,6 +15,7 @@ import {UserGuardService} from '../core/services/user-guard.service';
 import {AuthGuardService as AuthGuard} from '../core/services/auth-guard.service';
 import {NewRequestDetailComponent} from './pages/new-request-detail/new-request-detail.component';
 import {MyActivityComponent} from './pages/my-activity/my-activity.component';
+import {OwnerGuardService} from '../core/services/owner-guard.service';
 
 const routes: Routes = [
     {
@@ -49,7 +50,7 @@ const routes: Routes = [
         // Path to see the details of a specific project
         path: 'my-project-details/:projectUuid',
         component: MyProjectDetailsComponent,
-        canActivate: [AuthGuard, UserGuardService]
+        canActivate: [AuthGuard, UserGuardService, OwnerGuardService]
     },
     {
         // Path to see the details of a specific selfdata

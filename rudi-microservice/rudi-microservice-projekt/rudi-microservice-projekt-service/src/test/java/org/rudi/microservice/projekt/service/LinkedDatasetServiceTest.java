@@ -1,5 +1,11 @@
 package org.rudi.microservice.projekt.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +19,7 @@ import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
@@ -38,10 +45,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import lombok.val;
 
 /**
  * Class de test de la couche service
@@ -110,9 +114,20 @@ class LinkedDatasetServiceTest {
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 	}
 
+	private void mockAuthenticatedUserOtherUser(UUID managerUserUuid) {
+		final User user = new User().login("shakira").uuid(managerUserUuid);
+		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
+		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
+
+		final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
+		authenticatedUser.setLogin(user.getLogin());
+		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
+	}
+
 	@Test
 	@DisplayName("Je crée un projet puis lui ajoute un JDD ouvert")
-	void linkOpenDatasetToProject() throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
+	void linkOpenDatasetToProject()
+			throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
 
 		// Création projet
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -141,14 +156,15 @@ class LinkedDatasetServiceTest {
 				.hasFieldOrPropertyWithValue("comment", "link opened");
 
 		// et qu'il a bien aucune date de fin malgré l'alimentation initiale
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)
-				.get(0).getEndDate())
-				.isNull();
+		assertThat(
+				linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED).get(0).getEndDate())
+						.isNull();
 	}
 
 	@Test
 	@DisplayName("Je crée un projet puis lui ajoute un JDD restreint")
-	void linkRestrictedDatasetToProject() throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
+	void linkRestrictedDatasetToProject()
+			throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
 
 		// Création projet
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -206,6 +222,108 @@ class LinkedDatasetServiceTest {
 				.isThrownBy(() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 	}
 
+	@Test
+	@DisplayName("Je crée un projet, puis un autre tente d'y rajouter un JDD avec un utilisateur non autorisé")
+	void linkOpenDatasetToProject_unauthorized()
+			throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
+		// Création du projet
+		final Project createdProject = createProject(PROJET_LAMPADAIRES);
+		final var projectUuid = createdProject.getUuid();
+
+		// C'est bien vide
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
+
+		// Créations des JDDs de test
+		final var ld1Uuid = UUID.randomUUID();
+		final var ld1 = createLinkedDataset(ld1Uuid, "link opened", DatasetConfidentiality.OPENED);
+
+		// On met une date de fin à ce JDD restreint même si il n'est pas sensé y'en avoir
+		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
+
+		// On se connecte avec quelqu'un d'autre.
+		mockAuthenticatedUserOtherUser(UUID.randomUUID());
+
+		// Ajout du JDD lié restreint
+		Metadata associated1 = createMetadataAssociated(ld1);
+		when(datasetService.getDataset(any(UUID.class))).thenReturn(associated1);
+		assertThrows(AppServiceForbiddenException.class,
+				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
+	}
+
+	@Test
+	@DisplayName("Je crée un projet, puis un autre tente d'y supprimer un JDD ouvert avec un utilisateur non autorisé")
+	void unlinkOpenDatasetToProject_unauthorized()
+			throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
+		// Création du projet
+		final Project createdProject = createProject(PROJET_LAMPADAIRES);
+		final var projectUuid = createdProject.getUuid();
+
+		// C'est bien vide
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
+
+		// Créations des JDDs de test
+		final var ld1Uuid = UUID.randomUUID();
+		final var ld1 = createLinkedDataset(ld1Uuid, "link opened", DatasetConfidentiality.OPENED);
+
+		// On met une date de fin à ce JDD restreint même si il n'est pas sensé y'en avoir
+		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
+
+		// Ajout du JDD lié restreint
+		Metadata associated1 = createMetadataAssociated(ld1);
+		when(datasetService.getDataset(any(UUID.class))).thenReturn(associated1);
+		val linkedDataset = linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
+		UUID linkedDatasetUuid = linkedDataset.getDatasetUuid();
+
+		// Check que le JDD lié ouvert est bien completé
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isNotEmpty();
+
+		// On se connecte avec quelqu'un d'autre.
+		mockAuthenticatedUserOtherUser(UUID.randomUUID());
+
+		assertThrows(AppServiceForbiddenException.class,
+				() -> linkedDatasetService.unlinkProjectToDataset(projectUuid, linkedDatasetUuid));
+	}
+
+	@Test
+	@DisplayName("Je crée un projet, puis un autre tente d'y supprimer un JDD ouvert avec un utilisateur non autorisé")
+	void updateLinkedDataset_unauthorized()
+			throws IOException, AppServiceException, DataverseAPIException, APIManagerException {
+		// Création du projet
+		final Project createdProject = createProject(PROJET_LAMPADAIRES);
+		final var projectUuid = createdProject.getUuid();
+
+		// C'est bien vide
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
+
+		// Créations des JDDs de test
+		final var ld1Uuid = UUID.randomUUID();
+		final var ld1 = createLinkedDataset(ld1Uuid, "link opened", DatasetConfidentiality.OPENED);
+
+		// On met une date de fin à ce JDD restreint même si il n'est pas sensé y'en avoir
+		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
+
+		// Ajout du JDD lié restreint
+		Metadata associated1 = createMetadataAssociated(ld1);
+		when(datasetService.getDataset(any(UUID.class))).thenReturn(associated1);
+		LinkedDataset linkedDataset = linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
+		UUID linkedDatasetUuid = linkedDataset.getDatasetUuid();
+
+		// Check que le JDD lié ouvert est bien completé
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isNotEmpty();
+
+		// On se connecte avec quelqu'un d'autre.
+		mockAuthenticatedUserOtherUser(UUID.randomUUID());
+		val newComment = "Shakira est dans la place !";
+		linkedDataset.comment(newComment);
+
+		assertThrows(AppServiceForbiddenException.class,
+				() -> linkedDatasetService.updateLinkedDataset(projectUuid, linkedDataset));
+		assertThat(linkedDatasetService.getLinkedDataset(projectUuid, linkedDatasetUuid)).isNotEqualTo(newComment);
+	}
+
 	@Data
 	private static class KnownProject {
 		private final String file;
@@ -231,7 +349,8 @@ class LinkedDatasetServiceTest {
 		MetadataAccessCondition accessCondition = new MetadataAccessCondition();
 		MetadataAccessConditionConfidentiality confidentiality = new MetadataAccessConditionConfidentiality();
 		confidentiality.setGdprSensitive(false);
-		confidentiality.setRestrictedAccess(linkedDataset.getDatasetConfidentiality().equals(DatasetConfidentiality.RESTRICTED));
+		confidentiality.setRestrictedAccess(
+				linkedDataset.getDatasetConfidentiality().equals(DatasetConfidentiality.RESTRICTED));
 		accessCondition.setConfidentiality(confidentiality);
 		returned.setAccessCondition(accessCondition);
 		return returned;

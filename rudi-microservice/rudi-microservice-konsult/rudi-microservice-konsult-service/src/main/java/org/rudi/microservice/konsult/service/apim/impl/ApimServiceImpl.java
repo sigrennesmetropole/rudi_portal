@@ -9,6 +9,7 @@ import org.rudi.facet.apimaccess.bean.Credentials;
 import org.rudi.facet.apimaccess.bean.EndpointKeyType;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.apimaccess.exception.ApplicationOperationException;
+import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.registration.RegistrationHelper;
 import org.rudi.facet.apimaccess.service.ApplicationService;
@@ -30,7 +31,7 @@ public class ApimServiceImpl implements ApimService {
 	private final RegistrationHelper registrationHelper;
 
 	@Override
-	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException {
+	public boolean hasEnabledApi(Credentials credentials) throws SSLException, AppServiceForbiddenException, GetClientRegistrationException, BuildClientRegistrationException {
 		checkCredentials(credentials);
 		return registrationHelper.findRegistrationForUser(credentials.getLogin(), credentials.getPassword()) != null;
 	}

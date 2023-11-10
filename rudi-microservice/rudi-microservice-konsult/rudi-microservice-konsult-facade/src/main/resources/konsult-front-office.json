@@ -11,6 +11,8 @@
 		"apidocumentation": "https://sigrennesmetropole.github.io/rudi_documentation/api/authentification/",
 		"apiDocumentationService": "https://sigrennesmetropole.github.io/rudi_documentation/",
 		"docRudiBzh": "https://doc.rudi.bzh/",
-		"tableDisplayMaxFileSize": "1000000000"
+		"tableDisplayMaxFileSize": "1000000000",
+		"twitter": "https://twitter.com/PortailRudi/",
+		"linkedin": "https://www.linkedin.com/company/projet-rudi/"
 	}
 }

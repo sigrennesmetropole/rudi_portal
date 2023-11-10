@@ -1934,7 +1934,7 @@
 				}
 			}
 		},
-		"/projects/{projectUuid}/numberOfDataset": {
+		"/projects/{projectUuid}/number-of-datasets": {
 			"get": {
 				"tags": [
 					"projekt"
@@ -1971,6 +1971,40 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{projectUuid}/is-owner": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Détermine si l'utilisateur connecté est owner du projet ou non",
+				"description": "Retourne true si l'utilisateur connecté est owner du projet, false sinon.",
+				"operationId": "isAuthenticatedUserProjectOwner",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectUuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Renvoie true si l'utilisateur connecté est owner du projet, false sinon.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
 								}
 							}
 						}
