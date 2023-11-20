@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-my-requests',
-  templateUrl: './my-requests.component.html',
-  styleUrls: ['./my-requests.component.scss']
+    selector: 'app-my-requests',
+    templateUrl: './my-requests.component.html',
+    styleUrls: ['./my-requests.component.scss']
 })
-export class MyRequestsComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class MyRequestsComponent {
 }

@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.annotation.processing.Generated;
 
-import org.rudi.facet.bpmn.bean.AssetDescription1Test;
-import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity1Test;
+import org.rudi.facet.bpmn.bean.AssetDescription1TestData;
+import org.rudi.facet.bpmn.entity.workflow.AssetDescription1TestEntity;
 import org.springframework.stereotype.Component;
 
 @Generated(value = "org.mapstruct.ap.MappingProcessor", date = "2021-11-30T10:24:06+0100", comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11 (Oracle Corporation)")
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 public class AssetDescriptionMapperImpl1Test implements AssetDescriptionMapper1Test {
 
 	@Override
-	public AssetDescriptionEntity1Test dtoToEntity(AssetDescription1Test arg0) {
+	public AssetDescription1TestEntity dtoToEntity(AssetDescription1TestData arg0) {
 		if (arg0 == null) {
 			return null;
 		}
 
-		AssetDescriptionEntity1Test testAssetDescriptionEntity = new AssetDescriptionEntity1Test();
+		AssetDescription1TestEntity testAssetDescriptionEntity = new AssetDescription1TestEntity();
 
 		testAssetDescriptionEntity.setUuid(arg0.getUuid());
 		testAssetDescriptionEntity.setProcessDefinitionKey(arg0.getProcessDefinitionKey());
@@ -39,7 +39,7 @@ public class AssetDescriptionMapperImpl1Test implements AssetDescriptionMapper1T
 	}
 
 	@Override
-	public void dtoToEntity(AssetDescription1Test arg0, AssetDescriptionEntity1Test arg1) {
+	public void dtoToEntity(AssetDescription1TestData arg0, AssetDescription1TestEntity arg1) {
 		if (arg0 == null) {
 			return;
 		}
@@ -59,13 +59,13 @@ public class AssetDescriptionMapperImpl1Test implements AssetDescriptionMapper1T
 	}
 
 	@Override
-	public List<AssetDescriptionEntity1Test> dtoToEntities(List<AssetDescription1Test> arg0) {
+	public List<AssetDescription1TestEntity> dtoToEntities(List<AssetDescription1TestData> arg0) {
 		if (arg0 == null) {
 			return null;
 		}
 
-		List<AssetDescriptionEntity1Test> list = new ArrayList<AssetDescriptionEntity1Test>(arg0.size());
-		for (AssetDescription1Test testAssetDescription : arg0) {
+		List<AssetDescription1TestEntity> list = new ArrayList<AssetDescription1TestEntity>(arg0.size());
+		for (AssetDescription1TestData testAssetDescription : arg0) {
 			list.add(dtoToEntity(testAssetDescription));
 		}
 
@@ -73,12 +73,12 @@ public class AssetDescriptionMapperImpl1Test implements AssetDescriptionMapper1T
 	}
 
 	@Override
-	public AssetDescription1Test entityToDto(AssetDescriptionEntity1Test arg0) {
+	public AssetDescription1TestData entityToDto(AssetDescription1TestEntity arg0) {
 		if (arg0 == null) {
 			return null;
 		}
 
-		AssetDescription1Test testAssetDescription = new AssetDescription1Test();
+		AssetDescription1TestData testAssetDescription = new AssetDescription1TestData();
 
 		testAssetDescription.setUuid(arg0.getUuid());
 		testAssetDescription.setProcessDefinitionKey(arg0.getProcessDefinitionKey());
@@ -97,13 +97,13 @@ public class AssetDescriptionMapperImpl1Test implements AssetDescriptionMapper1T
 	}
 
 	@Override
-	public List<AssetDescription1Test> entitiesToDto(Collection<AssetDescriptionEntity1Test> arg0) {
+	public List<AssetDescription1TestData> entitiesToDto(Collection<AssetDescription1TestEntity> arg0) {
 		if (arg0 == null) {
 			return null;
 		}
 
-		List<AssetDescription1Test> list = new ArrayList<AssetDescription1Test>(arg0.size());
-		for (AssetDescriptionEntity1Test testAssetDescriptionEntity : arg0) {
+		List<AssetDescription1TestData> list = new ArrayList<AssetDescription1TestData>(arg0.size());
+		for (AssetDescription1TestEntity testAssetDescriptionEntity : arg0) {
 			list.add(entityToDto(testAssetDescriptionEntity));
 		}
 

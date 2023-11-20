@@ -1,0 +1,42 @@
+<div class="container-fluid">
+    <!--
+    TODO: SearchBox pour organization
+    <app-search-box
+        [mediaSize]="mediaSize"
+        [libelle]="'searchbox.rechercherOrganisation'"
+        (searchTermsEmitter)="onChangesSearchTerms($event)"
+        class="d-flex justify-content-center w-100 mb-4">
+    </app-search-box>
+    -->
+
+    <mat-toolbar *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl"
+                 class="rudi-filters-toolbar">
+    </mat-toolbar>
+
+    <ng-container *ngIf="organizations$ | async as organizations">
+
+        <div class="d-flex py-3 justify-content-between">
+            <!--Nombre de résultats-->
+            <div class=" w-50 search-count">
+                <ng-container *ngIf="!organizations">
+                    {{'searchbox.searchIsRunning'|translate}}
+                </ng-container>
+                <ng-container *ngIf="totalOrganizations$ | async as totalOrganizations">
+                    {{totalOrganizations}} {{'searchbox.results'|translate}}{{totalOrganizations > 1 ? 's' : ''}}
+                </ng-container>
+            </div>
+
+            <app-order *ngIf="mediaSize.isXl || mediaSize.isLg || mediaSize.isXxl"
+                       (orderChangeEvent)="onOrderChange($event)">
+            </app-order>
+        </div>
+
+        <app-list-organization-card
+            [organizations]="organizations"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalOrganizations$ | async"
+            (pageChangeEvent)="onPageChange($event)"
+        ></app-list-organization-card>
+
+    </ng-container>
+</div>

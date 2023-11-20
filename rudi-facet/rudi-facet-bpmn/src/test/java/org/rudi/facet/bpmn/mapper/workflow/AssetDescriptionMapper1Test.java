@@ -1,9 +1,9 @@
 package org.rudi.facet.bpmn.mapper.workflow;
 
-import org.rudi.facet.bpmn.bean.AssetDescription1Test;
-import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity1Test;
+import org.rudi.facet.bpmn.bean.AssetDescription1TestData;
+import org.rudi.facet.bpmn.entity.workflow.AssetDescription1TestEntity;
 
 public interface AssetDescriptionMapper1Test
-		extends AssetDescriptionMapper<AssetDescriptionEntity1Test, AssetDescription1Test> {
+		extends AssetDescriptionMapper<AssetDescription1TestEntity, AssetDescription1TestData> {
 
 }

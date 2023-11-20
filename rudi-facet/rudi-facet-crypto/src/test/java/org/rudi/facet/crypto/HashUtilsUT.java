@@ -31,7 +31,7 @@ class HashUtilsUT {
 	@Test
 	void sha3Object() {
 
-		HashBeanTest object = HashBeanTest.builder().field1("toto").field2(true).field3(LocalDateTime.now())
+		HashTestBean object = HashTestBean.builder().field1("toto").field2(true).field3(LocalDateTime.now())
 				.field4(List.of(1L, 12L, 24L)).build();
 
 		try {

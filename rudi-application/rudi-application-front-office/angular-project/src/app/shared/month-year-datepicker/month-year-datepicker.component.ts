@@ -65,10 +65,22 @@ export class MonthYearDatepickerComponent implements OnInit {
     public errorMessage: string;
 
     /**
+     * Date à partir de laquelle on peut sélectionner une date
+     * (grise les dates antérieures) | null par défaut
+     */
+    @Input()
+    public startDate: Moment | null;
+
+    /**
      * Accesseur au datepicker popup pour sélectionner la date au clic
      */
     @ViewChild('datepicker')
     public datepickerPopup: MatDatepicker<Moment>;
+
+    constructor() {
+        this.startDate = null;
+    }
+
 
     ngOnInit(): void {
         const value: Moment = this.formGroup.get(this.controlName).value;
@@ -90,8 +102,10 @@ export class MonthYearDatepickerComponent implements OnInit {
      * @param date la valeur Moment de la date choisie
      */
     chosenYearHandler(date: Moment): void {
-        const currentMonth = moment().month();
-        this.ctrlValue = date.month(currentMonth);
+        this.ctrlValue = date.month(moment().month());
+        if(this.startDate){
+            this.ctrlValue = date.month(this.startDate.month());
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 /**
  * Séparateur avec 2 traits horizontaux et un label au milieu
@@ -8,18 +8,11 @@ import {Component, Input, OnInit} from '@angular/core';
     templateUrl: './label-separator.component.html',
     styleUrls: ['./label-separator.component.scss']
 })
-export class LabelSeparatorComponent implements OnInit {
+export class LabelSeparatorComponent {
 
     /**
      * le texte au milieu du séparateur
      */
     @Input()
     public text: string;
-
-    /**
-     * Constructeur
-     */
-    constructor() {}
-
-    ngOnInit(): void {}
 }

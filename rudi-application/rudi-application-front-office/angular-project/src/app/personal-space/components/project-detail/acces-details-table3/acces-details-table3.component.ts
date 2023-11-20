@@ -1,7 +1,6 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 import * as moment from 'moment';
 import {OpenLinkedDatasetAccessRequest} from '../../../../core/services/tasks/projekt/linked-dataset-task-dependencies.service';
 
@@ -16,7 +15,7 @@ export interface Table3Data {
     templateUrl: './acces-details-table3.component.html',
     styleUrls: ['./acces-details-table3.component.scss']
 })
-export class AccesDetailsTable3Component implements OnInit, AfterViewInit {
+export class AccesDetailsTable3Component implements AfterViewInit {
     jdds: Table3Data[] = [];
     displayedColumns: string[] = ['date', 'titre'];
     dataSource: MatTableDataSource<Table3Data> = new MatTableDataSource(this.jdds);
@@ -36,16 +35,9 @@ export class AccesDetailsTable3Component implements OnInit, AfterViewInit {
         }
     }
 
-    constructor(private _liveAnnouncer: LiveAnnouncer) {
-    }
-
     @ViewChild(MatSort) sort: MatSort;
 
     ngAfterViewInit() {
         this.dataSource.sort = this.sort;
     }
-
-    ngOnInit(): void {
-    }
-
 }

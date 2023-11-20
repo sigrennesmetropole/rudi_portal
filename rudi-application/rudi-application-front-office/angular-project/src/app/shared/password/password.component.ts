@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
     selector: 'app-password',
     templateUrl: './password.component.html',
     styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent implements OnInit {
+export class PasswordComponent {
     /**
      * Cache ou non le password
      */
@@ -22,12 +22,6 @@ export class PasswordComponent implements OnInit {
      * Mot de passe
      */
     password: string;
-
-    constructor() {
-    }
-
-    ngOnInit(): void {
-    }
 
     /**
      * Méthode qui renvoie le password entré par l'utilisateur au composant parent

@@ -4,6 +4,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTableModule} from '@angular/material/table';
 import {CoreModule} from '@core/core.module';
 import {ClipboardFieldComponent} from '@shared/clipboard-field/clipboard-field.component';
+import {ListOrganizationCardComponent} from '@shared/list-organization-card/list-organization-card.component';
+import {OrganizationCardComponent} from '@shared/organization-card/organization-card.component';
 import {ToStringPipe} from '@shared/pipes/to-string.pipe';
 import {DatasetTableComponent} from '@shared/project-datasets-tables/dataset-table/dataset-table.component';
 import {
@@ -12,6 +14,7 @@ import {
 import {
     ProjectMainInformationLabelComponent
 } from '@shared/project-main-informations/project-main-information-label/project-main-information-label.component';
+import {SearchBoxComponent} from '@shared/search-box/search-box.component';
 import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
 import {BotDetectCaptchaModule} from 'angular-captcha';
 import {PopoverModule} from 'ngx-smart-popover';
@@ -93,6 +96,9 @@ import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component'
 @NgModule({
     declarations:
         [
+            OrganizationCardComponent,
+            ListOrganizationCardComponent,
+            SearchBoxComponent,
             LabelSeparatorComponent,
             ErrorBoxComponent,
             OrganizationLogoComponent,
@@ -184,6 +190,9 @@ import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component'
         MatTableModule
     ],
     exports: [
+        OrganizationCardComponent,
+        ListOrganizationCardComponent,
+        SearchBoxComponent,
         MaterialModules,
         LabelSeparatorComponent,
         OrganizationLogoComponent,

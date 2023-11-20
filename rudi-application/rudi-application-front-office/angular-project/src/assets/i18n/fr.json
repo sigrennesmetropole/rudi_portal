@@ -25,7 +25,7 @@
         "catalogue": "Catalogue",
         "reutilisations": " des réutilisations",
         "buttonPopover": {
-            "submitProject": "Soumettre une réutilisation",
+            "submitProject": "Déclarer une réutilisation",
             "genericUnauthorizedMessage": "Veuillez vous connecter ou vous inscrire pour accéder à cette page."
         },
         "datasetButton": {
@@ -188,7 +188,7 @@
             "comment": "Commentaire",
             "commentHint": "Vous avez la possibilité d'ajouter un commentaire sur le jeu de données sélectionné, notamment si certaines de ses caractéristiques ne vous conviennent pas tout à fait ou que vous souhaitez apporter des précisions sur son utilisation. 3000 signes maximum sont autorisés",
             "date": "Date de fin d'accès souhaitée",
-            "dateHint": "Cette date correspond à la date jusqu'à laquelle vous souhaitez utiliser ce jeu de données dans le cadre de cette réutilisation",
+            "dateHint": "Cette date correspond à la date jusqu'à laquelle vous souhaitez utiliser ce jeu de données dans le cadre de cette réutilisation (Exemple : Vous demandez une fin d'accès pour le 09/2023 alors vous n'aurez plus accès au jeu de données le premier jour du mois de septembre de l'année 2023).",
             "dateError": "la date de fin d'accès est obligatoire"
         }
     },
@@ -205,6 +205,7 @@
         "site": "le site de présentation du projet RUDI",
         "versionBeta": "VERSION BETA 1.0",
         "catalogue": "Catalogue",
+        "organisations": "Organisations",
         "accueil": "Accueil",
         "reutilisations": "Réutilisations",
         "documentation": "Documentation",
@@ -386,6 +387,7 @@
         "jeux": "Jeux",
         "donnees": "de données",
         "rechercherJeuDonnees": "Rechercher un jeu de données...",
+        "rechercherOrganisation": "Rechercher une organisation...",
         "searchIsRunning": "Recherche en cours",
         "results": "résultat",
         "noResult": "Aucun résultat",
@@ -1167,8 +1169,6 @@
             "numberOfDataset": "Jeux de données",
             "noResult": "Vous n'avez pas encore créé de réutilisation dans Rudi. Les formulaires de création de réutilisation sont accessibles en cliquant ",
             "here": " ici",
-            "isReuse": "Réutilisation - ",
-            "isProject": "Projet - ",
             "resultTilte": "réutilisation(s)"
         },
         "project": {
@@ -1412,6 +1412,8 @@
         "reusesTotal": "Réutilisation",
         "noMetadata":  "L'organisation n'a publié aucun jeu de données.",
         "noReuse": "L'organisation n'a publié aucun projet ou réutilisation.",
-        "description": "Description"
+        "description": "Description",
+        "catalogue": "Catalogue ",
+        "desOrganisations": "des organisations"
     }
 }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Form} from '../../../selfdata/selfdata-api';
 import {RequestDetailDependencies} from '../../pages/request-detail-dependencies';
 
@@ -7,15 +7,9 @@ import {RequestDetailDependencies} from '../../pages/request-detail-dependencies
     templateUrl: './selfdata-main-information.component.html',
     styleUrls: ['./selfdata-main-information.component.scss']
 })
-export class SelfdataMainInformationComponent implements OnInit {
+export class SelfdataMainInformationComponent {
     @Input() task: RequestDetailDependencies;
     @Input() taskLoading: boolean;
     @Input() formLoading: boolean;
     @Input() form: Form;
-
-    constructor() {
-    }
-
-    ngOnInit(): void {
-    }
 }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {IconRegistryService} from '../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../models/title-icon-type';
 
@@ -7,7 +7,7 @@ import {ALL_TYPES} from '../models/title-icon-type';
     templateUrl: './task-detail-header.component.html',
     styleUrls: ['./task-detail-header.component.scss']
 })
-export class TaskDetailHeaderComponent implements OnInit {
+export class TaskDetailHeaderComponent {
 
     @Input() headingLoading: boolean;
     @Input() pageTitle: string;
@@ -19,8 +19,4 @@ export class TaskDetailHeaderComponent implements OnInit {
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
     }
-
-    ngOnInit(): void {
-    }
-
 }

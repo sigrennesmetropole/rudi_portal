@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {IconRegistryService} from '../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../models/title-icon-type';
 
@@ -7,7 +7,7 @@ import {ALL_TYPES} from '../models/title-icon-type';
     templateUrl: './boolean-data-block.component.html',
     styleUrls: ['./boolean-data-block.component.scss']
 })
-export class BooleanDataBlockComponent implements OnInit {
+export class BooleanDataBlockComponent {
 
     /**
      * la valeur du booléen, true ou false
@@ -23,9 +23,6 @@ export class BooleanDataBlockComponent implements OnInit {
         private readonly iconRegistryService: IconRegistryService,
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
-    }
-
-    ngOnInit(): void {
     }
 
     /**

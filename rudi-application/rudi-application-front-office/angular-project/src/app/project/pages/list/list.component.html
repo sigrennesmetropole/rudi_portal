@@ -5,12 +5,9 @@
             'project-container-lg':  mediaSize.isLg, 'project-container-xl': mediaSize.isXl, 'project-container-xxl': mediaSize.isXxl}"
             class="project-container container-fluid pl-0 pr-0"
         >
-
-            <!--Composant de recherche libre-->
-            <app-search-box
-                [mediaSize]="mediaSize"
-                class="d-flex justify-content-center w-100"
-            ></app-search-box>
+            <app-page-title [title1]="'project.catalogue'|translate"
+                            [title2]="'project.reutilisations'|translate"
+                            class="d-flex justify-content-center w-100"></app-page-title>
 
             <!--Composant reutilisation banner-->
             <app-banner [mediaSize]="mediaSize">

@@ -10,9 +10,6 @@ export const CAPTCHA_NOT_VALID_CODE = 423; // Erreur 400 (pour erreur client)
     providedIn: 'root'
 })
 export class CaptchaCheckerService {
-    constructor() {
-    }
-
     validateCaptchaAndDoNextStep(isEnabled: boolean, rudiCaptcha: RudiCaptchaComponent, nextStep: Observable<unknown>): Observable<unknown> {
         // Si le service de captcha n'est pas activé, on ignore cette étape et passe au next step
         return !isEnabled ? nextStep : rudiCaptcha.validateInput().pipe(

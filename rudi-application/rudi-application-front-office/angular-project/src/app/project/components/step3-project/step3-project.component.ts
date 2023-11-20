@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {ProjectDatasetItem} from '../../model/project-dataset-item';
@@ -8,7 +8,7 @@ import {ProjectDatasetItem} from '../../model/project-dataset-item';
     templateUrl: './step3-project.component.html',
     styleUrls: ['./step3-project.component.scss']
 })
-export class Step3ProjectComponent implements OnInit {
+export class Step3ProjectComponent {
 
     @Input()
     public step3FormGroup: FormGroup;
@@ -43,8 +43,6 @@ export class Step3ProjectComponent implements OnInit {
     constructor(public dialog: MatDialog) {
     }
 
-    ngOnInit(): void {
-    }
     public openDialogDatasets(): void {
         this.datasetsDialogOpened.emit();
     }

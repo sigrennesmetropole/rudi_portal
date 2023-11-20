@@ -1,11 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
     selector: 'app-success-step3-template',
     templateUrl: './success-step3-template.component.html',
     styleUrls: ['./success-step3-template.component.scss']
 })
-export class SuccessStep3TemplateComponent implements OnInit {
+export class SuccessStep3TemplateComponent {
 
     @Input()
     stepTitle: string;
@@ -19,10 +19,4 @@ export class SuccessStep3TemplateComponent implements OnInit {
     buttonTitle: string;
     @Input()
     routerLink: string;
-    constructor() {
-    }
-
-    ngOnInit(): void {
-    }
-
 }

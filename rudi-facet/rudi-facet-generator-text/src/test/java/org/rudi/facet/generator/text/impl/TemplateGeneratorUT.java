@@ -34,7 +34,7 @@ class TemplateGeneratorUT {
 
 	@Test
 	void testStringTemplate() {
-		TemplateStringDataModelTest t = new TemplateStringDataModelTest();
+		TemplateStringTestDataModel t = new TemplateStringTestDataModel();
 		try {
 			DocumentContent d = templateGenerator.generateDocument(t);
 			Assert.assertNotNull(d);
@@ -51,7 +51,7 @@ class TemplateGeneratorUT {
 
 	@Test
 	void testFileTemplate() {
-		TemplateFileDataModelTest t = new TemplateFileDataModelTest();
+		TemplateFileTestDataModel t = new TemplateFileTestDataModel();
 		URL testResultURL = Thread.currentThread().getContextClassLoader().getResource("test-result.html");
 		try {
 			DocumentContent d = templateGenerator.generateDocument(t);

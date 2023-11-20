@@ -1,15 +1,15 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
-import {KonsultMetierService, MAX_RESULTS_PER_PAGE} from '../../../core/services/konsult-metier.service';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../../core/services/breakpoint-observer.service';
-import {Observable, Subject} from 'rxjs';
-import {OrderValue} from '../../../core/services/filters/order-filter';
-import {SimpleSkosConcept} from '../../../kos/kos-model';
+import {KonsultMetierService, MAX_RESULTS_PER_PAGE} from '@core/services/konsult-metier.service';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {OrderValue} from '@core/services/filters/order-filter';
+import {SimpleSkosConcept} from '@app/kos/kos-model';
 import {Item} from '../filter-forms/array-filter-form.component';
-import {Metadata, MetadataList} from '../../../api-kaccess';
-import {FiltersService} from '../../../core/services/filters.service';
-import {SidenavOpeningsService} from '../../../core/services/sidenav-openings.service';
-import {ThemeCacheService} from '../../../core/services/theme-cache.service';
+import {Metadata, MetadataList} from '@app/api-kaccess';
+import {FiltersService} from '@core/services/filters.service';
+import {SidenavOpeningsService} from '@core/services/sidenav-openings.service';
+import {ThemeCacheService} from '@core/services/theme-cache.service';
 import {takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
@@ -51,6 +51,8 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     searchIsRunning = false;
     searche$: Observable<string>;
     metadataListTotal: number;
+    private filtersServiceSubscription?: Subscription;
+
     get themes(): SimpleSkosConcept[] {
         return this.themeCacheService.themes;
     }
@@ -70,7 +72,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         private readonly filtersService: FiltersService,
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly sidenavOpeningsService: SidenavOpeningsService,
-        private readonly themeCacheService: ThemeCacheService,
+        private readonly themeCacheService: ThemeCacheService
     ) {
         this.searche$ = this.filtersService.searchFilter.value$;
     }
@@ -100,6 +102,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.filtersServiceSubscription.unsubscribe();
         this.isDestroyed$.next();
     }
 
@@ -111,6 +114,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         this.konsultMetierService.getProducerNames().subscribe(
             producerNames => this.producerNames = producerNames
         );
+        this.filtersServiceSubscription = this.filtersService.searchFilter.value$.subscribe();
     }
 
     getThemeLabelFor(metadata: Metadata): string {
@@ -119,5 +123,9 @@ export class ListContainerComponent implements OnInit, OnDestroy {
 
     getMetadataListTotal($event: number): void {
         this.metadataListTotal = $event;
+    }
+
+    onChanges(search: string): void {
+        this.filtersService.searchFilter.value = search;
     }
 }

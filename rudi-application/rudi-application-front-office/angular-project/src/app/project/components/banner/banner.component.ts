@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
-import {from, Observable} from 'rxjs';
 import {Router} from '@angular/router';
+import {from, Observable} from 'rxjs';
+import {MediaSize} from '../../../core/services/breakpoint-observer.service';
 
 @Component({
     selector: 'app-banner',
@@ -11,16 +11,14 @@ import {Router} from '@angular/router';
 export class BannerComponent {
     @Input() mediaSize: MediaSize;
 
-    constructor(private breakpointObserver: BreakpointObserverService,
-                private router: Router) {
-    }
-
-    ngOnInit(): void {
+    constructor(
+        private router: Router) {
     }
 
     submitProject(): Observable<boolean> {
         return from(this.router.navigate(['/projets/soumettre-un-projet']));
     }
+
     declareReuse(): Observable<boolean> {
         return from(this.router.navigate(['/projets/declarer-une-reutilisation']));
     }

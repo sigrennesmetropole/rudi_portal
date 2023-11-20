@@ -22,7 +22,7 @@ class DocxGeneratorUT {
 
 	@Test
 	void generate() {
-		DocxDataModelTest dataModel = new DocxDataModelTest();
+		DocxTestDataModel dataModel = new DocxTestDataModel();
 		try {
 			DocumentContent output = docxGenerator.generateDocument(dataModel);
 			assertEquals(output.getContentType(), GenerationFormat.DOCX.getMimeType());

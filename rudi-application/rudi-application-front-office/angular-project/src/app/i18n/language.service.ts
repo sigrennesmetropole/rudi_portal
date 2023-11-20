@@ -5,10 +5,6 @@ import {DictionaryEntry, Language} from "../api-kaccess";
   providedIn: 'root'
 })
 export class LanguageService {
-
-  constructor() {
-  }
-
   getCurrentLanguage(): Language {
     return Language.FrFr;
   }

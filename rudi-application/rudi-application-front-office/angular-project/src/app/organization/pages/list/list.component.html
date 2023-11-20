@@ -1,0 +1,13 @@
+<mat-sidenav-container>
+    <mat-sidenav-content>
+        <div class="container-fluid" [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd, 'p-large':mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+
+            <app-page-title [title1]="'organization.catalogue'|translate"
+                            [title2]="'organization.desOrganisations'|translate"
+                            class="d-flex justify-content-center w-100"></app-page-title>
+
+            <app-list-container-organization [mediaSize]="mediaSize">
+            </app-list-container-organization>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

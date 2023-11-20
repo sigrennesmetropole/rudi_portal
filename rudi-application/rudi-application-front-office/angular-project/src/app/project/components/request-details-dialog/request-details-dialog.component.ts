@@ -3,8 +3,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RequestDetails} from '../../../shared/models/request-details';
-import {CloseEvent, DialogClosedData} from '../../../data-set/models/dialog-closed-data';
+import {RequestDetails} from '@shared/models/request-details';
+import {CloseEvent, DialogClosedData} from '@app/data-set/models/dialog-closed-data';
+import * as moment from 'moment';
 import {Moment} from 'moment';
 
 /**
@@ -28,7 +29,6 @@ const COMMENT_MAX_LENGTH = 3000;
     styleUrls: ['./request-details-dialog.component.scss']
 })
 export class RequestDetailsDialogComponent implements OnInit {
-
     /**
      * Formulaire de saisie des infos du détail de la demande d'accès
      */
@@ -49,6 +49,12 @@ export class RequestDetailsDialogComponent implements OnInit {
      */
     commentMaxLength = COMMENT_MAX_LENGTH;
 
+    /**
+     * Date à partir de laquelle on peut sélectionner une date
+     * (grise les dates antérieures) pour le month-year-DatePicker
+     */
+    startDate: Moment;
+
     constructor(
         public dialogRef: MatDialogRef<RequestDetailsDialogComponent, DialogClosedData<RequestDetails>>,
         @Inject(MAT_DIALOG_DATA) public dialogData: RequestDetailsDialogData,
@@ -65,6 +71,9 @@ export class RequestDetailsDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // (mois actuel)+ 1
+        this.startDate =  moment().add(1, 'months').date(1);
+
         this.formGroup = this.formBuilder.group({
             comment: [''],
             date: [null, Validators.required]

@@ -1,16 +1,16 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ProjectDatasetItem} from '../../model/project-dataset-item';
-import {ProjectDatasetPictoType} from '../../model/project-dataset-picto-type';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ALL_TYPES as ALL_TITLE_ICON_TYPES, TitleIconType} from '../../../shared/models/title-icon-type';
+import {ProjectDatasetItem} from '../../model/project-dataset-item';
+import {ProjectDatasetPictoType} from '../../model/project-dataset-picto-type';
 
 @Component({
     selector: 'app-project-dataset-list',
     templateUrl: './project-dataset-list.component.html',
     styleUrls: ['./project-dataset-list.component.scss']
 })
-export class ProjectDatasetListComponent implements OnInit {
+export class ProjectDatasetListComponent {
 
     @Input()
     public items: ProjectDatasetItem[];
@@ -35,9 +35,6 @@ export class ProjectDatasetListComponent implements OnInit {
             titleIconType,
             this.domSanitizer.bypassSecurityTrustResourceUrl(`/assets/icons/${titleIconType}.svg`)
         );
-    }
-
-    ngOnInit(): void {
     }
 
     public isItemLogo(item: ProjectDatasetItem): boolean {

@@ -20,8 +20,8 @@
             <mat-hint class="title-hint">{{'project.request-details-dialog.dateHint'|translate}}</mat-hint>
             <div>
                 <app-month-year-datepicker [formGroup]="formGroup" controlName="date"
-                                           [errorMessage]="'project.request-details-dialog.dateError' | translate">
-
+                                           [errorMessage]="'project.request-details-dialog.dateError' | translate"
+                                           [startDate]="startDate">
                 </app-month-year-datepicker>
             </div>
 

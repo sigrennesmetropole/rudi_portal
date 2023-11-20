@@ -21,9 +21,6 @@ export class SelfdataRequestSectionComponent {
     @Output() requestDetailsClicked: EventEmitter<void> = new EventEmitter<void>();
     @Output() createRequestClicked: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor() {
-    }
-
     goToRequestDetails(): void {
         this.requestDetailsClicked.emit();
     }

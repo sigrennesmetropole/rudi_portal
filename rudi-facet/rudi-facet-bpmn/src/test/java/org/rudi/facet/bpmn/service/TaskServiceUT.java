@@ -42,22 +42,22 @@ import org.rudi.common.test.RudiAssertions;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.BpmnSpringBootTest;
-import org.rudi.facet.bpmn.bean.AssetDescription1Test;
-import org.rudi.facet.bpmn.bean.AssetDescription2Test;
+import org.rudi.facet.bpmn.bean.AssetDescription1TestData;
+import org.rudi.facet.bpmn.bean.AssetDescription2TestData;
 import org.rudi.facet.bpmn.bean.form.FormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.ProcessFormDefinitionSearchCriteria;
 import org.rudi.facet.bpmn.bean.form.SectionDefinitionSearchCriteria;
-import org.rudi.facet.bpmn.bean.workflow.TaskSearchCriteria1Test;
-import org.rudi.facet.bpmn.dao.workflow.AssetDescriptionDao2Test;
-import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity2Test;
+import org.rudi.facet.bpmn.bean.workflow.TaskSearchCriteria1TestBean;
+import org.rudi.facet.bpmn.dao.workflow.AssetDescription2TestDao;
+import org.rudi.facet.bpmn.entity.workflow.AssetDescription2TestEntity;
 import org.rudi.facet.bpmn.exception.BpmnInitializationException;
 import org.rudi.facet.bpmn.exception.FormConvertException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.bpmn.exception.InvalidDataException;
-import org.rudi.facet.bpmn.helper.workflow.AssetDescriptionWorkflowHelper2Test;
+import org.rudi.facet.bpmn.helper.workflow.AssetDescription2TestWorkflowHelper;
 import org.rudi.facet.bpmn.mapper.workflow.AssetDescriptionMapper2Test;
-import org.rudi.facet.bpmn.service.impl.TaskServiceImpl1Test;
-import org.rudi.facet.bpmn.service.impl.TaskServiceImpl2Test;
+import org.rudi.facet.bpmn.service.impl.TaskService1TestImpl;
+import org.rudi.facet.bpmn.service.impl.TaskService2TestImpl;
 import org.rudi.facet.generator.model.GenerationFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -92,22 +92,22 @@ class TaskServiceUT {
 	protected JavaMailSenderImpl javaMailSender;
 
 	@Autowired
-	private TaskServiceImpl2Test test2TaskService;
+	private TaskService2TestImpl test2TaskService;
 
 	@Autowired
-	private TaskServiceImpl1Test test1TaskService;
+	private TaskService1TestImpl test1TaskService;
 
 	@Autowired
-	private TaskQueryService<TaskSearchCriteria1Test> taskQueryService;
+	private TaskQueryService<TaskSearchCriteria1TestBean> taskQueryService;
 
 	@Autowired
 	private FormService formService;
 
 	@Autowired
-	private AssetDescriptionDao2Test test2AssetDescriptionDao;
+	private AssetDescription2TestDao test2AssetDescriptionDao;
 
 	@Autowired
-	private AssetDescriptionWorkflowHelper2Test test2AssetDescriptionHelper;
+	private AssetDescription2TestWorkflowHelper test2AssetDescriptionHelper;
 
 	@Autowired
 	private AssetDescriptionMapper2Test test2AssetDescriptionMapper;
@@ -257,7 +257,7 @@ class TaskServiceUT {
 		assertEquals(definitions2.size(), size + 1);
 
 		// création d'un tâche
-		AssetDescription1Test draft = new AssetDescription1Test();
+		AssetDescription1TestData draft = new AssetDescription1TestData();
 		draft.setDescription("Test workflow");
 		draft.setA("toto");
 		draft.setProcessDefinitionKey("test");
@@ -273,7 +273,7 @@ class TaskServiceUT {
 		assertNotNull(t1bis.getAsset());
 		assertEquals("titi", t1bis.getAsset().getDescription());
 
-		Page<Task> ts = taskQueryService.searchTasks(TaskSearchCriteria1Test.builder().a("toto").build(),
+		Page<Task> ts = taskQueryService.searchTasks(TaskSearchCriteria1TestBean.builder().a("toto").build(),
 				Pageable.unpaged());
 		long tsCount = ts.getTotalElements();
 
@@ -284,7 +284,7 @@ class TaskServiceUT {
 		Task t2 = test1TaskService.startTask(t1);
 		assertNotNull(t2);
 
-		ts = taskQueryService.searchTasks(TaskSearchCriteria1Test.builder().a("toto").build(), PageRequest.of(0, 10));
+		ts = taskQueryService.searchTasks(TaskSearchCriteria1TestBean.builder().a("toto").build(), PageRequest.of(0, 10));
 		assertNotNull(ts);
 		assertEquals(ts.getTotalElements(), tsCount + 1);
 
@@ -296,7 +296,7 @@ class TaskServiceUT {
 		Task t4 = test1TaskService.updateTask(t3);
 
 		// test création entity sans le draft
-		AssetDescription2Test t21bis = createTest2AssetDescription();
+		AssetDescription2TestData t21bis = createTest2AssetDescription();
 
 		Task t22 = test2TaskService.createDraft(t21bis);
 		assertNotNull(t22);
@@ -304,17 +304,17 @@ class TaskServiceUT {
 		Task t23 = test2TaskService.startTask(t22);
 		assertNotNull(t23);
 
-		ts = taskQueryService.searchTasks(TaskSearchCriteria1Test.builder().a("toto").build(), Pageable.unpaged());
+		ts = taskQueryService.searchTasks(TaskSearchCriteria1TestBean.builder().a("toto").build(), Pageable.unpaged());
 		assertNotNull(ts);
 		assertEquals(ts.getTotalElements(), tsCount + 2);
 
 		ts = taskQueryService.searchTasks(
-				TaskSearchCriteria1Test.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build(),
+				TaskSearchCriteria1TestBean.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build(),
 				Pageable.unpaged());
 		assertNotNull(ts);
 		assertEquals(ts.getTotalElements(), tsCount + 2);
 
-		ts = taskQueryService.searchTasks(TaskSearchCriteria1Test.builder().description("%es%").build(),
+		ts = taskQueryService.searchTasks(TaskSearchCriteria1TestBean.builder().description("%es%").build(),
 				Pageable.unpaged());
 		assertNotNull(ts);
 		assertEquals(ts.getTotalElements(), tsCount + 1);
@@ -323,18 +323,18 @@ class TaskServiceUT {
 		test1TaskService.doIt(t4.getId(), a.getName());
 
 		ts = taskQueryService.searchTasks(
-				TaskSearchCriteria1Test.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build(),
+				TaskSearchCriteria1TestBean.builder().status(Arrays.asList(Status.DRAFT, Status.PENDING)).build(),
 				Pageable.unpaged());
 		assertNotNull(ts);
 		assertEquals(ts.getTotalElements(), tsCount + 1);
 
 	}
 
-	private AssetDescription2Test createTest2AssetDescription() throws FormConvertException, InvalidDataException {
-		AssetDescription2Test draft2 = new AssetDescription2Test();
+	private AssetDescription2TestData createTest2AssetDescription() throws FormConvertException, InvalidDataException {
+		AssetDescription2TestData draft2 = new AssetDescription2TestData();
 		draft2.setDescription("Test2 workflow");
 		draft2.setA("toto");
-		AssetDescriptionEntity2Test t21 = test2AssetDescriptionHelper.createAssetEntity(draft2);
+		AssetDescription2TestEntity t21 = test2AssetDescriptionHelper.createAssetEntity(draft2);
 		t21.setProcessDefinitionKey("test");
 		t21.setStatus(Status.DRAFT);
 		t21.setFunctionalStatus("Draft");
@@ -342,7 +342,7 @@ class TaskServiceUT {
 		t21.setCreationDate(LocalDateTime.now());
 		t21.setUpdatedDate(t21.getCreationDate());
 		test2AssetDescriptionDao.save(t21);
-		AssetDescription2Test t21bis = test2AssetDescriptionMapper.entityToDto(t21);
+		AssetDescription2TestData t21bis = test2AssetDescriptionMapper.entityToDto(t21);
 		return t21bis;
 	}
 

@@ -2029,6 +2029,51 @@
 					}
 				}
 			}
+		},
+		"/organization-beans": {
+			"get": {
+				"tags": [
+					"organization"
+				],
+				"summary": "Collection d'organisations-beans",
+				"description": "Retourne une liste d'organisations",
+				"operationId": "searchOrganizationsBeans",
+				"parameters": [
+					{
+						"in": "query",
+						"description": "user lié aux organizations",
+						"name": "user_uuid",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-strukture-model.json#/components/schemas/OrganizationUserUuidParam"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-strukture-model.json#/components/schemas/PagedOrganizationBeanList"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
 		}
 	},
 	"components": {

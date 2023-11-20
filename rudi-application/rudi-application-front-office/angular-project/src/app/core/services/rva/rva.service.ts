@@ -1,5 +1,5 @@
-import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {Address} from '../../../selfdata/selfdata-api/model/address';
 
 @Injectable({
@@ -10,9 +10,6 @@ export abstract class RvaService {
 
     public static isValidQuery(query: string): boolean {
         return query.length > RvaService.MIN_QUERY_LENGTH;
-    }
-
-    constructor() {
     }
 
     abstract getFullAddresses(query: string): Observable<Address[]>;

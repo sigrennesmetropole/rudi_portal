@@ -1,57 +1,8 @@
 @import "src/app/styles/colors";
 @import "src/app/styles/variables-rudi";
 @import "src/app/styles/common-style";
+@import "src/app/styles/pagination";
 
-::ng-deep .ngx-pagination {
-    padding-left: 0;
-    margin-left: -6px !important;
-}
-
-
-::ng-deep .ngx-pagination .pagination-previous {
-    color: $primary-text-light !important;
-    font-weight: normal !important;
-    font-stretch: normal;
-}
-
-::ng-deep .ngx-pagination .pagination-next {
-    color: $primary-text-light !important;
-    font-weight: normal !important;
-    font-stretch: normal;
-}
-
-::ng-deep .ngx-pagination .current {
-    padding: 0.1875rem 0.625rem;
-    background: $primary-color !important;
-    color: #fefefe;
-    cursor: default;
-    font-size: 14px;
-    border-radius: 3px;
-    text-decoration: none;
-
-}
-
-::ng-deep .ngx-pagination a, .ngx-pagination button {
-    color: $primary-color !important;
-    display: block;
-    padding: 0.1875rem 0.625rem;
-    font-weight: 600 !important;
-    font-stretch: normal !important;
-    font-style: normal !important;
-
-}
-
-.pagination-font-size {
-    font-size: 14px;
-}
-
-.pagination-spacing-sm {
-    ::ng-deep .ngx-pagination a,
-    ::ng-deep .ngx-pagination .current,
-    ::ng-deep .ngx-pagination .disabled {
-        padding: 0.1875rem 0.425rem;
-    }
-}
 
 .mat-sidenav {
     margin-top: 106px;

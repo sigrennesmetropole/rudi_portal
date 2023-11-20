@@ -1,11 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
     selector: 'app-project-basic-details',
     templateUrl: './project-basic-details.component.html',
     styleUrls: ['./project-basic-details.component.scss']
 })
-export class ProjectBasicDetailsComponent implements OnInit {
+export class ProjectBasicDetailsComponent {
 
     /**
      * Chaîne décrivant le type de projet dont il s'agit
@@ -36,11 +36,4 @@ export class ProjectBasicDetailsComponent implements OnInit {
      */
     @Input()
     updatedDate: string;
-
-    constructor() {
-    }
-
-    ngOnInit(): void {
-    }
-
 }

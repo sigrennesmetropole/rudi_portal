@@ -1,6 +1,7 @@
 package org.rudi.facet.acl.helper;
 
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
 
@@ -19,9 +20,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.service.exception.AppServiceBadRequestException;
-import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.AccessKeyDto;
@@ -42,20 +40,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.UnknownHttpStatusCodeException;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
@@ -105,7 +96,6 @@ public class ACLHelper {
 	@Getter
 	@Value("${rudi.facet.acl.service.url:lb://RUDI-ACL/}")
 	private String aclServiceURL;
-
 
 	@Autowired
 	@Qualifier("rudi_oauth2")
@@ -295,9 +285,9 @@ public class ACLHelper {
 		return result;
 	}
 
-
 	@NotNull
-	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText, @Nullable String type) {
+	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText,
+			@Nullable String type) {
 		List<User> result = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(userUuids)) {
 			if (searchText == null) {
@@ -438,7 +428,7 @@ public class ACLHelper {
 	/**
 	 * Permet la modification du mot de passe d'un utilisateur.
 	 *
-	 * @param login de l'utilisateur
+	 * @param login       de l'utilisateur
 	 * @param oldPassword contient l'ancien mot de passe
 	 * @param newPassword contient le nouveau mot de passe
 	 */

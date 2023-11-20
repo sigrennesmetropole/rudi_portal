@@ -1,5 +1,10 @@
 package org.rudi.microservice.projekt.service.helper.linkeddataset;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+
 import java.io.IOException;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,8 +15,6 @@ import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.microservice.projekt.service.ProjectSpringBootTest;
-import org.rudi.microservice.projekt.service.helper.linkeddataset.LinkedDatasetExpirationHelper;
-import org.rudi.microservice.projekt.service.helper.linkeddataset.LinkedDatasetSubscriptionHelper;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetDao;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 
 @ProjectSpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -48,8 +47,7 @@ class LinkedDatasetExpirationHelperUT {
 
 		val result = linkedDatasetExpirationHelper.getValidatedLinkedDatasetExpired();
 
-		assertThat(result.size())
-				.isEqualTo(0);
+		assertThat(result.size()).isEqualTo(0);
 	}
 
 	@Test
@@ -59,8 +57,7 @@ class LinkedDatasetExpirationHelperUT {
 
 		val result = linkedDatasetExpirationHelper.getValidatedLinkedDatasetExpired();
 
-		assertThat(CollectionUtils.isNotEmpty(result))
-				.isTrue();
+		assertThat(CollectionUtils.isNotEmpty(result)).isTrue();
 	}
 
 	@Test
@@ -70,13 +67,11 @@ class LinkedDatasetExpirationHelperUT {
 
 		val result = linkedDatasetExpirationHelper.getValidatedLinkedDatasetExpired();
 
-		assertThat(CollectionUtils.isNotEmpty(result))
-				.isTrue();
+		assertThat(CollectionUtils.isNotEmpty(result)).isTrue();
 
 		val expiredFromResult = result.get(0);
 
-		assertThat(expiredFromResult.getUuid())
-				.isEqualTo(expiredLinkedDataset.getUuid());
+		assertThat(expiredFromResult.getUuid()).isEqualTo(expiredLinkedDataset.getUuid());
 	}
 
 	@Test
@@ -86,7 +81,7 @@ class LinkedDatasetExpirationHelperUT {
 
 		val result = linkedDatasetExpirationHelper.getRestrictedValidatedLinkedDatasetWithoutEndDate();
 
-		assertThat(CollectionUtils.isEmpty(result));
+		assertThat(CollectionUtils.isEmpty(result)).isTrue();
 	}
 
 	@Test
@@ -97,9 +92,8 @@ class LinkedDatasetExpirationHelperUT {
 
 		val result = linkedDatasetExpirationHelper.getRestrictedValidatedLinkedDatasetWithoutEndDate();
 
-		assertThat(CollectionUtils.isNotEmpty(result));
-		assertThat(result.get(0).getUuid())
-				.isEqualByComparingTo(withoutEndDate.getUuid());
+		assertThat(CollectionUtils.isNotEmpty(result)).isTrue();
+		assertThat(result.get(0).getUuid()).isEqualByComparingTo(withoutEndDate.getUuid());
 	}
 
 	@Test
@@ -119,8 +113,7 @@ class LinkedDatasetExpirationHelperUT {
 		createLinkedDatasetFromJson(JSON_EXPIRED);
 		val listToClean = linkedDatasetExpirationHelper.getValidatedLinkedDatasetExpired();
 		Assertions.assertThatCode(() -> linkedDatasetExpirationHelper.cleanLinkedDatasetExpired(listToClean))
-				.as("Le code ne throw aucune exception malgré les erreurs potentielles")
-				.doesNotThrowAnyException();
+				.as("Le code ne throw aucune exception malgré les erreurs potentielles").doesNotThrowAnyException();
 	}
 
 	@AfterEach

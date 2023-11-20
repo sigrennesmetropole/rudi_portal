@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
-import {Task} from '../../../../api-bpmn';
+import {MatTableDataSource} from '@angular/material/table';
 import * as moment from 'moment';
+import {Task} from '../../../../api-bpmn';
 import {Indicators} from '../../../../projekt/projekt-api';
 
 export interface Table1Data {
@@ -22,7 +21,7 @@ export interface OtherIndicators {
     templateUrl: './acces-details-table1.component.html',
     styleUrls: ['./acces-details-table1.component.scss']
 })
-export class AccesDetailsTable1Component implements OnInit, AfterViewInit {
+export class AccesDetailsTable1Component implements AfterViewInit {
     jdds: Table1Data[] = [];
     displayedColumns: string[] = ['date', 'titre', 'statut'];
     dataSource: MatTableDataSource<Table1Data> = new MatTableDataSource(this.jdds);
@@ -51,9 +50,6 @@ export class AccesDetailsTable1Component implements OnInit, AfterViewInit {
 
             this.dataSource = new MatTableDataSource(this.jdds);
         }
-    }
-
-    constructor(private _liveAnnouncer: LiveAnnouncer) {
     }
 
     @ViewChild(MatSort) sort: MatSort;
@@ -100,8 +96,4 @@ export class AccesDetailsTable1Component implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.dataSource.sort = this.sort;
     }
-
-    ngOnInit(): void {
-    }
-
 }

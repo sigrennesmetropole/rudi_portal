@@ -1,11 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
     selector: 'app-project-heading',
     templateUrl: './project-heading.component.html',
     styleUrls: ['./project-heading.component.scss']
 })
-export class ProjectHeadingComponent implements OnInit {
+export class ProjectHeadingComponent {
 
     /**
      * CHaîne base 64 du logo du projet
@@ -30,12 +30,4 @@ export class ProjectHeadingComponent implements OnInit {
      */
     @Input()
     status: string;
-
-
-    constructor() {
-    }
-
-    ngOnInit(): void {
-    }
-
 }

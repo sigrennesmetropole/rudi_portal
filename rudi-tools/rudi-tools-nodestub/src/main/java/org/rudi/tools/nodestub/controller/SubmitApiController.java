@@ -22,6 +22,7 @@ public class SubmitApiController implements SubmitApi {
 	@Autowired
 	private KalimHelper kalimHelper;
 
+	@Override
 	public ResponseEntity<Void> submitMetadata(Method method, @Valid org.rudi.facet.kaccess.bean.Metadata body)
 			throws Exception {
 		kalimHelper.submit(method, body);

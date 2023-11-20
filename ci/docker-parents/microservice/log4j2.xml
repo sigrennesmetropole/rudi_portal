@@ -34,13 +34,13 @@
             <appender-ref ref="apiLogger" level="DEBUG" />
             <appender-ref ref="console" level="DEBUG" />
         </Logger>    
-        <Logger name="org.springframework" level="DEBUG" additivity="false">
+        <Logger name="org.springframework" level="INFO" additivity="false">
             <appender-ref ref="fileLogger" level="INFO" />
-            <appender-ref ref="console" level="DEBUG" />
+            <appender-ref ref="console" level="INFO" />
         </Logger>
         <Logger name="org.rudi" level="DEBUG" additivity="false">
             <appender-ref ref="fileLogger" level="DEBUG" />
-            <appender-ref ref="console" level="DEBUG" />
+            <appender-ref ref="console" level="INFO" />
         </Logger>        
         <Root level="DEBUG" additivity="false">
             <appender-ref ref="console" />

@@ -14,8 +14,8 @@ import org.rudi.microservice.strukture.core.bean.OrganizationMemberType;
 import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.OrganizationSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.PagedOrganizationList;
-import org.rudi.microservice.strukture.core.bean.PasswordUpdate;
 import org.rudi.microservice.strukture.core.bean.PagedOrganizationUserMembers;
+import org.rudi.microservice.strukture.core.bean.PasswordUpdate;
 import org.rudi.microservice.strukture.facade.controller.api.OrganizationsApi;
 import org.rudi.microservice.strukture.service.organization.OrganizationService;
 import org.springframework.http.ResponseEntity;
@@ -136,4 +136,6 @@ public class OrganizationsController implements OrganizationsApi {
 		organizationService.updateUserOrganizationPassword(organizationUuid, passwordUpdate);
 		return ResponseEntity.noContent().build();
 	}
+
+
 }

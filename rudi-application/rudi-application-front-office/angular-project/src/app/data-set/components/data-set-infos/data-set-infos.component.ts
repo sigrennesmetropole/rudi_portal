@@ -436,36 +436,24 @@ export class DataSetInfosComponent implements OnInit {
      * @param period élément à traduire et afficher
      */
     getSelfDataPeriod(period: Period): string {
-        let translateKey;
         if (period && period.unit && period.value) {
+            let translateKey;
             switch (period.unit) {
                 case UnitEnum.Days:
-                    if (period.value > 1) {
-                        translateKey = 'donneesPersonnellesBox.days';
-                    } else {
-                        translateKey = 'donneesPersonnellesBox.day';
-                    }
+                    translateKey = (period.value > 1) ? 'donneesPersonnellesBox.days' : 'donneesPersonnellesBox.day';
                     break;
                 case UnitEnum.Months:
-                    if (period.value > 1) {
-                        translateKey = 'donneesPersonnellesBox.months';
-                    } else {
-                        translateKey = 'donneesPersonnellesBox.month';
-                    }
+                    translateKey = (period.value > 1) ? 'donneesPersonnellesBox.months' : 'donneesPersonnellesBox.month';
                     break;
                 case UnitEnum.Years:
-                    if (period.value > 1) {
-                        translateKey = 'donneesPersonnellesBox.years';
-                    } else {
-                        translateKey = 'donneesPersonnellesBox.year';
-                    }
+                    translateKey = (period.value > 1) ? 'donneesPersonnellesBox.years' : 'donneesPersonnellesBox.year';
                     break;
             }
 
-            return period.value + ' ' + this.translateService.instant(translateKey);
-        } else {
-            return null;
+            return `${period.value} ${this.translateService.instant(translateKey)}`;
         }
+
+        return null;
     }
 
     getSelfDataCategory(category: SelfdataCatagoriesEnum): string {

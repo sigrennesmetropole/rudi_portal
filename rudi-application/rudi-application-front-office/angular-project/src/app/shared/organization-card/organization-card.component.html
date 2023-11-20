@@ -1,0 +1,17 @@
+<mat-card
+    class="mat-elevation-z0 organization-card">
+    <mat-card-content (click)="onClickOrganization(organizationBean.uuid)">
+        <div class="d-flex my-3">
+            <div class="align-items-center">
+                <app-organization-logo [organizationId]="organizationBean.uuid"
+                                       [isANewRequest]="false"
+                                       cssClass="with-border"
+                                       organizationType="producer"
+                ></app-organization-logo>
+            </div>
+            <div class="resource_title">
+                {{organizationBean.name}}
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

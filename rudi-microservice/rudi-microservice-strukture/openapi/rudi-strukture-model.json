@@ -464,6 +464,10 @@
 						"description": "Le nombre de résultats à retourner par page",
 						"type": "integer",
 						"format": "int32"
+					},
+					"order": {
+						"description": "Le critère de tri des résultats",
+						"type": "string"
 					}
 				}
 			},
@@ -601,6 +605,39 @@
 						"type": "string"
 					}
 				}
+			},
+			"OrganizationBean": {
+				"description": "Organisation",
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string"
+					}
+				}
+			},
+			"PagedOrganizationBeanList": {
+				"description": "Liste paginée d'organisationsBeans",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Organisations de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/OrganizationBean"
+								}
+							}
+						}
+					}
+				]
 			}
 		}
 	}

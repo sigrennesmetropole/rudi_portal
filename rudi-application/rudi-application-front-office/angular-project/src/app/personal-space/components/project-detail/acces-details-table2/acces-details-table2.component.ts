@@ -1,11 +1,10 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {MatSort} from '@angular/material/sort';
-import {NewDatasetRequest} from '../../../../projekt/projekt-api';
-import * as moment from 'moment';
-import {DomSanitizer} from '@angular/platform-browser';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {DomSanitizer} from '@angular/platform-browser';
+import * as moment from 'moment';
+import {NewDatasetRequest} from '../../../../projekt/projekt-api';
 
 export interface Table2Data {
     date: string;
@@ -18,7 +17,7 @@ export interface Table2Data {
     templateUrl: './acces-details-table2.component.html',
     styleUrls: ['./acces-details-table2.component.scss']
 })
-export class AccesDetailsTable2Component implements OnInit, AfterViewInit {
+export class AccesDetailsTable2Component implements AfterViewInit {
     jdds: Table2Data[] = [];
     displayedColumns: string[] = ['date', 'titre', 'statut'];
     dataSource: MatTableDataSource<Table2Data> = new MatTableDataSource(this.jdds);
@@ -38,9 +37,10 @@ export class AccesDetailsTable2Component implements OnInit, AfterViewInit {
         }
     }
 
-    constructor(private domSanitizer: DomSanitizer,
-                private matIconRegistry: MatIconRegistry,
-                private _liveAnnouncer: LiveAnnouncer) {
+    constructor(
+        private domSanitizer: DomSanitizer,
+        private matIconRegistry: MatIconRegistry,
+    ) {
         this.matIconRegistry.addSvgIcon(
             'nouvelles_donnees',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/pictos/nouvelles_donnees.svg')
@@ -52,6 +52,4 @@ export class AccesDetailsTable2Component implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.dataSource.sort = this.sort;
     }
-
-    ngOnInit(): void {}
 }

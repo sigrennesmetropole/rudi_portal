@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 /**
  * Le error-box est une div générique capable d'afficher un message d'erreur et collé un message cliquable qui fait quelque-chose
@@ -8,7 +8,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
     templateUrl: './error-box.component.html',
     styleUrls: ['./error-box.component.scss']
 })
-export class ErrorBoxComponent implements OnInit {
+export class ErrorBoxComponent {
 
     /**
      * le texte principal de l'erreur, juste visuel
@@ -27,13 +27,6 @@ export class ErrorBoxComponent implements OnInit {
      */
     @Output()
     clickableTextClicked = new EventEmitter<void>();
-
-    /**
-     * Constructeur
-     */
-    constructor() {}
-
-    ngOnInit(): void {}
 
     /**
      * ai-je un texte de fourni ?

@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {Organization} from '../../../strukture/strukture-model';
-import {BreakpointObserverService, NgClassObject} from '../../../core/services/breakpoint-observer.service';
-import {switchMap} from 'rxjs/operators';
-import {UserService} from '../../../core/services/user.service';
-import {OrganizationMetierService} from '../../../core/services/organization/organization-metier.service';
-import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {OrganizationBean} from '@app/strukture/api-strukture';
+import {BreakpointObserverService, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {SearchOrganizationsService} from '@shared/list-organization-card/search-organizations.service';
+import {Observable} from 'rxjs';
+import {UserService} from '@core/services/user.service';
+import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
+import {PropertiesMetierService} from '@core/services/properties-metier.service';
 
 
 @Component({
@@ -14,56 +15,55 @@ import {PropertiesMetierService} from '../../../core/services/properties-metier.
 })
 
 
-export class OrganizationTabComponent implements OnInit {
-    myOrganizations: Organization[];
+export class OrganizationTabComponent implements OnInit, OnDestroy {
     isLoading: boolean;
     page: number;
-    itemsPerPage = 9;
     errorLoading: boolean;
+    itemsPerPage: number;
+
+    organizations$: Observable<OrganizationBean[]>;
+    totalOrganizations$: Observable<number>;
 
     constructor(private readonly breakpointObserver: BreakpointObserverService,
                 private readonly utilisateurService: UserService,
                 private readonly organizationMetierService: OrganizationMetierService,
                 private readonly propertiesMetierService: PropertiesMetierService,
+                private readonly searchOrganizationsService: SearchOrganizationsService
     ) {
-    }
-
-    get showOrganization(): boolean {
-        return this.myOrganizations.length > 0;
+        this.itemsPerPage = 9;
+        this.organizations$ = searchOrganizationsService.organizations$;
+        this.totalOrganizations$ = searchOrganizationsService.totalOrganizations$;
     }
 
     get paginationControlsNgClass(): NgClassObject {
         return this.breakpointObserver.getNgClassFromMediaSize('pagination-spacing');
     }
-
+    onPageChange(page: number): void {
+        this.searchOrganizationsService.currentPage$.next(page);
+    }
     ngOnInit(): void {
+        this.isLoading = true;
         this.getMyOrganisations();
+    }
+    ngOnDestroy(): void {
+        this.searchOrganizationsService.complete();
     }
 
     /**
      * Méthode qui permet de récupérer les organisations du user connecté
      */
     public getMyOrganisations(): void {
-        this.isLoading = true;
         this.utilisateurService.getConnectedUser()
-            .pipe(
-                switchMap(connectedUser => {
-                    // Recupération des organisations de l'utilisateur
-                    return this.organizationMetierService.getMyOrganizations(connectedUser?.uuid);
-                }))
             .subscribe(
-                {
-                    next: (organzations: Organization[] | undefined) => {
-                        this.myOrganizations = organzations;
-                        this.isLoading = false;
-                        this.errorLoading = false;
-                    },
-                    error: (e) => {
-                        console.error(e);
-                        this.isLoading = false;
-                        this.errorLoading = true;
-
-                    }
+                (user) => {
+                    this.searchOrganizationsService.initSubscriptions(user?.uuid, this.itemsPerPage);
+                    this.isLoading = false;
+                    this.errorLoading = false;
+                },
+                (e) => {
+                    console.error(e);
+                    this.isLoading = false;
+                    this.errorLoading = true;
                 }
             );
     }

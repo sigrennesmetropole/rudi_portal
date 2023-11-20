@@ -2,8 +2,10 @@
     <!--Composant de recherche libre-->
     <app-search-box
         [mediaSize]="mediaSize"
-        class="d-flex justify-content-center w-100"
-    ></app-search-box>
+        [libelle]="'searchbox.rechercherJeuDonnees'"
+        (searchTermsEmitter)="onChanges($event)"
+        class="d-flex justify-content-center w-100">
+    </app-search-box>
 
     <app-banner
         (selectedDatesItemsChange)="selectedDatesItems = $event"

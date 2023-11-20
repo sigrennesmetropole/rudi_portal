@@ -1,5 +1,9 @@
 package org.rudi.microservice.selfdata.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
+
 import java.util.UUID;
 
 import org.rudi.common.facade.helper.ControllerHelper;
@@ -18,9 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class AttachmentsController implements AttachmentsApi {
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODERATOR + "," + USER + ")")
 	public ResponseEntity<UUID> uploadAttachment(MultipartFile file) throws Exception {
 		final var authenticatedUserUuid = aclHelper.getAuthenticatedUserUuid();
-		//Vérifie les types des atachements
+		// Vérifie les types des atachements
 		selfdataInformationRequestHelper.checkMediaType(file.getContentType());
 
 		val documentContent = controllerHelper.documentContentFrom(file);
@@ -58,6 +59,7 @@ public class AttachmentsController implements AttachmentsApi {
 		return ResponseEntity.noContent().build();
 	}
 
+	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODERATOR + "," + USER + ")")
 	public ResponseEntity<DocumentMetadata> getAttachmentMetadata(UUID uuid) throws DocumentNotFoundException {
 		return ResponseEntity.ok(documentMetadataHelper.getDocumentMetadata(uuid));

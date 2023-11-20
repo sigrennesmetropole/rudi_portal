@@ -44,4 +44,6 @@ public class OrganizationCustomDaoImpl extends AbstractCustomDaoImpl<Organizatio
 		builder.addIsNotNull(searchCriteria.getActive(), organization -> organization.get("closing_date"));
 		builder.add(searchCriteria.getUserUuid(), (organization, userUuid) -> organization.join("members").get("userUuid").in(userUuid));
 	}
+
+
 }

@@ -10,12 +10,6 @@ export enum AuthenticationState {
 
 export abstract class AuthenticationMethod {
 
-    /**
-     * Constructeur
-     */
-    protected constructor() {
-    }
-
     abstract getBaseUrl(): string;
 
     abstract getContentType(): string;

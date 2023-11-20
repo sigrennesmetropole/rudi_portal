@@ -8,9 +8,9 @@
 </div>
 <div *ngIf="!isLoading">
     <div class="my-organisation-count"> {{'accountInfo.tab.myOrganizations'| translate}}
-        <span> ({{myOrganizations.length}})</span></div>
+        <span> ({{totalOrganizations$ | async}})</span></div>
     <!--Pas d'organisation -->
-    <mat-card class="mat-elevation-z0 card-no-result" *ngIf="!showOrganization">
+    <mat-card class="mat-elevation-z0 card-no-result" *ngIf="(totalOrganizations$ | async) <= 0">
         <mat-card-content>
             <div>
         <span>
@@ -20,25 +20,17 @@
             </div>
         </mat-card-content>
     </mat-card>
-    <div *ngIf="showOrganization">
+    <div *ngIf="(totalOrganizations$ | async) > 0">
         <div class="content">
-            <div fxLayout="row wrap">
-                <div
-                    *ngFor="let organisation of myOrganizations | paginate: { itemsPerPage: itemsPerPage, currentPage: page }"
-                    class="triplet-card"
-                >
-                    <app-organization-card
-                        [myOrganization]="organisation"
-                    ></app-organization-card>
-                </div>
-                <pagination-controls
-                    (pageChange)="page=$event"
-                    class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
-                    [ngClass]="paginationControlsNgClass"
-                    [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
-                    [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate">
-                </pagination-controls>
-            </div>
+
+           <app-list-organization-card
+                [organizations]="organizations$ | async"
+                [itemsPerPage]="itemsPerPage"
+                [totalItems]="totalOrganizations$ | async"
+                (pageChangeEvent)="onPageChange($event)"
+            ></app-list-organization-card>
+
+
         </div>
     </div>
 </div>

@@ -1,17 +1,16 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Order, ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
-import {UserService} from '../../../core/services/user.service';
-import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
+import {Order, ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
+import {UserService} from '@core/services/user.service';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {Sort} from '@angular/material/sort';
-import {ProjectDependenciesFetchers, ProjectDependenciesService} from '../../../core/services/asset/project/project-dependencies.service';
-import {injectDependenciesEach} from '../../../shared/utils/dependencies-utils';
+import {ProjectDependenciesFetchers, ProjectDependenciesService} from '@core/services/asset/project/project-dependencies.service';
+import {injectDependenciesEach} from '@shared/utils/dependencies-utils';
 import {tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {PagedProjectList} from '../../../projekt/projekt-model';
-import {mapEach} from '../../../shared/utils/ObservableUtils';
-import {BackPaginationSort} from '../../../shared/back-pagination/back-pagination-sort';
-import {SortTableInterface} from '../../../shared/back-pagination/sort-table-interface';
-import {TranslateService} from '@ngx-translate/core';
+import {PagedProjectList} from '@app/projekt/projekt-model';
+import {mapEach} from '@shared/utils/ObservableUtils';
+import {BackPaginationSort} from '@shared/back-pagination/back-pagination-sort';
+import {SortTableInterface} from '@shared/back-pagination/sort-table-interface';
 
 export interface ProjectSummary {
     uuid: string;
@@ -52,8 +51,7 @@ export class ReusesComponent implements OnInit {
                 private readonly userService: UserService,
                 private readonly breakpointObserver: BreakpointObserverService,
                 private readonly projectDependencyFetcher: ProjectDependenciesFetchers,
-                private readonly projectDependencyService: ProjectDependenciesService,
-                private readonly translateService: TranslateService) {
+                private readonly projectDependencyService: ProjectDependenciesService) {
         this.mediaSize = this.breakpointObserver.getMediaSize();
     }
 
@@ -100,7 +98,7 @@ export class ReusesComponent implements OnInit {
                 mapEach(({project, dependencies}) => ({
                     uuid: project.uuid,
                     updatedDate: new Date(project.updated_date),
-                    projectTitle: this.computeTitleProject(project.is_a_reuse) + project.title,
+                    projectTitle: project.title,
                     confidentiality: project.confidentiality.label,
                     status: project.functional_status,
                     numberOfDatasets: dependencies.numberOfRequests
@@ -130,18 +128,6 @@ export class ReusesComponent implements OnInit {
             this.sortIsRunning = true;
             this.backPaginationSort.currentPage = this.page;
             this.loadProjects(this.backPaginationSort.sortTable(sort));
-        }
-    }
-
-    /**
-     * Méthode qui permet de rajouter au titre du projet le bon prefixe en fonction de son statut
-     * @param isReuse : boolean permettant de désigner s'il s'agit d'une reutilisation ou non
-     */
-    computeTitleProject(isReuse: boolean): string {
-        if (isReuse) {
-            return this.translateService.instant('personalSpace.myReuses.isReuse') + ' ';
-        } else {
-            return this.translateService.instant('personalSpace.myReuses.isProject') + ' ';
         }
     }
 }

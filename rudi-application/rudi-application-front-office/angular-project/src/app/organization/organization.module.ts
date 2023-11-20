@@ -1,9 +1,13 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {DataSetModule} from '@app/data-set/data-set.module';
+import {ListContainerComponent} from '@app/organization/components/list-container/list-container.component';
+import {OrderComponent} from '@app/organization/components/order/order.component';
+import {ListComponent} from '@app/organization/pages/list/list.component';
 import {DetailComponent} from './pages/detail/detail.component';
 import {OrganizationRoutingModule} from './organization-routing.module';
-import {SharedModule} from '../shared/shared.module';
-import {CoreModule} from '../core/core.module';
+import {SharedModule} from '@shared/shared.module'
+import {CoreModule} from '@core/core.module'
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
@@ -21,14 +25,19 @@ import { UpdateUserPasswordPopinComponent } from './components/administration-ta
 
 
 @NgModule({
-    declarations: [DetailComponent,
+    declarations: [
+        OrderComponent,
+        ListContainerComponent,
+        DetailComponent,
+        ListComponent,
         OrganizationInformationsComponent,
         AdministrationTabComponent,
         OrganizationMembersTableComponent,
         OrganizationTableComponent,
         DeletionMemberConfirmationPopinComponent,
         DeletionMemberConfirmationPopinComponent,
-        UpdateUserPasswordPopinComponent],
+        UpdateUserPasswordPopinComponent
+    ],
     imports: [
         CommonModule,
         SharedModule,
@@ -37,12 +46,11 @@ import { UpdateUserPasswordPopinComponent } from './components/administration-ta
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-    ]
-    ,
-    providers:
-        [
+        DataSetModule,
+    ],
+    providers: [
             {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'}
-        ],
+    ],
     entryComponents: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

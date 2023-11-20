@@ -1,12 +1,12 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {PROCESS_DEFINITION_KEY_TYPES} from '../../../shared/models/title-icon-type';
-import {MatTableDataSource} from '@angular/material/table';
+import {Component, Input, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
-import {PaginatorComponent} from '../../../shared/paginator/paginator.component';
+import {SortDirection} from '@angular/material/sort/sort-direction';
+import {MatTableDataSource} from '@angular/material/table';
+import {ProcessDefinitionsKeyIconRegistryService} from '../../../core/services/process-definitions-key-icon-registry.service';
 import {RequestToStudy} from '../../../core/services/tasks-aggregator/request-to-study.interface';
 import {ProcessDefinitionEnum} from '../../../core/services/tasks/process-definition.enum';
-import {ProcessDefinitionsKeyIconRegistryService} from '../../../core/services/process-definitions-key-icon-registry.service';
-import {SortDirection} from '@angular/material/sort/sort-direction';
+import {PROCESS_DEFINITION_KEY_TYPES} from '../../../shared/models/title-icon-type';
+import {PaginatorComponent} from '../../../shared/paginator/paginator.component';
 import {ProcessDefinitionKeyTranslatePipe} from '../../../shared/pipes/process-definition-key-translate.pipe';
 import {compareDates, compareIgnoringCase} from '../../../shared/utils/comparators-utils';
 
@@ -15,7 +15,7 @@ import {compareDates, compareIgnoringCase} from '../../../shared/utils/comparato
     templateUrl: './tasks.component.html',
     styleUrls: ['./tasks.component.scss']
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent {
 
     requestsToStudyDisplayedColumns: string[] = ['receivedDate', 'processDefinitionKey', 'description', 'status'];
     dataSource: MatTableDataSource<RequestToStudy>;
@@ -57,10 +57,6 @@ export class TasksComponent implements OnInit {
         private readonly processDefinitionKeyTranslatePipe: ProcessDefinitionKeyTranslatePipe
     ) {
         processDefinitionsKeyIconRegistryService.addAllSvgIcons(PROCESS_DEFINITION_KEY_TYPES);
-    }
-
-
-    ngOnInit(): void {
     }
 
     // tslint:disable-next-line:no-any type de retour any[] obligatoire

@@ -3,9 +3,8 @@ import {CommonModule} from '@angular/common';
 import {ProjectRoutingModule} from './project-routing.module';
 import {ListComponent} from './pages/list/list.component';
 import {BannerComponent} from './components/banner/banner.component';
-import {SearchBoxComponent} from './components/search-box/search-box.component';
-import {CoreModule} from '../core/core.module';
-import {SharedModule} from '../shared/shared.module';
+import {CoreModule} from '@core/core.module';
+import {SharedModule} from '@shared/shared.module';
 import {MatStepperModule} from '@angular/material/stepper';
 import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
 import {AddDataSetDialogComponent} from './components/add-data-set-dialog/add-data-set-dialog.component';
@@ -30,7 +29,6 @@ import {SuccessStep3TemplateComponent} from './components/success-step3-template
     declarations: [
         ListComponent,
         BannerComponent,
-        SearchBoxComponent,
         AddDataSetDialogComponent,
         DetailComponent,
         OrderComponent,

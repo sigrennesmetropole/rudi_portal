@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {RadioListItem} from './radio-list-item';
+import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {RadioListItem} from './radio-list-item';
 
 /**
  * Composant générique de listes de suggestions radio bindées sur FormControl
@@ -10,7 +10,7 @@ import {FormGroup} from '@angular/forms';
     templateUrl: './radio-list.component.html',
     styleUrls: ['./radio-list.component.scss']
 })
-export class RadioListComponent implements OnInit {
+export class RadioListComponent {
 
     /**
      * La liste des suggestions du groupe de boutons radio
@@ -29,11 +29,4 @@ export class RadioListComponent implements OnInit {
      */
     @Input()
     public controlName: string;
-
-    constructor() {
-    }
-
-    ngOnInit(): void {
-    }
-
 }

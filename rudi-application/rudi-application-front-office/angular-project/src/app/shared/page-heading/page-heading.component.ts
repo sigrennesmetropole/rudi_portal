@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoint-observer.service';
 
 @Component({
@@ -6,7 +6,7 @@ import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoi
     templateUrl: './page-heading.component.html',
     styleUrls: ['./page-heading.component.scss']
 })
-export class PageHeadingComponent implements OnInit {
+export class PageHeadingComponent {
 
     @Input()
     organizationId: string;
@@ -24,8 +24,5 @@ export class PageHeadingComponent implements OnInit {
 
     constructor(private readonly breakpointObserverService: BreakpointObserverService) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
-    }
-
-    ngOnInit(): void {
     }
 }

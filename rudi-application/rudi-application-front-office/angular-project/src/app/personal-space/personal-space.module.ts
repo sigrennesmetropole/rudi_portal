@@ -51,7 +51,6 @@ import {MySelfdataRequestsComponent} from './components/my-requests-tables/my-se
 import {MyLinkedDatasetsComponent} from './components/my-requests-tables/my-linked-datasets/my-linked-datasets.component';
 import {MyProfilComponent} from './components/my-profil/my-profil.component';
 import {OrganizationTabComponent} from './components/organization-tab/organization-tab.component';
-import {OrganizationCardComponent} from './components/organization-card/organization-card.component';
 import {ProjectTaskDetailComponent} from './pages/project-task-detail/project-task-detail.component';
 import {ProjectModule} from '../project/project.module';
 
@@ -99,7 +98,6 @@ import {ProjectModule} from '../project/project.module';
         MySelfdataRequestsComponent,
         MyProfilComponent ,
         OrganizationTabComponent,
-        OrganizationCardComponent,
         ProjectTaskDetailComponent,
     ],
     imports: [

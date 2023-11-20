@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {IconRegistryService} from '../../../core/services/icon-registry.service';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
 import {ALL_TYPES} from '../../../shared/models/title-icon-type';
@@ -8,7 +8,7 @@ import {ALL_TYPES} from '../../../shared/models/title-icon-type';
     templateUrl: './selfdata-datasets.component.html',
     styleUrls: ['./selfdata-datasets.component.scss']
 })
-export class SelfdataDatasetsComponent implements OnInit {
+export class SelfdataDatasetsComponent {
     urlToDoc: string;
     searchUrlLoading = false;
 
@@ -18,9 +18,6 @@ export class SelfdataDatasetsComponent implements OnInit {
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
         this.getUrlToDoc();
-    }
-
-    ngOnInit(): void {
     }
 
     /**

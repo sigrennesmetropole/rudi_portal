@@ -30,6 +30,11 @@
                            [routerLinkActive]="'active'"><span>{{'header.reutilisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="#" routerLink="organization"
+                           [routerLinkActive]="'active'"><span
+                            class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc"
                            rel="noopener noreferrer" target="_blank">
                             <em class="fa fa-external-link fa-1x mr-2  icon-hide-mobile"></em>
@@ -142,6 +147,11 @@
                         <a class="nav-link" href="#" routerLink="projets"
                            routerLinkActive="active-item"><span
                             class="ul-items-mobile">{{'header.reutilisations'| translate}}</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" routerLink="organization"
+                           routerLinkActive="active-item"><span
+                            class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"

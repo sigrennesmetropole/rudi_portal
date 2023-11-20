@@ -1,13 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MatchingData} from '../../../selfdata/selfdata-api';
+import {Component, Input} from '@angular/core';
 import {SelfdataAttachmentService} from '../../../core/services/selfdata-attachment.service';
+import {MatchingData} from '../../../selfdata/selfdata-api';
 
 @Component({
     selector: 'app-matching-data-card',
     templateUrl: './matching-data-card.component.html',
     styleUrls: ['./matching-data-card.component.scss']
 })
-export class MatchingDataCardComponent implements OnInit {
+export class MatchingDataCardComponent {
     @Input() isDataTabEmpty: boolean;
     @Input() subscriptionSucced: boolean;
     @Input() data: MatchingData[];
@@ -20,8 +20,5 @@ export class MatchingDataCardComponent implements OnInit {
 
     constructor(
         private readonly selfdataAttachmentService: SelfdataAttachmentService) {
-    }
-
-    ngOnInit(): void {
     }
 }
