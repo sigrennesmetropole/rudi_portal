@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-selfdata</artifactId>
-		<version>1.1.5</version>
+		<version>1.1.6</version>
 	</parent>
 
 	<artifactId>rudi-microservice-selfdata-service</artifactId>
@@ -144,7 +144,7 @@
 		<dependency>
 			<groupId>org.rudi</groupId>
 			<artifactId>rudi-facet-dataset</artifactId>
-			<version>1.1.5</version>
+			<version>1.1.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -1,5 +1,7 @@
 package org.rudi.facet.apimaccess.service.impl;
 
+import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +18,7 @@ import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.application.ApplicationOperationAPI;
 import org.rudi.facet.apimaccess.api.subscription.SubscriptionOperationAPI;
+import org.rudi.facet.apimaccess.bean.APILifecycleStatusState;
 import org.rudi.facet.apimaccess.bean.APISearchCriteria;
 import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.bean.ApplicationInfo;
@@ -47,7 +50,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
 
 @Service
 @RequiredArgsConstructor
@@ -77,16 +79,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 	 * Usernames dont on peut gérer les souscriptions car on connaît leurs mots-de-passe
 	 */
 	@Getter(value = AccessLevel.PRIVATE, lazy = true)
-	private final List<String> handledSubscriptionUsernames = Arrays.asList(
-			apiManagerProperties.getRudiUsername(),
-			apiManagerProperties.getAnonymousUsername()
-	);
+	private final List<String> handledSubscriptionUsernames = Arrays.asList(apiManagerProperties.getRudiUsername(),
+			apiManagerProperties.getAnonymousUsername());
 
 	@Override
-	public Application createApplication(Application application, String username) throws ApplicationOperationException {
+	public Application createApplication(Application application, String username)
+			throws ApplicationOperationException {
 		final var createdApplication = applicationOperationAPI.createApplication(application, username);
-		applicationOperationAPI.generateApplicationKey(createdApplication.getApplicationId(), username, EndpointKeyType.PRODUCTION);
-		applicationOperationAPI.generateApplicationKey(createdApplication.getApplicationId(), username, EndpointKeyType.SANDBOX);
+		applicationOperationAPI.generateApplicationKey(createdApplication.getApplicationId(), username,
+				EndpointKeyType.PRODUCTION);
+		applicationOperationAPI.generateApplicationKey(createdApplication.getApplicationId(), username,
+				EndpointKeyType.SANDBOX);
 		return createdApplication;
 	}
 
@@ -96,7 +99,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public Applications searchApplication(ApplicationSearchCriteria applicationSearchCriteria, String username) throws ApplicationOperationException {
+	public Applications searchApplication(ApplicationSearchCriteria applicationSearchCriteria, String username)
+			throws ApplicationOperationException {
 		if (applicationSearchCriteria == null) {
 			applicationSearchCriteria = new ApplicationSearchCriteria();
 		}
@@ -110,7 +114,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public SubscriptionList searchApplicationAPISubscriptions(DevPortalSubscriptionSearchCriteria devPortalSubscriptionSearchCriteria, String username) throws SubscriptionOperationException {
+	public SubscriptionList searchApplicationAPISubscriptions(
+			DevPortalSubscriptionSearchCriteria devPortalSubscriptionSearchCriteria, String username)
+			throws SubscriptionOperationException {
 		if (devPortalSubscriptionSearchCriteria == null) {
 			throw new IllegalArgumentException("Les paramètres de recherche sont absents");
 		}
@@ -118,12 +124,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 				&& StringUtils.isEmpty(devPortalSubscriptionSearchCriteria.getApiId())) {
 			throw new IllegalArgumentException("Au moins un des paramètres apiId et applicationId est obligatoire");
 		}
-		if (devPortalSubscriptionSearchCriteria.getLimit() != null && devPortalSubscriptionSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
-			LOGGER.warn("Le nombre de souscriptions application - api dépasse le nombre d'élément maximum autorisé: {} > {}",
+		if (devPortalSubscriptionSearchCriteria.getLimit() != null
+				&& devPortalSubscriptionSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
+			LOGGER.warn(
+					"Le nombre de souscriptions application - api dépasse le nombre d'élément maximum autorisé: {} > {}",
 					devPortalSubscriptionSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
 			devPortalSubscriptionSearchCriteria.setLimit(LIMIT_MAX_VALUE);
 		}
-		return subscriptionOperationAPI.searchApplicationAPISubscriptions(devPortalSubscriptionSearchCriteria, username);
+		return subscriptionOperationAPI.searchApplicationAPISubscriptions(devPortalSubscriptionSearchCriteria,
+				username);
 	}
 
 	private List<org.wso2.carbon.apimgt.rest.api.publisher.Subscription> getAllSubscriptions(@Nonnull String apiId) {
@@ -132,30 +141,30 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public Subscription subscribeAPI(Subscription applicationAPISubscription, String username) throws APISubscriptionException {
+	public Subscription subscribeAPI(Subscription applicationAPISubscription, String username)
+			throws APISubscriptionException {
 		checkApplicationAPISubscription(applicationAPISubscription);
 		return subscriptionOperationAPI.createApplicationAPISubscription(applicationAPISubscription, username);
 	}
 
 	@Override
-	public Subscription subscribeAPIToDefaultUserApplication(String apiId, String username) throws APISubscriptionException, ApplicationOperationException {
+	public Subscription subscribeAPIToDefaultUserApplication(String apiId, String username)
+			throws APISubscriptionException, ApplicationOperationException {
 		String applicationId = getDefaultApplicationId(username);
-		val applicationAPISubscription = new Subscription()
-				.applicationId(applicationId)
-				.apiId(apiId)
+		val applicationAPISubscription = new Subscription().applicationId(applicationId).apiId(apiId)
 				.throttlingPolicy(getThrottlingPolicy(username));
 		return subscribeAPI(applicationAPISubscription, username);
 	}
 
 	@Override
-	public void createDefaultSubscriptions(String apiId, boolean isRestricted) throws APISubscriptionException, ApplicationOperationException {
+	public void createDefaultSubscriptions(String apiId, boolean isRestricted)
+			throws APISubscriptionException, ApplicationOperationException {
 
 		final List<String> usernamesThatHasAlreadySubscribed = getAllSubscriptions(apiId).stream()
 				.map(applicationAPISubscription -> {
 					final var subscriber = applicationAPISubscription.getApplicationInfo().getSubscriber();
 					return APIManagerProperties.Domains.removeDomainFromUsername(subscriber);
-				})
-				.collect(Collectors.toList());
+				}).collect(Collectors.toList());
 
 		final var rudiUsername = apiManagerProperties.getRudiUsername();
 		if (!usernamesThatHasAlreadySubscribed.contains(rudiUsername)) {
@@ -177,29 +186,34 @@ public class ApplicationServiceImpl implements ApplicationService {
 			if (getHandledSubscriptionUsernames().contains(username)) {
 				unsubscribeAPI(applicationAPISubscription.getSubscriptionId(), username);
 			} else {
-				final var causeMessage = String.format("Cannot delete subscriptions for usernames other than %s. Please change API status to RETIRED to automatically remove all subscriptions.", StringUtils.join(getHandledSubscriptionUsernames(), " or "));
+				final var causeMessage = String.format(
+						"Cannot delete subscriptions for usernames other than %s. Please change API status to RETIRED to automatically remove all subscriptions.",
+						StringUtils.join(getHandledSubscriptionUsernames(), " or "));
 				final var cause = new NotImplementedException(causeMessage);
-				throw new SubscriptionOperationException(applicationAPISubscription.getSubscriptionId(), username, cause);
+				throw new SubscriptionOperationException(applicationAPISubscription.getSubscriptionId(), username,
+						cause);
 			}
 		}
 	}
 
 	@Override
-	public boolean hasSubscribeAPIToDefaultUserApplication(String apiId, String username) throws ApplicationOperationException, SubscriptionOperationException {
+	public boolean hasSubscribeAPIToDefaultUserApplication(String apiId, String username)
+			throws ApplicationOperationException, SubscriptionOperationException {
 		String applicationId = getDefaultApplicationId(username);
 		return hasSubscribeAPI(apiId, applicationId, username);
 	}
 
 	@Override
-	public boolean hasSubscribeAPI(String apiId, String applicationId, String username) throws SubscriptionOperationException {
+	public boolean hasSubscribeAPI(String apiId, String applicationId, String username)
+			throws SubscriptionOperationException {
 		SubscriptionList applicationAPISubscriptions = searchApplicationAPISubscriptions(
-				new DevPortalSubscriptionSearchCriteria().apiId(apiId).applicationId(applicationId),
-				username);
+				new DevPortalSubscriptionSearchCriteria().apiId(apiId).applicationId(applicationId), username);
 		return CollectionUtils.isNotEmpty(applicationAPISubscriptions.getList());
 	}
 
 	@Override
-	public Subscription getSubscriptionAPI(String subscriptionId, String username) throws SubscriptionOperationException {
+	public Subscription getSubscriptionAPI(String subscriptionId, String username)
+			throws SubscriptionOperationException {
 		if (StringUtils.isEmpty(subscriptionId)) {
 			throw new IllegalArgumentException("L'identifiant de la souscription à récupérer est absent");
 		}
@@ -207,7 +221,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public Subscription updateSubscriptionAPI(Subscription applicationAPISubscription, String username) throws SubscriptionOperationException {
+	public Subscription updateSubscriptionAPI(Subscription applicationAPISubscription, String username)
+			throws SubscriptionOperationException {
 		checkApplicationAPISubscription(applicationAPISubscription);
 		if (StringUtils.isEmpty(applicationAPISubscription.getSubscriptionId())) {
 			throw new IllegalArgumentException("L'identifiant de la souscription à mettre à jour est absent");
@@ -224,9 +239,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username, MultiValueMap<String, String> parameters) throws APIManagerException, IOException {
+	public DocumentContent downloadAPIContent(UUID globalId, UUID mediaId, String username,
+			MultiValueMap<String, String> parameters) throws APIManagerException, IOException {
 		final var apiInfo = getApiInfo(globalId, mediaId);
-		return applicationOperationAPI.getAPIContent(apiInfo.getContext(), apiInfo.getVersion(), getDefaultApplicationId(username), username, parameters);
+		return applicationOperationAPI.getAPIContent(apiInfo.getContext(), apiInfo.getVersion(),
+				getDefaultApplicationId(username), username, parameters);
 	}
 
 	@Override
@@ -273,9 +290,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	private APIInfo getApiInfo(UUID globalId, UUID mediaId) throws APIsOperationException, APINotFoundException {
-		val apiList = apIsService.searchAPI(new APISearchCriteria()
-				.globalId(globalId)
-				.mediaUuid(mediaId));
+		val apiList = apIsService.searchAPI(new APISearchCriteria().globalId(globalId).mediaUuid(mediaId));
 		if (apiList.getCount() == 0) {
 			throw new APINotFoundException(globalId, mediaId);
 		}
@@ -283,13 +298,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public ApplicationKey getApplicationKey(String applicationId, String username, EndpointKeyType keyType) throws ApplicationOperationException {
-		return applicationOperationAPI.getApplicationKeyList(applicationId, username)
-				.getList()
-				.stream()
-				.filter(key -> key.getKeyType() == keyType)
-				.findFirst()
-				.orElse(null);
+	public ApplicationKey getApplicationKey(String applicationId, String username, EndpointKeyType keyType)
+			throws ApplicationOperationException {
+		return applicationOperationAPI.getApplicationKeyList(applicationId, username).getList().stream()
+				.filter(key -> key.getKeyType() == keyType).findFirst().orElse(null);
 	}
 
 	@Override
@@ -297,10 +309,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		return getOrCreateDefaultApplication(username, applicationProcessor);
 	}
 
-	private <R> R getOrCreateDefaultApplication(String username, ApplicationProcessor<R> applicationProcessor) throws ApplicationOperationException {
-		final var applications = searchApplication(new ApplicationSearchCriteria().name(defaultApplicationName), username);
+	private <R> R getOrCreateDefaultApplication(String username, ApplicationProcessor<R> applicationProcessor)
+			throws ApplicationOperationException {
+		final var applications = searchApplication(new ApplicationSearchCriteria().name(defaultApplicationName),
+				username);
 		if (CollectionUtils.isEmpty(applications.getList())) {
-			final var application = new Application().name(defaultApplicationName).throttlingPolicy(defaultApplicationRequestPolicy);
+			final var application = new Application().name(defaultApplicationName)
+					.throttlingPolicy(defaultApplicationRequestPolicy);
 			final var createdApplication = createApplication(application, username);
 			return applicationProcessor.processCreatedApplication(createdApplication);
 		} else {
@@ -312,7 +327,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private interface ApplicationProcessor<R> {
 		R processCreatedApplication(Application application);
 
-		R processExistingApplicationInfo(ApplicationInfo applicationInfo, String username) throws ApplicationOperationException;
+		R processExistingApplicationInfo(ApplicationInfo applicationInfo, String username)
+				throws ApplicationOperationException;
 	}
 
 	private final ApplicationProcessor<Application> applicationProcessor = new ApplicationProcessor<>() {
@@ -322,7 +338,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 
 		@Override
-		public Application processExistingApplicationInfo(ApplicationInfo applicationInfo, String username) throws ApplicationOperationException {
+		public Application processExistingApplicationInfo(ApplicationInfo applicationInfo, String username)
+				throws ApplicationOperationException {
 			return applicationOperationAPI.getApplication(applicationInfo.getApplicationId(), username);
 		}
 	};
@@ -340,15 +357,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 	};
 
 	@Override
-	public SubscriptionList searchUserSubscriptions(DevPortalSubscriptionSearchCriteria devPortalSubscriptionSearchCriteria, String username) throws SubscriptionOperationException {
+	public SubscriptionList searchUserSubscriptions(
+			DevPortalSubscriptionSearchCriteria devPortalSubscriptionSearchCriteria, String username)
+			throws SubscriptionOperationException {
 		if (devPortalSubscriptionSearchCriteria == null) {
 			throw new IllegalArgumentException("Les paramètres de recherche sont absents");
 		}
 		if (StringUtils.isEmpty(devPortalSubscriptionSearchCriteria.getApplicationId())) {
 			throw new IllegalArgumentException("ApplicationId est obligatoire");
 		}
-		if (devPortalSubscriptionSearchCriteria.getLimit() != null && devPortalSubscriptionSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
-			LOGGER.warn("Le nombre de souscriptions application - api dépasse le nombre d'élément maximum autorisé: {} > {}",
+		if (devPortalSubscriptionSearchCriteria.getLimit() != null
+				&& devPortalSubscriptionSearchCriteria.getLimit() > LIMIT_MAX_VALUE) {
+			LOGGER.warn(
+					"Le nombre de souscriptions application - api dépasse le nombre d'élément maximum autorisé: {} > {}",
 					devPortalSubscriptionSearchCriteria.getLimit(), LIMIT_MAX_VALUE);
 			devPortalSubscriptionSearchCriteria.setLimit(LIMIT_MAX_VALUE);
 		}
@@ -361,20 +382,34 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (myApps == null) {
 			throw new APIManagerException(String.format("No application found for user %s", username));
 		}
-		val defaultApp = myApps.getList().stream().filter(applicationInfo -> applicationInfo.getName().equals(defaultApplicationName)).findFirst();
+		val defaultApp = myApps.getList().stream()
+				.filter(applicationInfo -> applicationInfo.getName().equals(defaultApplicationName)).findFirst();
 		if (defaultApp.isEmpty()) {
-			throw new APIManagerException(String.format("Default application %s not found for user %s", defaultApplicationName, username));
+			throw new APIManagerException(
+					String.format("Default application %s not found for user %s", defaultApplicationName, username));
 		}
 		val defaultAppId = defaultApp.get().getApplicationId();
+
 		// 2- Recupération des souscriptions du defaultApp du owner
 		val searchCriteria = new DevPortalSubscriptionSearchCriteria().applicationId(defaultAppId);
 		val mySubscriptions = searchUserSubscriptions(searchCriteria, username);
+
 		if (mySubscriptions == null || mySubscriptions.getCount() == 0) {
 			// Pas de souscription trouvée, y a rien à supprimer donc comme souscription, on continue sur la suppression du linkedDataset
 			return;
 		}
+
 		val subscriptionsDeleted = new ArrayList<Subscription>(); // Elle servira pour rollbacker au besoin
 		for (Subscription subscription : mySubscriptions.getList()) {
+			// RUDI-4264 filtre sur l'état de l'API
+			if (APILifecycleStatusState
+					.fromValue(subscription.getApiInfo().getLifeCycleStatus()) == APILifecycleStatusState.BLOCKED) {
+				// l'api est bloquée, il ne sera pas possible d'en récupérer le détail
+				LOGGER.info("L'état {} de l'api {} ne permet pas de vérifier les souscriptions pour l'utilisateur",
+						subscription.getApiInfo().getLifeCycleStatus(), subscription.getApiId());
+				continue;
+			}
+
 			// Suppression de toutes les souscriptions aux médias de ce dataset
 			val subscribedAPI = apIsService.getAPIFromDevportal(subscription.getApiId(), username);
 			val apisDatasetUuid = subscribedAPI.getAdditionalProperties().get(DATASET_UUID_FIELD);
