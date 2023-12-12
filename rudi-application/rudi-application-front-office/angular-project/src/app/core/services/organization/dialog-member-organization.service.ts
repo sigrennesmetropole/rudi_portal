@@ -1,20 +1,22 @@
-import {Observable} from 'rxjs';
-import {DialogClosedData} from '../../../data-set/models/dialog-closed-data';
-import {DefaultMatDialogConfig} from '../default-mat-dialog-config';
-import {MatDialog} from '@angular/material/dialog';
+import {ComponentType} from '@angular/cdk/portal';
 import {Injectable} from '@angular/core';
-import {MemberPopinComponent} from '../../../shared/member-popin/member-popin.component';
-import {
-    OrganizationMemberDialogData
-} from '../../../organization/components/administration-tab/organization-members-table/organization-member-dialog-data';
-import {OrganizationMember} from '../../../strukture/strukture-model';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogClosedData} from '@app/data-set/models/dialog-closed-data';
 import {
     DeletionMemberConfirmationPopinComponent
-} from '../../../organization/components/administration-tab/deletion-member-confirmation-popin/deletion-member-confirmation-popin.component';
+} from '@app/organization/components/administration-tab/deletion-member-confirmation-popin/deletion-member-confirmation-popin.component';
+import {
+    OrganizationMemberDialogData
+} from '@app/organization/components/administration-tab/organization-members-table/organization-member-dialog-data';
+import {
+    OrganizationTableDialogData
+} from '@app/organization/components/administration-tab/organization-table/organization-table-dialog-data';
 import {
     UpdateUserPasswordPopinComponent
-} from '../../../organization/components/administration-tab/update-user-password-popin/update-user-password-popin.component';
-import {OrganizationTableDialogData} from '../../../organization/components/administration-tab/organization-table/organization-table-dialog-data';
+} from '@app/organization/components/administration-tab/update-user-password-popin/update-user-password-popin.component';
+import {OrganizationMember} from '@app/strukture/strukture-model';
+import {MemberPopinComponent} from '@shared/member-popin/member-popin.component';
+import {Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -27,40 +29,38 @@ export class DialogMemberOrganizationService {
     /**
      * Ouverture d'une dialog permettant d'administrer les membres d'une organisation
      */
-    public openDialogAddMember(organizationMemberDialogData: OrganizationMemberDialogData): Observable<DialogClosedData<OrganizationMember>> {
-        const dialogConfig = new DefaultMatDialogConfig<OrganizationMemberDialogData>();
-        dialogConfig.data = organizationMemberDialogData;
-        const dialogRef = this.dialog.open(MemberPopinComponent, dialogConfig);
-        return dialogRef.afterClosed();
+    public openDialogAddMember(
+        addOrganizationMemberDialogData: OrganizationMemberDialogData
+    ): Observable<DialogClosedData<OrganizationMember>> {
+        return this.openDialog(MemberPopinComponent, addOrganizationMemberDialogData);
     }
 
     /**
      * Ouverture d'une dialog permettant d'administrer les membres d'une organisation
      */
-    public openDialogUpdateMember(organizationMemberDialogData: OrganizationMemberDialogData): Observable<DialogClosedData<OrganizationMember>> {
-        const dialogConfig = new DefaultMatDialogConfig<OrganizationMemberDialogData>();
-        dialogConfig.data = organizationMemberDialogData;
-        const dialogRef = this.dialog.open(MemberPopinComponent, dialogConfig);
-        return dialogRef.afterClosed();
+    public openDialogUpdateMember(
+        updateOrganizationMemberDialogData: OrganizationMemberDialogData
+    ): Observable<DialogClosedData<OrganizationMember>> {
+        return this.openDialog(MemberPopinComponent, updateOrganizationMemberDialogData);
     }
 
     /**
      * Ouverture d'une dialog permettant de detacher un membre d'une organisation
      */
-    public openDialogDeletionConfirmation(organizationMemberDialogData: OrganizationMemberDialogData): Observable<DialogClosedData<OrganizationMember>> {
-        const dialogConfig = new DefaultMatDialogConfig<OrganizationMemberDialogData>();
-        dialogConfig.data = organizationMemberDialogData;
-        const dialogRef = this.dialog.open(DeletionMemberConfirmationPopinComponent, dialogConfig);
-        return dialogRef.afterClosed();
+    public openDialogDeletionConfirmation(
+        organizationMemberDialogData: OrganizationMemberDialogData
+    ): Observable<DialogClosedData<OrganizationMember>> {
+        return this.openDialog(DeletionMemberConfirmationPopinComponent, organizationMemberDialogData);
     }
 
     /**
      * Ouverture d'une dialog permettant de modifier le mot de passe d'une organisation
      */
     public openDialogUpdatepassword(organizationTableDialogData: OrganizationTableDialogData): Observable<DialogClosedData<void>> {
-        const dialogConfig = new DefaultMatDialogConfig<OrganizationTableDialogData>();
-        dialogConfig.data = organizationTableDialogData;
-        const dialogRef = this.dialog.open(UpdateUserPasswordPopinComponent, dialogConfig);
-        return dialogRef.afterClosed();
+        return this.openDialog(UpdateUserPasswordPopinComponent, organizationTableDialogData);
+    }
+
+    private openDialog<T, D, R>(component: ComponentType<T>, data?: D): Observable<R> {
+        return this.dialog.open(component, {data}).afterClosed();
     }
 }

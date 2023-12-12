@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" targetNamespace="http://org.eclipse.bpmn2/default/process">
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.4.RC1-v20220528-0836-B1" targetNamespace="http://org.eclipse.bpmn2/default/process">
   <bpmn:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="xs:boolean"/>
   <bpmn:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="xs:string"/>
   <bpmn:itemDefinition id="EMailData" isCollection="false" structureRef="org.rudi.facet.bpmn.bean.workflow.EMailData"/>
@@ -68,22 +68,24 @@
       <bpmn:documentation id="Documentation_5"><![CDATA[Positionne le workflow dans l'état "terminé" (completed)]]></bpmn:documentation>
       <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
-      <bpmn:script>
-        linkedDatasetWorkflowContext.info(&quot;Update status validated&quot;);
-        linkedDatasetWorkflowContext.updateStatus(context, execution, &quot;COMPLETED&quot;, &quot;VALIDATED&quot;, &quot;acceptée&quot;);
-        var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/linked-dataset/validated-subject.txt&quot;, &quot;file:templates/emails/linked-dataset/validated-body.html&quot;);
-        linkedDatasetWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);
+      <bpmn:script>linkedDatasetWorkflowContext.info(&quot;Update status validated&quot;);
+linkedDatasetWorkflowContext.updateStatus(context, execution, &quot;COMPLETED&quot;, &quot;VALIDATED&quot;, &quot;acceptée&quot;);
+var currentLocalDateTime =linkedDatasetWorkflowContext.getCurrentLocalDateTime(); 
+linkedDatasetWorkflowContext.addData(execution, &quot;commentDate&quot;, currentLocalDateTime);
+var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/linked-dataset/validated-subject.txt&quot;, &quot;file:templates/emails/linked-dataset/validated-body.html&quot;);
+linkedDatasetWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);
       </bpmn:script>
     </bpmn:scriptTask>
     <bpmn:scriptTask id="ScriptTask_3" name="Demande refusée" scriptFormat="javascript">
       <bpmn:documentation id="Documentation_7"><![CDATA[Positionne le workflow dans l'état "abandonné" (Canceled)]]></bpmn:documentation>
       <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
-      <bpmn:script>
-        linkedDatasetWorkflowContext.info(&quot;Update status cancelled&quot;);
-        linkedDatasetWorkflowContext.updateStatus(context, execution, &quot;CANCELLED&quot;,&quot;CANCELLED&quot;, &quot;refusée&quot;);
-        var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/linked-dataset/refused-subject.txt&quot;, &quot;file:templates/emails/linked-dataset/refused-body.html&quot;);
-        linkedDatasetWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);</bpmn:script>
+      <bpmn:script>linkedDatasetWorkflowContext.info(&quot;Update status cancelled&quot;);
+linkedDatasetWorkflowContext.updateStatus(context, execution, &quot;CANCELLED&quot;,&quot;CANCELLED&quot;, &quot;refusée&quot;);
+var currentLocalDateTime =linkedDatasetWorkflowContext.getCurrentLocalDateTime(); 
+linkedDatasetWorkflowContext.addData(execution, &quot;commentDate&quot;, currentLocalDateTime);
+var localEmailData = new org.rudi.facet.bpmn.bean.workflow.EMailData(&quot;file:templates/emails/linked-dataset/refused-subject.txt&quot;, &quot;file:templates/emails/linked-dataset/refused-body.html&quot;);
+linkedDatasetWorkflowContext.sendEMailToInitiator(context,execution,localEmailData);</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_6" sourceRef="ScriptTask_3" targetRef="EndEvent_13bsqqd"/>
     <bpmn:sequenceFlow id="SequenceFlow_8" sourceRef="ScriptTask_1" targetRef="UserTask_1"/>
@@ -149,19 +151,19 @@
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="81.0" width="110.0" x="755.0" y="91.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="34.0" width="68.0" x="776.0" y="114.0"/>
+          <dc:Bounds height="15.0" width="108.0" x="756.0" y="124.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="81.0" width="110.0" x="755.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="34.0" width="68.0" x="776.0" y="381.0"/>
+          <dc:Bounds height="15.0" width="100.0" x="760.0" y="391.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
         <dc:Bounds height="81.0" width="110.0" x="900.0" y="90.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="34.0" width="68.0" x="921.0" y="113.0"/>
+          <dc:Bounds height="15.0" width="102.0" x="904.0" y="123.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EventEndLinkedDatasetRestrictedAccess">

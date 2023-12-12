@@ -4,47 +4,58 @@
             <div *ngIf="!loading && !initializationError">
                 <button mat-raised-button class="subscribe-button" (click)="handleClickSubscribe()">
                     <mat-icon>lock_open</mat-icon>
-                    {{ 'personalSpace.projectDatasets.subscribe' | translate}}
+                    {{ 'personalSpace.projectDatasets.subscribe' | translate }}
                 </button>
             </div>
-            <app-error-box *ngIf="initializationError"
-                           [text]="'personalSpace.projectDatasets.errorInitialization' | translate"></app-error-box>
+            <app-error-box
+                *ngIf="initializationError"
+                [text]="'personalSpace.projectDatasets.errorInitialization' | translate"
+            ></app-error-box>
             <div *ngIf="loading">
-                <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="loading"></app-loader>
+                <app-loader
+                    [allPage]="false"
+                    [isLight]="true"
+                    [noText]="true"
+                    [active]="loading"
+                ></app-loader>
             </div>
         </div>
 
-                <!-- Tableau des JDDs ouverts -->
-                <app-open-dataset-table [openDatasetsList]="linkedDatasetsOpened"
-                                        [tableLoading]="openedLinkedDatasetLoading"
-                                        [hasAddButton]="addActionAuthorized"
-                                [hasDeleteButton]="deleteActionAuthorized"
-                                [disableAddButton]="addingInProgress"
-                                (addOpenedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, false)"
-                                (addingElementToOpenedTable)=updateAddButtonStatus($event)
-                                (requestUuidEmitter)="handleOpenDatasetRequestUuidChanged($event)">
-        </app-open-dataset-table>
+        <app-open-dataset-table
+            [openDatasetsList]="linkedDatasetsOpened"
+            [tableLoading]="openedLinkedDatasetLoading"
+            [hasAddButton]="addActionAuthorized"
+            [hasDeleteButton]="deleteActionAuthorized"
+            [disableAddButton]="addingInProgress"
+            (addOpenedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, false)"
+            (addingElementToOpenedTable)=updateAddButtonStatus($event)
+            (requestUuidEmitter)="handleOpenDatasetRequestUuidChanged($event)"
+        ></app-open-dataset-table>
 
-                <!-- Tableau des demandes d'accès à des JDDs restreints -->
-                <app-restricted-dataset-table [restrictedDatasetsList]="linkedDatasetsRestricted"
-                                              [tableLoading]="restrictedLinkedDatasetLoading"
-                                              [hasAddButton]="addActionAuthorized"
-                                      [hasDeleteButton]="deleteActionAuthorized"
-                                              [disableAddButton]="addingInProgress"
-                                              (addRestrictedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, true)"
-                                              (addingElementToRestrictedTable)=updateAddButtonStatus($event)
-                                              (requestUuidEmitter)="handleRestrictedDatasetRequestUuidChanged($event)">
-                </app-restricted-dataset-table>
+        <app-restricted-dataset-table
+            [restrictedDatasetsList]="linkedDatasetsRestricted"
+            [tableLoading]="restrictedLinkedDatasetLoading"
+            [hasAddButton]="addActionAuthorized"
+            [hasDeleteButton]="deleteActionAuthorized"
+            [hasCommentButton]="true"
+            [disableAddButton]="addingInProgress"
+            (addRestrictedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, true)"
+            (addingElementToRestrictedTable)=updateAddButtonStatus($event)
+            (requestUuidEmitter)="handleRestrictedDatasetRequestUuidChanged($event)"
+            (commentActionEvent)="onClickCommentAction($event, true)"
+        ></app-restricted-dataset-table>
 
-                <!-- Tableau des nouvelles demandes -->
-                <app-new-dataset-request-table [newDatasetRequestList]="newDatasetRequests"
-                                               [tableLoading]="newLinkedDatasetLoading"
-                                               [hasAddButton]="addActionAuthorized"
-                                       [hasDeleteButton]="deleteActionAuthorized"
-                                       [disableAddButton]="addingInProgress"
-                                       (addNewDatasetRequestEvent)="addNewDatasetRequest($event)"
-                                       (addingElementToNewDatasetTable)=updateAddButtonStatus($event)
-                                       (requestUuidEmitter)="handleNewDatasetRequestUuidChanged($event)">
-        </app-new-dataset-request-table>
+        <app-new-dataset-request-table
+            [newDatasetRequestList]="newDatasetRequests"
+            [tableLoading]="newLinkedDatasetLoading"
+            [hasAddButton]="addActionAuthorized"
+            [hasDeleteButton]="deleteActionAuthorized"
+            [disableAddButton]="addingInProgress"
+            [hasCommentButton]="true"
+            (addNewDatasetRequestEvent)="addNewDatasetRequest($event)"
+            (addingElementToNewDatasetTable)=updateAddButtonStatus($event)
+            (requestUuidEmitter)="handleNewDatasetRequestUuidChanged($event)"
+            (commentActionEvent)="onClickCommentAction($event, false)"
+        ></app-new-dataset-request-table>
     </mat-card>
 </div>

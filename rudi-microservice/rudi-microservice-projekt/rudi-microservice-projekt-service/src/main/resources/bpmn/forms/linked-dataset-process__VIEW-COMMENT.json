@@ -1,0 +1,9 @@
+{
+	"sections": [
+		{
+			"name": "view-comment-dataset",
+			"readOnly": true,
+			"label": "Commentaire"
+		}
+	]
+}

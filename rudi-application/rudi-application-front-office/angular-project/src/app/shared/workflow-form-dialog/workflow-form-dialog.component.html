@@ -1,0 +1,40 @@
+<mat-icon
+    class="icon-close"
+    svgIcon="icon-close"
+    [mat-dialog-close]="null"
+    (click)="onClickClose()"
+></mat-icon>
+
+<mat-dialog-content>
+    <span class="dialog-title">{{dialogData.title}}</span>
+
+    <p class="step-required-information" *ngIf="hasRequiredFields">
+        <span class="required-symbol">*</span>
+        {{'common.requiredInformation' | translate}}
+    </p>
+
+    <app-workflow-form
+        #workflowForm
+        [workflowForm]="dialogData.form"
+        (submitEvent)="handleFormSubmit()"
+    ></app-workflow-form>
+
+    <mat-dialog-actions class="d-flex justify-content-between">
+        <button
+            mat-stroked-button
+            class="buttons mat-stroked-button btn dialog-cancel"
+            (click)="onClickClose()"
+        >
+            <span>{{'popup.cancel'|translate}}</span>
+        </button>
+
+        <button
+            *ngIf="!workflowFormComponent.isReadonly"
+            mat-stroked-button
+            class="buttons mat-stroked-button btn dialog-validate"
+            (click)="onClickConfirm()"
+        >
+            <span>{{'popup.confirm'|translate}}</span>
+        </button>
+    </mat-dialog-actions>
+</mat-dialog-content>

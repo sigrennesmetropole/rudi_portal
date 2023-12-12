@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.SetUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.FormDefinition;
 import org.rudi.bpmn.core.bean.FormSectionDefinition;
@@ -50,8 +51,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author FNI18300
@@ -353,20 +354,19 @@ public class FormServiceImpl implements FormService {
 		}
 
 		final Map<String, FormManualDefinition> formManualDefinitionsByName = definitionResources.getForms();
-		final Collection<ProcessFormDefinition> createdOrUpdatedProcessFormDefinitions = new ArrayList<>(formManualDefinitionsByName.size());
+		final Collection<ProcessFormDefinition> createdOrUpdatedProcessFormDefinitions = new ArrayList<>(
+				formManualDefinitionsByName.size());
 		for (final Map.Entry<String, FormManualDefinition> entry : formManualDefinitionsByName.entrySet()) {
 			final String formName = entry.getKey();
 			final var formManualDefinition = entry.getValue();
 
-			val form = new FormDefinition()
-					.name(formName);
+			val form = new FormDefinition().name(formName);
 
 			var nextSectionOrder = 1;
 			for (final var referencedSection : formManualDefinition.getSections()) {
 				final var section = createdOrUpdatedSectionsByName.get(referencedSection.getName());
-				form.addFormSectionDefinitionsItem(new FormSectionDefinition()
-						.order(nextSectionOrder)
-						.readOnly(false)
+				form.addFormSectionDefinitionsItem(new FormSectionDefinition().order(nextSectionOrder)
+						.readOnly(BooleanUtils.toBooleanDefaultIfNull(referencedSection.isReadOnly(), false))
 						.sectionDefinition(section));
 				++nextSectionOrder;
 			}
@@ -374,10 +374,8 @@ public class FormServiceImpl implements FormService {
 			final var createdOrUpdatedForm = createOrUpdateFormDefinition(form);
 			final var criteria = createCriteriaFromSectionFormManualDefinitionFilename(formName);
 			createdOrUpdatedProcessFormDefinitions.add(createOrUpdateProcessFormDefinition(new ProcessFormDefinition()
-					.processDefinitionId(criteria.getProcessDefinitionId())
-					.userTaskId(criteria.getUserTaskId())
-					.actionName(criteria.getActionName())
-					.formDefinition(createdOrUpdatedForm)));
+					.processDefinitionId(criteria.getProcessDefinitionId()).userTaskId(criteria.getUserTaskId())
+					.actionName(criteria.getActionName()).formDefinition(createdOrUpdatedForm)));
 		}
 
 		return createdOrUpdatedProcessFormDefinitions;
@@ -391,14 +389,14 @@ public class FormServiceImpl implements FormService {
 		if (formName != null) {
 			final var splitFilename = formName.split(FORM_DEFINITION_FILE_NAME_SEPARATOR);
 			if (splitFilename.length >= 2) {
-				return ProcessFormDefinitionSearchCriteria.builder()
-						.processDefinitionId(splitFilename[0])
-						.userTaskId(splitFilename[1])
-						.actionName(splitFilename.length > 2 ? splitFilename[2] : null)
+				return ProcessFormDefinitionSearchCriteria.builder().processDefinitionId(splitFilename[0])
+						.userTaskId(splitFilename[1]).actionName(splitFilename.length > 2 ? splitFilename[2] : null)
 						.build();
 			}
 		}
-		throw new InvalidParameterException("Form name does not match process form definition naming convention \"<processDefinitionId>__<userTaskId>[__<actionName>]\" : " + formName);
+		throw new InvalidParameterException(
+				"Form name does not match process form definition naming convention \"<processDefinitionId>__<userTaskId>[__<actionName>]\" : "
+						+ formName);
 	}
 
 	interface AbstractFormElementAdaptor<T, C> {
@@ -433,7 +431,8 @@ public class FormServiceImpl implements FormService {
 
 	}
 
-	private class SectionAdaptor implements AbstractFormElementAdaptor<SectionDefinition, SectionDefinitionSearchCriteria> {
+	private class SectionAdaptor
+			implements AbstractFormElementAdaptor<SectionDefinition, SectionDefinitionSearchCriteria> {
 		@Override
 		public void validate(SectionDefinition element) {
 			validateSection(element);
@@ -467,11 +466,12 @@ public class FormServiceImpl implements FormService {
 		}
 	}
 
-
 	private class FormAdaptor implements AbstractFormElementAdaptor<FormDefinition, FormDefinitionSearchCriteria> {
 
-		private final Comparator<SectionDefinition> sectionComparator = Comparator.comparing(SectionDefinition::getUuid);
-		private final Comparator<FormSectionDefinition> formSectionComparator = Comparator.comparing(FormSectionDefinition::getSectionDefinition, sectionComparator);
+		private final Comparator<SectionDefinition> sectionComparator = Comparator
+				.comparing(SectionDefinition::getUuid);
+		private final Comparator<FormSectionDefinition> formSectionComparator = Comparator
+				.comparing(FormSectionDefinition::getSectionDefinition, sectionComparator);
 
 		@Override
 		public void validate(FormDefinition element) {
@@ -519,15 +519,16 @@ public class FormServiceImpl implements FormService {
 		}
 	}
 
-
-	private class ProcessFormAdaptor implements AbstractFormElementAdaptor<ProcessFormDefinition, ProcessFormDefinitionSearchCriteria> {
+	private class ProcessFormAdaptor
+			implements AbstractFormElementAdaptor<ProcessFormDefinition, ProcessFormDefinitionSearchCriteria> {
 		@Override
 		public void validate(ProcessFormDefinition element) {
 			validateProcessForm(element);
 		}
 
 		@Override
-		public ProcessFormDefinitionSearchCriteria buildSearchCriteriaToFindExisting(ProcessFormDefinition processForm) {
+		public ProcessFormDefinitionSearchCriteria buildSearchCriteriaToFindExisting(
+				ProcessFormDefinition processForm) {
 			final var criteria = new ProcessFormDefinitionSearchCriteria();
 			criteria.setProcessDefinitionId(processForm.getProcessDefinitionId());
 			criteria.setUserTaskId(processForm.getUserTaskId());

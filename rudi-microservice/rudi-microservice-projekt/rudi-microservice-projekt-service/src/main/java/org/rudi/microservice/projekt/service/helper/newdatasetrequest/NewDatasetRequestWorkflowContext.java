@@ -10,6 +10,7 @@ import javax.script.ScriptContext;
 
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.rudi.bpmn.core.bean.Status;
+import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.bean.workflow.EMailDataModel;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
@@ -43,6 +44,20 @@ public class NewDatasetRequestWorkflowContext extends
 			ACLHelper aclHelper, FormHelper formHelper, ProjectCustomDao projectCustomDao) {
 		super(eMailService, templateGenerator, assetDescriptionDao, assignmentHelper, aclHelper, formHelper);
 		this.projectCustomDao = projectCustomDao;
+	}
+
+	@Transactional(readOnly = false)
+	public void addData(ExecutionEntity executionEntity, String key, Object value) {
+		NewDatasetRequestEntity datasetRequestEntity;
+		try {
+			datasetRequestEntity = super.injectData(executionEntity, key, value);
+			getAssetDescriptionDao().save(datasetRequestEntity);
+			log.debug("WkC - Update data {} for asset {}", key, datasetRequestEntity);
+		} catch (AppServiceException e) {
+			log.error("WkC - Error in update data {}", key, e);
+
+		}
+
 	}
 
 	@Transactional(readOnly = false)

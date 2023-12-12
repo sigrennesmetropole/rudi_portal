@@ -197,7 +197,8 @@
         "close": "Fermer",
         "cancel": "Annuler",
         "inProgress": "Traitement en cours",
-        "validate": "Valider"
+        "validate": "Valider",
+        "confirm": "Confirmer"
     },
     "header": {
         "creationPortal": "Portail en cours de création.",
@@ -1304,6 +1305,10 @@
             "delete": {
                 "error": "Echec de la suppression du jeu de données. Merci de renouveler la suppression. Si le problème persiste veuillez contacter un administrateur.",
                 "alt": "bouton de suppression "
+            },
+            "show-comment": {
+                "error": "Vous n'avez pas de nouveau commentaire.",
+                "dialog-title": "Commentaire"
             }
         },
         "dialogDatasets": {
@@ -1411,7 +1416,7 @@
         "datasetTotal": "Jeux de donnée",
         "reusesTotal": "Réutilisation",
         "noMetadata":  "L'organisation n'a publié aucun jeu de données.",
-        "noReuse": "L'organisation n'a publié aucun projet ou réutilisation.",
+        "noReuse": "L'organisation n'a publié aucune réutilisation.",
         "description": "Description",
         "catalogue": "Catalogue ",
         "desOrganisations": "des organisations"

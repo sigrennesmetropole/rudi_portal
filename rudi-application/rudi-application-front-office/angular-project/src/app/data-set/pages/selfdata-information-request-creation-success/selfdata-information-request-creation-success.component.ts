@@ -9,7 +9,6 @@ import {DateTimeUtils} from '../../../shared/utils/date-time-utils';
 @Component({
     selector: 'app-selfdata-information-request-creation-success',
     templateUrl: './selfdata-information-request-creation-success.component.html',
-    styleUrls: ['./selfdata-information-request-creation-success.component.scss']
 })
 export class SelfdataInformationRequestCreationSuccessComponent {
     metadata: Metadata;

@@ -136,8 +136,12 @@ public class FormHelper {
 	}
 
 	public Form lookupDraftForm(String processDefinitionKey) throws FormDefinitionException {
+		return lookupViewForm(processDefinitionKey, DRAFT_USER_TASK_ID);
+	}
+
+	public Form lookupViewForm(String processDefinitionKey, String userKey) throws FormDefinitionException {
 		Form result = null;
-		ProcessFormDefinitionSearchCriteria searchCriteria = createSearchCriteria(processDefinitionKey);
+		ProcessFormDefinitionSearchCriteria searchCriteria = createSearchCriteria(processDefinitionKey, userKey);
 		Page<ProcessFormDefinitionEntity> processFormDefinitionEntities = processFormDefinitionCustomDao
 				.searchProcessFormDefintions(searchCriteria, PageRequest.of(0, 1, createSortCriteria()));
 		if (!processFormDefinitionEntities.isEmpty()) {
@@ -145,7 +149,7 @@ public class FormHelper {
 			try {
 				result = formMapper.entityToDto(processFormDefinitionEntity.getFormDefinition());
 			} catch (FormDefinitionException e) {
-				log.warn("Failed to set form for draft task", e);
+				log.warn("Failed to set form for task with key {}", userKey, e);
 			}
 		}
 		return result;
@@ -342,10 +346,10 @@ public class FormHelper {
 				.actionName(actionName != null ? actionName : "main").acceptFlexActionName(actionName == null).build();
 	}
 
-	private ProcessFormDefinitionSearchCriteria createSearchCriteria(String processDefinitionKey) {
+	private ProcessFormDefinitionSearchCriteria createSearchCriteria(String processDefinitionKey, String userTaskId) {
 		String processInstanceId = lookupBpmnHelper().lookupProcessInstanceBusinessKey(processDefinitionKey, null);
 		return ProcessFormDefinitionSearchCriteria.builder().processDefinitionId(processInstanceId)
-				.acceptFlexRevision(true).userTaskId(DRAFT_USER_TASK_ID).acceptFlexUserTaskId(true).build();
+				.acceptFlexRevision(true).userTaskId(userTaskId).acceptFlexUserTaskId(true).build();
 	}
 
 	private Sort createSortCriteria() {

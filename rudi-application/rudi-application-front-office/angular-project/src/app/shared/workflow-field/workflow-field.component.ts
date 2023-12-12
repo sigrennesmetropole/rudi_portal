@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Field, Section} from '../../api-bpmn';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {WorkflowProperties} from '../workflow-form/workflow-properties';
+import {Field} from '@app/api-bpmn';
+import {WorkflowProperties} from '@shared/workflow-form/workflow-properties';
 
 /**
  * Champ généré dynamiquement à partir d'un {@link Field} du WorkFlow.
@@ -13,18 +13,14 @@ import {WorkflowProperties} from '../workflow-form/workflow-properties';
     styleUrls: ['./workflow-field.component.scss']
 })
 export class WorkflowFieldComponent {
-
     /**
-     * On est obligé d'avoir un élément parent de <mat-form-field> avec [formGroup]="formGroup" dans le template
+     * Props
      */
     @Input()
     formGroup: FormGroup;
 
-    /**
-     * Section contenant le champ <i>field</i>
-     */
     @Input()
-    section: Section;
+    formControlNamePrefix: string;
 
     @Input()
     field: Field;
@@ -32,14 +28,14 @@ export class WorkflowFieldComponent {
     @Input()
     properties: WorkflowProperties;
 
-    @Input()
-    worflowFormReadOnly: boolean;
-
     @Output()
     submit: EventEmitter<void> = new EventEmitter<void>();
 
+    /**
+     * Getters
+     */
     get formControlName(): string {
-        return computeFormControlName(this.section, this.field);
+        return `${this.formControlNamePrefix}_${this.field.definition.name}`;
     }
 
     get label(): string {
@@ -55,19 +51,17 @@ export class WorkflowFieldComponent {
     }
 
     get readonly(): boolean {
-        return this.field.definition.readOnly || this.worflowFormReadOnly;
+        return this.field.definition.readOnly;
     }
 
     get formControl(): AbstractControl {
         return this.formGroup.get(this.formControlName);
     }
 
-
+    /**
+     * Methods
+     */
     addOtherControls(): void {
         // Par défaut on ne rajoute, les components fils en rajoutent si besoin
     }
-}
-
-export function computeFormControlName(section: Section, field: Field): string {
-    return section.name + '_' + field.definition.name;
 }

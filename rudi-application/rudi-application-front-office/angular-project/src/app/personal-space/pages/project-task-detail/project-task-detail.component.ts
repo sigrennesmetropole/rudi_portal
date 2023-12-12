@@ -11,6 +11,7 @@ import {LinkedDatasetMetadatas} from '@core/services/asset/project/project-depen
 import {ProjectSubmissionService} from '@core/services/asset/project/project-submission.service';
 import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {DataSetActionsAuthorizationService} from '@core/services/data-set/data-set-actions-authorization.service';
+import {LogService} from '@core/services/log.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {
     ProjectDependencies,
@@ -51,6 +52,7 @@ export class ProjectTaskDetailComponent
         private readonly sanitizer: DomSanitizer,
         private readonly projektService: ProjektService,
         private readonly dataSetActionsAuthorizationService: DataSetActionsAuthorizationService,
+        protected logger: LogService,
         readonly dialog: MatDialog,
         readonly translateService: TranslateService,
         readonly snackBarService: SnackBarService,
@@ -60,7 +62,7 @@ export class ProjectTaskDetailComponent
         readonly projectSubmissionService: ProjectSubmissionService,
         readonly projectConsultService: ProjectConsultationService,
     ) {
-        super(dialog, translateService, snackBarService, taskWithDependenciesService, projectTaskMetierService);
+        super(dialog, translateService, snackBarService, taskWithDependenciesService, projectTaskMetierService, logger);
         iconRegistry.addSvgIcon('project-svg-icon',
             sanitizer.bypassSecurityTrustResourceUrl('assets/icons/process-definitions-key/project_definition_key.svg'));
     }

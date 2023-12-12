@@ -15,6 +15,8 @@ import {
     ProjectMainInformationLabelComponent
 } from '@shared/project-main-informations/project-main-information-label/project-main-information-label.component';
 import {SearchBoxComponent} from '@shared/search-box/search-box.component';
+import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
+import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
 import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
 import {BotDetectCaptchaModule} from 'angular-captcha';
 import {PopoverModule} from 'ngx-smart-popover';
@@ -91,7 +93,8 @@ import {WorkflowFieldTextComponent} from './workflow-field-text/workflow-field-t
 import {WorkflowFieldComponent} from './workflow-field/workflow-field.component';
 import {WorkflowFormSubmitSuccessComponent} from './workflow-form-submit-success/workflow-form-submit-success.component';
 import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
-import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component';
+import { IsSectionDisplayedPipe } from '@shared/workflow-form/pipes/is-section-displayed.pipe';
+import { IsSectionOnlyHelpPipe } from '@shared/workflow-form/pipes/is-section-only-help.pipe';
 
 @NgModule({
     declarations:
@@ -135,7 +138,8 @@ import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component'
             WorkflowFieldTemplateComponent,
             WorkflowFieldComponent,
             WorkflowFieldTextComponent,
-            WorkflowPopinComponent,
+            WorkflowFieldDateComponent,
+            WorkflowFormDialogComponent,
             CopiedButtonComponent,
             PasswordComponent,
             ProjectMainInformationsComponent,
@@ -177,7 +181,9 @@ import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component'
             RestrictedDatasetTableComponent,
             DeletionConfirmationPopinComponent,
             DatasetTableComponent,
-            ClipboardFieldComponent
+            ClipboardFieldComponent,
+            IsSectionDisplayedPipe,
+            IsSectionOnlyHelpPipe
         ],
     imports: [
         CommonModule,
@@ -229,6 +235,7 @@ import {WorkflowPopinComponent} from './workflow-popin/workflow-popin.component'
         TabContentDirective,
         BannerButtonComponent,
         WorkflowFormComponent,
+        WorkflowFormDialogComponent,
         CopiedButtonComponent,
         PasswordComponent,
         ProjectMainInformationsComponent,

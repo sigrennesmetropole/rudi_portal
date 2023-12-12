@@ -100,3 +100,6 @@ body {
     top: 0 !important;
 }
 
+.cdk-overlay-container {
+    z-index: 999 !important;
+}

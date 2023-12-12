@@ -14,7 +14,7 @@
 	rudi_theme	Theme	Category for thematic classification of the data		text	10	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE		rudi	
 	rudi_keywords	Keywords	List of tags that can be used to retrieve the data		text	11	#VALUE	TRUE	FALSE	TRUE	TRUE	TRUE	FALSE		rudi	
 	rudi_producer	Producer	Entity that produces the data on the Producer node		none	12	";"	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		rudi	
-	rudi_producer_organization_id	organization uuid	Unique identifier of the organization in RUDI system		text	13	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_producer	rudi	
+	rudi_producer_organization_id	organization uuid	Unique identifier of the organization in RUDI system		text	13	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_producer	rudi	
 	rudi_producer_organization_name	organization name	Updated offical name of the organization		text	14	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	rudi_producer	rudi	
 	rudi_producer_organization_address	organization address	Updated offical postal address of the organization		textbox	15	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_producer	rudi	
 	rudi_producer_organization_coordinates_latitude	organization coordinates latitude	GPS coordinates in EPSG:4326/WGS 84 coordinates (latitude)		float	16	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	rudi_producer	rudi	

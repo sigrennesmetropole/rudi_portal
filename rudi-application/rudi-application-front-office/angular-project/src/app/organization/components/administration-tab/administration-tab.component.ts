@@ -1,14 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Organization} from '../../../strukture/strukture-model';
-import {OrganizationMetierService} from '../../../core/services/organization/organization-metier.service';
-import {ALL_TYPES} from '../../../shared/models/title-icon-type';
-import {IconRegistryService} from '../../../core/services/icon-registry.service';
 import {ActivatedRoute} from '@angular/router';
+import {Organization} from '@app/strukture/strukture-model';
+import {IconRegistryService} from '@core/services/icon-registry.service';
+import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
+import {ALL_TYPES} from '@shared/models/title-icon-type';
 
 @Component({
     selector: 'app-administration-tab',
     templateUrl: './administration-tab.component.html',
-    styleUrls: ['./administration-tab.component.scss']
 })
 export class AdministrationTabComponent implements OnInit {
 

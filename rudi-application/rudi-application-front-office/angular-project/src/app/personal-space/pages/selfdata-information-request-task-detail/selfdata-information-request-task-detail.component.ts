@@ -1,30 +1,31 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ALL_TYPES} from '../../../shared/models/title-icon-type';
-import {IconRegistryService} from '../../../core/services/icon-registry.service';
+import {LogService} from '@core/services/log.service';
+import {ALL_TYPES} from '@shared/models/title-icon-type';
+import {IconRegistryService} from '@core/services/icon-registry.service';
 import * as moment from 'moment/moment';
-import {TaskDetailComponent} from '../../../shared/task-detail/task-detail.component';
+import {TaskDetailComponent} from '@shared/task-detail/task-detail.component';
 
 import {MatDialog} from '@angular/material/dialog';
 import {TranslateService} from '@ngx-translate/core';
-import {SnackBarService} from '../../../core/services/snack-bar.service';
-import {Form, SelfdataInformationRequest} from '../../../selfdata/selfdata-api';
-import {Level} from '../../../shared/notification-template/notification-template.component';
-import {SelfdataInformationRequestDetailService} from '../../../core/services/selfdata-information-request-detail.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {Form, SelfdataInformationRequest} from '@app/selfdata/selfdata-api';
+import {Level} from '@shared/notification-template/notification-template.component';
+import {SelfdataInformationRequestDetailService} from '@core/services/selfdata-information-request-detail.service';
 import {
     SelfdataInformationRequestTaskMetierService
-} from '../../../core/services/tasks/selfdata/selfdata-information-request-task-metier.service';
+} from '@core/services/tasks/selfdata/selfdata-information-request-task-metier.service';
 import {
     SelfdataInformationRequestDependencies,
     SelfdataInformationRequestTask,
     SelfdataInformationRequestTaskDependenciesService,
     SelfdataInformationRequestTaskDependencyFetchers
-} from '../../../core/services/tasks/selfdata/selfdata-information-request-task-dependencies.service';
+} from '@core/services/tasks/selfdata/selfdata-information-request-task-dependencies.service';
 import {map, tap} from 'rxjs/operators';
-import {injectDependencies} from '../../../shared/utils/dependencies-utils';
-import {SelfdataTaskSearchCriteria} from '../../../core/services/tasks/selfdata/selfdata-task-search-criteria.interface';
-import {Period} from '../../../api-kaccess';
-import {RequestDetailDependencies} from '../request-detail-dependencies';
+import {injectDependencies} from '@shared/utils/dependencies-utils';
+import {SelfdataTaskSearchCriteria} from '@core/services/tasks/selfdata/selfdata-task-search-criteria.interface';
+import {Period} from '@app/api-kaccess';
+import {RequestDetailDependencies} from '@app/personal-space/pages/request-detail-dependencies';
 import UnitEnum = Period.UnitEnum;
 
 
@@ -47,6 +48,7 @@ export class SelfdataInformationRequestTaskDetailComponent
                 private readonly route: ActivatedRoute,
                 private readonly selfdataInformationRequestDetailService: SelfdataInformationRequestDetailService,
                 private readonly selfdataInformationRequestTaskDependencyFetchers: SelfdataInformationRequestTaskDependencyFetchers,
+                protected logger: LogService,
                 iconRegistryService: IconRegistryService,
                 dialog: MatDialog,
                 translateService: TranslateService,
@@ -54,7 +56,7 @@ export class SelfdataInformationRequestTaskDetailComponent
                 taskWithDependenciesService: SelfdataInformationRequestTaskDependenciesService,
                 taskMetierService: SelfdataInformationRequestTaskMetierService,
     ) {
-        super(dialog, translateService, snackBarService, taskWithDependenciesService, taskMetierService);
+        super(dialog, translateService, snackBarService, taskWithDependenciesService, taskMetierService, logger);
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
     }
 

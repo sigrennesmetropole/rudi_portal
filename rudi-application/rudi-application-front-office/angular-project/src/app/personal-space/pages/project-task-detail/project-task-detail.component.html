@@ -3,7 +3,7 @@
         [headingLoading]="isLoading"
         [pageSubTitle]="dependencies?.project?.title"
         [pageTitle]="'personalSpace.projectDetails.headerTitle' | translate "
-        [status]="dependencies?.project?.reutilisation_status.label" [icon]="'project-svg-icon'"
+        [status]="dependencies?.project?.functional_status" [icon]="'project-svg-icon'"
     ></app-task-detail-header>
 
     <div class="bandeau" *ngIf="!isLoading">

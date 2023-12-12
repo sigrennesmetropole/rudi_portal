@@ -15,6 +15,7 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Status;
+import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.bean.workflow.EMailData;
 import org.rudi.facet.bpmn.bean.workflow.EMailDataModel;
@@ -87,6 +88,19 @@ public class LinkedDatasetWorkflowContext
 		}
 	}
 
+	@Transactional(readOnly = false)
+	public void addData(ExecutionEntity executionEntity, String key, Object value) {
+		LinkedDatasetEntity datasetRequestEntity;
+		try {
+			datasetRequestEntity = super.injectData(executionEntity, key, value);
+			getAssetDescriptionDao().save(datasetRequestEntity);
+			log.debug("WkC - Update data {} for asset {}", key, datasetRequestEntity);
+		} catch (AppServiceException e) {
+			log.error("WkC - Error in update data {}", key, e);
+
+		}
+	}
+
 	/**
 	 * Retourne la liste des users candidats pour la tâche
 	 *
@@ -141,7 +155,8 @@ public class LinkedDatasetWorkflowContext
 		}
 
 		try {
-			org.rudi.facet.organization.bean.Organization producer = organizationHelper.getOrganization(eMailDataModel.getAssetDescription().getDatasetOrganisationUuid());
+			org.rudi.facet.organization.bean.Organization producer = organizationHelper
+					.getOrganization(eMailDataModel.getAssetDescription().getDatasetOrganisationUuid());
 			if (producer != null) {
 				eMailDataModel.addData("producer", producer);
 			}
@@ -150,7 +165,8 @@ public class LinkedDatasetWorkflowContext
 		}
 	}
 
-	private void computePotentialProducersOwnersAssigneesGestion(Collection<OrganizationMember> members, List<String> assignees, List<String> assigneeEmails){
+	private void computePotentialProducersOwnersAssigneesGestion(Collection<OrganizationMember> members,
+			List<String> assignees, List<String> assigneeEmails) {
 		for (OrganizationMember member : members) {
 			final var user = getAclHelper().getUserByUUID(member.getUserUuid());
 			if (user != null) {

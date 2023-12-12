@@ -39,10 +39,14 @@ export class NewDatasetRequestTableComponent {
     hasAddButton = false;
     @Input()
     hasDeleteButton = false;
+    @Input()
+    hasCommentButton = false;
     @Output()
     addNewDatasetRequestEvent = new EventEmitter<NewDatasetRequest>();
     @Output()
     addingElementToNewDatasetTable = new EventEmitter<boolean>();
+    @Output()
+    commentActionEvent: EventEmitter<RowTableData> = new EventEmitter();
 
     constructor(
         private _liveAnnouncer: LiveAnnouncer,
@@ -108,5 +112,9 @@ export class NewDatasetRequestTableComponent {
                     }
                 });
         }
+    }
+
+    showComment(element: RowTableData): void {
+        this.commentActionEvent.emit(element);
     }
 }

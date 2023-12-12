@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {LinkedDatasetFromProject} from '@app/data-set/models/linked-dataset-from-project';
-import {NewDatasetRequest, ProjektService} from '@app/projekt/projekt-api';
+import {Field, NewDatasetRequest, ProjektService, Section} from '@app/projekt/projekt-api';
+import {Form} from '@app/projekt/projekt-api/model/form';
 import {Project} from '@app/projekt/projekt-model';
 import {KonsultApiAccessService} from '@core/services/api-access/konsult/konsult-api-access.service';
 import {ProjectConsultationService} from '@core/services/asset/project/project-consultation.service';
@@ -19,10 +21,11 @@ import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
 import {Level} from '@shared/notification-template/notification-template.component';
+import {RowTableData} from '@shared/project-datasets-tables/dataset.interface';
 import {injectDependencies} from '@shared/utils/dependencies-utils';
+import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
 import {of} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
-
 
 @Component({
     selector: 'app-project-datasets-tab',
@@ -144,18 +147,20 @@ export class ProjectDatasetsTabComponent {
         }
     }
 
-    constructor(private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
-                private readonly apiAccessService: KonsultApiAccessService,
-                private readonly projectDependenciesService: ProjectDependenciesService,
-                private readonly projectDependenciesFetchers: ProjectDependenciesFetchers,
-                private readonly projectSubmissionService: ProjectSubmissionService,
-                private readonly projectConsultService: ProjectConsultationService,
-                private readonly projektMetierService: ProjektMetierService,
-                private readonly snackBarService: SnackBarService,
-                private readonly translateService: TranslateService,
-                private readonly projektService: ProjektService,
-                private readonly dataSetActionsAuthorizationService: DataSetActionsAuthorizationService,
-                iconRegistryService: IconRegistryService,
+    constructor(
+        private readonly dialog: MatDialog,
+        private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
+        private readonly apiAccessService: KonsultApiAccessService,
+        private readonly projectDependenciesService: ProjectDependenciesService,
+        private readonly projectDependenciesFetchers: ProjectDependenciesFetchers,
+        private readonly projectSubmissionService: ProjectSubmissionService,
+        private readonly projectConsultService: ProjectConsultationService,
+        private readonly projektMetierService: ProjektMetierService,
+        private readonly snackBarService: SnackBarService,
+        private readonly translateService: TranslateService,
+        private readonly projektService: ProjektService,
+        private readonly dataSetActionsAuthorizationService: DataSetActionsAuthorizationService,
+        iconRegistryService: IconRegistryService,
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
     }
@@ -316,5 +321,36 @@ export class ProjectDatasetsTabComponent {
                 });
             }
         });
+    }
+
+    onClickCommentAction(element: RowTableData, isRestricted: boolean): void {
+        if (isRestricted) {
+            this.projektService
+                .getDecisionInformationsForLinkedDataset(this._project.uuid, element.uuid)
+                .subscribe((data: Form) => this.showCommentPopupOrSnackbar(data));
+        } else {
+            this.projektService
+                .getDecisionInformationsForNewRequest(this._project.uuid, element.uuid)
+                .subscribe((data: Form) => this.showCommentPopupOrSnackbar(data));
+        }
+    }
+
+    private showCommentPopupOrSnackbar(form: Form): void {
+        const commentExistPredicate = (field: Field) => field.definition.name === 'commentDate' && field.values.length;
+        const formHasComment: boolean = !!(form?.sections
+            .map((section: Section) => !!section.fields?.filter(commentExistPredicate).length)
+            .some(Boolean)
+        );
+
+        if (formHasComment) {
+            this.dialog.open(WorkflowFormDialogComponent, {
+                data: {
+                    title: this.translateService.instant('personalSpace.projectDatasets.show-comment.dialog-title'),
+                    form
+                }
+            });
+        } else {
+            this.snackBarService.showInfo('personalSpace.projectDatasets.show-comment.error');
+        }
     }
 }

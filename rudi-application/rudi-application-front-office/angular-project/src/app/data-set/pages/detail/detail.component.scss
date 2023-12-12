@@ -357,6 +357,14 @@
                     display: none;
                 }
             }
+
+            .banner-btn-download {
+                padding: 5px 22px 9px 22px;
+            }
+
+            .button-info {
+                padding: 5px 22px 9px 22px;
+            }
         }
 
         .icon-information-sm {
@@ -384,18 +392,6 @@
         .date-range-hour {
             font-size: 14px;
             font-weight: normal;
-        }
-
-        .banner-card {
-
-            .banner-btn-download {
-                padding: 5px 22px 9px 22px;
-            }
-
-            .button-info {
-                padding: 5px 22px 9px 22px;
-            }
-
         }
 
         .card-description-keyword {

@@ -479,15 +479,26 @@ public class ApplicationServiceImpl implements ApplicationService {
 					String.format("Default application %s not found for user %s", defaultApplicationName, username));
 		}
 		val defaultAppId = defaultApp.get().getApplicationId();
+
 		// 2- Recupération des souscriptions du defaultApp du owner
 		val searchCriteria = new DevPortalSubscriptionSearchCriteria().applicationId(defaultAppId);
 		val mySubscriptions = searchUserSubscriptions(searchCriteria, username);
+
 		if (mySubscriptions == null || mySubscriptions.getCount() == 0) {
 			// Pas de souscription trouvée, y a rien à supprimer donc comme souscription, on continue sur la suppression du linkedDataset
 			return;
 		}
 		val subscriptionsDeleted = new ArrayList<Subscription>(); // Elle servira pour rollbacker au besoin
 		for (Subscription subscription : mySubscriptions.getList()) {
+			// RUDI-4264 filtre sur l'état de l'API
+			if (APILifecycleStatusState
+					.fromValue(subscription.getApiInfo().getLifeCycleStatus()) == APILifecycleStatusState.BLOCKED) {
+				// l'api est bloquée, il ne sera pas possible d'en récupérer le détail
+				LOGGER.info("L'état {} de l'api {} ne permet pas de vérifier les souscriptions pour l'utilisateur",
+						subscription.getApiInfo().getLifeCycleStatus(), subscription.getApiId());
+				continue;
+			}
+
 			// Suppression de toutes les souscriptions aux médias de ce dataset
 			val subscribedAPI = apIsService.getAPIFromDevportal(subscription.getApiId(), username);
 			val apisDatasetUuid = subscribedAPI.getAdditionalProperties().get(DATASET_UUID_FIELD);

@@ -1,0 +1,18 @@
+<ng-container [formGroup]="formGroup">
+    <div class="d-flex">
+        <mat-label>{{label}}<span *ngIf="required" class="required-symbol">*</span></mat-label>
+    </div>
+    <mat-hint class="title-hint">{{help}}</mat-hint>
+    <mat-form-field appearance="outline">
+        <input
+                matInput
+                type="date"
+                [formControlName]="formControlName"
+                [readonly]="readonly"
+                (keydown.control.enter)="submit.emit()"
+        />
+        <mat-error>
+            <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.requiredInformationError'|translate}}
+        </mat-error>
+    </mat-form-field>
+</ng-container>

@@ -4,7 +4,13 @@
     </div>
     <mat-hint class="title-hint">{{help}}</mat-hint>
     <mat-form-field appearance="outline">
-        <textarea [formControlName]="formControlName" matInput rows="15" (keydown.control.enter)="submit.emit()"></textarea>
+        <textarea
+                matInput
+                rows="15"
+                [formControlName]="formControlName"
+                [readonly]="readonly"
+                (keydown.control.enter)="submit.emit()"
+        ></textarea>
         <mat-error>
             <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.requiredInformationError'|translate}}
         </mat-error>

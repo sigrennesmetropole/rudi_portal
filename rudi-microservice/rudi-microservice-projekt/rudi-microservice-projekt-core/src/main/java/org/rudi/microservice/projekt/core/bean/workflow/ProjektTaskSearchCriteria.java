@@ -3,6 +3,8 @@
  */
 package org.rudi.microservice.projekt.core.bean.workflow;
 
+import java.util.UUID;
+
 import org.rudi.facet.bpmn.bean.workflow.TaskSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
 
@@ -12,8 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
-import java.util.UUID;
 
 /**
  * @author FNI18300

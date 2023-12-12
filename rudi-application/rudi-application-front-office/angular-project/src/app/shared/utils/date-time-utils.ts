@@ -1,5 +1,6 @@
+import * as moment from 'moment';
 import {Moment} from 'moment';
-import {Period} from '../../api-kaccess';
+import {Period} from '@app/api-kaccess';
 
 const ISO_STRING_WITHOUT_OFFSET_LENGTH = '2020-01-01T00:00:00.000'.length;
 
@@ -32,5 +33,9 @@ export class DateTimeUtils {
             default:
                 return period.value;
         }
+    }
+
+    static formatStringDate(date: string, format: string = 'YYYY-MM-DD'): string {
+        return moment(date).format(format);
     }
 }

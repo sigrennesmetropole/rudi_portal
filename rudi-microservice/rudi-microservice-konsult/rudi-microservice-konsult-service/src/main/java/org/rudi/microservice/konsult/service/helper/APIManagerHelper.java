@@ -139,17 +139,13 @@ public class APIManagerHelper {
 					e);
 		}
 
-		final var list = apiList.getList();
-		if (CollectionUtils.isEmpty(list)) {
+		if (apiList == null || CollectionUtils.isEmpty(apiList.getList())) {
 			throw new APINotFoundException(globalId, mediaId);
-		} else {
-			final var size = CollectionUtils.size(list);
-			if (size > 1) {
-				throw new APINotUniqueException(globalId, mediaId, size);
-			}
+		} else if (CollectionUtils.size(apiList.getList()) > 1) {
+			throw new APINotUniqueException(globalId, mediaId, apiList.getList().size());
 		}
 
-		return list.get(0);
+		return apiList.getList().get(0);
 	}
 
 	/**

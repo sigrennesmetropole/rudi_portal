@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Item} from '../filter-forms/array-filter-form.component';
 import {DEBUT_NAME_PREFIX, FIN_NAME_PREFIX} from '../filter-forms/dates-filter-form/dates-filter-form.component';
-import {FiltersService} from '../../../core/services/filters.service';
+import {FiltersService} from '@core/services/filters.service';
 import {AccessStatusFilterItem} from '../filter-forms/access-status-filter-form/access-status-filter-form.component';
 
 @Component({
@@ -25,7 +25,10 @@ export class FiltersItemsListComponent {
      * Filter not null value in selectedAccessStatusItems
      */
     get notNullSelectedAccessStatusItems(): AccessStatusFilterItem[] {
-        return this.selectedAccessStatusItems = this.selectedAccessStatusItems.filter(selectedValue => selectedValue.value != null);
+        this.selectedAccessStatusItems = this.selectedAccessStatusItems.filter(
+            selectedValue => selectedValue.value != null
+        );
+        return this.selectedAccessStatusItems;
     }
 
     /**

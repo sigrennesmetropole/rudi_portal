@@ -1,22 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {TaskDetailComponent} from '../../../shared/task-detail/task-detail.component';
-import {LinkedDataset} from '../../../projekt/projekt-model';
+import {LogService} from '@core/services/log.service';
+import {TaskDetailComponent} from '@shared/task-detail/task-detail.component';
+import {LinkedDataset} from '@app/projekt/projekt-model';
 import {
     LinkedDatasetDependencies,
     LinkedDatasetTask,
     LinkedDatasetTaskDependenciesService
-} from '../../../core/services/tasks/projekt/linked-dataset-task-dependencies.service';
-import {ProjektTaskSearchCriteria} from '../../../core/services/tasks/projekt/projekt-task-search-criteria.interface';
+} from '@core/services/tasks/projekt/linked-dataset-task-dependencies.service';
+import {ProjektTaskSearchCriteria} from '@core/services/tasks/projekt/projekt-task-search-criteria.interface';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslateService} from '@ngx-translate/core';
-import {SnackBarService} from '../../../core/services/snack-bar.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
 import {map, tap} from 'rxjs/operators';
-import {ALL_TYPES, PROCESS_DEFINITION_KEY_TYPES} from '../../../shared/models/title-icon-type';
-import {IconRegistryService} from '../../../core/services/icon-registry.service';
-import {ProcessDefinitionsKeyIconRegistryService} from '../../../core/services/process-definitions-key-icon-registry.service';
-import {NewDatasetRequestTaskMetierService} from '../../../core/services/tasks/projekt/new-dataset-request-task-metier.service';
-import {RequestDetailDependencies} from '../request-detail-dependencies';
+import {ALL_TYPES, PROCESS_DEFINITION_KEY_TYPES} from '@shared/models/title-icon-type';
+import {IconRegistryService} from '@core/services/icon-registry.service';
+import {ProcessDefinitionsKeyIconRegistryService} from '@core/services/process-definitions-key-icon-registry.service';
+import {NewDatasetRequestTaskMetierService} from '@core/services/tasks/projekt/new-dataset-request-task-metier.service';
+import {RequestDetailDependencies} from '@app/personal-space/pages/request-detail-dependencies';
 
 @Component({
     selector: 'app-new-request-task-detail',
@@ -31,6 +32,7 @@ export class NewRequestTaskDetailComponent
 
     constructor(private readonly route: ActivatedRoute,
                 private readonly router: Router,
+                protected logger: LogService,
                 private readonly IconRegistryService: IconRegistryService,
                 private readonly processDefinitionsKeyIconRegistryService: ProcessDefinitionsKeyIconRegistryService,
                 readonly dialog: MatDialog,
@@ -39,7 +41,7 @@ export class NewRequestTaskDetailComponent
                 readonly taskWithDependenciesService: LinkedDatasetTaskDependenciesService,
                 readonly newDatasetRequestTaskMetierService: NewDatasetRequestTaskMetierService,
     ) {
-        super(dialog, translateService, snackBarService, taskWithDependenciesService, newDatasetRequestTaskMetierService);
+        super(dialog, translateService, snackBarService, taskWithDependenciesService, newDatasetRequestTaskMetierService, logger);
         IconRegistryService.addAllSvgIcons(ALL_TYPES);
         processDefinitionsKeyIconRegistryService.addAllSvgIcons(PROCESS_DEFINITION_KEY_TYPES);
     }

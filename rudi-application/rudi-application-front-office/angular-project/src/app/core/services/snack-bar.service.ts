@@ -49,6 +49,16 @@ export class SnackBarService {
         });
     }
 
+    showInfo(i18nMessageKey: string, duration?: number): void {
+        this.translate(i18nMessageKey).subscribe(translatedMessage => {
+            const data: Data = {
+                level: Level.INFO,
+                message: translatedMessage,
+            };
+            this.openSnackBar(data, duration);
+        });
+    }
+
     showError(i18nMessageKey: string, duration?: number): void {
         this.translate(i18nMessageKey).subscribe(translatedMessage => {
             const data: Data = {

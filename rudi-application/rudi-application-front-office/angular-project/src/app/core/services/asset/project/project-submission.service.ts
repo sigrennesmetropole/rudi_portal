@@ -16,7 +16,7 @@ import {
     TerritorialScale
 } from '../../../../projekt/projekt-model';
 import {TranslateService} from '@ngx-translate/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {UserService} from '../../user.service';
 import {User} from '../../../../acl/acl-api';
 import {Metadata} from '../../../../api-kaccess';
@@ -285,7 +285,7 @@ export class ProjectSubmissionService {
             validators: [consistentPeriodValidator({beginControlName: 'begin_date', endControlName: 'end_date'})],
             updateOn: 'blur',
             reuseStatus: ['', Validators.required]
-        });
+        } as AbstractControlOptions);
     }
 
     /**
@@ -760,7 +760,7 @@ export class ProjectSubmissionService {
             }
             return of(null);
           });
-        
+
           return forkJoin(link$);
     }
 
@@ -1007,7 +1007,7 @@ export class ProjectSubmissionService {
      */
     private manageNewDatasetRequestWorkflow(requestAdded: NewDatasetRequest, createdProject: Project): Observable<Task> {
         return this.newDatasetRequestTaskMetierService.createDraft(requestAdded).pipe(
-            
+
             switchMap((associatedTask: Task) => {
                 if (createdProject.project_status === ProjectStatus.Validated) {
                     // Only start the task if the project is "Validated"

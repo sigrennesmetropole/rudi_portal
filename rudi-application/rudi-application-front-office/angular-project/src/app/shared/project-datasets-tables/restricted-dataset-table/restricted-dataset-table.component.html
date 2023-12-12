@@ -6,6 +6,8 @@
     [hasAddButton]="hasAddButton"
     [hasDeleteButton]="hasDeleteButton"
     [disableAddButton]="disableAddButton"
+    [hasCommentButton]="hasCommentButton"
     (addActionEvent)="openRestrictedDatasetsPopin()"
-    (deleteActionEvent)="deleteRequest($event)">
-</app-dataset-table>
+    (deleteActionEvent)="deleteRequest($event)"
+    (commentActionEvent)="showComment($event)"
+></app-dataset-table>

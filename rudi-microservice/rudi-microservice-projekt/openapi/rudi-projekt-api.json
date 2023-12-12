@@ -1425,6 +1425,81 @@
 				}
 			}
 		},
+		"/projects/{project-uuid}/linked-datasets/{linked-dataset-uuid}/decision-informations": {
+			"description": "Consultation du commentaire lié à l'acceptation ou au refus d'accès à un jeu de données lié à un projet",
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Les informations liées à une décision",
+				"description": "Affiche la décision liée à un jeu de données",
+				"operationId": "getDecisionInformationsForLinkedDataset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "path",
+						"name": "linked-dataset-uuid",
+						"description": "UUID du linked dataset",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					}
+				],
+				
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "Aucun commentaire n'est renseigné"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
 		"/projects/{project-uuid}/indicators": {
 			"get": {
 				"tags": [
@@ -1758,6 +1833,81 @@
 				"responses": {
 					"204": {
 						"description": "Demande de nouveau JDD supprimée avec succès"
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"403": {
+						"$ref": "#/components/responses/Forbidden"
+					},
+					"406": {
+						"$ref": "#/components/responses/NotAcceptable"
+					},
+					"408": {
+						"$ref": "#/components/responses/RequestTimeout"
+					},
+					"429": {
+						"$ref": "#/components/responses/TooManyRequests"
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					},
+					"503": {
+						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/{project-uuid}/new-dataset-requests/{request-uuid}/decision-informations": {
+			"description": "Consultation du commentaire lié à l'acceptation ou au refus de nouveau jeu de données lié à un projet",
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Les informations liées à une décision",
+				"description": "Affiche la décision liée à une demande de jeu de données",
+				"operationId": "getDecisionInformationsForNewRequest",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "UUID du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					},
+					{
+						"in": "path",
+						"name": "request-uuid",
+						"description": "UUID du new dataset request",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": "5596b5b2-b227-4c74-a9a1-719e7c1008c7"
+					}
+				],
+				
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/Form"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "Aucun commentaire n'est renseigné"
 					},
 					"400": {
 						"$ref": "#/components/responses/BadRequestError"

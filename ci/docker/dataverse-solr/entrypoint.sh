@@ -17,7 +17,8 @@ SOLR_URL=${SOLR_URL:-"http://localhost:$SOLR_PORT"}
 
 solr start -v
 echo "Starting Solr...."
-if [ -f /tmp/updateSchemaMDB.sh ]; then
+# if [ -f /tmp/updateSchemaMDB.sh ]; then
+if [ -f /tmp/updateSchemaMDB.sh ] && [ ! -d /var/solr/data/collection1 ]; then
     sleep 25;
     solr stop -v
     unzip -o -qq /tmp/collection1.zip -d /var/solr/data/

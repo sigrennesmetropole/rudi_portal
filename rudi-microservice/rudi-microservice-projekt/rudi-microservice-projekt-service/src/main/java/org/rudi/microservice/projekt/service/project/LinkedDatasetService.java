@@ -3,9 +3,11 @@ package org.rudi.microservice.projekt.service.project;
 import java.util.List;
 import java.util.UUID;
 
+import org.rudi.bpmn.core.bean.Form;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
@@ -56,5 +58,17 @@ public interface LinkedDatasetService {
 	void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid)
 			throws AppServiceException, APIManagerException;
 
-	PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable) throws AppServiceNotFoundException, AppServiceException;
+	PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable)
+			throws AppServiceNotFoundException, AppServiceException;
+
+	/**
+	 * Retourne le formulaire de consultation des informations de la décision concernant la demande d'accès au JDD
+	 * 
+	 * @param linkedDatasetUuid le lien du JDD
+	 * @return le formulaire avec les informations à afficher
+	 * @throws AppServiceException     si les informations ne sont pas trouvées ou n'existent pas
+	 * @throws FormDefinitionException si le formulaire défini n'est pas valide
+	 */
+	Form getDecisionInformations(UUID projectUuid, UUID linkedDatasetUuid)
+			throws AppServiceException, FormDefinitionException;
 }

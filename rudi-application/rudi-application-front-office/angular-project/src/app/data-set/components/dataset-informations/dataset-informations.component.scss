@@ -321,19 +321,6 @@
             display: none;
         }
 
-        .banner-card {
-            button {
-
-                mat-icon {
-                    margin-right: 0;
-                }
-
-                span {
-                    display: none;
-                }
-            }
-        }
-
         .icon-information-sm {
             vertical-align: top;
             margin-right: 0;
@@ -362,6 +349,16 @@
         }
 
         .banner-card {
+            button {
+
+                mat-icon {
+                    margin-right: 0;
+                }
+
+                span {
+                    display: none;
+                }
+            }
 
             .banner-btn-download {
                 padding: 5px 22px 9px 22px;

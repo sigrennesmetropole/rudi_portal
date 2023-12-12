@@ -1,21 +1,19 @@
 <form [formGroup]="formGroup" *ngIf="workflowForm">
-
     <ng-container *ngFor="let section of workflowForm.sections">
-
-        <div class="help-title" *ngIf="isSectionOnlyHelp(section)">
+        <div class="help-title" *ngIf="section | isSectionOnlyHelp">
             <span>{{section.help}}</span>
         </div>
 
-        <label class="section-title-container" *ngIf="isSectionDisplayed(section)">
+        <label class="section-title-container" *ngIf="section | isSectionDisplayed">
             <span class="title">{{section.label}}</span>
             <span class="description" *ngIf="section.help != null">{{section.help}}</span>
         </label>
 
-        <ng-container *ngIf="!isSectionDisplayed(section)">
+        <ng-container *ngIf="!(section | isSectionDisplayed)">
             <ng-container *ngTemplateOutlet="fields"></ng-container>
         </ng-container>
 
-        <ng-container *ngIf="isSectionDisplayed(section)">
+        <ng-container *ngIf="section | isSectionDisplayed">
             <mat-card class="section-card">
                 <ng-container *ngTemplateOutlet="fields"></ng-container>
             </mat-card>
@@ -23,17 +21,14 @@
 
         <ng-template #fields>
             <ng-container *ngFor="let field of section.fields">
-
-                <app-workflow-field-template [formGroup]="formGroup"
-                                             [section]="section"
-                                             [worflowFormReadOnly]="worflowFormReadOnly"
-                                             [field]="field"
-                                             [properties]="properties"
-                                             (submit)="submit()">
-                </app-workflow-field-template>
-
+                <app-workflow-field-template
+                    [formGroup]="formGroup"
+                    [section]="section"
+                    [field]="field"
+                    [properties]="properties"
+                    (submit)="submit()"
+                ></app-workflow-field-template>
             </ng-container>
         </ng-template>
     </ng-container>
-
 </form>

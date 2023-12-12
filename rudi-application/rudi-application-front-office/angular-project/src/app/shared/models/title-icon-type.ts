@@ -37,7 +37,10 @@ export type TitleIconType =
     'dashes' |
     'copy-to-clipboard'|
     'icon-reutilisation'|
-    'icon-historique';
+    'icon-historique' |
+    'icon-delete' |
+    'icon-close' |
+    'icon-comment';
 
 
 export const ALL_TYPES: TitleIconType[] = [
@@ -75,7 +78,10 @@ export const ALL_TYPES: TitleIconType[] = [
     'dashes',
     'copy-to-clipboard',
     'icon-reutilisation',
-    'icon-historique'
+    'icon-historique',
+    'icon-delete',
+    'icon-close',
+    'icon-comment',
 ];
 
 export const PROCESS_DEFINITION_KEY_TYPES: TitleIconType[] = [

@@ -1,6 +1,7 @@
 import {Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {Field, Section} from '../../api-bpmn';
+import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
+import {Field, Section} from '@app/api-bpmn';
 import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 import {Observable, of} from 'rxjs';
 import {WorkflowFieldTextComponent} from '../workflow-field-text/workflow-field-text.component';
@@ -33,9 +34,6 @@ export class WorkflowFieldTemplateComponent implements OnInit {
     @Input()
     properties: WorkflowProperties;
 
-    @Input()
-    worflowFormReadOnly: boolean;
-
     @Output()
     submit: EventEmitter<void> = new EventEmitter<void>();
 
@@ -58,11 +56,10 @@ export class WorkflowFieldTemplateComponent implements OnInit {
             const componentRef = viewContainerRef.createComponent<WorkflowFieldComponent>(componentFactory);
             Object.assign(componentRef.instance, {
                 formGroup: this.formGroup,
-                section: this.section,
+                formControlNamePrefix: this.section.name,
                 field: this.field,
                 properties: this.properties,
                 submit: this.submit,
-                worflowFormReadOnly: this.worflowFormReadOnly
             });
             componentRef.instance.addOtherControls();
         });
@@ -116,6 +113,8 @@ export class WorkflowFieldTemplateComponent implements OnInit {
                 return WorkflowFieldAddressComponent;
             case 'ATTACHMENT':
                 return WorkflowFieldAttachmentComponent;
+            case 'DATE':
+                return WorkflowFieldDateComponent;
             default:
                 console.warn(`WorkFlow FieldType "${type}" not handled. Using default component : WorkflowFieldComponent`);
                 return WorkflowFieldComponent;

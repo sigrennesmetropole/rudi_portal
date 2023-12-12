@@ -30,11 +30,13 @@ export abstract class OrganizationMetierService {
             return this.logosByOrganizationId[organizationId];
         }
 
-        return this.logosByOrganizationId[organizationId] = this.downloadProducerMediaByType(organizationId, KindOfData.Logo).pipe(
+        this.logosByOrganizationId[organizationId] = this.downloadProducerMediaByType(organizationId, KindOfData.Logo).pipe(
             // Source pour la gestion du cache : https://betterprogramming.pub/how-to-create-a-caching-service-for-angular-bfad6cbe82b0
             shareReplay(1),
             switchMap(blob => this.imageLogoService.createImageFromBlob(blob))
         );
+
+        return this.logosByOrganizationId[organizationId];
     }
 
     protected abstract downloadProducerMediaByType(organizationId: string, kindOfData: KindOfData): Observable<Blob>;

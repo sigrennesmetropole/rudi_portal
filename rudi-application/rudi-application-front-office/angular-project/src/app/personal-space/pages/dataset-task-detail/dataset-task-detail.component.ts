@@ -1,26 +1,27 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {LogService} from '@core/services/log.service';
 import {map, tap} from 'rxjs/operators';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 
 import * as moment from 'moment';
-import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {injectDependencies} from '@shared/utils/dependencies-utils';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslateService} from '@ngx-translate/core';
-import {SnackBarService} from '../../../core/services/snack-bar.service';
-import {TaskDetailComponent} from '../../../shared/task-detail/task-detail.component';
-import {LinkedDataset} from '../../../projekt/projekt-model';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {TaskDetailComponent} from '@shared/task-detail/task-detail.component';
+import {LinkedDataset} from '@app/projekt/projekt-model';
 
 import {
     LinkedDatasetDependencies,
     LinkedDatasetTask,
     LinkedDatasetTaskDependenciesService,
     LinkedDatasetTaskDependencyFetchers
-} from '../../../core/services/tasks/projekt/linked-dataset-task-dependencies.service';
-import {LinkedDatasetTaskMetierService} from '../../../core/services/tasks/projekt/linked-dataset-task-metier.service';
-import {ProjektTaskSearchCriteria} from '../../../core/services/tasks/projekt/projekt-task-search-criteria.interface';
-import {RequestDetailDependencies} from '../request-detail-dependencies';
+} from '@core/services/tasks/projekt/linked-dataset-task-dependencies.service';
+import {LinkedDatasetTaskMetierService} from '@core/services/tasks/projekt/linked-dataset-task-metier.service';
+import {ProjektTaskSearchCriteria} from '@core/services/tasks/projekt/projekt-task-search-criteria.interface';
+import {RequestDetailDependencies} from '@app/personal-space/pages/request-detail-dependencies';
 
 
 @Component({
@@ -40,13 +41,14 @@ export class DatasetTaskDetailComponent
                 private readonly linkedDatasetDependencyFetchers: LinkedDatasetTaskDependencyFetchers,
                 private readonly iconRegistry: MatIconRegistry,
                 private readonly sanitizer: DomSanitizer,
+                protected logger: LogService,
                 readonly dialog: MatDialog,
                 readonly translateService: TranslateService,
                 readonly snackBarService: SnackBarService,
                 readonly taskWithDependenciesService: LinkedDatasetTaskDependenciesService,
                 readonly linkedDatasetTaskMetierService: LinkedDatasetTaskMetierService
     ) {
-        super(dialog, translateService, snackBarService, taskWithDependenciesService, linkedDatasetTaskMetierService);
+        super(dialog, translateService, snackBarService, taskWithDependenciesService, linkedDatasetTaskMetierService, logger);
         iconRegistry.addSvgIcon(
             'request',
             sanitizer.bypassSecurityTrustResourceUrl('assets/icons/key_icon_circle.svg'));

@@ -1,5 +1,13 @@
 package org.rudi.microservice.projekt.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +21,7 @@ import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
+import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.bpmn.service.TaskService;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kmedia.bean.KindOfData;
@@ -27,6 +36,7 @@ import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
 import org.rudi.microservice.projekt.facade.controller.api.ProjectsApi;
 import org.rudi.microservice.projekt.service.project.LinkedDatasetService;
+import org.rudi.microservice.projekt.service.project.NewDatasetRequestService;
 import org.rudi.microservice.projekt.service.project.ProjectService;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
@@ -38,12 +48,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
-import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,6 +56,7 @@ public class ProjectController implements ProjectsApi {
 	private final ControllerHelper controllerHelper;
 	private final ProjectService projectService;
 	private final LinkedDatasetService linkedDatasetService;
+	private final NewDatasetRequestService newDatasetRequestService;
 	private final UtilPageable utilPageable;
 	private final TaskService<Project> projectTaskService;
 
@@ -264,5 +269,49 @@ public class ProjectController implements ProjectsApi {
 	@Override
 	public ResponseEntity<Boolean> isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception {
 		return ResponseEntity.ok(projectService.isAuthenticatedUserProjectOwner(projectUuid));
+	}
+
+	/**
+	 * Retourne le formulaire de consultation des informations de la décision concernant la demande d'accès au JDD
+	 * 
+	 * @param projectUuid       l'uuid du projet
+	 * @param linkedDatasetUuid le lien du JDD
+	 * @return le formulaire avec les informations à afficher
+	 * @throws AppServiceException     si les informations ne sont pas trouvées ou n'existent pas
+	 * @throws FormDefinitionException si le formulaire défini n'est pas valide
+	 */
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + "," + PROVIDER + ")")
+	public ResponseEntity<Form> getDecisionInformationsForLinkedDataset(UUID projectUuid, UUID linkedDatasetUUID)
+			throws Exception {
+		Form form = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUUID);
+		if (form != null) {
+			return ResponseEntity.ok(form);
+		} else {
+			return ResponseEntity.noContent().build();
+		}
+	}
+
+	/**
+	 * Retourne le formulaire de consultation des informations de la décision concernant la demande de nouveau JDD
+	 * 
+	 * @param projectUuid           l'uuid du projet
+	 * @param newDatasetRequestUUID le lien de la demande
+	 * @return le formulaire avec les informations à afficher
+	 * @throws AppServiceException     si les informations ne sont pas trouvées ou n'existent pas
+	 * @throws FormDefinitionException si le formulaire défini n'est pas valide
+	 */
+	@Override
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
+			+ PROJECT_MANAGER + ", " + USER + ", " + MODERATOR + ")")
+	public ResponseEntity<Form> getDecisionInformationsForNewRequest(UUID projectUuid, UUID newDatasetRequestUUID)
+			throws Exception {
+		Form form = newDatasetRequestService.getDecisionInformations(projectUuid, newDatasetRequestUUID);
+		if (form != null) {
+			return ResponseEntity.ok(form);
+		} else {
+			return ResponseEntity.noContent().build();
+		}
 	}
 }

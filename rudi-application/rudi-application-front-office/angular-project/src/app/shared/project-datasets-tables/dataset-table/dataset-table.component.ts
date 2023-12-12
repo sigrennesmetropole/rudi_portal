@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {RowTableData} from '@shared/project-datasets-tables/dataset.interface';
 
@@ -8,7 +8,7 @@ import {RowTableData} from '@shared/project-datasets-tables/dataset.interface';
     styleUrls: ['./dataset-table.component.scss']
 })
 export class DatasetTableComponent {
-    displayedColumns: string[] = ['addedDate', 'title', 'status', 'delete-img'];
+    displayedColumns: string[] = ['addedDate', 'title', 'status', 'comment-action', 'delete-action'];
 
     /**
      * titre du tableau
@@ -52,19 +52,28 @@ export class DatasetTableComponent {
     @Input()
     hasDeleteButton: boolean;
 
+    @Input()
+    hasCommentButton: boolean;
+
     @Output()
     addActionEvent: EventEmitter<void>;
 
     @Output()
     deleteActionEvent: EventEmitter<RowTableData>;
 
+    @Output()
+    commentActionEvent: EventEmitter<RowTableData>;
+
     constructor() {
         this.dataSource = new MatTableDataSource([]);
         this.tableLoading = true;
         this.disableAddButton = false;
         this.hasAddButton = false;
+        this.hasCommentButton = false;
+
         this.addActionEvent = new EventEmitter();
         this.deleteActionEvent = new EventEmitter();
+        this.commentActionEvent = new EventEmitter();
     }
 
     addAction(): void {
@@ -73,5 +82,9 @@ export class DatasetTableComponent {
 
     deleteAction(element: RowTableData): void {
         this.deleteActionEvent.emit(element);
+    }
+
+    commentAction(element: RowTableData): void {
+        this.commentActionEvent.emit(element);
     }
 }

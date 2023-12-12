@@ -41,7 +41,7 @@
                                 {{'metaData.selfdataInformationRequest.creation.mandatoryInformation' | translate}}
                             </span>
                         </p>
-                        <app-workflow-form [draftForm]="form" [properties]="properties"></app-workflow-form>
+                        <app-workflow-form [workflowForm]="form" [properties]="properties"></app-workflow-form>
                         <app-rudi-captcha *ngIf="enableCaptchaOnPage" [nomCaptcha]="'captchaFR'"></app-rudi-captcha>
                         <!-- Box erreur captcha -->
                         <app-error-box *ngIf="errorCaptchaInput"

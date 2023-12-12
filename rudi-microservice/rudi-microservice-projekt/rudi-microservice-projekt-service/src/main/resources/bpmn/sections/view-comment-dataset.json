@@ -1,0 +1,21 @@
+{
+	"label": "",
+	"help": "Vous pouvez consulter le commentaire associé à votre demande ci-dessous",
+	"readOnly": true,
+	"fieldDefinitions": [
+		{
+			"name": "commentDate",
+			"label": "Reçu le ",
+			"type": "DATE",
+			"required": false,
+			"readOnly": true
+		},
+		{
+			"name": "messageToProjectOwner",
+			"label": "",
+			"type": "TEXT",
+			"required": false,
+			"readOnly": true
+		}
+	]
+}

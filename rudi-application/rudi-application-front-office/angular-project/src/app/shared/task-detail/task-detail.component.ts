@@ -1,15 +1,17 @@
-import {Action, Task} from '../../projekt/projekt-api';
-import {DefaultMatDialogConfig} from '../../core/services/default-mat-dialog-config';
-import {WorkflowPopinComponent, WorkflowPopinInputData, WorkflowPopinOutputData} from '../workflow-popin/workflow-popin.component';
-import {CloseEvent, DialogClosedData} from '../../data-set/models/dialog-closed-data';
-import {Level} from '../notification-template/notification-template.component';
-import {TaskWithDependencies} from '../utils/task-utils';
-import {AssetDescription} from '../../api-bpmn';
 import {MatDialog} from '@angular/material/dialog';
+import {AssetDescription} from '@app/api-bpmn';
+import {CloseEvent} from '@app/data-set/models/dialog-closed-data';
+import {Action, Task} from '@app/projekt/projekt-api';
+import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
+import {LogService} from '@core/services/log.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {TaskMetierService} from '@core/services/tasks/task-metier.service';
+import {TaskWithDependenciesService} from '@core/services/tasks/task-with-dependencies-service';
 import {TranslateService} from '@ngx-translate/core';
-import {SnackBarService} from '../../core/services/snack-bar.service';
-import {TaskWithDependenciesService} from '../../core/services/tasks/task-with-dependencies-service';
-import {TaskMetierService} from '../../core/services/tasks/task-metier.service';
+import {Level} from '@shared/notification-template/notification-template.component';
+import {TaskWithDependencies} from '@shared/utils/task-utils';
+import {WorkflowFormDialogInputData} from '@shared/workflow-form-dialog/types';
+import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
 
 export abstract class TaskDetailComponent<A extends AssetDescription, D, T extends TaskWithDependencies<A, D>, C> {
     taskWithDependencies: T;
@@ -20,6 +22,7 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
         protected readonly snackBarService: SnackBarService,
         protected readonly taskWithDependenciesService: TaskWithDependenciesService<T, C, A>,
         protected readonly taskMetierService: TaskMetierService<A>,
+        protected readonly logger: LogService,
     ) {
     }
 
@@ -45,24 +48,31 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
     }
 
     openPopinForAction(action: Action): void {
-        const dialogConfig = new DefaultMatDialogConfig<WorkflowPopinInputData>();
+        const dialogConfig: DefaultMatDialogConfig<WorkflowFormDialogInputData> = new DefaultMatDialogConfig();
+
+        if (this.task && !this.task.actions.some((current: Action): boolean => current === action)) {
+            throw new Error(`Task ${this.task.id} must contain action ${action.name}`);
+        }
+
         dialogConfig.data = {
-            action,
-            task: this.taskWithDependencies.task
+            title: action.label,
+            form: action.form || this.task.asset.form,
         };
-        // tslint:disable-next-line:max-line-length
-        const dialogRef = this.dialog.open<WorkflowPopinComponent, WorkflowPopinInputData, DialogClosedData<WorkflowPopinOutputData>>(WorkflowPopinComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(data => {
-            if (data.closeEvent === CloseEvent.VALIDATION) {
-                this.doAction(action, data.data);
-            }
-        });
+
+        this.dialog
+            .open(WorkflowFormDialogComponent, dialogConfig)
+            .afterClosed()
+            .subscribe(data => {
+                if (data.closeEvent === CloseEvent.VALIDATION) {
+                    this.doAction(action);
+                }
+            });
     }
 
     protected abstract goBackToList(): Promise<boolean>;
 
-    private doAction(action: Action, data: WorkflowPopinOutputData): void {
-        this.taskMetierService.doAction(action, data.task).subscribe({
+    private doAction(action: Action): void {
+        this.taskMetierService.doAction(action, this.taskWithDependencies.task).subscribe({
             complete: () => {
                 this.translateService.get('task.success').subscribe(message => {
                     this.snackBarService.openSnackBar({
@@ -74,7 +84,7 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
                 this.goBackToList();
             },
             error: (err) => {
-                console.error(`Erreur lors du doAction ${action.name} sur la tâche`, data.task, err);
+                this.logger.error(`Erreur lors du doAction ${action.name} sur la tâche`, this.taskWithDependencies.task, err);
                 this.translateService.get('task.error').subscribe(message => {
                     this.snackBarService.openSnackBar({
                         level: Level.ERROR,

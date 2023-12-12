@@ -38,8 +38,11 @@ class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldP
 	@Override
 	public void process(@Nullable ProjectEntity project, ProjectEntity existingProject) throws AppServiceException {
 		final var authenticatedUserUuid = lookupUserUuid(getAuthenticatedUser());
+		// RUDI-4253 à faire : Appeler ici les méthodes de vérification de droit d'accès au projet,
+		//  en cours de mise en place dans projektAuthorisationHelper
 
 		if (project != null) {
+
 			val ownerUuid = project.getOwnerUuid();
 			if (ownerUuid == null) {
 				throw new MissingParameterException("owner_uuid manquant");
@@ -53,6 +56,8 @@ class OwnerProcessor implements CreateProjectFieldProcessor, UpdateProjectFieldP
 		if (existingProject != null) {
 			val ownerUuid = existingProject.getOwnerUuid();
 
+			// cette vérification de cohérence entre ancien et nouveau n'est à faire que dans le cadre de l'update
+			// à déporter dans la méthode appelante
 			if (project != null && project.getOwnerType() != existingProject.getOwnerType()) {
 				// Pour le moment on ne sait pas ce qu'il faut faire lorsqu'on change le ownerType
 				throw new AppServiceForbiddenException("Cannot change project ownerType");

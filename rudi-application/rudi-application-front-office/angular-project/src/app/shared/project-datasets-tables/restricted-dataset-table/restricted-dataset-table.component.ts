@@ -22,7 +22,6 @@ import * as moment from 'moment';
 })
 export class RestrictedDatasetTableComponent {
     restrictedDatasets: DatasetsTableData[] = [];
-    displayedColumns: string[] = ['addedDate', 'title', 'status', 'delete-img'];
     dataSource: MatTableDataSource<DatasetsTableData> = new MatTableDataSource(this.restrictedDatasets);
     @Output() requestUuidEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -41,12 +40,16 @@ export class RestrictedDatasetTableComponent {
     hasAddButton = false;
     @Input()
     hasDeleteButton = false;
+    @Input()
+    hasCommentButton = false;
     associatedMetadatas: Metadata[] = [];
     @Output()
     addRestrictedLinkedDatasetEvent = new EventEmitter<LinkedDatasetFromProject>();
     @Output()
     addingElementToRestrictedTable = new EventEmitter<boolean>();
 
+    @Output()
+    commentActionEvent: EventEmitter<RowTableData> = new EventEmitter();
 
     constructor(
         private _liveAnnouncer: LiveAnnouncer,
@@ -122,5 +125,9 @@ export class RestrictedDatasetTableComponent {
                     }
                 });
         }
+    }
+
+    showComment(element: RowTableData): void {
+        this.commentActionEvent.emit(element);
     }
 }
