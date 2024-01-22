@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
 import {KonsultMetierService} from '../../konsult-metier.service';
 import {ProjektMetierService} from '../../asset/project/projekt-metier.service';
-import {DatasetConfidentiality, Indicators, NewDatasetRequest, ProjektService} from '../../../../projekt/projekt-api';
-import {Metadata} from '../../../../api-kaccess';
-import {LinkedDataset, OwnerInfo, Project} from '../../../../projekt/projekt-model';
+import {DatasetConfidentiality, Indicators, LinkedDatasetStatus, NewDatasetRequest, ProjektService} from '@app/projekt/projekt-api';
+import {Metadata} from '@app/api-kaccess';
+import {LinkedDataset, OwnerInfo, Project} from '@app/projekt/projekt-model';
 import {from} from 'rxjs';
-import {Task} from '../../../../api-bpmn';
+import {Task} from '@app/api-bpmn';
 import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
-import {DependencyFetcher, OtherLinksKey, OwnerKey} from '../../../../shared/utils/dependencies-utils';
+import {DependencyFetcher, OtherLinksKey, OwnerKey} from '@shared/utils/dependencies-utils';
 import {TaskDependencyFetchers, TaskWithDependenciesService} from '../task-with-dependencies-service';
-import {TaskWithDependencies} from '../../../../shared/utils/task-utils';
+import {TaskWithDependencies} from '@shared/utils/task-utils';
 import {TaskDependencies} from '../task-dependencies.interface';
-import {AclService} from '../../../../acl/acl-api';
-import {OrganizationService} from '../../../../strukture/api-strukture';
+import {AclService} from '@app/acl/acl-api';
+import {OrganizationService} from '@app/strukture/api-strukture';
 import {LinkedDatasetTaskMetierService} from './linked-dataset-task-metier.service';
 import {ProjektTaskSearchCriteria} from './projekt-task-search-criteria.interface';
 
@@ -188,7 +188,7 @@ export class LinkedDatasetTaskDependencyFetchers
         return {
             hasPrerequisites: (input: LinkedDatasetTask) => LinkedDatasetTaskDependencyFetchers.hasProjectUuid(input),
             getKey: taskWithDependencies => taskWithDependencies.dependencies.project.uuid,
-            getValue: projectUuid => this.projektService.getLinkedDatasets(projectUuid, 'VALIDATED')
+            getValue: projectUuid => this.projektService.getLinkedDatasets(projectUuid, [LinkedDatasetStatus.Validated])
         };
     }
 

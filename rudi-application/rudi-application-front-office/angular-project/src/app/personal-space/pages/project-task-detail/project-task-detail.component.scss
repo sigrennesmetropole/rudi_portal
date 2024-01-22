@@ -29,8 +29,7 @@
     font-size: 15px;
 }
 
-
-.project-section {
+.project-section{
     border: 1px solid $self-data-border-color;
     border-radius: 7px;
     box-sizing: border-box;
@@ -46,11 +45,14 @@
     @extend .align-items-md-start;
     @extend .justify-content-md-between;
 
-    .project-metadata {
+    .project-metadata-container {
         @extend .col-sm-12;
         @extend .col-lg-8;
-        @extend .mr-lg-5;
-        @extend .project-section;
+        @extend .pr-lg-4;
+        padding: 0;
+        .project-metadata{
+            @extend .project-section;
+        }
     }
 
     .project-owner {

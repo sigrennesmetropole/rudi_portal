@@ -17,6 +17,7 @@ import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.strukture.core.bean.Organization;
 import org.rudi.microservice.strukture.core.bean.OrganizationBean;
@@ -58,6 +59,8 @@ class OrganizationBeanServiceUT {
 	private ProjektHelper projektHelper;
 	@MockBean
 	OrganizationMembersHelper organizationMembersHelper;
+	@MockBean
+	DatasetService datasetService;
 
 	private UUID metalOwner;
 	private UUID familialOwner;
@@ -99,6 +102,8 @@ class OrganizationBeanServiceUT {
 		//Rajout d'un User d'organization pour les tris
 		addMemberToAnOrganization("brezzblock@delta.j", familialOwner, vieillesCharrues.getUuid());
 
+
+
 		//Organization Wacken
 		LocalDateTime wackenCreationDate = LocalDateTime.of(1990, Month.AUGUST, 24, 14, 0, 0, 0);
 		LocalDateTime wackenEndingDate = LocalDateTime.of(2024, Month.JULY, 31, 14, 30, 0, 0);
@@ -106,6 +111,7 @@ class OrganizationBeanServiceUT {
 		organizations.add(wacken);
 		//Rajout d'un User d'organization pour les tris
 		addMemberToAnOrganization("ich-will@metal.de", metalOwner, wacken.getUuid());
+
 
 		//Organization Motoc
 		LocalDateTime motocCreationDate = LocalDateTime.of(2007, Month.AUGUST, 25, 16, 0, 0, 0);
@@ -115,6 +121,7 @@ class OrganizationBeanServiceUT {
 		//Rajout d'un User d'organization pour les tris
 		addMemberToAnOrganization("motocultor@le-gros-bordel.bzh", metalOwner, motocultor.getUuid());
 
+
 		//Organization Macumba
 		LocalDateTime macumbaCreationDate = LocalDateTime.of(2021, Month.AUGUST, 5, 14, 0, 0, 0);
 		LocalDateTime macumbaEndingDate = LocalDateTime.of(2024, Month.AUGUST, 2, 14, 30, 0, 0);
@@ -122,7 +129,6 @@ class OrganizationBeanServiceUT {
 		organizations.add(macumba);
 		//Rajout d'un User d'organization pour les tris
 		addMemberToAnOrganization("macumba@tous-les-soirs.drunk", macumbaOwner, macumba.getUuid());
-
 
 		return organizations;
 	}
@@ -222,7 +228,7 @@ class OrganizationBeanServiceUT {
 
 		Page<OrganizationBean> organizationBeans = organizationBeanService.searchOrganizationBeans(criteria, pageable);
 		assertThat(organizationBeans)
-				.as("La liste ne doit pas être nul, mais contenir les organizations créées au préalable.").isNotEmpty()
+				.as("La liste ne doit pas être nulle, mais contenir les organizations créées au préalable.").isNotEmpty()
 				.as("Les listes doivent être équivalentes.") // parcours la liste des beans et vérifie que pour chaque bean il y a une organization correspondante
 					.allMatch(bean -> organizations.stream().anyMatch(organization -> organization.getUuid().equals(bean.getUuid())));
 

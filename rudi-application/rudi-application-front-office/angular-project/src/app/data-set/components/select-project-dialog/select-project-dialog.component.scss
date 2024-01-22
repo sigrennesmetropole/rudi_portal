@@ -44,7 +44,7 @@
 
         svg:hover {
             opacity: 1;
-            background-color: $focus;
+            background-color: $primary-color;
             fill: white;
         }
     }
@@ -83,7 +83,7 @@
 
     .dialog-cancel {
         background-color: $secondary-color;
-        border: solid 1px $blocks-and-menus-outline;;
+        border: solid 1px $blocks-and-menus-outline;
         color: $primary-text-light;
         width: 160px;
         height: 42px;
@@ -92,7 +92,7 @@
         font-weight: bold;
 
         &:hover {
-            background-color: $focus;
+            background-color: $primary-color;
             color: $secondary-color;
         }
     }

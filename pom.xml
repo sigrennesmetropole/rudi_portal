@@ -6,7 +6,7 @@
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>1.2.3</version>
+	<version>1.2.4</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 
@@ -42,23 +42,23 @@
 		<openapi.plugin.version>7.1.0</openapi.plugin.version>
 		<openapi.jackson.version>0.2.6</openapi.jackson.version>
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
-		<jackson-core.version>2.16.0</jackson-core.version>
+		<jackson-core.version>2.16.1</jackson-core.version>
 		<apache.directory.api.version>2.1.5</apache.directory.api.version>
 		<google.maps.version>0.2.7</google.maps.version>
 		<jasig.cas.client.version>3.6.4</jasig.cas.client.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<lombok.version>1.18.20</lombok.version>
 		<swagger.codegen.version>3.0.21</swagger.codegen.version>
-		<swagger.version>2.2.19</swagger.version>
+		<swagger.version>2.2.20</swagger.version>
 		<flyway.version>9.19.4</flyway.version>
 		<freemarker.version>2.3.32</freemarker.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
 		<nimbus.jose.jwt.version>9.37.3</nimbus.jose.jwt.version>
 		<freemarker.version>2.3.31</freemarker.version>
-		<jsoup.version>1.17.1</jsoup.version>
+		<jsoup.version>1.17.2</jsoup.version>
 		<activiti.version>7.1.0.M6</activiti.version>
-		<log4j.version>2.22.0</log4j.version>
+		<log4j.version>2.22.1</log4j.version>
 		<jaxb-api.version>2.3.1</jaxb-api.version>
 		<tika.version>2.9.1</tika.version>
 		<s3.version>2.5.0</s3.version>
@@ -74,16 +74,16 @@
 		<jsonassert.version>1.5.1</jsonassert.version>
 		<boucycastle.version>1.77</boucycastle.version>
 		<activation.version>1.1</activation.version>
-		<reactor-test.version>3.6.0</reactor-test.version>
+		<reactor-test.version>3.6.2</reactor-test.version>
 		<h2.version>2.2.224</h2.version>
 
 		<maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-		<compiler.plugin.version>3.11.0</compiler.plugin.version>
+		<compiler.plugin.version>3.12.0</compiler.plugin.version>
 		<version-maven-plugin.version>2.16.2</version-maven-plugin.version>
 		<!-- avec surefire 2.12.4, le test du microservice provider n'est pas
 		lancé -->
-		<maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
 		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
 		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>

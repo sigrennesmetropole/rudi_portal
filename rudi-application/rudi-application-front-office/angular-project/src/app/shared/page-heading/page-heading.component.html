@@ -1,19 +1,25 @@
-<div class="header-metadata ml">
-    <div class="header-img">
-        <app-organization-logo [ngClass]="{'metadata-theme-sm' : mediaSize.isSm,
-                                            'metadata-theme-md' : mediaSize.isMd,
-                                            'metadata-theme-lg' : mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
-                               class="organization-logo"
-                               [organizationId]="organizationId"
-                               organizationType="producer">
-        </app-organization-logo>
+<div class="header-metadata">
+
+    <div class="header-img-container mb-sm-2">
+        <div class="header-img">
+            <app-organization-logo [ngClass]="{'metadata-theme-sm' : mediaSize.isSm,
+                                                    'metadata-theme-md' : mediaSize.isMd,
+                                                    'metadata-theme-lg' : mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+                                   class="organization-logo"
+                                   [organizationId]="organizationId"
+                                   organizationType="producer">
+            </app-organization-logo>
+        </div>
     </div>
-    <div class="header-ressource">
-        <div class="producer-name">{{organizationName}}</div>
-        <div class="resource-description">
-            <mat-icon class="d-inline-flex dataset-icon" [svgIcon]="icon"
-                      *ngIf="icon != null && icon !== ''"></mat-icon>
-            <span class="blue-theme resource-title">{{resourceTitle}}</span>
+
+    <div class="header-ressource-container">
+        <div class="header-ressource">
+            <div class="producer-name">{{organizationName}}</div>
+            <div class="resource-description">
+                <mat-icon class="d-inline-flex dataset-icon" [svgIcon]="icon"
+                          *ngIf="icon != null && icon !== ''"></mat-icon>
+                <h1 class="blue-theme resource-title">{{resourceTitle}}</h1>
+            </div>
         </div>
     </div>
 </div>

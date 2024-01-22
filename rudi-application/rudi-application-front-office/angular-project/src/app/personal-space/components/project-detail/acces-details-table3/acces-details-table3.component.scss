@@ -20,7 +20,7 @@
     }
 
     .titre-jdd {
-        font-family: OpenSans;
+        font-family: OpenSans, sans-serif;
         font-size: 15px;
         font-weight: bold;
         text-align: left;
@@ -29,7 +29,7 @@
     }
 
     .table-header {
-        font-family: OpenSans;
+        font-family: OpenSans, sans-serif;
         font-size: 13px;
         font-weight: 600;
         color: $primary-text;
@@ -42,7 +42,7 @@
     }
 
     .data-town-name {
-        font-family: OpenSans;
+        font-family: OpenSans, sans-serif;
         font-size: 13px;
         line-height: 1.54;
         color: $primary-text;

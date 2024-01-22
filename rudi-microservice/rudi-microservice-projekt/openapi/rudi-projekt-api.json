@@ -1117,7 +1117,10 @@
 						"name": "status",
 						"description": "Statut de la demande, optionnel. Si vide : récupération de tous les JDDs",
 						"schema": {
-							"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDatasetStatus"
+							"type": "array",
+							"items": {
+								"$ref": "rudi-projekt-model.json#/components/schemas/LinkedDatasetStatus"
+							}
 						},
 						"example": "DRAFT"
 					}
@@ -3833,6 +3836,42 @@
 					},
 					"503": {
 						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/count-per-owner": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Retourne le nombre de projects par owner",
+				"description": "Recherche de statut de réutilisation",
+				"operationId": "getNumberOfProjectsPerOwners",
+				"parameters": [
+					{
+						"name": "criteria",
+						"in": "query",
+						"description": "critères de recherches",
+						"required": true,
+						"schema": {
+							"$ref": "./rudi-projekt-model.json#/components/schemas/ProjectSearchCriteria"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-projekt-model.json#/components/schemas/ProjectByOwners"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}

@@ -134,12 +134,12 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	}
 
 	@Override
-	public List<LinkedDataset> getLinkedDatasets(UUID projectUuid, LinkedDatasetStatus status)
+	public List<LinkedDataset> getLinkedDatasets(UUID projectUuid, List<LinkedDatasetStatus> status)
 			throws AppServiceNotFoundException {
 		val project = getRequiredProjectEntity(projectUuid);
 		return project.getLinkedDatasets().stream().map(linkedDatasetMapper::entityToDto)
 				// si status nul on renvoie tout sinon fitlrage par status
-				.filter(linked -> linked.getLinkedDatasetStatus().equals(status) || status == null)
+				.filter(linked -> status == null || status.contains(linked.getLinkedDatasetStatus()))
 				.collect(Collectors.toList());
 	}
 

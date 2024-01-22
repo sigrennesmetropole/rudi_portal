@@ -23,4 +23,6 @@ public class ProjektProperties {
 
 	private String linkedDatasetOwnerPath = "/owner-info/{linkedDatasetUuid}";
 
+	private String getNumberOfProjectsPerOwnersPath = "/projects/project-per-owner";
+
 }

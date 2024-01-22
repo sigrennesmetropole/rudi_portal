@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
+import {DataSetActionsAuthorizationService} from '@core/services/data-set/data-set-actions-authorization.service';
 import {UserService} from '../../../core/services/user.service';
 import {LinkedDataset, Project} from '../../../projekt/projekt-model';
 import {map} from 'rxjs/operators';
@@ -12,6 +13,7 @@ import {Metadata} from '../../../api-kaccess';
 import {MatSelectChange} from '@angular/material/select';
 import {filterEach} from '../../../shared/utils/rxjs-pipes';
 import {Router} from '@angular/router';
+
 
 /**
  * Les données que peuvent accepter la Dialog
@@ -71,6 +73,7 @@ export class SelectProjectDialogComponent implements OnInit {
                 private readonly formBuilder: FormBuilder,
                 private readonly userService: UserService,
                 private readonly projektMetierService: ProjektMetierService,
+                private readonly dataSetActionsAuthorizationService: DataSetActionsAuthorizationService,
                 private router: Router,
                 @Inject(MAT_DIALOG_DATA) public dialogData: SelectProjectDialogData,
     ) {
@@ -101,7 +104,7 @@ export class SelectProjectDialogComponent implements OnInit {
         // On charge pour récupérer les projets de l'user connected
         this.isLoading = true;
         this.projektMetierService.getMyAndOrganizationsProjectsWithoutPagination().pipe(
-            filterEach(myProject => !myProject.is_a_reuse),
+            filterEach((myProject: Project) => this.dataSetActionsAuthorizationService.canAddDatasetFromProject(myProject)),
         )
             .subscribe(myProjects => {
                 this.isLoading = false;

@@ -7,7 +7,7 @@ function get<P, V, M>(key: string, properties: P, mapper: (value: V) => M): M | 
     const child = properties[childKey];
     if (child) {
         if (key.length > childKey.length) {
-            const childChildKey = key.substr(childKey.length + 1);
+            const childChildKey = key.slice(childKey.length + 1);
             return get(childChildKey, child, mapper);
         } else {
             return mapper(child);

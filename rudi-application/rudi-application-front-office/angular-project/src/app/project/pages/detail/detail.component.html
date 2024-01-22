@@ -18,7 +18,8 @@
                 <mat-toolbar class="bandeau-card">
                     <button class="button button-info" disabled mat-raised-button>
                         <mat-icon [ngClass]="mediaSize.isSm ? 'icon-information-sm' : 'icon-information'"
-                                  svgIcon="icon-info">error_outline
+                                  svgIcon="icon-info">
+                            error_outline
                         </mat-icon>
                         <span
                             [ngClass]="{'bandeau-icon-libelle': mediaSize.isSm}">{{'project.detail.informations'|translate}}</span>
@@ -63,7 +64,8 @@
 
                         <div *ngIf="userIdentity" class="contact">
                             <label class="card-label">{{userIdentity}}</label><br/>
-                            <app-contact-button [email]="project.contact_email" *ngIf="isKnownUser"></app-contact-button>
+                            <app-contact-button [email]="project.contact_email"
+                                                *ngIf="isKnownUser"></app-contact-button>
                         </div>
 
                         <div class="mt-4 mr-auto">

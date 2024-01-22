@@ -15,18 +15,34 @@ classe [RudiTsvUpdator](../../java/org/rudi/facet/kaccess/helper/tsv/RudiTsvUpda
 
 On utilise le script [upload_rudi_tsv.sh](upload_rudi_tsv.sh).
 
-On fait ensuite un RELOAD Solr en appelant ce script sur la machine hébergeant Dataverse (à adapter en fonction de l'instance) : 
+On fait ensuite un RELOAD Solr en appelant ce script sur la machine hébergeant Dataverse (à adapter en fonction de
+l'instance) :
+
+Sur un environnement iaas :
 
 ```
 sudo /opt/dataverse/images/dataverse/dvinstall/updateSchemaMDB.sh -d http://localhost:8095 -t /opt/dataverse/v5.4.1-rudi/instance1/solr-data/collection1/conf/
+```
+
+Sur un environnement karbon :
+
+```
+/opt/dv/dvinstall/updateSchemaMDB.sh -d http://localhost:8095 -t /opt/dataverse/v5.4.1-rudi/instance1/solr-data/collection1/conf/
 ```
 
 En fonction du nombre de JDD, cette opération peut prendre du temps.
 
 Si la commande ne s'arrête plus, on peut redémarrer SolR (ou même tous les services Dataverse).
 
-Suite à cela il faut vérifier si le fichier [schema_dv_mdb_fields.xml](../../../../../../ansible/roles/dataverse/files/solr-data/collection1/conf/schema_dv_mdb_fields.xml) est toujours synchro avec celui stocké sur le serveur.
+Suite à cela il faut vérifier si le
+fichier [schema_dv_mdb_fields.xml](../../../../../../ansible/roles/dataverse/files/solr-data/collection1/conf/schema_dv_mdb_fields.xml)
+est toujours synchro avec celui stocké sur le serveur.
 On peut pour cela lancer le rôle dataverse via Ansible en mode `--check` pour voir les ajustements nécessaires.
+
+### Si rajout d'une facet dataverse
+
+Il sera nécessaire d'aller dans le dataverse rudi_root dans `Edit > General Information` et de modifier la section
+`Browse/Search Facets` pour y rajouter notre nouvelle facet dans la section **Selected**.
 
 # Vérifications
 
@@ -49,19 +65,21 @@ L'ajout de champs modifie les fichiers suivants de l'instance Dataverse :
 - schema_dv_mdb_copies.xml
 
 À chaque déploiement Ansible/Karbon, ces fichiers sont écrasés.
-Il faut donc récupérer ces fichiers depuis la machine (ou la VM ou le pod) ciblée et écraser les fichiers correspondants dans les dossiers suivants :
+Il faut donc récupérer ces fichiers depuis la machine (ou la VM ou le pod) ciblée et écraser les fichiers correspondants
+dans les dossiers suivants :
 
 - Pour Ansible : [ce dossier](../../../../../../ansible/roles/dataverse/files/solr-data/collection1/conf)
 - Pour Karbon : [ce dossier](../../../../../../ci/karbon/apps/dataverse-solr/conf)
 
-**Attention cependant** : certaines modifications doivent être conservées car Dataverse ne les prend pas en compte dans le fichier tsv.
+**Attention cependant** : certaines modifications doivent être conservées car Dataverse ne les prend pas en compte dans
+le fichier tsv.
 Notamment :
 
 - schema.xml : n'écraser ce fichier que si les modifications apportées sont réellement voulues
 - schema_dv_mdb_fields.xml : ne pas écraser le type des champs qui ont le type :
-  - `text_fr`
-  - `rudi_id`
-- schema_dv_mdb_copies.xml : 
+    - `text_fr`
+    - `rudi_id`
+- schema_dv_mdb_copies.xml :
 
 # Instances Dataverse
 
@@ -91,7 +109,7 @@ Exemple avec un champ portant l'id `225` dans la table `datasetfieldtype` :
 ```postgresql
 -- On supprime le contrôle des valeurs pour le champ
 UPDATE datasetfieldtype
-SET allowcontrolledvocabulary = false
+SET allowcontrolledvocabulary = FALSE
 WHERE id = 225;
 -- On supprime les valeurs autorisées pour le champ
 DELETE
@@ -100,7 +118,6 @@ WHERE datasetfieldtype_id = 225;
 ```
 
 [RudiMetadataField]: ../../../main/java/org/rudi/facet/kaccess/constant/RudiMetadataField.java
-
 
 # Liens complémentaires
 

@@ -1,6 +1,8 @@
 @import "src/app/styles/variables-rudi";
 @import "src/app/styles/colors";
 @import "src/app/styles/common-style";
+@import "src/app/styles/responsive";
+
 
 .my-profil-title {
     font-size: 17px;
@@ -16,44 +18,76 @@
 
 .my-profil-card {
     box-shadow: none;
-    width: 65%;
+    width: 100%;
     border: solid 1.1px $blocks-and-menus-outline;
     padding: 17px 17px 17px 17px;
     overflow: hidden;
     margin-bottom: 100px;
+}
 
-    mat-card-content {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 15px;
-        font-family: OpenSans, sans-serif;
-
-        .text-section{
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        .keyword {
-            color: $primary-color
-        }
-
-    }
-
-    .logo-container {
-        margin: 0 16px 12px 0;
-    }
-
-    img {
-        width: 70px;
-        height: 70px;
-        object-fit: contain;
-    }
-
-    .my-profil-card-content {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: column;
-        gap: 22px;
+@mixin mobile-screen {
+    .my-profil-card {
+        width: 100%;
     }
 }
+
+@mixin desktop-screen {
+    .my-profil-card {
+        width: 50%;
+    }
+}
+
+@include xs() {
+    @include mobile-screen;
+}
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include mobile-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include desktop-screen;
+}
+
+mat-card-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    font-family: OpenSans, sans-serif;
+
+    .text-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .keyword {
+        color: $primary-color
+    }
+}
+
+.logo-container {
+    margin: 0 16px 12px 0;
+}
+
+img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.my-profil-card-content {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 22px;
+}
+

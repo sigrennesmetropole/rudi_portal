@@ -23,10 +23,12 @@
     <div *ngIf="(totalOrganizations$ | async) > 0">
         <div class="content">
 
-           <app-list-organization-card
+            <app-list-organization-card
                 [organizations]="organizations$ | async"
                 [itemsPerPage]="itemsPerPage"
                 [totalItems]="totalOrganizations$ | async"
+                [datasetCountLoading]="datasetCountLoading$ | async"
+                [projectCountLoading$]="projectCountLoading$ | async"
                 (pageChangeEvent)="onPageChange($event)"
             ></app-list-organization-card>
 

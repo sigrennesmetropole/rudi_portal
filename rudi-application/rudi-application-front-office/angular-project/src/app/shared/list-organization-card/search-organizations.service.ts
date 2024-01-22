@@ -1,5 +1,9 @@
 import {Injectable} from '@angular/core';
+import {MetadataFacets} from '@app/api-kaccess';
+import {KonsultService} from '@app/konsult/konsult-api';
 import {Order} from '@app/organization/components/order/type';
+import {ProjektService} from '@app/projekt/projekt-api';
+import {ProjectByOwner} from '@app/projekt/projekt-model';
 import {OrganizationBean, OrganizationService, PagedOrganizationBeanList} from '@app/strukture/api-strukture';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
@@ -25,9 +29,13 @@ export class SearchOrganizationsService {
     currentSortOrder$: BehaviorSubject<Order>;
     totalOrganizations$: BehaviorSubject<number>;
     organizations$: BehaviorSubject<OrganizationBean[]>;
+    datasetCountLoading: BehaviorSubject<boolean>;
+    projectsCountLoading: BehaviorSubject<boolean>;
 
     constructor(
         private organizationService: OrganizationService,
+        private readonly projektService: ProjektService,
+        private readonly konsultService: KonsultService
     ) {
         this.currentRequest = {
             itemPerPage: searchDefaultPageSize
@@ -37,15 +45,17 @@ export class SearchOrganizationsService {
         this.currentSortOrder$ = new BehaviorSubject(searchDefaultOrder);
         this.totalOrganizations$ = new BehaviorSubject(0);
         this.organizations$ = new BehaviorSubject([]);
+        this.datasetCountLoading = new BehaviorSubject(false);
+        this.projectsCountLoading = new BehaviorSubject(false);
     }
 
     initSubscriptions(userUuid?: string, itemPerPage?: number) {
         this.currentRequest.userUuid = null;
         this.currentRequest.itemPerPage = searchDefaultPageSize;
-        if(userUuid){
+        if (userUuid) {
             this.currentRequest.userUuid = userUuid;
         }
-        if(itemPerPage){
+        if (itemPerPage) {
             this.currentRequest.itemPerPage = itemPerPage;
         }
         this.subscription = new Subscription();
@@ -57,18 +67,6 @@ export class SearchOrganizationsService {
 
     complete(): void {
         this.subscription.unsubscribe();
-    }
-
-    private initCurrentPageSubscription(): Subscription {
-        return this.currentPage$
-            .pipe(
-                tap((page: number) => this.currentRequest.offset = (page - 1) * this.currentRequest.itemPerPage),
-                map((page: number): SearchOrganisationsRequest => ({
-                    ...this.currentRequest,
-                    offset: (page - 1) * this.currentRequest.itemPerPage
-                }))
-            )
-            .subscribe((request: SearchOrganisationsRequest) => this.searchOrganisations(request));
     }
 
     private initCurrentSortOrderSubscription(): Subscription {
@@ -83,6 +81,19 @@ export class SearchOrganizationsService {
             .subscribe((request: SearchOrganisationsRequest) => this.searchOrganisations(request));
     }
 
+    private initCurrentPageSubscription(): Subscription {
+        return this.currentPage$
+            .pipe(
+                tap((page: number) => this.currentRequest.offset = (page - 1) * this.currentRequest.itemPerPage),
+                map((page: number): SearchOrganisationsRequest => ({
+                    ...this.currentRequest,
+                    offset: (page - 1) * this.currentRequest.itemPerPage
+                }))
+            )
+            .subscribe((request: SearchOrganisationsRequest) => this.searchOrganisations(request));
+    }
+
+
     private searchOrganisations(searchRequest: SearchOrganisationsRequest): void {
         this.organizationService.searchOrganizationsBeans(
             searchRequest.userUuid,
@@ -92,6 +103,47 @@ export class SearchOrganizationsService {
         ).subscribe((data: PagedOrganizationBeanList) => {
             this.totalOrganizations$.next(data.total);
             this.organizations$.next(data.elements);
+
+            this.updateOrganizationsProjectCount();
+            this.updateOrganizationDatasetCount();
         });
+    }
+
+    private updateOrganizationsProjectCount(): void {
+        this.projectsCountLoading.next(true);
+        const organizations: OrganizationBean[] = [...this.organizations$.value];
+
+        this.projektService.getNumberOfProjectsPerOwners({
+            owner_uuids: organizations.map((e: OrganizationBean) => e.uuid)
+        }).subscribe((projectByOwners: ProjectByOwner[]): void => {
+
+            projectByOwners.forEach((projectByOwner: ProjectByOwner) => {
+                const orga = organizations.find(organisation => organisation.uuid === projectByOwner.ownerUUID);
+                if (!!orga) {
+                    orga.projectCount = projectByOwner.projectCount;
+                }
+            });
+
+            this.projectsCountLoading.next(false);
+            this.organizations$.next(organizations);
+        });
+    }
+
+    private updateOrganizationDatasetCount(): void {
+        this.datasetCountLoading.next(true);
+        const organizations: OrganizationBean[] = [...this.organizations$.value];
+
+        this.konsultService.searchMetadataFacets(['producer_organization_id']).subscribe(
+            (metadataFacets: MetadataFacets) => {
+                const targetedFacet = metadataFacets.items.find(i => i.propertyName === 'producer_organization_id');
+                organizations.forEach((organization: OrganizationBean) => {
+                    const datasetCount = targetedFacet.values.find(value => value.value == organization.uuid);
+                    if (!!datasetCount) {
+                        organization.datasetCount = datasetCount.count;
+                    }
+                });
+                this.datasetCountLoading.next(false);
+                this.organizations$.next(organizations);
+            });
     }
 }

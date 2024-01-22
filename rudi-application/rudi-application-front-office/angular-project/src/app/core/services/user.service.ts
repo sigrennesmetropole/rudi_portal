@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {EMPTY, Observable, of} from 'rxjs';
 import {AclService, AddressType, EmailAddress, User} from '../../acl/acl-api';
 import {AuthenticationService} from './authentication.service';
-import {catchError, map, mapTo, switchMap, take} from 'rxjs/operators';
+import {map, switchMap, take} from 'rxjs/operators';
 import {AuthenticationState} from './authentication/authentication-method';
 import {FormBuilder} from '@angular/forms';
 

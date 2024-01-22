@@ -212,7 +212,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -242,15 +242,15 @@ class LinkedDatasetServiceUT {
 		linkedDatasetService.linkProjectToDataset(projectUuid, ld_self);
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.hasSize(1);
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED).get(0))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.VALIDATED)
 				.hasFieldOrPropertyWithValue("comment", "link opened");
 
 		// et qu'il a bien aucune date de fin malgré l'alimentation initiale
 		assertThat(
-				linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED).get(0).getEndDate())
+				linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0).getEndDate())
 						.isNull();
 	}
 
@@ -267,7 +267,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -323,7 +323,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -338,7 +338,7 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
 	}
 
 	@Test
@@ -352,7 +352,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -394,7 +394,7 @@ class LinkedDatasetServiceUT {
 
 		final var projectUuid = createdProject.getUuid();
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -411,14 +411,14 @@ class LinkedDatasetServiceUT {
 		linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isNotEmpty();
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED).get(0))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.VALIDATED)
 				.hasFieldOrPropertyWithValue("comment", "link opened");
 
 		// et qu'il a bien aucune date de fin malgré l'alimentation initiale
 		assertThat(
-				linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED).get(0).getEndDate())
+				linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0).getEndDate())
 						.isNull();
 	}
 
@@ -435,7 +435,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -479,7 +479,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -496,8 +496,8 @@ class LinkedDatasetServiceUT {
 		linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isNotEmpty();
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED).get(0))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.VALIDATED)
 				.hasFieldOrPropertyWithValue("comment", "link opened");
 	}
@@ -515,7 +515,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -561,7 +561,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -576,7 +576,7 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
 	}
 
 	@Test
@@ -590,7 +590,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -636,7 +636,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -651,7 +651,7 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
 	}
 
 	@Test
@@ -665,7 +665,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -709,7 +709,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -723,7 +723,7 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
 	}
 
 	@Test
@@ -737,7 +737,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -778,7 +778,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -795,13 +795,13 @@ class LinkedDatasetServiceUT {
 
 		// Check que le JDD lié restreint est bien en cours
 		assertThat(linkedDatasetService.getLinkedDataset(projectUuid, ld1Uuid)).isNotNull();
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.DRAFT)).isNotEmpty();
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.DRAFT).get(0))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.DRAFT)
 				.hasFieldOrPropertyWithValue("comment", "link restreint");
 
 		// la date de fin est obligatoire pour une demande d'accès restreinte
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.DRAFT).get(0).getEndDate())
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT)).get(0).getEndDate())
 				.isNotNull();
 	}
 
@@ -815,7 +815,7 @@ class LinkedDatasetServiceUT {
 
 		// C'est bien vide
 		for (LinkedDatasetStatus status : LinkedDatasetStatus.values()) {
-			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, status))
+			assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(status)))
 					.as("À sa création, le projet n'utilise aucun JDD de statut " + status).isEmpty();
 		}
 
@@ -841,7 +841,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -870,7 +870,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -887,7 +887,7 @@ class LinkedDatasetServiceUT {
 		UUID linkedDatasetUuid = linkedDataset.getDatasetUuid();
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
 
 		// On se connecte avec quelqu'un d'autre.
 		mockAuthenticatedUserOtherUser(UUID.randomUUID(), List.of(RoleCodes.USER));
@@ -905,7 +905,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -922,7 +922,7 @@ class LinkedDatasetServiceUT {
 		UUID linkedDatasetUuid = linkedDataset.getDatasetUuid();
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED)).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
 
 		// On se connecte avec quelqu'un d'autre.
 		mockAuthenticatedUserOtherUser(UUID.randomUUID(), List.of(RoleCodes.USER));
@@ -942,7 +942,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -974,7 +974,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1043,7 +1043,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1086,7 +1086,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1154,7 +1154,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1186,7 +1186,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1251,7 +1251,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1326,7 +1326,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1384,7 +1384,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1430,7 +1430,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1462,7 +1462,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1531,7 +1531,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test
@@ -1574,7 +1574,7 @@ class LinkedDatasetServiceUT {
 		final var projectUuid = createdProject.getUuid();
 
 		// C'est bien vide
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, LinkedDatasetStatus.VALIDATED))
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
 				.as("À sa création, le projet n'utilise aucun JDD").isEmpty();
 
 		// Créations des JDDs de test

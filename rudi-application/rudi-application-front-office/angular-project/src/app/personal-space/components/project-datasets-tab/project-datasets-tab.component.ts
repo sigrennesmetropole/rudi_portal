@@ -48,6 +48,7 @@ export class ProjectDatasetsTabComponent {
      * Loader de l'onglet
      */
     loading = false;
+    loadingCommentData: boolean;
     /**
      * Loader dédié
      */
@@ -108,7 +109,7 @@ export class ProjectDatasetsTabComponent {
             this.startAllLoader();
             of(new ProjectWithDependencies(this._project, {})).pipe(
                 injectDependencies({
-                    linkedDatasetMetadatas: this.projectDependenciesFetchers.linkedDatasetMetadatas,
+                    linkedDatasetMetadatas: this.projectDependenciesFetchers.linkedDatasetMetadatas(),
                     newDatasetRequests: this.projectDependenciesFetchers.newDatasetRequests,
                     linkedDatasetsOpened: this.projectDependenciesFetchers.linkedDatasetsOpened,
                     linkedDatasetsRestricted: this.projectDependenciesFetchers.linkedDatasetsRestricted
@@ -163,6 +164,7 @@ export class ProjectDatasetsTabComponent {
         iconRegistryService: IconRegistryService,
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
+        this.loadingCommentData = false;
     }
 
     /**
@@ -324,13 +326,20 @@ export class ProjectDatasetsTabComponent {
     }
 
     onClickCommentAction(element: RowTableData, isRestricted: boolean): void {
+        this.loadingCommentData = true;
         if (isRestricted) {
             this.projektService
                 .getDecisionInformationsForLinkedDataset(this._project.uuid, element.uuid)
+                .pipe(
+                    tap(() => { this.loadingCommentData = false; })
+                )
                 .subscribe((data: Form) => this.showCommentPopupOrSnackbar(data));
         } else {
             this.projektService
                 .getDecisionInformationsForNewRequest(this._project.uuid, element.uuid)
+                .pipe(
+                    tap(() => { this.loadingCommentData = false; })
+                )
                 .subscribe((data: Form) => this.showCommentPopupOrSnackbar(data));
         }
     }

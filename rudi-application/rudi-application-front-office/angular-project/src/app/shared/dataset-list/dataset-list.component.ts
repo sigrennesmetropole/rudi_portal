@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Metadata, MetadataList} from '../../api-kaccess';
-import {KonsultMetierService, MAX_RESULTS_PER_PAGE} from '../../core/services/konsult-metier.service';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
-import {ThemeCacheService} from '../../core/services/theme-cache.service';
-import {FiltersService} from '../../core/services/filters.service';
+import {Metadata, MetadataList} from '@app/api-kaccess';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {FiltersService} from '@core/services/filters.service';
+import {KonsultMetierService, MAX_RESULTS_PER_PAGE} from '@core/services/konsult-metier.service';
+import {LogService} from '@core/services/log.service';
+import {ThemeCacheService} from '@core/services/theme-cache.service';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {debounceTime, takeUntil, tap} from 'rxjs/operators';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {LogService} from '../../core/services/log.service';
 
 const FIRST_PAGE = 1;
 const EMPTY_METADATA_LIST: MetadataList = {
@@ -51,7 +51,7 @@ export class DatasetListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.filtersService.currentFilters.producerUuid = this.producerUuid;
+        this.filtersService.currentFilters.producerUuids = [this.producerUuid];
         this.mediaSize = this.breakpointObserver.getMediaSize();
         this.filtersService.filter$.pipe(takeUntil(this.isDestroyed$)).subscribe(() => {
             this.page = FIRST_PAGE;

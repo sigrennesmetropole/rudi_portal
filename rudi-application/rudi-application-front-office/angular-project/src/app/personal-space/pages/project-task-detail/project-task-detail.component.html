@@ -11,47 +11,48 @@
             <app-tab [icon]="'icon-reutilisation'" [label]="'personalSpace.projectDetails.projectTab' | translate">
                 <ng-template>
                     <div class="project-details-container">
-                        <mat-card class="project-metadata">
-                            <mat-card-content>
-                                <app-project-main-informations
-                                    [project]="dependencies.project"
-                                ></app-project-main-informations>
+                        <div class="project-metadata-container">
+                            <mat-card class="project-metadata">
+                                <mat-card-content>
+                                    <app-project-main-informations
+                                        [project]="dependencies.project"
+                                    ></app-project-main-informations>
 
-                                <app-open-dataset-table
-                                    [openDatasetsList]="dependencies.openLinkedDatasets"
-                                    [tableLoading]="isLoading"
-                                    [hasAddButton]="addActionAuthorized"
-                                    [hasDeleteButton]="deleteActionAuthorized"
-                                    [disableAddButton]="addingInProgress"
-                                    (addOpenedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, false)"
-                                    (addingElementToOpenedTable)=updateAddButtonStatus($event)
-                                    (requestUuidEmitter)="handleOpenDatasetRequestUuidChanged($event)"
-                                ></app-open-dataset-table>
+                                    <app-open-dataset-table
+                                        [openDatasetsList]="dependencies.openLinkedDatasets"
+                                        [tableLoading]="isLoadingOpenDataset"
+                                        [hasAddButton]="addActionAuthorized"
+                                        [hasDeleteButton]="deleteActionAuthorized"
+                                        [disableAddButton]="addingInProgress"
+                                        (addOpenedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, false)"
+                                        (addingElementToOpenedTable)=updateAddButtonStatus($event)
+                                        (requestUuidEmitter)="handleOpenDatasetRequestUuidChanged($event)"
+                                    ></app-open-dataset-table>
 
-                                <app-restricted-dataset-table
-                                    [restrictedDatasetsList]="dependencies.restrictedLinkedDatasets"
-                                    [tableLoading]="isLoading"
-                                    [hasAddButton]="addActionAuthorized"
-                                    [hasDeleteButton]="deleteActionAuthorized"
-                                    [disableAddButton]="addingInProgress"
-                                    (addRestrictedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, true)"
-                                    (addingElementToRestrictedTable)=updateAddButtonStatus($event)
-                                    (requestUuidEmitter)="handleRestrictedDatasetRequestUuidChanged($event)"
-                                ></app-restricted-dataset-table>
+                                    <app-restricted-dataset-table
+                                        [restrictedDatasetsList]="dependencies.restrictedLinkedDatasets"
+                                        [tableLoading]="isLoadingRestrictedDataset"
+                                        [hasAddButton]="addActionAuthorized"
+                                        [hasDeleteButton]="deleteActionAuthorized"
+                                        [disableAddButton]="addingInProgress"
+                                        (addRestrictedLinkedDatasetEvent)="addLinkedDatasetAndReloadDependencies($event, true)"
+                                        (addingElementToRestrictedTable)=updateAddButtonStatus($event)
+                                        (requestUuidEmitter)="handleRestrictedDatasetRequestUuidChanged($event)"
+                                    ></app-restricted-dataset-table>
 
-                                <app-new-dataset-request-table
-                                    [newDatasetRequestList]="dependencies.newDatasetsRequest"
-                                    [tableLoading]="isLoading"
-                                    [hasAddButton]="addActionAuthorized"
-                                    [hasDeleteButton]="deleteActionAuthorized"
-                                    [disableAddButton]="addingInProgress"
-                                    (addNewDatasetRequestEvent)="addNewDatasetRequest($event)"
-                                    (addingElementToNewDatasetTable)=updateAddButtonStatus($event)
-                                    (requestUuidEmitter)="handleNewDatasetRequestUuidChanged($event)"
-                                ></app-new-dataset-request-table>
-                            </mat-card-content>
-                        </mat-card>
-
+                                    <app-new-dataset-request-table
+                                        [newDatasetRequestList]="dependencies.newDatasetsRequest"
+                                        [tableLoading]="isLoadingNewDatasetRequest"
+                                        [hasAddButton]="addActionAuthorized"
+                                        [hasDeleteButton]="deleteActionAuthorized"
+                                        [disableAddButton]="addingInProgress"
+                                        (addNewDatasetRequestEvent)="addNewDatasetRequest($event)"
+                                        (addingElementToNewDatasetTable)=updateAddButtonStatus($event)
+                                        (requestUuidEmitter)="handleNewDatasetRequestUuidChanged($event)"
+                                    ></app-new-dataset-request-table>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
                         <mat-card class="project-owner">
                             <mat-card-title class="section-title">
                                 {{ 'personalSpace.projectDetails.projectOwner' | translate }}

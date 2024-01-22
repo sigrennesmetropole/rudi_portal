@@ -1,7 +1,11 @@
 <div class="card-container">
-    <div *ngFor="let organisation of organizations | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }" class="card-organization">
+    <div
+        *ngFor="let organisation of organizations | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }"
+        class="card-organization">
         <app-organization-card
             [organizationBean]="organisation"
+            [datasetCountLoading]="datasetCountLoading"
+            [projectCountLoading$]="projectCountLoading$"
         ></app-organization-card>
     </div>
 </div>

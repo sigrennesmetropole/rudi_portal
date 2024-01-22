@@ -12,6 +12,7 @@ import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.Project;
+import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -149,4 +150,6 @@ public interface ProjectService {
 	 * @throws Exception
 	 */
 	boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception;
+
+	List<ProjectByOwner> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria);
 }

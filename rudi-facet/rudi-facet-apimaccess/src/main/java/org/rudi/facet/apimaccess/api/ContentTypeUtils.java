@@ -1,14 +1,17 @@
 package org.rudi.facet.apimaccess.api;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
+
 
 public class ContentTypeUtils {
 
+	ContentTypeUtils(){}
 	public static MediaType normalize(String contentTypeValue) {
 		final MediaType contentType;
 		if (contentTypeValue == null) {
@@ -16,17 +19,23 @@ public class ContentTypeUtils {
 		} else {
 			String fullType = extractType(contentTypeValue);
 			Map<String, String> parameters = extractParameters(contentTypeValue);
-			Map<String, String> outputParameters = new HashMap<String, String>();
-			for (Map.Entry<String, String> parameter : parameters.entrySet()) {
-				if (parameter.getValue().contains("/") && !parameter.getValue().startsWith("\"")) {
-					outputParameters.put(parameter.getKey(), "\"" + parameter.getValue() + "\"");
-				} else {
-					outputParameters.put(parameter.getKey(), parameter.getValue());
+			// Vérifie s'il y avait des paramètres.
+			if(MapUtils.isNotEmpty(parameters)){
+				for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+					if (parameter.getValue().contains("/")) {
+						// Rajout des quotes si elles ne sont pas présentes
+						parameters.put(parameter.getKey(), StringUtils.wrapIfMissing(parameter.getValue(),'"'));
+					} else {
+						parameters.put(parameter.getKey(), parameter.getValue());
+					}
 				}
+				// join
+				contentType = MediaType.parseMediaType(fullType + "; " + parameters.entrySet().stream()
+						.map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining(" ")));
 			}
-			// join
-			contentType = MediaType.parseMediaType(fullType + "; " + outputParameters.entrySet().stream()
-					.map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining(" ")));
+			else {
+				contentType = MediaType.parseMediaType(fullType);
+			}
 		}
 		return contentType;
 	}
@@ -36,38 +45,35 @@ public class ContentTypeUtils {
 		return (index >= 0 ? mimeType.substring(0, index) : mimeType).trim();
 	}
 
+	/**
+	 * Permet de retourner les paramètres du mimeType
+	 *
+	 * @param mimeType exemple application/json;name="myParams"
+	 * @return s'il y a des paramètres : Map<clé,"valeur">, retourne NULL sinon
+	 *
+	 */
 	private static Map<String, String> extractParameters(String mimeType) {
-		int index = mimeType.indexOf(';');
+		Map<String, String> parameters = new HashMap<>();
+		String[] substr = StringUtils.split(mimeType, ";");
 
-		Map<String, String> parameters = null;
-		do {
-			int nextIndex = index + 1;
-			boolean quoted = false;
-			while (nextIndex < mimeType.length()) {
-				char ch = mimeType.charAt(nextIndex);
-				if (ch == ';') {
-					if (!quoted) {
-						break;
-					}
-				} else if (ch == '"') {
-					quoted = !quoted;
-				}
-				nextIndex++;
-			}
-			String parameter = mimeType.substring(index + 1, nextIndex).trim();
-			if (parameter.length() > 0) {
-				if (parameters == null) {
-					parameters = new LinkedHashMap<>(4);
-				}
-				int eqIndex = parameter.indexOf('=');
-				if (eqIndex >= 0) {
-					String attribute = parameter.substring(0, eqIndex).trim();
-					String value = parameter.substring(eqIndex + 1).trim();
-					parameters.put(attribute, value);
+		//Si le mimeType contient des paramètres
+		if(substr != null && substr.length > 1){
+
+			// On parcourt l'ensemble des paramètres séparés par un ";"
+			// Les parameters commencent à l'index 1, l'index 0 est occupé par le mimeType
+			for (int i = 1; i < substr.length; i++) {
+				// On sépare la clé et la valeur du paramètre clé=param
+				String[] stringParams = StringUtils.split(substr[i], "=");
+
+				//Si le paramètre est bien composé d'une clé et d'une valeur
+				if(stringParams!= null && stringParams.length == 2) {
+					String key = stringParams[0].trim();
+					String value = stringParams[1].trim();
+
+					parameters.put(key, value);
 				}
 			}
-			index = nextIndex;
-		} while (index < mimeType.length());
+		}
 
 		return parameters;
 	}

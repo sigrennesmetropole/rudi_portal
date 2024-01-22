@@ -1,13 +1,5 @@
 package org.rudi.microservice.projekt.facade.controller;
 
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
-import static org.rudi.common.core.security.QuotedRoleCodes.USER;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +24,7 @@ import org.rudi.microservice.projekt.core.bean.LinkedDatasetStatus;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.PagedProjectList;
 import org.rudi.microservice.projekt.core.bean.Project;
+import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
 import org.rudi.microservice.projekt.facade.controller.api.ProjectsApi;
@@ -48,6 +41,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -127,7 +127,7 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	public ResponseEntity<List<LinkedDataset>> getLinkedDatasets(UUID projectUuid, LinkedDatasetStatus status)
+	public ResponseEntity<List<LinkedDataset>> getLinkedDatasets(UUID projectUuid, List<LinkedDatasetStatus> status)
 			throws AppServiceNotFoundException {
 		return ResponseEntity.ok(linkedDatasetService.getLinkedDatasets(projectUuid, status));
 	}
@@ -275,7 +275,7 @@ public class ProjectController implements ProjectsApi {
 	 * Retourne le formulaire de consultation des informations de la décision concernant la demande d'accès au JDD
 	 * 
 	 * @param projectUuid       l'uuid du projet
-	 * @param linkedDatasetUuid le lien du JDD
+	 * @param linkedDatasetUUID le lien du JDD
 	 * @return le formulaire avec les informations à afficher
 	 * @throws AppServiceException     si les informations ne sont pas trouvées ou n'existent pas
 	 * @throws FormDefinitionException si le formulaire défini n'est pas valide
@@ -313,5 +313,10 @@ public class ProjectController implements ProjectsApi {
 		} else {
 			return ResponseEntity.noContent().build();
 		}
+	}
+
+	@Override
+	public ResponseEntity<List<ProjectByOwner>> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria) throws Exception {
+		return ResponseEntity.ok(projectService.getNumberOfProjectsPerOwners(criteria));
 	}
 }

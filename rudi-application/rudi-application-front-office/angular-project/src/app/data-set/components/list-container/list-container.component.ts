@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {KonsultMetierService, MAX_RESULTS_PER_PAGE} from '@core/services/konsult-metier.service';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {OrderValue} from '@core/services/filters/order-filter';
 import {SimpleSkosConcept} from '@app/kos/kos-model';

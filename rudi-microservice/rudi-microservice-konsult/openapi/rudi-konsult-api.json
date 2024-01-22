@@ -271,7 +271,7 @@
 						"$ref": "#/components/parameters/GlobalIdParam"
 					},
 					{
-						"$ref": "#/components/parameters/ProducerUuidParam"
+						"$ref": "#/components/parameters/ProducerUuidsParam"
 					},
 					{
 						"$ref": "#/components/parameters/OffsetParam"
@@ -1021,13 +1021,17 @@
 					}
 				}
 			},
-			"ProducerUuidParam": {
+			"ProducerUuidsParam": {
 				"in": "query",
-				"name": "producerUuid",
+				"name": "producerUuids",
 				"description": "UUID du producteur (l'UUID du producteur du jeu de données doit correspondre à cet UUID)",
 				"schema": {
-					"type": "string",
-					"format": "uuid"
+					"type": "array",
+					"items": {
+						"type": "string",
+						"format": "uuid"
+					}
+
 				}
 			},
 			"DateDebutParam": {

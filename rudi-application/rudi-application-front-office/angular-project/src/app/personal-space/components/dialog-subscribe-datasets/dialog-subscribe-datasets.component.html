@@ -4,10 +4,16 @@
     </mat-dialog-actions>
     <mat-dialog-content>
         <div class="blue-theme text-alignement" [translate]="'personalSpace.dialogDatasets.title'"></div>
-        <div class="text-alignement"> {{'personalSpace.dialogDatasets.description' | translate}}<a
-            [href]="rudiDocLink" [translate]="'personalSpace.dialogDatasets.link'"></a></div>
+        <div class="text-alignement">
+            <span id="table-description">{{'personalSpace.dialogDatasets.description' | translate}}</span>
+            <a [href]="rudiDocLink" [translate]="'personalSpace.dialogDatasets.link'"></a>
+        </div>
         <div>
-            <table mat-table [dataSource]="dataSource">
+            <table
+                mat-table
+                aria-describedby="table-description"
+                [dataSource]="dataSource"
+            >
 
                 <!-- Checkbox Column -->
                 <ng-container matColumnDef="checkbox">

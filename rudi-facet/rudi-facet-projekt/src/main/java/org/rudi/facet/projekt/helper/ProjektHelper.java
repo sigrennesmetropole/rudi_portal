@@ -1,11 +1,19 @@
 package org.rudi.facet.projekt.helper;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
+import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Component
 @RequiredArgsConstructor
@@ -69,5 +77,21 @@ public class ProjektHelper {
 				.retrieve()
 				.bodyToMono(UUID.class)
 				.block();
+	}
+
+
+	public List<ProjectByOwner> getNumberOfProjectsPerOwners(List<UUID> ownerUuids){
+		ProjectSearchCriteria criteria = new ProjectSearchCriteria().ownerUuids(ownerUuids);
+		val projectByOwners = projektWebClient.get().uri(uriBuilder -> uriBuilder
+						.path(projektProperties.getGetNumberOfProjectsPerOwnersPath())
+						.queryParam("criteria", criteria)
+						.build())
+				.retrieve()
+				.bodyToMono(ProjectByOwner[].class)
+				.block();
+
+
+		// Null safety projectByOwners
+		return Optional.ofNullable(projectByOwners).map(Arrays::stream).orElseGet(Stream::empty).collect(Collectors.toList());
 	}
 }

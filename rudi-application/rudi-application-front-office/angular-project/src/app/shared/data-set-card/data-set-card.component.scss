@@ -94,19 +94,12 @@
 
         .data-set-card-content {
             flex-direction: revert;
+            height: auto;
         }
 
         &:hover {
             background-color: $banner-solid-color;
         }
-
-    }
-
-    &-sm, &-md {
-        .data-set-card-content {
-            height: auto;
-        }
-
     }
 
 

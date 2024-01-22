@@ -14,11 +14,10 @@ import org.rudi.microservice.strukture.storage.entity.organization.OrganizationE
 })
 public interface OrganizationBeanMapper extends AbstractMapper<OrganizationEntity, OrganizationBean> {
 
-	@Override
-	OrganizationBean entityToDto(OrganizationEntity entity);
-
 	@AfterMapping
 	default void afterMapping(OrganizationEntity entity, @MappingTarget OrganizationBean bean){
-		//TODO RUDI-4155 : le nombre de JDD et de projet est à charger ici
+		// on set les valeurs par défaut à zéro projet et zéro jdd
+		bean.setDatasetCount(0);
+		bean.setProjectCount(0);
 	}
 }

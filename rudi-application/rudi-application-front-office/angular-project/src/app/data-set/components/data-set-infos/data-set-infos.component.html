@@ -71,81 +71,102 @@
             <!-- Bloc condition d'utilisation -->
             <ng-container>
                 <!--bloc Licence  -->
-                <div class="rudi-panel-table-header" id="licence-table-header">
+                <div class="rudi-panel-table-header">
                     <span>{{'conditionsUtilisationBox.licenceReutilisationDonnees'|translate}}</span>
                 </div>
-                <table class="table rudi-panel-table" aria-describedby="licence-table-header">
-                    <tbody class="rudi-panel-tbody-border mat-header-row">
-                    <tr>
-                        <th scope="row">{{'conditionsUtilisationBox.typeLicence'|translate}}</th>
-                        <td *ngIf="metaDataFunctions.isLicenceTypeStandard(metadata.access_condition.licence)"
-                            class="type-licence-libelle">
-                            <a href="{{this.conceptUri | async}}" target="_blank">{{licenceLabel | async}}</a>
-                        </td>
-                        <td *ngIf="metaDataFunctions.isLicenceTypeCustom(metadata.access_condition.licence)"
-                            class="type-licence-libelle">
-                            <a href="{{getCustomLicenceUri()}}"
-                               target="_blank">{{getCustomLicenceLabel(metadata.access_condition.licence)}}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">{{'conditionsUtilisationBox.acces' | translate}}</th>
-                        <td *ngIf="metadata.access_condition.confidentiality?.restricted_access">{{'conditionsUtilisationBox.donneesAccesRestreint' | translate}}</td>
-                        <td *ngIf="!(metadata.access_condition.confidentiality?.restricted_access)">{{'conditionsUtilisationBox.donneesOuvertes' | translate}}</td>
-                    </tr>
-                    <tr *ngIf="metadata.access_condition.confidentiality?.gdpr_sensitive">
-                        <th scope="row">{{'conditionsUtilisationBox.autre' | translate}}</th>
-                        <td>{{'conditionsUtilisationBox.contientDesDonneesPersonnelles' | translate}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </ng-container>
-            <!--Fin -->
-
-            <!--bloc Obligations -->
-            <div
-                *ngIf="metadata.access_condition.bibliographical_reference || metadata.access_condition.mandatory_mention">
-                <div class="rudi-panel-table-header" id="obligations-table-header">
-                    <span>{{'conditionsUtilisationBox.obligationLegale'|translate}}</span>
+                <div class="table rudi-panel-table">
+                    <div class="rudi-panel-tbody-border container-fluid">
+                        <div class="row-container py-2">
+                            <div class="libelle-key">{{'conditionsUtilisationBox.typeLicence'|translate}}</div>
+                            <div *ngIf="metaDataFunctions.isLicenceTypeStandard(metadata.access_condition.licence)"
+                                 class="type-licence-libelle libelle-value">
+                                <a href="{{this.conceptUri | async}}" target="_blank">{{licenceLabel | async}}</a>
+                            </div>
+                            <div *ngIf="metaDataFunctions.isLicenceTypeCustom(metadata.access_condition.licence)"
+                                class="type-licence-libelle libelle-value">
+                                <a href="{{getCustomLicenceUri()}}"
+                                   target="_blank">{{getCustomLicenceLabel(metadata.access_condition.licence)}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rudi-panel-tbody-border container-fluid">
+                        <div class="row-container py-2">
+                            <div class="libelle-key">{{'conditionsUtilisationBox.acces' | translate}}</div>
+                            <div *ngIf="metadata.access_condition.confidentiality?.restricted_access"
+                                 class="type-licence-libelle libelle-value">
+                                {{'conditionsUtilisationBox.donneesAccesRestreint' | translate}}
+                            </div>
+                            <div *ngIf="!(metadata.access_condition.confidentiality?.restricted_access)"
+                                 class="libelle-value">
+                                {{'conditionsUtilisationBox.donneesOuvertes' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="metadata.access_condition.confidentiality?.gdpr_sensitive" class="rudi-panel-tbody-border container-fluid">
+                        <div class="row-container py-2">
+                            <div class="libelle-key">{{'conditionsUtilisationBox.autre' | translate}}</div>
+                            <div *ngIf="metadata.access_condition.confidentiality?.restricted_access"
+                                 class="libelle-value">
+                                {{'conditionsUtilisationBox.contientDesDonneesPersonnelles' | translate}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <table class="table rudi-panel-table" aria-describedby="obligations-table-header">
-                    <tbody class="rudi-panel-tbody-border mat-header-row">
-                    <tr *ngIf="metadata.access_condition.mandatory_mention">
-                        <th scope="row">{{'conditionsUtilisationBox.mandatoryMention'|translate}}</th>
-                        <td>{{getMandatoryMention(metadata.access_condition)}}</td>
-                    </tr>
-                    <tr *ngIf="metadata.access_condition.bibliographical_reference">
-                        <th scope="row">{{'conditionsUtilisationBox.bibliographicalReference'|translate}}</th>
-                        <td>{{getBibliographicalReference(metadata.access_condition)}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!--Fin -->
 
-            <!--bloc Contraintes d'utilisation -->
-            <div *ngIf="metadata.access_condition.access_constraint || metadata.access_condition.usage_constraint
+                <!--bloc Obligations -->
+                <div *ngIf="metadata.access_condition.bibliographical_reference || metadata.access_condition.mandatory_mention">
+                    <div class="rudi-panel-table-header">
+                        <span>{{'conditionsUtilisationBox.obligationLegale'|translate}}</span>
+                    </div>
+                    <div class="table rudi-panel-table">
+                        <div class="container-fluid">
+                            <div *ngIf="metadata.access_condition.mandatory_mention" class="rudi-panel-tbody-border row-container py-2">
+                                <div class="libelle-key">{{'conditionsUtilisationBox.mandatoryMention'|translate}}</div>
+                                <div class="libelle-value">
+                                    {{getMandatoryMention(metadata.access_condition)}}
+                                </div>
+                            </div>
+                            <div *ngIf="metadata.access_condition.bibliographical_reference" class="rudi-panel-tbody-border row-container py-2">
+                                <div class="libelle-key">{{'conditionsUtilisationBox.bibliographicalReference'|translate}}</div>
+                                <div class="libelle-value">
+                                    {{getBibliographicalReference(metadata.access_condition)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--bloc Contraintes d'utilisation -->
+                <div *ngIf="metadata.access_condition.access_constraint || metadata.access_condition.usage_constraint
                || metadata.access_condition.other_constraints">
-                <div class="rudi-panel-table-header" id="access_condition-table-header">
-                    <span>{{'conditionsUtilisationBox.contraintesUtilisationAcces'|translate}}</span>
+                    <div class="rudi-panel-table-header" id="access_condition-table-header">
+                        <span>{{'conditionsUtilisationBox.contraintesUtilisationAcces'|translate}}</span>
+                    </div>
+                    <div class="table rudi-panel-table">
+                        <div class="container-fluid">
+                            <div *ngIf="metadata.access_condition.usage_constraint" class="rudi-panel-tbody-border row-container py-2">
+                                <div class="libelle-key">{{'conditionsUtilisationBox.utilisation'|translate}}</div>
+                                <div class="libelle-value">
+                                    {{getUsageConstraint(metadata.access_condition)}}
+                                </div>
+                            </div>
+                            <div *ngIf="metadata.access_condition.access_constraint" class="rudi-panel-tbody-border row-container py-2">
+                                <div class="libelle-key">{{'conditionsUtilisationBox.acces'|translate}}</div>
+                                <div class="libelle-value">
+                                    {{getAccessConstraint(metadata.access_condition)}}
+                                </div>
+                            </div>
+                            <div *ngIf="metadata.access_condition.other_constraints" class="rudi-panel-tbody-border row-container py-2">
+                                <div class="libelle-key">{{'conditionsUtilisationBox.autre'|translate}}</div>
+                                <div class="libelle-value">
+                                    {{getOtherConstraints(metadata.access_condition)}}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-                <table class="table rudi-panel-table" aria-describedby="access_condition-table-header">
-                    <tbody class="rudi-panel-tbody-border mat-header-row">
-                    <tr *ngIf="metadata.access_condition.usage_constraint">
-                        <th scope="row">{{'conditionsUtilisationBox.utilisation'|translate}}</th>
-                        <td>{{getUsageConstraint(metadata.access_condition)}}</td>
-                    </tr>
-                    <tr *ngIf="metadata.access_condition.access_constraint">
-                        <th scope="row">{{'conditionsUtilisationBox.acces'|translate}}</th>
-                        <td>{{getAccessConstraint(metadata.access_condition)}}</td>
-                    </tr>
-                    <tr *ngIf="metadata.access_condition.other_constraints">
-                        <th scope="row">{{'conditionsUtilisationBox.autre'|translate}}</th>
-                        <td>{{getOtherConstraints(metadata.access_condition)}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            </ng-container>
         </div>
         <!--Fin -->
     </mat-expansion-panel>
@@ -160,46 +181,48 @@
                 {{'metaData.date'|translate}}
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <div *ngIf="metadata.dataset_dates.updated" class="rudi-panel-card">
-            <span>{{'metaData.derniereMajDonnee'|translate}}</span>
-            <span class="rudi-panel-card-data"
-                  [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-                {{ metadata?.dataset_dates.updated | date :'dd/MM/yyyy'}}
-                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.updated | date :'HH:mm'}}</span>
-      </span>
-        </div>
-        <div *ngIf="metadata.metadata_info.metadata_dates.updated" class="rudi-panel-card">
-            <span>{{'metaData.derniereMajDonneeInfo'|translate}}</span>
-            <span class="rudi-panel-card-data"
-                  [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-                {{metadata?.metadata_info.metadata_dates.updated | date :'dd/MM/yyyy'}}
-                <span
-                    class="rudi-panel-card-hour ml-2">{{ metadata?.metadata_info.metadata_dates.updated | date :'HH:mm'}}</span>
-      </span>
-        </div>
-        <div *ngIf="metadata.dataset_dates.published" class="rudi-panel-card">
-            <span>{{'metaData.publication'|translate}}</span>
-            <span class="rudi-panel-card-data"
-                  [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-                {{metadata?.dataset_dates.published | date :'dd/MM/yyyy'}}
-                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.published | date :'HH:mm'}}</span>
-      </span>
-        </div>
-        <div *ngIf="metadata.dataset_dates.created" class="rudi-panel-card">
-            <span>{{'metaData.creationJeuDonnée'|translate}}</span>
-            <span class="rudi-panel-card-data"
-                  [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-                {{metadata?.dataset_dates.created | date :'dd/MM/yyyy'}}
-                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.created | date :'HH:mm'}}</span>
-      </span>
-        </div>
-        <div *ngIf="metadata.dataset_dates.validated" class="rudi-panel-card">
-            <span>{{'metaData.validationJeuDonnee'|translate}}</span>
-            <span class="rudi-panel-card-data"
-                  [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-                {{ metadata?.dataset_dates.validated | date :'dd/MM/yyyy'}}
-                <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.validated | date :'HH:mm'}}</span>
-      </span>
+        <div class="container-fluid">
+            <div *ngIf="metadata.dataset_dates.updated" class="rudi-panel-card row">
+                <span class="col-sm-12 col-md-6 rudi-panel-card-libelle">{{'metaData.derniereMajDonnee'|translate}}</span>
+                <span class="col-sm-12 col-md-6 text-sm-left text-md-right"
+                      [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+                    {{ metadata?.dataset_dates.updated | date :'dd/MM/yyyy'}}
+                    <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.updated | date :'HH:mm'}}</span>
+                </span>
+            </div>
+            <div *ngIf="metadata.metadata_info.metadata_dates.updated" class="rudi-panel-card row">
+                <span class="col-sm-12 col-md-6 rudi-panel-card-libelle">{{'metaData.derniereMajDonneeInfo'|translate}}</span>
+                <span class="col-sm-12 col-md-6 text-sm-left text-md-right"
+                      [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+                    {{metadata?.metadata_info.metadata_dates.updated | date :'dd/MM/yyyy'}}
+                    <span
+                        class="rudi-panel-card-hour ml-2">{{ metadata?.metadata_info.metadata_dates.updated | date :'HH:mm'}}</span>
+              </span>
+            </div>
+            <div *ngIf="metadata.dataset_dates.published" class="rudi-panel-card row">
+                <span class="col-sm-12 col-md-6 rudi-panel-card-libelle">{{'metaData.publication'|translate}}</span>
+                <span class="col-sm-12 col-md-6 text-sm-left text-md-right"
+                      [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+                    {{metadata?.dataset_dates.published | date :'dd/MM/yyyy'}}
+                    <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.published | date :'HH:mm'}}</span>
+          </span>
+            </div>
+            <div *ngIf="metadata.dataset_dates.created" class="rudi-panel-card row">
+                <span class="col-sm-12 col-md-6 rudi-panel-card-libelle">{{'metaData.creationJeuDonnée'|translate}}</span>
+                <span class="col-sm-12 col-md-6 text-sm-left text-md-right"
+                      [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+                    {{metadata?.dataset_dates.created | date :'dd/MM/yyyy'}}
+                    <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.created | date :'HH:mm'}}</span>
+          </span>
+            </div>
+            <div *ngIf="metadata.dataset_dates.validated" class="rudi-panel-card row">
+                <span class="col-sm-12 col-md-6 rudi-panel-card-libelle">{{'metaData.validationJeuDonnee'|translate}}</span>
+                <span class="col-sm-12 col-md-6 text-sm-left text-md-right"
+                      [ngClass]="{'rudi-panel-card-large': mediaSize.isMd || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+                    {{ metadata?.dataset_dates.validated | date :'dd/MM/yyyy'}}
+                    <span class="rudi-panel-card-hour ml-2">{{ metadata?.dataset_dates.validated | date :'HH:mm'}}</span>
+          </span>
+            </div>
         </div>
     </mat-expansion-panel>
 

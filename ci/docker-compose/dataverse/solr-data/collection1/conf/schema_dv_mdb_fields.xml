@@ -280,7 +280,7 @@
     <field name="rudi_producer_organization_caption" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="rudi_producer_organization_coordinates_latitude" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="rudi_producer_organization_coordinates_longitude" type="text_en" multiValued="false" stored="true" indexed="true"/>
-    <field name="rudi_producer_organization_id" type="text_en" multiValued="false" stored="true" indexed="true"/>
+    <field name="rudi_producer_organization_id" type="rudi_id" multiValued="false" stored="true" indexed="true"/>
     <field name="rudi_producer_organization_name" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="rudi_producer_organization_summary" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="rudi_resource_language" type="text_en" multiValued="true" stored="true" indexed="true"/>

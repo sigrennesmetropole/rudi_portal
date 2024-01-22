@@ -1,8 +1,15 @@
 <div class="table-jdd" [hidden]="!hasOtherIndicators() && !hasOtherRequests()">
     <hr>
-    <span class="table-title-style" [translate]="'personalSpace.project.details.otherDetails'"> </span>
+    <span id="table-description" class="table-title-style" [translate]="'personalSpace.project.details.otherDetails'"></span>
 
-    <table mat-table [dataSource]="dataSource" matSort class="mat-table-demandes-acces" [hidden]="!hasOtherRequests()">
+    <table
+        mat-table
+        matSort
+        class="mat-table-demandes-acces"
+        aria-describedby="table-description"
+        [dataSource]="dataSource"
+        [hidden]="!hasOtherRequests()"
+    >
 
         <!-- Date Column -->
         <ng-container matColumnDef="date">

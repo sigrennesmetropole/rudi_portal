@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {filter, map} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {AuthenticationService} from './authentication.service';
 
 @Injectable({

@@ -5,7 +5,6 @@ import {OrganizationMetierService} from '../../../../core/services/organization/
 import {IconRegistryService} from '../../../../core/services/icon-registry.service';
 import {ALL_TYPES} from '../../../../shared/models/title-icon-type';
 import {DialogMemberOrganizationService} from '../../../../core/services/organization/dialog-member-organization.service';
-import {OrganizationMemberDialogData} from '../organization-members-table/organization-member-dialog-data';
 import {OrganizationTableDialogData} from './organization-table-dialog-data';
 
 @Component({

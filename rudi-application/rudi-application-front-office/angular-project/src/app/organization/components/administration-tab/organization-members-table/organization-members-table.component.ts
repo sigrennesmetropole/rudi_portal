@@ -226,12 +226,7 @@ export class OrganizationMembersTableComponent implements OnInit {
                     this.hasError = false;
                 },
                 error: err => {
-                    if (err.status === 401) {
-                        this.snackbarService.openSnackBar({
-                            message: err.error.label,
-                            level: Level.ERROR
-                        });
-                    } else if (err.status === 404) {
+                    if (err.status === 401 || err.status === 404) {
                         this.snackbarService.openSnackBar({
                             message: err.error.label,
                             level: Level.ERROR

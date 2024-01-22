@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
+import {Filters} from '@shared/models/filters';
 import {BehaviorSubject} from 'rxjs';
-import {Filters} from '../../shared/models/filters';
-import {ProducerNamesFilter} from './filters/producer-names-filter';
-import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE, OrderFilter} from './filters/order-filter';
 import {debounceTime} from 'rxjs/operators';
-import {SearchFilter} from './filters/search-filter';
-import {ThemesFilter} from './filters/themes-filter';
 import {AccessStatusFilter} from './filters/access-status-filter';
 import {DatesFilter} from './filters/dates-filter';
+import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE, OrderFilter} from './filters/order-filter';
+import {ProducerNamesFilter} from './filters/producer-names-filter';
+import {SearchFilter} from './filters/search-filter';
+import {ThemesFilter} from './filters/themes-filter';
 
 const EMPTY_FILTERS: Filters = {
     search: '',
@@ -21,7 +21,7 @@ const EMPTY_FILTERS: Filters = {
     order: DEFAULT_ORDER_VALUE,
     accessStatus: null,
     globalIds: [],
-    producerUuid: '',
+    producerUuids: [],
 };
 
 @Injectable({

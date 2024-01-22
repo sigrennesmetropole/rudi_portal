@@ -1,5 +1,5 @@
-import {OrderValue} from '../../core/services/filters/order-filter';
-import {AccessStatusFiltersType} from '../../core/services/filters/access-status-filters-type';
+import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
+import {OrderValue} from '@core/services/filters/order-filter';
 
 export interface Filters {
     search: string;
@@ -15,5 +15,5 @@ export interface Filters {
 
     /** Global ID du ou des jeux de données */
     globalIds: string[];
-    producerUuid: string,
+    producerUuids: string[],
 }

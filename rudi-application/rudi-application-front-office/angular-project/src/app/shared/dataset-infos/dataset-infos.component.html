@@ -1,15 +1,12 @@
-<div class="d-flex my-3" (click)="handleClickOnDatasetCard(currentJddId)">
-    <div class=" d-flex align-items-center" *ngIf="showLogo">
+<div class="container-global my-3" (click)="handleClickOnDatasetCard(currentJddId)">
+    <div class="logo-container text-md-center" *ngIf="showLogo">
         <app-organization-logo [organizationId]="organizationId"
                                [isANewRequest]="isANewRequest"
                                cssClass="with-border"
                                organizationType="producer"
         ></app-organization-logo>
     </div>
-    <div
-        [ngClass]="{'col-8': mediaSize.isLg && !isTabReuse,
-         'col-9': mediaSize.isXl && !isTabReuse || mediaSize.isXxl && !isTabReuse,
-         'ml-3':isTabReuse}">
+    <div class="text-container">
         <div class="dataset-info">
             <div class="dataset-info-organization_name"><span *ngIf="organizationName">{{organizationName}}</span></div>
             <div *ngIf="resourceTitle"

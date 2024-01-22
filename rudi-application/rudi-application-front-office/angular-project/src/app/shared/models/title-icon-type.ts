@@ -20,6 +20,7 @@ export type TitleIconType =
     'icone_archives' |
     'icone_atraiter' |
     'icon_add_blue' |
+    'icon_add_light' |
     'square-fill' |
     'circle-fill' |
     'dash' |
@@ -60,6 +61,7 @@ export const ALL_TYPES: TitleIconType[] = [
     'icone_archives',
     'icone_atraiter',
     'icon_add_blue',
+    'icon_add_light',
     'square-fill',
     'circle-fill',
     'dash',

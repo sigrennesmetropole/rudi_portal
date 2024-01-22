@@ -1,11 +1,11 @@
 <app-page>
     <!-- Header --->
     <app-task-detail-header [headingLoading]="headingLoading"
-                               [pageSubTitle]="dependencies?.datasetTitle"
-                               [pageTitle]="'personalSpace.project.details.new-data' | translate"
-                               [status]="dependencies?.taskStatus"
-                               [icon]="'nouvelles_donnees_definition_key'"
-    ></app-task-detail-header>
+                            [pageSubTitle]="dependencies?.datasetTitle"
+                            [pageTitle]="'personalSpace.project.details.new-data' | translate"
+                            [status]="dependencies?.taskStatus"
+                            [icon]="'nouvelles_donnees_definition_key'">
+    </app-task-detail-header>
 
     <!--Onglets-->
     <app-tabs *ngIf="task">

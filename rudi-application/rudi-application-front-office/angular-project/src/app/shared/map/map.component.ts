@@ -535,7 +535,7 @@ export class MapComponent implements AfterViewInit {
      */
     handleClosePopup(): void {
         if (this.popupFeature) {
-            this.popupFeature.setStyle(undefined);
+            this.popupFeature.setStyle();
             this.popupFeature = null;
             this.map.removeOverlay(this.popup);
         }
@@ -548,7 +548,7 @@ export class MapComponent implements AfterViewInit {
     addFeatureInteraction(vectorLayer: BaseLayer): void {
         this.map.on('click', (event) => {
             if (this.popupFeature) {
-                this.popupFeature.setStyle(undefined);
+                this.popupFeature.setStyle();
             }
 
             const feature = this.map.forEachFeatureAtPixel(event.pixel, (clickedFeature, clickedLayer) => {

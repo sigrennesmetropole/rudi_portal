@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {OrganizationBean} from '@app/strukture/strukture-model';
 import {BreakpointObserverService, NgClassObject} from '@core/services/breakpoint-observer.service';
-import {$e} from 'codelyzer/angular/styles/chars';
 
 @Component({
     selector: 'app-list-organization-card',
@@ -13,6 +12,8 @@ export class ListOrganizationCardComponent {
     @Input() totalItems: number;
     @Input() itemsPerPage: number;
     @Input() currentPage: number;
+    @Input() datasetCountLoading: boolean;
+    @Input() projectCountLoading$: boolean;
 
     @Output() pageChangeEvent: EventEmitter<number>;
 

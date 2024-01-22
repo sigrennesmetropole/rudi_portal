@@ -1,18 +1,18 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
 import {HttpResponse} from '@angular/common/http';
-import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from '../../api-kaccess';
-import {Filters} from '../../shared/models/filters';
-import {map} from 'rxjs/operators';
-import {PageResultUtils} from '../../shared/utils/page-result-utils';
-import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE} from './filters/order-filter';
-import {MetadataUtils} from '../../shared/utils/metadata-utils';
+import {Injectable} from '@angular/core';
+import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from '@app/api-kaccess';
+import {KonsultService} from '@app/konsult/konsult-api';
+import {Filters} from '@shared/models/filters';
+import {MetadataUtils} from '@shared/utils/metadata-utils';
+import {PageResultUtils} from '@shared/utils/page-result-utils';
 import * as mime from 'mime';
-import * as customMimeDatabase from '../../../assets/mime-db/custom-mime-db.json';
 // @ts-ignore
 import * as Module from 'module';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import * as customMimeDatabase from '../../../assets/mime-db/custom-mime-db.json';
 import {AccessStatusFiltersType} from './filters/access-status-filters-type';
-import {KonsultService} from '../../konsult/konsult-api';
+import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE} from './filters/order-filter';
 
 export const MAX_RESULTS_PER_PAGE = 36;
 export const MAX_RESULTS_PER_REQUEST = 100;
@@ -57,7 +57,7 @@ export class KonsultMetierService {
             accessStatus.restrictedAcces,
             accessStatus.gdprSensitive,
             filters.globalIds,
-            filters.producerUuid,
+            filters.producerUuids,
             offset,
             limit,
             filters.order,
@@ -88,7 +88,7 @@ export class KonsultMetierService {
                 order: DEFAULT_ORDER_VALUE,
                 accessStatus: null,
                 globalIds,
-                producerUuid: null,
+                producerUuids: [],
             }, null, offset, MAX_RESULTS_PER_REQUEST)
         );
     }
@@ -127,6 +127,7 @@ export class KonsultMetierService {
     getNumberOfDatasetsOnTheSameTheme(globalId: string): Observable<number> {
         return this.konsultService.getNumberOfDatasetsOnTheSameTheme(globalId);
     }
+
     getMediaFileExtension(media: Media): string {
         const mediaFile = media as MediaFile;
         const originalFileType = mediaFile.file_type.replace(CRYPT_SUFFIX, '');

@@ -8,7 +8,6 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {OwnerType, Project} from '../../../projekt/projekt-model';
 import {LinkedDatasetMetadatas} from '../../../core/services/asset/project/project-dependencies.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Metadata} from '../../../api-kaccess';
 import {PropertiesMetierService} from '../../../core/services/properties-metier.service';
 import {ErrorWithCause} from '../../../shared/models/error-with-cause';
 import {SnackBarService} from '../../../core/services/snack-bar.service';

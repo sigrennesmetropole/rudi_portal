@@ -9,10 +9,12 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.common.storage.dao.PredicateListBuilder;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
+import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
 import org.rudi.microservice.projekt.storage.entity.DatasetConfidentiality;
@@ -137,6 +139,8 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 		return queryLauncher(projectUuid, FIELD_DATASET_REQUESTS).intValue();
 	}
 
+
+
 	private<T> Long queryLauncher(UUID projectUuid, String fieldToJoin) {
 		val builder = entityManager.getCriteriaBuilder();
 		val countQuery = builder.createQuery(Long.class);
@@ -150,5 +154,22 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 
 		countQuery.select(builder.countDistinct(join));
 		return entityManager.createQuery(countQuery).getSingleResult();
+	}
+
+
+	@Override
+	public List<ProjectByOwner> getNumberOfProjectsPerOwners(List<UUID> owners) {
+		val builder = entityManager.getCriteriaBuilder();
+		val countQuery = builder.createQuery(ProjectByOwner.class);
+		val countRoot = countQuery.from(entitiesClass);
+		//Ajout des filtres
+		List<Predicate> predicates = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(owners)){
+			predicates.add(countRoot.get(FIELD_OWNER_UUID).in(owners));
+		}
+		countQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
+		countQuery.groupBy(countRoot.get(FIELD_OWNER_UUID));
+		countQuery.select(builder.construct(ProjectByOwner.class, countRoot.get(FIELD_OWNER_UUID),builder.countDistinct(countRoot)));
+		return entityManager.createQuery(countQuery).getResultList();
 	}
 }

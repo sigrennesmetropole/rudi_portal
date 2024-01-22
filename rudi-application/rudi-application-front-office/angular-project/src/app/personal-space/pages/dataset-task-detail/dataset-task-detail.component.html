@@ -1,9 +1,9 @@
 <app-page>
     <app-task-detail-header [headingLoading]="headingLoading"
-                               [pageSubTitle]="dependencies?.datasetTitle"
-                               [pageTitle]="'personalSpace.requestDetail.requestDateWithParam' |translate : {date: dependencies?.receivedDate.format('DD/MM/YYYY')}"
-                               [icon]="'restricted-dataset'"
-    ></app-task-detail-header>
+                            [pageSubTitle]="dependencies?.datasetTitle"
+                            [pageTitle]="'personalSpace.requestDetail.requestDateWithParam' |translate : {date: dependencies?.receivedDate.format('DD/MM/YYYY')}"
+                            [icon]="'restricted-dataset'">
+    </app-task-detail-header>
     <app-tabs *ngIf="task">
         <app-tab [label]="'personalSpace.requestDetail.tabs.demand' | translate" [icon]="'key_icon_circle'">
             <ng-template>

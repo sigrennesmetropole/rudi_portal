@@ -195,7 +195,7 @@
             height: 40px;
             border-radius: 4px;
             border: solid 1px $blocks-and-menus-outline;
-            background-color: $banner-solid-color;;
+            background-color: $banner-solid-color;
 
             .label-date {
                 font-size: 12px;
@@ -247,10 +247,6 @@
 
         .bandeau-icon-libelle {
             display: none;
-        }
-
-        .icon-information-sm {
-            margin-right: 0;
         }
 
         .card-margin-top {
@@ -375,6 +371,7 @@
 .row {
     margin-right: -15px;
 }
+
 .dataset-infos {
     cursor: pointer;
 }

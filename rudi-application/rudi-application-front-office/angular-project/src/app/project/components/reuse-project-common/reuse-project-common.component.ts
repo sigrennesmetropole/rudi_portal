@@ -15,8 +15,7 @@ import {MetadataUtils} from '../../../shared/utils/metadata-utils';
 
 @Component({
     selector: 'app-reuse-project-common',
-    templateUrl: './reuse-project-common.component.html',
-    styleUrls: ['./reuse-project-common.component.scss']
+    templateUrl: './reuse-project-common.component.html'
 })
 export class ReuseProjectCommonComponent {
 

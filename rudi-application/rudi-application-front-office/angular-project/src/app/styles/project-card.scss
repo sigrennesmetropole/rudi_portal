@@ -83,19 +83,12 @@
 
         .project-card-content {
             flex-direction: revert;
+            height: auto;
         }
 
         &:hover {
             background-color: $banner-solid-color;
         }
-
-    }
-
-    &-sm, &-md {
-        .project-card-content {
-            height: auto;
-        }
-
     }
 
 

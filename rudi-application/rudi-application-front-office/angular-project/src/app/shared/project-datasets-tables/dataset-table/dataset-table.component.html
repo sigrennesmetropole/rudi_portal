@@ -28,7 +28,6 @@
                     [organizationName]="element?.organization_name"
                     [organizationId]="element?.datasetOrganizationId"
                     [resourceTitle]="element?.datasetTitle"
-                    [isTabReuse]="true"
                     [popover]="myPopover"
                 ></app-dataset-infos>
                 <popover-content #myPopover placement="bottom" [closeOnClickOutside]="true">
@@ -92,9 +91,11 @@
             mat-raised-button
             class="button mat-stroked-button add-link-button"
             [disabled]="disableAddButton"
+            (mouseenter)="onMouseEnterAddButton()"
+            (mouseleave)="onMouseLeaveAddButton()"
             (click)="addAction()"
         >
-            <mat-icon svgIcon="icon_add_blue" class="icon-add-jdd"></mat-icon>
+            <mat-icon [svgIcon]="addButtonIcon" class="icon-add-jdd"></mat-icon>
             <span>{{'personalSpace.project.tabs.datasets.addButton' | translate}}</span>
         </button>
     </div>

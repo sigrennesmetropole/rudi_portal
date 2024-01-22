@@ -21,7 +21,7 @@ public interface LinkedDatasetService {
 	 * @param status      Statut des jdd demandés
 	 * @return Tous les jeux de données réutilisés par le projet
 	 */
-	List<LinkedDataset> getLinkedDatasets(UUID projectUuid, LinkedDatasetStatus status)
+	List<LinkedDataset> getLinkedDatasets(UUID projectUuid, List<LinkedDatasetStatus> status)
 			throws AppServiceNotFoundException;
 
 	/**

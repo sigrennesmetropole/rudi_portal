@@ -1,8 +1,6 @@
 package org.rudi.facet.kaccess.helper.search.mapper;
 
 import java.util.EnumSet;
-import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -146,9 +144,8 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 					datasetSearchCriteria.getProducerNames());
 		}
 
-		if( datasetSearchCriteria.getProducerUuid() != null ){
-			fqFilter.add(RudiMetadataField.PRODUCER_ORGANIZATION_ID,
-					datasetSearchCriteria.getProducerUuid());
+		if(!CollectionUtils.isEmpty(datasetSearchCriteria.getProducerUuids())){
+			fqFilter.add(RudiMetadataField.PRODUCER_ORGANIZATION_ID.getIndex(), datasetSearchCriteria.getProducerUuids());
 		}
 
 		if (datasetSearchCriteria.getDateDebut() != null) {

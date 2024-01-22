@@ -37,6 +37,10 @@ export class ProjectTaskDetailComponent
     implements OnInit {
 
     isLoading: boolean;
+    isLoadingOpenDataset: boolean;
+    isLoadingRestrictedDataset: boolean;
+    isLoadingNewDatasetRequest: boolean;
+
     public dependencies: ProjectDependencies;
     addingInProgress: boolean = false;
 
@@ -127,7 +131,9 @@ export class ProjectTaskDetailComponent
     addLinkedDatasetAndReloadDependencies(linkToCreate: LinkedDatasetFromProject, isRestricted: boolean): void {
         this.updateAddButtonStatus(true);
         linkToCreate.project = this.dependencies.project;
-        this.isLoading = true;
+        this.isLoadingRestrictedDataset = isRestricted;
+        this.isLoadingOpenDataset = !isRestricted;
+
         this.projectSubmissionService.createLinkedDatasetFromProject(linkToCreate).pipe(
             // Reload dependencies
             switchMap(() => {
@@ -135,7 +141,7 @@ export class ProjectTaskDetailComponent
                     return this.projectConsultService.getRestrictedLinkedDatasetsMetadata(this.dependencies.project.uuid).pipe(
                         tap((links: LinkedDatasetMetadatas[]) => {
                             this.dependencies.restrictedLinkedDatasets = links;
-                            this.isLoading = false;
+                            this.isLoadingRestrictedDataset = false;
                             this.addingInProgress = false;
                         })
                     );
@@ -144,7 +150,7 @@ export class ProjectTaskDetailComponent
                 return this.projectConsultService.getOpenedLinkedDatasetsMetadata(this.dependencies.project.uuid).pipe(
                     tap((links: LinkedDatasetMetadatas[]) => {
                         this.dependencies.openLinkedDatasets = links;
-                        this.isLoading = false;
+                        this.isLoadingOpenDataset = false;
                         this.addingInProgress = false;
                     })
                 );
@@ -152,25 +158,26 @@ export class ProjectTaskDetailComponent
         ).subscribe({
             error: err => {
                 console.error(err);
-                this.isLoading = false;
+                this.isLoadingRestrictedDataset = false;
+                this.isLoadingOpenDataset = false;
                 this.addingInProgress = false;
             }
         });
     }
 
     handleOpenDatasetRequestUuidChanged(openDatasetRequestUuid: string): void {
-        this.isLoading = true;
+        this.isLoadingOpenDataset = true;
         this.projektMetierService.deleteLinkedDatasetRequest(this.dependencies.project.uuid, openDatasetRequestUuid).pipe(
             // Reload dependencies
             switchMap(() => this.projectConsultService.getOpenedLinkedDatasetsMetadata(this.dependencies.project.uuid)),
             tap((links: LinkedDatasetMetadatas[]) => {
                 this.dependencies.openLinkedDatasets = links;
-                this.isLoading = false;
+                this.isLoadingOpenDataset = false;
             })
         ).subscribe({
             error: err => {
                 console.error(err);
-                this.isLoading = false;
+                this.isLoadingOpenDataset = false;
                 this.snackBarService.openSnackBar({
                     message: this.translateService.instant('personalSpace.projectDatasets.delete.error'),
                     level: Level.ERROR
@@ -180,18 +187,18 @@ export class ProjectTaskDetailComponent
     }
 
     handleRestrictedDatasetRequestUuidChanged(restrictedDatasetRequestUuid: string): void {
-        this.isLoading = true;
+        this.isLoadingRestrictedDataset = true;
         this.projektMetierService.deleteLinkedDatasetRequest(this.dependencies.project.uuid, restrictedDatasetRequestUuid).pipe(
             // Reload dependencies
             switchMap(() => this.projectConsultService.getRestrictedLinkedDatasetsMetadata(this.dependencies.project.uuid)),
             tap((links: LinkedDatasetMetadatas[]) => {
                 this.dependencies.restrictedLinkedDatasets = links;
-                this.isLoading = false;
+                this.isLoadingRestrictedDataset = false;
             })
         ).subscribe({
             error: err => {
                 console.error(err);
-                this.isLoading = false;
+                this.isLoadingRestrictedDataset = false;
                 this.snackBarService.openSnackBar({
                     message: this.translateService.instant('personalSpace.projectDatasets.delete.error'),
                     level: Level.ERROR
@@ -203,37 +210,37 @@ export class ProjectTaskDetailComponent
     addNewDatasetRequest(linkToCreate: NewDatasetRequest): void {
         this.updateAddButtonStatus(true);
         const projectUuid = this.dependencies.project.uuid;
-        this.isLoading = true;
+        this.isLoadingNewDatasetRequest = true;
         this.projectSubmissionService.addNewDatasetRequest(projectUuid, linkToCreate, this.dependencies.project).pipe(
             // Reload dependencies
             switchMap(() => this.projectConsultService.getNewDatasetsRequest(projectUuid)),
             tap((values: NewDatasetRequest[]) => {
                 this.dependencies.newDatasetsRequest = values;
-                this.isLoading = false;
+                this.isLoadingNewDatasetRequest = false;
                 this.updateAddButtonStatus(false);
             })
         ).subscribe({
             error: err => {
                 console.error(err);
-                this.isLoading = false;
+                this.isLoadingNewDatasetRequest = false;
                 this.updateAddButtonStatus(false);
             }
         });
     }
 
     handleNewDatasetRequestUuidChanged(newDatasetRequestUuid: string): void {
-        this.isLoading = true;
+        this.isLoadingNewDatasetRequest = true;
         this.projektMetierService.deleteNewDatasetRequest(this.dependencies.project.uuid, newDatasetRequestUuid).pipe(
             // Reload dependencies
             switchMap(() => this.projectConsultService.getNewDatasetsRequest(this.dependencies.project.uuid)),
             tap((values: NewDatasetRequest[]) => {
                 this.dependencies.newDatasetsRequest = values;
-                this.isLoading = false;
+                this.isLoadingNewDatasetRequest = false;
             })
         ).subscribe({
             error: err => {
                 console.error(err);
-                this.isLoading = false;
+                this.isLoadingNewDatasetRequest = false;
                 this.snackBarService.openSnackBar({
                     message: this.translateService.instant('personalSpace.projectDatasets.delete.error'),
                     level: Level.ERROR

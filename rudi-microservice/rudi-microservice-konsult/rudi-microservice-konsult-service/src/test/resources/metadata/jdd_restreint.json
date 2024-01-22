@@ -1,6 +1,6 @@
 {
 	"global_id": "84fabc33-dc9f-466c-a29d-9874d335c1de",
-	"resource_title": "JDD ouvert",
+	"resource_title": "JDD restreint - Producer 1",
 	"synopsis": [
 		{
 			"lang": "fr-FR",
@@ -28,7 +28,7 @@
 	],
 	"producer": {
 		"organization_id": "acdccf43-566b-4134-b39e-ddf46c801242",
-		"organization_name": "Producteur rudi",
+		"organization_name": "Producteur rudi 1",
 		"organization_address": "2 rue de rudi"
 	},
 	"contacts": [

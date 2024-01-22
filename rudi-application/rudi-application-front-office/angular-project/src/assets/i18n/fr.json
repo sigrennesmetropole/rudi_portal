@@ -2,9 +2,11 @@
     "headerAppTitle": "App blanche",
     "pageTitle": {
         "/": "Catalogue",
+        "/organization": "Organisations",
         "/catalogue": "Catalogue",
         "/projets": "Réutilisations",
-        "/projets/soumettre-un-projet": "Projet",
+        "/projets/soumettre-un-projet": "Réutilisations",
+        "/personal-space/my-account": "Mon compte",
         "/login": "Mon compte",
         "/personal-space/my-activity": "Mon activité",
         "/personal-space/selfdata-datasets": "Mes données personnelles",
@@ -151,8 +153,8 @@
                     "error-update": "Une erreur est survenue lors de la mise à jour de la  réutilisation. Veuillez contacter un administrateur.",
                     "error": "Une erreur est survenue lors de la création de la réutilisation. Veuillez contacter un administrateur.",
                     "ok": {
-                        "title" : "Votre réutilisation a bien été soumise.",
-                        "description1" : "Vos demandes seront transmises aux producteurs dès qu'un animateur aura validé votre demande de publication. Vous serez averti par mail des avancées de celle-ci.",
+                        "title": "Votre réutilisation a bien été soumise.",
+                        "description1": "Vos demandes seront transmises aux producteurs dès qu'un animateur aura validé votre demande de publication. Vous serez averti par mail des avancées de celle-ci.",
                         "description2": "Vous pouvez la consulter à tout moment depuis votre espace personnel.",
                         "see": "Voir ma réutilisation"
                     }
@@ -593,7 +595,7 @@
                 "errorToUser": "Une erreur est survenue lors de la prise en compte des informations renseignées. Merci de renouveler votre demande. Si le problème persiste, veuillez contacter un administrateur Rudi.",
                 "error": {
                     "errorUpload": "Erreur lors de l'upload de la pièce-jointe.",
-                    "errorLookupAttachment": "Le document est introuvable.",
+                    "errorLookupAttachment": "L'information n'a pas été renseignée.",
                     "errorDownload": "Erreur lors du téléchargement de la pièce-jointe."
                 }
             },
@@ -1166,7 +1168,7 @@
             "updatedDate": "Date de mise à jour",
             "title": "Titre de la réutilisation",
             "confidentiality": "Confidentialité",
-            "status": "Statut du projet",
+            "status": "Statut de la réutilisation",
             "numberOfDataset": "Jeux de données",
             "noResult": "Vous n'avez pas encore créé de réutilisation dans Rudi. Les formulaires de création de réutilisation sont accessibles en cliquant ",
             "here": " ici",
@@ -1222,17 +1224,17 @@
                     "linkedDatasetStatus": {
                         "draft": "Brouillon",
                         "in_progress": "En cours",
-                        "validated":  "Validé",
+                        "validated": "Validé",
                         "cancelled": "Annulé",
-                        "archived":  "Archivé"
+                        "archived": "Archivé"
                     }
                 },
                 "information": "Information",
                 "deletion": {
                     "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande n'a pas encore été traitée par l'équipe Rudi.",
                     "title": "Retirer un jeu de données",
-                    "text1": "Vous souhaitez retirer un jeu de données de votre projet ? Cliquer sur confirmer.",
-                    "text2": "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour ce projet.",
+                    "text1": "Vous souhaitez retirer un jeu de données de votre réutilisation ? Cliquer sur confirmer.",
+                    "text2": "Attention dans le cas d'un jeu de données à accès restreint, vous ne pourrez plus accéder au jeu de données pour cette réutilisation.",
                     "confirmationPopup": {
                         "cancel": "Annuler",
                         "validate": "Confirmer",
@@ -1272,7 +1274,7 @@
             },
             "tabs": {
                 "demand": "Demande",
-                "project": "Projet",
+                "project": "Réutilisation",
                 "history": "Historique"
             }
         },
@@ -1382,7 +1384,7 @@
             "title": "Mon compte",
             "description1": "Vous trouverez sur cette page le récapitulatif des informations concernant votre compte Rudi. L'onglet \"Mes organisations\" vous permet de consulter et gérer les organisations auxquelles vous êtes rattaché, ainsi que de créer une nouvelle organisation. ",
             "linkText": "Cliquez ici pour en savoir plus.",
-            "myProfil":{
+            "myProfil": {
                 "tabTitle": "Mon profil",
                 "pageTitle": "Mes informations personnelles",
                 "nom": "Nom",
@@ -1415,10 +1417,20 @@
         "noUrl": "L'organisation n'a renseigné aucune information.",
         "datasetTotal": "Jeux de donnée",
         "reusesTotal": "Réutilisation",
-        "noMetadata":  "L'organisation n'a publié aucun jeu de données.",
+        "noMetadata": "L'organisation n'a publié aucun jeu de données.",
         "noReuse": "L'organisation n'a publié aucune réutilisation.",
         "description": "Description",
         "catalogue": "Catalogue ",
-        "desOrganisations": "des organisations"
+        "desOrganisations": "des organisations",
+        "card": {
+            "projectsCount": {
+                "single": "{number} réutilisation",
+                "plural": "{number} réutilisations"
+            },
+            "datasetsCount": {
+                "single": "{number} jeu de données",
+                "plural": "{number} jeux de données"
+            }
+        }
     }
 }

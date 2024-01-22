@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ProjektMetierService} from './projekt-metier.service';
-import {RadioListItem} from '../../../../shared/radio-list/radio-list-item';
+import {RadioListItem} from '@shared/radio-list/radio-list-item';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
+import {map, mapTo, switchMap} from 'rxjs/operators';
 import {
     Confidentiality,
     LinkedDataset,
@@ -14,56 +14,55 @@ import {
     Support,
     TargetAudience,
     TerritorialScale
-} from '../../../../projekt/projekt-model';
+} from '@app/projekt/projekt-model';
 import {TranslateService} from '@ngx-translate/core';
 import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {UserService} from '../../user.service';
-import {User} from '../../../../acl/acl-api';
-import {Metadata} from '../../../../api-kaccess';
+import {User} from '@app/acl/acl-api';
+import {Metadata} from '@app/api-kaccess';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AddDataSetDialogComponent} from '../../../../project/components/add-data-set-dialog/add-data-set-dialog.component';
-import {Level} from '../../../../shared/notification-template/notification-template.component';
+import {AddDataSetDialogComponent} from '@app/project/components/add-data-set-dialog/add-data-set-dialog.component';
+import {Level} from '@shared/notification-template/notification-template.component';
 import {SnackBarService} from '../../snack-bar.service';
 import {KonsultMetierService} from '../../konsult-metier.service';
 import {
     SuccessProjectCreationDialogComponent
-} from '../../../../project/components/success-project-creation-dialog/success-project-creation-dialog.component';
-import {ProjectDatasetItem} from '../../../../project/model/project-dataset-item';
-import {ProjectDatasetPictoType} from '../../../../project/model/project-dataset-picto-type';
+} from '@app/project/components/success-project-creation-dialog/success-project-creation-dialog.component';
+import {ProjectDatasetItem} from '@app/project/model/project-dataset-item';
+import {ProjectDatasetPictoType} from '@app/project/model/project-dataset-picto-type';
 import {
     EditNewDataSetDialogComponent,
     NewDataSetDialogData
-} from '../../../../project/components/edit-new-data-set-dialog/edit-new-data-set-dialog.component';
-import {DataRequestItem} from '../../../../project/model/data-request-item';
-import {AddDataSetDialogData} from '../../../../project/components/add-data-set-dialog/add-data-set-dialog-data';
-import {RequestDetails} from '../../../../shared/models/request-details';
+} from '@app/project/components/edit-new-data-set-dialog/edit-new-data-set-dialog.component';
+import {DataRequestItem} from '@app/project/model/data-request-item';
+import {AddDataSetDialogData} from '@app/project/components/add-data-set-dialog/add-data-set-dialog-data';
+import {RequestDetails} from '@shared/models/request-details';
 import {
     RequestDetailsDialogComponent,
     RequestDetailsDialogData
-} from '../../../../project/components/request-details-dialog/request-details-dialog.component';
-import {TitleIconType} from '../../../../shared/models/title-icon-type';
-import {UpdateAction} from '../../../../project/model/upate-action';
+} from '@app/project/components/request-details-dialog/request-details-dialog.component';
+import {TitleIconType} from '@shared/models/title-icon-type';
+import {UpdateAction} from '@app/project/model/upate-action';
 import {DefaultMatDialogConfig} from '../../default-mat-dialog-config';
 import {
     SelectProjectDialogComponent,
     SelectProjectDialogData
-} from '../../../../data-set/components/select-project-dialog/select-project-dialog.component';
-import {DialogClosedData} from '../../../../data-set/models/dialog-closed-data';
-import {LinkedDatasetFromProject} from '../../../../data-set/models/linked-dataset-from-project';
-import {Organization} from '../../../../strukture/strukture-model';
+} from '@app/data-set/components/select-project-dialog/select-project-dialog.component';
+import {DialogClosedData} from '@app/data-set/models/dialog-closed-data';
+import {LinkedDatasetFromProject} from '@app/data-set/models/linked-dataset-from-project';
+import {Organization} from '@app/strukture/strukture-model';
 import {OrganizationMetierService} from '../../organization/organization-metier.service';
 import {Task} from 'src/app/projekt/projekt-api/model/task';
-import {HttpErrorResponse} from '@angular/common/http';
 import {Moment} from 'moment';
-import {consistentPeriodValidator} from '../../../validators/consistent-period-validator';
+import {consistentPeriodValidator} from '@core/validators/consistent-period-validator';
 import {ProjectTaskMetierService} from '../../tasks/projekt/project-task-metier.service';
 import {LinkedDatasetTaskMetierService} from '../../tasks/projekt/linked-dataset-task-metier.service';
-import {ActionFallbackUtils} from '../../../../shared/utils/action-fallback-utils';
+import {ActionFallbackUtils} from '@shared/utils/action-fallback-utils';
 import {AccessStatusFiltersType} from '../../filters/access-status-filters-type';
-import {MetadataUtils} from '../../../../shared/utils/metadata-utils';
-import {AccessConditionConfidentiality} from '../../../../shared/utils/access-condition-confidentiality';
+import {MetadataUtils} from '@shared/utils/metadata-utils';
+import {AccessConditionConfidentiality} from '@shared/utils/access-condition-confidentiality';
 import {NewDatasetRequestTaskMetierService} from '../../tasks/projekt/new-dataset-request-task-metier.service';
-import {DatasetConfidentiality, ReutilisationStatus} from '../../../../projekt/projekt-api';
+import {DatasetConfidentiality, ReutilisationStatus} from '@app/projekt/projekt-api';
 import { ObjectType } from '../../tasks/object-type.enum';
 
 /**
@@ -74,11 +73,6 @@ const KNOWN_CONFIDENTIALITY_CODES = [
 ];
 
 const DEFAULT_CONFIDENTIALITY_CODE = 'OPEN';
-
-/**
- * Statut d'un projet correspondant à une réutilisation
- */
-const REUSE_STATUS: ProjectStatus = 'VALIDATED';
 
 /**
  * Taille maximale de la description d'un projet ou d'une réutilisation
@@ -95,16 +89,6 @@ export interface FormProjectDependencies {
     supports: Support[];
     projectTypes: ProjectType[];
     reuseStatus: ProjectType[];
-    user: User;
-    organizations: Organization[];
-}
-
-/**
- * Liste des éléments requis pour charger le formulaire de réutilisation
- */
-export interface FormReutilisationDependencies {
-    projectTypes: ProjectType[];
-    projectPublicCible: TargetAudience[];
     user: User;
     organizations: Organization[];
 }
@@ -230,39 +214,6 @@ export class ProjectSubmissionService {
     }
 
     /**
-     * Initialisation des champs du formulaire de l'étape 1 : réutilisation
-     */
-    public initStep1ReutilisationFormGroup(): FormGroup {
-        return this.formBuilder.group({
-            title: ['', Validators.required],
-            description: ['', [Validators.required, Validators.maxLength(MAX_DESCRIPTION_LENGTH)]],
-            image: [''],
-            publicCible: [''],
-            type: ['', Validators.required],
-            url: ['', Validators.pattern(/^(http|https|ftp):\/\/.*$/)],
-            reuseStatus: ['', Validators.required]
-        });
-    }
-
-    public reutilisationFormGroupToProject(step1FormGroup: FormGroup,
-                                           step2FormGroup: FormGroup,
-                                           user: User,
-                                           projectType: ProjectType): Project {
-        const ownerType = step2FormGroup.get('ownerType').value as OwnerType;
-        return {
-            title: step1FormGroup.get('title').value,
-            description: step1FormGroup.get('description').value,
-            type: projectType,
-            access_url: step1FormGroup.get('url').value,
-            owner_uuid: ownerType === OwnerType.Organization ? step2FormGroup.get('organizationUuid').value : user.uuid,
-            owner_type: ownerType,
-            contact_email: step2FormGroup.get('contactEmail').value,
-            project_status: REUSE_STATUS,
-            object_type: ObjectType.PROJECT
-        };
-    }
-
-    /**
      * Initialisation des champs du formulaire de l'étape 1 : projet
      */
     public initStep1ProjectFormGroup(): FormGroup {
@@ -385,23 +336,6 @@ export class ProjectSubmissionService {
         }
         organizationUuidFormControl.setErrors(null);
         return null;
-    }
-
-    /**
-     * Chargement des éléments requis pour afficher le formulaire de réutilisation
-     */
-    public loadDependenciesReutilisation(): Observable<FormReutilisationDependencies> {
-        const connectedUser$: Observable<User | undefined> = this.userService.getConnectedUser();
-        const dependencies = {
-            projectTypes: this.projektMetierService.searchProjectTypes(),
-            projectPublicCible: this.projektMetierService.searchProjectPublicCible(),
-            user: connectedUser$,
-            organizations: connectedUser$.pipe(
-                switchMap(connectedUser => this.organizationMetierService.getMyOrganizations(connectedUser.uuid))
-            ),
-        };
-
-        return forkJoin(dependencies);
     }
 
     /**
@@ -704,40 +638,6 @@ export class ProjectSubmissionService {
             })
         );
     }
-
-    /**
-     * Créé la réutilisation et la soumets (transmission des demandes + workflow) avec gestion fine des cas d'erreur
-     * @param project l'objet réutilisation a créer
-     * @param linkedDatasets les JDDs ouverts liés
-     * @param dataRequests c'est vide pour une réutilisation
-     * @param image l'image de la réutilisation
-     * @param mapRequestDetailsByDatasetUuid c'est vide pour une réutilisation
-     */
-    public createAndSubmitReutilisation(project: Project, linkedDatasets: Metadata[], dataRequests: DataRequestItem[], image: Blob,
-                                        mapRequestDetailsByDatasetUuid: Map<string, RequestDetails>): Observable<Project> {
-
-        // 1) on crée le projet
-        return this.createProject(project, linkedDatasets, dataRequests, image, mapRequestDetailsByDatasetUuid).pipe(
-            // Si erreur a la création du project alors on l'indique techniquement
-            catchError((projectError: HttpErrorResponse) => {
-                console.error(projectError);
-                throw new Error('Une erreur a eu lieu pendant la création du project avant les workflow');
-            }),
-
-            // 2) projet créé, maintenant on doit démarrer son workflow
-            switchMap((created: Project) => {
-                const submitAction = new ActionFallbackUtils<Task>({
-                    action: this.submitProject(created),
-                    fallback: this.projektMetierService.deleteProject(created),
-                    fallbackSuccessMessage: 'Une erreur a eu lieu lors du démarrage du workflow de la réutilisation',
-                    fallbackErrorMessage: 'Erreur lors de la suppression du project après avoir eu une erreur dans le workflow, ' +
-                        'une incohérence a été créée'
-                });
-                return submitAction.doActionFallbackOnfailure().pipe(mapTo(created));
-            }),
-        );
-    }
-
 
     /**
      * Créé et démarre le workflow pour les demandes d'accès aux JDDs

@@ -63,7 +63,7 @@ public class RudiMetadataField {
 	public static final FieldSpec CONTACT_EMAIL = CONTACT.newChildFromJavaField("email");
 
 	public static final FieldSpec PRODUCER = ROOT.newChildFromJavaField("producer");
-	public static final FieldSpec PRODUCER_ORGANIZATION_ID = PRODUCER.newChildFromJavaField("organizationId");
+	public static final FieldSpec PRODUCER_ORGANIZATION_ID = PRODUCER.newChildFromJavaField("organizationId").isDirectSortable(false);
 	public static final FieldSpec PRODUCER_ORGANIZATION_NAME = PRODUCER.newChildFromJavaField(ORGANIZATION_NAME)
 			.isDirectSortable(false);
 	public static final FieldSpec PRODUCER_ORGANIZATION_ADDRESS = PRODUCER.newChildFromJavaField("organizationAddress");

@@ -26,6 +26,7 @@ import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.Project;
+import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.service.exception.DataverseExternalServiceException;
 import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
@@ -391,5 +392,10 @@ public class ProjectServiceImpl implements ProjectService {
 		var uuids = myInformationsHelper.getMeAndMyOrganizationUuids();
 		final var projectEntity = getRequiredProjectEntity(projectUuid);
 		return CollectionUtils.containsAny(uuids, projectEntity.getOwnerUuid());
+	}
+
+	@Override
+	public List<ProjectByOwner> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria) {
+		return projectCustomDao.getNumberOfProjectsPerOwners(criteria.getOwnerUuids());
 	}
 }

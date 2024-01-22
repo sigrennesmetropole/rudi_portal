@@ -10,9 +10,16 @@
 
 <!-- On utilise hidden à la place de *ngIf pour éviter des bugs avec mat-table : https://stackoverflow.com/a/56127490/1655155 -->
 <div [hidden]="!(requestsToStudy?.length)">
-
-    <table mat-table [dataSource]="dataSource" matSort matSortActive="receivedDate" matSortDirection="desc"
-           class="cursor">
+    <span id="table-description" class="invisible">{{ 'personalSpace.myNotifications.title1' | translate }}</span>
+    <table
+        mat-table
+        matSort
+        matSortActive="receivedDate"
+        matSortDirection="desc"
+        class="cursor"
+        aria-describedby="table-description"
+        [dataSource]="dataSource"
+    >
 
         <ng-container matColumnDef="receivedDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header"

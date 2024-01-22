@@ -43,7 +43,6 @@ export class LoaderComponent implements OnInit {
     /**
      * Texte éventuel affiché sous le loader
      */
-        // description = 'Chargement...';
     description: string;
 
 

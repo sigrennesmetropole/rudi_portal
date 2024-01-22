@@ -9,6 +9,7 @@ import {RowTableData} from '@shared/project-datasets-tables/dataset.interface';
 })
 export class DatasetTableComponent {
     displayedColumns: string[] = ['addedDate', 'title', 'status', 'comment-action', 'delete-action'];
+    addButtonIcon: string;
 
     /**
      * titre du tableau
@@ -65,6 +66,7 @@ export class DatasetTableComponent {
     commentActionEvent: EventEmitter<RowTableData>;
 
     constructor() {
+        this.addButtonIcon = 'icon_add_blue';
         this.dataSource = new MatTableDataSource([]);
         this.tableLoading = true;
         this.disableAddButton = false;
@@ -86,5 +88,13 @@ export class DatasetTableComponent {
 
     commentAction(element: RowTableData): void {
         this.commentActionEvent.emit(element);
+    }
+
+    onMouseEnterAddButton(): void {
+        this.addButtonIcon = 'icon_add_light';
+    }
+
+    onMouseLeaveAddButton(): void {
+        this.addButtonIcon = 'icon_add_blue';
     }
 }

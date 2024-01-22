@@ -1,6 +1,7 @@
 @import "src/app/styles/variables-rudi";
 @import "src/app/styles/colors";
 @import "src/app/styles/common-style";
+@import "bootstrap/scss/bootstrap-grid";
 
 .rudi-card-title {
     margin-left: -16px;
@@ -21,7 +22,6 @@
 }
 
 .rudi-panel-data-language {
-    max-width: 600px;
     border-radius: 4px;
     border: solid 1px $blocks-and-menus-outline;
 
@@ -67,8 +67,6 @@
 }
 
 .rudi-bloc-access-condition {
-    //margin: 0 -24px 0 -24px;
-    max-width: 600px;
     color: $focus !important;
 }
 
@@ -104,27 +102,18 @@
 
 .rudi-panel-card {
     margin-bottom: 12px;
-    max-width: 600px;
     font-size: 12px;
     color: $primary-text;
     padding: 11px 16px;
     border-radius: 6px;
     background-color: $banner-solid-color;
-    display: flex;
-    justify-content: space-between;
 
     &:first-child {
         margin-top: 10px;
     }
 
-    &-data {
-        font-size: 15px;
+    &-libelle{
         font-weight: 600;
-        color: black;
-        margin-left: 1rem;
-        margin-right: 1rem;
-        display: flex;
-        align-items: center;
     }
 
     &-large {
@@ -152,7 +141,6 @@
 ::ng-deep {
     .stockage-expansion-panel.rudi-expansion-panel {
         .stockage-panel {
-            max-width: 600px;
             margin-bottom: 12px;
         }
 
@@ -252,13 +240,10 @@ table td {
     background-color: $banner-solid-color;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
-    height: 40px;
     padding: 20px;
-    display: flex;
     color: $primary-text;
     font-size: 15px;
     font-weight: 600;
-    align-items: center;
 }
 
 .rudi-panel-tbody-border {
@@ -301,12 +286,23 @@ table td {
     font-weight: 600;
 }
 
-.type-licence-libelle {
+.row-container{
+    @extend .row;
+}
+
+.libelle-key{
+    @extend .col-sm-12;
+    @extend .col-md-5;
+
     font-size: 14px;
     font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    letter-spacing: normal;
+}
+.libelle-value{
+    @extend .col-sm-12;
+    @extend .col-md-7;
+}
+.type-licence-libelle {
+    font-size: 14px;
     color: $primary-color;
     text-decoration: underline;
 }

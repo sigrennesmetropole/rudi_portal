@@ -2,7 +2,7 @@
 	"help": "Vous vous apprêtez à soumettre votre réutilisation. Celle-ci va être soumise à modération auprès des équipes Rudi afin d’être publiée sur le catalogue des réutilisations",
 	"fieldDefinitions": [
 		{
-			"name": "messageToProjectOwner",
+			"name": "messageToModerator",
 			"label": "Message à l’attention de l'animateur",
 			"type": "TEXT",
 			"required": false

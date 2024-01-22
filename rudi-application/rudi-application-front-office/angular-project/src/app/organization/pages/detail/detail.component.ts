@@ -7,14 +7,12 @@ import {User} from '../../../acl/acl-model';
 import {UserService} from '../../../core/services/user.service';
 import {LogService} from '../../../core/services/log.service';
 import {SnackBarService} from '../../../core/services/snack-bar.service';
-import {Level} from '../../../shared/notification-template/notification-template.component';
 import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
     selector: 'app-detail',
-    templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
+    templateUrl: './detail.component.html'
 })
 export class DetailComponent implements OnInit {
 

@@ -1,14 +1,5 @@
 package org.rudi.microservice.konsult.service.metadata;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +32,16 @@ import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 /**
  * Class de test de MetadataService
@@ -195,17 +196,20 @@ class MetadataServiceIT {
 	void testSearchMetadata_searchByProducerUUID() throws DataverseAPIException, IOException {
 		String username = "rudi";
 		mockUserData(username);
+		DatasetSearchCriteria searchCriteria = new DatasetSearchCriteria().producerUuids(List.of(firstProducerUUID));
+		MetadataList oldMetadataList = metadataService.searchMetadatas(searchCriteria);
+
+
+		List<Metadata> listOK = new ArrayList<>(oldMetadataList.getItems());
 
 		// Bon producer UUID
 		final Metadata firstJddOuvert = creerJddOuvert(true);
+		listOK.add(firstJddOuvert);
 		final Metadata jddRestreint = creerJddRestreint();
+		listOK.add(jddRestreint); // On le rajoute à la liste des jeux de données censée être remontée par le search
 
 		// Mauvais producer UUID
 		final Metadata secondJddOuvert = creerJddOuvert(false);
-
-		List<Metadata> listOK = List.of(firstJddOuvert, jddRestreint);
-
-		DatasetSearchCriteria searchCriteria = new DatasetSearchCriteria().producerUuid(firstProducerUUID);
 		MetadataList metadataList = metadataService.searchMetadatas(searchCriteria);
 
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas nulle").isNotNull();
@@ -220,14 +224,13 @@ class MetadataServiceIT {
 		assertThat(metadataList.getItems().contains(secondJddOuvert))
 				.as("Vérifier que la liste ne contient pas le JDD ne correspondant pas au filtre.").isFalse();
 
-		searchCriteria = new DatasetSearchCriteria().producerUuid(secondProducerUUID);
+		searchCriteria = new DatasetSearchCriteria().producerUuids(List.of(secondProducerUUID));
 		metadataList = metadataService.searchMetadatas(searchCriteria);
 
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas nulle").isNotNull();
 		assertThat(metadataList.getItems()).as("Vérifier que la liste retournée n'est pas vide").isNotEmpty();
 
-		assertThat(metadataList.getItems().contains(secondJddOuvert) && metadataList.getItems().size() == 1)
-				.as("Vérifier que la liste ne contient bien qu'un seul JDD et le bon").isTrue();
+		metadataList.getItems().forEach(m -> assertEquals(secondProducerUUID, m.getProducer().getOrganizationId()));
 	}
 
 	private void supprimerJdd(Metadata jddASupprimer) throws DataverseAPIException {

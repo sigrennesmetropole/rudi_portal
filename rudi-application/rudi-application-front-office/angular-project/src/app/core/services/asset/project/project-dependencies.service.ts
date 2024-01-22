@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {DependencyFetcher, ObjectWithDependencies, OwnerKey} from '../../../../shared/utils/dependencies-utils';
-import {LinkedDataset, OwnerInfo, PagedProjectList, Project} from '../../../../projekt/projekt-model';
+import {DependencyFetcher, ObjectWithDependencies, OwnerKey} from '@shared/utils/dependencies-utils';
+import {LinkedDataset, LinkedDatasetStatus, OwnerInfo, PagedProjectList, Project} from '@app/projekt/projekt-model';
 import {from, Observable} from 'rxjs';
 import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
-import {NewDatasetRequest, ProjektService} from '../../../../projekt/projekt-api';
+import {NewDatasetRequest, ProjektService} from '@app/projekt/projekt-api';
 import {ProjektMetierService} from './projekt-metier.service';
-import {mapEach} from '../../../../shared/utils/ObservableUtils';
-import {Metadata} from '../../../../api-kaccess';
+import {mapEach} from '@shared/utils/ObservableUtils';
+import {Metadata} from '@app/api-kaccess';
 import {KonsultMetierService} from '../../konsult-metier.service';
 import {ProjectConsultationService} from './project-consultation.service';
 
@@ -110,11 +110,11 @@ export class ProjectDependenciesFetchers {
         };
     }
 
-    get linkedDatasetMetadatas(): DependencyFetcher<ProjectWithDependencies, LinkedDatasetMetadatas[]> {
+    linkedDatasetMetadatas(status?: LinkedDatasetStatus[]): DependencyFetcher<ProjectWithDependencies, LinkedDatasetMetadatas[]> {
         return {
             hasPrerequisites: (input: ProjectWithDependencies) => ProjectDependenciesFetchers.hasProjectUuid(input),
             getKey: projectWithDependencies => projectWithDependencies.project.uuid,
-            getValue: projectUuid => this.projektMetierService.getLinkedDatasets(projectUuid).pipe(
+            getValue: projectUuid => this.projektMetierService.getLinkedDatasets(projectUuid, status).pipe(
                 switchMap((linkedDatasets: LinkedDataset[]) => {
                     return from(linkedDatasets).pipe(
                         mergeMap((linkedDataset: LinkedDataset) => {
@@ -133,31 +133,6 @@ export class ProjectDependenciesFetchers {
             )
         };
     }
-
-    get validatedLinkedDatasetsMetadatas(): DependencyFetcher<ProjectWithDependencies, LinkedDatasetMetadatas[]> {
-        return {
-            hasPrerequisites: (input: ProjectWithDependencies) => ProjectDependenciesFetchers.hasProjectUuid(input),
-            getKey: projectWithDependencies => projectWithDependencies.project.uuid,
-            getValue: projectUuid => this.projektMetierService.getValidatedLinkedDatasets(projectUuid).pipe(
-                switchMap((validatedLinkedDatasets: LinkedDataset[]) => {
-                    return from(validatedLinkedDatasets).pipe(
-                        mergeMap((validatedLinkedDataset: LinkedDataset) => {
-                            return this.konsultMetierService.getMetadataByUuid(validatedLinkedDataset.dataset_uuid).pipe(
-                                map((dataset: Metadata) => {
-                                    return {linkedDataset: validatedLinkedDataset, dataset};
-                                })
-                            );
-                        }),
-                        reduce((accumulator: LinkedDatasetMetadatas[], current: LinkedDatasetMetadatas) => {
-                            accumulator.push(current);
-                            return accumulator;
-                        }, [])
-                    );
-                })
-            )
-        };
-    }
-
     /**
      * Check les entrées des dépendances pour savoir si y'a bien la dépendance projet qui a été loadée
      * @param input l'entrée à checker

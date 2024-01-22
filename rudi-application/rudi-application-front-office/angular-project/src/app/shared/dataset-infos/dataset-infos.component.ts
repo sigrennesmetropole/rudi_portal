@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoint-observer.service';
-import {IconRegistryService} from '../../core/services/icon-registry.service';
-import {ALL_TYPES} from '../models/title-icon-type';
 import {Router} from '@angular/router';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
+import {IconRegistryService} from '@core/services/icon-registry.service';
+import {ALL_TYPES} from '@shared/models/title-icon-type';
 
 @Component({
     selector: 'app-dataset-infos',
@@ -40,20 +40,14 @@ export class DatasetsInfosComponent {
     @Input() goToDetails = false;
     /**
      * Id du jdd courrant
-     *
      */
     @Input() currentJddId: string;
-    /**
-     * Est ou pas dans le tableau de la page 'Mes réutilisations'
-     */
-    @Input() isTabReuse=false;
     /**
      * S'agit -il d'une nouvelle demande ?
      */
     @Input() isANewRequest = false;
     restrictedDatasetIcon = 'key_icon_88_secondary-color';
     mediaSize: MediaSize;
-
 
 
     constructor(

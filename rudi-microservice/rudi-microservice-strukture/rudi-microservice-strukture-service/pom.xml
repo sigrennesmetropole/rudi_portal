@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-strukture</artifactId>
-		<version>1.2.3</version>
+		<version>1.2.4</version>
 	</parent>
 
 	<artifactId>rudi-microservice-strukture-service</artifactId>
@@ -113,6 +113,10 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-facet-generator-text</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.rudi</groupId>
+			<artifactId>rudi-facet-kaccess</artifactId>
 		</dependency>
 	</dependencies>
 

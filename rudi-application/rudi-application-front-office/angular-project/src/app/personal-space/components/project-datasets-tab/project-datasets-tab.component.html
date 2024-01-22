@@ -57,5 +57,12 @@
             (requestUuidEmitter)="handleNewDatasetRequestUuidChanged($event)"
             (commentActionEvent)="onClickCommentAction($event, false)"
         ></app-new-dataset-request-table>
+
+        <app-loader
+            [allPage]="true"
+            [isLight]="true"
+            [noText]="true"
+            [active]="loadingCommentData"
+        ></app-loader>
     </mat-card>
 </div>

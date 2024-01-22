@@ -2,16 +2,11 @@ import {Injectable} from '@angular/core';
 import {FilePreviewModel} from '@sleiss/ngx-awesome-uploader';
 import {Observable} from 'rxjs';
 import {HttpEvent} from '@angular/common/http';
-import {DataSize} from '../../shared/models/data-size';
-import {DocumentMetadata, SelfdataService} from '../../selfdata/selfdata-api';
+import {DataSize} from '@shared/models/data-size';
+import {DocumentMetadata, SelfdataService} from '@app/selfdata/selfdata-api';
 import {PropertiesAdapter} from './properties-adapter';
-import {FrontOfficeProperties} from '../../selfdata/selfdata-model';
-import {DefaultMatDialogConfig} from './default-mat-dialog-config';
-import {
-    WorkflowFieldAttachmentPopinComponent
-} from '../../shared/workflow-field-attachment-popin/workflow-field-attachment-popin.component';
+import {FrontOfficeProperties} from '@app/selfdata/selfdata-model';
 import {MatDialog} from '@angular/material/dialog';
-import {AttachmentPopinData} from '../../shared/workflow-field-attachment-popin/attachment-popin-data';
 
 
 @Injectable({

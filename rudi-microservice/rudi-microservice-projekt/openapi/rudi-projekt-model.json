@@ -130,7 +130,8 @@
 					"title",
 					"description",
 					"owner_uuid",
-					"owner_type"
+					"owner_type",
+					"reutilisation_status"
 				],
 				"allOf": [
 					{
@@ -1109,6 +1110,31 @@
 						"$ref": "#/components/schemas/SearchCriteria"
 					}
 				]
+			},
+			"ProjectByOwner": {
+				"description": "Objet contenant un owner UUID et le nombre de projets qu'il a",
+				"type": "object",
+				"required": [
+					"ownerUUID",
+					"projectCount"
+				],
+				"properties": {
+					"ownerUUID": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"projectCount": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"ProjectByOwners": {
+				"description": "Liste des owner et le nombre de projets associés",
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/ProjectByOwner"
+				}
 			}
 		}
 	}

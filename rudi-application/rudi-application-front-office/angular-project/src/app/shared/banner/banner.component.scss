@@ -1,11 +1,47 @@
 @import "src/app/styles/common-style";
 @import "src/app/styles/variables-rudi";
 @import "src/app/styles/colors";
+@import "src/app/styles/responsive";
 
 :host {
     display: flex;
     background-color: $banner-solid-color;
-    height: 60px;
     padding: 8px 80px;
-    gap: 10px;
+}
+
+@mixin mobile-screen {
+    :host {
+        padding: 18px 80px 8px 80px;
+        flex-direction: column;
+        height: unset;
+        gap: 10px;
+    }
+}
+
+@mixin desktop-screen {
+    :host {
+        gap: 10px;
+        flex-direction: row;
+        height: 60px;
+    }
+}
+
+@include xs() {
+    @include mobile-screen;
+}
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include desktop-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include desktop-screen;
 }

@@ -59,7 +59,7 @@ button, button.mat-raised-button {
 }
 
 .button-active:hover {
-    background-color: $focus;
+    background-color: $primary-color;
     color: $secondary-color;
     cursor: pointer;
 }

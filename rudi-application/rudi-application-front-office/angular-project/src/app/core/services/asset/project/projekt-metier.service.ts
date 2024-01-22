@@ -1,5 +1,8 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable, of, zip} from 'rxjs';
+import {Metadata} from '@app/api-kaccess';
+import {KindOfData} from '@app/api-kmedia';
+import {DataRequestItem} from '@app/project/model/data-request-item';
+import {DatasetConfidentiality, OwnerInfo, ProjektService, ReutilisationStatusSearchCriteria} from '@app/projekt/projekt-api';
 import {
     Confidentiality,
     FrontOfficeProperties,
@@ -14,22 +17,19 @@ import {
     Support,
     TargetAudience,
     TerritorialScale
-} from '../../../../projekt/projekt-model';
-import {DatasetConfidentiality, OwnerInfo, ProjektService, ReutilisationStatusSearchCriteria} from '../../../../projekt/projekt-api';
-import {KindOfData} from '../../../../api-kmedia';
-import {Base64EncodedLogo, ImageLogoService} from '../../image-logo.service';
+} from '@app/projekt/projekt-model';
+import {DataSize} from '@shared/models/data-size';
+import {ErrorWithCause} from '@shared/models/error-with-cause';
+import {RequestDetails} from '@shared/models/request-details';
+import {DateTimeUtils} from '@shared/utils/date-time-utils';
+import {PageResultUtils} from '@shared/utils/page-result-utils';
+import {forkJoin, Observable, of, zip} from 'rxjs';
 import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
-import {PageResultUtils} from '../../../../shared/utils/page-result-utils';
-import {Metadata} from '../../../../api-kaccess';
+import {Base64EncodedLogo, ImageLogoService} from '../../image-logo.service';
 import {KonsultMetierService} from '../../konsult-metier.service';
-import {DataRequestItem} from '../../../../project/model/data-request-item';
-import {RequestDetails} from '../../../../shared/models/request-details';
-import {DateTimeUtils} from '../../../../shared/utils/date-time-utils';
-import {ErrorWithCause} from '../../../../shared/models/error-with-cause';
-import {DataSize} from '../../../../shared/models/data-size';
 import {PropertiesAdapter} from '../../properties-adapter';
+import {ObjectType} from '../../tasks/object-type.enum';
 import {LinkedDatasetMetadatas} from './project-dependencies.service';
-import { ObjectType } from '../../tasks/object-type.enum';
 
 const {firstElementOrThrow} = PageResultUtils;
 
@@ -82,7 +82,7 @@ export class ProjektMetierService {
 
     /**
      * Récupération des projets de l'utilisateur fourni
-     * @param myUserUuid uuid de l'utilisateur
+     * @param userUuid uuid de l'utilisateur
      */
     getMyProjects(userUuid: string): Observable<Project[]> {
         return PageResultUtils.fetchAllElementsUsing(offset =>
@@ -94,9 +94,14 @@ export class ProjektMetierService {
 
     /**
      * Récupération des projets de l'utilisateur fourni
-     * @param myUserUuid uuid de l'utilisateur
+     * @param offset ou commencer la recherche paginée,
+     *      - valeur par défaut : 0
+     * @param limit nombre de données renvoyées,
+     *      - valeur par défaut : 10
+     * @param order string pour le sort des données,
+     *      - valeur par défaut : order by date desc
      */
-    getMyAndOrganizationsProjects(offset?: number, limit?: number, order?: string): Observable<PagedProjectList> {
+    getMyAndOrganizationsProjects(offset: number = 0, limit: number = 10, order: string = DEFAULT_PROJECT_ORDER): Observable<PagedProjectList> {
         return this.projektService.getMyProjects(offset, limit, order);
     }
 
@@ -201,13 +206,12 @@ export class ProjektMetierService {
      * Appel API : récupération de tous les statuts (plusieurs appels back au besoin)
      */
     searchReuseStatus(): Observable<TargetAudience[]> {
-        return PageResultUtils.fetchAllElementsUsing(offset =>
-            {
-                const criteria : ReutilisationStatusSearchCriteria = {
+        return PageResultUtils.fetchAllElementsUsing(offset => {
+                const criteria: ReutilisationStatusSearchCriteria = {
                     offset: offset,
                     order: DEFAULT_ORDER
-                }
-                return this.projektService.searchReutilisationStatus(criteria)
+                };
+                return this.projektService.searchReutilisationStatus(criteria);
             }
         );
     }
@@ -309,19 +313,12 @@ export class ProjektMetierService {
     }
 
     /**
-     * Récupération des demandes d'accès aux JDDs ouverts ou restreints pour un projet
+     * Récupération des demandes d'accès aux JDDs ouverts ou restreints pour un projet par LinkedDatasetStatus
      * @param uuid l'UUID d'un projet JDD qui contient les liens
+     * @param status un tableau de LinkedDatasetStatus
      */
-    getLinkedDatasets(uuid: string): Observable<LinkedDataset[]> {
-        return this.projektService.getLinkedDatasets(uuid);
-    }
-
-    /**
-     * Récupération des demandes d'accès aux JDDs ouverts ou restreints validés pour un projet
-     * @param uuid l'UUID d'un projet JDD qui contient les liens
-     */
-    getValidatedLinkedDatasets(uuid: string): Observable<LinkedDataset[]> {
-        return this.projektService.getLinkedDatasets(uuid, 'VALIDATED');
+    getLinkedDatasets(uuid: string, status?: LinkedDatasetStatus[]): Observable<LinkedDataset[]> {
+        return this.projektService.getLinkedDatasets(uuid, status);
     }
 
     /**

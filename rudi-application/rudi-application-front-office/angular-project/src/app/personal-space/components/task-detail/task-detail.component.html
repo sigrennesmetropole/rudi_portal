@@ -17,29 +17,10 @@
                 <label class="data-label">{{'personalSpace.requestDetail.endDate'|translate}}</label> <br>
                 <span class="data-value">{{formatEndDate(requestDisplayData?.endDate)}}</span>
             </div>
-
-            <!-- Format et niveau non affiché ?
-            <div class="vertical-space">
-                <label class="data-label">{{'personalSpace.requestDetail.format'|translate}}</label> <br>
-                <span class="data-value">Valeur</span>
-            </div>
-            <div class="vertical-space">
-                <label class="data-label">{{'personalSpace.requestDetail.serviceLevel'|translate}}</label> <br>
-                <span class="data-value">Valeur</span>
-            </div> -->
-
             <div class="vertical-space">
                 <label class="data-label">{{'personalSpace.requestDetail.comment'|translate}}</label> <br>
                 <span class="data-value">{{requestDisplayData?.comment}}</span>
             </div>
         </mat-card-content>
-        <!--                    TODO : Non compris dans l'US-->
-        <!--                    <mat-card-footer class="contact">-->
-        <!--                        <div class="specific-infos">Info spé</div>-->
-        <!--                        <div class="vertical-space">-->
-        <!--                            <label class="data-label">Libelle</label> <br>-->
-        <!--                            <span class="data-value">Valeur</span>-->
-        <!--                        </div>-->
-        <!--                    </mat-card-footer>-->
     </mat-card>
 </div>

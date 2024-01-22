@@ -6,6 +6,6 @@ import {Project} from '@app/projekt/projekt-api';
     templateUrl: './project-main-informations.component.html',
     styleUrls: ['./project-main-informations.component.scss']
 })
-export class ProjectMainInformationsComponent {
+export class ProjectMainInformationsComponent{
     @Input() project: Project;
 }

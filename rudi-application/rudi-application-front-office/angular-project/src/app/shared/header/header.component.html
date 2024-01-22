@@ -67,13 +67,11 @@
                             <button class="title" mat-menu-item
                                     (click)="handleClickGoToMySelfdata()">{{'header.accountMenu.mySelfdata'| translate}}</button>
                             <hr class="hr">
-                            <button (click)="handleClickLogout()" class="title" mat-menu-item>{{'header.logOut'| translate}}</button>
+                            <button (click)="handleClickLogout()" class="title"
+                                    mat-menu-item>{{'header.logOut'| translate}}</button>
                         </mat-menu>
                     </li>
                 </ul>
-                <div class="header-right-menu-items">
-                    <em class="fa fa-search search-icon-desktop fa-1x mr-2 pointer disabled"></em>
-                </div>
             </ngx-navbar-collapse>
         </nav>
     </div>
@@ -89,10 +87,6 @@
 
             <!-- Conteneur boutons actions -->
             <div class="buttons-container">
-                <!-- Bouton search -->
-                <span class="p-2">
-                    <em class="fa fa-search search-icon-mobile fa-1x pointer disabled"></em>
-                </span>
                 <!-- Bouton mon compte -->
                 <button *ngIf="!isConnectedAsUser" mat-stroked-button (click)="handleClickGoLogin()">
                     <mat-icon>account_circle</mat-icon>
@@ -110,7 +104,8 @@
                     <button mat-menu-item
                             (click)="handleClickGoToMySelfdata()">{{'header.accountMenu.mySelfdata'| translate}}</button>
                     <hr class="hr">
-                    <button (click)="handleClickLogout()" class="title" mat-menu-item>{{'header.logOut'| translate}}</button>
+                    <button (click)="handleClickLogout()" class="title"
+                            mat-menu-item>{{'header.logOut'| translate}}</button>
                 </mat-menu>
                 <!-- button menu burger -->
                 <button

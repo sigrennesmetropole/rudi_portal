@@ -114,6 +114,10 @@
     .mat-checkbox-inner-container-no-side-margin {
         margin-bottom: 6px !important;
     }
+
+    svg {
+        vertical-align: unset;
+    }
 }
 
 .blue-theme {
@@ -190,12 +194,6 @@ mat-icon {
     position: relative;
     height: 20px;
     margin-right: 5px;
-}
-
-::ng-deep {
-    svg {
-        vertical-align: unset;
-    }
 }
 
 .search-bar {

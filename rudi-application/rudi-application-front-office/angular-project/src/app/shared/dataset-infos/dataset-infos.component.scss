@@ -1,14 +1,6 @@
 @import "src/app/styles/variables-rudi";
 @import "src/app/styles/common-style";
-
-.producteur-img-box {
-    min-width: 70px;
-    height: 70px;
-    padding: 10px 4px 10px 4px;
-    border-radius: 3.4px;
-    border: solid 0.9px $blocks-and-menus-outline;
-    justify-content: center;
-}
+@import "src/app/styles/_responsive.scss";
 
 .dataset-info {
     font-family: OpenSans, sans-serif;
@@ -25,9 +17,7 @@
         color: $primary-color;
         font-weight: 600;
         margin-top: 5px;
-        @include max-2-lignes;
     }
-
 }
 
 .mat-divider {
@@ -36,4 +26,48 @@
 
 .svg-style {
     height: 15px;
+}
+
+.container-global {
+    display: flex;
+}
+
+@mixin mobile() {
+    .container-global {
+        flex-direction: column;
+    }
+    .text-container{
+        margin-left: 0;
+    }
+    .logo-container{
+        margin-bottom: 15px;
+    }
+
+}
+@mixin desktop() {
+    .container-global {
+        flex-direction: row;
+    }
+    .text-container{
+        margin-left: 15px;
+    }
+    .logo-container{
+        margin-bottom: 0;
+    }
+}
+
+@include sm {
+    @include mobile();
+}
+
+@include md {
+    @include desktop();
+}
+
+@include lg {
+    @include desktop();
+}
+
+@include xl {
+    @include desktop();
 }

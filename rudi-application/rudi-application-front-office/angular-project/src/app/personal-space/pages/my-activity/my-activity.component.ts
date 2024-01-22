@@ -3,8 +3,7 @@ import {PropertiesMetierService} from '../../../core/services/properties-metier.
 
 @Component({
   selector: 'app-my-activity',
-  templateUrl: './my-activity.component.html',
-  styleUrls: ['./my-activity.component.scss']
+  templateUrl: './my-activity.component.html'
 })
 export class MyActivityComponent {
     urlToDoc: string;

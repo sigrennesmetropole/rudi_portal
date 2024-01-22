@@ -29,7 +29,6 @@ import {MatSelectModule} from '@angular/material/select';
 import {LineTruncationLibModule} from 'ngx-line-truncation';
 import {NgxNavbarModule} from 'ngx-bootstrap-navbar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {PopoverModule} from 'ngx-smart-popover';
 
 export const MaterialModules = [
     LayoutModule,

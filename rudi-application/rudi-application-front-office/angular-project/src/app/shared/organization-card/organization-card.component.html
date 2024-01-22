@@ -1,6 +1,6 @@
 <mat-card
     class="mat-elevation-z0 organization-card">
-    <mat-card-content (click)="onClickOrganization(organizationBean.uuid)">
+    <mat-card-content (click)="onClickOrganization(organizationBean.uuid)" class="card-content">
         <div class="d-flex my-3">
             <div class="align-items-center">
                 <app-organization-logo [organizationId]="organizationBean.uuid"
@@ -9,9 +9,29 @@
                                        organizationType="producer"
                 ></app-organization-logo>
             </div>
-            <div class="resource_title">
-                {{organizationBean.name}}
+            <div class="organization-card-content">
+                <div class="resource-title">
+                    {{organizationBean.name}}
+                </div>
+                <div class="ressource-description">
+                    <p class="description">{{organizationBean.description | truncateText: 181}}</p>
+                </div>
             </div>
         </div>
     </mat-card-content>
+    <div class="d-flex d-table-cell ">
+        <ng-container *ngIf="!datasetCountLoading else loader">
+            <button class="rudi-btn-sm d-flex align-items-center" mat-flat-button>
+                {{datasetsCountTranslationKey | translate: {number: organizationBean.datasetCount} }}
+            </button>
+        </ng-container>
+        <ng-container *ngIf="!projectCountLoading$ else loader">
+            <button class="rudi-btn-sm d-flex align-items-center" mat-flat-button>
+                {{projectsCountTranslationKey | translate: {number: organizationBean.projectCount} }}
+            </button>
+        </ng-container>
+        <ng-template #loader>
+            <app-loader [allPage]="false" [isTransparent]="true" [noText]="true" [active]="true"></app-loader>
+        </ng-template>
+    </div>
 </mat-card>

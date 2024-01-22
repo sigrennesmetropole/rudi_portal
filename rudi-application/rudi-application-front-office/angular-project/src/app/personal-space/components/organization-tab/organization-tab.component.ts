@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OrganizationBean} from '@app/strukture/api-strukture';
 import {BreakpointObserverService, NgClassObject} from '@core/services/breakpoint-observer.service';
-import {SearchOrganizationsService} from '@shared/list-organization-card/search-organizations.service';
-import {Observable} from 'rxjs';
-import {UserService} from '@core/services/user.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
+import {UserService} from '@core/services/user.service';
+import {SearchOrganizationsService} from '@shared/list-organization-card/search-organizations.service';
+import {Observable} from 'rxjs';
 
 
 @Component({
@@ -23,6 +23,8 @@ export class OrganizationTabComponent implements OnInit, OnDestroy {
 
     organizations$: Observable<OrganizationBean[]>;
     totalOrganizations$: Observable<number>;
+    projectCountLoading$: Observable<boolean>;
+    datasetCountLoading$: Observable<boolean>;
 
     constructor(private readonly breakpointObserver: BreakpointObserverService,
                 private readonly utilisateurService: UserService,
@@ -33,18 +35,23 @@ export class OrganizationTabComponent implements OnInit, OnDestroy {
         this.itemsPerPage = 9;
         this.organizations$ = searchOrganizationsService.organizations$;
         this.totalOrganizations$ = searchOrganizationsService.totalOrganizations$;
+        this.datasetCountLoading$ = searchOrganizationsService.datasetCountLoading;
+        this.projectCountLoading$ = searchOrganizationsService.projectsCountLoading;
     }
 
     get paginationControlsNgClass(): NgClassObject {
         return this.breakpointObserver.getNgClassFromMediaSize('pagination-spacing');
     }
+
     onPageChange(page: number): void {
         this.searchOrganizationsService.currentPage$.next(page);
     }
+
     ngOnInit(): void {
         this.isLoading = true;
         this.getMyOrganisations();
     }
+
     ngOnDestroy(): void {
         this.searchOrganizationsService.complete();
     }

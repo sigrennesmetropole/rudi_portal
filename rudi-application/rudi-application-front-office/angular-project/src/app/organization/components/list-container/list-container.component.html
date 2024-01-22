@@ -1,14 +1,4 @@
 <div class="container-fluid">
-    <!--
-    TODO: SearchBox pour organization
-    <app-search-box
-        [mediaSize]="mediaSize"
-        [libelle]="'searchbox.rechercherOrganisation'"
-        (searchTermsEmitter)="onChangesSearchTerms($event)"
-        class="d-flex justify-content-center w-100 mb-4">
-    </app-search-box>
-    -->
-
     <mat-toolbar *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl"
                  class="rudi-filters-toolbar">
     </mat-toolbar>
@@ -35,6 +25,9 @@
             [organizations]="organizations"
             [itemsPerPage]="itemsPerPage"
             [totalItems]="totalOrganizations$ | async"
+            [currentPage]="currentPage$ | async"
+            [datasetCountLoading]="datasetCountLoading$ | async"
+            [projectCountLoading$]="projectCountLoading$ | async"
             (pageChangeEvent)="onPageChange($event)"
         ></app-list-organization-card>
 

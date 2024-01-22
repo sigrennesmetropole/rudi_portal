@@ -1,23 +1,23 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BreakpointObserverService, MediaSize} from '../../../core/services/breakpoint-observer.service';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {ProjektMetierService} from '../../../core/services/asset/project/projekt-metier.service';
-import {Project} from '../../../projekt/projekt-model';
+import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
+import {LinkedDatasetStatus, Project} from '@app/projekt/projekt-model';
 import {map} from 'rxjs/operators';
-import {AclService} from '../../../acl/acl-api';
+import {AclService} from '@app/acl/acl-api';
 import {TranslateService} from '@ngx-translate/core';
-import {PageTitleService} from '../../../core/services/page-title.service';
-import {OwnerInfo, ProjektService} from '../../../projekt/projekt-api';
+import {PageTitleService} from '@core/services/page-title.service';
+import {OwnerInfo, ProjektService} from '@app/projekt/projekt-api';
 import {Observable} from 'rxjs';
-import {injectDependencies} from '../../../shared/utils/dependencies-utils';
+import {injectDependencies} from '@shared/utils/dependencies-utils';
 import {
     LinkedDatasetMetadatas,
     ProjectDependenciesFetchers,
     ProjectDependenciesService,
-} from '../../../core/services/asset/project/project-dependencies.service';
-import {Base64EncodedLogo} from '../../../core/services/image-logo.service';
+} from '@core/services/asset/project/project-dependencies.service';
+import {Base64EncodedLogo} from '@core/services/image-logo.service';
 
 const ICON_INFO = '../assets/icons/icon_tab_infos.svg';
 const PROJECT_LOGO = '/assets/images/logo_projet_par_defaut.png';
@@ -114,7 +114,7 @@ export class DetailComponent implements OnInit {
     private loadProjectDependencies(projectUuid: string): Observable<Dependencies> {
         return this.projectDependenciesService.getProject(projectUuid).pipe(
             injectDependencies({
-                linkedDatasetMetadatas: this.projectDependenciesFetchers.validatedLinkedDatasetsMetadatas
+                linkedDatasetMetadatas: this.projectDependenciesFetchers.linkedDatasetMetadatas([LinkedDatasetStatus.Validated, LinkedDatasetStatus.Archived]),
             }),
             injectDependencies({
                 logo: this.projectDependenciesFetchers.logo

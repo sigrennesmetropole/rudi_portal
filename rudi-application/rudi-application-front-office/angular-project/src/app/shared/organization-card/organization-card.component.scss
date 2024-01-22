@@ -10,7 +10,12 @@
     overflow: hidden;
     margin-bottom: 1em;
 
-    .resource_title {
+    .organization-card-content {
+        min-height: $card-height-sm;
+        max-height: $card-height-sm;
+    }
+
+    .resource-title {
         font-family: OpenSans, sans-serif;
         font-size: 16px;
         color: $primary-color;
@@ -20,5 +25,20 @@
         overflow: hidden;
         text-overflow: ellipsis;
         @include max-2-lignes;
+    }
+
+    .ressource-description {
+        margin-top: 5px;
+        margin-left: 1em;
+        font-size: 15px;
+        overflow: hidden;
+
+        .description {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            hyphens: auto;
+            padding-bottom: 0;
+        }
+
     }
 }

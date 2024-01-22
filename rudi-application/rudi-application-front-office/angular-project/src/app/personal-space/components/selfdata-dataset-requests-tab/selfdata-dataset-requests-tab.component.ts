@@ -7,8 +7,7 @@ import {MetadataUtils} from '../../../shared/utils/metadata-utils';
 
 @Component({
     selector: 'app-selfdata-dataset-requests-tab',
-    templateUrl: './selfdata-dataset-requests-tab.component.html',
-    styleUrls: ['./selfdata-dataset-requests-tab.component.scss']
+    templateUrl: './selfdata-dataset-requests-tab.component.html'
 })
 export class SelfdataDatasetRequestsTabComponent implements OnInit {
 

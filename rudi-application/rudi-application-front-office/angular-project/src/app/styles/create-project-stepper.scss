@@ -253,6 +253,7 @@ mat-label {
 }
 
 mat-form-field {
+    width: 100% !important;
     margin: 12px 0 31px;
     border-radius: 4px;
 }
@@ -321,18 +322,6 @@ mat-error {
     font-family: OpenSans, sans-serif;
 }
 
-
-::ng-deep {
-    .mat-focused .mat-form-field-label {
-        /*change color of label*/
-        color: $focus !important;
-    }
-}
-
-mat-form-field {
-    width: 100% !important;
-}
-
 *:focus-visible {
     // on ne veut pas les rectangles bleu sur focus du champ input
     outline: none;
@@ -340,6 +329,10 @@ mat-form-field {
 
 // Customization Angular Material
 ::ng-deep {
+    .mat-focused .mat-form-field-label {
+        /*change color of label*/
+        color: $focus !important;
+    }
 
     // Customization du formulaire Angular Material
     .mat-form-field-disabled {

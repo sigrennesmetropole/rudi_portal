@@ -4,8 +4,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-success-project-creation-dialog',
-    templateUrl: './success-project-creation-dialog.component.html',
-    styleUrls: ['./success-project-creation-dialog.component.scss']
+    templateUrl: './success-project-creation-dialog.component.html'
 })
 export class SuccessProjectCreationDialogComponent {
 

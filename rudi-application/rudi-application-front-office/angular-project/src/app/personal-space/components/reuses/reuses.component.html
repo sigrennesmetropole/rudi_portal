@@ -13,10 +13,17 @@
 
     <!-- Wrapper du tableau et du loader -->
     <div class="table-and-loader-container">
+        <span id="table-description" class="invisible">{{ 'personalSpace.myReuses.resultTilte' | translate }}</span>
         <!-- le tableau -->
-        <table mat-table
-               [dataSource]='projectList | paginate: { itemsPerPage: ITEMS_PER_PAGE, currentPage: page, totalItems: total}'
-               matSort matSortActive="updatedDate" matSortDirection="desc" (matSortChange)="sortTable($event)">
+        <table
+            mat-table
+            matSort
+            matSortActive="updatedDate"
+            matSortDirection="desc"
+            aria-describedby="table-description"
+            [dataSource]='projectList | paginate: { itemsPerPage: ITEMS_PER_PAGE, currentPage: page, totalItems: total}'
+            (matSortChange)="sortTable($event)"
+        >
 
             <ng-container matColumnDef="updatedDate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header

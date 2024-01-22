@@ -34,8 +34,10 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
         return this.sortAction().filter(action => !!action.label);
     }
 
-    private sortAction(): Array<Action> {
-        return this.task?.actions.sort(function compare(a, b) {
+    private sortAction(): Action[] {
+        const actions: Action[] = this.task?.actions ?? [];
+
+        return actions.sort(function compare(a: Action, b: Action): number {
             // pour afficher le bouton valider avant le bouton rejeter
             if (a.label < b.label) {
                 return -1;

@@ -360,6 +360,10 @@
 							},
 							"user_uuid": {
 								"$ref": "#/components/schemas/OrganizationUserUuidParam"
+							},
+							"load_all_informations": {
+								"description": "Utilisé dans le cadre des organizationBean pour savoir si l'on charge l'ensemble des informations",
+								"type": "boolean"
 							}
 						}
 					}
@@ -616,6 +620,15 @@
 					},
 					"name": {
 						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"datasetCount": {
+						"type": "integer"
+					},
+					"projectCount": {
+						"type": "integer"
 					}
 				}
 			},

@@ -6,7 +6,6 @@
 @import '~@angular/material/theming';
 @import 'mixins';
 @import 'functions';
-@import "../styles/variables-rudi";
 
 $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-serif;');
 @include mat-core($custom-typography);
@@ -159,28 +158,6 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
             background-color: $primary-color !important;
         }
     }
-}
-
-.rudi-select-panel {
-    height: min-content;
-    padding: 16px 10px 16px 25px;
-    color: $primary-text;
-    font-size: 15px;
-
-    ul {
-        max-height: 300px;
-        overflow-x: auto;
-        scrollbar-width: thin; /* "auto" or "thin" */
-        scrollbar-color: white; /* scroll thumb and track */
-    }
-
-    &-footer {
-        display: flex;
-        justify-content: center;
-    }
-}
-
-::ng-deep {
 
     .rudi-icon-back {
         background-color: $secondary-color;
@@ -204,18 +181,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
             height: 28px !important;
         }
     }
-}
 
-.rudi-radio-group {
-    font-size: 14px;
-    color: $primary-text;
-}
-
-.rudi-radio-button {
-    margin-bottom: 20px;
-}
-
-::ng-deep {
     .rudi-blue-large-button {
         width: 100%;
         margin: 20px 0 0 0;
@@ -253,6 +219,34 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
             color: white;
         }
     }
+}
+
+.rudi-select-panel {
+    height: min-content;
+    padding: 16px 10px 16px 25px;
+    color: $primary-text;
+    font-size: 15px;
+
+    ul {
+        max-height: 300px;
+        overflow-x: auto;
+        scrollbar-width: thin; /* "auto" or "thin" */
+        scrollbar-color: white; /* scroll thumb and track */
+    }
+
+    &-footer {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.rudi-radio-group {
+    font-size: 14px;
+    color: $primary-text;
+}
+
+.rudi-radio-button {
+    margin-bottom: 20px;
 }
 
 .rudi-menu-button {
@@ -541,12 +535,13 @@ mat-toolbar a:hover {
         height: 42px;
 
         .icon-information {
-            fill: $primary-text;
-            vertical-align: top;
             margin-right: 10px;
-            height: 18px;
-            width: 18px;
-            font-weight: 400;
+            vertical-align: unset;
+        }
+
+        .icon-information-sm {
+            margin-right: 0;
+            vertical-align: unset;
         }
     }
 }

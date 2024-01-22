@@ -46,29 +46,6 @@ button.mat-menu-item:hover {
     color: white;
 }
 
-.mat-badge-content {
-    background: $focus;
-    top: 7px !important;
-    left: 110px;
-}
-
-.rudi-sidenav-container-filter {
-    .mat-badge-content {
-        background: $focus;
-        top: 0 !important;
-        font-size: 14px;
-        font-weight: normal;
-        width: 30px;
-        height: 30px;
-        left: -40px;
-        line-height: 28px;
-    }
-}
-
-.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled="true"]) {
-    background: none;
-}
-
 ::ng-deep.mat-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay {
     opacity: 0;
 }
@@ -139,11 +116,6 @@ button.mat-menu-item:hover {
     margin-left: 5px;
 }
 
-
-::ng-deep.mat-form-field-appearance-outline .mat-form-field-infix {
-    padding: 10px;
-}
-
 ::ng-deep.mat-menu-panel {
     overflow: hidden !important;
     border-radius: 6px !important;
@@ -159,18 +131,6 @@ button.mat-menu-item:hover {
             overflow: auto;
         }
     }
-}
-
-::ng-deep.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-    background-color: $focus;
-}
-
-::ng-deep.mat-checkbox-frame {
-    border: 1px solid $blocks-and-menus-outline;
-}
-
-::ng-deep.mat-checkbox-label {
-    margin-left: 5px;
 }
 
 ::ng-deep.mat-drawer-container {
