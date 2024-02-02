@@ -1,5 +1,10 @@
 package org.rudi.microservice.strukture.service.organization;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -15,6 +20,7 @@ import org.mockito.stubbing.Answer;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.strukture.service.StruktureSpringBootTest;
 import org.rudi.microservice.strukture.service.helper.organization.OrganizationHelper;
 import org.rudi.microservice.strukture.service.helper.organization.OrganizationMembersHelper;
@@ -24,11 +30,6 @@ import org.rudi.microservice.strukture.storage.entity.organization.OrganizationM
 import org.rudi.microservice.strukture.storage.entity.organization.OrganizationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @StruktureSpringBootTest
 public class OrganizationHelperTestUT {
@@ -41,6 +42,9 @@ public class OrganizationHelperTestUT {
 
 	@MockBean
 	OrganizationMembersHelper organizationMembersHelper;
+
+	@MockBean
+	DatasetService datasetService;
 
 	@AfterEach
 	public void cleanData() {
@@ -71,8 +75,7 @@ public class OrganizationHelperTestUT {
 
 		// Quand on va demander au Helper de chercher les users correspondants, il fonctionne
 		User administratorUser = new User().uuid(member1Uuid);
-		when(organizationMembersHelper.searchCorrespondingUsers(any(), any()))
-				.thenReturn(List.of(administratorUser));
+		when(organizationMembersHelper.searchCorrespondingUsers(any(), any())).thenReturn(List.of(administratorUser));
 
 		// Recherche des utilisateurs administrateurs de l'organisation
 		List<User> users = organizationHelper.searchUserAdministrators(organization.getUuid());

@@ -17,11 +17,11 @@ import org.springframework.security.oauth2.core.AuthenticationMethod;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
+import lombok.val;
 
 @Component
 @RequiredArgsConstructor
@@ -44,17 +44,23 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	@Nullable
 	@Override
 	public ClientRegistration findByUsernameAndPassword(String username, String password)
-			throws SSLException, GetClientRegistrationException, BuildClientRegistrationException {
+			throws GetClientRegistrationException {
 		return findRegistrationOrRegister(username, password);
 	}
 
 	@NotNull
 	@Override
 	public ClientRegistration findRegistrationOrRegister(String username, String password)
-			throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
+			throws GetClientRegistrationException {
 		// On fait la registration dans ACL et pas dans les remote
 		val clientRegistrationDto = aclHelper.findRegistrationOrRegister(username, password);
-		return convertToEntity(clientRegistrationDto);
+
+		ClientRegistration registration = convertToEntity(clientRegistrationDto);
+		if (registration == null) { // On vérifie que la registration n'est pas nulle.
+			throw new GetClientRegistrationException(username, new NullPointerException());
+		}
+
+		return registration;
 	}
 
 	@Override
@@ -84,7 +90,7 @@ public class CustomRemoteClientRegistrationRepository implements RudiClientRegis
 	 * Conversion d'un DTO vers un ClientRegistration
 	 *
 	 * @param registrationDto DTO à convertir
-	 * @return
+	 * @return ClientRegistration
 	 */
 	private ClientRegistration convertToEntity(ClientRegistrationDto registrationDto) {
 		if (registrationDto == null) {

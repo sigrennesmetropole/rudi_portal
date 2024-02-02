@@ -1,5 +1,16 @@
 package org.rudi.microservice.strukture.service.organization;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -21,6 +32,7 @@ import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.strukture.core.bean.Organization;
 import org.rudi.microservice.strukture.core.bean.OrganizationMember;
@@ -38,16 +50,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import lombok.val;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @StruktureSpringBootTest
 class OrganizationServiceUT {
@@ -69,6 +71,9 @@ class OrganizationServiceUT {
 
 	@MockBean
 	OrganizationMembersHelper organizationMembersHelper;
+
+	@MockBean
+	DatasetService datasetService;
 
 	private Organization createOrganizationDto() {
 		Organization organization = new Organization();
@@ -121,7 +126,8 @@ class OrganizationServiceUT {
 		return organizationService.createOrganization(organization);
 	}
 
-	private OrganizationMember createOrganizationMember(Organization organization, OrganizationRole role) throws Exception {
+	private OrganizationMember createOrganizationMember(Organization organization, OrganizationRole role)
+			throws Exception {
 		val adminUuid = UUID.randomUUID();
 		val adminOrgaMember = new OrganizationMember();
 		adminOrgaMember.setUuid(organization.getUuid());
@@ -199,8 +205,9 @@ class OrganizationServiceUT {
 	void createOrganization_name_KO() {
 
 		Organization organization = new Organization();
-		organization.setName("Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long " +
-				"Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long");
+		organization.setName(
+				"Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long "
+						+ "Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long Nom trop long");
 		organization.setOpeningDate(LocalDateTime.now());
 
 		User userOrganisation = new User();
@@ -263,14 +270,15 @@ class OrganizationServiceUT {
 
 		Organization organization = new Organization();
 		organization.setName("Description KO");
-		organization.setDescription("Description trop longue de + de 800 caractères ah oui quand même au bout d'un moment" +
-				"j'ai envie de dire enfin voilà quoi après bon. S'il faut meubler autant s'entraîner à la dactilographie n'est-ce pas ? " +
-				"Car ce texte a été écrit à la main pour rendre les tests authentiques de toute manière la façon dont la phrase est tournée" +
-				"n'a que peu d'incidence sur le résultat fonctionnel du TU après tout ? nan je crois que ça se rapproche la ? peut-être pas assez" +
-				"je ne sais pas réellement. J'avoue je m'amuse un peu avec la musique dans les oreilles et tou AAAA quel dommage je devrais" +
-				"écouter du Tenwing ça au moins c'est du lourd, let's go Spotify et Deezer et tout quel artiste de fou et je dis pas ça" +
-				"parce que j'ai un intérêt derrière et tout hehehehehehe. Bon la je fais du padding pour être sûr quoicoubehhhh hein quoi ?" +
-				"hein ? Apagnan enfin ça s'écrit pas comme ça je crois");
+		organization
+				.setDescription("Description trop longue de + de 800 caractères ah oui quand même au bout d'un moment"
+						+ "j'ai envie de dire enfin voilà quoi après bon. S'il faut meubler autant s'entraîner à la dactilographie n'est-ce pas ? "
+						+ "Car ce texte a été écrit à la main pour rendre les tests authentiques de toute manière la façon dont la phrase est tournée"
+						+ "n'a que peu d'incidence sur le résultat fonctionnel du TU après tout ? nan je crois que ça se rapproche la ? peut-être pas assez"
+						+ "je ne sais pas réellement. J'avoue je m'amuse un peu avec la musique dans les oreilles et tou AAAA quel dommage je devrais"
+						+ "écouter du Tenwing ça au moins c'est du lourd, let's go Spotify et Deezer et tout quel artiste de fou et je dis pas ça"
+						+ "parce que j'ai un intérêt derrière et tout hehehehehehe. Bon la je fais du padding pour être sûr quoicoubehhhh hein quoi ?"
+						+ "hein ? Apagnan enfin ça s'écrit pas comme ça je crois");
 		organization.setOpeningDate(LocalDateTime.now());
 
 		User userOrganisation = new User();
@@ -303,7 +311,8 @@ class OrganizationServiceUT {
 
 		Organization organization = new Organization();
 		organization.setName("Url OK");
-		organization.setUrl("https://mavieskoa?query=recherche+trop+longue+faut+pas+faire+ca+surtout+que+je+renvoie+oui.com");
+		organization.setUrl(
+				"https://mavieskoa?query=recherche+trop+longue+faut+pas+faire+ca+surtout+que+je+renvoie+oui.com");
 		organization.setOpeningDate(LocalDateTime.now());
 
 		User userOrganisation = new User();
@@ -324,7 +333,8 @@ class OrganizationServiceUT {
 		criteria.setUuid(created.getUuid());
 		Page<Organization> organizations = organizationService.searchOrganizations(criteria, Pageable.unpaged());
 		assertTrue(organizations.get().anyMatch(collected -> collected.getName().equals(organization.getName())));
-		assertTrue(organizations.get().anyMatch(collected -> collected.getOpeningDate().equals(organization.getOpeningDate())));
+		assertTrue(organizations.get()
+				.anyMatch(collected -> collected.getOpeningDate().equals(organization.getOpeningDate())));
 	}
 
 	@Test
@@ -374,22 +384,18 @@ class OrganizationServiceUT {
 		mockExternalCalls();
 
 		val newOrga = createTestOrganization();
-		//Création du membre de l'organisation
+		// Création du membre de l'organisation
 		val member = createOrganizationMember(newOrga, OrganizationRole.ADMINISTRATOR);
-		//Création de la date custom
+		// Création de la date custom
 		LocalDateTime adminAddedDate = LocalDateTime.of(2023, Month.JANUARY, 8, 13, 19, 16, 0);
 		member.setAddedDate(adminAddedDate);
 		organizationService.addOrganizationMember(newOrga.getUuid(), member);
 
-		//Vérification que le user de l'organisation est bien créé et que sa date est bien set par défaut.
+		// Vérification que le user de l'organisation est bien créé et que sa date est bien set par défaut.
 		val members = organizationService.getOrganizationMembers(newOrga.getUuid());
-		assertThat(members)
-				.as("L'organisation a des membres")
-				.isNotEmpty();
+		assertThat(members).as("L'organisation a des membres").isNotEmpty();
 		for (OrganizationMember aMember : members) {
-			assertThat(aMember.getAddedDate())
-					.as("La date ne doit pas être nulle")
-					.isNotNull();
+			assertThat(aMember.getAddedDate()).as("La date ne doit pas être nulle").isNotNull();
 
 			assertThat(aMember.getAddedDate().truncatedTo(ChronoUnit.HOURS))
 					.as("La date d'ajout doit être égale à celle du jour à l'heure près.")
@@ -408,29 +414,24 @@ class OrganizationServiceUT {
 
 		organizationService.addOrganizationMember(savedOrganization.getUuid(), organizationEditor);
 		List<OrganizationMember> members = organizationService.getOrganizationMembers(savedOrganization.getUuid());
-		assertThat(members)
-				.as("Il existe un membre au moins")
-				.isNotEmpty();
+		assertThat(members).as("Il existe un membre au moins").isNotEmpty();
 
 		OrganizationMember member = members.stream()
 				.filter(organizationMember -> organizationMember.getUserUuid().equals(organizationEditor.getUserUuid()))
 				.findFirst().orElse(null);
 
-		assertThat(member.getUserUuid())
-				.as("L'editeur fait bien partie de la liste des membres")
+		assertThat(member.getUserUuid()).as("L'editeur fait bien partie de la liste des membres")
 				.isEqualByComparingTo(organizationEditor.getUserUuid());
 
 		// Update du rôle EDITOR => ADMIN
 		organizationEditor.setRole(OrganizationRole.ADMINISTRATOR);
-		val memberUpdated = organizationService
-				.updateOrganizationMember(savedOrganization.getUuid(), organizationEditor.getUserUuid(), organizationEditor);
+		val memberUpdated = organizationService.updateOrganizationMember(savedOrganization.getUuid(),
+				organizationEditor.getUserUuid(), organizationEditor);
 
-		assertThat(memberUpdated.getUserUuid())
-				.as("C'est bien le membre visé qui a été modifié")
+		assertThat(memberUpdated.getUserUuid()).as("C'est bien le membre visé qui a été modifié")
 				.isEqualByComparingTo(organizationEditor.getUserUuid());
 
-		assertThat(memberUpdated.getRole())
-				.as("On est passé de EDITOR => ADMIN")
+		assertThat(memberUpdated.getRole()).as("On est passé de EDITOR => ADMIN")
 				.isEqualByComparingTo(OrganizationRole.ADMINISTRATOR);
 	}
 
@@ -446,32 +447,29 @@ class OrganizationServiceUT {
 
 		organizationService.addOrganizationMember(savedOrganization.getUuid(), admin1);
 		List<OrganizationMember> members = organizationService.getOrganizationMembers(savedOrganization.getUuid());
-		assertThat(members)
-				.as("Il existe un membre au moins")
-				.isNotEmpty();
+		assertThat(members).as("Il existe un membre au moins").isNotEmpty();
 
 		OrganizationMember member = members.stream()
-				.filter(organizationMember -> organizationMember.getUserUuid().equals(admin1.getUserUuid()))
-				.findFirst().orElse(null);
+				.filter(organizationMember -> organizationMember.getUserUuid().equals(admin1.getUserUuid())).findFirst()
+				.orElse(null);
 
-		assertThat(member.getUserUuid())
-				.as("L'editeur fait bien partie de la liste des membres")
+		assertThat(member.getUserUuid()).as("L'editeur fait bien partie de la liste des membres")
 				.isEqualByComparingTo(admin1.getUserUuid());
 
 		// Update du rôle EDITOR => ADMIN
 		admin1.setRole(OrganizationRole.EDITOR);
 		// On tente de faire passer le dernier admin en EDITOR => Exception
-		assertThrows(CannotRemoveLastAdministratorException.class, () -> organizationService.updateOrganizationMember(savedOrganization.getUuid(), admin1.getUserUuid(), admin1));
+		assertThrows(CannotRemoveLastAdministratorException.class, () -> organizationService
+				.updateOrganizationMember(savedOrganization.getUuid(), admin1.getUserUuid(), admin1));
 
 		// On ajoute un second admin puis retente de faire passer le 1 en EDITOR => OK
 		organizationService.addOrganizationMember(savedOrganization.getUuid(), admin2);
-		val memberUpdated = organizationService.updateOrganizationMember(savedOrganization.getUuid(), admin1.getUserUuid(), admin1);
-		assertThat(memberUpdated.getUserUuid())
-				.as("C'est bien le membre visé qui a été modifié")
+		val memberUpdated = organizationService.updateOrganizationMember(savedOrganization.getUuid(),
+				admin1.getUserUuid(), admin1);
+		assertThat(memberUpdated.getUserUuid()).as("C'est bien le membre visé qui a été modifié")
 				.isEqualByComparingTo(admin1.getUserUuid());
 
-		assertThat(memberUpdated.getRole())
-				.as("On est passé de EDITOR => ADMIN")
+		assertThat(memberUpdated.getRole()).as("On est passé de EDITOR => ADMIN")
 				.isEqualByComparingTo(OrganizationRole.EDITOR);
 	}
 
@@ -490,22 +488,17 @@ class OrganizationServiceUT {
 		organizationService.addOrganizationMember(savedOrganization.getUuid(), editor1);
 
 		var oldMembers = organizationService.getOrganizationMembers(savedOrganization.getUuid());
-		assertThat(oldMembers.size())
-				.as("Il y a 3 membres, les 2 ajoutés + le ROBOT")
-				.isEqualTo(4);
+		assertThat(oldMembers.size()).as("Il y a 3 membres, les 2 ajoutés + le ROBOT").isEqualTo(4);
 
 		// Suppression d'un ADMINISTRATOR
 		organizationService.removeOrganizationMembers(savedOrganization.getUuid(), admin1.getUserUuid());
 		var newMembers = organizationService.getOrganizationMembers(savedOrganization.getUuid());
 
-
-		assertThat(newMembers.size())
-				.as("On ne doit avoir supprimé qu'un seul membre")
+		assertThat(newMembers.size()).as("On ne doit avoir supprimé qu'un seul membre")
 				.isEqualTo(oldMembers.size() - 1);
 
 		assertThat(newMembers.stream().map(OrganizationMember::getUserUuid).collect(Collectors.toList()))
-				.as("La liste ne doit plus contenir le membre supprimé")
-				.doesNotContain(admin1.getUserUuid());
+				.as("La liste ne doit plus contenir le membre supprimé").doesNotContain(admin1.getUserUuid());
 
 		// Suppression d'un EDITOR
 		organizationService.removeOrganizationMembers(savedOrganization.getUuid(), editor1.getUserUuid());
@@ -527,18 +520,16 @@ class OrganizationServiceUT {
 		organizationService.addOrganizationMember(savedOrganization.getUuid(), admin1);
 
 		var oldMembers = organizationService.getOrganizationMembers(savedOrganization.getUuid());
-		assertThat(oldMembers.size())
-				.as("Il y a 2 membres, l'admin + le ROBOT")
-				.isEqualTo(2);
+		assertThat(oldMembers.size()).as("Il y a 2 membres, l'admin + le ROBOT").isEqualTo(2);
 
 		// Tentative de uppression de l'ADMINISTRATOR
 		// On ne peut supprimer le dernier ADMIN
-		assertThrows(CannotRemoveLastAdministratorException.class, () -> organizationService.removeOrganizationMembers(savedOrganization.getUuid(), admin1.getUserUuid()));
+		assertThrows(CannotRemoveLastAdministratorException.class,
+				() -> organizationService.removeOrganizationMembers(savedOrganization.getUuid(), admin1.getUserUuid()));
 
 		var newMembers = organizationService.getOrganizationMembers(savedOrganization.getUuid());
 
-		assertThat(newMembers.size())
-				.as("L'admin n'a pas été supprimé et aucun autre membre ne l'a été")
+		assertThat(newMembers.size()).as("L'admin n'a pas été supprimé et aucun autre membre ne l'a été")
 				.isEqualTo(oldMembers.size());
 	}
 
@@ -558,13 +549,8 @@ class OrganizationServiceUT {
 		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(true);
 
 		// J'essaye de MAJ les infos d'un autre membre (membre 1) alors que j'ai un DTO qui concerne quelqu'un d'autre (membre 2)
-		assertThrows(
-				AppServiceBadRequestException.class,
-				() -> organizationService.updateOrganizationMember(
-						organization.getUuid(),
-						userUuidFromAnotherUser,
-						updateDto)
-		);
+		assertThrows(AppServiceBadRequestException.class, () -> organizationService
+				.updateOrganizationMember(organization.getUuid(), userUuidFromAnotherUser, updateDto));
 	}
 
 	@Test
@@ -583,18 +569,12 @@ class OrganizationServiceUT {
 		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(true);
 
 		// J'essaye de MAJ les infos d'un membre d'une autre organisation ( orga 1) alors que j'ai un DTO qui concerne l'orga 2
-		assertThrows(
-				AppServiceBadRequestException.class,
-				() -> organizationService.updateOrganizationMember(
-						anotherOne.getUuid(),
-						userUuidModified,
-						updateDto)
-		);
+		assertThrows(AppServiceBadRequestException.class,
+				() -> organizationService.updateOrganizationMember(anotherOne.getUuid(), userUuidModified, updateDto));
 	}
 
 	@Test
-	void updateOrganizationMember_unauthorized_when_not_administrator_of_organization()
-			throws AppServiceException {
+	void updateOrganizationMember_unauthorized_when_not_administrator_of_organization() throws AppServiceException {
 
 		Organization organization = createTestOrganization();
 		UUID userUuidModified = UUID.randomUUID();
@@ -607,13 +587,8 @@ class OrganizationServiceUT {
 		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(false);
 
 		// Je suis pas administrateur de l'orga, j'ai pas le droit
-		assertThrows(
-				AppServiceUnauthorizedException.class,
-				() -> organizationService.updateOrganizationMember(
-						organization.getUuid(),
-						userUuidModified,
-						updateDto)
-		);
+		assertThrows(AppServiceUnauthorizedException.class, () -> organizationService
+				.updateOrganizationMember(organization.getUuid(), userUuidModified, updateDto));
 	}
 
 	@Test
@@ -630,7 +605,7 @@ class OrganizationServiceUT {
 
 		var newMembers = organizationService.getOrganizationMembers(organization.getUuid());
 
-		//On ne doit avoir supprimé aucun membre
+		// On ne doit avoir supprimé aucun membre
 		assertEquals(oldMembers, newMembers);
 	}
 
@@ -641,8 +616,7 @@ class OrganizationServiceUT {
 		PasswordUpdate passwordUpdate = new PasswordUpdate();
 		passwordUpdate.setOldPassword("manemajeff");
 		passwordUpdate.setNewPassword("Peut1mp0rt3!");
-		assertThrows(AppServiceForbiddenException.class, () ->
-				organizationService.updateUserOrganizationPassword(UUID.randomUUID(), passwordUpdate)
-		);
+		assertThrows(AppServiceForbiddenException.class,
+				() -> organizationService.updateUserOrganizationPassword(UUID.randomUUID(), passwordUpdate));
 	}
 }

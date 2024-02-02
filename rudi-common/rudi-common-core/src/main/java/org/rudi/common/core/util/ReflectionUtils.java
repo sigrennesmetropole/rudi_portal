@@ -6,17 +6,12 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 public class ReflectionUtils {
-
-	// TODO ajouter le cache + TU
-	private Map<Field, Map<Function<PropertyDescriptor, Method>, Method>> findMethodForCache = new HashMap<>();
 
 	private ReflectionUtils() {
 	}

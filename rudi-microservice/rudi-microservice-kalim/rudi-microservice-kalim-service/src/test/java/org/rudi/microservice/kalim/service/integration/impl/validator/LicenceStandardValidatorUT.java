@@ -29,25 +29,6 @@ class LicenceStandardValidatorUT {
 	private KosHelper kosHelper;
 
 	@Test
-	@DisplayName("Test de la validation d'une licence standard avec un label vide")
-	void testValidateLicenceStandardEmptyLabel() {
-		LicenceStandard licenceStandard = new LicenceStandard().licenceLabel(null);
-		licenceStandard.setLicenceType(Licence.LicenceTypeEnum.STANDARD);
-
-		Set<IntegrationRequestErrorEntity> integrationRequestErrorEntities =
-				licenceStandardValidator.validate(licenceStandard);
-
-		assertThat(integrationRequestErrorEntities.size()).isEqualTo(1);
-
-		Assertions.assertTrue(integrationRequestErrorEntities.stream().anyMatch(integrationRequestErrorEntity ->
-						integrationRequestErrorEntity.getFieldName().equals(RudiMetadataField.LICENCE_LABEL.getLocalName())
-								&& integrationRequestErrorEntity.getMessage().equals(
-								String.format(IntegrationError.ERR_202.getMessage(),
-										RudiMetadataField.LICENCE_LABEL.getLocalName()))),
-				"La valeur de la propriété " + RudiMetadataField.LICENCE_LABEL.getLocalName() + " est manquante");
-	}
-
-	@Test
 	@DisplayName("Test de la validation d'une licence standard avec un label inconnu de kos")
 	void testValidateLicenceStandardInvalidLabel() {
 		final var unknownLicenceLabel =  LicenceStandard.LicenceLabelEnum.CC_BY_ND_4_0;

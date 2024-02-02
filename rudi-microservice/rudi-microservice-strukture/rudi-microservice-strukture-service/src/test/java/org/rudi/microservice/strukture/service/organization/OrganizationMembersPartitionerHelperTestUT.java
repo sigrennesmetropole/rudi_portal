@@ -21,11 +21,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
 import org.rudi.microservice.strukture.service.StruktureSpringBootTest;
@@ -53,6 +55,14 @@ class OrganizationMembersPartitionerHelperTestUT {
 
 	@MockBean
 	private ACLHelper aclHelper;
+
+	@MockBean
+	DatasetService datasetService;
+
+	@AfterEach
+	void tearDown() {
+		organizationDao.deleteAll();
+	}
 
 	@Test
 	void getOrganizationMembersPartition_splits() {

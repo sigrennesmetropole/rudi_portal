@@ -1,5 +1,14 @@
 package org.rudi.microservice.strukture.service.organization;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -22,6 +31,7 @@ import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.strukture.core.bean.OrganizationMemberType;
 import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
@@ -36,21 +46,14 @@ import org.rudi.microservice.strukture.storage.entity.organization.OrganizationR
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
 @StruktureSpringBootTest
 class OrganizationMembersHelperTestUT {
 
 	@Autowired
 	private OrganizationMembersHelper organizationMembersHelper;
+
+	@Autowired
+	private OrganizationDao organizationDao;
 
 	@MockBean
 	private ACLHelper aclHelper;
@@ -58,8 +61,8 @@ class OrganizationMembersHelperTestUT {
 	@MockBean
 	private UtilContextHelper utilContextHelper;
 
-	@Autowired
-	private OrganizationDao organizationDao;
+	@MockBean
+	DatasetService datasetService;
 
 	@AfterEach
 	public void cleanData() {
@@ -178,11 +181,8 @@ class OrganizationMembersHelperTestUT {
 		Map<UUID, OrganizationMemberEntity> membersByUserUuid = members.stream()
 				.collect(Collectors.toMap(OrganizationMemberEntity::getUserUuid, Function.identity()));
 
-		User user = new User().login("okmec")
-				.firstname("monprénom")
-				.lastname("monnomdefamille")
-				.uuid(member.getUserUuid())
-				.lastConnexion(LocalDateTime.now());
+		User user = new User().login("okmec").firstname("monprénom").lastname("monnomdefamille")
+				.uuid(member.getUserUuid()).lastConnexion(LocalDateTime.now());
 		List<User> users = List.of(user);
 		Map<UUID, User> usersByUuid = users.stream().collect(Collectors.toMap(User::getUuid, Function.identity()));
 
@@ -272,11 +272,8 @@ class OrganizationMembersHelperTestUT {
 		OrganizationMemberEntity member2 = new OrganizationMemberEntity();
 		member2.setUserUuid(robot.getUuid());
 
-		when(
-				aclHelper.searchUsersWithCriteria(
-						eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(UserType.PERSON.getValue())
-				)
-		).thenReturn(List.of(person));
+		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(),
+				eq(UserType.PERSON.getValue()))).thenReturn(List.of(person));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
 		assertEquals(1, users.size());
@@ -298,11 +295,8 @@ class OrganizationMembersHelperTestUT {
 		OrganizationMemberEntity member2 = new OrganizationMemberEntity();
 		member2.setUserUuid(robot.getUuid());
 
-		when(
-				aclHelper.searchUsersWithCriteria(
-						eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(UserType.ROBOT.getValue())
-				)
-		).thenReturn(List.of(robot));
+		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(),
+				eq(UserType.ROBOT.getValue()))).thenReturn(List.of(robot));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
 		assertEquals(1, users.size());
@@ -313,8 +307,10 @@ class OrganizationMembersHelperTestUT {
 	@Test
 	@DisplayName("Cherche un user dans ACL à partir de son login ou de son uuid. On ne passe pas aucun des 2 paramètres de recherche ici")
 	void getUserByLoginOrByUuid_none_parameter() {
-		assertThrowsExactly(MissingParameterException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("", null));
-		assertThrowsExactly(MissingParameterException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid(null, null));
+		assertThrowsExactly(MissingParameterException.class,
+				() -> organizationMembersHelper.getUserByLoginOrByUuid("", null));
+		assertThrowsExactly(MissingParameterException.class,
+				() -> organizationMembersHelper.getUserByLoginOrByUuid(null, null));
 	}
 
 	@Test
@@ -324,14 +320,17 @@ class OrganizationMembersHelperTestUT {
 		when(aclHelper.getUserByUUID(UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a"))).thenReturn(myUser);
 
 		// On recherche un userUuid aléatoire => UserNotFoundException
-		assertThrowsExactly(UserNotFoundException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("", UUID.randomUUID()));
+		assertThrowsExactly(UserNotFoundException.class,
+				() -> organizationMembersHelper.getUserByLoginOrByUuid("", UUID.randomUUID()));
 
 		// On recherche un userUuid correct mais un login aléatoire => UserNotFoundException
-		assertThrowsExactly(UserNotFoundException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("", UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a")));
+		assertThrowsExactly(UserNotFoundException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("",
+				UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a")));
 
-		assertThat(organizationMembersHelper.getUserByLoginOrByUuid(null, UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a")).getUuid())
-				.as("L'uuid passé correspond à notre user mocké et on ne passe pas de login")
-				.isEqualByComparingTo(myUser.getUuid());
+		assertThat(organizationMembersHelper
+				.getUserByLoginOrByUuid(null, UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a")).getUuid())
+						.as("L'uuid passé correspond à notre user mocké et on ne passe pas de login")
+						.isEqualByComparingTo(myUser.getUuid());
 	}
 
 	@Test
@@ -341,14 +340,15 @@ class OrganizationMembersHelperTestUT {
 		when(aclHelper.getUserByLogin("user-test")).thenReturn(myUser);
 
 		// On recherche un login aléatoire => UserNotFoundException
-		assertThrowsExactly(UserNotFoundException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("azerty", null));
+		assertThrowsExactly(UserNotFoundException.class,
+				() -> organizationMembersHelper.getUserByLoginOrByUuid("azerty", null));
 
 		// On recherche un login correct mais un userUuid aléatoire => UserNotFoundException
-		assertThrowsExactly(UserNotFoundException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("user-test", UUID.randomUUID()));
+		assertThrowsExactly(UserNotFoundException.class,
+				() -> organizationMembersHelper.getUserByLoginOrByUuid("user-test", UUID.randomUUID()));
 
 		assertThat(organizationMembersHelper.getUserByLoginOrByUuid("user-test", null).getUuid())
-				.as("Le login passé correspond à notre user mocké")
-				.isEqualByComparingTo(myUser.getUuid());
+				.as("Le login passé correspond à notre user mocké").isEqualByComparingTo(myUser.getUuid());
 	}
 
 	@Test
@@ -359,11 +359,13 @@ class OrganizationMembersHelperTestUT {
 		when(aclHelper.getUserByUUID(UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a"))).thenReturn(myUser);
 
 		// On passe un login aléatoire et un uuid alétoire => UserNotFoundException
-		assertThrowsExactly(UserNotFoundException.class, () -> organizationMembersHelper.getUserByLoginOrByUuid("azerty", UUID.randomUUID()));
+		assertThrowsExactly(UserNotFoundException.class,
+				() -> organizationMembersHelper.getUserByLoginOrByUuid("azerty", UUID.randomUUID()));
 
-		assertThat(organizationMembersHelper.getUserByLoginOrByUuid("user-test", UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a")).getUuid())
-				.as("Le login passé est correct et l'uuid aussi, notre user mocké est donc bien retrouvé")
-				.isEqualByComparingTo(myUser.getUuid());
+		assertThat(organizationMembersHelper
+				.getUserByLoginOrByUuid("user-test", UUID.fromString("2acbc550-81eb-4710-8ee3-15c4af42c74a")).getUuid())
+						.as("Le login passé est correct et l'uuid aussi, notre user mocké est donc bien retrouvé")
+						.isEqualByComparingTo(myUser.getUuid());
 	}
 
 	@Test
@@ -382,21 +384,14 @@ class OrganizationMembersHelperTestUT {
 		member2.setUserUuid(uuid2);
 		member2.setRole(OrganizationRole.EDITOR);
 
-
 		OrganizationMemberEntity member3 = new OrganizationMemberEntity();
 		member3.setAddedDate(LocalDateTime.now());
 		member3.setUserUuid(uuid2);
 		member3.setRole(OrganizationRole.ADMINISTRATOR);
 
-
-		assertThat(member1.equals(member1))
-				.as("Les objets sont identiques")
-				.isTrue();
-		assertThat(member1.equals(member2))
-				.as("Les deux membres sont distincts")
-				.isFalse();
-		assertThat(member2.equals(member3))
-				.as("Les 2 membres sont identiques car ils ont des userUuid identiques")
+		assertThat(member1.equals(member1)).as("Les objets sont identiques").isTrue();
+		assertThat(member1.equals(member2)).as("Les deux membres sont distincts").isFalse();
+		assertThat(member2.equals(member3)).as("Les 2 membres sont identiques car ils ont des userUuid identiques")
 				.isTrue();
 	}
 
@@ -433,6 +428,7 @@ class OrganizationMembersHelperTestUT {
 		assertDoesNotThrow(() -> organizationMembersHelper.checkUserIsNotMember(saved, member2));
 		saved.getMembers().add(member2);
 		// On a ajouté le membre et tentons d'ajouter le 3 sauf que membre2.equals(membre2) => Exception
-		assertThrowsExactly(UserIsAlreadyOrganizationMemberException.class, () -> organizationMembersHelper.checkUserIsNotMember(saved, member3));
+		assertThrowsExactly(UserIsAlreadyOrganizationMemberException.class,
+				() -> organizationMembersHelper.checkUserIsNotMember(saved, member3));
 	}
 }

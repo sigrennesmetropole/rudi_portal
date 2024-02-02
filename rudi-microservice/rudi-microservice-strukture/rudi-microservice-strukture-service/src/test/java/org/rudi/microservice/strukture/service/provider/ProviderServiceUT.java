@@ -16,6 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.strukture.core.bean.AbstractAddress;
 import org.rudi.microservice.strukture.core.bean.AddressRole;
 import org.rudi.microservice.strukture.core.bean.AddressType;
@@ -32,6 +33,7 @@ import org.rudi.microservice.strukture.storage.dao.address.AbstractAddressDao;
 import org.rudi.microservice.strukture.storage.dao.address.AddressRoleDao;
 import org.rudi.microservice.strukture.storage.dao.provider.ProviderDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -56,6 +58,9 @@ class ProviderServiceUT {
 
 	@Autowired
 	private AbstractAddressDao abstractAddressDao;
+
+	@MockBean
+	DatasetService datasetService;
 
 	// données insérées en base before test
 	private Provider transportProvider;

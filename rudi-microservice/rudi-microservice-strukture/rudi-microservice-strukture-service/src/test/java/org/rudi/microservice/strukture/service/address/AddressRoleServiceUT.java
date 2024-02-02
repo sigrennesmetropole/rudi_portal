@@ -10,12 +10,14 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.strukture.core.bean.AddressRole;
 import org.rudi.microservice.strukture.core.bean.AddressRoleSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.AddressType;
 import org.rudi.microservice.strukture.service.StruktureSpringBootTest;
 import org.rudi.microservice.strukture.storage.dao.address.AddressRoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 /**
  * Class de test du service AddressRoleService
@@ -29,6 +31,9 @@ class AddressRoleServiceUT {
 
 	@Autowired
 	private AddressRoleDao addressRoleDao;
+
+	@MockBean
+	DatasetService datasetService;
 
 	private AddressRole roleSiteWebProjet;
 	private AddressRole roleMailHotline;

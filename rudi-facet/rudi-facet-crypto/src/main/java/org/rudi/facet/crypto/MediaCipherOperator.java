@@ -11,10 +11,13 @@ import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.spec.GCMParameterSpec;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Chiffrement et déchiffrement de média chiffré par la clé publique RUDI.
  */
 // Sources initiales : https://www.baeldung.com/java-aes-encryption-decryption + https://mkyong.com/java/java-aes-encryption-and-decryption/
+@Slf4j
 public class MediaCipherOperator extends CipherOperator {
 
 	private final RudiAlgorithmSpec spec;
@@ -49,17 +52,24 @@ public class MediaCipherOperator extends CipherOperator {
 
 	private FirstBlock decryptFirstBlock(InputStream encryptedStream, Key privateKey, RudiAlgorithmSpec rudiSpec) throws GeneralSecurityException, IOException {
 		final var encryptedFirstBlock = new byte[rudiSpec.firstBlockSpec.getFirstBlockSizeInBytes()];
-		encryptedStream.read(encryptedFirstBlock);
+		int count;
+		int offset = 0;
+		while ((count = encryptedStream.read(encryptedFirstBlock,offset, encryptedFirstBlock.length - offset)) > 0){
+			offset += count;
+			if(offset >= encryptedFirstBlock.length){
+				break;
+			}
+		}
 		return firstBlockCipherOperator.decrypt(encryptedFirstBlock, privateKey);
 	}
 
 	public static void main(String[] args) throws Exception {
 		if (args.length != 3) {
-			System.err.println("Usage : encrypt  PUBLIC_KEY_PATH FILE");
-			System.err.println("   or : decrypt PRIVATE_KEY_PATH FILE");
-			System.err.println("Encrypt or decrypt a file.");
-			System.err.println("");
-			System.err.println("MODE : \"encrypt\" or \"decrypt\"");
+			log.error("Usage : encrypt  PUBLIC_KEY_PATH FILE");
+			log.error("   or : decrypt PRIVATE_KEY_PATH FILE");
+			log.error("Encrypt or decrypt a file.");
+			log.error("");
+			log.error("MODE : \"encrypt\" or \"decrypt\"");
 			System.exit(1);
 		}
 
@@ -87,7 +97,7 @@ public class MediaCipherOperator extends CipherOperator {
 			}
 		}
 
-		System.out.println("Output file path : " + outputFilePath);
+		log.error("Output file path : " + outputFilePath);
 	}
 
 }

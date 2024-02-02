@@ -158,7 +158,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 						}
 					});
 				}
-				log.info("Assignees : {}",assignees);
+				log.info("liste des producers owner : {}",assignees);
 
 				if (eMailData != null) {
 					sendEMail(executionEntity, assetDescription, eMailData, assigneeEmails, null);
@@ -241,7 +241,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 					}
 				}
 			}
-			log.info("Assignees : {}",userList);
+			log.info("email sent to users : {}",userList);
 
 			if (eMailData != null) {
 				sendEMail(executionEntity, assetDescription, eMailData, assigneeEmails, null);
@@ -281,7 +281,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 					}
 				}
 			}
-			log.info("Assignees : {}", userRole);
+			log.info("email sent to users with roles : {}", userRole);
 
 			if (eMailData != null) {
 				sendEMail(executionEntity, assetDescription, eMailData, assigneeEmails, null);

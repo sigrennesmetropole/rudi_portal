@@ -17,6 +17,6 @@ import org.springframework.test.context.TestPropertySource;
 @Inherited
 @SpringBootTest(classes = { SpringBootTestApplication.class })
 @TestPropertySource(properties = "spring.config.name = apimaccess")
-@ActiveProfiles(profiles = { "test", "${spring.profiles.test:test-env" })
+@ActiveProfiles(profiles = { "test", "${spring.profiles.test:test-env}" })
 public @interface ApimaccessSpringBootTest {
 }

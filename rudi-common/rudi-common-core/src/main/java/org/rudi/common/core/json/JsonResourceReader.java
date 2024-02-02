@@ -6,13 +6,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.io.Resource;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
+import org.springframework.core.io.Resource;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 
@@ -42,7 +41,7 @@ public class JsonResourceReader {
 	public JsonResourceReader(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder,
 			SubTypeRegister subTypeRegister) {
 		if (subTypeRegister != null) {
-			jackson2ObjectMapperBuilder.postConfigurer(objectMapper -> subTypeRegister.addSubTypes(objectMapper));
+			jackson2ObjectMapperBuilder.postConfigurer(subTypeRegister::addSubTypes);
 		}
 		this.objectMapper = jackson2ObjectMapperBuilder.build();
 	}

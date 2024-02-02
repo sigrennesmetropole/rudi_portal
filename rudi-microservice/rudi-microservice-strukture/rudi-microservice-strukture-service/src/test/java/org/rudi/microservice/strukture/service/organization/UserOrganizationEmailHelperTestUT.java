@@ -1,9 +1,16 @@
 package org.rudi.microservice.strukture.service.organization;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -17,20 +24,13 @@ import org.rudi.facet.email.EMailService;
 import org.rudi.facet.generator.exception.GenerationException;
 import org.rudi.facet.generator.exception.GenerationModelNotFoundException;
 import org.rudi.facet.generator.text.impl.TemplateGeneratorImpl;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.strukture.service.StruktureSpringBootTest;
 import org.rudi.microservice.strukture.service.helper.UserOrganizationEmailHelper;
 import org.rudi.microservice.strukture.storage.entity.organization.OrganizationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @StruktureSpringBootTest
 public class UserOrganizationEmailHelperTestUT {
@@ -44,14 +44,17 @@ public class UserOrganizationEmailHelperTestUT {
 	@MockBean
 	private EMailService eMailService;
 
+	@MockBean
+	DatasetService datasetService;
+
 	@Value("${email.organization.password.update.mock}")
 	private String organizationPasswordUpdateMock;
 
 	@Test
 	void sendUserOrganizationUpdatePasswordConfirmation_fails_on_bad_calling() {
 
-		assertThrows(IllegalArgumentException.class, () -> userOrganizationEmailHelper
-				.sendUserOrganizationUpdatePasswordConfirmation(null, null, null));
+		assertThrows(IllegalArgumentException.class,
+				() -> userOrganizationEmailHelper.sendUserOrganizationUpdatePasswordConfirmation(null, null, null));
 
 		assertThrows(IllegalArgumentException.class, () -> userOrganizationEmailHelper
 				.sendUserOrganizationUpdatePasswordConfirmation(null, null, Locale.FRENCH));
@@ -74,8 +77,8 @@ public class UserOrganizationEmailHelperTestUT {
 		assertDoesNotThrow(() -> userOrganizationEmailHelper
 				.sendUserOrganizationUpdatePasswordConfirmation(new OrganizationEntity(), null, Locale.FRENCH));
 
-		assertDoesNotThrow(() -> userOrganizationEmailHelper
-				.sendUserOrganizationUpdatePasswordConfirmation(new OrganizationEntity(), new ArrayList<>(), Locale.FRENCH));
+		assertDoesNotThrow(() -> userOrganizationEmailHelper.sendUserOrganizationUpdatePasswordConfirmation(
+				new OrganizationEntity(), new ArrayList<>(), Locale.FRENCH));
 	}
 
 	@Test
@@ -119,10 +122,8 @@ public class UserOrganizationEmailHelperTestUT {
 		user.setUuid(UUID.randomUUID());
 		users.add(user);
 
-		when(templateGenerator.generateDocument(any())).thenReturn(new DocumentContent(
-					ContentType.TEXT_HTML.toString(), new File(organizationPasswordUpdateMock)
-				)
-		);
+		when(templateGenerator.generateDocument(any())).thenReturn(
+				new DocumentContent(ContentType.TEXT_HTML.toString(), new File(organizationPasswordUpdateMock)));
 
 		userOrganizationEmailHelper.sendUserOrganizationUpdatePasswordConfirmation(organization, users, Locale.FRENCH);
 
