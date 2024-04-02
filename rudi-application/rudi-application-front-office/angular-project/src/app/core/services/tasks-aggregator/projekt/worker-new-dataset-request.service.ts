@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {RequestToStudy} from '../request-to-study.interface';
-import {Task} from '../../../../api-bpmn';
-import {WorkerService} from '../worker.service';
-import {NewDatasetRequest} from '../../../../projekt/projekt-model';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {NewDatasetRequest} from 'micro_service_modules/projekt/projekt-model';
 import {
     NewDatasetRequestDependencies,
     NewDatasetRequestTask,
     NewDatasetRequestTaskDepenciesService,
     NewDatasetRequestTaskDependencyFetchers
 } from '../../tasks/projekt/new-dataset-request-task-depencies.service';
-import {SelfdataInformationRequestDependencies} from '../../tasks/selfdata/selfdata-information-request-task-dependencies.service';
 import {ProjektTaskSearchCriteria} from '../../tasks/projekt/projekt-task-search-criteria.interface';
+import {SelfdataInformationRequestDependencies} from '../../tasks/selfdata/selfdata-information-request-task-dependencies.service';
+import {RequestToStudy} from '../request-to-study.interface';
+import {WorkerService} from '../worker.service';
 
 
 @Injectable({

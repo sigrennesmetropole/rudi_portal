@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {SearchAutocompleteItem} from './search-autocomplete-item.interface';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {SearchAutocompleteItem} from './search-autocomplete-item.interface';
 
 @Component({
     selector: 'app-search-autocomplete',

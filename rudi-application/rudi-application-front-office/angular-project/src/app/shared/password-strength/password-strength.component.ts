@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, SimpleChange} from '@angular/core';
-import {PasswordStrengthCriterion} from './password-strength-criterion';
-import {PasswordStrengthCriteria} from './password-strength-criteria';
 import {Validators} from '@angular/forms';
+import {PasswordStrengthCriteria} from './password-strength-criteria';
+import {PasswordStrengthCriterion} from './password-strength-criterion';
 
 @Component({
     selector: 'app-password-strength',

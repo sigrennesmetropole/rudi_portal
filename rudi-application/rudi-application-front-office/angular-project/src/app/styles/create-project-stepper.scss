@@ -1,5 +1,5 @@
-@import "./variables-rudi";
-@import "./common-style";
+@import "variables-rudi";
+@import "common-style";
 
 @mixin button-blue {
     background-color: $primary-color;
@@ -429,10 +429,4 @@ mat-error {
     .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
         color: $primary-color;
     }
-
-    .mat-select-value,
-    input[matinput] {
-        @include centered-mat-field-label;
-    }
-
 }

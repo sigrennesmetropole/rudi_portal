@@ -1,5 +1,5 @@
-<div class="container-global my-3" (click)="handleClickOnDatasetCard(currentJddId)">
-    <div class="logo-container text-md-center" *ngIf="showLogo">
+<div class="container-global my-3" (click)="handleClickOnDatasetCard(currentJddId, resourceTitle)">
+    <div class="logo-container" *ngIf="showLogo">
         <app-organization-logo [organizationId]="organizationId"
                                [isANewRequest]="isANewRequest"
                                cssClass="with-border"
@@ -8,12 +8,14 @@
     </div>
     <div class="text-container">
         <div class="dataset-info">
-            <div class="dataset-info-organization_name"><span *ngIf="organizationName">{{organizationName}}</span></div>
+            <div class="dataset-info-organization_name"><span *ngIf="organizationName">{{ organizationName }}</span>
+            </div>
             <div *ngIf="resourceTitle"
                  class="dataset-info-resource_title">
                 <mat-icon [svgIcon]="restrictedDatasetIcon" *ngIf="isRestricted"
                           class="svg-style"></mat-icon>
-                {{resourceTitle}}</div>
+                {{ resourceTitle }}
+            </div>
         </div>
     </div>
 </div>

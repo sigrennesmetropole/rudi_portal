@@ -1,10 +1,13 @@
 package org.rudi.microservice.strukture.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.helper.ControllerHelper;
@@ -27,10 +30,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADMINISTRATOR;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,9 +41,9 @@ public class ProvidersController implements ProvidersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + "," + MODULE + ")")
-	public ResponseEntity<ProviderPageResult> searchProviders(@Valid String code, @Valid String libelle,
-			@Valid LocalDateTime dateDebut, @Valid java.time.LocalDateTime dateFin, @Valid UUID nodeProviderUuid,
-			@Valid Boolean full, @Valid Integer offset, @Valid Integer limit, @Valid String order) {
+	public ResponseEntity<ProviderPageResult> searchProviders(String code, String libelle, LocalDateTime dateDebut,
+			java.time.LocalDateTime dateFin, UUID nodeProviderUuid, Boolean full, Integer offset, Integer limit,
+			String order) {
 		ProviderSearchCriteria searchCriteria = new ProviderSearchCriteria();
 		searchCriteria.setCode(code);
 		searchCriteria.setLabel(libelle);
@@ -65,19 +64,19 @@ public class ProvidersController implements ProvidersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<AbstractAddress> createAddress(UUID providerUuid, @Valid AbstractAddress abstractAddress) {
+	public ResponseEntity<AbstractAddress> createAddress(UUID providerUuid, AbstractAddress abstractAddress) {
 		return ResponseEntity.ok(providerService.createAddress(providerUuid, abstractAddress));
 	}
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<NodeProvider> createNode(UUID providerUuid, @Valid NodeProvider nodeProvider) {
+	public ResponseEntity<NodeProvider> createNode(UUID providerUuid, NodeProvider nodeProvider) {
 		return ResponseEntity.ok(providerService.createNode(providerUuid, nodeProvider));
 	}
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<Provider> createProvider(@Valid Provider provider) {
+	public ResponseEntity<Provider> createProvider(Provider provider) {
 		return ResponseEntity.ok(providerService.createProvider(provider));
 	}
 
@@ -103,7 +102,8 @@ public class ProvidersController implements ProvidersApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> deleteProviderMediaByType(UUID providerUuid, KindOfData kindOfData) throws AppServiceException {
+	public ResponseEntity<Void> deleteProviderMediaByType(UUID providerUuid, KindOfData kindOfData)
+			throws AppServiceException {
 		providerService.deleteMedia(providerUuid, kindOfData);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -153,24 +153,25 @@ public class ProvidersController implements ProvidersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<AbstractAddress> updateAddress(UUID providerUuid, @Valid AbstractAddress abstractAddress) {
+	public ResponseEntity<AbstractAddress> updateAddress(UUID providerUuid, AbstractAddress abstractAddress) {
 		return ResponseEntity.ok(providerService.updateAddress(providerUuid, abstractAddress));
 	}
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<NodeProvider> updateNode(UUID providerUuid, @Valid NodeProvider nodeProvider) {
+	public ResponseEntity<NodeProvider> updateNode(UUID providerUuid, NodeProvider nodeProvider) {
 		return ResponseEntity.ok(providerService.updateNode(providerUuid, nodeProvider));
 	}
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + "," + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<Provider> updateProvider(@Valid Provider provider) {
+	public ResponseEntity<Provider> updateProvider(Provider provider) {
 		return ResponseEntity.ok(providerService.updateProvider(provider));
 	}
 
 	@Override
-	public ResponseEntity<Void> uploadProviderMediaByType(UUID providerUuid, KindOfData kindOfData, Resource body) throws Exception {
+	public ResponseEntity<Void> uploadProviderMediaByType(UUID providerUuid, KindOfData kindOfData, Resource body)
+			throws Exception {
 		providerService.uploadMedia(providerUuid, kindOfData, body);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

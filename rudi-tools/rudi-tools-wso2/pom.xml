@@ -5,18 +5,20 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-tools</artifactId>
-		<version>1.2.4</version>
+		<version>2.0.0</version>
 	</parent>
 	<artifactId>org.rudi.wso2.userstore</artifactId>
 	<version>0.0.1</version>
 	<packaging>bundle</packaging>
-	<name>RUDI Jdbc User Store</name>
+	<name>rudi-tools-wso2</name>
 
 	<properties>
-		<carbon.version>4.6.0</carbon.version>
+		<carbon.version>4.10.9</carbon.version>
 		<carbon.user.imp.pkg.version>[4.0.0,5.0.0)</carbon.user.imp.pkg.version>
 		<osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
 		<osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
+		<synapse.version>4.0.0-wso2v62</synapse.version>
+		<wso2.vault.version>1.1.8</wso2.vault.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -44,13 +46,20 @@
 		<dependency>
 			<groupId>org.apache.synapse</groupId>
 			<artifactId>synapse-core</artifactId>
-			<version>3.0.1</version>
+			<version>${synapse.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.synapse/synapse-commons -->
+		<!--
+		https://mvnrepository.com/artifact/org.apache.synapse/synapse-commons -->
 		<dependency>
 			<groupId>org.apache.synapse</groupId>
 			<artifactId>synapse-commons</artifactId>
-			<version>3.0.1</version>
+			<version>${synapse.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.wso2.securevault</groupId>
+			<artifactId>org.wso2.securevault</artifactId>
+			<version>${wso2.vault.version}</version>
 		</dependency>
 
 	</dependencies>

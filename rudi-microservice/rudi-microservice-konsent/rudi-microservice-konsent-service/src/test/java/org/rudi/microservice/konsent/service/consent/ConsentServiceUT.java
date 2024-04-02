@@ -1,18 +1,5 @@
 package org.rudi.microservice.konsent.service.consent;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +16,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.rudi.common.core.DocumentContent;
+import org.mockito.InjectMocks;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.UserType;
@@ -42,9 +29,6 @@ import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.buckets3.DocumentStorageService;
 import org.rudi.facet.buckets3.exception.DocumentStorageException;
-import org.rudi.facet.generator.pdf.exception.ConvertorException;
-import org.rudi.facet.generator.pdf.exception.SignerException;
-import org.rudi.facet.generator.pdf.exception.ValidationException;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.microservice.konsent.core.bean.Consent;
 import org.rudi.microservice.konsent.core.bean.ConsentSearchCriteria;
@@ -62,6 +46,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 /**
  * Class de test du ConsentService
@@ -70,9 +64,14 @@ import lombok.val;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ConsentServiceUT {
+
+	@InjectMocks
 	private final ConsentsService consentsService;
+	@InjectMocks
 	private final MyConsentsService myConsentsService;
+	@InjectMocks
 	private final TreatmentsService treatmentsService;
+
 	private final List<TransientDtoReplacerTest> transientDtoReplacers;
 	private final JsonResourceReader jsonResourceReader;
 	private final UtilPageable utilPageable;
@@ -123,7 +122,7 @@ class ConsentServiceUT {
 	// CONFIGURATION DES TESTS
 
 	@BeforeAll
-	private void createTreatmentsInDatabase() throws Exception {
+	public void createTreatmentsInDatabase() throws Exception {
 		createOkTreatments();
 		createKoTreatments();
 	}
@@ -136,7 +135,7 @@ class ConsentServiceUT {
 	/**
 	 * @param jsonPath chemin du fichier JSON
 	 * @return Treatment entity créée en base
-	 * @throws Exception
+	 * @throws Exception e
 	 */
 	private Treatment createTreatmentFromJson(String jsonPath) throws Exception {
 		val treatmentDto = jsonResourceReader.read(jsonPath, Treatment.class);
@@ -150,7 +149,7 @@ class ConsentServiceUT {
 	 * Crée les entiités ou récupère celles qui étaient déjà en BD pour une Version
 	 *
 	 * @param treatmentVersion une version de traitement
-	 * @throws AppServiceException
+	 * @throws AppServiceException erreur lors de la creatio des entities
 	 */
 	private void createEntities(TreatmentVersion treatmentVersion) throws AppServiceException {
 		for (final TransientDtoReplacerTest getterOrCreator : transientDtoReplacers) {
@@ -242,22 +241,22 @@ class ConsentServiceUT {
 	}
 
 	private User setConnectedUser(AuthenticatedUser authenticatedUser, UUID userUuid, List<UUID> organizationUuids)
-			throws AppServiceException, ConvertorException, IOException, ValidationException, SignerException,
+			throws AppServiceException,
 			DocumentStorageException {
-		User user = null;
 
-		if (authenticatedUser != null) {
-			user = authenticatedUserToUser(authenticatedUser, userUuid);
+		if(authenticatedUser == null){
+			mockUnauthenticatedUser();
+			return null;
 		}
-		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
+
+		User user = authenticatedUserToUser(authenticatedUser, userUuid);
+
 		when(aclHelper.getAuthenticatedUserUuid()).thenReturn(userUuid);
 		when(aclHelper.getAuthenticatedUser()).thenReturn(user);
+		when(aclHelper.getUserByLogin(authenticatedUser.getLogin())).thenReturn(user);
+		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 
-		if (authenticatedUser != null) {
-			when(aclHelper.getUserByLogin(authenticatedUser.getLogin())).thenReturn(user);
-		}
-
-		DocumentContent documentContent = new DocumentContent("", new File(""));
+//		DocumentContent documentContent = new DocumentContent("", new File(""));
 		when(organizationHelper.getMyOrganizationsUuids(ownerUuid1)).thenReturn(organizationUuids);
 //		when(pdfConvertor.convertDocx2PDF(any())).thenReturn(documentContent);
 //		when(pdfConvertor.convertPDF2PDFA(any())).thenReturn(documentContent);
@@ -267,6 +266,13 @@ class ConsentServiceUT {
 		return user;
 	}
 
+	private void mockUnauthenticatedUser() throws AppServiceUnauthorizedException {
+		when(utilContextHelper.getAuthenticatedUser()).thenReturn(null);
+		when(aclHelper.getAuthenticatedUser()).thenThrow(AppServiceUnauthorizedException.class);
+		when(aclHelper.getAuthenticatedUserUuid()).thenThrow(AppServiceUnauthorizedException.class);
+	}
+
+
 	private List<Consent> createConsents(List<UUID> treatmentVersionUuids) throws AppServiceException {
 		List<Consent> consents = new ArrayList<>();
 		for (UUID treatmentVersionUuid : treatmentVersionUuids) {
@@ -275,24 +281,14 @@ class ConsentServiceUT {
 		return consents;
 	}
 
-	/**
-	 * Récupèration d'user inconnu/invalide - nul - sans login
-	 *
-	 * @return arguments de type : user
-	 */
-	static Stream<Arguments> getUnknownUser() {
-		return Stream.of(null, Arguments.of(new AuthenticatedUser()));
-	}
 	// ================== Tests POST consent ===========================
 
 	/**
 	 * Consentir avec un utilisateur inconnu => Répondre 401
 	 */
-	@ParameterizedTest
-	@MethodSource("getUnknownUser")
-	void consent_with_unknown_user(AuthenticatedUser user) throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
-		setConnectedUser(null, UUID.randomUUID(), new ArrayList<>());
+	@Test
+	void consent_with_unknown_user() throws AppServiceException {
+		mockUnauthenticatedUser();
 		assertThrows(AppServiceUnauthorizedException.class, () -> consentsService.createConsent(UUID.randomUUID()));
 	}
 
@@ -355,11 +351,9 @@ class ConsentServiceUT {
 	/**
 	 * Rechercher mes consentements sans être un utilisateur connu => 401
 	 */
-	@ParameterizedTest
-	@MethodSource("getUnknownUser")
-	void searchMyConsents_with_unknown_user(AuthenticatedUser user) throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
-		setConnectedUser(user, null, new ArrayList<>());
+	@Test
+	void searchMyConsents_with_unknown_user() throws AppServiceException {
+		mockUnauthenticatedUser();
 		val pageable = utilPageable.getPageable(0, 10, "consentDate");
 		assertThrows(AppServiceUnauthorizedException.class,
 				() -> myConsentsService.searchMyConsents(new ConsentSearchCriteria(), pageable));
@@ -371,7 +365,7 @@ class ConsentServiceUT {
 	@Test
 	void searchMyConsents_with_user_never_consented() throws Exception {
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
-		List<Consent> consents = createConsents(List.of(okTreatmentVersion3Uuid));
+		createConsents(List.of(okTreatmentVersion3Uuid));
 		setConnectedUser(getRandomUser(), UUID.randomUUID(), new ArrayList<>());
 		val pageable = utilPageable.getPageable(0, 10, "consentDate");
 		PagedConsentList page = myConsentsService.searchMyConsents(new ConsentSearchCriteria(), pageable);
@@ -414,6 +408,7 @@ class ConsentServiceUT {
 	/**
 	 * Rechercher mes consentements ayant été émis dans une période donnée => Répondre les consentements donnés dans la période => Ne pas répondre les
 	 * consentements hors de la période
+	 *
 	 */
 	@ParameterizedTest
 	@MethodSource("getValidPeriods")
@@ -502,10 +497,10 @@ class ConsentServiceUT {
 	@Test
 	void searchMyConsents_not_otherConsents() throws Exception {
 		setConnectedUser(getKnownUser(), TREATMENT_OWNER_UUID, new ArrayList<>());
-		List<Consent> myConsents = createConsents(List.of(okTreatmentVersion3Uuid));
+		createConsents(List.of(okTreatmentVersion3Uuid));
 
 		setConnectedUser(getKnownUser2(), UUID.randomUUID(), new ArrayList<>());
-		List<Consent> otherConsents = createConsents(List.of(okTreatmentVersion4Uuid));
+		createConsents(List.of(okTreatmentVersion4Uuid));
 
 		val pageable = utilPageable.getPageable(0, 10, "consentDate");
 
@@ -526,7 +521,7 @@ class ConsentServiceUT {
 
 		// Création de 3 consentements
 		setConnectedUser(getKnownUser(), TREATMENT_OWNER_UUID, new ArrayList<>());
-		List<Consent> myConsents = createConsents(
+		createConsents(
 				List.of(okTreatmentVersion3Uuid, okTreatmentVersion4Uuid, okTreatmentVersion5Uuid));
 
 		// Je cherche mes consentements sur le traitement 3
@@ -592,13 +587,30 @@ class ConsentServiceUT {
 	/**
 	 * Recherche des consentements des autres concernant mes traitements en étant un utilisateur inconnu => Liste vide
 	 */
-	@ParameterizedTest
-	@MethodSource("getUnknownUser")
-	void searchMyTreatmentsConsents_for_unknown_user(AuthenticatedUser user) throws AppServiceException,
-			ValidationException, DocumentStorageException, ConvertorException, IOException, SignerException {
-		setConnectedUser(user, UUID.randomUUID(), new ArrayList<>());
-		val result = consentsService.searchMyTreatmentsConsents(new ConsentSearchCriteria());
-		assertThat(result.getElements()).as("Page de consentements retournée").isEmpty();
+	@Test
+	void searchMyTreatmentsConsents_for_unknown_user() throws AppServiceException {
+		mockUnauthenticatedUser();
+
+		assertThrows(AppServiceUnauthorizedException.class, () -> consentsService.searchMyTreatmentsConsents(new ConsentSearchCriteria()));
+	}
+
+	@Test
+	void revokeConsent() throws DocumentStorageException, AppServiceException {
+		// Un user créé des consentements pour des traitements owné par 1, 3 et l'organisation 2
+		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
+
+		val consents = consentsService.searchMyTreatmentsConsents(new ConsentSearchCriteria());
+		if(CollectionUtils.isNotEmpty(consents.getElements())){
+			consentsService.revokeConsent(consents.getElements().get(0).getUuid());
+		}
+	}
+
+	@Test
+	void revokeConsent_checkConsentValidities_unkonwnConsent() throws DocumentStorageException, AppServiceException {
+		// Un user créé des consentements pour des traitements owné par 1, 3 et l'organisation 2
+		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
+		// vérifie le bon fonctionne de l'algo en cas de UUID ne renvoyant aucun consentement
+		consentsService.checkConsentValidities(List.of(UUID.randomUUID()));
 	}
 
 	/**
@@ -608,8 +620,8 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_user_in_organisation() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_user_in_organisation() throws AppServiceException,
+			DocumentStorageException {
 
 		// Autre user consent, je own le 1 et mon organisation owne le 2
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
@@ -619,7 +631,7 @@ class ConsentServiceUT {
 		// je dis que mon organisation est celle qui owne le traitement 2
 		List<UUID> myOrganizations = List.of(ownerOrganisationUuid2);
 		User user = setConnectedUser(getKnownUser2(), ownerUuid1, myOrganizations);
-
+		assertNotNull(user);
 		// cherche les consentements de mes traitements, et vérifie que j'ai bien ceux que je veux
 		// vérifie également que je suis le owner de chaque traitement OU que mon organisation owne chaque traitement
 		PagedConsentList myTreatmentsConsents = consentsService.searchMyTreatmentsConsents(new ConsentSearchCriteria());
@@ -635,8 +647,8 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_user_not_in_organisation() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_user_not_in_organisation() throws AppServiceException,
+			DocumentStorageException {
 
 		// Je own le traitement 1 uniquement
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
@@ -645,7 +657,7 @@ class ConsentServiceUT {
 		// Quand je récupère les organisations du chercheur, je n'en récupère pas
 		List<UUID> myOrganisations = new ArrayList<>();
 		User user = setConnectedUser(getKnownUser2(), UUID.randomUUID(), myOrganisations);
-
+		assertNotNull(user);
 		// Je vérifie que j'ai bien les consentements que je cherche et que pour chacun d'entre eux
 		// je ne suis que le owner du traitement
 		PagedConsentList myTreatmentsConsents = consentsService.searchMyTreatmentsConsents(new ConsentSearchCriteria());
@@ -663,13 +675,12 @@ class ConsentServiceUT {
 	@Test
 	@Disabled
 	void searchMyTreatmentsConsents_for_user_in_organisation_no_consent_from_other_organisation()
-			throws AppServiceException, ValidationException, DocumentStorageException, ConvertorException, IOException,
-			SignerException {
+			throws AppServiceException, DocumentStorageException {
 
 		// Je own le traitement 1 mais pas le traitement 2, il est own par une organisation que j'ai donc c'est bon
 		// mais le traitement 4 est own par une autre organisation
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
-		List<Consent> otherConsents = createConsents(List.of(okTreatmentVersionUuid, okTreatmentVersion2Uuid));
+		createConsents(List.of(okTreatmentVersionUuid, okTreatmentVersion2Uuid));
 		List<Consent> otherConsentsNotRetrieved = createConsents(List.of(okTreatmentVersion4Uuid));
 
 		// Quand je récupère les organisations du chercheur, je ne récupère que celle qui owne le traitement 2
@@ -687,8 +698,8 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_no_consent_from_other_owner() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_no_consent_from_other_owner() throws AppServiceException,
+			DocumentStorageException {
 
 		// Je own le traitement 1 mais pas le traitement 3
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
@@ -710,12 +721,12 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_user_without_treatments() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_user_without_treatments() throws AppServiceException,
+			DocumentStorageException {
 
 		// Un autre user crée un consentement owné par l'user ownerUuid1
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
-		List<Consent> otherConsents = createConsents(List.of(okTreatmentVersionUuid));
+		createConsents(List.of(okTreatmentVersionUuid));
 
 		// Le user qui cherche a un UUID random = il ne peut pas avoir un traitement avec son UUID
 		List<UUID> myOrganisations = new ArrayList<>();
@@ -727,6 +738,7 @@ class ConsentServiceUT {
 
 		// Alors que si j'ai le bon UUID c'est bon
 		User user = setConnectedUser(getKnownUser2(), ownerUuid1, myOrganisations);
+		assertNotNull(user);
 		myTreatmentsConsents = consentsService.searchMyTreatmentsConsents(new ConsentSearchCriteria());
 		assertFalse(CollectionUtils.isEmpty(myTreatmentsConsents.getElements()));
 		myTreatmentsConsents.getElements()
@@ -739,8 +751,8 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_unknown_owner() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_unknown_owner() throws AppServiceException,
+			DocumentStorageException {
 
 		// Un autre user crée un consentement owné par l'user ownerUuid1
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
@@ -770,15 +782,17 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_consent_owners() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_consent_owners() throws AppServiceException,
+			DocumentStorageException {
 
 		// Un user créé un consentement à un de mes traitements
 		User consentCreator1 = setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
+		assertNotNull(consentCreator1);
 		List<Consent> consentsUser1 = createConsents(List.of(okTreatmentVersionUuid));
 
 		// Un autre user créé un consentement à un de mes traitements
 		User consentCreator2 = setConnectedUser(getKnownUser2(), UUID.randomUUID(), new ArrayList<>());
+		assertNotNull(consentCreator2);
 		List<Consent> consentsUser2 = createConsents(List.of(okTreatmentVersionUuid));
 
 		// Je configure un chercheur qui pourrait remonter le consentement lié au traitement 1
@@ -815,12 +829,12 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_treatments() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_treatments() throws AppServiceException,
+			DocumentStorageException {
 
 		// Un user créé des consentements pour des traitements owné par 1, 3 et l'organisation 2
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
-		List<Consent> consentsUser1 = createConsents(
+		createConsents(
 				List.of(okTreatmentVersionUuid, okTreatmentVersion2Uuid, okTreatmentVersion3Uuid));
 
 		// Je configure un chercheur qui owne le traitement 1 et dont l'organisation owne le traitement 2
@@ -857,12 +871,12 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_for_another_treatment() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_for_another_treatment() throws AppServiceException,
+			DocumentStorageException {
 
 		// Un user créé des consentements pour des traitements owné par 1, 3 et l'organisation 2
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
-		List<Consent> consentsUser1 = createConsents(
+		createConsents(
 				List.of(okTreatmentVersionUuid, okTreatmentVersion2Uuid, okTreatmentVersion3Uuid));
 
 		// Je configure un chercheur qui owne le traitement 1 et dont l'organisation owne le traitement 2
@@ -893,8 +907,8 @@ class ConsentServiceUT {
 	 */
 	@Test
 	@Disabled
-	void searchMyTreatmentsConsents_consents_are_valid() throws AppServiceException, ValidationException,
-			DocumentStorageException, ConvertorException, IOException, SignerException {
+	void searchMyTreatmentsConsents_consents_are_valid() throws AppServiceException,
+			DocumentStorageException {
 
 		setConnectedUser(getKnownUser(), UUID.randomUUID(), new ArrayList<>());
 		List<Consent> myConsents = createConsents(List.of(okTreatmentVersionUuid));
@@ -909,4 +923,5 @@ class ConsentServiceUT {
 		});
 		assertTrue(searched.getElements().containsAll(myConsents));
 	}
+
 }

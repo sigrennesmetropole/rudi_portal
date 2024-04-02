@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CopiedButtonComponent } from './copied-button.component';
+import {CopiedButtonComponent} from './copied-button.component';
 
 describe('CopiedButtonComponent', () => {
   let component: CopiedButtonComponent;

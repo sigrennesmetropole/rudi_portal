@@ -1,19 +1,17 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
-import org.rudi.facet.apimaccess.api.registration.ClientRegistrationV017OperationAPI;
+import org.rudi.facet.apimaccess.api.registration.Application;
+import org.rudi.facet.apimaccess.api.registration.OAuth2DynamicClientRegistrationOperationAPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-class ClientRegistererForRudiAndAnonymous extends ClientRegisterer<ClientAccessKey> {
+class ClientRegistererForRudiAndAnonymous extends ClientRegisterer<Application> {
 
-	ClientRegistererForRudiAndAnonymous(
-			@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
+	ClientRegistererForRudiAndAnonymous(@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
 			@Value("${apimanager.oauth2.client.default.registration.scopes}") String[] scopes,
-			ClientRegistrationV017OperationAPI clientRegistrationOperationAPI,
-			@Value("${apimanager.oauth2.client.anonymous.use-domain-prefix-to-register:false}") boolean useDomainPrefixToRegisterAnonymous
-	) {
+			OAuth2DynamicClientRegistrationOperationAPI clientRegistrationOperationAPI,
+			@Value("${apimanager.oauth2.client.anonymous.use-domain-prefix-to-register:false}") boolean useDomainPrefixToRegisterAnonymous) {
 		super(tokenUri, scopes, clientRegistrationOperationAPI, useDomainPrefixToRegisterAnonymous);
 	}
 

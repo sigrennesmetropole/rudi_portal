@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {Component, Input} from '@angular/core';
 
 
 @Component({

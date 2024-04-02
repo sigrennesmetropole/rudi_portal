@@ -6,8 +6,6 @@ package org.rudi.microservice.projekt.facade.controller;
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.service.TaskQueryService;
@@ -32,10 +30,9 @@ public class TasksController implements TasksApi {
 	private final TaskQueryService<ProjektTaskSearchCriteria> taskQueryService;
 
 	@Override
-	public ResponseEntity<List<Task>> searchTasks(@Valid String title, @Valid String description,
-			@Valid List<String> processDefinitionKeys, @Valid List<Status> status, @Valid List<String> fonctionalStatus,
-			@Valid ProjectStatus projectStatus, @Valid Boolean asAdmin, @Valid UUID datasetProducerUuid,
-			@Valid UUID projectUuid) throws Exception {
+	public ResponseEntity<List<Task>> searchTasks(String title, String description, List<String> processDefinitionKeys,
+			List<Status> status, List<String> fonctionalStatus, ProjectStatus projectStatus, Boolean asAdmin,
+			UUID datasetProducerUuid, UUID projectUuid) throws Exception {
 		ProjektTaskSearchCriteria searchCriteria = ProjektTaskSearchCriteria.builder().title(title)
 				.description(description).processDefinitionKeys(processDefinitionKeys)
 				.functionalStatus(fonctionalStatus).projectStatus(projectStatus).status(status)

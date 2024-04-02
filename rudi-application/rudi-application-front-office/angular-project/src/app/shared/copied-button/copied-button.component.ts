@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {Component, Input, OnInit} from '@angular/core';
 
 /**
  * Composant génerique du boutton copy avec/sans icon visibilité

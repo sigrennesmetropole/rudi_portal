@@ -1,4 +1,4 @@
-@import "../../styles/common-style";
+@import "common-style";
 @import "../workflow-form/workflow-form.component";
 
 mat-label {
@@ -64,10 +64,4 @@ mat-error {
     .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
         color: $primary-color;
     }
-
-    .mat-select-value,
-    input[matinput] {
-        @include centered-mat-field-label;
-    }
-
 }

@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
-import {OrganizationBean} from '@app/strukture/api-strukture';
+import {OrganizationBean} from 'micro_service_modules/strukture/api-strukture';
+import {URIComponentCodec} from '@core/services/codecs/uri-component-codec';
 
 @Component({
     selector: 'app-organization-card',
@@ -12,11 +13,11 @@ export class OrganizationCardComponent {
     @Input() datasetCountLoading: boolean;
     @Input() projectCountLoading$: boolean;
 
-    constructor(private readonly router: Router) {
+    constructor(private readonly router: Router, private readonly uriComponentCodec: URIComponentCodec) {
     }
 
-    onClickOrganization(uuid: string): Promise<boolean> {
-        return this.router.navigate(['/organization/detail/' + uuid]);
+    onClickOrganization(uuid: string, name: string): Promise<boolean> {
+        return this.router.navigate(['/organization/detail/' + uuid + '/' + this.uriComponentCodec.normalizeString(name)]);
     }
 
     get datasetsCountTranslationKey(): string {

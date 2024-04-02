@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit, SecurityContext} from '@angular/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from '@angular/material/snack-bar';
-import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoint-observer.service';
-import {Event, Router} from '@angular/router';
-import {distinctUntilChanged, skip, take} from 'rxjs/operators';
-import {Observable} from 'rxjs';
 import {DomSanitizer} from '@angular/platform-browser';
+import {Event, Router} from '@angular/router';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, skip, take} from 'rxjs/operators';
 
 export interface Data {
     /** Any translated string or HTML message */

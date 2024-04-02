@@ -1,10 +1,10 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {CloseEvent, DialogClosedData} from '@app/data-set/models/dialog-closed-data';
-import {Field, Section} from '@app/projekt/projekt-api';
+import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {getSectionWithFields} from '@shared/utils/workflow-form-utils';
 import {WorkflowFormDialogInputData, WorkflowFormDialogOutputData} from '@shared/workflow-form-dialog/types';
 import {WorkflowFormComponent} from '@shared/workflow-form/workflow-form.component';
+import {Field, Section} from 'micro_service_modules/projekt/projekt-api';
 
 @Component({
     selector: 'app-workflow-form-dialog',

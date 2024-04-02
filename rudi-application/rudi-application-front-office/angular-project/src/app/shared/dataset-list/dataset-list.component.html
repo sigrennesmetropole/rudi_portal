@@ -15,8 +15,6 @@
             >
                 <app-data-set-card
                     [metadata]="metadata"
-                    [themePicto]="getThemePictoFor(metadata)"
-                    [themeLabel]="getThemeLabelFor(metadata)"
                     [isSelectable]="isSelectable"
                     (selectMetadata)="selectMetadata.emit($event)"
                     (dbSelectMetadata)="dbSelectMetadata.emit($event)"

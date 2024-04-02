@@ -13,25 +13,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.webclient.HttpClientHelper;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.ApimaccessSpringBootTest;
 import org.rudi.facet.apimaccess.api.registration.Application;
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
-import org.rudi.facet.apimaccess.api.registration.ClientRegistrationV017OperationAPI;
 import org.rudi.facet.apimaccess.api.registration.OAuth2DynamicClientRegistrationExceptionFactory;
 import org.rudi.facet.apimaccess.api.registration.OAuth2DynamicClientRegistrationOperationAPI;
-import org.rudi.facet.apimaccess.exception.APIManagerHttpExceptionFactory;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -81,18 +76,18 @@ class CustomMemoryClientRegistrationRepositoryUT {
 		when(properties.getPort()).thenReturn(port);
 
 		final var defaultScopes = new String[] { SCOPE };
-		final var apiManagerHttpExceptionFactory = new APIManagerHttpExceptionFactory();
-		final var clientRegistrationV017OperationAPI = new ClientRegistrationV017OperationAPI(properties,
-				apiManagerHttpExceptionFactory, httpClientHelper);
-		final var clientRegisterForAdmin = new ClientRegistererForAdmin(tokenUri, null, adminRegistrationId,
-				adminClientId, adminClientSecret, clientRegistrationV017OperationAPI);
-
-		final var clientRegisterForRudiAndAnonymous = new ClientRegistererForRudiAndAnonymous(tokenUri, defaultScopes,
-				clientRegistrationV017OperationAPI, false);
-
 		final var objectMapper = new ObjectMapper();
 		final var clientRegistrationExceptionFactory = new OAuth2DynamicClientRegistrationExceptionFactory(
 				objectMapper);
+
+		final var oauth2DynamicClientRegistrationOperationApi = new OAuth2DynamicClientRegistrationOperationAPI(
+				properties, clientRegistrationExceptionFactory, httpClientHelper);
+		final var clientRegisterForAdmin = new ClientRegistererForAdmin(tokenUri, null, adminRegistrationId,
+				adminClientId, adminClientSecret, oauth2DynamicClientRegistrationOperationApi);
+
+		final var clientRegisterForRudiAndAnonymous = new ClientRegistererForRudiAndAnonymous(tokenUri, defaultScopes,
+				oauth2DynamicClientRegistrationOperationApi, false);
+
 		final var oAuth2DynamicClientRegistrationOperationAPI = new OAuth2DynamicClientRegistrationOperationAPI(
 				properties, clientRegistrationExceptionFactory, httpClientHelper);
 		final var clientRegisterForUsers = new ClientRegistererForUsers(tokenUri, defaultScopes,
@@ -113,14 +108,14 @@ class CustomMemoryClientRegistrationRepositoryUT {
 			throws IOException, BuildClientRegistrationException, GetClientRegistrationException {
 		final String username = "anonymous";
 		final String password = "anonymous";
-		final ClientAccessKey clientAccessKey = jsonResourceReader.read("wso2/ClientAccessKey.json",
-				ClientAccessKey.class);
+		final Application clientAccessKey = jsonResourceReader.read("wso2/Application_anonymous.json",
+				Application.class);
 
 		mockWebServer.enqueue(
 				new MockResponse().setBody(jsonResourceReader.getObjectMapper().writeValueAsString(clientAccessKey))
 						.addHeader("Content-Type", "application/json"));
 
-		when(properties.getRegistrationV017Path()).thenReturn("v0.17/register");
+		when(properties.getRegistrationV11Path()).thenReturn("v1.1/register");
 
 		final ClientRegistration clientRegistration = customMemoryClientRegistrationRepository.register(username,
 				password);
@@ -172,7 +167,7 @@ class CustomMemoryClientRegistrationRepositoryUT {
 		mockWebServer.enqueue(new MockResponse().setBody(body).addHeader("Content-Type", "application/json")
 				.setResponseCode(HttpStatus.SC_INTERNAL_SERVER_ERROR));
 
-		when(properties.getRegistrationV017Path()).thenReturn("v0.17/register");
+		when(properties.getRegistrationV11Path()).thenReturn("v1.1/register");
 
 		assertThatThrownBy(() -> customMemoryClientRegistrationRepository.register(username, password))
 				.as("On retrouve le username dans le message d'erreur").hasMessageContaining(username)

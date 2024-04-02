@@ -1,0 +1,71 @@
+@import "colors";
+@import "responsive";
+@import "variables-rudi";
+@import "common-style";
+
+.hero-section-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hero-content-container {
+    margin: 80px auto;
+}
+
+.hero-text-container {
+    padding: 10px 50px;
+    position: relative;
+}
+
+.hero-text {
+    max-width: 550px;
+    text-align: center;
+    line-height: 45px;
+}
+
+.hero-title {
+    @extend .hero-text;
+    font-size: 38px;
+    color: $primary-color;
+    font-weight: 700;
+    margin: 0;
+
+}
+
+.hero-subtitle {
+    @extend .hero-text;
+    font-size: 34px;
+    color: $accent-color;
+}
+
+.hero-section-right-edge-picto {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.hero-search-bar-container {
+    margin-top: 35px;
+    padding: 0 20px;
+}
+
+/**
+   Responsive
+*/
+@include xs() {
+    .hero-left-picto-container, .hero-right-picto-container {
+        display: none;
+    }
+}
+
+@include sm() {
+    .hero-left-picto-container, .hero-right-picto-container {
+        display: none;
+    }
+}
+
+@include md() {
+    .hero-left-picto-container, .hero-right-picto-container {
+        display: none;
+    }
+}

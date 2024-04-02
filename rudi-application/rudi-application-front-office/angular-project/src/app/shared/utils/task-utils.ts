@@ -1,4 +1,4 @@
-import {AssetDescription, Task} from '../../api-bpmn';
+import {AssetDescription, Task} from 'micro_service_modules/api-bpmn';
 import {ObjectWithDependencies} from './dependencies-utils';
 
 /**

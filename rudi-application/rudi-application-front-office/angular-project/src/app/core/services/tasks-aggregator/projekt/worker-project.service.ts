@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Project} from '@app/projekt/projekt-model';
-import {Task} from 'src/app/api-bpmn';
+import {Project} from 'micro_service_modules/projekt/projekt-model';
+import {Task} from 'micro_service_modules/api-bpmn';
 import {
     ProjectDependencies,
     ProjectTask,
@@ -26,7 +26,7 @@ export class WorkerProjectService extends WorkerService<ProjectTask, Project, Pr
     mapToRequestToStudy(task: Task, assetDescription: Project, dependencies: ProjectDependencies): RequestToStudy {
         const requestToStudy = super.mapToRequestToStudy(task, assetDescription, dependencies);
 
-        //on override le champ pour forcer la banette à afficher le titre de la réutilisation dans la colonne description.
+        // on override le champ pour forcer la banette à afficher le titre de la réutilisation dans la colonne description.
         requestToStudy.description = task.asset.title;
         requestToStudy.url = 'project-task-detail';
 

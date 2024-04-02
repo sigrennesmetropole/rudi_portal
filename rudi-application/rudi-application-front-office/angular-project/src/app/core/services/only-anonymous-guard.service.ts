@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {AuthenticationService} from './authentication.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {AuthenticationService} from './authentication.service';
 import {AuthenticationState} from './authentication/authentication-method';
 
 @Injectable({
@@ -31,8 +31,12 @@ export class OnlyAnonymousGuardService implements CanActivate, CanActivateChild 
                             return true;
                         }
 
-                        // je suis déjà authentifié ? je retourne vers login/account
-                        this.router.navigate(['/personal-space/my-account']).then();
+                        if (route.data?.forcedRoute) {
+                            this.router.navigate([route.data.forcedRoute]).then();
+                        } else {
+                            // je suis déjà authentifié ? je retourne vers login/account
+                            this.router.navigate(['/personal-space/my-account']).then();
+                        }
                         return false;
                     }
                 )

@@ -1,10 +1,5 @@
 package org.rudi.facet.acl.helper;
 
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,11 +37,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import reactor.core.publisher.Mono;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
@@ -55,6 +55,7 @@ import reactor.core.publisher.Mono;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ACLHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
@@ -76,6 +77,10 @@ public class ACLHelper {
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.crud.url:/acl/v1/users}")
 	private String userEndpointCRUDURL;
+
+	@Getter
+	@Value("${rudi.facet.acl.endpoint.users.count.url:/acl/v1/users/count}")
+	private String userCountEndpointURL;
 
 	@Getter
 	@Value("${rudi.facet.acl.endpoint.users.client-key.url:/acl/v1/users/{login}/client-key}")
@@ -258,8 +263,8 @@ public class ACLHelper {
 	/**
 	 * Retourne la liste des utilisateurs associé à un rôle dont le code est passé en paramètre
 	 *
-	 * @param roleCode
-	 * @return
+	 * @param roleCode code du Role sur lequel filtrer
+	 * @return List de User ayant le rôle. Si Aucun, list Vide
 	 */
 	@NotNull
 	public List<User> searchUsers(String roleCode) {
@@ -269,6 +274,7 @@ public class ACLHelper {
 		if (ArrayUtils.isNotEmpty(roles)) {
 			final var criteria = UserSearchCriteria.builder()
 					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList())).build();
+
 			UserPageResult pageResult = loadBalancedWebClient.get()
 					.uri(buildUsersSearchURL(),
 							uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
@@ -278,6 +284,7 @@ public class ACLHelper {
 											formatListParameter(criteria.getRoleUuids()))
 									.build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
+
 			if (pageResult != null && pageResult.getElements() != null) {
 				result.addAll(pageResult.getElements());
 			}
@@ -334,6 +341,10 @@ public class ACLHelper {
 
 	protected String buildUsersSearchURL() {
 		return getAclServiceURL() + getUsersEndpointSearchURL();
+	}
+
+	protected String buildUsersCountURL() {
+		return getAclServiceURL() + getUserCountEndpointURL();
 	}
 
 	protected String buildRolesSearchURL(String code) {
@@ -449,5 +460,14 @@ public class ACLHelper {
 
 		loadBalancedWebClient.put().uri(buildUpdateUserPasswordURL(), Map.of(USER_LOGIN_PARAMETER, login))
 				.bodyValue(passwordUpdate).retrieve().toBodilessEntity().block();
+	}
+
+	public Long getUserCount() {
+		Long userCount = loadBalancedWebClient.get().uri(buildUsersCountURL()).retrieve().bodyToMono(Long.class)
+				.block();
+		if (userCount != null) {
+			return userCount;
+		}
+		return 0L;
 	}
 }

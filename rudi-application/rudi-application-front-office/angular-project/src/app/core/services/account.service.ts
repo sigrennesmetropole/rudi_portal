@@ -1,10 +1,10 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {Account, User} from '../../acl/acl-model';
-import {Observable, throwError} from 'rxjs';
-import {AclService, PasswordChange} from '../../acl/acl-api';
-import {HttpErrorResponse} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
+import {AclService, PasswordChange} from 'micro_service_modules/acl/acl-api';
+import {Account, User} from 'micro_service_modules/acl/acl-model';
+import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 @Injectable({

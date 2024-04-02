@@ -1,10 +1,14 @@
-import {Injectable} from '@angular/core';
 import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {Injectable} from '@angular/core';
 
 /**
  * Définit l'oobjet qui donne des infos sur le contexte de visualisation de l'appli RUDI
  */
 export interface MediaSize {
+    /**
+     * Est-ce très petit
+     */
+    isXs: boolean;
 
     /**
      * Est-ce petit
@@ -45,7 +49,8 @@ export interface MediaSize {
 export type NgClassObject = { [p: string]: boolean };
 
 class ScreenBreakpoints {
-    public static SMBREAKPOINT = '(min-width:360px) and (max-width:767px)';
+    public static XSBREAKPOINT = '(min-width:0px) and (max-width:459px)';
+    public static SMBREAKPOINT = '(min-width:460px) and (max-width:767px)';
     public static MDBREAKPOINT = '(min-width:768px) and (max-width:1023px)';
     public static LGBREAKPOINT = '(min-width:1024px) and (max-width:1439px)';
     public static XLBREAKPOINT = '(min-width:1440px) and (max-width:1824px)';
@@ -61,6 +66,7 @@ export class BreakpointObserverService {
      * Instanciation d'un singleton mediaSize
      */
     mediaSize: MediaSize = {
+        isXs: false,
         isSm: false,
         isMd: false,
         isLg: false,
@@ -72,7 +78,7 @@ export class BreakpointObserverService {
         },
         get isDeviceMobile(): boolean {
             // Pour savoir si on est sur mobile, on regarde l'état du mediaSize
-            return this.isMd || this.isSm;
+            return this.isXs || this.isSm || this.isMd;
         }
     };
 
@@ -88,6 +94,10 @@ export class BreakpointObserverService {
      * Méthode appelée pour récupérer le mediaSize dans un component
      */
     getMediaSize(): MediaSize {
+        // Mode Small device
+        this.breakpointObserver.observe(ScreenBreakpoints.XSBREAKPOINT).subscribe((state: BreakpointState) => {
+            this.mediaSize.isXs = state.matches;
+        });
 
         // Mode Small device
         this.breakpointObserver.observe(ScreenBreakpoints.SMBREAKPOINT).subscribe((state: BreakpointState) => {

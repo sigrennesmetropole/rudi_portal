@@ -1,0 +1,41 @@
+datasource:
+  workspace: category
+  autoCreate: false
+
+model:
+  nodeType: mgnl:category
+  properties:
+    - name: name
+      required: true
+    - name: displayName
+      i18n: true
+    - name: level
+      options:
+        level1:
+          name: level1
+          value: level-1
+        level2:
+          name: level2
+          value: level-2
+        level3:
+          name: level3
+          value: level-3
+        level4:
+          name: level4
+          value: level-4
+        level5:
+          name: level5
+          value: level-5
+    - name: relatedUUID
+      multiple: true
+      type: reference:category
+    - name: description
+      i18n: true
+    - name: image
+      required: true
+      type: asset
+    - name: icon
+      required: true
+      type: asset
+    - name: body
+      i18n: true

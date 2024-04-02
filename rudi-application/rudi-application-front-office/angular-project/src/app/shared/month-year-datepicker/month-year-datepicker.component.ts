@@ -1,10 +1,10 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatDatepicker} from '@angular/material/datepicker';
 import * as moment from 'moment';
 import {Moment} from 'moment';
-import {MatDatepicker} from '@angular/material/datepicker';
 
 /**
  * Format MM/YYYY appliqué au DatePicker
@@ -103,7 +103,7 @@ export class MonthYearDatepickerComponent implements OnInit {
      */
     chosenYearHandler(date: Moment): void {
         this.ctrlValue = date.month(moment().month());
-        if(this.startDate){
+        if (this.startDate){
             this.ctrlValue = date.month(this.startDate.month());
         }
     }

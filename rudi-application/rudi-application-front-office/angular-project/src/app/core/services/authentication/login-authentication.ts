@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {AuthenticationMethod, AuthenticationState} from './authentication-method';
 import {HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {URIComponentCodec} from '../codecs/uri-component-codec';
+import {AuthenticationMethod, AuthenticationState} from './authentication-method';
 
 @Injectable({
     providedIn: 'root'

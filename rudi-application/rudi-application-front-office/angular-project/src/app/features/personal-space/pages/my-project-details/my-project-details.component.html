@@ -1,0 +1,58 @@
+<mat-sidenav-container>
+    <mat-sidenav-content class="sidebar-content-pd">
+        <div class="project-container ps-0 pe-0 container-fluid">
+
+            <!-- Loader chargement toute page -->
+            <app-loader [allPage]="true" [active]="loading"></app-loader>
+
+            <!-- En-tête de la section détail projet -->
+            <app-project-heading
+                class="project-header"
+                [logo]="projectLogo"
+                [projectTitle]="project?.title"
+                [ownerDescription]="projectOwnerInfo?.name"
+                [status]="project?.functional_status"
+            >
+            </app-project-heading>
+
+            <!-- Bannière et onglets du détail projet -->
+            <app-tabs>
+                <app-tab [label]="'personalSpace.project.tabs.information' | translate"
+                         [icon]="'icon_tab_infos'">
+                    <ng-template>
+                        <app-project-information [project]="project"></app-project-information>
+                    </ng-template>
+                </app-tab>
+                <app-tab [label]="'personalSpace.project.tabs.datasets.title' | translate" [icon]="'jdd_icon'">
+                    <ng-template>
+                        <app-project-datasets-tab [project]="project"></app-project-datasets-tab>
+                    </ng-template>
+                </app-tab>
+                <app-tab [label]="'personalSpace.project.tabs.api' | translate" [icon]="'api_icon'">
+                    <ng-template>
+                        <app-project-api-tab></app-project-api-tab>
+                    </ng-template>
+                </app-tab>
+                <ng-container appTabsLayout>
+                    <div class="detail-wrapper">
+                        <div class="onglet-wrapper">
+                            <ng-container appTabContent></ng-container>
+                        </div>
+                        <div class="aside-wrapper">
+                            <div>
+                                <app-project-basic-details
+                                    [projectType]="project?.type?.label"
+                                    [ownerDescription]="projectOwnerInfo?.name"
+                                    [ownerEmail]="project?.contact_email"
+                                    [creationDate]="getDateToFormat('creation_date')"
+                                    [updatedDate]="getDateToFormat('updated_date')"
+                                ></app-project-basic-details>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </app-tabs>
+        </div>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

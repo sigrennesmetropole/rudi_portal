@@ -1,7 +1,7 @@
-import {TaskMetierService} from '../task-metier.service';
-import {TaskService as SelfdataTaskService} from '../../../../selfdata/selfdata-api';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {TaskService as SelfdataTaskService} from 'micro_service_modules/selfdata/selfdata-api';
 import {Observable} from 'rxjs';
-import {Task} from '../../../../api-bpmn';
+import {TaskMetierService} from '../task-metier.service';
 import {SelfdataTaskSearchCriteria} from './selfdata-task-search-criteria.interface';
 
 export abstract class MicroserviceSelfdataTaskMetierService<T> extends TaskMetierService<T> {

@@ -1,14 +1,14 @@
 import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {CloseEvent, DialogClosedData} from '../../data-set/models/dialog-closed-data';
-import {OrganizationRole} from '../../strukture/api-strukture';
-import {TranslateService} from '@ngx-translate/core';
+import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {
     OrganizationMemberDialogData
-} from '../../organization/components/administration-tab/organization-members-table/organization-member-dialog-data';
-import {OrganizationMember} from '../../strukture/strukture-model';
+} from '@features/organization/components/administration-tab/organization-members-table/organization-member-dialog-data';
+import {TranslateService} from '@ngx-translate/core';
+import {OrganizationRole} from 'micro_service_modules/strukture/api-strukture';
+import {OrganizationMember} from 'micro_service_modules/strukture/strukture-model';
 
 @Component({
     selector: 'app-member-popin',

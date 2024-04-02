@@ -1,23 +1,22 @@
+import {Injectable} from '@angular/core';
+import {DEFAULT_VIEW_PROJECTION, DisplayMapService} from '@core/services/data-set/display-map.service';
+import {LogService} from '@core/services/log.service';
+import {Media} from 'micro_service_modules/api-kaccess';
+import {LayerInformation} from 'micro_service_modules/konsult/konsult-model';
+import {getTopLeft, getWidth} from 'ol/extent';
+import {GeoJSON} from 'ol/format';
+import {Geometry} from 'ol/geom';
 import BaseLayer from 'ol/layer/Base';
 import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import {bbox as bboxStrategy} from 'ol/loadingstrategy';
+import {get, Projection} from 'ol/proj';
 import {TileWMS, WMTS} from 'ol/source';
 import VectorSource from 'ol/source/Vector';
-import {GeoJSON} from 'ol/format';
-import {bbox as bboxStrategy} from 'ol/loadingstrategy';
-import VectorLayer from 'ol/layer/Vector';
-import {Geometry} from 'ol/geom';
-import {LINE_STYLE, POINT_STYLE, POLYGON_STYLE} from './map.style.function';
+import {Style} from 'ol/style';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
-import {get, Projection} from 'ol/proj';
-import {getTopLeft, getWidth} from 'ol/extent';
-import {DEFAULT_VIEW_PROJECTION, DisplayMapService} from '../../core/services/data-set/display-map.service';
-import {Injectable} from '@angular/core';
-import {Media} from '../../api-kaccess';
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {Style} from 'ol/style';
-import {LogService} from '../../core/services/log.service';
-import {LayerInformation} from '../../konsult/konsult-model';
 import {
     getDefaultCrs,
     getFormat,
@@ -28,6 +27,7 @@ import {
     getStyles,
     getVersion
 } from './map.media.layer.function';
+import {LINE_STYLE, POINT_STYLE, POLYGON_STYLE} from './map.style.function';
 
 /**
  * Construction d'un TileGrid pour afficher un layer WMTS dans une projection donnée

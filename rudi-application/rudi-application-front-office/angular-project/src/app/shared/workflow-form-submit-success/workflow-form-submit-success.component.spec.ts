@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WorkflowFormSubmitSuccessComponent } from './workflow-form-submit-success.component';
+import {WorkflowFormSubmitSuccessComponent} from './workflow-form-submit-success.component';
 
 describe('WorkflowFormSubmitSuccessComponent', () => {
   let component: WorkflowFormSubmitSuccessComponent;

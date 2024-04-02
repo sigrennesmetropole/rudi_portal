@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WorkInProgressComponent } from './work-in-progress.component';
+import {WorkInProgressComponent} from './work-in-progress.component';
 
 describe('WorkInProgressComponent', () => {
   let component: WorkInProgressComponent;

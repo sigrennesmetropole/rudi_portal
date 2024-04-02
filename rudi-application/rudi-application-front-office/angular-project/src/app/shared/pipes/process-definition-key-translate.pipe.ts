@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {ProcessDefinitionEnum} from '../../core/services/tasks/process-definition.enum';
+import {ProcessDefinitionEnum} from '@core/services/tasks/process-definition.enum';
 import {TranslateService} from '@ngx-translate/core';
 
 /**

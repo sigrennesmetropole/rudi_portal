@@ -1,0 +1,47 @@
+<div class="jdds-section-container">
+    <h2 class="title">{{ 'home.jddSection.title' | translate }}</h2>
+
+    <app-loader [isTransparent]="true" [allPage]="false" [active]="isLoading"></app-loader>
+
+    <div class="desktop-jdds-list" *ngIf="!isLoading">
+        <ng-container *ngFor="let item of jdds">
+            <ng-container *ngTemplateOutlet="jddItemTemplate; context: {item: item}"></ng-container>
+        </ng-container>
+    </div>
+
+    <div class="mobile-jdds-list" *ngIf="!isLoading && mediaSize.isDeviceMobile">
+        <app-rudi-swiper
+            containerName="rudi-jdds"
+            [autoplay]="false"
+            [loop]="true"
+            [slidesPerView]="1"
+            [spaceBetween]="10"
+            [rowsPerView]="jdds.length > 1 ? 2 : 1"
+        >
+            <div *ngFor="let item of jdds">
+                <ng-container *ngTemplateOutlet="jddItemTemplate; context: {item: item}"></ng-container>
+            </div>
+        </app-rudi-swiper>
+    </div>
+
+    <div class="text-center">
+        <a mat-stroked-button class="see-more-btn" [routerLink]="'/catalogue'">
+            {{ 'home.jddSection.seeMore' | translate }}
+        </a>
+    </div>
+</div>
+
+<ng-template #jddItemTemplate let-item="item">
+    <div class="jdd-item">
+        <app-dataset-infos
+            class="dataset-card-infos"
+            [showLogo]="true"
+            [goToDetails]="true"
+            [organizationName]="item?.producer.organization_name"
+            [organizationId]="item?.producer.organization_id"
+            [isRestricted]="item?.access_condition?.confidentiality?.restricted_access"
+            [resourceTitle]="item?.resource_title"
+            [currentJddId]="item.global_id"
+        ></app-dataset-infos>
+    </div>
+</ng-template>

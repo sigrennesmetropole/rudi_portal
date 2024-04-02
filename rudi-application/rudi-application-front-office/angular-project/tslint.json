@@ -29,6 +29,7 @@
         "spaces"
       ]
     },
+    "js-comment-in-css" : false,
     "max-classes-per-file": false,
     "max-line-length": [
       true,

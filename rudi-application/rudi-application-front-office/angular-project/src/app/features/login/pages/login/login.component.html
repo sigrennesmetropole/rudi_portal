@@ -1,0 +1,126 @@
+<mat-sidenav-container class="main-container">
+    <mat-sidenav>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="container-fluid"
+             [ngClass]="{
+                'p-small': mediaSize.isDeviceMobile,
+                'p-large': mediaSize.isDeviceDesktop
+            }"
+        >
+            <!-- La page entière -->
+            <div>
+                <!-- Le titre de la page -->
+                <div class="d-flex justify-content-center">
+                    <span class="login-header-title" [translate]="'authentification.seConnection'"></span>
+                </div>
+                <!--Lien vers inscription -->
+                <div class="d-flex justify-content-center mb-2">
+                    <span class="text-center">{{'authentification.pas-compte'|translate}}</span>
+                    <span class="text-center ms-1 link-bold-underlined-colored pointer"
+                          routerLink="sign-up"
+                          [queryParams]="{redirectTo: redirectToParam}">{{'authentification.inscrire'|translate}}</span>
+                </div>
+                <!-- Le bloc formulaire authent -->
+                <form [formGroup]="loginForm" (submit)="handleClickLogin()">
+                    <mat-card [ngClass]="{'p-60': mediaSize.isDeviceDesktop || mediaSize.isMd, 'p-19': mediaSize.isSm}">
+                        <!-- Titre du bloc -->
+                        <mat-card-title class="d-flex justify-content-center">
+                            <p *ngIf="!mediaSize.isSm" class="login-text-title"
+                               [translate]="'authentification.connectez-vous'"></p>
+                            <p *ngIf="mediaSize.isSm" class="login-text-title">
+                                <span class="login-text-title-mobile"
+                                      [translate]="'authentification.connectez-vous-mobileDebut'"></span>
+                                <span class="login-text-title-mobile"
+                                      [translate]="'authentification.connectez-vous-mobileFin'"></span>
+                            </p>
+                        </mat-card-title>
+                        <!-- Formulaire du bloc -->
+                        <mat-card-content>
+                            <div class="d-flex justify-content-center">
+                                <!-- Champ identifiant -->
+                                <div class="login-form-container">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label [translate]="'authentification.login'"></mat-label>
+                                        <input matInput type="text" formControlName="login" autocomplete="off">
+                                        <mat-error *ngIf="formControls.login.errors">
+                                            {{'authentification.loginRequired'|translate}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <!-- Champ mot de passe -->
+                                    <mat-form-field appearance="fill">
+                                        <mat-label [translate]="'authentification.password'"></mat-label>
+                                        <input matInput [type]="hidePassword ? 'password' : 'text'"
+                                               formControlName="password" autocomplete="off">
+                                        <mat-icon matSuffix class="visibility-icon"
+                                                  (click)="hidePassword = !hidePassword">
+                                            {{hidePassword ? 'visibility' : 'visibility_off'}}
+                                        </mat-icon>
+                                        <mat-error *ngIf="formControls.password.errors">
+                                            {{'authentification.passwordRequired'|translate}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <app-rudi-captcha *ngIf="enableCaptchaOnPage"
+                                                      [nomCaptcha]="'captchaFR'"></app-rudi-captcha>
+                                    <!-- Box erreur sur le captcha -->
+                                    <app-error-box *ngIf="errorCaptchaInput"
+                                                   [text]="'authentification.error-captcha'|translate">
+                                    </app-error-box>
+                                    <!-- Box erreur d'authent normale -->
+                                    <app-error-box *ngIf="isError4xx"
+                                                   [text]="'authentification.error-body'|translate"
+                                                   [clickableText]="'authentification.error-footer'|translate"
+                                                   (clickableTextClicked)="handleClickGoInscrire()"
+                                    >
+                                    </app-error-box>
+                                    <app-error-box *ngIf="errorAccountNotActif"
+                                                   [text]="'authentification.errorBodyAccountNotActif'|translate"
+                                                   [clickableText]="'authentification.errorFooterAccountNotActif'|translate"
+                                                   (clickableTextClicked)="handleClickContactRudi()"
+                                    >
+                                    </app-error-box>
+                                    <!-- Box erreur d'authent 500 -->
+                                    <app-error-box *ngIf="errorServerAccountNotActive"
+                                                   [text]="'authentification.errorServerIsNotActive'|translate"
+                                    >
+                                    </app-error-box>
+                                    <app-error-box *ngIf="errorServerAuthenticate"
+                                                   [text]="'authentification.errorServerAuthent'|translate"
+                                    >
+                                    </app-error-box>
+                                    <!-- Box erreur d'authent dù à multiples tentatives de connection -->
+                                    <app-error-box *ngIf="errorUserLocked"
+                                                   [text]="'authentification.errorLoginLocked'|translate"
+                                                   [clickableText]="'authentification.errorLoginLockedFooter'|translate"
+                                                   (clickableTextClicked)="handleClickToResetPassword()"
+                                    >
+                                    </app-error-box>
+                                    <!-- interaction mdp oublié -->
+                                    <div class="d-flex justify-content-end p-2">
+                                            <span class="forgot-password" routerLink="forgot-password"
+                                                  [translate]="'authentification.passwordForget'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions class="d-flex align-items-center flex-column mb-2 mx-0">
+                            <!-- Bouton d'action du formulaire -->
+                            <button mat-raised-button class="bouton-login"
+                                    [ngClass]="{
+                                        'login-btn-desktop': mediaSize.isDeviceDesktop,
+                                        'login-btn-mobile': mediaSize.isDeviceMobile
+                                    }"
+                                    [disabled]="!isValid"
+                                    type="submit">
+                                <span>{{'authentification.seConnection'|translate}}</span>
+                            </button>
+                            <!-- Loader -->
+                            <mat-progress-spinner *ngIf="loading" class="m-2" mode="indeterminate"
+                                                  diameter="30"></mat-progress-spinner>
+                        </mat-card-actions>
+                    </mat-card>
+                </form>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

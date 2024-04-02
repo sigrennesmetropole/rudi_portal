@@ -1,0 +1,21 @@
+<button mat-raised-button
+        [matMenuTriggerFor]="matMenu"
+        #matMenuTrigger="matMenuTrigger"
+        class="button rudi-select-button"
+        [ngClass]="menuIsOpened ? 'active' : ''"
+        (onMenuOpen)="onMenuOpen()"
+        (onMenuClose)="onMenuClose()"
+        [matBadge]="counter$ | async"
+        *ngIf="!isHidden"
+>
+  {{buttonTextKey | translate}}
+  <mat-icon iconPositionEnd class="rudi-select-arrow">
+    <ng-container *ngIf="!menuIsOpened">keyboard_arrow_down</ng-container>
+    <ng-container *ngIf="menuIsOpened">keyboard_arrow_up</ng-container>
+  </mat-icon>
+  <mat-menu #matMenu="matMenu" yPosition="below" class="rudi-menu">
+    <div fxLayout="column" class="rudi-select-panel" (click)="$event.stopPropagation();">
+      <ng-content></ng-content>
+    </div>
+  </mat-menu>
+</button>

@@ -1,0 +1,19 @@
+<div class="key-figures-container">
+    <div class="figures-container">
+        <ng-container *ngFor="let keyFigure of keyFiguresDescription.keyFigures">
+            <ng-container
+                *ngTemplateOutlet="figureKeyTemplate; context:{count: keyFigure.count, label: keyFigure.label}"></ng-container>
+        </ng-container>
+    </div>
+    <div class="logo-container">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="loadingLogo"></app-loader>
+        <img [src]="logoSrc" [alt]="'home.keyFiguresSection.altLogo' | translate">
+    </div>
+</div>
+
+<ng-template #figureKeyTemplate let-count="count" let-label="label">
+    <div class="figure-key">
+        <span class="count">{{count | number:'': 'fr-FR'}}</span>
+        <span class="label">{{label}}</span>
+    </div>
+</ng-template>

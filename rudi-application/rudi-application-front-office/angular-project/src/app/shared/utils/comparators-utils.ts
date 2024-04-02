@@ -1,4 +1,4 @@
-import {SortDirection} from '@angular/material/sort/sort-direction';
+import {SortDirection} from '@angular/material/sort';
 
 /**
  * Comparaison entre 2 dates avec renvoi numérique

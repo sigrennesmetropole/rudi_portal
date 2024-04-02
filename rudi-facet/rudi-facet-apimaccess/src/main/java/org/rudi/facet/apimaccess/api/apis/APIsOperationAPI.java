@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.apimaccess.api.APIManagerProperties;
 import org.rudi.facet.apimaccess.api.AbstractManagerAPI;
 import org.rudi.facet.apimaccess.api.MonoUtils;
@@ -32,12 +33,19 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.wso2.carbon.apimgt.rest.api.admin.Environment;
+import org.wso2.carbon.apimgt.rest.api.gateway.APIArtifact;
+import org.wso2.carbon.apimgt.rest.api.gateway.DeployResponse;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIRevision;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIRevisionDeployment;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 public class APIsOperationAPI extends AbstractManagerAPI {
 
 	private static final String API_PATH = "/apis";
@@ -45,6 +53,10 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 	private static final String API_GET_POLICY_PATH = API_GET_PATH + "/subscription-policies";
 	private static final String API_UPDATE_SWAGGER_DEFINITION_PATH = API_GET_PATH + "/swagger";
 	private static final String API_UPDATE_LIFECYCLE_STATUS_PATH = API_PATH + "/change-lifecycle";
+	private static final String API_REVISIONS_PATH = API_GET_PATH + "/revisions";
+	private static final String API_PUBLISHER_DEPLOYMENT_PATH = API_GET_PATH + "/deploy-revision";
+	private static final String API_GATEWAY_DEPLOYMENT_PATH = "/redeploy-api";
+	private static final String API_GATEWAY_ARTIFACT_PATH = "/api-artifact";
 
 	APIsOperationAPI(PublisherHttpExceptionFactory publisherHttpExceptionFactory,
 			WebClient.Builder apimWebClientBuilder, APIManagerProperties apiManagerProperties) {
@@ -68,9 +80,11 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 	}
 
 	@Nonnull
-	public API getAPIFromDevportal(String apiId, String username) throws APIsOperationWithIdException {
-		final Mono<API> mono = populateRequestWithRegistrationId(HttpMethod.GET, username,
-				buildDevPortalURIPath(API_GET_PATH), Map.of(API_ID, apiId)).retrieve().bodyToMono(API.class);
+	public org.wso2.carbon.apimgt.rest.api.devportal.API getAPIFromDevportal(String apiId, String username)
+			throws APIsOperationWithIdException {
+		final Mono<org.wso2.carbon.apimgt.rest.api.devportal.API> mono = populateRequestWithRegistrationId(
+				HttpMethod.GET, username, buildDevPortalURIPath(API_GET_PATH), Map.of(API_ID, apiId)).retrieve()
+						.bodyToMono(org.wso2.carbon.apimgt.rest.api.devportal.API.class);
 		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
 	}
 
@@ -111,7 +125,7 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 
 	/**
 	 * @see <a href=
-	 *      "https://apim.docs.wso2.com/en/3.2.0/develop/product-apis/publisher-apis/publisher-v1/publisher-v1/#tag/API-Lifecycle/paths/~1apis~1change-lifecycle/post">Documentation
+	 *      "https://apim.docs.wso2.com/en/latest/reference/product-apis/publisher-apis/publisher-v4/publisher-v4/#tag/API-Lifecycle/operation/changeAPILifecycle">Documentation
 	 *      WSO2</a>
 	 */
 	public APIWorkflowResponse updateAPILifecycleStatus(String apiId, APILifecycleStatusAction apiLifecycleStatusAction)
@@ -130,5 +144,54 @@ public class APIsOperationAPI extends AbstractManagerAPI {
 		final Mono<Void> mono = populateRequestWithAdminRegistrationId(HttpMethod.DELETE,
 				buildPublisherURIPath(API_GET_PATH), Map.of(API_ID, apiId)).retrieve().bodyToMono(Void.class);
 		MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
+	}
+
+	public APIRevision createApiRevision(String apiId, String description) throws APIsOperationWithIdException {
+
+		final Mono<APIRevision> mono = populateRequestWithAdminRegistrationId(HttpMethod.POST,
+				buildPublisherURIPath(API_REVISIONS_PATH), Map.of(API_ID, apiId))
+						.contentType(MediaType.APPLICATION_JSON)
+						.body(Mono.just(new APIRevision().description(description)), APIRevision.class).retrieve()
+						.bodyToMono(APIRevision.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
+	}
+
+	public APIRevisionDeployment[] deployApiRevisionInPublisher(String apiId, String apiRevisionId,
+			List<Environment> gateways) throws APIsOperationWithIdException {
+
+		// récupération de tous les environnements/vhosts où déployer la révision
+		APIRevisionDeployment[] apiRevisionDeployments = CollectionUtils
+				.emptyIfNull(gateways).stream().flatMap(gateway -> CollectionUtils.emptyIfNull(gateway.getVhosts())
+						.stream().map(vhost -> new APIRevisionDeployment().name(gateway.getName())
+								.vhost(vhost.getHost()).displayOnDevportal(true)))
+				.toArray(APIRevisionDeployment[]::new);
+
+		final Mono<APIRevisionDeployment[]> mono = populateRequestWithAdminRegistrationId(HttpMethod.POST,
+				buildPublisherURIPath(API_PUBLISHER_DEPLOYMENT_PATH),
+				uriBuilder -> uriBuilder.queryParam("revisionId", apiRevisionId).build(apiId))
+						.contentType(MediaType.APPLICATION_JSON)
+						.body(Mono.just(apiRevisionDeployments), APIRevisionDeployment[].class).retrieve()
+						.bodyToMono(APIRevisionDeployment[].class);
+
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
+	}
+
+	public DeployResponse redeployApiInGateway(String apiName, String version, String apiId)
+			throws APIsOperationWithIdException {
+		WebClient.RequestBodySpec req = populateRequestWithAdminRegistrationId(HttpMethod.POST,
+				buildGatewayURIPath(API_GATEWAY_DEPLOYMENT_PATH),
+				uriBuilder -> uriBuilder.queryParam("apiName", apiName).queryParam("version", version).build());
+		final Mono<DeployResponse> mono = req.retrieve().bodyToMono(DeployResponse.class);
+
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
+	}
+
+	public APIArtifact getApiInGateway(String apiName, String version, String apiId)
+			throws APIsOperationWithIdException {
+		WebClient.RequestBodySpec req = populateRequestWithAdminRegistrationId(HttpMethod.GET,
+				buildGatewayURIPath(API_GATEWAY_ARTIFACT_PATH),
+				uriBuilder -> uriBuilder.queryParam("apiName", apiName).queryParam("version", version).build());
+		final Mono<APIArtifact> mono = req.retrieve().bodyToMono(APIArtifact.class);
+		return MonoUtils.blockOrThrow(mono, e -> new APIsOperationWithIdException(apiId, e));
 	}
 }

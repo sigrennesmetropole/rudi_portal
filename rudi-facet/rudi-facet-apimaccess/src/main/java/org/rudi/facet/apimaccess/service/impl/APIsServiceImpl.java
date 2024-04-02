@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.rudi.facet.apimaccess.api.admin.AdminOperationAPI;
 import org.rudi.facet.apimaccess.api.apis.APIsOperationAPI;
 import org.rudi.facet.apimaccess.api.policy.ThrottlingPolicyOperationAPI;
@@ -36,14 +35,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.wso2.carbon.apimgt.rest.api.admin.APICategory;
+import org.wso2.carbon.apimgt.rest.api.admin.APICategoryList;
+import org.wso2.carbon.apimgt.rest.api.admin.Environment;
+import org.wso2.carbon.apimgt.rest.api.gateway.DeployResponse;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIRevision;
+import org.wso2.carbon.apimgt.rest.api.publisher.APIRevisionDeployment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APIsServiceImpl implements APIsService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(APIsServiceImpl.class);
@@ -80,18 +86,37 @@ public class APIsServiceImpl implements APIsService {
 		// mise à jour de la définition openapi de l'api
 		apIsOperationAPI.updateAPIOpenapiDefinition(
 				openApiGenerator.generate(apiDescription, buildAPIContext(apiDescription)), apiResult.getId());
+
+		// création de la révision - par défaut la description peut rester vide
+		final APIRevision apiRevision = apIsOperationAPI.createApiRevision(apiResult.getId(), Strings.EMPTY);
+
+		// recherche des différentes gateways sur lesquelles déployer
+		List<Environment> gateways = adminOperationAPI.getSelectedGatewayEnvironments();
+
+		// Déploiement de la révision dans le publisher
+		final APIRevisionDeployment[] apiRevisionDeploymentResult = apIsOperationAPI
+				.deployApiRevisionInPublisher(apiResult.getId(), apiRevision.getId(), gateways);
+		if (apiRevisionDeploymentResult == null || apiRevisionDeploymentResult.length < 1) {
+			throw new APIManagerException(String.format(
+					"Erreur lors du déploiement de la révision %s de l'api d'id %s dans le publisher, resultat %s",
+					apiRevision.getId(), apiResult.getId(), apiRevisionDeploymentResult));
+		}
+
 		// publication de l'api
 		updateAPILifecycleStatus(apiResult.getId(), APILifecycleStatusAction.PUBLISH);
+
+		// Déploiement dans la gateway
+		final DeployResponse deploymentResult = apIsOperationAPI.redeployApiInGateway(apiResult.getName(),
+				apiResult.getVersion(), apiResult.getId());
 
 		return apIsOperationAPI.getAPI(apiResult.getId());
 	}
 
 	@Override
 	public API createOrUnarchiveAPI(APIDescription apiDescription) throws APIManagerException {
-		val apiList = searchAPIByName(apiDescription);
-		final var apiExists = apiList.getCount() > 0;
-		if (apiExists) {
-			val apiId = apiList.getList().get(0).getId();
+		APIList apiList = searchAPIByName(apiDescription);
+		if (apiList != null && apiList.getCount() > 0) {
+			String apiId = apiList.getList().get(0).getId();
 			unarchiveAPI(apiId);
 			return apIsOperationAPI.getAPI(apiId);
 		} else {
@@ -113,7 +138,7 @@ public class APIsServiceImpl implements APIsService {
 	@Override
 	public void createOrUpdateAPIByName(APIDescription apiDescription) throws APIManagerException {
 		val apiList = searchAPIByName(apiDescription);
-		if (apiList.getCount() > 0) {
+		if (apiList != null && apiList.getCount() > 0) {
 			updateAPIByName(apiDescription);
 		} else {
 			createOrUnarchiveAPI(apiDescription);
@@ -152,14 +177,13 @@ public class APIsServiceImpl implements APIsService {
 	private API getAPIByName(APIDescription apiDescription)
 			throws APINotFoundException, APIsOperationException, APIsOperationWithIdException {
 		val apis = searchAPIByName(apiDescription);
-		if (apis.getCount() == 0) {
+		if (apis != null && apis.getCount() == 0) {
 			throw new APINotFoundException(apiDescription);
 		}
 		// il y a normalement qu'une seule api avec ce nom
 		return getAPI(apis.getList().get(0).getId());
 	}
 
-	@Nonnull
 	private APIList searchAPIByName(APIDescription apiDescription) throws APIsOperationException {
 		if (apiDescription == null) {
 			throw new IllegalArgumentException("Les paramètres de l'API à rechercher par nom sont absents");
@@ -182,7 +206,8 @@ public class APIsServiceImpl implements APIsService {
 	}
 
 	@Override
-	public API getAPIFromDevportal(String apiId, String username) throws APIsOperationWithIdException {
+	public org.wso2.carbon.apimgt.rest.api.devportal.API getAPIFromDevportal(String apiId, String username)
+			throws APIsOperationWithIdException {
 		if (StringUtils.isEmpty(apiId)) {
 			throw new IllegalArgumentException(APIsServiceImpl.API_ID_NOT_GIVEN);
 		}
@@ -220,7 +245,7 @@ public class APIsServiceImpl implements APIsService {
 	API buildAPIToSave(APIDescription apiDescription)
 			throws ThrottlingPolicyOperationException, AdminOperationException {
 		// get actual subscription policies (pour le moment on récupère toutes les subscriptions policies)
-		final var searchCriteria = new SearchCriteria().offset(0);
+		final var searchCriteria = new SearchCriteria().offset(0).limit(200);
 		final var policyLevel = PolicyLevel.SUBSCRIPTION;
 		final var limitingPolicies = throttlingPolicyOperationAPI.searchLimitingPoliciesByPublisher(searchCriteria,
 				policyLevel);
@@ -235,10 +260,10 @@ public class APIsServiceImpl implements APIsService {
 
 	private void checkApiCategories() throws AdminOperationException {
 		if (!apiCategoriesCreated) {
-			final var apiCategoriesNamesToCreate = List.of(apiCategories);
-			final var existingApiCategories = adminOperationAPI.getApiCategories();
-			final var existingCategoriesNames = existingApiCategories.getList().stream().map(APICategory::getName)
-					.collect(Collectors.toList());
+			final List<String> apiCategoriesNamesToCreate = List.of(apiCategories);
+			final APICategoryList existingApiCategories = adminOperationAPI.getApiCategories();
+			final List<String> existingCategoriesNames = existingApiCategories.getList().stream()
+					.map(APICategory::getName).collect(Collectors.toList());
 
 			for (final String apiCategoryNameToCreate : apiCategoriesNamesToCreate) {
 				if (!existingCategoriesNames.contains(apiCategoryNameToCreate)) {

@@ -1,9 +1,9 @@
+import {HttpEvent} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {SelfdataAttachmentService} from '@core/services/selfdata-attachment.service';
 import {FilePreviewModel} from '@sleiss/ngx-awesome-uploader';
 import {Observable} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {HttpEvent} from '@angular/common/http';
 import {UploaderAdapter} from '../uploader/uploader.adapter';
-import {SelfdataAttachmentService} from '../../core/services/selfdata-attachment.service';
 
 @Injectable({
     providedIn: 'root'

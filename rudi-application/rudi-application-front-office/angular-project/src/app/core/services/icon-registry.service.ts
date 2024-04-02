@@ -1,7 +1,7 @@
-import {TitleIconType} from '../../shared/models/title-icon-type';
 import {Injectable} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
+import {TitleIconType} from '@shared/models/title-icon-type';
 
 @Injectable({
     providedIn: 'root'

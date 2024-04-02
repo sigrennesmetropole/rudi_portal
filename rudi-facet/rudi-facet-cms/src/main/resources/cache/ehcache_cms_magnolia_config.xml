@@ -1,0 +1,27 @@
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xmlns='http://www.ehcache.org/v3'
+	xsi:schemaLocation="http://www.ehcache.org/v3 https://www.ehcache.org/schema/ehcache-core.xsd">
+
+	<cache alias="cms_magnolia_category">
+		<key-type>java.lang.String</key-type>
+		<value-type>org.rudi.facet.cms.bean.CmsCategory</value-type>
+		<expiry>
+			<ttl unit="hours">1</ttl>
+		</expiry>
+		<resources>
+			<heap unit="entries">50</heap>
+		</resources>
+	</cache>
+
+	<cache alias="cms_magnolia_asset">
+		<key-type>java.lang.String</key-type>
+		<value-type>org.rudi.facet.cms.bean.CmsAsset</value-type>
+		<expiry>
+			<ttl unit="hours">1</ttl>
+		</expiry>
+		<resources>
+			<heap unit="entries">50</heap>
+		</resources>
+	</cache>
+	
+</config>

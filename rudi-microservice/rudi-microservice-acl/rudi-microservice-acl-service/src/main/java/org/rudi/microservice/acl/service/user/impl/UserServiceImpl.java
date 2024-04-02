@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
@@ -17,11 +18,12 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.rudi.common.core.LongId;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.common.service.util.PageableUtil;
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
+import org.rudi.facet.apimaccess.api.registration.Application;
 import org.rudi.facet.apimaccess.exception.BuildClientRegistrationException;
 import org.rudi.facet.apimaccess.exception.GetClientRegistrationException;
 import org.rudi.facet.apimaccess.helper.rest.RudiClientRegistrationRepository;
@@ -31,6 +33,7 @@ import org.rudi.microservice.acl.core.bean.ClientKey;
 import org.rudi.microservice.acl.core.bean.ClientRegistrationDto;
 import org.rudi.microservice.acl.core.bean.PasswordUpdate;
 import org.rudi.microservice.acl.core.bean.Role;
+import org.rudi.microservice.acl.core.bean.RoleSearchCriteria;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.service.helper.PasswordHelper;
@@ -44,6 +47,7 @@ import org.rudi.microservice.acl.service.password.InvalidCredentialsException;
 import org.rudi.microservice.acl.service.user.UserService;
 import org.rudi.microservice.acl.storage.dao.address.AbstractAddressDao;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleDao;
+import org.rudi.microservice.acl.storage.dao.role.RoleCustomDao;
 import org.rudi.microservice.acl.storage.dao.role.RoleDao;
 import org.rudi.microservice.acl.storage.dao.user.UserCustomDao;
 import org.rudi.microservice.acl.storage.dao.user.UserDao;
@@ -55,6 +59,7 @@ import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Service;
@@ -101,6 +106,9 @@ public class UserServiceImpl implements UserService {
 	@Getter
 	private int lockDuration;
 
+	@Value("${application.role.user.code:USER}")
+	private String userRoleCode;
+
 	@Autowired
 	private UtilContextHelper utilContextHelper;
 
@@ -121,6 +129,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RoleDao roleDao;
+
+	@Autowired
+	private RoleCustomDao roleCustomDao;
 
 	@Autowired
 	private UserMapper userMapper;
@@ -477,7 +488,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void addClientRegistration(String login, AccessKeyDto accessKey) {
-		val clientAccessKey = new ClientAccessKey().setClientId(accessKey.getClientId())
+		val clientAccessKey = new Application().setClientId(accessKey.getClientId())
 				.setClientSecret(accessKey.getClientSecret());
 		rudiClientRegistrationRepository.addClientRegistration(login, clientAccessKey);
 	}
@@ -504,5 +515,24 @@ public class UserServiceImpl implements UserService {
 		// Changement du mot de passe
 		user.setPassword(passwordHelper.encodePassword(passwordUpdate.getNewPassword()));
 		userDao.save(user);
+	}
+
+	@Override
+	public Long countUsers() {
+
+		RoleSearchCriteria criteria = new RoleSearchCriteria();
+		criteria.setCode(userRoleCode);
+		List<RoleEntity> roles = roleCustomDao.searchRoles(criteria);
+
+		List<UUID> roleUuids = CollectionUtils.emptyIfNull(roles).stream().map(LongId::getUuid)
+				.collect(Collectors.toList());
+
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().roleUuids(roleUuids).build();
+
+		Pageable pageable = PageRequest.of(0, 1);
+
+		final Page<UserEntity> pagedUserEntities = userCustomDao.searchUsers(searchCriteria, pageable);
+		return pagedUserEntities.getTotalElements();
+
 	}
 }

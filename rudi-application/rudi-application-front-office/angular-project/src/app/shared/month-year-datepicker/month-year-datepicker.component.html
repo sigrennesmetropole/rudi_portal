@@ -1,6 +1,7 @@
 <div class="field-content">
     <mat-form-field appearance="outline" [formGroup]="formGroup">
-        <input matInput [placeholder]="placeholder" [min]="startDate" [matDatepicker]="datepicker" [value]="startDate" [formControlName]="controlName">
+        <input matInput [placeholder]="placeholder" [min]="startDate" [matDatepicker]="datepicker" [value]="startDate"
+               [formControlName]="controlName">
         <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
         <mat-datepicker #datepicker
                         startView="multi-year"
@@ -10,7 +11,7 @@
         </mat-datepicker>
     </mat-form-field>
     <div class="error-label" *ngIf="hasErrors()">
-        <em class="fa fa-info-circle fa-2x mr-2"></em> {{errorMessage}}
+        <em class="fa fa-info-circle fa-2x me-2"></em> {{errorMessage}}
     </div>
 </div>
 

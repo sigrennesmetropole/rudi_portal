@@ -958,6 +958,253 @@
 					}
 				}
 			}
+		},
+		"/cms/categories": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Accès aux catégories.",
+				"description": "Accès aux catégories.",
+				"operationId": "getCategories",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Retourne les categories",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "CmsCategory"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/cms/{assetType}/renders/{assetTemplate}": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Téléchargement d'un ensemble d'asset du cms.",
+				"description": "Téléchargement d'un ensemble d'asset du cms.",
+				"operationId": "renderAssets",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "assetType",
+						"description": "Identifiant du type d'asset",
+						"required": true,
+						"schema": {
+							"$ref": "CmsAssetType"
+						},
+						"example": "news ou terms ou projectvalues"
+					},
+					{
+						"in": "path",
+						"name": "assetTemplate",
+						"description": "Identifiant d'un template de génération",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "termDetail"
+					},
+					{
+						"in": "query",
+						"name": "categories",
+						"description": "Liste des catégories",
+						"required": "false",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filters",
+						"description": "filtre complémentaire de la forme param=value",
+						"required": "false",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"$ref": "#/components/parameters/LocaleParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne les données d'un média",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "CmsAsset"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/cms/{assetType}/{assetId}/{assetTemplate}": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Téléchargement d'un asset du cms.",
+				"description": "Téléchargement d'un asset du cms.",
+				"operationId": "renderAsset",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "assetType",
+						"description": "Identifiant du type d'asset",
+						"required": true,
+						"schema": {
+							"$ref": "CmsAssetType"
+						},
+						"example": "news ou terms ou projectvalues"
+					},
+					{
+						"in": "path",
+						"name": "assetId",
+						"description": "Identifiant d'un asset",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "assetTemplate",
+						"description": "Identifiant d'un template de génération",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "termDetail"
+					},
+					{
+						"$ref": "#/components/parameters/LocaleParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne les données d'un média",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "CmsAsset"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/customizations": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Description des éléménts paramétrables",
+				"description": "Description des éléménts paramétrables",
+				"operationId": "getCustomizationDescription",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "lang",
+						"description": "langue d'affichage",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne les données de paramétrage",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-konsult-model.json#/components/schemas/CustomizationDescription"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/customizations/resources/{resource-name}": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Téléchargement des resources de customisation",
+				"description": "Téléchargement des resources de customisation",
+				"operationId": "downloadCustomizationResource",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "resource-name",
+						"description": "Nom de la resource",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne la ressource demandée",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -1141,6 +1388,15 @@
 				"schema": {
 					"type": "string",
 					"format": "uuid"
+				}
+			},
+			"LocaleParam": {
+				"in": "query",
+				"name": "locale",
+				"description": "Locale demandée",
+				"required": false,
+				"schema": {
+					"type": "string"
 				}
 			}
 		},

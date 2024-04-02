@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
-import javax.validation.Valid;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataList;
 import org.rudi.microservice.kalim.core.bean.Report;
@@ -19,6 +17,8 @@ import org.rudi.tools.nodestub.service.ResourcesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +55,8 @@ public class ResourcesApiController implements ResourcesApi {
 	}
 
 	@Override
-	public ResponseEntity<MetadataList> getRessources(@Valid Integer incomingLimit, @Valid Integer incomingOffset,
-			@Valid OffsetDateTime updatedAfter, @Valid OffsetDateTime updateBefore) {
+	public ResponseEntity<MetadataList> getRessources(Integer incomingLimit, Integer incomingOffset,
+			OffsetDateTime updatedAfter, OffsetDateTime updateBefore) {
 
 		final int limit;
 		if (incomingLimit == null || incomingLimit < 0) {
@@ -74,17 +74,14 @@ public class ResourcesApiController implements ResourcesApi {
 
 		final List<Metadata> metadatas = resourcesService.getMetadataList(limit, offset, updatedAfter);
 
-		return ResponseEntity.ok(
-				new MetadataList()
-						.total((long) metadatas.size())
-						.offset((long) offset)
-						.items(metadatas)
-		);
+		return ResponseEntity
+				.ok(new MetadataList().total((long) metadatas.size()).offset((long) offset).items(metadatas));
 	}
 
 	@Override
-	public ResponseEntity<Void> sendResourceReport(UUID uuid, @Valid Report report) throws IOException {
-		final File reportFile = new File(nodeStubConfiguration.getReportsDirectory(), nodeStubConfiguration.getReportsNameFormat().format(new Object[]{ uuid }));
+	public ResponseEntity<Void> sendResourceReport(UUID uuid, Report report) throws IOException {
+		final File reportFile = new File(nodeStubConfiguration.getReportsDirectory(),
+				nodeStubConfiguration.getReportsNameFormat().format(new Object[] { uuid }));
 		if (checkParentDirectoryExistsOrCreate(reportFile)) {
 			mapper.writeValue(reportFile, report);
 			if (nodeStubConfiguration.getErrors429().contains(uuid.toString())) {
@@ -128,6 +125,7 @@ public class ResourcesApiController implements ResourcesApi {
 
 	@Nonnull
 	private File getResourceFile(UUID uuid) {
-		return new File(nodeStubConfiguration.getResourcesDirectory(), nodeStubConfiguration.getResourcesNameFormat().format(new Object[]{ uuid }));
+		return new File(nodeStubConfiguration.getResourcesDirectory(),
+				nodeStubConfiguration.getResourcesNameFormat().format(new Object[] { uuid }));
 	}
 }

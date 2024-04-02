@@ -8,17 +8,22 @@
 		{
 			"name": "apimanager.api.admin.context",
 			"type": "java.lang.String",
-			"description": "Le contexte d'accès à l'api REST en mode admin  (par défaut `/admin/v1`)."
+			"description": "Le contexte d'accès à l'api REST en mode admin (par défaut `/admin/v4`)."
 		},
 		{
 			"name": "apimanager.api.publisher.context",
 			"type": "java.lang.String",
-			"description": "Le contexte d'accès à l'api REST en mode admin  (par défaut `/publisher/v1`)."
+			"description": "Le contexte d'accès à l'api REST publisher (par défaut `/publisher/v4`)."
 		},
 		{
 			"name": "apimanager.api.store.context",
 			"type": "java.lang.String",
-			"description": "Le contexte d'accès à l'api REST en mode admin  (par défaut `/store/v1`)."
+			"description": "Le contexte d'accès à l'api REST devportal (par défaut `/devportal/v3`)."
+		},
+		{
+			"name": "apimanager.api.gateway.context",
+			"type": "java.lang.String",
+			"description": "Le contexte d'accès à l'api REST gateway (par défaut `/gateway/v2`)."
 		},
 		{
 			"name": "apimanager.api.store.api.categories",
@@ -113,7 +118,7 @@
 		{
 			"name": "apimanager.oauth2.client.registration.uri",
 			"type": "java.lang.String",
-			"description": "Url utilisé pour générer les paramètres de connection Oauth2 (notamment clienId et clientSecret) de l'utilisateur connecté (par exemple `https://wso2.open-dev.com:9443/client-registration/v0.17/register`)."
+			"description": "Url utilisé pour générer les paramètres de connection Oauth2 (notamment clienId et clientSecret) de l'utilisateur connecté (par exemple `https://wso2.open-dev.com:9443/api/identity/oauth2/dcr/v1.1/register`)."
 		},
 		{
 			"name": "apimanager.oauth2.client.provider.token-uri",
@@ -131,11 +136,6 @@
 			"description": "Port of WSO2 API Manager."
 		},
 		{
-			"name": "apimanager.oauth2.client.registration-v0.17.path",
-			"type": "java.lang.String",
-			"description": "Registration v0.17 path."
-		},
-		{
 			"name": "apimanager.oauth2.client.registration-v1.1.path",
 			"type": "java.lang.String",
 			"description": "Registration v1.1 path."
@@ -148,14 +148,6 @@
 				{
 					"value": "9443",
 					"description": "Default WSO2 API Manager port."
-				}
-			]
-		},
-		{
-			"name": "apimanager.oauth2.client.registration-v0.17.path",
-			"values": [
-				{
-					"value": "/client-registration/v0.17/register"
 				}
 			]
 		},

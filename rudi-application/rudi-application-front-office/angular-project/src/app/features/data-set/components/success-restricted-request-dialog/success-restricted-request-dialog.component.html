@@ -1,0 +1,15 @@
+<div id="content">
+    <mat-dialog-content class="justify-content-center">
+        <div class="dialog-header-close-button" fxLayoutAlign="end center">
+            <button mat-icon-button [mat-dialog-close]="null">
+                <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
+            </button>
+        </div>
+        <div [translate]="'metaData.restrictedDatasetRequestDialog.ok.title'" class="title"></div>
+        <div class="content-text">
+            <span
+                class="description-text">{{'metaData.restrictedDatasetRequestDialog.ok.description1' | translate}}</span>
+            <span class="link-text" (click)="goToMyReuses()">{{'metaData.restrictedDatasetRequestDialog.ok.description2' | translate}}</span>
+        </div>
+    </mat-dialog-content>
+</div>

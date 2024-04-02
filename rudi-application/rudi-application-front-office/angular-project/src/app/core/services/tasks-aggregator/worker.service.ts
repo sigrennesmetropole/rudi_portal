@@ -1,14 +1,14 @@
-import {RequestToStudy} from './request-to-study.interface';
+import {injectDependenciesEach} from '@shared/utils/dependencies-utils';
+import {mapEach} from '@shared/utils/ObservableUtils';
+import {TaskWithDependencies} from '@shared/utils/task-utils';
+import {Task} from 'micro_service_modules//api-bpmn/model/task';
+import {AssetDescription} from 'micro_service_modules/api-bpmn';
 import {Observable} from 'rxjs';
-import {injectDependenciesEach} from '../../../shared/utils/dependencies-utils';
-import {mapEach} from '../../../shared/utils/ObservableUtils';
-import {TaskWithDependencies} from '../../../shared/utils/task-utils';
-import {TaskDependencyFetchers, TaskWithDependenciesService} from '../tasks/task-with-dependencies-service';
-import {Task} from 'src/app/api-bpmn/model/task';
-import {Worker} from './worker.interface';
 import {TaskDependencies} from '../tasks/task-dependencies.interface';
-import {AssetDescription} from '../../../api-bpmn';
 import {TaskSearchCriteria} from '../tasks/task-search-criteria.interface';
+import {TaskDependencyFetchers, TaskWithDependenciesService} from '../tasks/task-with-dependencies-service';
+import {RequestToStudy} from './request-to-study.interface';
+import {Worker} from './worker.interface';
 
 /**
  * Service capble de récupérer des données et de les renvoyer au format : Tâche de travail RUDI

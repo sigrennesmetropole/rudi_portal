@@ -1,6 +1,9 @@
-@import "src/app/styles/common-style";
+@import "common-style";
 
-button, button.mat-raised-button {
+button, button.mat-raised-button.mat-mdc-raised-button:not(:disabled) {
+    --mdc-protected-button-container-color: #{$primary-color};
+    --mdc-protected-button-label-text-color: #{$secondary-color};
+
     cursor: pointer;
     font-weight: 600;
     border-radius: 6px;

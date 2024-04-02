@@ -1,6 +1,6 @@
-import {Metadata, SelfdataContent} from '../../api-kaccess';
+import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
+import {Metadata, SelfdataContent} from 'micro_service_modules/api-kaccess';
 import {Filters} from '../models/filters';
-import {AccessStatusFiltersType} from '../../core/services/filters/access-status-filters-type';
 import {AccessConditionConfidentiality} from './access-condition-confidentiality';
 import SelfdataAccessEnum = SelfdataContent.SelfdataAccessEnum;
 

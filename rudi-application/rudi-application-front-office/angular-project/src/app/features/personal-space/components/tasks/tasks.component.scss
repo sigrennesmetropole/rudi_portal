@@ -1,0 +1,113 @@
+@import "common-style";
+
+::ng-deep {
+    table {
+        width: 100%;
+        font-family: OpenSans, sans-serif;
+        cursor: pointer;
+
+        * {
+            font-family: OpenSans, sans-serif;
+        }
+
+        tr {
+            height: unset;
+
+            &:focus, &:active, &:hover {
+                background-color: $selected-table-row;
+            }
+        }
+
+        th {
+            font-weight: 600;
+            font-size: 13px;
+            color: $primary-text;
+            padding: 12px 24px;
+
+            mat-icon {
+                @include mat-icon-size(18px);
+                margin-right: 5px;
+            }
+
+        }
+
+        td {
+            padding: 24px 24px;
+            font-size: 15px;
+            line-height: 1.4;
+
+            &.dataset-title {
+                font-weight: bold;
+                color: var(--0-classic-blue);
+            }
+
+            &.owner-name {
+                font-weight: bold;
+            }
+        }
+
+    }
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.icon-style {
+    height: 18px;
+    width: 18px;
+    margin-right: 7px;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    width: 23ch;
+}
+
+.table-header {
+    font-family: OpenSans, sans-serif;
+}
+
+.table-header:first-child {
+    text-decoration: underline;
+}
+
+// Centrer le contenu de la colonne "status"
+::ng-deep .status-header .mat-sort-header-container {
+    justify-content: center;
+}
+
+.status-chip {
+    border-radius: 14px;
+    background-color: var(--background-s-lection-active-tableau);
+    white-space: nowrap;
+    padding: 5px 18px;
+    font-size: 13px;
+    color: $primary-color;
+}
+
+// Taille fixe colonne date (format dd/mm/yyyy) marge de 16 caractères
+.mat-column-receivedDate {
+    width: 16ch;
+}
+
+// Taille fixe colonne statut, 50 caractères max en BDD
+.mat-column-status {
+    width: 50ch;
+    text-align: center;
+}
+
+// Taille variable pour la description 40% de la fenêtre (compromis)
+.mat-column-description {
+    max-width: 40vw;
+}
+
+// Crop de la description si trop longue
+.description-container {
+    max-width: 100%;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

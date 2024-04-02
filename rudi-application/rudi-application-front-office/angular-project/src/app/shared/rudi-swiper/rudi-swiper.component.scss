@@ -1,0 +1,47 @@
+@import "colors";
+@import "responsive";
+
+.swiper-container {
+    @import "swiper/css";
+    @import 'swiper/css/navigation';
+    @import 'swiper/css/pagination';
+    @import 'swiper/css/grid';
+
+    width: 100%;
+    height: 100%;
+    margin: auto;
+
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-button-next, .swiper-button-prev {
+        top: var(--swiper-button-top-offset, 60px);
+        &::after {
+            content: none;
+        }
+    }
+
+    .swiper-button-prev {
+        left: var(--swiper-navigation-sides-offset, 0);
+    }
+
+    .swiper-button-next {
+        right: var(--swiper-navigation-sides-offset, 0);
+    }
+
+    @mixin nav-button-for-small-screens {
+        .swiper-button-next, .swiper-button-prev {
+            top: var(--swiper-navigation-top-offset, 35%);
+        }
+    }
+
+    @include xs(){
+        @include nav-button-for-small-screens;
+    }
+
+    @include sm() {
+        @include nav-button-for-small-screens;
+    }
+}

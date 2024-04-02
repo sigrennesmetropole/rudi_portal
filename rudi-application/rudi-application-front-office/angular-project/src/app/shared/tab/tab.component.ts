@@ -1,6 +1,6 @@
 import {Component, ContentChild, Input, TemplateRef} from '@angular/core';
-import {ALL_TYPES, TitleIconType} from '../models/title-icon-type';
-import {IconRegistryService} from '../../core/services/icon-registry.service';
+import {IconRegistryService} from '@core/services/icon-registry.service';
+import {ALL_TYPES, TitleIconType} from '@shared/models/title-icon-type';
 
 @Component({
     selector: 'app-tab',
@@ -20,6 +20,9 @@ export class TabComponent {
 
     @Input()
     disabled = false;
+
+    @Input()
+    invisible?: boolean;
 
     @ContentChild(TemplateRef)
         // tslint:disable-next-line:no-any

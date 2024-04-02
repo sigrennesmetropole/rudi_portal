@@ -1,8 +1,10 @@
 <div id="dialog-content">
-    <mat-dialog-actions class="dialog-header-button">
-        <mat-icon svgIcon="icon-close" class="icon-close" (click)="handleClose()"></mat-icon>
-    </mat-dialog-actions>
     <mat-dialog-content>
+        <div class="dialog-header-close-button" fxLayoutAlign="end center">
+            <button mat-icon-button (click)="handleClose()">
+                <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
+            </button>
+        </div>
         <div class="dialog-title">{{organizationMemberDialogData.title}}</div>
         <div class="text-alignement description"> {{organizationMemberDialogData.subTitle}}</div>
         <div class="text-alignement description1">

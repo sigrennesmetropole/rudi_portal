@@ -1,5 +1,5 @@
-@import "src/app/styles/variables-rudi";
-@import "src/app/styles/common-style";
+@import "variables-rudi";
+@import "common-style";
 
 * {
     font-family: OpenSans, sans-serif;
@@ -29,7 +29,7 @@
 
 button {
     @extend .button;
-    @extend .mat-stroked-button;
+    @extend .mat-stroked-button !optional;
     @include button-blue;
     margin-top: 2em;
 

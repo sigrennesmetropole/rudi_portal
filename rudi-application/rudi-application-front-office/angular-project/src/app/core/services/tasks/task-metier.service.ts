@@ -1,5 +1,5 @@
-import {Action, AssetDescription, Task} from '../../../api-bpmn';
-import {Observable,throwError} from 'rxjs';
+import {Action, AssetDescription, Task} from 'micro_service_modules/api-bpmn';
+import {Observable, throwError} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {ObjectType} from './object-type.enum';
 import {TaskSearchCriteria} from './task-search-criteria.interface';

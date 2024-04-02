@@ -1,6 +1,6 @@
-@import "src/app/styles/common-style";
-@import "src/app/styles/variables-rudi";
-@import "src/app/styles/colors";
+@import "common-style";
+@import "variables-rudi";
+@import "colors";
 @import "bootstrap/scss/functions";
 
 // Ajustement des variables initialisées dans ngx-smart-popover/scss/popover-content.component
@@ -34,13 +34,13 @@ $popover-header-bg: white;
 
             &::before {
                 top: 0;
-                border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+                border-width: 0 calc($popover-arrow-width / 2) $popover-arrow-height calc($popover-arrow-width / 2);
                 border-bottom-color: $popover-arrow-outer-color;
             }
 
             &::after {
                 top: $popover-border-width;
-                border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+                border-width: 0 calc($popover-arrow-width / 2) $popover-arrow-height calc($popover-arrow-width / 2);
                 border-bottom-color: $popover-arrow-color;
             }
         }
@@ -52,7 +52,7 @@ $popover-header-bg: white;
             left: 50%;
             display: block;
             width: $popover-arrow-width;
-            margin-left: -$popover-arrow-width / 2;
+            margin-left:  calc(-1 * $popover-arrow-width / 2);
             content: "";
             border-bottom: $popover-border-width solid $popover-header-bg;
         }

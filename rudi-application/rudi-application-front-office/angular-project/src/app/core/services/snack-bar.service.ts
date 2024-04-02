@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Data, Level, NotificationTemplateComponent} from '../../shared/notification-template/notification-template.component';
 import {TranslateService} from '@ngx-translate/core';
-import {switchMap} from 'rxjs/operators';
+import {Data, Level, NotificationTemplateComponent} from '@shared/notification-template/notification-template.component';
 import {Observable, of} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'

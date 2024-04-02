@@ -1,10 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
-import {Metadata} from '../../api-kaccess';
-import {LanguageService} from '../../i18n/language.service';
 import {Router} from '@angular/router';
+import {LanguageService} from '@core/i18n/language.service';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {URIComponentCodec} from '@core/services/codecs/uri-component-codec';
+import {ThemeCacheService} from '@core/services/theme-cache.service';
+import {Metadata} from 'micro_service_modules/api-kaccess';
 import {MetadataUtils} from '../utils/metadata-utils';
 
 @Component({
@@ -15,7 +17,6 @@ import {MetadataUtils} from '../utils/metadata-utils';
 export class DataSetCardComponent implements OnInit {
     @Input() metadata: Metadata;
     mediaSize: MediaSize;
-    @Input() themeLabel: string;
     @Input() isSelectable = false;
     isSelected = false;
     isSingleClick = true;
@@ -23,8 +24,10 @@ export class DataSetCardComponent implements OnInit {
     @Output() dbSelectMetadata = new EventEmitter<Metadata>();
 
     constructor(
+        private readonly themeCacheService: ThemeCacheService,
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly languageService: LanguageService,
+        private readonly uriComponentCodec: URIComponentCodec,
         private matIconRegistry: MatIconRegistry,
         private domSanitizer: DomSanitizer,
         private router: Router,
@@ -45,21 +48,16 @@ export class DataSetCardComponent implements OnInit {
             'self-data-icon',
             this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/self-data-icon.svg')
         );
-    }
 
-    private _themePicto: string;
+        themeCacheService.init();
+    }
 
     get themePicto(): string {
-        return this._themePicto;
+        return this.metadata.theme;
     }
 
-    /** Example 'weather.svg' */
-    @Input() set themePicto(themePicto: string) {
-        this.matIconRegistry.addSvgIcon(
-            themePicto,
-            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/pictos/' + themePicto)
-        );
-        this._themePicto = themePicto;
+    get themeLabel(): string {
+        return this.themeCacheService.getThemeLabelFor(this.metadata);
     }
 
     get ngClass(): NgClassObject {
@@ -108,8 +106,8 @@ export class DataSetCardComponent implements OnInit {
      * Fonction de permet de naviguer vers le detail d'un jdd
      */
     ifNotSelectableGoToDetail(): void {
-        if (!this.isSelectable && this.metadata.global_id) {
-            this.router.navigate(['/catalogue/detail/' + this.metadata.global_id]);
+        if (!this.isSelectable && this.metadata.global_id && this.metadata.resource_title) {
+            this.router.navigate(['/catalogue/detail/' + this.metadata.global_id + '/' + this.uriComponentCodec.normalizeString(this.metadata.resource_title)]);
         }
     }
 

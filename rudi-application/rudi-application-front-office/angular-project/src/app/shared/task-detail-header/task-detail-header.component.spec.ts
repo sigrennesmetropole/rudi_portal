@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {RequestDetailHeaderComponent} from './task-detail-header.component';
+import {TaskDetailHeaderComponent} from './task-detail-header.component';
 
 describe('RequestDetailHeaderComponent', () => {
-  let component: RequestDetailHeaderComponent;
-  let fixture: ComponentFixture<RequestDetailHeaderComponent>;
+  let component: TaskDetailHeaderComponent;
+  let fixture: ComponentFixture<TaskDetailHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RequestDetailHeaderComponent ]
+      declarations: [ TaskDetailHeaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RequestDetailHeaderComponent);
+    fixture = TestBed.createComponent(TaskDetailHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

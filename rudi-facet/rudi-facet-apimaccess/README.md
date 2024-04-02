@@ -8,9 +8,10 @@ L'ajout de cette facette dans un µservice nécessite la configuration des propr
 * `apimanager.base-url` L'url de base (sans port ni chemin) d'accès à l'api REST de l'API Manager WSO2 (par exemple `https://wso2.open-dev.com`)
 * `apimanager.port` Port de l'api REST de l'API Manager WSO2 (par défaut `9443`)
 * `apimanager.api.url` L'url d'accès à l'api REST de l'API Manager WSO2 (par exemple `https://wso2.open-dev.com:9443/api/am`)
-* `apimanager.api.admin.context` Le contexte d'accès à l'api REST en mode admin  (par défaut `/admin/v1`)
-* `apimanager.api.publisher.context` Le contexte d'accès à l'api REST en mode admin  (par défaut `/publisher/v1`)
-* `apimanager.api.store.context` Le contexte d'accès à l'api REST en mode admin  (par défaut `/store/v1`)
+* `apimanager.api.admin.context` Le contexte d'accès à l'api REST en mode admin (par défaut `/admin/v4`).
+* `apimanager.api.publisher.context` Le contexte d'accès à l'api REST publisher (par défaut `/publisher/v4`).
+* `apimanager.api.store.context` Le contexte d'accès à l'api REST devportal (par défaut `/devportal/v3`).
+* `apimanager.api.gateway.context` Le contexte d'accès à l'api REST gateway (par défaut `/gateway/v2`).
 * `apimanager.api.store.api.categories` Nom de la catégorie d'API dans laquelle les APIs sont crées (par défaut on utilise la catégorie existante `RudiData`)
 * `apimanager.api.store.application.default.name` Nom de l'application WSO2 par défaut pour un utilisateur
 * `apimanager.api.store.application.default.requestPolicy` Nom de la politique de requêtage par défaut pour l'application par défaut de l'utilisateur connecté
@@ -18,8 +19,7 @@ L'ajout de cette facette dans un µservice nécessite la configuration des propr
 * `apimanager.api.store.subscription.anonymous.policy` Nom de la politique de souscription à une API par défaut pour l'utiilsateur anonymous
 
 * `apimanager.gateway.url` L'url du gateway WSO2 utilisé pour télécharger les données d'une API via son contexte
-
-* `apimanager.oauth2.client.registration-v0.17.path` Chemin pour l'enregistrement client v0.17 (par défaut : `/client-registration/v0.17/register`)
+* `apimanager.api.admin.environments.gateway.names` Liste des noms des gateways sur lesquelles déployer les révisions des APIs ("Default" par défaut)
 * `apimanager.oauth2.client.registration-v1.1.path` Chemin pour l'enregistrement client v1.1 (par défaut : `/api/identity/oauth2/dcr/v1.1/register`)
 * `apimanager.oauth2.client.admin.registration.client-id` Client-id de l'utilisateur admin pour l'autorisation OAuth2
 * `apimanager.oauth2.client.admin.registration.client-secret` Client-secret de l'utilisateur admin pour l'autorisation OAuth2
@@ -33,10 +33,10 @@ L'ajout de cette facette dans un µservice nécessite la configuration des propr
 * `apimanager.oauth2.client.anonymous.password` Password de connexion de l'utilisateur anonymous
 
 * `apimanager.oauth2.client.default.registration.scopes` Liste des scopes utilisés par les users connectés pour faire des requêtes vers WSO2
-* `apimanager.oauth2.client.registration.uri` Url utilisé pour générer les paramètres de connection Oauth2 (notamment clienId et clientSecret) de l'utilisateur connecté (par exemple `https://wso2.open-dev.com:9443/client-registration/v0.17/register`)
+* `apimanager.oauth2.client.registration.uri` Url utilisé pour générer les paramètres de connection Oauth2 (notamment clienId et clientSecret) de l'utilisateur connecté (par exemple `https://wso2.open-dev.com:9443/api/identity/oauth2/dcr/v1.1/register`)
 * `apimanager.oauth2.client.provider.token-uri` Url permettant d'obtenir un token WSO2 (par exemple `https://wso2.open-dev.com:9443/oauth2/token`)
 
-La procédure à exécuter pour générer le client-id et le client-secret est défini sur la page `https://apim.docs.wso2.com/en/latest/develop/product-apis/admin-apis/admin-v0.17/admin-v0.17/#section/Authentication`.
+La procédure à exécuter pour générer le client-id et le client-secret est défini sur la page `https://apim.docs.wso2.com/en/latest/reference/product-apis/admin-apis/admin-v4/admin-v4/#section/Authentication`.
 
 Il est toutefois possible d'utiliser les propriétés définies dans le fichier properties de test de la facet apimaccess (fichier `test/resources/apimaccess-test.properties`)
 

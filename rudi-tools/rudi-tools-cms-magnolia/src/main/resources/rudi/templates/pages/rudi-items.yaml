@@ -1,0 +1,32 @@
+# https://git.magnolia-cms.com/projects/MODULES/repos/templating-essentials/browse/magnolia-templating-kit-2/src/main/resources/mtk2/templates/pages/basic.ftl
+class: info.magnolia.module.site.templates.PageTemplateDefinition
+templateScript: /rudi/templates/pages/rudi-items.ftl
+renderType: freemarker
+
+dialog: mtk2:pages/basic
+
+areas:
+  main:
+    availableComponents:
+      termList:
+        id: rudi:components/term/termList
+      newsList:
+        id: rudi:components/news/newsList
+      projectvalueList:
+        id: rudi:components/projectvalue/projectvalueList                
+      link:
+        id: mtk2:components/link
+      textImage:
+        id: mtk2:components/textImage
+      image:
+        id: mtk2:components/image
+      html:
+        id: mtk2:components/html
+      linkList:
+        id: mtk2:components/linkList
+      teaser:
+        id: mtk2:components/teaser
+      video:
+        id: mtk2:components/video
+      pageIntro:
+        id: mtk2:components/pageIntro

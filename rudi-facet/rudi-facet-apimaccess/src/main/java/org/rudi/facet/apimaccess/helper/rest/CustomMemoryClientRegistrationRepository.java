@@ -1,6 +1,6 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
-import java.util.Objects;
+import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_CACHE_CLIENT_REGISTRATION;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,11 +16,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import static org.rudi.facet.apimaccess.constant.BeanIds.API_MACCESS_CACHE_CLIENT_REGISTRATION;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
@@ -35,11 +34,9 @@ public class CustomMemoryClientRegistrationRepository implements RudiClientRegis
 	@SuppressWarnings("java:S107")
 	public CustomMemoryClientRegistrationRepository(
 			@Qualifier(API_MACCESS_CACHE_CLIENT_REGISTRATION) Cache<String, ClientRegistration> cache,
-			APIManagerProperties properties,
-			ClientRegistererForAdmin clientRegistererForAdmin,
+			APIManagerProperties properties, ClientRegistererForAdmin clientRegistererForAdmin,
 			ClientRegistererForRudiAndAnonymous clientRegistererForRudiAndAnonymous,
-			ClientRegistererForUsers clientRegistererForUsers
-	) {
+			ClientRegistererForUsers clientRegistererForUsers) {
 		this.cache = cache;
 		this.properties = properties;
 		this.clientRegistererForRudiAndAnonymous = clientRegistererForRudiAndAnonymous;
@@ -74,23 +71,13 @@ public class CustomMemoryClientRegistrationRepository implements RudiClientRegis
 
 	@Nullable
 	@Override
-	public ClientRegistration findByUsernameAndPassword(String username, String password) throws SSLException, GetClientRegistrationException {
+	public ClientRegistration findByUsernameAndPassword(String username, String password)
+			throws SSLException, GetClientRegistrationException {
 		final var cachedRegistration = findByUsername(username);
 		if (cachedRegistration == null) {
 			throw new GetClientRegistrationException(username, new NullPointerException());
 		}
-		if (cachedRegistration != null) {
-			return cachedRegistration;
-		}
-
-		final var clientRegisterer = getClientRegistererFor(username);
-		try {
-			final var remoteRegistration = clientRegisterer.getRegistration(username, password);
-			cache.put(username, remoteRegistration);
-			return remoteRegistration;
-		} catch (GetClientRegistrationException e) {
-			return null;
-		}
+		return cachedRegistration;
 	}
 
 	/**
@@ -98,7 +85,8 @@ public class CustomMemoryClientRegistrationRepository implements RudiClientRegis
 	 */
 	@Nonnull
 	@Override
-	public ClientRegistration findRegistrationOrRegister(String username, String password) throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
+	public ClientRegistration findRegistrationOrRegister(String username, String password)
+			throws BuildClientRegistrationException, SSLException, GetClientRegistrationException {
 		val registration = findByUsername(username);
 		if (registration == null) {
 			return register(username, password);
@@ -107,7 +95,8 @@ public class CustomMemoryClientRegistrationRepository implements RudiClientRegis
 	}
 
 	@Override
-	public ClientRegistration register(String username, String password) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
+	public ClientRegistration register(String username, String password)
+			throws SSLException, BuildClientRegistrationException, GetClientRegistrationException {
 		final var clientRegisterer = getClientRegistererFor(username);
 		final var clientRegistration = clientRegisterer.register(username, password);
 		addClientRegistration(clientRegistration);

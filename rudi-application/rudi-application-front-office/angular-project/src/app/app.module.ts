@@ -1,37 +1,42 @@
+import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
+import {HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
+
+import localeFr from '@angular/common/locales/fr';
+import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, Injector, LOCALE_ID, NgModule} from '@angular/core';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatPaginatorIntl} from '@angular/material/paginator';
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CoreModule} from '@core/core.module';
+import {HttpTokenInterceptor} from '@core/interceptors/http.token.interceptor';
+import {ResponseTokenInterceptor} from '@core/interceptors/response.token.interceptor';
+import {LogService} from '@core/services/log.service';
+import {HomeModule} from '@features/home/home.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {TranslateCompiler, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {BotDetectCaptchaModule} from '@shared/angular-captcha/botdetect-captcha.module';
+import {SharedModule} from '@shared/shared.module';
+import {MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler} from 'ngx-translate-messageformat-compiler';
+import {appInitializerFactory} from './app-initializer-factory';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HomeComponent} from './home/home.component';
-import {HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
-import {TranslateCompiler, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {CoreModule} from './core/core.module';
-import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/common';
-import {MAT_DATE_LOCALE} from '@angular/material/core';
-import {LogService} from './core/services/log.service';
-import {HttpTokenInterceptor} from './core/interceptors/http.token.interceptor';
-import {ResponseTokenInterceptor} from './core/interceptors/response.token.interceptor';
-import {SharedModule} from './shared/shared.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler} from 'ngx-translate-messageformat-compiler';
-import {PopoverModule} from 'ngx-smart-popover';
-import {MatPaginatorIntl} from '@angular/material/paginator';
-import {TranslatedMatPaginatorIntl} from './i18n/translated-mat-paginator-intl';
-import {appInitializerFactory} from './app-initializer-factory';
+import {TranslatedMatPaginatorIntl} from '@core/i18n/translated-mat-paginator-intl';
 
+registerLocaleData(localeFr);
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         CoreModule,
         SharedModule,
+        HomeModule,
         AppRoutingModule,
+        BotDetectCaptchaModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -43,11 +48,12 @@ import {appInitializerFactory} from './app-initializer-factory';
                 useClass: TranslateMessageFormatCompiler
             }
         }),
-        PopoverModule,
+        NgbModule,
     ],
     exports: [],
     providers: [
         LogService,
+        { provide: LOCALE_ID, useValue: 'fr-FR'},
         {provide: LocationStrategy, useClass: PathLocationStrategy},
         {provide: APP_BASE_HREF, useValue: '/'},
         {provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true},
@@ -71,7 +77,6 @@ import {appInitializerFactory} from './app-initializer-factory';
         },
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    entryComponents: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

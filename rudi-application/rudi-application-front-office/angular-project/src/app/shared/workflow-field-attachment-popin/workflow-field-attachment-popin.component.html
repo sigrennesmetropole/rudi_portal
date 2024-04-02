@@ -1,8 +1,10 @@
 <div id="content-style">
-    <mat-dialog-actions class="dialog-header-button">
-        <mat-icon svgIcon="icon-close" class="" [mat-dialog-close]="null"></mat-icon>
-    </mat-dialog-actions>
     <mat-dialog-content id="dialog-content">
+        <div class="dialog-header-close-button" fxLayoutAlign="end center">
+            <button mat-icon-button [mat-dialog-close]="null">
+                <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
+            </button>
+        </div>
         <app-page-title class="confirmer-action"
                         [title1]="'metaData.selfdataInformationRequest.viewing.attachment.popin.title' | translate">
         </app-page-title>
@@ -10,7 +12,7 @@
                            [text]="'metaData.selfdataInformationRequest.viewing.attachment.popin.alert' | translate">
         </app-page-subtitle>
         <div class="d-flex mt-4 mb-4">
-            <div class="mr-2">
+            <div class="me-2">
                 <mat-checkbox [(ngModel)]="consent" class="signup-checkbox" required></mat-checkbox>
             </div>
             <div>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.consentText' | translate }}</div>

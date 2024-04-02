@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
-import {AttachmentAdapter} from './attachment.adapter';
-import {DocumentMetadata, SelfdataService} from '../../selfdata/selfdata-api';
-import {ALL_TYPES} from '../models/title-icon-type';
-import {IconRegistryService} from '../../core/services/icon-registry.service';
 import {MatDialog} from '@angular/material/dialog';
-import {SelfdataAttachmentService} from '../../core/services/selfdata-attachment.service';
+import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
+import {IconRegistryService} from '@core/services/icon-registry.service';
+import {SelfdataAttachmentService} from '@core/services/selfdata-attachment.service';
+import {DocumentMetadata, SelfdataService} from 'micro_service_modules/selfdata/selfdata-api';
+import {SelfdataRequestAllowedAttachementType} from 'micro_service_modules/selfdata/selfdata-model';
 import {Observable} from 'rxjs';
-import {DefaultMatDialogConfig} from '../../core/services/default-mat-dialog-config';
+import {ALL_TYPES} from '../models/title-icon-type';
 import {AttachmentPopinData} from '../workflow-field-attachment-popin/attachment-popin-data';
 import {WorkflowFieldAttachmentPopinComponent} from '../workflow-field-attachment-popin/workflow-field-attachment-popin.component';
-import {SelfdataRequestAllowedAttachementType} from '../../selfdata/selfdata-model';
+import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
+import {AttachmentAdapter} from './attachment.adapter';
 
 @Component({
     selector: 'app-workflow-field-attachment',

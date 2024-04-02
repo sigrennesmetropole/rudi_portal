@@ -1,0 +1,38 @@
+!content-type:news
+name: news-app
+icon: icon-content-app
+permissions:
+  roles:
+    editors: news_editor
+    publishers: news_editor
+subApps:
+  detail:
+    form:
+      properties:
+        title1:
+          locale:
+            rows: 1
+            maxLength: 5
+          message:
+            rows: 1
+            maxLength: 256
+        title2:
+          locale:
+            rows: 1
+            maxLength: 5
+          message:
+            rows: 1
+            maxLength: 256
+        sumup:
+          locale:
+            rows: 1
+            maxLength: 5
+          message:
+            rows: 10
+            maxLength: 512         
+        body:
+          locale:
+            rows: 1
+            maxLength: 5
+          message:
+            rows: 20

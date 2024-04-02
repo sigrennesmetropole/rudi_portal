@@ -1,7 +1,7 @@
-import {Observable, ReplaySubject} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
-import {Injector} from '@angular/core';
 import {LOCATION_INITIALIZED} from '@angular/common';
+import {Injector} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable, ReplaySubject} from 'rxjs';
 
 const TRANSLATE_SERVICE_IS_READY = new ReplaySubject<void>();
 /**

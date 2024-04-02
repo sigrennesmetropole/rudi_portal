@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {RvaService} from '../rva.service';
+import {Address} from 'micro_service_modules/api-rva';
+import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {Observable} from 'rxjs';
-import {Address} from '../../../../api-rva';
-import {KonsultService} from '../../../../konsult/konsult-api';
+import {RvaService} from '../rva.service';
 
 @Injectable({
     providedIn: 'root'

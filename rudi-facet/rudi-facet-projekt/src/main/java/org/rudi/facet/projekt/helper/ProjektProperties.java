@@ -25,4 +25,6 @@ public class ProjektProperties {
 
 	private String getNumberOfProjectsPerOwnersPath = "/projects/project-per-owner";
 
+	private String getProjectsPath = "/projects";
+
 }

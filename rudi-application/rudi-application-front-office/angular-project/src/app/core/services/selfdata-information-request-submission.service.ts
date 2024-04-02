@@ -1,15 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Metadata} from '../../api-kaccess';
-import {Form, TaskService} from '../../selfdata/selfdata-api';
-import {Observable} from 'rxjs';
-import {Task} from 'src/app/api-bpmn';
 import {HttpErrorResponse} from '@angular/common/http';
-import {catchError, switchMap} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import {ActionFallbackUtils} from '@shared/utils/action-fallback-utils';
+import {Task} from 'micro_service_modules//api-bpmn';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {Form, TaskService} from 'micro_service_modules/selfdata/selfdata-api';
+import {SelfdataInformationRequest, SelfdataInformationRequestStatus} from 'micro_service_modules/selfdata/selfdata-model';
+import {Observable} from 'rxjs';
+import {catchError, switchMap} from 'rxjs/operators';
 import {ObjectType} from './tasks/object-type.enum';
-import {ActionFallbackUtils} from '../../shared/utils/action-fallback-utils';
 import {SelfdataInformationRequestTaskMetierService} from './tasks/selfdata/selfdata-information-request-task-metier.service';
-import {SelfdataInformationRequest, SelfdataInformationRequestStatus} from '../../selfdata/selfdata-model';
 
 const FUNCTIONAL_DRAFT_STATUS = 'DRAFT';
 

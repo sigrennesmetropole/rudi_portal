@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {IconRegistryService} from '../../core/services/icon-registry.service';
+import {IconRegistryService} from '@core/services/icon-registry.service';
 import {ALL_TYPES} from '../models/title-icon-type';
 
 @Component({

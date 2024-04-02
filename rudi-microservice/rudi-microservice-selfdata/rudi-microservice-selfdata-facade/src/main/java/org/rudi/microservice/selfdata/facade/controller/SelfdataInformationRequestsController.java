@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.microservice.selfdata.core.bean.MatchingData;
@@ -34,8 +32,8 @@ public class SelfdataInformationRequestsController implements InformationRequest
 	}
 
 	@Override
-	public ResponseEntity<Task> createSelfdataInformationRequestDraft(
-			@Valid SelfdataInformationRequest informationRequest) throws Exception {
+	public ResponseEntity<Task> createSelfdataInformationRequestDraft(SelfdataInformationRequest informationRequest)
+			throws Exception {
 		return ResponseEntity.ok(selfdataInformationRequestTaskService.createDraft(informationRequest));
 	}
 
@@ -78,7 +76,8 @@ public class SelfdataInformationRequestsController implements InformationRequest
 	}
 
 	@Override
-	public ResponseEntity<List<MatchingData>> getMySelfdataInformationRequestMatchingData(UUID datasetUuid) throws Exception {
+	public ResponseEntity<List<MatchingData>> getMySelfdataInformationRequestMatchingData(UUID datasetUuid)
+			throws Exception {
 		return ResponseEntity.ok(selfdataService.getMySelfdataInformationRequestMatchingData(datasetUuid));
 
 	}

@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
+import {LanguageService} from '@core/i18n/language.service';
+import {DictionaryEntry} from 'micro_service_modules/api-kaccess';
 import {BarChartData, BarChartValues, BarModel, GroupedBarModel, LineAndPlot, Serie, TpbcDataInterface} from './tpbcData.interface';
-import {DictionaryEntry} from '../../../api-kaccess';
-import {LanguageService} from '../../../i18n/language.service';
 
 export const DEFAULT_COLOURS = ['#ff8d6d', '#004680', '#498100', '#00D7D2', '#313c53', '#7BD500', '#98abc5', '#8a89a6'];
 export const MARGIN = {top: 40, right: 20, bottom: 50, left: 40};
-export const WINDOWS_WIDTH: number = 400;
-export const WINDOWS_HEIGHT: number = 400;
+export const WINDOWS_WIDTH = 400;
+export const WINDOWS_HEIGHT = 400;
 
 @Injectable({
     providedIn: 'root'
@@ -60,7 +60,7 @@ export class BarchartService {
 
     private fillYlabels(v: BarChartValues, dataBars: BarModel[], lineAndPlot: LineAndPlot, xLabels: string[],
                         series: Serie[], i: number): void {
-        let k: number = 0;
+        let k = 0;
         v.values.forEach((value, j) => {
             dataBars[j].coordonateY.push(value);
             if (value != null) {

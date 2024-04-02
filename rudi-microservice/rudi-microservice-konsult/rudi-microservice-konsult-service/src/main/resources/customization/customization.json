@@ -1,0 +1,128 @@
+{
+    "overrideCssFile": "/style-override.css",
+	"mainLogo": "/assets/main-logo.png",
+	"heroDescription": {
+		"leftImage": "/assets/hero/left-image.png",
+		"rightImage": "/assets/hero/right-image.png",
+		"titles1": [
+			{
+				"locale": "fr_FR",
+				"text": "Portail de partage et d'accès aux données territoriales"
+			},
+			{
+				"locale": "en_GB",
+				"text": "Territorial data shared and access"
+			}
+		],
+		"titles2": [
+			{
+				"locale": "fr_FR",
+				"text": "de Rennes Métropole"
+			},
+			{
+				"locale": "en_GB",
+				"text": "for Rennes Métropole"
+			}
+		]
+	},
+	"projectsDescription": {
+		"titles1": [
+			{
+				"locale": "fr_FR",
+				"text": "Découvrez"
+			},
+			{
+				"locale": "en_GB",
+				"text": "Discover"
+			}
+		],
+		"titles2": [
+			{
+				"locale": "fr_FR",
+				"text": "les réutilisations"
+			},
+			{
+				"locale": "en_GB",
+				"text": "for Rennes Métropole"
+			}
+		],
+		"subtitles": [
+			{
+				"locale": "fr_FR",
+				"text": "Les réutilisations RUDI"
+			},
+			{
+				"locale": "en_GB",
+				"text": "RUDI reuses"
+			}
+		],
+		"descriptions": [
+			{
+				"locale": "fr_FR",
+				"text": "Une Réutilisation est la description par un Utilisateur de l’usage d’un ou plusieurs jeux de données du catalogue. Tout Utilisateur inscrit peut déclarer une Réutilisation en décrivant le résultat produit (article, application, etc) et en indiquant le ou les jeux de données utilisés."
+			},
+			{
+				"locale": "en_GB",
+				"text": "A Re-use is the description by a User of the use of one or more datasets from the catalog. Any registered User can declare a Re-use by describing the result produced (article, application, etc.) and indicating the dataset(s) used."
+			}
+		]
+	},
+	"keyFiguresDescription": {
+		"keyFiguresLogo": "/assets/keyFigures/key-figures-logo.png",
+		"keyFigures": [
+			{
+				"type": "DATASET",
+				"labels": [
+					{
+						"locale": "fr_FR",
+						"text": "Données"
+					},
+					{
+						"locale": "en_GB",
+						"text": "Data"
+					}
+				]
+			},
+			{
+				"type": "USER",
+				"labels": [
+					{
+						"locale": "fr_FR",
+						"text": "Utilisateurs"
+					},
+					{
+						"locale": "en_GB",
+						"text": "Users"
+					}
+				]
+			},
+			{
+				"type": "ORGANIZATION",
+				"labels": [
+					{
+						"locale": "fr_FR",
+						"text": "Organisations"
+					},
+					{
+						"locale": "en_GB",
+						"text": "Organizations"
+					}
+				]
+			},
+			{
+				"type": "PROJEKT",
+				"labels": [
+					{
+						"locale": "fr_FR",
+						"text": "Réutilisations"
+					},
+					{
+						"locale": "en_GB",
+						"text": "Reuses"
+					}
+				]
+			}
+		]
+
+	}
+}

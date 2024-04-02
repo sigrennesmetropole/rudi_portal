@@ -1,8 +1,8 @@
-import {Filter} from './filter';
+import {Filters} from '@shared/models/filters';
 import {BehaviorSubject} from 'rxjs';
-import {Filters} from '../../../shared/models/filters';
 import {FiltersService} from '../filters.service';
 import {AccessStatusFiltersType} from './access-status-filters-type';
+import {Filter} from './filter';
 
 export class AccessStatusFilter extends Filter<AccessStatusFiltersType> {
     protected filtersKey = 'accessStatus';

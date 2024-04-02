@@ -1,0 +1,48 @@
+@import "colors";
+@import "responsive";
+@import "swiper/css";
+
+.themes-section-container {
+    width: 90%;
+    height: 100%;
+    margin: auto;
+
+    .title {
+        text-align: center;
+        color: $primary-color;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .theme-card {
+        box-sizing: border-box;
+        width: 155px;
+        height: 170px;
+        border-radius: 15px;
+        border: 1.1px solid $blocks-and-menus-outline;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        justify-content: center;
+        cursor: pointer;
+        @include xs() {
+            width: 90%;
+            margin: auto;
+        }
+
+        .theme-picto {
+            width: 120px;
+            height: 110px;
+            margin: 20px auto 10px auto;
+            border-radius: 5px;
+        }
+
+        .theme-name {
+            text-align: center;
+            color: $primary-color;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+    }
+}

@@ -1,0 +1,89 @@
+<div class="container-fluid">
+    <!--Composant de recherche libre-->
+    <app-search-box
+        [mediaSize]="mediaSize"
+        [libelle]="'searchbox.rechercherJeuDonnees'"
+        (searchTermsEmitter)="onChanges($event)"
+        class="d-flex justify-content-center w-100">
+    </app-search-box>
+
+    <app-banner
+        (selectedDatesItemsChange)="selectedDatesItems = $event"
+        (selectedProducerItemsChange)="selectedProducerItems = $event"
+        (selectedAccessStatusItemsChange)="selectedAccessStatusItems = $event"
+        (selectedThemeItemsChange)="selectedThemeItems = $event"
+        [mediaSize]="mediaSize"
+        [producerNames]="producerNames"
+        [themes]="themes"
+        [accessStatusForcedValue]="accessStatusForcedValue"
+        [accessStatusHiddenValues]="accessStatusHiddenValues"
+    ></app-banner>
+
+    <app-filters-items-list
+        [selectedDatesItems]="selectedDatesItems"
+        [selectedProducerItems]="selectedProducerItems"
+        [hasSelectedItems]="hasSelectedItems"
+        [selectedAccessStatusItems]="accessStatusForcedValue === undefined ? selectedAccessStatusItems : []"
+        [selectedThemeItems]="selectedThemeItems"
+    >
+    </app-filters-items-list>
+
+    <div [ngClass]="{'data-set-full-height-sm': mediaSize.isSm || mediaSize.isMd }"
+         class="data-set-full-height">
+        <app-loader
+            [active]="isLoading">
+        </app-loader>
+
+        <div class="d-flex py-3 justify-content-between">
+            <!--Nombre de résultats-->
+            <div class=" w-50 search-count">
+                <div *ngIf="metadataListTotal">
+                    <span>{{metadataListTotal}} {{'searchbox.results'|translate}}{{metadataListTotal > 1 ? 's' : ''}}</span>
+                    <span *ngIf="searche$ | async as searche">{{'searchbox.pour'|translate}} "{{searche}}"</span>
+                </div>
+                <div *ngIf="!metadataListTotal">
+                    <span>{{'searchbox.noResult'|translate}}</span>
+                </div>
+            </div>
+
+            <!--Composant de tri-->
+            <app-order
+                [values]="orders"
+                *ngIf="(mediaSize.isXl || mediaSize.isLg || mediaSize.isXxl) && metadataListTotal"
+            >
+            </app-order>
+
+            <!--Ouverture des filtres en mode mobile-->
+            <div
+                (click)="openSidenav()"
+                *ngIf="mediaSize.isMd || mediaSize.isSm"
+                class="rudi-filter-box pointer w-50 d-flex justify-content-end align-items-center blue-theme">
+                <ng-container *ngIf="!this.isFiltered" class="container-filter-box">
+                    <mat-icon [ngClass]="this.isFiltered ? 'rudi-icon-bordered' : ''" aria-hidden="false"
+                              aria-label="filter icon"
+                              class="pointer me-1 font-weight-bold">tune
+                    </mat-icon>
+                    <span class="rudi-filter-box-libelle">{{'filterBox.filtrer'|translate}}</span>
+                </ng-container>
+                <button *ngIf="this.isFiltered" class="rudi-icon-bordered" color="primary" mat-flat-button>
+                    <mat-icon aria-hidden="false" aria-label="filter icon "
+                              class="pointer me-1 font-weight-bold">tune
+                    </mat-icon>
+                    <span class="rudi-filter-box-libelle-hover">{{'filterBox.filtres'|translate}}</span>
+                </button>
+            </div>
+            <!---------------------------------------->
+        </div>
+
+        <app-dataset-list [accessStatusHiddenValues]="accessStatusForcedValue"
+                          [isSelectable]="isSelectable"
+                          [limit]="limit"
+                          [mediaSize]="mediaSize"
+                          [resultsPerRow]="resultsPerRow"
+                          (metadataListTotal)="getMetadataListTotal($event)"
+                          (selectMetadata)="selectMetadata.emit($event)"
+                          (dbSelectMetadata)="dbSelectMetadata.emit($event)"
+        ></app-dataset-list>
+    </div>
+
+</div>

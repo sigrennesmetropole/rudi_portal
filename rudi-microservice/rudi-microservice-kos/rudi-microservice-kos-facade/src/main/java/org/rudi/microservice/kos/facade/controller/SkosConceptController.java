@@ -1,5 +1,9 @@
 package org.rudi.microservice.kos.facade.controller;
 
+import java.util.List;
+
+import org.rudi.common.core.DocumentContent;
+import org.rudi.common.facade.helper.ControllerHelper;
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.kos.core.bean.Language;
 import org.rudi.microservice.kos.core.bean.SimpleSkosConcept;
@@ -10,41 +14,45 @@ import org.rudi.microservice.kos.core.bean.SkosRelationType;
 import org.rudi.microservice.kos.facade.controller.api.SkosConceptsApi;
 import org.rudi.microservice.kos.service.skos.SkosConceptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-
 @RestController
 public class SkosConceptController implements SkosConceptsApi {
 
-    @Autowired
-    private UtilPageable utilPageable;
+	@Autowired
+	private UtilPageable utilPageable;
 
-    @Autowired
-    private SkosConceptService skosConceptService;
+	@Autowired
+	private SkosConceptService skosConceptService;
 
-    @Override
-    public ResponseEntity<SimpleSkosConceptPageResult> searchSkosConcepts(@Valid Integer limit, @Valid Integer offset, @Valid String order,
-                                                                          @Valid Language lang, @Valid String text, @Valid List<SkosRelationType> types,
-                                                                          @Valid List<String> roles, @Valid List<String> codes, @Valid List<String> schemes,
-                                                                          @Valid List<SkosConceptLabel> labels) throws Exception {
+	@Autowired
+	private ControllerHelper controllerHelper;
 
-        SkosConceptSearchCriteria skosConceptSearchCriteria = SkosConceptSearchCriteria.builder()
-                .labels(labels).codes(codes).codesScheme(schemes)
-                .text(text).roles(roles).lang(lang).types(types)
-                .build();
+	@Override
+	public ResponseEntity<SimpleSkosConceptPageResult> searchSkosConcepts(Integer limit, Integer offset, String order,
+			Language lang, String text, List<SkosRelationType> types, List<String> roles, List<String> codes,
+			List<String> schemes, List<SkosConceptLabel> labels) throws Exception {
 
-        Pageable pageable = utilPageable.getPageable(offset, limit, order);
+		SkosConceptSearchCriteria skosConceptSearchCriteria = SkosConceptSearchCriteria.builder().labels(labels)
+				.codes(codes).codesScheme(schemes).text(text).roles(roles).lang(lang).types(types).build();
 
-        Page<SimpleSkosConcept> page = skosConceptService.searchSkosConcepts(skosConceptSearchCriteria, pageable);
-        SimpleSkosConceptPageResult result = new SimpleSkosConceptPageResult();
-        result.setTotal(page.getTotalElements());
-        result.setElements(page.getContent());
+		Pageable pageable = utilPageable.getPageable(offset, limit, order);
 
-        return ResponseEntity.ok(result);
-    }
+		Page<SimpleSkosConcept> page = skosConceptService.searchSkosConcepts(skosConceptSearchCriteria, pageable);
+		SimpleSkosConceptPageResult result = new SimpleSkosConceptPageResult();
+		result.setTotal(page.getTotalElements());
+		result.setElements(page.getContent());
+
+		return ResponseEntity.ok(result);
+	}
+
+	@Override
+	public ResponseEntity<Resource> downloadSkosConceptIcon(String resourceName) throws Exception {
+		DocumentContent resource = skosConceptService.downloadSkosConceptIcon(resourceName);
+		return controllerHelper.downloadableResponseEntity(resource);
+	}
 }

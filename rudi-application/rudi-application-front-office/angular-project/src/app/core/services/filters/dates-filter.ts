@@ -1,7 +1,7 @@
-import {Filter} from './filter';
+import {Filters} from '@shared/models/filters';
 import {BehaviorSubject} from 'rxjs';
-import {Filters} from '../../../shared/models/filters';
 import {FiltersService} from '../filters.service';
+import {Filter} from './filter';
 
 export interface Dates {
   debut: string;

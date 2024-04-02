@@ -1,0 +1,51 @@
+@import "variables-rudi";
+@import "common-style";
+
+.mat-drawer-content {
+    overflow-x: hidden;
+}
+
+//****** Style mat-menu du bandeau *******
+.menu-libelle {
+    font-size: 15px;
+    color: $primary-text;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+}
+
+::ng-deep.mat-radio-container, ::ng-deep.mat-radio-outer-circle, ::ng-deep.mat-radio-inner-circle {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+//****** Fin Style mat-menu du bandeau *******
+
+.project-container {
+
+    .project-card-description {
+        height: 100%;
+    }
+
+    &-sm {
+
+        .card-description-keyword {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+
+        .project-card {
+            border-left: none;
+            border-right: none;
+            border-radius: unset;
+            border-top: none;
+            padding: 0;
+        }
+
+    }
+}
+// On annule la règle /pages/list/list.component.scss "::ng-deep .row"
+.row {
+    margin-right: -15px;
+}

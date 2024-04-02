@@ -1,0 +1,16 @@
+# https://git.magnolia-cms.com/projects/MODULES/repos/templating-essentials/browse/magnolia-templating-kit-2/src/main/resources/mtk2/templates/pages/basic.ftl
+class: info.magnolia.module.site.templates.PageTemplateDefinition
+templateScript: /rudi/templates/pages/rudi-item.ftl
+renderType: freemarker
+
+dialog: mtk2:pages/basic
+
+areas:
+  main:
+    availableComponents:
+      term:
+        id: rudi:components/term/termOne
+      news:
+        id: rudi:components/news/newsOne        
+      projectvalue:
+        id: rudi:components/projectvalue/projectvalueOne

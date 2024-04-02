@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from './asset/project/projekt-metier.service';
-import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
+import {ProjectCatalogItem, ProjectCatalogItemPage} from '@features/project/model/project-catalog-item';
+import {injectDependenciesEach} from '@shared/utils/dependencies-utils';
+import {mapEach} from '@shared/utils/ObservableUtils';
+import {PagedProjectList, Project, ProjectSearchCriteria, ProjectStatus} from 'micro_service_modules/projekt/projekt-model';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {PagedProjectList, Project, ProjectSearchCriteria, ProjectStatus} from '../../projekt/projekt-model';
 import {ProjectDependenciesFetchers, ProjectWithDependencies} from './asset/project/project-dependencies.service';
-import {mapEach} from '../../shared/utils/ObservableUtils';
-import {injectDependenciesEach} from '../../shared/utils/dependencies-utils';
+import {DEFAULT_PROJECT_ORDER, ProjektMetierService} from './asset/project/projekt-metier.service';
 
 /**
  * Service métier des "Projects" dans le module Project de RUDI
@@ -60,7 +60,7 @@ export class ProjectListService {
             // On remplit le projectCatalogItems qui permettra d'alimenter les card
             mapEach(({project, dependencies}) => {
                 projectCatalogItems.push({
-                    project: project,
+                    project,
                     ownerInfo: dependencies.ownerInfo,
                     logo: dependencies.logo
                 });

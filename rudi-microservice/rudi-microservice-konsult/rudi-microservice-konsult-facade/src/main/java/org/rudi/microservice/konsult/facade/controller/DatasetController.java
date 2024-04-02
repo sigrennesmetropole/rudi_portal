@@ -1,11 +1,21 @@
 package org.rudi.microservice.konsult.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.ANONYMOUS;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.helper.ControllerHelper;
@@ -21,17 +31,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.ANONYMOUS;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,28 +42,19 @@ public class DatasetController implements DatasetsApi {
 	@Override
 	public ResponseEntity<MetadataList> searchMetadatas(String freeText, List<String> themes, List<String> keywords,
 			List<String> producerNames, OffsetDateTime dateDebut, OffsetDateTime dateFin, Boolean restrictedAccess,
-			Boolean gdprSensitive, List<UUID> globalId, List<UUID> producerUuids, Integer offset, Integer limit, String order) throws Exception {
+			Boolean gdprSensitive, List<UUID> globalId, List<UUID> producerUuids, Integer offset, Integer limit,
+			String order) throws Exception {
 
-		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria()
-				.limit(limit)
-				.offset(offset)
-				.freeText(freeText)
-				.keywords(keywords)
-				.themes(themes)
-				.producerNames(producerNames)
-				.producerUuids(producerUuids)
-				.dateDebut(dateDebut)
-				.dateFin(dateFin)
-				.order(order)
-				.restrictedAccess(restrictedAccess)
-				.gdprSensitive(gdprSensitive)
-				.globalIds(globalId);
+		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria().limit(limit).offset(offset)
+				.freeText(freeText).keywords(keywords).themes(themes).producerNames(producerNames)
+				.producerUuids(producerUuids).dateDebut(dateDebut).dateFin(dateFin).order(order)
+				.restrictedAccess(restrictedAccess).gdprSensitive(gdprSensitive).globalIds(globalId);
 
 		return ResponseEntity.ok(metadataService.searchMetadatas(datasetSearchCriteria));
 	}
 
 	@Override
-	public ResponseEntity<MetadataFacets> searchMetadataFacets(@Valid List<String> facets) throws Exception {
+	public ResponseEntity<MetadataFacets> searchMetadataFacets(List<String> facets) throws Exception {
 		return ResponseEntity.ok(metadataService.searchMetadatasFacets(facets));
 	}
 
@@ -121,14 +111,17 @@ public class DatasetController implements DatasetsApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", " + MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT + ", " + MODULE_PROJEKT + ", "
+			+ MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_KALIM + ", " + MODULE_KALIM_ADMINISTRATOR + ", "
+			+ MODULE_SELFDATA + ", " + MODULE_SELFDATA_ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ")")
 	public ResponseEntity<Void> unsubscribeToDataset(UUID globalId, UUID subscriptionOwnerUuid) throws Exception {
 		metadataService.unsubscribeToDataset(globalId, subscriptionOwnerUuid);
 		return ResponseEntity.status(200).build();
 	}
 
 	@Override
-	public ResponseEntity<Resource> callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws Exception {
+	public ResponseEntity<Resource> callServiceMetadataMedia(UUID globalId, UUID mediaId,
+			Map<String, String> parameters) throws Exception {
 		final DocumentContent documentContent = metadataService.callServiceMetadataMedia(globalId, mediaId, parameters);
 		return controllerHelper.downloadableResponseEntity(documentContent);
 	}

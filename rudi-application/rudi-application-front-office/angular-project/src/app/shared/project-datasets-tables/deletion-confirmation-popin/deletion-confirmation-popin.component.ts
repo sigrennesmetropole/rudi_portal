@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {CloseEvent, DialogClosedData} from '../../../data-set/models/dialog-closed-data';
+import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 
 @Component({
     selector: 'app-deletion-confirmation-popin',

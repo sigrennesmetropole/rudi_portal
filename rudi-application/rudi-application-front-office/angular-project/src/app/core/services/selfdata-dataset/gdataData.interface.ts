@@ -1,15 +1,15 @@
-import {DictionaryEntry} from '../../../api-kaccess';
+import {DictionaryEntry} from 'micro_service_modules/api-kaccess';
 
 export interface GdataDataInterface {
     title?: string;
-    description?:string;
-    genericDataObject?:GenericDataObject;
+    description?: string;
+    genericDataObject?: GenericDataObject;
 }
 export interface  GenericDataObject{
-    legend?: Array<DictionaryEntry>;
-    data?: Array<GenericData>;
+    legend?: DictionaryEntry[];
+    data?: GenericData[];
 }
 export interface GenericData {
-    label?: Array<DictionaryEntry>;
+    label?: DictionaryEntry[];
     value?: string;
 }

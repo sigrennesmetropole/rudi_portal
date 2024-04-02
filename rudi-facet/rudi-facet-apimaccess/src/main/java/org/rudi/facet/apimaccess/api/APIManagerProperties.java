@@ -1,5 +1,7 @@
 package org.rudi.facet.apimaccess.api;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +28,8 @@ public class APIManagerProperties {
 	@Value("${apimanager.gateway.url}")
 	private String serverGatewayUrl;
 
-	@Value("${apimanager.api.admin.context:/admin/v1}")
-	private String adminContext = "/admin/v1";
+	@Value("${apimanager.api.admin.context:/admin/v4}")
+	private String adminContext = "/admin/v4";
 
 	@Value("${apimanager.api.admin.api-categories-path:/api-categories}")
 	private String apiCategoriesPath = "/api-categories";
@@ -35,17 +37,23 @@ public class APIManagerProperties {
 	@Value("${apimanager.api.admin.system-scopes-role-aliases-path:/system-scopes/role-aliases}")
 	private String systemScopesRoleAliasesPath = "/system-scopes/role-aliases";
 
-	@Value("${apimanager.api.publisher.context:/publisher/v1}")
+	@Value("${apimanager.api.admin.environements-path:/environments}")
+	private String environmentsPath = "/environments";
+
+	@Value("#{'${apimanager.api.admin.environments.gateway.names:Default}'.split(',')}")
+	private List<String> gatewayNames = List.of("Default");
+
+	@Value("${apimanager.api.publisher.context:/publisher/v4}")
 	private String publisherContext;
 
-	@Value("${apimanager.api.store.context:/store/v1}")
+	@Value("${apimanager.api.store.context:/devportal/v3}")
 	private String storeContext;
+
+	@Value("${apimanager.api.gateway.context:/gateway/v2}")
+	private String gatewayContext;
 
 	@Value("${apimanager.oauth2.client.admin.registration.id}")
 	private String adminRegistrationId;
-
-	@Value("${apimanager.oauth2.client.registration-v0.17.path:/client-registration/v0.17/register}")
-	private String registrationV017Path;
 
 	@Value("${apimanager.oauth2.client.registration-v1.1.path:/api/identity/oauth2/dcr/v1.1/register}")
 	private String registrationV11Path;

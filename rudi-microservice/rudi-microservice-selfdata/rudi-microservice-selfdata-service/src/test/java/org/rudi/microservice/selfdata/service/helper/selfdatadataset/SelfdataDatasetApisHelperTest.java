@@ -26,7 +26,6 @@ import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.facet.apimaccess.api.application.ApplicationOperationAPI;
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
 import org.rudi.facet.apimaccess.api.registration.ClientRegistrationResponse;
 import org.rudi.facet.apimaccess.bean.Application;
 import org.rudi.facet.apimaccess.exception.APIEndpointException;
@@ -132,8 +131,8 @@ class SelfdataDatasetApisHelperTest {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin(RandomStringUtils.random(6));
 
-		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId")
-				.setClientSecret("randomSecret");
+		ClientRegistrationResponse response = new org.rudi.facet.apimaccess.api.registration.Application()
+				.setClientId("randomId").setClientSecret("randomSecret");
 
 		rudiClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
 		assertNotNull(selfdataDatasetApisHelper.searchCachedRegistration(user));
@@ -365,8 +364,8 @@ class SelfdataDatasetApisHelperTest {
 	private AuthenticatedUser createAndRegisterValidUser() {
 		AuthenticatedUser user = new AuthenticatedUser();
 		user.setLogin("validUser@com");
-		ClientRegistrationResponse response = new ClientAccessKey().setClientId("randomId")
-				.setClientSecret("randomSecret");
+		ClientRegistrationResponse response = new org.rudi.facet.apimaccess.api.registration.Application()
+				.setClientId("randomId").setClientSecret("randomSecret");
 		rudiClientRegistrationRepository.addClientRegistration(user.getLogin(), response);
 		return user;
 	}

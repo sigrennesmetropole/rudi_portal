@@ -3,9 +3,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
-import {SelfdataAttachmentService} from '../../core/services/selfdata-attachment.service';
-import {SnackBarService} from '../../core/services/snack-bar.service';
-import {CloseEvent} from '../../data-set/models/dialog-closed-data';
+import {SelfdataAttachmentService} from '@core/services/selfdata-attachment.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {CloseEvent} from '@features/data-set/models/dialog-closed-data';
 import {Level} from '../notification-template/notification-template.component';
 import {AttachmentPopinData} from './attachment-popin-data';
 

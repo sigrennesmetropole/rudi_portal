@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {NgClassObject} from '../../core/services/breakpoint-observer.service';
-import {IconRegistryService} from '../../core/services/icon-registry.service';
+import {NgClassObject} from '@core/services/breakpoint-observer.service';
+import {IconRegistryService} from '@core/services/icon-registry.service';
 import {ALL_TYPES} from '../models/title-icon-type';
 
 @Component({

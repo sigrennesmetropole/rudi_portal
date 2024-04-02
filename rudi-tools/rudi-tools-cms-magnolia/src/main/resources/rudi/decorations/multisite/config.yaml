@@ -1,0 +1,42 @@
+sites:
+  fallback:
+
+    theme:
+      name: rudi-theme
+
+    i18n:
+      class: info.magnolia.cms.i18n.DefaultI18nContentSupport
+      enabled: true
+      fallbackLocale: fr
+      defaultLocale: en
+      locales:
+        fr:
+          country: ''
+          enabled: true
+          language: fr      
+        en:
+          country: ''
+          enabled: true
+          language: en
+        de:
+          country: ''
+          enabled: true
+          language: de
+
+    cors:
+      default:
+        uris:
+          graphql:
+            patternString: /.graphql*
+          rest:
+            patternString: /.rest*
+        allowedOrigins:
+          all: '*'
+        allowedMethods:
+          all: '*'
+        allowedHeaders:
+          - Accept
+          - Content-Type
+          - Origin
+          - X-PINGOTHER
+          - X-Requested-With

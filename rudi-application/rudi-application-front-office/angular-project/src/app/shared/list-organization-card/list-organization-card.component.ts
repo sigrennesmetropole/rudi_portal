@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {OrganizationBean} from '@app/strukture/strukture-model';
+import {OrganizationBean} from 'micro_service_modules/strukture/strukture-model';
 import {BreakpointObserverService, NgClassObject} from '@core/services/breakpoint-observer.service';
 
 @Component({

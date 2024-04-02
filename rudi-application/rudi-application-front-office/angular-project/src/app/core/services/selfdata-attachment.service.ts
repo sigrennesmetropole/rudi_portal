@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {FilePreviewModel} from '@sleiss/ngx-awesome-uploader';
-import {Observable} from 'rxjs';
 import {HttpEvent} from '@angular/common/http';
-import {DataSize} from '@shared/models/data-size';
-import {DocumentMetadata, SelfdataService} from '@app/selfdata/selfdata-api';
-import {PropertiesAdapter} from './properties-adapter';
-import {FrontOfficeProperties} from '@app/selfdata/selfdata-model';
+import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {DataSize} from '@shared/models/data-size';
+import {FilePreviewModel} from '@sleiss/ngx-awesome-uploader';
+import {DocumentMetadata, SelfdataService} from 'micro_service_modules/selfdata/selfdata-api';
+import {FrontOfficeProperties} from 'micro_service_modules/selfdata/selfdata-model';
+import {Observable} from 'rxjs';
+import {PropertiesAdapter} from './properties-adapter';
 
 
 @Injectable({

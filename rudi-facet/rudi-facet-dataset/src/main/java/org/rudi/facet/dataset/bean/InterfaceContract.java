@@ -13,12 +13,12 @@ import lombok.Getter;
 
 @Getter
 public enum InterfaceContract {
-	DOWNLOAD("dwnl"),
-	GENERIC_DATA("gdata", "generic-data"),
-	TEMPORAL_BAR_CHART("tpbc", "temporal-bar-chart"),
-	WFS("wfs"),
-	WMS("wms"),
-	WMTS("wmts");
+	DOWNLOAD("dwnl", "dwnl", false),
+	GENERIC_DATA("gdata", "generic-data", false),
+	TEMPORAL_BAR_CHART("tpbc", "temporal-bar-chart", false),
+	WFS("wfs", "wfs", true),
+	WMS("wms", "wms", true),
+	WMTS("wmts", "wmts", true);
 
 	/**
 	 * Nom long de l'interface_contract, tel qu'utilisé dans le JSON des métadonnées de JDD.
@@ -30,14 +30,23 @@ public enum InterfaceContract {
 	 */
 	private final String urlPath;
 
-	InterfaceContract(String urlPath) {
-		this(urlPath, urlPath);
+	private final boolean validable;
+
+	private InterfaceContract(String urlPath) {
+		this(urlPath, false);
 	}
 
-	InterfaceContract(String urlPath, String code) {
+	private InterfaceContract(String urlPath, boolean validable) {
+		this(urlPath, urlPath, validable);
+	}
+
+	private InterfaceContract(String urlPath, String code, boolean validable) {
 		this.code = code;
 		this.urlPath = urlPath;
+		this.validable = validable;
 	}
+
+
 
 	@JsonValue
 	public String getUrlPath() {

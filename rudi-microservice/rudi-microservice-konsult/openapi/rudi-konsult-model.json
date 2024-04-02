@@ -134,6 +134,104 @@
 						"type": "number"
 					}
 				}
+			},
+			"HeroDescription": {
+				"description": "Element configurable du Hero de la page d'accueil",
+				"type": "object",
+				"properties": {
+					"left_image": {
+						"type": "string"
+					},
+					"right_image": {
+						"type": "string"
+					},
+					"title1": {
+						"type": "string"
+					},
+					"title2": {
+						"type": "string"
+					}
+				}
+			},
+			"ProjectsDescription": {
+				"description": "Element configurable de la section projects de la page d'accueil",
+				"type": "object",
+				"properties": {
+					"title1": {
+						"type": "string"
+					},
+					"title2": {
+						"type": "string"
+					},
+					"subtitle": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				}
+			},
+			"KeyFigureType": {
+				"description": "Type de KeyFigure ",
+				"type": "string",
+				"enum": [
+					"USER",
+					"DATASET",
+					"ORGANIZATION",
+					"PROJEKT"
+				]
+			},
+			"KeyFigure":{
+				"description": "Element correspondant à 1 chiffre clé",
+				"type": "object",
+				"properties": {
+					"count": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"label": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/KeyFigureType"
+					}
+				}
+			},
+			"KeyFiguresDescription": {
+				"description": "Element de récupération des chiffres clé",
+				"type": "object",
+				"properties": {
+					"keyFiguresLogo": {
+						"type": "string"
+					},
+					"keyFigures": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/KeyFigure"
+						}
+					}
+				}
+			},
+			"CustomizationDescription": {
+				"description": "Element configurable de l'application",
+				"type": "object",
+				"properties": {
+					"override_css_file": {
+						"type": "string"
+					},
+					"main_logo": {
+						"type": "string"
+					},
+					"hero_description": {
+						"$ref": "#/components/schemas/HeroDescription"
+					},
+					"projects_description": {
+						"$ref": "#/components/schemas/ProjectsDescription"
+					},
+					"key_figures_description": {
+						"$ref": "#/components/schemas/KeyFiguresDescription"
+					}
+				}
 			}
 		}
 	}

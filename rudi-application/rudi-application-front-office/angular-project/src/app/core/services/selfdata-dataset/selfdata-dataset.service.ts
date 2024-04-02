@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
-import {PagedSelfdataDataset, SelfdataDataset} from '../../../personal-space/components/selfdata-datasets-table/selfdata-dataset.interface';
-import {EMPTY, forkJoin, from, Observable, of} from 'rxjs';
+import {LanguageService} from '@core/i18n/language.service';
+import {MatchingDataView} from '@features/personal-space/components/matching-data-card/matching-data-view';
+import {PagedSelfdataDataset, SelfdataDataset} from '@features/personal-space/components/selfdata-datasets-table/selfdata-dataset.interface';
+import {MetadataUtils} from '@shared/utils/metadata-utils';
+import {Metadata} from 'micro_service_modules/api-kaccess';
 import {
     Address,
     FieldType,
@@ -13,18 +15,16 @@ import {
     SelfdataInformationRequestSearchCriteria,
     SelfdataService,
     TaskService
-} from '../../../selfdata/selfdata-api';
-import {Metadata} from '../../../api-kaccess';
-import {MetadataUtils} from '../../../shared/utils/metadata-utils';
-import {SelfdataRequestType} from './selfdata-request-type';
-import {SelfdataDatasetLatestRequests} from './selfdata-dataset-latest-requests';
-import {SelfdataInformationRequestStatus} from '../../../selfdata/selfdata-model';
-import {BarChartData} from './tpbcData.interface';
-import {LanguageService} from '../../../i18n/language.service';
-import {GdataDataInterface, GenericDataObject} from './gdataData.interface';
-import {SelfdataAttachmentService} from '../selfdata-attachment.service';
-import {MatchingDataView} from '../../../personal-space/components/matching-data-card/matching-data-view';
+} from 'micro_service_modules/selfdata/selfdata-api';
+import {SelfdataInformationRequestStatus} from 'micro_service_modules/selfdata/selfdata-model';
+import {EMPTY, forkJoin, from, Observable, of} from 'rxjs';
+import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
 import {SelfdataRvaService} from '../rva/selfdata/selfdata-rva.service';
+import {SelfdataAttachmentService} from '../selfdata-attachment.service';
+import {GdataDataInterface, GenericDataObject} from './gdataData.interface';
+import {SelfdataDatasetLatestRequests} from './selfdata-dataset-latest-requests';
+import {SelfdataRequestType} from './selfdata-request-type';
+import {BarChartData} from './tpbcData.interface';
 
 @Injectable({
     providedIn: 'root'

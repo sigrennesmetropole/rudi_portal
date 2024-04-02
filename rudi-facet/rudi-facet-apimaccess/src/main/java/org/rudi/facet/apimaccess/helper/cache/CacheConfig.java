@@ -32,7 +32,7 @@ import freemarker.template.Template;
 @EnableCaching
 public class CacheConfig {
 
-	private static final String CONFIG_FILE_PATH = "/cache/ehcache_config.xml";
+	private static final String CONFIG_FILE_PATH = "/cache/ehcache_apimaccess_config.xml";
 
 	@Bean(name = API_MACCESS_CACHE_MANAGER)
 	public org.springframework.cache.CacheManager cacheManager(

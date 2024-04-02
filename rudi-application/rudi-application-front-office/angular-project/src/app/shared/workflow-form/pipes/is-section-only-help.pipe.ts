@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Section} from '@app/projekt/projekt-api';
+import {Section} from 'micro_service_modules/projekt/projekt-api';
 
 @Pipe({
     name: 'isSectionOnlyHelp'

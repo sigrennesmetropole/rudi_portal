@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {AclService} from '@app/acl/acl-api';
-import {Task} from '@app/api-bpmn';
-import {NewDatasetRequest, ProjektService} from '@app/projekt/projekt-api';
-import {OwnerInfo, Project} from '@app/projekt/projekt-model';
-import {OrganizationService} from '@app/strukture/api-strukture';
+import {AclService} from 'micro_service_modules/acl/acl-api';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
 import {DependencyFetcher, OwnerKey} from '@shared/utils/dependencies-utils';
 import {TaskWithDependencies} from '@shared/utils/task-utils';
+import {NewDatasetRequest, ProjektService} from 'micro_service_modules/projekt/projekt-api';
+import {OwnerInfo, Project} from 'micro_service_modules/projekt/projekt-model';
 import {ProjectConsultationService} from '../../asset/project/project-consultation.service';
 import {LinkedDatasetMetadatas} from '../../asset/project/project-dependencies.service';
 import {ProjektMetierService} from '../../asset/project/projekt-metier.service';
@@ -57,7 +57,7 @@ export class ProjectTaskDependencyFetcher extends TaskDependencyFetchers<Project
                 private readonly konsultMetierService: KonsultMetierService,
                 private readonly projektService: ProjektService,
                 private readonly projektMetierService: ProjektMetierService,
-                private readonly projectConsultService: ProjectConsultationService,) {
+                private readonly projectConsultService: ProjectConsultationService, ) {
         super(organizationService, aclService);
     }
 

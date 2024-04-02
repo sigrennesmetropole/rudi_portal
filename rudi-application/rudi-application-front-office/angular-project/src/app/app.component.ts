@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {environment} from '../environments/environment';
-
-import {BreakpointObserverService, MediaSize} from './core/services/breakpoint-observer.service';
-import {RouteHistoryService} from './core/services/route-history.service';
 import {NavigationEnd, Router} from '@angular/router';
+
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
+import {PageTitleService} from '@core/services/page-title.service';
+import {RouteHistoryService} from '@core/services/route-history.service';
+import {TranslateService} from '@ngx-translate/core';
 import {filter, map} from 'rxjs/operators';
-import {PageTitleService} from './core/services/page-title.service';
+import {environment} from '../environments/environment';
 
 @Component({
     selector: 'app-root',

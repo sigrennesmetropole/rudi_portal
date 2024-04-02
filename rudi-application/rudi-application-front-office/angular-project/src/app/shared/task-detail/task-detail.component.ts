@@ -1,7 +1,6 @@
 import {MatDialog} from '@angular/material/dialog';
-import {AssetDescription} from '@app/api-bpmn';
-import {CloseEvent} from '@app/data-set/models/dialog-closed-data';
-import {Action, Task} from '@app/projekt/projekt-api';
+import {AssetDescription} from 'micro_service_modules/api-bpmn';
+import {CloseEvent} from '@features/data-set/models/dialog-closed-data';
 import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
 import {LogService} from '@core/services/log.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
@@ -12,6 +11,7 @@ import {Level} from '@shared/notification-template/notification-template.compone
 import {TaskWithDependencies} from '@shared/utils/task-utils';
 import {WorkflowFormDialogInputData} from '@shared/workflow-form-dialog/types';
 import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
+import {Action, Task} from 'micro_service_modules/projekt/projekt-api';
 
 export abstract class TaskDetailComponent<A extends AssetDescription, D, T extends TaskWithDependencies<A, D>, C> {
     taskWithDependencies: T;

@@ -1,16 +1,14 @@
 import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from '@app/api-kaccess';
-import {KonsultService} from '@app/konsult/konsult-api';
 import {Filters} from '@shared/models/filters';
 import {MetadataUtils} from '@shared/utils/metadata-utils';
 import {PageResultUtils} from '@shared/utils/page-result-utils';
-import * as mime from 'mime';
-// @ts-ignore
-import * as Module from 'module';
+import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from 'micro_service_modules/api-kaccess';
+import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import mime, {Mime} from 'mime';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import * as customMimeDatabase from '../../../assets/mime-db/custom-mime-db.json';
+import customMimeDatabase from 'src/assets/mime-db/custom-mime-db';
 import {AccessStatusFiltersType} from './filters/access-status-filters-type';
 import {DEFAULT_VALUE as DEFAULT_ORDER_VALUE} from './filters/order-filter';
 
@@ -32,7 +30,7 @@ export class KonsultMetierService {
 
     private static loadCustomMimeType(): void {
         // Le fichier JSON est chargé dans notre objet sous la propriété default et est de type Module
-        mime.define((customMimeDatabase as Module).default, true);
+        new Mime().define(customMimeDatabase, true);
     }
 
     private static getFacetsValues(facets: MetadataFacets): string[] {

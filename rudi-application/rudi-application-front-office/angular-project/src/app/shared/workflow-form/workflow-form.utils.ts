@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Validators} from '@angular/forms';
-import {Field, Section, Validator as WorkflowValidator} from '@app/api-bpmn';
-import {Form} from '@app/projekt/projekt-api';
+import {Field, Section, Validator as WorkflowValidator} from 'micro_service_modules/api-bpmn';
 import {LogService} from '@core/services/log.service';
 import {ObjectUtils} from '@shared/utils/object-utils';
 import {Validator} from '@shared/workflow-form/workflow-form.types';
+import {Form} from 'micro_service_modules/projekt/projekt-api';
 
 const REQUIRED_WORKFLOW_VALIDATOR: WorkflowValidator = {
     type: 'REQUIRED'

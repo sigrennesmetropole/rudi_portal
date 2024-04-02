@@ -1,9 +1,15 @@
 package org.rudi.microservice.projekt.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
+
 import java.util.List;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
@@ -41,13 +47,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
-import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -76,9 +75,9 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	public ResponseEntity<PagedProjectList> searchProjects(@Valid List<UUID> datasetUuids,
-			@Valid List<UUID> linkedDatasetUuids, @Valid List<UUID> ownerUuids, @Valid List<ProjectStatus> status,
-			@Valid Integer offset, @Valid Integer limit, @Valid String order) throws Exception {
+	public ResponseEntity<PagedProjectList> searchProjects(List<UUID> datasetUuids, List<UUID> linkedDatasetUuids,
+			List<UUID> ownerUuids, List<ProjectStatus> status, Integer offset, Integer limit, String order)
+			throws Exception {
 		val searchCriteria = new ProjectSearchCriteria().datasetUuids(datasetUuids)
 				.linkedDatasetUuids(linkedDatasetUuids).ownerUuids(ownerUuids).status(status);
 		val pageable = utilPageable.getPageable(offset, limit, order);
@@ -208,7 +207,7 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	public ResponseEntity<Task> createProjectDraft(@Valid Project project) throws Exception {
+	public ResponseEntity<Task> createProjectDraft(Project project) throws Exception {
 		return ResponseEntity.ok(projectTaskService.createDraft(project));
 	}
 
@@ -316,7 +315,8 @@ public class ProjectController implements ProjectsApi {
 	}
 
 	@Override
-	public ResponseEntity<List<ProjectByOwner>> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria) throws Exception {
+	public ResponseEntity<List<ProjectByOwner>> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria)
+			throws Exception {
 		return ResponseEntity.ok(projectService.getNumberOfProjectsPerOwners(criteria));
 	}
 }

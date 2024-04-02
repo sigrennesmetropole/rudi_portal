@@ -1,0 +1,13 @@
+<div class="rudi-sidenav-container">
+    <p class="rudi-sidenav-container-filter-title d-flex align-items-center">
+        <!-- Bouton retour -->
+        <span>
+          <button mat-mini-fab class="rudi-icon-back me-2">
+            <mat-icon class="toolbar-icon pointer" aria-hidden="false" aria-label="back icon"
+                      (click)="close.emit()">keyboard_arrow_left</mat-icon>
+          </button>
+        </span>
+        {{titleKey | translate}}
+    </p>
+    <ng-content></ng-content>
+</div>

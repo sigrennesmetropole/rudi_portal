@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {RvaAddress} from './workflow-field-address.model';
+import {RvaService} from '@core/services/rva/rva.service';
+import {SelfdataRvaService} from '@core/services/rva/selfdata/selfdata-rva.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
 import {mapEach} from '../utils/ObservableUtils';
 import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
-import {SnackBarService} from '../../core/services/snack-bar.service';
-import {TranslateService} from '@ngx-translate/core';
-import {SelfdataRvaService} from '../../core/services/rva/selfdata/selfdata-rva.service';
-import {RvaService} from '../../core/services/rva/rva.service';
+import {RvaAddress} from './workflow-field-address.model';
 
 @Component({
     selector: 'app-workflow-field-address',

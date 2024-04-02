@@ -157,7 +157,8 @@ public interface UserService {
 	 * @throws SSLException Erreur lors de la récupération des clés
 	 */
 	@Nullable
-	ClientKey getClientKeyByLogin(String login) throws SSLException, BuildClientRegistrationException, GetClientRegistrationException;
+	ClientKey getClientKeyByLogin(String login)
+			throws SSLException, BuildClientRegistrationException, GetClientRegistrationException;
 
 	/**
 	 * Enregistre une authentification avec ou sans succès
@@ -175,6 +176,7 @@ public interface UserService {
 
 	/**
 	 * Récupération de la CLientRegistration d'un utilisateur par login
+	 * 
 	 * @param login login de l'utilisateur
 	 * @return la ClientRegistration WSO2
 	 * @throws Exception erreur avec WSO2
@@ -183,14 +185,16 @@ public interface UserService {
 
 	/**
 	 * Création d'une client registration WSO2 pour un user
-	 * @param login le login de l'user qui fait l'action
+	 * 
+	 * @param login     le login de l'user qui fait l'action
 	 * @param accessKey les clés d'accès WSO2
 	 */
 	void addClientRegistration(String login, AccessKeyDto accessKey);
 
 	/**
 	 * Réalise la registration dans WSO2 à l'aide du login et du pwd de l'utilisateur connecté
-	 * @param login le login de l'utilisateur
+	 * 
+	 * @param login    le login de l'utilisateur
 	 * @param password son mot de passe
 	 * @return uen client rgeistration associée
 	 * @throws Exception si problème de registration WSO2
@@ -199,10 +203,18 @@ public interface UserService {
 
 	/**
 	 * Mise à jour du mot de passe d'un utilisateur autre que celui connecté par login
-	 * @param login le login de l'utilisateur modifié
+	 * 
+	 * @param login          le login de l'utilisateur modifié
 	 * @param passwordUpdate les infos de changement de mot de passe
 	 * @throws Exception si traitement invalide
 	 */
 	void updateUserPassword(String login, PasswordUpdate passwordUpdate) throws Exception;
+
+	/**
+	 * Comptage des nombres d'utilisateurs, pour l'affichage des chiffres clé sur la page d'accueil
+	 * 
+	 * @return le nombre d'utilisateurs ayant le rôle USER
+	 */
+	Long countUsers();
 
 }

@@ -1,43 +1,45 @@
 package org.rudi.microservice.kalim.service.integration.impl.validator.map;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.rudi.facet.kaccess.bean.Connector;
 import org.rudi.facet.kaccess.bean.ConnectorConnectorParametersInner;
-import org.rudi.microservice.kalim.service.IntegrationError;
+import org.rudi.microservice.kalim.service.integration.impl.validator.map.connector.InterfaceContactConnectorValidator;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WFS_INTERFACE_CONTRACT;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WFS_MANDATORY_PARAMS;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WMS_INTERFACE_CONTRACT;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WMS_MANDATORY_PARAMS;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WMTS_INTERFACE_CONTRACT;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WMTS_MANDATORY_PARAMS;
 
 @Component
 @RequiredArgsConstructor
 public class ConnectorValidator {
 	private final List<AbstractConnectorParametersValidator> mapFieldValidators;
+	private final List<InterfaceContactConnectorValidator> interfaceContactConnectorValidators;
 
 	public Set<IntegrationRequestErrorEntity> validate(Connector connector) {
 		Set<IntegrationRequestErrorEntity> integrationRequestsErrors = new HashSet<>();
-		checkMandatoryParameters(connector.getInterfaceContract(), connector.getConnectorParameters(), integrationRequestsErrors);
-		if (!integrationRequestsErrors.isEmpty()) { // Si des champs obligatoires sont manquants, on arrête là
-			return integrationRequestsErrors;
-		}
-		// Pas de champs obligatoires manquants, validation de ceux renseignés
-		for (ConnectorConnectorParametersInner parameterInner : connector.getConnectorParameters()) {
-			mapFieldValidators.stream()
-					.filter(element -> element.isToBeUse(parameterInner))
-					.findFirst()
-					.ifPresent(validator -> integrationRequestsErrors.addAll(validator.validate(parameterInner, connector.getInterfaceContract())));
+		InterfaceContract interfaceContract = InterfaceContract.from("code",connector.getInterfaceContract(), (contract -> connector.getInterfaceContract().equalsIgnoreCase(contract.getCode())), true);
+
+		// Permet de ne pas trester les connectors parameters si on est dans le cas d'un service non-géo - Exemple : DWNL
+		if(interfaceContract != null && interfaceContract.isValidable()){
+
+			checkMandatoryParameters(interfaceContract, connector.getConnectorParameters(), integrationRequestsErrors);
+			if (!integrationRequestsErrors.isEmpty()) { // Si des champs obligatoires sont manquants, on arrête là
+				return integrationRequestsErrors;
+			}
+
+			// Pas de champs obligatoires manquants, validation de ceux renseignés
+			for (ConnectorConnectorParametersInner parameterInner : connector.getConnectorParameters()) {
+				mapFieldValidators.stream()
+						.filter(element -> element.isToBeUse(parameterInner))
+						.findFirst()
+						.ifPresent(validator -> integrationRequestsErrors.addAll(validator.validate(parameterInner, connector.getInterfaceContract())));
+			}
 		}
 		return integrationRequestsErrors;
 	}
@@ -49,24 +51,14 @@ public class ConnectorValidator {
 	 * @param connectorParameters tableau des paramètres fournis
 	 * @param errorEntities       set d'erreur alimenté en cas de param obligatoire manquant
 	 */
-	private void checkMandatoryParameters(String interfaceContract, List<ConnectorConnectorParametersInner> connectorParameters, Set<IntegrationRequestErrorEntity> errorEntities) {
-		List<String> connectorParametersKeys = connectorParameters.stream().map(ConnectorConnectorParametersInner::getKey).collect(Collectors.toList());
+	private void checkMandatoryParameters(InterfaceContract interfaceContract, List<ConnectorConnectorParametersInner> connectorParameters, Set<IntegrationRequestErrorEntity> errorEntities) {
+		List<String> connectorParametersKeys = CollectionUtils.emptyIfNull(connectorParameters).stream().map(ConnectorConnectorParametersInner::getKey).collect(Collectors.toList());
 
-		boolean isWfsKo = interfaceContract.equalsIgnoreCase(WFS_INTERFACE_CONTRACT) && !connectorParametersKeys.containsAll(WFS_MANDATORY_PARAMS);
-		boolean isWmsKo = interfaceContract.equalsIgnoreCase(WMS_INTERFACE_CONTRACT) && !connectorParametersKeys.containsAll(WMS_MANDATORY_PARAMS);
-		boolean isWmtsKo = interfaceContract.equalsIgnoreCase(WMTS_INTERFACE_CONTRACT) && !connectorParametersKeys.containsAll(WMTS_MANDATORY_PARAMS);
-
-		if (isWfsKo || isWmsKo || isWmtsKo) {
-			errorEntities.add(buildError405());
+		for (InterfaceContactConnectorValidator validator : interfaceContactConnectorValidators){
+			if(validator.accept(interfaceContract)){
+				validator.validate(connectorParametersKeys, errorEntities);
+			}
 		}
 	}
 
-	/**
-	 * Construit une erreur de type 405
-	 *
-	 * @return l'erreur
-	 */
-	private IntegrationRequestErrorEntity buildError405() {
-		return new IntegrationRequestErrorEntity(UUID.randomUUID(), IntegrationError.ERR_405.getCode(), IntegrationError.ERR_405.getMessage(), "connector", LocalDateTime.now());
-	}
 }

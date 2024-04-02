@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RudiCaptchaComponent } from './rudi-captcha.component';
+import {RudiCaptchaComponent} from './rudi-captcha.component';
 
 describe('RudiCaptchaComponent', () => {
   let component: RudiCaptchaComponent;

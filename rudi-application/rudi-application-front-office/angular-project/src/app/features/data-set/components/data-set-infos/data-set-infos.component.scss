@@ -1,0 +1,348 @@
+@import "variables-rudi";
+@import "colors";
+@import "common-style";
+@import "bootstrap/scss/bootstrap-grid";
+
+.rudi-card-title {
+    margin-left: -16px;
+    font-size: 18px;
+    color: black;
+}
+
+.mat-card-header-text {
+    margin-left: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.rudi-panel-title {
+    font-size: 16px;
+    color: $primary-text;
+    font-weight: 600;
+}
+
+.rudi-panel-data-language {
+    border-radius: 4px;
+    border: solid 1px $blocks-and-menus-outline;
+
+    .rudi-panel-data-data-language {
+        font-size: 12px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        color: $primary-text;
+    }
+
+    .rudi-panel-language-value {
+        font-size: 15px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        color: #000000
+    }
+
+    .rudi-panel-table, .rudi-panel-tbody-border {
+        border: hidden;
+    }
+}
+
+.rudi-panel-available-count {
+    font-size: 15px;
+    font-weight: 600;
+    color: $primary-color;
+    margin-left: -20px;
+}
+
+.rudi-panel-available {
+    font-size: 15px;
+    margin-left: 0;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $primary-color
+}
+
+.rudi-bloc-access-condition {
+    color: $focus !important;
+}
+
+
+.map-spacing-desktop {
+    width: 50%;
+}
+
+.map-panel-mobile {
+    display: flex;
+    flex-direction: column;
+}
+
+::ng-deep.mat-expansion-panel-body {
+    padding: 0 0 0 0 !important;
+}
+
+.rudi-panel-body {
+    font-size: 15px;
+    color: $primary-text;
+
+    &.panel-provider {
+
+        font-size: 15px;
+        margin-bottom: 12px;
+
+        img {
+            max-width: 64px;
+            height: auto;
+        }
+    }
+}
+
+.rudi-panel-card {
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: $primary-text;
+    padding: 11px 16px;
+    border-radius: 6px;
+    background-color: $banner-solid-color;
+
+    &:first-child {
+        margin-top: 10px;
+    }
+
+    &-libelle {
+        font-weight: 600;
+    }
+
+    &-large {
+        width: 40%;
+    }
+
+    &-hour {
+        font-size: 13px;
+        color: black;
+        font-weight: normal;
+    }
+}
+
+.map-container-desktop {
+    width: 100%;
+    height: 200px;
+}
+
+.map-container-mobile {
+    // TODO rendre ça dynamique
+    width: 100%;
+    height: 300px;
+}
+
+::ng-deep {
+    .stockage-expansion-panel .rudi-expansion-panel {
+        .stockage-panel {
+            margin-bottom: 12px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .mat-expansion-panel-header {
+            padding: 0;
+        }
+
+        .mat-expansion-panel-header.mat-expanded {
+            border-radius: 6px 6px 0 0 !important;
+            border-bottom: none !important;
+        }
+
+        .stockage-panel .mat-expansion-panel-header.mat-expanded {
+            background-color: #e7e9ed;
+        }
+
+        .mat-expansion-indicator:hover, .mat-expansion-indicator:focus, .mat-expansion-indicator.open {
+            width: 30px;
+            border: none;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $primary-text-light;
+
+            &::after {
+                color: $primary-text-light;
+            }
+        }
+
+        .rudi-panel-table {
+            width: 100%;
+            border-left: 1px solid $blocks-and-menus-outline;
+            border-right: 1px solid $blocks-and-menus-outline;
+        }
+
+        .mat-expansion-panel-body {
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+}
+
+.rudi-mat-expansion-panel-source {
+    height: 40px;
+    border-radius: 6px;
+    border: solid 1px $blocks-and-menus-outline;
+    background-color: $banner-solid-color;
+    padding: 0 20px 3px 17px;
+
+    .mat-expansion-indicator:hover, .mat-expansion-indicator:focus, .mat-expansion-indicator.open {
+        width: 30px;
+        border: 1.6px solid $focus;
+        border-radius: 15px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: grey !important;
+
+        &::after {
+            color: grey;
+        }
+    }
+}
+
+.rudi-panel-source-title {
+    font-size: 15px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+}
+
+table th {
+    width: 40%;
+    color: black;
+    font-size: 12px;
+    font-weight: normal !important;
+}
+
+table thead th {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
+    border-style: hidden; /* hide standard table (collapsed) border */
+
+}
+
+table td {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: normal;
+    font-stretch: normal;
+    font-style: normal;
+    word-wrap: break-word;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.rudi-panel-table-header {
+    background-color: $banner-solid-color;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    padding: 20px;
+    color: $primary-text;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.rudi-panel-tbody-border {
+    border-left: 1px solid $blocks-and-menus-outline;
+    border-right: 1px solid $blocks-and-menus-outline;
+    border-bottom: 1px solid $blocks-and-menus-outline;
+}
+
+.rudi-panel-source-download {
+    background-color: $primary-text-light;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    height: 40px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .source-download-libelle {
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        color: $secondary-color;
+    }
+}
+
+.rudi-panel-source-download:hover {
+    background-color: $focus;
+    color: $secondary-color;
+
+    .source-download-libelle:hover {
+        color: $secondary-color;
+    }
+}
+
+.f-w-500 {
+    font-weight: 600;
+}
+
+.row-container {
+    @extend .row;
+}
+
+.libelle-key {
+    @extend .col-sm-12;
+    @extend .col-md-5;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.libelle-value {
+    @extend .col-sm-12;
+    @extend .col-md-7;
+}
+
+.type-licence-libelle {
+    font-size: 14px;
+    color: $primary-color;
+    text-decoration: underline;
+}
+
+.dataset-info-file-structure {
+    text-decoration: underline;
+    color: $focus !important;
+
+    a {
+        background-color: transparent;
+    }
+}
+
+.text-and-icon {
+    display: flex;
+    align-items: center;
+
+    .clickable-icon {
+        cursor: pointer;
+    }
+}
+
+.no-outline-focus:focus {
+    outline: none;
+}
+
+.margin-data-value {
+    margin-bottom: 17px;
+}
+
+.map-style {
+    max-width: 600px;
+}

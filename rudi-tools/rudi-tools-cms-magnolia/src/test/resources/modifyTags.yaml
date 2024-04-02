@@ -1,0 +1,18 @@
+form:
+  properties:
+    - name: mgnl:tags
+      class: info.magnolia.contenttags.ui.field.TagsFieldDefinition
+actions:
+  cancel:
+    $type: closeAction
+    availability:
+      multiple: true
+  commit:
+    class: info.magnolia.contenttags.ui.form.action.AddTagsActionDefinition
+    availability:
+      multiple: true
+footerLayout:
+  $type: defaultEditorActionLayout
+  primaryActions:
+    cancel: cancel
+    commit: commit

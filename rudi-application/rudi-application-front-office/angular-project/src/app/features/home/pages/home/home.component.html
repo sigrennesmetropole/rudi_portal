@@ -1,0 +1,41 @@
+<div class="home-container">
+    <div class="hero-section">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="customizationDescriptionIsLoading"></app-loader>
+        <app-hero-section
+            *ngIf="!customizationDescriptionIsLoading"
+            [heroDescription]="customizationDescription?.hero_description"
+        ></app-hero-section>
+    </div>
+    <div class="themes-section" *ngIf="themes">
+        <div class="themes-container">
+            <app-themes-section
+                [themes]="themes"
+                [isLoading]="themesIsLoading"
+            ></app-themes-section>
+        </div>
+    </div>
+
+    <div class="jdd-section">
+        <app-jdd-section [isLoading]="jddsIsLoading" [jdds]="jdds"></app-jdd-section>
+    </div>
+
+    <div class="projects-section">
+        <div class="projects-container">
+            <app-loader [isTransparent]="true" [allPage]="false"
+                        [active]="customizationDescriptionIsLoading || projectsIsLoading"></app-loader>
+            <app-projects-section
+                *ngIf="!customizationDescriptionIsLoading && !projectsIsLoading"
+                [projectsDescription]="customizationDescription.projects_description"
+                [projects]="projects">
+            </app-projects-section>
+        </div>
+    </div>
+
+    <div class="key-figures-sections">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="customizationDescriptionIsLoading"></app-loader>
+        <app-key-figures-section
+            *ngIf="!customizationDescriptionIsLoading"
+            [keyFiguresDescription]="customizationDescription.key_figures_description">
+        </app-key-figures-section>
+    </div>
+</div>

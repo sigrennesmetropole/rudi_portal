@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsult</artifactId>
-		<version>1.2.4</version>
+		<version>2.0.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsult-facade</artifactId>
@@ -150,7 +150,9 @@
 				<configuration>
 					<modelPackage>org.rudi.microservice.konsult.core.bean</modelPackage>
 					<schemaMappings>
-						Metadata=org.rudi.facet.kaccess.bean.Metadata,MetadataList=org.rudi.facet.kaccess.bean.MetadataList,MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets,Credentials=org.rudi.facet.apimaccess.bean.Credentials,Address=org.rudi.rva.core.bean.Address
+						Metadata=org.rudi.facet.kaccess.bean.Metadata,MetadataList=org.rudi.facet.kaccess.bean.MetadataList,MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets,Credentials=org.rudi.facet.apimaccess.bean.Credentials,Address=org.rudi.rva.core.bean.Address,
+						CmsCategory=org.rudi.facet.cms.bean.CmsCategory,CmsAsset=org.rudi.facet.cms.bean.CmsAsset,
+						CmsAssetType=org.rudi.facet.cms.bean.CmsAssetType
 					</schemaMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>

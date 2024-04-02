@@ -1,0 +1,18 @@
+#templateScript: /mtk2/templates/components/linkList.ftl
+templateScript: /rudi/templates/components/term/termList.ftl
+renderType: freemarker
+#dialog: rudi:components/termList
+#dialog: mtk2:components/linkList
+#class: info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition
+#class: info.magnolia.demo.travel.tours.model.definition.TourCategoryTemplateDefinition
+#modelClass: info.magnolia.demo.travel.tours.model.TourListModel
+
+areas:
+  termList:
+    templateScript: /rudi/templates/components/term/termListArea.ftl
+    type: list
+    availableComponents:
+      termDetail:
+        id: rudi:components/term/termDetail
+      termSimple:
+        id: rudi:components/term/termSimple

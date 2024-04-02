@@ -1,14 +1,10 @@
-@import "../styles/colors";
-@import "../styles/variables-rudi";
-@import "../styles/mat-theming";
+@import "colors";
+@import "variables-rudi";
+@import "mat-theming";
 @import "font-open-sans";
 @import "font-montserrat";
-@import '~@angular/material/theming';
 @import 'mixins';
 @import 'functions';
-
-$custom-typography: mat-typography-config($font-family: '"Montserrat", sans-serif;');
-@include mat-core($custom-typography);
 
 .search-box-title {
     color: $primary-color;
@@ -149,7 +145,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
 
         .rudi-select-arrow {
             float: right;
-            padding-top: 8px;
+            //padding-top: 8px;
         }
 
         .mat-badge-content {
@@ -231,7 +227,7 @@ $custom-typography: mat-typography-config($font-family: '"Montserrat", sans-seri
         max-height: 300px;
         overflow-x: auto;
         scrollbar-width: thin; /* "auto" or "thin" */
-        scrollbar-color: white; /* scroll thumb and track */
+        scrollbar-color: gray white; /* scroll thumb and track */
     }
 
     &-footer {

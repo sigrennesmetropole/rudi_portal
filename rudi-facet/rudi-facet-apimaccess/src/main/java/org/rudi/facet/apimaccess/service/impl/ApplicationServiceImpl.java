@@ -1,15 +1,15 @@
 package org.rudi.facet.apimaccess.service.impl;
 
-import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.NotImplementedException;
@@ -43,6 +43,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import org.wso2.carbon.apimgt.rest.api.devportal.API;
+import org.wso2.carbon.apimgt.rest.api.devportal.APIInfoAdditionalPropertiesInner;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.devportal.Subscription.StatusEnum;
 import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
@@ -54,6 +56,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
 
 @Service
 @RequiredArgsConstructor
@@ -403,7 +406,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			throws ApplicationOperationException {
 		final var applications = searchApplication(new ApplicationSearchCriteria().name(defaultApplicationName),
 				username);
-		if (CollectionUtils.isEmpty(applications.getList())) {
+		if (applications == null || CollectionUtils.isEmpty(applications.getList())) {
 			final var application = new Application().name(defaultApplicationName)
 					.throttlingPolicy(defaultApplicationRequestPolicy);
 			final var createdApplication = createApplication(application, username);
@@ -468,50 +471,32 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	public void deleteUserSubscriptionsForDatasetAPIs(String username, UUID datasetUuid) throws APIManagerException {
 		// 1- Recupération de l'id du rudi_application du owner
-		val myApps = searchApplication(null, username);
+		Applications myApps = searchApplication(null, username);
 		if (myApps == null) {
 			throw new APIManagerException(String.format("No application found for user %s", username));
 		}
-		val defaultApp = myApps.getList().stream()
+
+		Optional<ApplicationInfo> defaultApp = myApps.getList().stream()
 				.filter(applicationInfo -> applicationInfo.getName().equals(defaultApplicationName)).findFirst();
+
 		if (defaultApp.isEmpty()) {
 			throw new APIManagerException(
 					String.format("Default application %s not found for user %s", defaultApplicationName, username));
 		}
-		val defaultAppId = defaultApp.get().getApplicationId();
+
+		String defaultAppId = defaultApp.get().getApplicationId();
 
 		// 2- Recupération des souscriptions du defaultApp du owner
-		val searchCriteria = new DevPortalSubscriptionSearchCriteria().applicationId(defaultAppId);
-		val mySubscriptions = searchUserSubscriptions(searchCriteria, username);
+		DevPortalSubscriptionSearchCriteria searchCriteria = new DevPortalSubscriptionSearchCriteria().applicationId(defaultAppId);
+		SubscriptionList mySubscriptions = searchUserSubscriptions(searchCriteria, username);
 
 		if (mySubscriptions == null || mySubscriptions.getCount() == 0) {
 			// Pas de souscription trouvée, y a rien à supprimer donc comme souscription, on continue sur la suppression du linkedDataset
 			return;
 		}
-		val subscriptionsDeleted = new ArrayList<Subscription>(); // Elle servira pour rollbacker au besoin
-		for (Subscription subscription : mySubscriptions.getList()) {
-			// RUDI-4264 filtre sur l'état de l'API
-			if (APILifecycleStatusState
-					.fromValue(subscription.getApiInfo().getLifeCycleStatus()) == APILifecycleStatusState.BLOCKED) {
-				// l'api est bloquée, il ne sera pas possible d'en récupérer le détail
-				LOGGER.info("L'état {} de l'api {} ne permet pas de vérifier les souscriptions pour l'utilisateur",
-						subscription.getApiInfo().getLifeCycleStatus(), subscription.getApiId());
-				continue;
-			}
 
-			// Suppression de toutes les souscriptions aux médias de ce dataset
-			val subscribedAPI = apIsService.getAPIFromDevportal(subscription.getApiId(), username);
-			val apisDatasetUuid = subscribedAPI.getAdditionalProperties().get(DATASET_UUID_FIELD);
-			if (apisDatasetUuid.equals(datasetUuid.toString())) {
-				try {
-					unsubscribeAPI(subscription.getSubscriptionId(), username);
-					subscriptionsDeleted.add(subscription);
-				} catch (SubscriptionOperationException exception) {
-					doRollback(subscriptionsDeleted, username);
-					throw new SubscriptionOperationException(subscription.getSubscriptionId(), username, exception);
-				}
-			}
-		}
+		// Gestion de la suppression des souscriptions aux APIs.
+		handleDeletionUserSubscriptionsForDatasetAPIs(mySubscriptions, username, datasetUuid);
 	}
 
 	@Override
@@ -566,11 +551,46 @@ public class ApplicationServiceImpl implements ApplicationService {
 	 *
 	 * @param subscriptions list des souscriptions ayant été supprimées
 	 * @param username      le owner des souscriptions
-	 * @throws APISubscriptionException
+	 * @throws APISubscriptionException <w
 	 */
 	private void doRollback(List<Subscription> subscriptions, String username) throws APISubscriptionException {
 		for (Subscription subscription : subscriptions) {
 			subscribeAPI(subscription, username);
+		}
+	}
+
+
+	private void handleDeletionUserSubscriptionsForDatasetAPIs(SubscriptionList mySubscriptions, String username, UUID datasetUuid) throws APIManagerException {
+		val subscriptionsDeleted = new ArrayList<Subscription>(); // Elle servira pour rollbacker au besoin
+		for (Subscription subscription : mySubscriptions.getList()) {
+			// RUDI-4264 filtre sur l'état de l'API
+			if (APILifecycleStatusState
+					.fromValue(subscription.getApiInfo().getLifeCycleStatus()) == APILifecycleStatusState.BLOCKED) {
+				// l'api est bloquée, il ne sera pas possible d'en récupérer le détail
+				LOGGER.info("L'état {} de l'api {} ne permet pas de vérifier les souscriptions pour l'utilisateur",
+						subscription.getApiInfo().getLifeCycleStatus(), subscription.getApiId());
+				continue;
+			}
+
+			// Suppression de toutes les souscriptions aux médias de ce dataset
+			API subscribedAPI = apIsService.getAPIFromDevportal(subscription.getApiId(), username);
+			if (subscribedAPI != null) {
+
+				// identifier les API dont le global_id vaut le datasetUuid
+				List<@Valid APIInfoAdditionalPropertiesInner> apisDatasetUuid = subscribedAPI.getAdditionalProperties()
+						.stream().filter(a -> StringUtils.equals(a.getName(), DATASET_UUID_FIELD))
+						.filter(a -> StringUtils.equals(a.getValue(), datasetUuid.toString()))
+						.collect(Collectors.toList());
+				if (CollectionUtils.isNotEmpty(apisDatasetUuid)) {
+					try {
+						unsubscribeAPI(subscription.getSubscriptionId(), username);
+						subscriptionsDeleted.add(subscription);
+					} catch (SubscriptionOperationException exception) {
+						doRollback(subscriptionsDeleted, username);
+						throw new SubscriptionOperationException(subscription.getSubscriptionId(), username, exception);
+					}
+				}
+			}
 		}
 	}
 

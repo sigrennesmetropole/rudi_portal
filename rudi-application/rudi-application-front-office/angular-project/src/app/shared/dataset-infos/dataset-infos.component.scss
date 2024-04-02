@@ -1,6 +1,29 @@
-@import "src/app/styles/variables-rudi";
-@import "src/app/styles/common-style";
-@import "src/app/styles/_responsive.scss";
+@import "variables-rudi";
+@import "common-style";
+@import "_responsive.scss";
+@import "bootstrap/scss/bootstrap-grid";
+
+.container-global{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 18px;
+
+    .logo-container{
+        @extend .col-sm-12;
+        @extend .col-md-2;
+        @extend .col-lg-3;
+        padding: 0;
+        margin-bottom: 10px;
+    }
+    .text-container{
+        @extend .col-sm-12;
+        @extend .col-md-10;
+        @extend .col-lg-9;
+    }
+}
+
 
 .dataset-info {
     font-family: OpenSans, sans-serif;
@@ -28,10 +51,6 @@
     height: 15px;
 }
 
-.container-global {
-    display: flex;
-}
-
 @mixin mobile() {
     .container-global {
         flex-direction: column;
@@ -48,9 +67,7 @@
     .container-global {
         flex-direction: row;
     }
-    .text-container{
-        margin-left: 15px;
-    }
+
     .logo-container{
         margin-bottom: 0;
     }

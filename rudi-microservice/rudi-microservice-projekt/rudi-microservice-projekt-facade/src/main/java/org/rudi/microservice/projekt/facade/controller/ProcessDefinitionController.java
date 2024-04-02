@@ -5,8 +5,6 @@ package org.rudi.microservice.projekt.facade.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.rudi.bpmn.core.bean.ProcessDefinition;
 import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.facet.bpmn.service.InitializationService;
@@ -31,15 +29,13 @@ public class ProcessDefinitionController implements ProcessDefinitionsApi {
 	private final ResourceHelper resourceHelper;
 
 	@Override
-	public ResponseEntity<Void> deleteProcessDefinition(String processDefinitionKey, @Valid Integer version)
-			throws Exception {
+	public ResponseEntity<Void> deleteProcessDefinition(String processDefinitionKey, Integer version) throws Exception {
 		initializationService.deleteProcessDefinition(processDefinitionKey, version);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Override
-	public ResponseEntity<Boolean> updateProcessDefinition(String deploymentName, @Valid Resource body)
-			throws Exception {
+	public ResponseEntity<Boolean> updateProcessDefinition(String deploymentName, Resource body) throws Exception {
 		initializationService.updateProcessDefinition(deploymentName, resourceHelper.convertToDocumentContent(body));
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(true);
 	}

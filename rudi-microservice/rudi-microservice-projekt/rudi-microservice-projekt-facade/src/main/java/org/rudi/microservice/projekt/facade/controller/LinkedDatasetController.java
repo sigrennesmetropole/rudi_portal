@@ -3,7 +3,6 @@
  */
 package org.rudi.microservice.projekt.facade.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.service.TaskService;
@@ -13,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author FNI18300
@@ -31,7 +30,7 @@ public class LinkedDatasetController implements LinkedDatasetApi {
 	}
 
 	@Override
-	public ResponseEntity<Task> createLinkedDatasetDraft(@Valid LinkedDataset project) throws Exception {
+	public ResponseEntity<Task> createLinkedDatasetDraft(LinkedDataset project) throws Exception {
 		return ResponseEntity.ok(linkedDatasetTaskService.createDraft(project));
 	}
 

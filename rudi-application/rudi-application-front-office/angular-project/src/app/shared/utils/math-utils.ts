@@ -11,20 +11,8 @@ export class MathUtils {
      * @see java.lang.Math.multiplyExact(long, long)
      */
     static multiplyExact(x: number, y: number): number {
-        const r = x * y;
-        // TODO
-        // const ax = Math.abs(x);
-        // const ay = Math.abs(y);
-        // if (((ax | ay) >>> 31 !== 0)) {
-        //     // Some bits greater than 2^31 that might cause overflow
-        //     // Check the result using the divide operator
-        //     // and check for the special case of Long.MIN_VALUE * -1
-        //     if (((y != 0) && (r / y != x)) ||
-        //         (x == Long.MIN_VALUE && y == -1)) {
-        //         throw new ArithmeticException('long overflow');
-        //     }
-        // }
-        return r;
+        // cette méthode pourrait gérer le size overflow mais ne le gère pas actuellement faute de nécessité fonctionnelle et/ou technique
+        return  x * y;
     }
 
 }

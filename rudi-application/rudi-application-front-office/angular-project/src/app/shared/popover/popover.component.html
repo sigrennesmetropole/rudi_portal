@@ -1,18 +1,17 @@
-<popover-content #myPopover
-                 placement="bottom"
-                 [closeOnClickOutside]="true" >
+<ng-template #myPopover>
     <div class="popover-content-child">
         <div class="popover_logo-container">
-            <mat-icon class="popover_logo-style rudi_picto_reutilisations" [svgIcon]="buttonLogo" aria-hidden="false" aria-label="icon de la popine"></mat-icon>
+            <mat-icon class="popover_logo-style rudi_picto_reutilisations" [svgIcon]="buttonLogo"
+                      aria-hidden="false" aria-label="icon de la popine"></mat-icon>
         </div>
         <div class="popover-text-style">
-            <p class="firstParagraph">{{buttonMessageBody}}</p>
-            <p class="secondParagraph">{{buttonMessageFooter}}</p>
+            <p class="firstParagraph">{{ buttonMessageBody }}</p>
+            <p class="secondParagraph">{{ buttonMessageFooter }}</p>
         </div>
-
     </div>
-</popover-content>
-<button mat-raised-button [popover]="myPopover"
+</ng-template>
+<button mat-raised-button [ngbPopover]="myPopover" triggers="mouseenter:mouseleave"
+        [autoClose]="true" popoverClass="popover-content" [placement]="'bottom-right'"
         class="button project-btn-reutilisation">
-    <span>{{buttonMessageTitle}}</span>
+    <span>{{ buttonMessageTitle }}</span>
 </button>

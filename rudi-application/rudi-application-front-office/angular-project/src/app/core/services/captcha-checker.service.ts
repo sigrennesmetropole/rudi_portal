@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {RudiCaptchaComponent} from '../../shared/rudi-captcha/rudi-captcha.component';
+import {ErrorWithCause} from '@shared/models/error-with-cause';
+import {RudiCaptchaComponent} from '@shared/rudi-captcha/rudi-captcha.component';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {ErrorWithCause} from '../../shared/models/error-with-cause';
 
 export const CAPTCHA_NOT_VALID_CODE = 423; // Erreur 400 (pour erreur client)
 

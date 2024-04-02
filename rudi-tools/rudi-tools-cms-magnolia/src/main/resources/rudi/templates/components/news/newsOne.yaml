@@ -1,0 +1,10 @@
+templateScript: /rudi/templates/components/news/newsOne.ftl
+renderType: freemarker
+
+areas:
+  newsOne:
+    availableComponents:
+      newsDetail:
+        id: rudi:components/news/newsDetail
+      newsSimple:
+        id: rudi:components/news/newsSimple 

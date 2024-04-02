@@ -1,4 +1,4 @@
-import {Form, Section} from '../../api-bpmn';
+import {Form, Section} from 'micro_service_modules/api-bpmn';
 
 /**
  * Récupère les sections du formulaire contenant au moins 1 champ

@@ -98,7 +98,7 @@ public class DocumentStorageServiceImpl implements DocumentStorageService {
 			if (documentContent.isFile()) {
 				blobBuilder.payload(documentContent.getFile());
 			} else if (documentContent.isStream()) {
-				blobBuilder.payload(documentContent.getFileStream());
+				blobBuilder.payload(documentContent.getFileStream()).contentLength(documentContent.getFileSize());
 			}
 			blobBuilder.userMetadata(userMetaDatas);
 

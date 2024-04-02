@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
-import {ProjectCatalogItem, ProjectCatalogItemPage} from '../../project/model/project-catalog-item';
-import {ProjectListService} from '../../core/services/project-list.service';
-import {DEFAULT_PROJECT_ORDER, Order} from '../../core/services/asset/project/projekt-metier.service';
+import {ProjectCatalogItem, ProjectCatalogItemPage} from '@features/project/model/project-catalog-item';
+import {DEFAULT_PROJECT_ORDER, Order} from '@core/services/asset/project/projekt-metier.service';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {ProjectListService} from '@core/services/project-list.service';
 
 const FIRST_PAGE = 1;
 
@@ -104,18 +104,22 @@ export class ProjectListComponent implements OnInit {
         this.isLoading = true;
         setTimeout(() => this.runningSearch.emit(true)); // setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
         this.projectListService.searchProjectsCatalog(this.linkedDatasetsGlobalIds, this.offset, this.maxResultsPerPage, order, this.producerUuid)
-            .subscribe((data: ProjectCatalogItemPage) => {
-                this.isLoading = false;
-                this.projectList = data;
-                this.projectListChange.emit(data);
-                this.reuseListTotal.emit(data.total);
-            }, error => {
-                console.error('searchProjects failed', error);
-                this.isLoading = false;
-            }, () => {
-                this.runningSearch.emit(false);
-                this.isLoading = false;
+            .subscribe({
+                next: (data: ProjectCatalogItemPage) => {
+                    this.isLoading = false;
+                    this.projectList = data;
+                    this.projectListChange.emit(data);
+                    this.reuseListTotal.emit(data.total);
+                },
+                error: error => {
+                    console.error('searchProjects failed', error);
+                    this.isLoading = false;
+                },
+                complete: () => {
+                    this.runningSearch.emit(false);
+                    this.isLoading = false;
 
+                }
             });
     }
 

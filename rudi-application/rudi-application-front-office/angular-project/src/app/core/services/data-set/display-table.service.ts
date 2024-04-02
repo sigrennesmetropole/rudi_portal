@@ -1,17 +1,17 @@
+import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {KonsultMetierService} from '../konsult-metier.service';
+import {SPREADSHEET_COLDEF_INDEX} from '@features/data-set/components/spreadsheet/spreadsheet.component';
+import {TranslateService} from '@ngx-translate/core';
+import {ErrorWithCause} from '@shared/models/error-with-cause';
+import {GetBackendPropertyPipe} from '@shared/pipes/get-backend-property.pipe';
+import {ColDef} from 'ag-grid-community';
+import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {HttpResponse} from '@angular/common/http';
 import {read, utils, WorkBook} from 'xlsx';
-import {GetBackendPropertyPipe} from '../../../shared/pipes/get-backend-property.pipe';
-import {ColDef} from 'ag-grid-community';
+import {KonsultMetierService} from '../konsult-metier.service';
 import {DisplayTableDataInterface} from './display-table-data.interface';
-import {SPREADSHEET_COLDEF_INDEX} from '../../../data-set/components/spreadsheet/spreadsheet.component';
-import {ErrorWithCause} from '../../../shared/models/error-with-cause';
-import {TranslateService} from '@ngx-translate/core';
 import {readFile} from './display.function';
-import {KonsultService} from '../../../konsult/konsult-api';
 
 @Injectable({
     providedIn: 'root'

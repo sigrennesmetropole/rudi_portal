@@ -9,6 +9,9 @@
     "MetadataFacets": "../../api-kaccess/model/metadataFacets",
     "KindOfData": "../../api-kmedia/model/kindOfData",
     "AssetDescription": "../../../api-bpmn/model/assetDescription",
-    "Credentials": "../../api-apimaccess/model/credentials"
+    "Credentials": "../../api-apimaccess/model/credentials",
+    "CmsAsset": "../../api-cms/model/cmsAsset",
+    "CmsAssetType": "../../api-cms/model/cmsAssetType",
+    "CmsCategory": "../../api-cms/model/cmsCategory"
   }
 }

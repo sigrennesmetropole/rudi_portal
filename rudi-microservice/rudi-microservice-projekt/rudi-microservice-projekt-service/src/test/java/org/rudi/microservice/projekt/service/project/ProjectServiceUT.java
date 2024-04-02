@@ -23,10 +23,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
-import org.rudi.common.core.security.Role;
+import org.rudi.common.core.security.RoleCodes;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.exception.MissingParameterException;
@@ -175,7 +174,7 @@ class ProjectServiceUT {
 
 		assertThatThrownBy(() -> projectService.createProject(projectToCreate))
 				.isInstanceOf(AppServiceUnauthorizedException.class)
-				.hasMessage("Cannot modify project list without authentication");
+				.hasMessage("Accès non autorisé à la fonctionnalité pour l'utilisateur");
 	}
 
 	private void mockAuthenticatedUserToCreateProject(Project project) throws AppServiceUnauthorizedException {
@@ -183,7 +182,8 @@ class ProjectServiceUT {
 	}
 
 	private void mockAuthenticatedUserFromManager(UUID managerUserUuid) throws AppServiceUnauthorizedException {
-		final User user = new User().login("mpokora").uuid(managerUserUuid);
+		org.rudi.facet.acl.bean.Role roleUser = new org.rudi.facet.acl.bean.Role().code(RoleCodes.USER);
+		final User user = new User().login("mpokora").uuid(managerUserUuid).roles(Arrays.asList(roleUser));
 		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
 		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
 		when(aclHelper.getAuthenticatedUser()).thenReturn(user);
@@ -193,21 +193,25 @@ class ProjectServiceUT {
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 	}
 
-	private void mockAuthenticatedUserFromModerator(UUID moderatorUuid) {
-		final User user = new User().login("PresentMic").uuid(moderatorUuid);
+	private void mockAuthenticatedUserFromModerator(UUID moderatorUuid) throws AppServiceUnauthorizedException {
+		org.rudi.facet.acl.bean.Role roleModerator = new org.rudi.facet.acl.bean.Role().code(RoleCodes.MODERATOR);
+		final User user = new User().login("PresentMic").uuid(moderatorUuid).roles(Arrays.asList(roleModerator));
 		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
 		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
-		when(rolesHelper.hasAnyRole(user, Role.MODERATOR)).thenReturn(true);
+//		when(rolesHelper.hasAnyRole(user, Role.MODERATOR)).thenReturn(true);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(user);
 
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin(user.getLogin());
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 	}
 
-	private void mockAuthenticatedUserNotOwner(UUID managerUserUuid) {
-		final User user = new User().login("shakira").uuid(managerUserUuid);
+	private void mockAuthenticatedUserNotOwner(UUID managerUserUuid) throws AppServiceUnauthorizedException {
+		org.rudi.facet.acl.bean.Role roleUser = new org.rudi.facet.acl.bean.Role().code(RoleCodes.USER);
+		final User user = new User().login("shakira").uuid(managerUserUuid).roles(Arrays.asList(roleUser));
 		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
 		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(user);
 
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin(user.getLogin());
@@ -313,6 +317,7 @@ class ProjectServiceUT {
 		final Project project = jsonResourceReader.read(PROJET_LAMPADAIRES.getJsonPath(), Project.class);
 		createEntities(project);
 		project.getDesiredSupports().get(0).setUuid(null);
+		mockAuthenticatedUserToCreateProject(project);
 
 		assertThatThrownBy(() -> projectService.createProject(project)).isInstanceOf(MissingParameterException.class)
 				.hasMessage("support.uuid manquant");
@@ -323,6 +328,7 @@ class ProjectServiceUT {
 		final Project project = jsonResourceReader.read(PROJET_LAMPADAIRES.getJsonPath(), Project.class);
 		createEntities(project);
 		project.getConfidentiality().setUuid(null);
+		mockAuthenticatedUserToCreateProject(project);
 
 		assertThatThrownBy(() -> projectService.createProject(project)).isInstanceOf(MissingParameterException.class)
 				.hasMessage("confidentiality.uuid manquant");
@@ -374,8 +380,8 @@ class ProjectServiceUT {
 
 		assertThatThrownBy(() -> projectService.createProject(project))
 				.as("Je ne peux pas créer le projet pour quelqu'un d'autre")
-				.isInstanceOf(AppServiceForbiddenException.class).hasMessage(
-						"Authenticated user must be moderator or must be the same user as existing project manager");
+				.isInstanceOf(AppServiceUnauthorizedException.class)
+				.hasMessage("Accès non autorisé à la fonctionnalité pour l'utilisateur");
 	}
 
 	@Test
@@ -421,8 +427,8 @@ class ProjectServiceUT {
 
 		assertThatThrownBy(() -> projectService.updateProject(project))
 				.as("Je ne peux pas modifier le projet créé par quelqu'un d'autre")
-				.isInstanceOf(AppServiceForbiddenException.class).hasMessage(
-						"Authenticated user must be moderator or must be the same user as existing project manager");
+				.isInstanceOf(AppServiceUnauthorizedException.class)
+				.hasMessage("Accès non autorisé à la fonctionnalité pour l'utilisateur");
 	}
 
 	@Test
@@ -516,8 +522,8 @@ class ProjectServiceUT {
 
 		assertThatThrownBy(() -> projectService.deleteProject(createdProject.getUuid()))
 				.as("Je ne peux pas supprimer le projet créé par quelqu'un d'autre")
-				.isInstanceOf(AppServiceForbiddenException.class).hasMessage(
-						"Authenticated user must be moderator or must be the same user as existing project manager");
+				.isInstanceOf(AppServiceUnauthorizedException.class)
+				.hasMessage("Accès non autorisé à la fonctionnalité pour l'utilisateur");
 
 		final long totalElementsAfterDelete = countProjects();
 		assertThat(totalElementsAfterDelete).as("Aucun projet n'a été supprimé")
@@ -700,7 +706,7 @@ class ProjectServiceUT {
 		final UUID otherManager = UUID.randomUUID();
 		mockAuthenticatedUserFromManager(otherManager);
 
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> projectService.createNewDatasetRequest(projectUuid, request));
 	}
 
@@ -788,7 +794,7 @@ class ProjectServiceUT {
 		final UUID otherManager = UUID.randomUUID();
 		mockAuthenticatedUserFromManager(otherManager);
 
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> projectService.updateNewDatasetRequest(projectUuid, requestToUpdate));
 	}
 
@@ -879,7 +885,7 @@ class ProjectServiceUT {
 		final UUID otherManager = UUID.randomUUID();
 		mockAuthenticatedUserFromManager(otherManager);
 
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> projectService.deleteNewDatasetRequest(projectUuid, requestCreated.getUuid()));
 
 	}
@@ -912,7 +918,7 @@ class ProjectServiceUT {
 		val newLogo = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(SECOND_LOGO_FILE_NAME);
 
 		// Une exception est levée, car je ne suis pas connecté avec un utilisateur qui est Owner du projet
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, newLogo));
 	}
 
@@ -942,7 +948,7 @@ class ProjectServiceUT {
 		mockAuthenticatedUserFromManager(otherManager);
 
 		// Une exception est levée, car je ne suis pas connecté avec un utilisateur qui est Owner du projet
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> projectService.deleteMedia(projectUuid, KindOfData.LOGO));
 
 		// Je me re connecte en tant qu'Owner du projet

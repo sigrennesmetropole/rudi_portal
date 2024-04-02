@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input} from '@angular/core';
-import {BreakpointObserverService, NgClassObject} from '../../core/services/breakpoint-observer.service';
 import {MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
+import {BreakpointObserverService, NgClassObject} from '@core/services/breakpoint-observer.service';
 
 /**
  * Adaptation de mat-paginator pour un visuel identique à pagination-controls

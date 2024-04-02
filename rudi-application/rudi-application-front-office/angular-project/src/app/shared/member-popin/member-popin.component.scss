@@ -1,5 +1,5 @@
-@import "src/app/styles/common-style";
-@import "src/app/styles/variables-rudi";
+@import "common-style";
+@import "variables-rudi";
 
 #dialog-content {
     max-width: 768px;
@@ -22,13 +22,11 @@
 }
 
 ::ng-deep {
-    .icon-close {
-        float: right;
-        margin: -63px 0 0 96%;
 
+    .icon-close {
         svg {
-            height: 36px;
-            width: 36px;
+            height: 24px;
+            width: 24px;
             fill: black;
             opacity: 0.54;
             border: solid 1px grey;

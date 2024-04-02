@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {TaskWithDependencies} from '../../../../shared/utils/task-utils';
-import {Task} from '../../../../api-bpmn';
-import {SelfdataInformationRequest} from '../../../../selfdata/selfdata-model';
-import {TaskDependencyFetchers, TaskWithDependenciesService} from '../task-with-dependencies-service';
-import {SelfdataTaskSearchCriteria} from './selfdata-task-search-criteria.interface';
-import {TaskDependencies} from '../task-dependencies.interface';
-import {AclService} from '../../../../acl/acl-api';
-import {OrganizationService} from '../../../../strukture/api-strukture';
-import {SelfdataInformationRequestTaskMetierService} from './selfdata-information-request-task-metier.service';
-import {DependencyFetcher} from '../../../../shared/utils/dependencies-utils';
-import {Metadata} from '../../../../api-kaccess';
+import {DependencyFetcher} from '@shared/utils/dependencies-utils';
+import {TaskWithDependencies} from '@shared/utils/task-utils';
+import {AclService} from 'micro_service_modules/acl/acl-api';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {OwnerInfo} from 'micro_service_modules/projekt/projekt-model';
+import {SelfdataInformationRequest} from 'micro_service_modules/selfdata/selfdata-model';
+import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
 import {KonsultMetierService} from '../../konsult-metier.service';
-import {OwnerInfo} from '../../../../projekt/projekt-model';
+import {TaskDependencies} from '../task-dependencies.interface';
+import {TaskDependencyFetchers, TaskWithDependenciesService} from '../task-with-dependencies-service';
+import {SelfdataInformationRequestTaskMetierService} from './selfdata-information-request-task-metier.service';
+import {SelfdataTaskSearchCriteria} from './selfdata-task-search-criteria.interface';
 
 /**
  * les dépendances attendues pour une tâche

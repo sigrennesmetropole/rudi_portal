@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Media, Metadata} from '../../../api-kaccess';
+import {MetadataUtils} from '@shared/utils/metadata-utils';
+import {Media, Metadata} from 'micro_service_modules/api-kaccess';
+import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {Observable, of} from 'rxjs';
-import {MetadataUtils} from '../../../shared/utils/metadata-utils';
-import {KonsultService} from '../../../konsult/konsult-api';
 
 @Injectable({
     providedIn: 'root'

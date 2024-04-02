@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SearchCountComponent } from './search-count.component';
+import {SearchCountComponent} from './search-count.component';
 
 describe('SearchCountComponent', () => {
   let component: SearchCountComponent;

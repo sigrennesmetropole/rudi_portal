@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WorkflowFieldAttachmentPopinComponent } from './workflow-field-attachment-popin.component';
+import {WorkflowFieldAttachmentPopinComponent} from './workflow-field-attachment-popin.component';
 
 describe('WorkflowFieldAttachmentPopinComponent', () => {
   let component: WorkflowFieldAttachmentPopinComponent;

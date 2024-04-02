@@ -1,7 +1,7 @@
-import {Worker} from './worker.interface';
 import {from, Observable} from 'rxjs';
 import {mergeMap, reduce} from 'rxjs/operators';
 import {RequestToStudy} from './request-to-study.interface';
+import {Worker} from './worker.interface';
 
 /**
  * class abstraite d'agregrateur (qui aggrège les workers)

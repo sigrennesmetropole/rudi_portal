@@ -1,0 +1,65 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public CMS Rudi",
+		"version": "0.0.1",
+		"title": "rudi-cms-api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": "rudi@datarennes.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"CmsAssetType": {
+				"type": "string",
+				"enum": [ "TERMS", "PROJECTVALUES", "NEWS"]
+			},
+			"CmsCategory": {
+				"type": "object",
+				"properties": {
+				    "id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"path": {
+						"type": "string"
+					},
+					"asset_type": {
+						"type": "string"
+					}
+				}
+			},
+			"CmsAsset": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"update_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"creation_date": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			}
+		}
+	}
+}

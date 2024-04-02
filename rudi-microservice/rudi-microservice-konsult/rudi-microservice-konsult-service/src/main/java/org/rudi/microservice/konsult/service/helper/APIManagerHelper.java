@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.acl.bean.User;
@@ -22,6 +21,7 @@ import org.rudi.facet.apimaccess.exception.APINotFoundException;
 import org.rudi.facet.apimaccess.exception.APINotUniqueException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertiesException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertyException;
+import org.rudi.facet.apimaccess.helper.api.AdditionalPropertiesHelper;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Media;
@@ -46,6 +46,7 @@ public class APIManagerHelper {
 	private final APIsService apIsService;
 	private final ApplicationService applicationService;
 	private final MetadataDetailsHelper metadataDetailsHelper;
+	private final AdditionalPropertiesHelper additionalPropertiesHelper;
 	private final String anonymousUsername;
 	private final ACLHelper aclHelper;
 	private final OrganizationHelper organizationHelper;
@@ -54,10 +55,12 @@ public class APIManagerHelper {
 	public APIManagerHelper(APIsService apIsService, ApplicationService applicationService,
 			MetadataDetailsHelper metadataDetailsHelper,
 			@Value("${apimanager.oauth2.client.anonymous.username}") String anonymousUsername, ACLHelper aclHelper,
-			OrganizationHelper organizationHelper, ProjektHelper projektHelper) {
+			OrganizationHelper organizationHelper, ProjektHelper projektHelper,
+			AdditionalPropertiesHelper additionalPropertiesHelper) {
 		this.apIsService = apIsService;
 		this.applicationService = applicationService;
 		this.metadataDetailsHelper = metadataDetailsHelper;
+		this.additionalPropertiesHelper = additionalPropertiesHelper;
 		this.anonymousUsername = anonymousUsername;
 		this.aclHelper = aclHelper;
 		this.organizationHelper = organizationHelper;
@@ -183,10 +186,11 @@ public class APIManagerHelper {
 		final var apiInfo = getApiInfo(null, mediaId);
 		final var api = apIsService.getAPI(apiInfo.getId());
 		final var additionalProperties = api.getAdditionalProperties();
-		if (MapUtils.isEmpty(additionalProperties)) {
+		if (CollectionUtils.isEmpty(additionalProperties)) {
 			throw new MissingAPIPropertiesException(apiInfo.getId());
 		}
-		final var globalIdProperty = additionalProperties.get(APISearchPropertyKey.GLOBAL_ID);
+		final var globalIdProperty = additionalPropertiesHelper.getAdditionalPropertiesListAsMap(additionalProperties)
+				.get(APISearchPropertyKey.GLOBAL_ID);
 		if (StringUtils.isEmpty(globalIdProperty)) {
 			throw new MissingAPIPropertyException(APISearchPropertyKey.GLOBAL_ID, apiInfo.getId());
 		}

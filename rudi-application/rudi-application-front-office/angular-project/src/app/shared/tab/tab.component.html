@@ -1,4 +1,4 @@
-<button class="button" [ngClass]="{'active': active, 'with-icon': icon}" [disabled]="disabled" mat-stroked-button>
+<button class="button" [ngClass]="{'active': active, 'with-icon': icon, 'invisible': invisible}" [disabled]="disabled" mat-stroked-button>
     <mat-icon *ngIf="icon" class="little-icon-size" aria-hidden="true" [svgIcon]="icon"></mat-icon>
     <span>{{label}}</span>
 </button>

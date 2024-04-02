@@ -1,9 +1,10 @@
 package org.rudi.microservice.kalim.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
@@ -19,9 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
-
 @RestController
 public class IntegrationRequestController implements IntegrationRequestApi {
 
@@ -33,12 +31,10 @@ public class IntegrationRequestController implements IntegrationRequestApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KALIM_ADMINISTRATOR + ")")
-	public ResponseEntity<IntegrationRequestPageResult> searchIntegrationRequests(
-			@Valid IntegrationStatus integrationStatus, @Valid OffsetDateTime creationDateMin,
-			@Valid OffsetDateTime creationDateMax, @Valid OffsetDateTime treatmentDateMin,
-			@Valid OffsetDateTime treatmentDateMax, @Valid OffsetDateTime sendRequestDateMin,
-			@Valid OffsetDateTime sendRequestDateMax, @Valid UUID globalId, @Valid Integer offset, @Valid Integer limit,
-			@Valid String order) {
+	public ResponseEntity<IntegrationRequestPageResult> searchIntegrationRequests(IntegrationStatus integrationStatus,
+			OffsetDateTime creationDateMin, OffsetDateTime creationDateMax, OffsetDateTime treatmentDateMin,
+			OffsetDateTime treatmentDateMax, OffsetDateTime sendRequestDateMin, OffsetDateTime sendRequestDateMax,
+			UUID globalId, Integer offset, Integer limit, String order) {
 
 		IntegrationRequestSearchCriteria integrationRequestSearchCriteria = new IntegrationRequestSearchCriteria();
 		integrationRequestSearchCriteria.setCreationDateMax(creationDateMax);

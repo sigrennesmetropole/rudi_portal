@@ -1,0 +1,32 @@
+<div class="hero-section-container">
+    <div class="hero-left-picto-container">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="loadingLeftPicto"></app-loader>
+        <img [src]="leftPictoSrc$ | async" alt="hero-section-left-picto"/>
+    </div>
+
+    <div class="hero-content-container">
+        <div class="hero-text-container">
+            <h1 class="hero-title">{{ title1 }}</h1>
+            <h2 class="hero-subtitle">{{ title2 }}</h2>
+            <img
+                class="hero-section-right-edge-picto"
+                src="/assets/images/hero-section-right-edge-picto.png"
+                alt="hero-section-right-edge-picto"
+            />
+
+            <div class="hero-search-bar-container">
+                <app-search-box
+                    class="d-flex justify-content-center w-100"
+                    [libelle]="searchbarPlaceholder"
+                    [submitOnReset]="false"
+                    (searchTermsEmitter)="onSearchInputChanges($event)"
+                ></app-search-box>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-right-picto-container">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="loadingRightPicto"></app-loader>
+        <img [src]="rightPictoSrc$ | async" alt="hero-section-right-picto"/>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoint-observer.service';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 
 @Component({
     selector: 'app-page-heading',

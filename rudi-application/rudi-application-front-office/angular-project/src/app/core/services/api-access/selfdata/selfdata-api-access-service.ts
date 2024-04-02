@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {UserService} from '../../user.service';
-import {AclService} from '../../../../acl/acl-api';
-import {OrganizationService} from '../../../../strukture/api-strukture';
 import {TranslateService} from '@ngx-translate/core';
+import {Observable, throwError} from 'rxjs';
+import {AclService} from 'micro_service_modules/acl/acl-api';
+import {Credentials as SelfdataCredentials} from 'micro_service_modules/api-apimaccess';
+import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {ProjektService} from 'micro_service_modules/projekt/projekt-api';
+import {SelfdataService} from 'micro_service_modules/selfdata/selfdata-api';
+import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
+import {UserService} from '@core/services/user.service';
 import {AbstractApiAccessService} from '../abstract-api-access.service';
 import {Credentials} from '../credentials';
-import {Observable, throwError} from 'rxjs';
-import {SelfdataService} from '../../../../selfdata/selfdata-api';
-import { Credentials as SelfdataCredentials} from '../../../../api-apimaccess';
 import {SubscriptionData} from '../subscription-data';
-import {KonsultService} from '../../../../konsult/konsult-api';
-import {ProjektService} from '../../../../projekt/projekt-api';
 
 @Injectable({
     providedIn: 'root'

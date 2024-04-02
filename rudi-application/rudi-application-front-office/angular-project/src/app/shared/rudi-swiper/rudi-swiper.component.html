@@ -1,0 +1,14 @@
+<div class="swiper-container">
+    <div class="swiper" [class]="containerName">
+        <div #swiperWrapper class="swiper-wrapper">
+            <ng-content></ng-content>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev" role="button" tabindex="0">
+            <img src="/assets/images/swiper-button-prev.png" alt="swiper previews button icon"/>
+        </div>
+        <div class="swiper-button-next" role="button" tabindex="0">
+            <img src="/assets/images/swiper-button-next.png" alt="swiper next button icon"/>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 <mat-card
     class="mat-elevation-z0 organization-card">
-    <mat-card-content (click)="onClickOrganization(organizationBean.uuid)" class="card-content">
+    <mat-card-content (click)="onClickOrganization(organizationBean.uuid, organizationBean.name)" class="card-content">
         <div class="d-flex my-3">
             <div class="align-items-center">
                 <app-organization-logo [organizationId]="organizationBean.uuid"

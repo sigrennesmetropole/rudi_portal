@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {ProcessDefinitionEnum} from '../../core/services/tasks/process-definition.enum';
+import {ProcessDefinitionEnum} from '@core/services/tasks/process-definition.enum';
 import {TranslateService} from '@ngx-translate/core';
 
 /**
@@ -12,8 +12,6 @@ export class SelfdataProcessDefinitionKeyTranslatePipe implements PipeTransform 
         private readonly translateService: TranslateService,
     ) {
     }
-
-    // TODO rajouter Information et Effacement au fur et à mesure de l'avancement des dev des differents workflows
     transform(value: string): string {
         let result: string;
         if (value === ProcessDefinitionEnum.SELFDATA_INFORMATION_REQUEST_Process) {

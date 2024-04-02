@@ -5,14 +5,14 @@
     <mat-hint class="title-hint">{{help}}</mat-hint>
     <mat-form-field appearance="outline">
         <textarea
-                matInput
-                rows="15"
-                [formControlName]="formControlName"
-                [readonly]="readonly"
-                (keydown.control.enter)="submit.emit()"
+            matInput
+            rows="15"
+            [formControlName]="formControlName"
+            [readonly]="readonly"
+            (keydown.control.enter)="submit.emit()"
         ></textarea>
         <mat-error>
-            <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.requiredInformationError'|translate}}
+            <em class="fa fa-info-circle fa-2x me-2"></em>{{'common.requiredInformationError'|translate}}
         </mat-error>
     </mat-form-field>
 </ng-container>

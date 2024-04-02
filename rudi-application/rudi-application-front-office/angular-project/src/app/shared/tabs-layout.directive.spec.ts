@@ -1,4 +1,4 @@
-import { TabsLayoutDirective } from './tabs-layout.directive';
+import {TabsLayoutDirective} from './tabs-layout.directive';
 
 describe('TabsLayoutDirective', () => {
   it('should create an instance', () => {

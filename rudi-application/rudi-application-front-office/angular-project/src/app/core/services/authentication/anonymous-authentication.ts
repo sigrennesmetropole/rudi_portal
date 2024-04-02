@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {AuthenticationMethod, AuthenticationState} from './authentication-method';
 import {FormGroup} from '@angular/forms';
+import {AuthenticationMethod, AuthenticationState} from './authentication-method';
 
-export const ANONYMOUS_USERNAME = "anonymous";
+export const ANONYMOUS_USERNAME = 'anonymous';
 
 @Injectable({
     providedIn: 'root'

@@ -1,16 +1,11 @@
-@import "src/app/styles/colors";
-@import "src/app/styles/common-style";
-@import "src/app/styles/variables-rudi";
+@import "colors";
+@import "common-style";
+@import "variables-rudi";
 
 /***** Nav bar style *********/
 
 .header-nav {
     color: black;
-}
-
-.header-logo-container {
-    position: absolute;
-    z-index: -1;
 }
 
 .nav-item {
@@ -48,6 +43,8 @@
     z-index: 2;
     background-color: #FFFFFF;
     border-bottom: 1px solid #d5d8de;
+    padding: 0.5rem 1rem;
+    justify-content: space-between;
 }
 
 .header-container-lg li {
@@ -107,6 +104,17 @@
         padding-bottom: 5px;
         font-weight: 600;
         letter-spacing: 0.05em;
+        position: absolute;
+        width: 100%;
+
+        &.collapse.show {
+            top: 74px;
+            animation: fadeIn 1s;
+            @keyframes fadeIn {
+                0% { opacity: 0; }
+                100% { opacity: 1; }
+            }
+        }
 
         .header-btn-mon-compte {
             text-align: center;

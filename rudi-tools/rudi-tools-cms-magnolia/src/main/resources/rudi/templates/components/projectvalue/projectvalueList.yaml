@@ -1,0 +1,12 @@
+templateScript: /rudi/templates/components/projectvalue/projectvalueList.ftl
+renderType: freemarker
+
+areas:
+  projectvalueList:
+    templateScript: /rudi/templates/components/projectvalue/projectvalueListArea.ftl
+    type: list
+    availableComponents:
+      projectvalueDetail:
+        id: rudi:components/projectvalue/projectvalueDetail
+      projectvalueSimple:
+        id: rudi:components/projectvalue/projectvalueSimple

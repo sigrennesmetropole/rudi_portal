@@ -1,0 +1,21 @@
+!content-type:projectvalue
+name: projectvalues-app
+icon: icon-content-app
+permissions:
+  roles:
+    editors: projectvalues_editor
+    publishers: projectvalues_editor
+subApps:
+  detail:
+    form:
+      properties:
+        shorttitle:
+          rows: 1
+          maxLength: 32    
+          required: true  
+        title:
+          rows: 1
+          maxLength: 128
+          required: true
+        body:
+          rows: 20

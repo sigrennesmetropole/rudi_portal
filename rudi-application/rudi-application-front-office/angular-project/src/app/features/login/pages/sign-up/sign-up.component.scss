@@ -1,0 +1,127 @@
+@import "common-style";
+@import "variables-rudi";
+@import "common-style";
+
+.main-container {
+    @include card-container-bgcolor;
+}
+
+.signup-header-title {
+    @include card-header-title;
+}
+
+.signup-text-title {
+    @include card-text-title;
+    color: $secondary-text;
+    margin-bottom: 33px;
+}
+
+.signup-form-container {
+    @include card-form-container;
+}
+
+*:focus-visible {
+    // on ne veut pas les rectangles bleu sur focus du champ input
+    outline: none;
+}
+
+div.p-mb {
+    margin: 0 0 30px;
+}
+
+.fa-size {
+    font-size: 20px;
+}
+
+.hidePassword {
+    font-size: 25px;
+    color: $primary-text-light;
+}
+
+mat-form-field {
+    @include card-form-field-my;
+}
+
+::ng-deep {
+    .mat-focused .mat-form-field-label {
+        /*change color of label*/
+        color: $focus !important;
+    }
+}
+
+mat-error {
+    @include card-error-pb;
+    font-size: 11px;
+}
+
+.mat-error {
+    display: inline-block;
+}
+
+.password-msg {
+    font-size: 14px;
+    color: $primary-text;
+    margin-top: 1em;
+}
+
+mat-progress-spinner {
+    margin: auto;
+    color: $primary-color;
+}
+
+.p-19 {
+    @include card-px-19-mx-auto;
+    max-width: 640px;
+}
+
+.p-60 {
+    @include card-px-60-mx-auto;
+    width: 640px;
+}
+
+.signup-checkbox {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: normal;
+}
+
+.signup-checkbox-align {
+    vertical-align: super;
+}
+
+.signup-cgu {
+    color: $primary-color;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.signup-btn-inscription {
+    @include card-main-button;
+}
+
+.signup-btn-desktop {
+    @include card-main-button-desktop;
+}
+
+.signup-btn-mobile {
+    @include card-main-button-mobile;
+}
+
+#rgpd {
+    @extend .m-large-negative, .p-large;
+    padding-top: 2em !important;
+    background: $secondary-color;
+    color: $primary-text-light;
+
+    h3 {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 0.5em;
+    }
+
+    a {
+        color: #71757e;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+}

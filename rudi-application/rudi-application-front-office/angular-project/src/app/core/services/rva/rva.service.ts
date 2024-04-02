@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Address} from '../../../selfdata/selfdata-api/model/address';
+import {Address} from 'micro_service_modules/selfdata/selfdata-api/model/address';
 
 @Injectable({
     providedIn: 'root'

@@ -16,8 +16,6 @@ import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_STRUKTURE_ADM
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.acl.core.bean.AbstractAddress;
 import org.rudi.microservice.acl.core.bean.AccessKeyDto;
@@ -52,10 +50,9 @@ public class UserController implements UsersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE + ")")
-	public ResponseEntity<UserPageResult> searchUsers(@Valid String login, @Valid String password,
-			@Valid String lastname, @Valid String firstname, @Valid String company, @Valid UserType type,
-			@Valid List<UUID> roleUuids, @Valid List<UUID> userUuids, @Valid String loginAndDenomination,
-			@Valid Integer offset, @Valid Integer limit, @Valid String order) {
+	public ResponseEntity<UserPageResult> searchUsers(String login, String password, String lastname, String firstname,
+			String company, UserType type, List<UUID> roleUuids, List<UUID> userUuids, String loginAndDenomination,
+			Integer offset, Integer limit, String order) {
 
 		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().login(login).password(password)
 				.firstname(firstname).lastname(lastname).company(company).type(type).roleUuids(roleUuids)
@@ -86,13 +83,13 @@ public class UserController implements UsersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_STRUKTURE + ", " + MODULE_KALIM + ")")
-	public ResponseEntity<User> createUser(@Valid User user) throws Exception {
+	public ResponseEntity<User> createUser(User user) throws Exception {
 		return ResponseEntity.ok(userService.createUser(user));
 	}
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
-	public ResponseEntity<User> updateUser(@Valid User user) throws Exception {
+	public ResponseEntity<User> updateUser(User user) throws Exception {
 		return ResponseEntity.ok(userService.updateUser(user));
 	}
 
@@ -105,7 +102,7 @@ public class UserController implements UsersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
-	public ResponseEntity<AbstractAddress> createAddress(UUID userUuid, @Valid AbstractAddress abstractAddress)
+	public ResponseEntity<AbstractAddress> createAddress(UUID userUuid, AbstractAddress abstractAddress)
 			throws Exception {
 		return ResponseEntity.ok(userService.createAddress(userUuid, abstractAddress));
 	}
@@ -131,7 +128,7 @@ public class UserController implements UsersApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
-	public ResponseEntity<AbstractAddress> updateAddress(UUID userUuid, @Valid AbstractAddress abstractAddress)
+	public ResponseEntity<AbstractAddress> updateAddress(UUID userUuid, AbstractAddress abstractAddress)
 			throws Exception {
 		return ResponseEntity.ok(userService.updateAddress(userUuid, abstractAddress));
 	}
@@ -170,5 +167,10 @@ public class UserController implements UsersApi {
 	public ResponseEntity<Void> updateUserPassword(String login, PasswordUpdate passwordUpdate) throws Exception {
 		userService.updateUserPassword(login, passwordUpdate);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<Long> countUsers() throws Exception {
+		return ResponseEntity.ok(userService.countUsers());
 	}
 }

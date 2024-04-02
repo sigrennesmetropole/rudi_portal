@@ -1,0 +1,33 @@
+@import "colors";
+@import "variables-rudi";
+@import "common-style";
+
+.detail-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.project-owner-wrapper {
+    flex: 1;
+}
+
+.onglet-wrapper {
+    flex: 2;
+}
+
+.contact {
+    margin: 0 37px 5px 0;
+    padding: 20px 0;
+    border-top: 1px solid $blocks-and-menus-outline;
+
+    a {
+        color: $focus !important;
+        text-decoration: underline;
+    }
+
+    .button-contact {
+        @include button-blue;
+    }
+}
+

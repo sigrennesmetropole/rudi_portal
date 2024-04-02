@@ -1,0 +1,13 @@
+class: info.magnolia.rest.delivery.jcr.v2.JcrDeliveryEndpointDefinition
+workspace: terms
+rootPath: /
+nodeTypes:
+  - lib:term
+  - mgnl:category
+  - mgnl:contentNode  
+childNodeTypes:
+  - mgnl:category
+  - mgnl:contentNode
+includeSystemProperties: true
+bypassWorkspaceAcls: false
+limit: 50

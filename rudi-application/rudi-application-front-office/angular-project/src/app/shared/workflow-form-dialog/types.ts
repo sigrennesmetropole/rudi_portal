@@ -1,4 +1,4 @@
-import {Form} from '@app/projekt/projekt-api';
+import {Form} from 'micro_service_modules/projekt/projekt-api';
 
 export interface WorkflowFormDialogInputData {
     title: string;

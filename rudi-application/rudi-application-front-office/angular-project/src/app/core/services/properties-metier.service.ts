@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
+import {FrontOfficeProperties, KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {Observable} from 'rxjs';
 import {PropertiesAdapter} from './properties-adapter';
-import {FrontOfficeProperties, KonsultService} from '../../konsult/konsult-api';
 
 @Injectable({
     providedIn: 'root'

@@ -1,9 +1,11 @@
 package org.rudi.microservice.acl.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_ACL_ADMINISTRATOR;
+
 import java.util.List;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.rudi.microservice.acl.core.bean.Role;
 import org.rudi.microservice.acl.core.bean.RoleSearchCriteria;
@@ -13,10 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_ACL_ADMINISTRATOR;
 
 /**
  * Controleur pour la gestion des roles des utilisateurs
@@ -35,7 +33,7 @@ public class RoleController implements RolesApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
-	public ResponseEntity<Role> createRole(@Valid Role role) throws Exception {
+	public ResponseEntity<Role> createRole(Role role) throws Exception {
 		return ResponseEntity.ok(roleService.createRole(role));
 	}
 
@@ -54,8 +52,7 @@ public class RoleController implements RolesApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ", " + MODULE + ")")
-	public ResponseEntity<List<Role>> searchRoles(@Valid String code, @Valid String label, @Valid Boolean active)
-			throws Exception {
+	public ResponseEntity<List<Role>> searchRoles(String code, String label, Boolean active) throws Exception {
 		RoleSearchCriteria searchCriteria = new RoleSearchCriteria();
 		searchCriteria.setCode(code);
 		searchCriteria.setLabel(label);
@@ -65,7 +62,7 @@ public class RoleController implements RolesApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
-	public ResponseEntity<Role> updateRole(@Valid Role role) throws Exception {
+	public ResponseEntity<Role> updateRole(Role role) throws Exception {
 		return ResponseEntity.ok(roleService.updateRole(role));
 	}
 }

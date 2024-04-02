@@ -1,13 +1,14 @@
-import {InjectionToken, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {InjectionToken, NgModule} from '@angular/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from '@angular/material/snack-bar';
+import {URIComponentCodec} from '@core/services/codecs/uri-component-codec';
+import {GetBackendPropertyPipe} from '@shared/pipes/get-backend-property.pipe';
 import {ProjectListService} from './services/project-list.service';
-import {Worker} from './services/tasks-aggregator/worker.interface';
 import {WorkerLinkedDatasetService} from './services/tasks-aggregator/projekt/worker-linked-dataset.service';
-import {WorkerSelfdataInformationRequestService} from './services/tasks-aggregator/selfdata/worker-selfdata-information-request.service';
 import {WorkerNewDatasetRequestService} from './services/tasks-aggregator/projekt/worker-new-dataset-request.service';
-import {GetBackendPropertyPipe} from '../shared/pipes/get-backend-property.pipe';
 import {WorkerProjectService} from './services/tasks-aggregator/projekt/worker-project.service';
+import {WorkerSelfdataInformationRequestService} from './services/tasks-aggregator/selfdata/worker-selfdata-information-request.service';
+import {Worker} from './services/tasks-aggregator/worker.interface';
 
 /**
  * Clé d'injection pour les workers de l'aggrégateur des tasks (affichage bannette)
@@ -15,13 +16,11 @@ import {WorkerProjectService} from './services/tasks-aggregator/projekt/worker-p
 export const WORKERS_AGGREGATOR_TASKS = new InjectionToken<Worker>('tasksWorker');
 
 @NgModule({
-    declarations:
-        [],
+    declarations: [],
     imports: [
         CommonModule,
     ],
     exports: [],
-    entryComponents: [],
     providers: [
         {provide: WORKERS_AGGREGATOR_TASKS, useClass: WorkerLinkedDatasetService, multi: true},
         {provide: WORKERS_AGGREGATOR_TASKS, useClass: WorkerSelfdataInformationRequestService, multi: true},
@@ -36,7 +35,8 @@ export const WORKERS_AGGREGATOR_TASKS = new InjectionToken<Worker>('tasksWorker'
             useValue: {} // Add any data you wish to test if it is passed/used correctly
         },
         ProjectListService,
-        GetBackendPropertyPipe
+        GetBackendPropertyPipe,
+        URIComponentCodec,
     ]
 })
 

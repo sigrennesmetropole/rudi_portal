@@ -1,4 +1,4 @@
-import {Media} from '../../api-kaccess';
+import {Media} from 'micro_service_modules/api-kaccess';
 
 export function getLayerName(media: Media): string {
     return getConnectorParameter(media, 'layer');

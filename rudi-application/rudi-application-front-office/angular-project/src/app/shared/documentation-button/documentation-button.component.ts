@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IconRegistryService} from '../../core/services/icon-registry.service';
+import {IconRegistryService} from '@core/services/icon-registry.service';
 import {ALL_TYPES} from '../models/title-icon-type';
 
 @Component({
@@ -10,7 +10,7 @@ import {ALL_TYPES} from '../models/title-icon-type';
 export class DocumentationButtonComponent {
 
 
-    constructor(private readonly iconRegistryService: IconRegistryService,) {
+    constructor(private readonly iconRegistryService: IconRegistryService, ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
     }
 

@@ -1,4 +1,4 @@
-import {Metadata} from '../../../api-kaccess';
+import {Metadata} from 'micro_service_modules/api-kaccess';
 import {SubscriptionRequestStatus} from './subscription-request-status.enum';
 
 /**

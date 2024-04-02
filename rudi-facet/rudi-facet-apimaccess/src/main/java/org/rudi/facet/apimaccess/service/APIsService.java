@@ -101,7 +101,8 @@ public interface APIsService {
 	 */
 	API getAPI(String apiId) throws APIManagerException;
 
-	API getAPIFromDevportal(String apiId, String username) throws APIManagerException;
+	org.wso2.carbon.apimgt.rest.api.devportal.API getAPIFromDevportal(String apiId, String username)
+			throws APIManagerException;
 
 	/**
 	 * Recherche des API

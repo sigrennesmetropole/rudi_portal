@@ -1,13 +1,13 @@
 import {Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
-import {Field, Section} from '@app/api-bpmn';
-import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
+import {Field, Section} from 'micro_service_modules/api-bpmn';
 import {Observable, of} from 'rxjs';
-import {WorkflowFieldTextComponent} from '../workflow-field-text/workflow-field-text.component';
-import {WorkflowFieldBooleanComponent} from '../workflow-field-boolean/workflow-field-boolean.component';
 import {WorkflowFieldAddressComponent} from '../workflow-field-address/workflow-field-address.component';
 import {WorkflowFieldAttachmentComponent} from '../workflow-field-attachment/workflow-field-attachment.component';
+import {WorkflowFieldBooleanComponent} from '../workflow-field-boolean/workflow-field-boolean.component';
+import {WorkflowFieldTextComponent} from '../workflow-field-text/workflow-field-text.component';
+import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 import {WorkflowProperties} from '../workflow-form/workflow-properties';
 
 @Component({

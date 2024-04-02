@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MemberPopinComponent } from './member-popin.component';
+import {MemberPopinComponent} from './member-popin.component';
 
 describe('MemberPopinComponent', () => {
   let component: MemberPopinComponent;

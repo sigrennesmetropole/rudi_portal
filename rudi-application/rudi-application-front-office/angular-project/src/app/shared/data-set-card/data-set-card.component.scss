@@ -1,6 +1,6 @@
-@import "src/app/styles/variables-rudi";
-@import "src/app/styles/colors";
-@import "src/app/styles/common-style";
+@import "variables-rudi";
+@import "colors";
+@import "common-style";
 
 .data-set-card {
     box-shadow: none;
@@ -24,6 +24,10 @@
         height: 80%;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .mat-icon {
+        margin: 0;
     }
 
     img {
@@ -193,7 +197,7 @@
 
     .triangle-selfdata {
         @extend %triangle;
-        fill:$accent-color-svg-self-data;
+        fill: $accent-color-svg-self-data;
     }
 
     &:focus {
@@ -235,7 +239,8 @@
 .data-set-card-md.restricted {
     @include restricted-card-padding(40px);
 }
-%triangle{
+
+%triangle {
     position: absolute;
     top: 0;
     right: 0;

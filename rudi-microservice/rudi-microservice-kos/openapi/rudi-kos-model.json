@@ -246,8 +246,7 @@
 					},
 					"concept_icon": {
 						"description": "URI towards a graphical resource that describes the concept",
-						"type": "string",
-						"format": "uri"
+						"type": "string"
 					},
 					"of_scheme_code": {
 						"description": "code du schéma associé",

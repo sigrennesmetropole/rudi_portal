@@ -1,8 +1,18 @@
 import {Injectable} from '@angular/core';
-import {Metadata} from '@app/api-kaccess';
-import {KindOfData} from '@app/api-kmedia';
-import {DataRequestItem} from '@app/project/model/data-request-item';
-import {DatasetConfidentiality, OwnerInfo, ProjektService, ReutilisationStatusSearchCriteria} from '@app/projekt/projekt-api';
+import {DataRequestItem} from '@features/project/model/data-request-item';
+import {DataSize} from '@shared/models/data-size';
+import {ErrorWithCause} from '@shared/models/error-with-cause';
+import {RequestDetails} from '@shared/models/request-details';
+import {DateTimeUtils} from '@shared/utils/date-time-utils';
+import {PageResultUtils} from '@shared/utils/page-result-utils';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {KindOfData} from 'micro_service_modules/api-kmedia';
+import {
+    DatasetConfidentiality,
+    OwnerInfo,
+    ProjektService,
+    ReutilisationStatusSearchCriteria
+} from 'micro_service_modules/projekt/projekt-api';
 import {
     Confidentiality,
     FrontOfficeProperties,
@@ -17,12 +27,7 @@ import {
     Support,
     TargetAudience,
     TerritorialScale
-} from '@app/projekt/projekt-model';
-import {DataSize} from '@shared/models/data-size';
-import {ErrorWithCause} from '@shared/models/error-with-cause';
-import {RequestDetails} from '@shared/models/request-details';
-import {DateTimeUtils} from '@shared/utils/date-time-utils';
-import {PageResultUtils} from '@shared/utils/page-result-utils';
+} from 'micro_service_modules/projekt/projekt-model';
 import {forkJoin, Observable, of, zip} from 'rxjs';
 import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
 import {Base64EncodedLogo, ImageLogoService} from '../../image-logo.service';
@@ -208,7 +213,7 @@ export class ProjektMetierService {
     searchReuseStatus(): Observable<TargetAudience[]> {
         return PageResultUtils.fetchAllElementsUsing(offset => {
                 const criteria: ReutilisationStatusSearchCriteria = {
-                    offset: offset,
+                    offset,
                     order: DEFAULT_ORDER
                 };
                 return this.projektService.searchReutilisationStatus(criteria);

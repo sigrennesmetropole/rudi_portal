@@ -1,0 +1,62 @@
+datasource:
+  workspace: news
+  rootPath: /
+  namespaces:
+    lib: https://www.magnolia-travel.com/jcr/1.0/lib
+  autoCreate: true
+
+model:
+  nodeType: lib:news
+  properties:
+    - name: publishdate
+      type: date
+    - name: unpublishdate
+      type: date  
+    - name: title1
+      multiple: true
+      type: localizedmessage
+    - name: title2
+      multiple: true
+      type: localizedmessage   
+    - name: sumup
+      multiple: true
+      type: localizedrichtext
+    - name: body
+      multiple: true
+      type: localizedrichtext  
+    - name: image1
+      type: asset
+    - name: image2
+      type: asset
+    - name: categories
+      type: reference:category
+      multiple: true
+  subModels:
+    - name: localizedmessage
+      properties:
+        - name: locale
+          options:
+            - value: fr
+              label: France
+            - value: en
+              label: English
+            - value: de
+              label: Deutschland
+            - value: it
+              label: Italia
+        - name: message 
+    - name: localizedrichtext     
+      properties:
+        - name: locale
+          options:
+            - value: fr
+              label: France
+            - value: en
+              label: English
+            - value: de
+              label: Deutschland
+            - value: it
+              label: Italia
+        - name: message  
+          type: richText  
+     

@@ -1,0 +1,12 @@
+form:
+  properties:
+    categories:
+      label: Select a category
+      $type: jcrMultiLinkField
+      field:
+        $type: linkField
+        label: ""
+        datasource:
+          $type: jcrDatasource
+          workspace: category
+          rootPath: /rudi-types

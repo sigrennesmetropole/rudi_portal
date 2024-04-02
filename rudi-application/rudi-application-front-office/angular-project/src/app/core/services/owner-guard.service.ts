@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {Observable} from 'rxjs';
-import {ProjektService} from '../../projekt/projekt-api';
 import {map} from 'rxjs/operators';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class OwnerGuardService implements CanActivate, CanActivateChild {
 
     constructor(
         private readonly projectService: ProjektService,
-        private readonly router: Router,) {
+        private readonly router: Router, ) {
     }
 
     /**

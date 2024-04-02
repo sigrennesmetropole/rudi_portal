@@ -1,6 +1,6 @@
-@import "src/app/styles/variables-rudi";
-@import "src/app/styles/common-style";
-@import "src/app/styles/_responsive";
+@import "variables-rudi";
+@import "common-style";
+@import "_responsive";
 
 .header-img-container{
 
@@ -22,7 +22,6 @@
 
 .header-ressource-container{
     display: flex;
-    align-items: center;
     margin-left: 0;
 }
 
@@ -81,6 +80,10 @@
     .header-ressource-container {
         margin-left: 15px;
     }
+}
+
+@include xs {
+    @include mobile();
 }
 
 @include sm {

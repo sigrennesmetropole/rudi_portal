@@ -1,0 +1,14 @@
+@import "colors";
+@import "variables-rudi";
+@import "common-style";
+
+.rudi-filters-toolbar {
+    width: auto;
+    margin: 42px -95px 35px -95px;
+    background-color: #e7e9ed;
+    padding-left: 95px;
+}
+.search-count {
+    font-size: 1.4em;
+    font-weight: 600;
+}

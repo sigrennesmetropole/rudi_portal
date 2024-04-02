@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DeletionConfirmationPopinComponent } from './deletion-confirmation-popin.component';
+import {DeletionConfirmationPopinComponent} from './deletion-confirmation-popin.component';
 
 describe('DeletionConfirmationPopinComponent', () => {
   let component: DeletionConfirmationPopinComponent;

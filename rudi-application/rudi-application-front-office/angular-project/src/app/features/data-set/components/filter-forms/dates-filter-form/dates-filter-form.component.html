@@ -1,0 +1,41 @@
+<form (ngSubmit)="submitForm()" *ngIf="formGroup" [class]="formClass"
+      [formGroup]="formGroup">
+    <div [class]="debutDivClass" class="mb-2">{{'filterBox.dateDebutCouvertureTemporelle' | translate}}</div>
+    <mat-form-field appearance="outline">
+        <input
+            [matDatepicker]="picker1"
+            placeholder="JJ/MM/AAAA"
+            formControlName="startDate"
+            matInput
+            readonly
+        >
+        <mat-datepicker-toggle [for]="picker1" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+
+    <div [class]="finDivClass" class="mb-2">{{'filterBox.dateFinCouvertureTemporelle' | translate}}</div>
+    <mat-form-field appearance="outline">
+        <input
+            [matDatepicker]="picker2"
+            placeholder="JJ/MM/AAAA"
+            formControlName="endDate"
+            matInput
+            readonly
+        >
+        <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+
+    <div class="rudi-select-panel-footer">
+        <button
+            color="primary"
+            (click)="submitForm()"
+            [disabled]="!submitIsEnabled"
+            class="rudi-blue-button"
+            mat-raised-button
+            type="submit"
+        >
+            {{'common.appliquer'|translate}}
+        </button>
+    </div>
+</form>

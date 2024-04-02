@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {PropertiesMetierService} from '../../core/services/properties-metier.service';
-import {map} from 'rxjs/operators';
+import {PropertiesMetierService} from '@core/services/properties-metier.service';
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Pipe({
     name: 'getBackendProperty'

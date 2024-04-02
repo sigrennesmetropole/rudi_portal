@@ -1,0 +1,12 @@
+form:
+  properties:
+    shorttitle:
+      message:
+      $type: textField
+      i18n: true
+    title:
+      $type: textField
+      i18n: true
+    body:
+      $type: richTextField
+      i18n: true  

@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {AuthenticationMethod, AuthenticationState} from './authentication/authentication-method';
-import {LogService} from './log.service';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AccountService} from './account.service';
 import {ANONYMOUS_USERNAME, AnonymousAuthentication} from './authentication/anonymous-authentication';
+import {AuthenticationMethod, AuthenticationState} from './authentication/authentication-method';
 import {LoginAuthentication} from './authentication/login-authentication';
-import {FormGroup} from '@angular/forms';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {LogService} from '@core/services/log.service';
 
 /**
  * Le header qui contient le token qui certifie si on est authentifié ou pas

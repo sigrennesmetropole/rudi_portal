@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-workflow-form-submit-success',

@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AbstractControl} from '@angular/forms';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {FilePreviewModel, ValidationError} from '@sleiss/ngx-awesome-uploader';
-import {SnackBarService} from '../../core/services/snack-bar.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
-import {AbstractControl} from '@angular/forms';
+import {FilePreviewModel, ValidationError} from '@sleiss/ngx-awesome-uploader';
 import {UploaderCaptions} from '@sleiss/ngx-awesome-uploader/lib/uploader-captions';
-import {UploaderAdapter} from './uploader.adapter';
 import {AdapterProxy} from './adapter-proxy';
+import {UploaderAdapter} from './uploader.adapter';
 
 @Component({
     selector: 'app-uploader',
@@ -77,6 +77,7 @@ export class UploaderComponent<T> {
             previewCard: {
                 remove: '',
                 uploadError: '',
+                download: ''
             }
         };
     }

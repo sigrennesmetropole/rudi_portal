@@ -6,7 +6,7 @@
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>1.2.4</version>
+	<version>2.0.0</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 
@@ -43,7 +43,7 @@
 		<openapi.jackson.version>0.2.6</openapi.jackson.version>
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
 		<jackson-core.version>2.16.1</jackson-core.version>
-		<apache.directory.api.version>2.1.5</apache.directory.api.version>
+		<apache.directory.api.version>2.1.6</apache.directory.api.version>
 		<google.maps.version>0.2.7</google.maps.version>
 		<jasig.cas.client.version>3.6.4</jasig.cas.client.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
@@ -79,7 +79,7 @@
 
 		<maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-		<compiler.plugin.version>3.12.0</compiler.plugin.version>
+		<compiler.plugin.version>3.12.1</compiler.plugin.version>
 		<version-maven-plugin.version>2.16.2</version-maven-plugin.version>
 		<!-- avec surefire 2.12.4, le test du microservice provider n'est pas
 		lancé -->
@@ -91,7 +91,7 @@
 		<ant.plugin.version>3.1.0</ant.plugin.version>
 		<flyway-plugin.version>9.22.3</flyway-plugin.version>
 		<maven-scr-plugin.version>1.0.10</maven-scr-plugin.version>
-		<build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
 
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
@@ -288,6 +288,12 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-strukture-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-facet-cms</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -972,7 +978,7 @@
 						<dependency>
 							<groupId>org.postgresql</groupId>
 							<artifactId>postgresql</artifactId>
-							<version>42.7.1</version>
+							<version>42.7.2</version>
 						</dependency>
 					</dependencies>
 				</plugin>

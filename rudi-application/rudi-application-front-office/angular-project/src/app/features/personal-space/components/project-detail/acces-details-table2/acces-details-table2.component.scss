@@ -1,0 +1,66 @@
+@import "common-style";
+
+.mat-table-demandes-acces{
+    width: 100%;
+}
+.table-title-style {
+    font-family: OpenSans, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+.align-left{
+    text-align: left;
+}
+.titre-jdd{
+    font-family: OpenSans, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+    color: $primary-color;
+}
+.table-jdd {
+    margin-top: 3em;
+}
+.svg-style{
+    margin-right: 1em;
+    width: 1.5em;
+}
+.table-header{
+    font-family: OpenSans, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color:$primary-text;
+    //overide the mat table margin css
+    padding: 0px !important
+}
+.table-header:first-child {
+    text-decoration: underline;
+}
+.first-row{
+    width: 20%;
+}
+.fake-btn-status {
+    background-color: $banner-solid-color;
+    border-radius: 14px;
+    white-space: nowrap;
+    padding: 5px 18px;
+    font-size: 13px;
+    border: none;
+    height: 2.5em;
+    margin-top: 20px;
+}
+.second-row {
+    width: 50%;
+}
+.table-header:last-child {
+    display: flex;
+    justify-content: center;
+    height: inherit;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    height: inherit;
+    height: 5em;
+}

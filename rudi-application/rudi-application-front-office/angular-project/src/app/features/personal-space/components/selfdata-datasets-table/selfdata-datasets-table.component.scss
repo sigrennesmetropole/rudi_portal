@@ -1,0 +1,110 @@
+@import "common-style";
+
+
+.table-and-loader-container {
+    position: relative;
+}
+
+.table-loader {
+    background: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+::ng-deep {
+    table {
+        width: 100%;
+        font-family: OpenSans, sans-serif;
+        cursor: pointer;
+
+        * {
+            font-family: OpenSans, sans-serif;
+        }
+
+        tr {
+            height: unset;
+
+            &:focus, &:active, &:hover {
+                background-color: $selected-table-row;
+            }
+        }
+
+        th {
+            font-weight: 600;
+            font-size: 13px;
+            color: $primary-text;
+            padding: 12px 24px;
+
+            mat-icon {
+                @include mat-icon-size(18px);
+                margin-right: 5px;
+            }
+
+        }
+
+        td {
+            padding: 24px 24px;
+            font-size: 15px;
+            line-height: 1.4;
+
+            &.dataset-title {
+                font-weight: bold;
+                color: var(--0-classic-blue);
+            }
+
+            &:last-child {
+                text-align: center;
+            }
+        }
+
+    }
+}
+
+.status-chip {
+    border-radius: 14px;
+    background-color: var(--background-s-lection-active-tableau);
+    white-space: nowrap;
+    padding: 5px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--0-classic-blue);
+}
+
+.pagination-spacing-sm {
+    ::ng-deep .ngx-pagination a,
+    ::ng-deep .ngx-pagination .current,
+    ::ng-deep .ngx-pagination .disabled {
+        padding: 0.1875rem 0.425rem;
+    }
+}
+
+.icon-style {
+    height: 18px;
+    width: 18px;
+    margin-right: 15px;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+}
+
+.table-header {
+    font-family: OpenSans, sans-serif;
+}
+
+.table-header:first-child {
+    text-decoration: underline;
+}
+
+.table-header:last-child {
+    display: flex;
+    justify-content: center;
+    height: inherit;
+}
+

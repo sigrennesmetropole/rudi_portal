@@ -85,7 +85,7 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 		log.debug("WkC - Update {} to status {}", processInstanceBusinessKey, statusValue);
 		Status status = Status.valueOf(statusValue);
 		SelfdataInformationRequestStatus assetStatus = SelfdataInformationRequestStatus.valueOf(selfdataInformationRequestStatusValue);
-		if (processInstanceBusinessKey != null && status != null && functionalStatusValue != null) {
+		if (processInstanceBusinessKey != null && functionalStatusValue != null) {
 			UUID uuid = UUID.fromString(processInstanceBusinessKey);
 			SelfdataInformationRequestEntity assetDescription = getAssetDescriptionDao().findByUuid(uuid);
 			if (assetDescription != null) {
@@ -274,10 +274,10 @@ public class SelfdataInformationRequestWorkflowContext extends AbstractWorkflowC
 			if (CollectionUtils.isNotEmpty(userRole)) {
 				for (String role : userRole) {
 					users = getAclHelper().searchUsers(role);
-					if (users != null) {
-						users.forEach(user -> assigneeEmails.add(lookupEMailAddress(user)));
-					} else {
+					if (CollectionUtils.isEmpty(users)) {
 						log.warn("Member with user with role \"{}\" does not exist as user in ACL", userRole);
+					} else {
+						users.forEach(user -> assigneeEmails.add(lookupEMailAddress(user)));
 					}
 				}
 			}

@@ -1,9 +1,8 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {DialogClosedData} from '@app/data-set/models/dialog-closed-data';
-import {DataRequestItem} from '@app/project/model/data-request-item';
-import {NewDatasetRequest, NewDatasetRequestStatus} from '@app/projekt/projekt-model';
+import {DialogClosedData} from '@features/data-set/models/dialog-closed-data';
+import {DataRequestItem} from '@features/project/model/data-request-item';
 import {ProjectConsultationService} from '@core/services/asset/project/project-consultation.service';
 import {ProjectSubmissionService} from '@core/services/asset/project/project-submission.service';
 import {DialogSubscribeDatasetsService} from '@core/services/dialog-subscribe-datasets.service';
@@ -11,6 +10,7 @@ import {SnackBarService} from '@core/services/snack-bar.service';
 import {ObjectType} from '@core/services/tasks/object-type.enum';
 import {TranslateService} from '@ngx-translate/core';
 import {NewDatasetRequestTableData, RowTableData} from '@shared/project-datasets-tables/dataset.interface';
+import {NewDatasetRequest, NewDatasetRequestStatus} from 'micro_service_modules/projekt/projekt-model';
 import * as moment from 'moment';
 
 

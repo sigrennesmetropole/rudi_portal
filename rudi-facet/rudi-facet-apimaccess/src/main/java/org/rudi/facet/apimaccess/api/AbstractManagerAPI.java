@@ -21,19 +21,15 @@ public abstract class AbstractManagerAPI {
 	/**
 	 * Constructeur avec WebClient construisant les exceptions à partir d'une {@link APIManagerHttpExceptionFactory}.
 	 */
-	protected AbstractManagerAPI(
-			WebClient.Builder webClientBuilder,
-			APIManagerHttpExceptionFactory exceptionFactory,
-			APIManagerProperties apiManagerProperties
-	) {
+	protected AbstractManagerAPI(WebClient.Builder webClientBuilder, APIManagerHttpExceptionFactory exceptionFactory,
+			APIManagerProperties apiManagerProperties) {
 		this.webClient = buildWebClient(webClientBuilder, exceptionFactory);
 		this.apiManagerProperties = apiManagerProperties;
 	}
 
-	private static WebClient buildWebClient(WebClient.Builder webClientBuilder, APIManagerHttpExceptionFactory exceptionFactory) {
-		return webClientBuilder
-				.filter(WebClientHelper.createFilterFrom(exceptionFactory))
-				.build();
+	private static WebClient buildWebClient(WebClient.Builder webClientBuilder,
+			APIManagerHttpExceptionFactory exceptionFactory) {
+		return webClientBuilder.filter(WebClientHelper.createFilterFrom(exceptionFactory)).build();
 	}
 
 	public String getServerUrl() {
@@ -56,6 +52,10 @@ public abstract class AbstractManagerAPI {
 		return apiManagerProperties.getStoreContext();
 	}
 
+	public String getGatewayContext() {
+		return apiManagerProperties.getGatewayContext();
+	}
+
 	public String getAdminRegistrationId() {
 		return apiManagerProperties.getAdminRegistrationId();
 	}
@@ -68,41 +68,46 @@ public abstract class AbstractManagerAPI {
 		return apiManagerProperties.getAdminPassword();
 	}
 
-	public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId, String uri) {
-		WebClient.RequestBodySpec requestBodySpec = webClient.method(httpMethod)
-				.uri(uri)
+	public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId,
+			String uri) {
+		WebClient.RequestBodySpec requestBodySpec = webClient.method(httpMethod).uri(uri)
 				.attributes(ServerOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId(registrationId));
 		if (registrationId.equals(getAdminRegistrationId())) {
-			return requestBodySpec.headers(httpHeaders -> httpHeaders.setBasicAuth(getAdminUsername(), getAdminPassword()));
+			return requestBodySpec
+					.headers(httpHeaders -> httpHeaders.setBasicAuth(getAdminUsername(), getAdminPassword()));
 		}
 		return requestBodySpec;
 	}
 
-	public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId, String uri, Function<UriBuilder, URI> uriFunction) {
-		WebClient.RequestBodySpec requestBodySpec = webClient.method(httpMethod)
-				.uri(uri, uriFunction)
+	public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId,
+			String uri, Function<UriBuilder, URI> uriFunction) {
+		WebClient.RequestBodySpec requestBodySpec = webClient.method(httpMethod).uri(uri, uriFunction)
 				.attributes(ServerOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId(registrationId));
 		if (registrationId.equals(getAdminRegistrationId())) {
-			return requestBodySpec.headers(httpHeaders -> httpHeaders.setBasicAuth(getAdminUsername(), getAdminPassword()));
+			return requestBodySpec
+					.headers(httpHeaders -> httpHeaders.setBasicAuth(getAdminUsername(), getAdminPassword()));
 		}
 		return requestBodySpec;
 	}
 
-	public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId, String uri, Map<String, ?> uriVariables) {
-		WebClient.RequestBodySpec requestBodySpec = webClient.method(httpMethod)
-				.uri(uri, uriVariables)
+	public WebClient.RequestBodySpec populateRequestWithRegistrationId(HttpMethod httpMethod, String registrationId,
+			String uri, Map<String, ?> uriVariables) {
+		WebClient.RequestBodySpec requestBodySpec = webClient.method(httpMethod).uri(uri, uriVariables)
 				.attributes(ServerOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId(registrationId));
 		if (registrationId.equals(getAdminRegistrationId())) {
-			return requestBodySpec.headers(httpHeaders -> httpHeaders.setBasicAuth(getAdminUsername(), getAdminPassword()));
+			return requestBodySpec
+					.headers(httpHeaders -> httpHeaders.setBasicAuth(getAdminUsername(), getAdminPassword()));
 		}
 		return requestBodySpec;
 	}
 
-	public WebClient.RequestBodySpec populateRequestWithAdminRegistrationId(HttpMethod httpMethod, String uri, Function<UriBuilder, URI> uriFunction) {
+	public WebClient.RequestBodySpec populateRequestWithAdminRegistrationId(HttpMethod httpMethod, String uri,
+			Function<UriBuilder, URI> uriFunction) {
 		return populateRequestWithRegistrationId(httpMethod, getAdminRegistrationId(), uri, uriFunction);
 	}
 
-	public WebClient.RequestBodySpec populateRequestWithAdminRegistrationId(HttpMethod httpMethod, String uri, Map<String, ?> uriVariables) {
+	public WebClient.RequestBodySpec populateRequestWithAdminRegistrationId(HttpMethod httpMethod, String uri,
+			Map<String, ?> uriVariables) {
 		return populateRequestWithRegistrationId(httpMethod, getAdminRegistrationId(), uri, uriVariables);
 	}
 
@@ -118,23 +123,20 @@ public abstract class AbstractManagerAPI {
 		return buildURIPath(getServerUrl(), getStoreContext(), queryPath);
 	}
 
+	protected String buildGatewayURIPath(String queryPath) {
+		return buildURIPath(getServerUrl(), getGatewayContext(), queryPath);
+	}
+
 	public String buildAPIAccessUrl(String context, String version) {
 		return getServerGatewayUrl() + context + "/" + version;
 	}
 
 	public String buildAPIAccessUrl(String context, String version, MultiValueMap<String, String> queryParams) {
-		return UriComponentsBuilder.fromUriString(getServerGatewayUrl())
-				.path(context + "/" + version)
-				.queryParams(queryParams)
-				.build()
-				.toUriString();
+		return UriComponentsBuilder.fromUriString(getServerGatewayUrl()).path(context + "/" + version)
+				.queryParams(queryParams).build().toUriString();
 	}
 
 	private String buildURIPath(String serverURI, String pathContext, String queryPath) {
-		return UriComponentsBuilder.fromUriString(serverURI)
-				.path(pathContext)
-				.path(queryPath)
-				.build()
-				.toUriString();
+		return UriComponentsBuilder.fromUriString(serverURI).path(pathContext).path(queryPath).build().toUriString();
 	}
 }

@@ -28,7 +28,7 @@
 }
 
 @mixin card-px-60-mx-auto {
-    padding: 46px 60px 51px 60px;
+    padding: 46px 30px 51px;
     margin: 2em auto;
 }
 
@@ -40,6 +40,11 @@
     background-color: $primary-color;
     color: $secondary-color;
     width: 100%;
+
+    &.mat-mdc-button-disabled {
+        color: var(--mdc-protected-button-disabled-label-text-color);
+        background-color: var(--mdc-protected-button-disabled-container-color);
+    }
 }
 
 @mixin card-main-button-desktop {
@@ -59,14 +64,8 @@
     margin-bottom: 1em;
 }
 
-/// Centre verticalement l'étiquette d'un champ Angular Material
-@mixin centered-mat-field-label {
-    position: relative;
-    top: -0.21428em;
-}
-
 @mixin max-N-lignes($n) {
-    max-height: #{$n * 3.8 / 3}em;
+    max-height: calc($n * 3.8 / 3) em;
     overflow: hidden;
 }
 

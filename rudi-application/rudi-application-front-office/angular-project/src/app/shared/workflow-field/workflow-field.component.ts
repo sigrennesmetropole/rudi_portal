@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {Field} from '@app/api-bpmn';
+import {Field} from 'micro_service_modules/api-bpmn';
 import {WorkflowProperties} from '@shared/workflow-form/workflow-properties';
 
 /**

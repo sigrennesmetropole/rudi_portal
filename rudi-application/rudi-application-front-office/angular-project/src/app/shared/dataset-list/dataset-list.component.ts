@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Metadata, MetadataList} from '@app/api-kaccess';
+import {SafeResourceUrl} from '@angular/platform-browser';
 import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
 import {FiltersService} from '@core/services/filters.service';
 import {KonsultMetierService, MAX_RESULTS_PER_PAGE} from '@core/services/konsult-metier.service';
 import {LogService} from '@core/services/log.service';
 import {ThemeCacheService} from '@core/services/theme-cache.service';
+import {Metadata, MetadataList} from 'micro_service_modules/api-kaccess';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {debounceTime, takeUntil, tap} from 'rxjs/operators';
 
@@ -48,6 +49,7 @@ export class DatasetListComponent implements OnInit {
                 private readonly filtersService: FiltersService,
                 private readonly logService: LogService
     ) {
+        themeCacheService.init();
     }
 
     ngOnInit(): void {
@@ -96,7 +98,7 @@ export class DatasetListComponent implements OnInit {
     /**
      * @returns Example : 'weather'
      */
-    getThemePictoFor(metadata: Metadata): string {
+    getThemePictoFor(metadata: Metadata): SafeResourceUrl {
         return this.themeCacheService.getThemePictoFor(metadata);
     }
 

@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '../services/authentication.service';
+import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {catchError, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
+import {Level} from '@shared/notification-template/notification-template.component';
+import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
+import {catchError, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {AuthenticationService} from '../services/authentication.service';
 import {SnackBarService} from '../services/snack-bar.service';
-import {Level} from '../../shared/notification-template/notification-template.component';
 
 /**
  * Code de retour HTTP : erreur métier

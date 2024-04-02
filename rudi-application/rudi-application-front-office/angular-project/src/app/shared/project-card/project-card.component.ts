@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
-import {ProjectCatalogItem} from '../../project/model/project-catalog-item';
 import {Router} from '@angular/router';
+import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {URIComponentCodec} from '@core/services/codecs/uri-component-codec';
 
 @Component({
     selector: 'app-project-card',
@@ -14,6 +15,7 @@ export class ProjectCardComponent implements OnInit {
 
     constructor(
         private readonly breakpointObserver: BreakpointObserverService,
+        private readonly uriComponentCodec: URIComponentCodec,
         private readonly router: Router,
     ) {
     }
@@ -38,7 +40,7 @@ export class ProjectCardComponent implements OnInit {
     }
 
     get projectOwnerInfo(): string {
-        if (this.projectCatalogItem != null ) {
+        if (this.projectCatalogItem != null) {
             // ownerInfo n'est plus nullable, il renvoie [Utilisateur inconnu] si user not found (RUDI-2408)
             return this.projectCatalogItem?.ownerInfo?.name;
         }
@@ -64,6 +66,6 @@ export class ProjectCardComponent implements OnInit {
     }
 
     clickCard(): void {
-        this.router.navigate(['/projets/detail/' + this.projectCatalogItem.project.uuid]);
+        this.router.navigate(['/projets/detail/' + this.projectCatalogItem.project.uuid + '/' + this.uriComponentCodec.normalizeString(this.projectCatalogItem.project.title)]);
     }
 }

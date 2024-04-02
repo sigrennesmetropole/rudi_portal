@@ -1,9 +1,6 @@
 import {Injectable} from '@angular/core';
-import {RequestToStudy} from '../request-to-study.interface';
-
-import {WorkerService} from '../worker.service';
-import {Task} from 'src/app/api-bpmn/model/task';
-import {LinkedDataset} from '../../../../projekt/projekt-model';
+import {Task} from 'micro_service_modules//api-bpmn/model/task';
+import {LinkedDataset} from 'micro_service_modules/projekt/projekt-model';
 import {
     LinkedDatasetDependencies,
     LinkedDatasetTask,
@@ -11,6 +8,9 @@ import {
     LinkedDatasetTaskDependencyFetchers
 } from '../../tasks/projekt/linked-dataset-task-dependencies.service';
 import {ProjektTaskSearchCriteria} from '../../tasks/projekt/projekt-task-search-criteria.interface';
+import {RequestToStudy} from '../request-to-study.interface';
+
+import {WorkerService} from '../worker.service';
 
 @Injectable({
     providedIn: 'root'

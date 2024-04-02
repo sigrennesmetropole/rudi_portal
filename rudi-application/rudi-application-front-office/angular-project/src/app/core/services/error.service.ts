@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class ErrorService {
 
         // Erreur NULL - Message générique
         if (error == null || error.status == null) {
-            errorText = this.translateService.instant("error.internalError");
+            errorText = this.translateService.instant('error.internalError');
         }
 
         switch (error.status) {
@@ -24,14 +24,14 @@ export class ErrorService {
             case 500 :
                 break;
             case 401:
-                errorText = this.translateService.instant("authentification.error.authentificationFailed");
+                errorText = this.translateService.instant('authentification.error.authentificationFailed');
                 break;
             case 403:
-                errorText = this.translateService.instant("authentification.error.habilitation");
+                errorText = this.translateService.instant('authentification.error.habilitation');
                 break;
 
             default:
-                errorText = this.translateService.instant("error.internalError");
+                errorText = this.translateService.instant('error.internalError');
         }
 
 

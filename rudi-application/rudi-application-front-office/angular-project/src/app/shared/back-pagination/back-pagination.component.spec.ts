@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BackPaginationComponent } from './back-pagination.component';
+import {BackPaginationComponent} from './back-pagination.component';
 
 describe('BackPaginationComponent', () => {
   let component: BackPaginationComponent;

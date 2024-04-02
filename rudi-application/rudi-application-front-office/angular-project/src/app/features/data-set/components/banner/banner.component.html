@@ -1,0 +1,61 @@
+<mat-toolbar *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl"
+             class="rudi-filters-toolbar">
+
+    <app-filter-menu
+        #themesMenu
+        (closed)="themesForm.revert()"
+        [counter$]="themesForm.counter$"
+        buttonTextKey="filterBox.thematique">
+        <app-themes-filter-form
+            #themesForm
+            (selectedItemsChange)="selectedThemeItemsChange.emit($event)"
+            (submit)="themesMenu.close()"
+            [values]="themes"
+            ulClass="ps-0">
+        </app-themes-filter-form>
+    </app-filter-menu>
+
+    <app-filter-menu
+        #producerNamesMenu
+        (closed)="producerNamesForm.revert()"
+        [counter$]="producerNamesForm.counter$"
+        buttonTextKey="filterBox.producteur">
+        <app-producer-names-filter-form
+            #producerNamesForm
+            (selectedItemsChange)="selectedProducerItemsChange.emit($event)"
+            (submit)="producerNamesMenu.close()"
+            [values]="producerNames"
+            ulClass="ps-0">
+        </app-producer-names-filter-form>
+    </app-filter-menu>
+
+    <app-filter-menu
+        #datesMenu
+        (closed)="datesForm.revert()"
+        [counter$]="datesForm.counter$"
+        buttonTextKey="filterBox.couvertureTemporelle">
+        <app-dates-filter-form
+            #datesForm
+            (selectedItemsChange)="selectedDatesItemsChange.emit($event)"
+            (submit)="datesMenu.close()"
+            debutDivClass="d-flex me-3"
+            finDivClass="d-flex mt-2 me-3">
+        </app-dates-filter-form>
+    </app-filter-menu>
+
+    <app-filter-menu
+        #accessStatusMenu
+        (closed)="AccessStatusForm.revert()"
+        [counter$]="AccessStatusForm.counter$"
+        [isHidden]="accessStatusForcedValue !== undefined"
+        buttonTextKey="filterBox.restrictedAccess.statut">
+        <app-access-status-filter-form
+            #AccessStatusForm
+            (selectedItemsChange)="selectedAccessStatusItemsChange.emit($event);"
+            (submit)="accessStatusMenu.close()"
+            [forcedValue]="accessStatusForcedValue"
+            [hiddenValues]="accessStatusHiddenValues"
+            ulClass="ps-0">
+        </app-access-status-filter-form>
+    </app-filter-menu>
+</mat-toolbar>

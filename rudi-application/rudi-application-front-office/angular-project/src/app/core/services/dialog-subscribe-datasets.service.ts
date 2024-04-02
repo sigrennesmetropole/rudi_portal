@@ -1,17 +1,17 @@
-import {LinkedDatasetMetadatas} from './asset/project/project-dependencies.service';
-import {Project} from '../../projekt/projekt-api';
-import {Observable} from 'rxjs';
-import {DialogClosedData} from '../../data-set/models/dialog-closed-data';
-import {DefaultMatDialogConfig} from './default-mat-dialog-config';
+import {Injectable} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {
     DialogSubscribeDatasetsComponent,
     DialogSubscribeDatasetsData
-} from '../../personal-space/components/dialog-subscribe-datasets/dialog-subscribe-datasets.component';
-import {MatDialog} from '@angular/material/dialog';
-import {Injectable} from '@angular/core';
+} from '@features/personal-space/components/dialog-subscribe-datasets/dialog-subscribe-datasets.component';
 import {
     DeletionConfirmationPopinComponent
-} from '../../shared/project-datasets-tables/deletion-confirmation-popin/deletion-confirmation-popin.component';
+} from '@shared/project-datasets-tables/deletion-confirmation-popin/deletion-confirmation-popin.component';
+import {Project} from 'micro_service_modules/projekt/projekt-api';
+import {Observable} from 'rxjs';
+import {LinkedDatasetMetadatas} from './asset/project/project-dependencies.service';
+import {DefaultMatDialogConfig} from './default-mat-dialog-config';
 
 
 @Injectable({

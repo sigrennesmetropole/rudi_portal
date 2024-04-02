@@ -1,0 +1,8 @@
+class: info.magnolia.rendering.renderer.FreemarkerRenderer
+contextAttributes:
+  cms:
+    componentClass: info.magnolia.templating.freemarker.Directives
+    name: cms
+  cmsfn:
+    componentClass: info.magnolia.templating.functions.TemplatingFunctions
+    name: cmsfn

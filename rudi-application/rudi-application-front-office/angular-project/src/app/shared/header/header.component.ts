@@ -1,16 +1,16 @@
-import {Component, Input} from '@angular/core';
 import {Location} from '@angular/common';
+import {Component, Input} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '../../core/services/authentication.service';
-import {AuthenticationState} from '../../core/services/authentication/authentication-method';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {PropertiesMetierService} from '../../core/services/properties-metier.service';
-import {Level} from '../notification-template/notification-template.component';
-import {SnackBarService} from '../../core/services/snack-bar.service';
+import {Router} from '@angular/router';
+import {AuthenticationService} from '@core/services/authentication.service';
+import {AuthenticationState} from '@core/services/authentication/authentication-method';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {PropertiesMetierService} from '@core/services/properties-metier.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Level} from '../notification-template/notification-template.component';
 
 @Component({
     selector: 'app-header',

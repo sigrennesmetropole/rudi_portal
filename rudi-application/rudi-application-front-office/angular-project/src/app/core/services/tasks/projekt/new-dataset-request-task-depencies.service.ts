@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {NewDatasetRequest} from '../../../../projekt/projekt-api';
-import {Task} from '../../../../api-bpmn';
-import {TaskDependencyFetchers, TaskWithDependenciesService} from '../task-with-dependencies-service';
-import {TaskWithDependencies} from '../../../../shared/utils/task-utils';
+import {DependencyFetcher, OwnerKey} from '@shared/utils/dependencies-utils';
+import {TaskWithDependencies} from '@shared/utils/task-utils';
+import {AclService} from 'micro_service_modules/acl/acl-api';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {NewDatasetRequest} from 'micro_service_modules/projekt/projekt-api';
+import {OwnerInfo, Project} from 'micro_service_modules/projekt/projekt-model';
+import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
+import {ProjektMetierService} from '../../asset/project/projekt-metier.service';
 import {TaskDependencies} from '../task-dependencies.interface';
-import {AclService} from '../../../../acl/acl-api';
-import {OrganizationService} from '../../../../strukture/api-strukture';
+import {TaskDependencyFetchers, TaskWithDependenciesService} from '../task-with-dependencies-service';
 import {NewDatasetRequestTaskMetierService} from './new-dataset-request-task-metier.service';
 import {ProjektTaskSearchCriteria} from './projekt-task-search-criteria.interface';
-import {OwnerInfo, Project} from '../../../../projekt/projekt-model';
-import {DependencyFetcher, OwnerKey} from '../../../../shared/utils/dependencies-utils';
-import {ProjektMetierService} from '../../asset/project/projekt-metier.service';
 
 /**
  * les dépendances attendues pour une tâche

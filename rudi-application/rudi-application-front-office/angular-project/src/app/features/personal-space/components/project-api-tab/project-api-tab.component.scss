@@ -1,0 +1,67 @@
+@import "variables-rudi";
+@import "common-style";
+
+*:focus-visible {
+    // on ne veut pas les rectangles bleu sur focus du champ input
+    outline: none;
+}
+
+.card-api {
+    padding: 2em;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.password-field {
+    width: 33%;
+}
+
+.consumer-field-wrapper {
+    margin-bottom: 2em;
+}
+
+.action-button {
+    @include card-main-button;
+    border-radius: 6px;
+    padding: 0.5em;
+    background-color: #004680;
+    color: #ffffff;
+    font-size: 14px;
+    height: 47px;
+    width: 113px;
+}
+
+.app-copied-style {
+    width: 35em;
+}
+
+.title-keys {
+    margin: 25px 420px 2px 3px;
+    font-family: OpenSans, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: $primary-color;
+}
+
+.identification-title {
+    font-family: OpenSans, sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.72;
+}
+
+::ng-deep {
+    .error-zone {
+        height: 50px !important;
+
+        span {
+            vertical-align: middle;
+        }
+    }
+}

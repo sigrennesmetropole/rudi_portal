@@ -38,7 +38,7 @@ public interface LinkedDatasetService {
 	 * @param linkedDataset LinkedDataset fourni par le JSON
 	 */
 	LinkedDataset linkProjectToDataset(UUID projectUuid, LinkedDataset linkedDataset)
-			throws AppServiceNotFoundException, DataverseAPIException, AppServiceException, APIManagerException;
+			throws DataverseAPIException, AppServiceException, APIManagerException;
 
 	/**
 	 * MAJ un linked dataset
@@ -47,7 +47,7 @@ public interface LinkedDatasetService {
 	 * @param linkedDataset LinkedDataset fourni par le JSON à garder
 	 */
 	LinkedDataset updateLinkedDataset(UUID projectUuid, LinkedDataset linkedDataset)
-			throws AppServiceNotFoundException, AppServiceException, APIManagerException;
+			throws AppServiceException, APIManagerException;
 
 	/**
 	 * Supprime un lien entre un projet et un jeu de données
@@ -59,7 +59,7 @@ public interface LinkedDatasetService {
 			throws AppServiceException, APIManagerException;
 
 	PagedLinkedDatasetList searchMyLinkedDatasets(LinkedDatasetSearchCriteria criteria, Pageable pageable)
-			throws AppServiceNotFoundException, AppServiceException;
+			throws AppServiceException;
 
 	/**
 	 * Retourne le formulaire de consultation des informations de la décision concernant la demande d'accès au JDD

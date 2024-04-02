@@ -1,0 +1,23 @@
+cssFiles:
+  travels-magnolia:
+    addFingerPrint: true
+    link: /.resources/rudi/css/rudi.css
+    media: all
+
+imaging:
+  class: info.magnolia.templating.imaging.VariationAwareImagingSupport
+  variations:
+  
+    "1600":
+      class: info.magnolia.templating.imaging.variation.SimpleResizeVariation
+      width: 1600
+   
+    "960x720":
+      class: info.magnolia.templating.imaging.variation.SimpleResizeVariation
+      height: 720
+      width: 960
+      
+    "480x360":
+      class: info.magnolia.templating.imaging.variation.SimpleResizeVariation
+      height: 360
+      width: 480

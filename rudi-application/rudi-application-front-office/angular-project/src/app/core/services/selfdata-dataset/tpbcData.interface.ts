@@ -1,4 +1,4 @@
-import {DictionaryEntry} from '../../../api-kaccess';
+import {DictionaryEntry} from 'micro_service_modules/api-kaccess';
 
 export interface TpbcDataInterface {
     title?: string;
@@ -14,12 +14,12 @@ export interface TpbcDataInterface {
 }
 
 export interface BarModel {
-    coordonateX?: string,
-    coordonateY?: number[],
+    coordonateX?: string;
+    coordonateY?: number[];
 }
 
 export interface GroupedBarModel {
-    coordonateX: string,
+    coordonateX: string;
     [key: string]: any;
 }
 
@@ -30,35 +30,35 @@ export interface LineAndPlot {
 }
 
 export interface LineAndPlotValue {
-    coordonateX?: string,
-    coordonateY?: number,
-    color?: string
+    coordonateX?: string;
+    coordonateY?: number;
+    color?: string;
 }
 
 
 export interface Serie {
-    name?: string,
-    color?: string
+    name?: string;
+    color?: string;
 }
 
 export interface BarChartData {
-    legend?: Array<DictionaryEntry>;
+    legend?: DictionaryEntry[];
     type?: BarChartType;
-    legendYAxis?: Array<DictionaryEntry>;
-    legendXAxis?: Array<DictionaryEntry>;
-    series?: Array<BarChartSeries>;
-    values?: Array<BarChartValues>;
+    legendYAxis?: DictionaryEntry[];
+    legendXAxis?: DictionaryEntry[];
+    series?: BarChartSeries[];
+    values?: BarChartValues[];
 }
 
 export interface BarChartSeries {
-    legend?: Array<DictionaryEntry>;
+    legend?: DictionaryEntry[];
 }
 
 export interface BarChartValues {
     colour?: string;
     borderColour?: string;
-    legend?: Array<DictionaryEntry>;
-    values?: Array<number>;
+    legend?: DictionaryEntry[];
+    values?: number[];
 }
 
 export type BarChartType = 'POINT' | 'LINE' | 'BAR';

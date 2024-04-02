@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {TaskService as SelfdataTaskService} from '../../../../selfdata/selfdata-api';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {TaskService as SelfdataTaskService} from 'micro_service_modules/selfdata/selfdata-api';
+import {SelfdataInformationRequest} from 'micro_service_modules/selfdata/selfdata-model';
 import {Observable} from 'rxjs';
-import {Task} from '../../../../api-bpmn';
-import {MicroserviceSelfdataTaskMetierService} from './microservice-selfdata-task-metier.service';
-import {SelfdataInformationRequest} from '../../../../selfdata/selfdata-model';
 import {ObjectType} from '../object-type.enum';
+import {MicroserviceSelfdataTaskMetierService} from './microservice-selfdata-task-metier.service';
 
 @Injectable({
     providedIn: 'root'

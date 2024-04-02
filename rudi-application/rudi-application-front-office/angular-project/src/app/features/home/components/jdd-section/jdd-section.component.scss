@@ -1,0 +1,98 @@
+@import "colors";
+@import "responsive";
+@import "swiper/css";
+
+:host {
+    --swiper-button-top-offset: 42%;
+}
+
+.jdds-section-container {
+    width: 90%;
+    height: 100%;
+    margin: 20px auto;
+
+    .title {
+        text-align: center;
+        color: $primary-color;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .jdd-item {
+        box-sizing: border-box;
+        margin: 10px auto;
+        width: 80%;
+        border-radius: 8px;
+        border: 1.1px solid $blocks-and-menus-outline;
+        cursor: pointer;
+    }
+
+    .desktop-jdds-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .jdd-item {
+            width: 30%;
+        }
+    }
+
+    .mobile-jdds-list {
+        display: none;
+
+        .jdd-item {
+            margin: 0 auto;
+        }
+    }
+
+    .see-more-btn {
+        border-radius: 20px;
+        height: 42px;
+        margin: 50px;
+        padding: 0 20px;
+        line-height: 40px;
+        text-decoration: none;
+        color: $error-color-text;
+        background-color: $primary-color;
+
+        &:hover {
+            filter: brightness(125%);
+        }
+    }
+
+    @mixin switch-from-mobile-to-desktop() {
+        .mobile-jdds-list {
+            display: none;
+        }
+
+        .desktop-jdds-list {
+            display: flex;
+        }
+    }
+
+    @mixin switch-from-desktop-to-mobile() {
+        .mobile-jdds-list {
+            display: block;
+        }
+
+        .desktop-jdds-list {
+            display: none;
+        }
+    }
+
+    @include xs() {
+        @include switch-from-desktop-to-mobile();
+    }
+
+    @include sm() {
+        @include switch-from-desktop-to-mobile();
+    }
+
+    @include md() {
+        @include switch-from-desktop-to-mobile();
+    }
+
+    @include lg() {
+        @include switch-from-mobile-to-desktop();
+    }
+}

@@ -491,6 +491,50 @@
 					}
 				}
 			}
+		},
+		"/skosConcepts/resources/{resource-name}": {
+			"get": {
+				"tags": [
+					"skosConcepts"
+				],
+				"summary": "Icon de skos concept",
+				"description": "Récupération de l'icône d'un skos concept",
+				"operationId": "downloadSkosConceptIcon",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "resource-name",
+						"description": "Nom de la resource",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retourne la ressource demandée",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {

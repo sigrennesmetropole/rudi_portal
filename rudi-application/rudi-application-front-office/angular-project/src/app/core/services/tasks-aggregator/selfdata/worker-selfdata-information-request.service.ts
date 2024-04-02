@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
-import {RequestToStudy} from '../request-to-study.interface';
 
-import {Task} from 'src/app/api-bpmn';
-import {WorkerService} from '../worker.service';
-import {SelfdataInformationRequest} from '../../../../selfdata/selfdata-model';
+import {Task} from 'micro_service_modules//api-bpmn';
+import {SelfdataInformationRequest} from 'micro_service_modules/selfdata/selfdata-model';
 import {
     SelfdataInformationRequestDependencies,
     SelfdataInformationRequestTask,
@@ -11,6 +9,8 @@ import {
     SelfdataInformationRequestTaskDependencyFetchers
 } from '../../tasks/selfdata/selfdata-information-request-task-dependencies.service';
 import {SelfdataTaskSearchCriteria} from '../../tasks/selfdata/selfdata-task-search-criteria.interface';
+import {RequestToStudy} from '../request-to-study.interface';
+import {WorkerService} from '../worker.service';
 
 @Injectable({
     providedIn: 'root'

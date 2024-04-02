@@ -17,11 +17,10 @@ public class APIContextHelper {
 	}
 
 	public static String buildAPIContext(APIDescription apiDescription) {
-		return StringUtils.join(Arrays.asList(
-				CONTEXT_SEPARATOR + "datasets",
-				apiDescription.getMediaUuid().toString(),
-				InterfaceContract.fromCode(apiDescription.getInterfaceContract()).getUrlPath()
-		), CONTEXT_SEPARATOR);
+		return StringUtils.join(
+				Arrays.asList(CONTEXT_SEPARATOR + "datasets", apiDescription.getMediaUuid().toString(),
+						InterfaceContract.fromCode(apiDescription.getInterfaceContract()).getUrlPath()),
+				CONTEXT_SEPARATOR);
 	}
 
 }

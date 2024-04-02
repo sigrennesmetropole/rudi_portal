@@ -20,12 +20,12 @@ const MEGA = 1024 * 1024;
 export class FileSizePipe implements PipeTransform {
     transform(size: number) {
         let extension: string;
-        let orignalSize: number = size;
+        const orignalSize: number = size;
         if (size < KILO_PER_10) {
             extension = 'o';
             return size + ' ' + extension;
         }
-        let i: number = 1;
+        let i = 1;
         while (size >= KILO * MEGA) {
             size = size / KILO;
             i += 1;

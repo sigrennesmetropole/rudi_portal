@@ -20,36 +20,39 @@ import org.wso2.carbon.user.core.service.RealmService;
 //@Component(name = "rudi.user.store.mgt.dscomponent", immediate = true)
 public class RudiUserStoreMgtDSComponent {
 
-    private static final Log LOGGER = LogFactory
-            .getLog(RudiUserStoreMgtDSComponent.class);
+	private static final Log LOGGER = LogFactory.getLog(RudiUserStoreMgtDSComponent.class);
 
-    protected RealmService realmService;
+	protected RealmService realmService;
 
-    // @Activate
-    protected void activate(ComponentContext ctxt) {
-        LOGGER.info("RudiUserStoreManager bundle start activate...");
-        RudiUserStoreManager customUserStoreManager = new RudiUserStoreManager();
-        ctxt.getBundleContext().registerService(
-                UserStoreManager.class.getName(), customUserStoreManager, null);
-        LOGGER.info("RudiUserStoreManager bundle activated successfully.");
-    }
+	// @Activate
+	protected void activate(ComponentContext ctxt) {
+		LOGGER.info("RudiUserStoreManager bundle start activate...");
+		RudiUserStoreManager customUserStoreManager = new RudiUserStoreManager();
+		ctxt.getBundleContext().registerService(UserStoreManager.class.getName(), customUserStoreManager, null);
+		LOGGER.info("RudiUserStoreManager bundle activated successfully.");
+	}
 
-    // @Deactivate
-    protected void deactivate(ComponentContext ctxt) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Custom User Store Manager is deactivated ");
-        }
-    }
+	// @Deactivate
+	protected void deactivate(ComponentContext ctxt) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Custom User Store Manager is deactivated ");
+		}
+	}
 
-    // @Reference(name = "user.realmservice.default",
-    // cardinality = ReferenceCardinality.MANDATORY,
-    // policy = ReferencePolicy.DYNAMIC, unbind = "unsetRealmService")
-    protected void setRealmService(RealmService rlmService) {
-        realmService = rlmService;
-    }
+	// @Reference(name = "user.realmservice.default",
+	// cardinality = ReferenceCardinality.MANDATORY,
+	// policy = ReferencePolicy.DYNAMIC, unbind = "unsetRealmService")
+	protected void setRealmService(RealmService rlmService) {
+		LOGGER.info("RudiUserStoreMgtDSComponent setRealmService...");
+		realmService = rlmService;
+	}
 
-    protected void unsetRealmService(RealmService realmService) {
-        this.realmService = null;
-    }
+	/**
+	 * 
+	 * @param realmService le realmService  qui doit etre unset
+	 */
+	protected void unsetRealmService(RealmService realmService) {
+		this.realmService = null;
+	}
 
 }

@@ -1,7 +1,7 @@
 export class FooterUtils {
 
     static getCurrentYear(): number {
-        let date = new Date();
+        const date = new Date();
         return date.getFullYear();
     }
 }

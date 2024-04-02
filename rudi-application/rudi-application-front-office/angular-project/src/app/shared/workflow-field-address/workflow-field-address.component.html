@@ -19,7 +19,7 @@
 
         <mat-error>
             <ng-container *ngFor="let error of userInputFormControl?.errors | keyvalue">
-                <em class="fa fa-info-circle fa-2x mr-2"></em>{{'common.validatorsErrors.' + error.key |translate}}<br/>
+                <em class="fa fa-info-circle fa-2x me-2"></em>{{'common.validatorsErrors.' + error.key |translate}}<br/>
             </ng-container>
         </mat-error>
 

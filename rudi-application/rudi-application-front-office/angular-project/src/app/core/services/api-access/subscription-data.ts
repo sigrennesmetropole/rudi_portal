@@ -1,5 +1,5 @@
-import {Metadata} from '../../../api-kaccess';
-import {LinkedDataset} from '../../../projekt/projekt-api';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {LinkedDataset} from 'micro_service_modules/projekt/projekt-model';
 
 /**
  * Objet nécessaire pour réaliser une souscription dans RUDI

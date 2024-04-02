@@ -1,0 +1,10 @@
+@import "common-style";
+@import "variables-rudi";
+
+.description {
+    margin: 11px 0 20px;
+    font-family: OpenSans, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--3-texte-gris-fonc);
+}

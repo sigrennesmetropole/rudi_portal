@@ -1,7 +1,6 @@
-@import "src/app/styles/variables-rudi";
-@import "src/app/styles/colors";
-@import "src/app/styles/common-style";
-
+@import "variables-rudi";
+@import "colors";
+@import "common-style";
 
 .project-card {
     font-family: OpenSans, sans-serif;
@@ -9,17 +8,18 @@
     border: solid 1px $blocks-and-menus-outline;
     cursor: pointer;
     overflow: hidden;
+    padding: 0;
 
     mat-card-content {
         height: 80%;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding: 0 16px 16px 16px;
     }
 
     img {
-        border-top-left-radius: 8px 8px;
-        border-top-right-radius: 8px 8px;
-        height: 220px;
+        max-height: 220px;
+        object-fit: cover;
     }
 
     .project-card-producer {
@@ -58,16 +58,7 @@
 
     &-sm, &-md {
 
-        min-height: $card-height-sm;
-        border-left: none;
-        border-right: none;
-        border-radius: unset;
-        border-bottom: none;
-        padding: 17px 25px 17px 0;
-
-        img, .logo-container {
-            margin: 0 16px 12px 0;
-        }
+        min-height: 300px;
 
         .project-card-producer {
             font-size: 12px;
@@ -82,18 +73,18 @@
         }
 
         .project-card-content {
-            flex-direction: revert;
             height: auto;
+            flex-direction: revert;
         }
 
         &:hover {
             background-color: $banner-solid-color;
         }
+
     }
 
-
     &-lg, &-xl, &-xxl {
-        height:$card-project-height-lg;
+        height: $card-project-height-lg;
         border-radius: 8px;
 
 

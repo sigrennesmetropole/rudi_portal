@@ -1,20 +1,19 @@
 import {Injectable} from '@angular/core';
-import {Metadata, MetadataGeographyBoundingBox} from '../../../api-kaccess';
+import {SearchAutocompleteItem} from '@shared/search-autocomplete/search-autocomplete-item.interface';
+import {Metadata, MetadataGeographyBoundingBox} from 'micro_service_modules/api-kaccess';
+import {Address, KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {LayerInformation, Proj4Information} from 'micro_service_modules/konsult/konsult-model';
 import {Feature} from 'ol';
-import {Geometry, Polygon} from 'ol/geom';
-import {get, getTransform, Projection} from 'ol/proj';
+import {applyTransform} from 'ol/extent';
 import GeoJSON from 'ol/format/GeoJSON';
+import {Geometry, Polygon} from 'ol/geom';
+import {get, getTransform, Projection, TransformFunction} from 'ol/proj';
+import {register} from 'ol/proj/proj4';
+import proj4 from 'proj4';
 import {Observable, of} from 'rxjs';
-import {SearchAutocompleteItem} from '../../../shared/search-autocomplete/search-autocomplete-item.interface';
 import {map, switchMap} from 'rxjs/operators';
 import {KonsultRvaService} from '../rva/konsult/konsult-rva.service';
-import {Address} from '../../../api-rva';
 import {readFile} from './display.function';
-import {KonsultService} from '../../../konsult/konsult-api';
-import {LayerInformation, Proj4Information} from '../../../konsult/konsult-model';
-import {register} from 'ol/proj/proj4';
-import {applyTransform} from 'ol/extent';
-import proj4 from 'proj4';
 
 /**
  * Projection utilisée par la vue OpenLayers par défaut
@@ -51,13 +50,13 @@ export class DisplayMapService {
      * @param projectionTransformer fonction de reprojection
      */
     private static createBoundingBoxFeature(boundingBox: MetadataGeographyBoundingBox,
-                                            projectionTransformer: (array: number[]) => number[]): Feature<Polygon> {
+                                            projectionTransformer: TransformFunction): Feature<Polygon> {
 
         // Calcul des points projetés dans la proj de destination
         const nordOuestSource = [boundingBox.west_longitude, boundingBox.north_latitude];
         const sudEstSource = [boundingBox.east_longitude, boundingBox.south_latitude];
-        const nordOuestDestination = projectionTransformer(nordOuestSource);
-        const sudEstDestination = projectionTransformer(sudEstSource);
+        const nordOuestDestination = projectionTransformer(nordOuestSource, undefined, undefined);
+        const sudEstDestination = projectionTransformer(sudEstSource, undefined, undefined);
 
         // Création des coordonnées du polygone :
         // 1 outer ring qui fait le tour de la bounding box dans le sens horaire
@@ -92,7 +91,7 @@ export class DisplayMapService {
 
         const searchString = 'EPSG:';
         const regex = new RegExp(`${searchString}(\\d{4})`);
-        const match = epsgString.match(regex);
+        const match = regex.exec(epsgString);
 
         if (match && match.length > 1) {
             const matchedNumbers = match[1];

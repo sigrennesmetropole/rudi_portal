@@ -1,23 +1,26 @@
 <div class="header-container mat-typography" [ngClass]="ngClass">
     <div *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl">
-        <nav ngxNavbarDynamicExpand class="header-nav rudi-header-container navbar-expand pr-0"
+        <nav class="header-nav rudi-header-container navbar navbar-expand pe-0"
              aria-label="navbar-desktop">
-            <div class="header-logo-container">
+            <div class="header-logo-container navbar-brand">
                 <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
                     <mat-icon class="header-logo" aria-hidden="false"
                               aria-label="Logo bleu orange beta de rennes metropole"
                               svgIcon="logo-bleu-orange"></mat-icon>
                 </a>
             </div>
-            <ngx-navbar-collapse class="justify-content-end navbar-menu-items header-container-lg not-clickable"
-                                 id="main-nav">
-                <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 mr-2">
+            <div class="justify-content-end navbar-menu-items header-container-lg not-clickable navbar-expand collapse show"
+                 id="main-nav">
+                <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 me-2">
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.beta'|getBackendProperty|async}}"
+                        <a class="nav-link text-uppercase"
                            rel="noopener noreferrer"
-                           routerLinkActive="active-item">
-                            <em class="fa fa-home fa-1x mr-2"></em>
-                            <span>{{'header.accueil'| translate}}</span></a>
+                           routerLink="home"
+                           routerLinkActive="active-item"
+                        >
+                            <em class="fa fa-home fa-1x me-2"></em>
+                            <span>{{'header.accueil'| translate}}</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-uppercase" href="#" routerLink="catalogue"
@@ -37,7 +40,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc"
                            rel="noopener noreferrer" target="_blank">
-                            <em class="fa fa-external-link fa-1x mr-2  icon-hide-mobile"></em>
+                            <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
                             <span>{{'header.documentation'| translate}}</span>
                         </a>
                     </li>
@@ -45,7 +48,7 @@
                         <a class="nav-link text-uppercase" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
                            target="_blank"
                            rel="noopener noreferrer" [routerLinkActive]="'active'">
-                            <em class="fa fa-external-link fa-1x mr-2  icon-hide-mobile"></em>
+                            <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
                             <span>{{'header.blogProjet'| translate}}</span></a>
                     </li>
                     <li class="nav-item account-btn">
@@ -72,7 +75,7 @@
                         </mat-menu>
                     </li>
                 </ul>
-            </ngx-navbar-collapse>
+            </div>
         </nav>
     </div>
 
@@ -111,7 +114,7 @@
                 <button
                     class="navbar-toggler custom-toggler header-btn-toggle p-2"
                     type="button"
-                    (click)="collapse.toggle(); handleClickBurger()"
+                    (click)="handleClickBurger()"
                     aria-controls="main-nav"
                     aria-expanded="false"
                     aria-label="Ouvrir">
@@ -119,17 +122,16 @@
                           class="navbar-toggler-icon d-flex align-items-center justify-content-center">
                     </span>
                     <span *ngIf="!isCollapsed">
-                        <em class="fa fa-times fa-1x mr-2 pointer disabled"></em>
+                        <em class="fa fa-times fa-1x me-2 pointer disabled"></em>
                     </span>
                 </button>
             </div>
 
             <!-- Fin button menu burger -->
-            <ngx-navbar-collapse class="justify-content-end navbar-menu-items header-container-sm" id="main-nav2"
-                                 #collapse="ngxNavbarCollapse">
+            <div class="justify-content-end navbar-menu-items header-container-sm collapse" [ngClass]="{ show: !isCollapsed }" id="main-nav2">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.beta'|getBackendProperty|async}}"
+                        <a class="nav-link" href="#" routerLink="home"
                            rel="noopener noreferrer" routerLinkActive="active-item">
                             <span class="ul-items-mobile">{{'header.accueil'| translate}}</span></a>
                     </li>
@@ -137,11 +139,6 @@
                         <a class="nav-link" href="#" routerLink="catalogue"
                            routerLinkActive="active-item"><span
                             class="ul-items-mobile">{{'header.catalogue'| translate}}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="organization"
-                           routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" routerLink="projets"
@@ -165,7 +162,7 @@
                             <span class="ul-items-mobile">{{'header.blogProjet'| translate}}</span></a>
                     </li>
                 </ul>
-            </ngx-navbar-collapse>
+            </div>
         </nav>
     </div>
 </div>

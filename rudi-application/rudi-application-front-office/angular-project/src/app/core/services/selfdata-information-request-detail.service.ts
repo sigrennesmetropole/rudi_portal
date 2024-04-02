@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {TaskService as SelfdataTaskService} from '../../selfdata/selfdata-api';
+import {Form} from 'micro_service_modules/api-bpmn';
+import {TaskService as SelfdataTaskService} from 'micro_service_modules/selfdata/selfdata-api';
 import {Observable} from 'rxjs';
-import {Form} from '../../api-bpmn';
 
 @Injectable({
     providedIn: 'root'

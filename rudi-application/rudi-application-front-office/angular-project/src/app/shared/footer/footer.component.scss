@@ -1,5 +1,5 @@
-@import "src/app/styles/common-style";
-@import "src/app/styles/variables-rudi";
+@import "common-style";
+@import "variables-rudi";
 
 .mat-divider.mat-divider-horizontal {
     margin: 0 80px 0 80px !important;
@@ -183,26 +183,11 @@ ul {
     text-transform: uppercase;
     font-size: 14px;
     padding: 7px 0 0 0;
-
-
-    a {
-        color: $accent-color-svg;
-    }
-}
-
-.btn-nous-contacter:hover {
-    color: $secondary-color;
-    background-color: $accent-color-svg;
-    line-height: 1;
-    border: 1px solid $accent-color-svg;
-    border-radius: 1px;
-    width: 162px;
-    height: 32px;
     text-decoration: none !important;
 
-    a {
-        text-decoration: none !important;
+    &:hover {
         color: $secondary-color;
+        background-color: $accent-color-svg;
     }
 }
 

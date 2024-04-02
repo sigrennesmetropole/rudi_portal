@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
+import {URIComponentCodec} from '@core/services/codecs/uri-component-codec';
 import {IconRegistryService} from '@core/services/icon-registry.service';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
 
@@ -52,6 +53,7 @@ export class DatasetsInfosComponent {
 
     constructor(
         private readonly breakpointObserverService: BreakpointObserverService,
+        private readonly uriComponentCodec: URIComponentCodec,
         private router: Router,
         iconRegistryService: IconRegistryService,
     ) {
@@ -63,10 +65,11 @@ export class DatasetsInfosComponent {
     /**
      * Méthode appelée au clic sur un jdd et qui redirige l'utilisateur vers la page de details de ce jdd
      * @param currentJddId
+     * @param title
      */
-    handleClickOnDatasetCard(currentJddId: string): void {
-        if (currentJddId) {
-            this.router.navigate(['/catalogue/detail/' + currentJddId]);
+    handleClickOnDatasetCard(currentJddId: string, title: string): void {
+        if (currentJddId && title) {
+            this.router.navigate(['/catalogue/detail/' + currentJddId + '/' + this.uriComponentCodec.normalizeString(title)]);
         }
     }
 }

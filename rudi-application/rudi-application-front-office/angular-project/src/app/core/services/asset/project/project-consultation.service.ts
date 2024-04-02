@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {ProjektMetierService} from './projekt-metier.service';
-import {from, Observable} from 'rxjs';
-import {LinkedDatasetMetadatas} from './project-dependencies.service';
-import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
-import {LinkedDataset} from '../../../../projekt/projekt-model';
-import {Metadata} from '../../../../api-kaccess';
-import {KonsultMetierService} from '../../konsult-metier.service';
-import {NewDatasetRequest} from '../../../../projekt/projekt-api';
-import {RowTableData} from '../../../../shared/project-datasets-tables/dataset.interface';
-import {Status} from '../../../../api-bpmn';
-import {Level} from '../../../../shared/notification-template/notification-template.component';
-import {SnackBarService} from '../../snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Level} from '@shared/notification-template/notification-template.component';
+import {RowTableData} from '@shared/project-datasets-tables/dataset.interface';
+import {Status} from 'micro_service_modules/api-bpmn';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {NewDatasetRequest} from 'micro_service_modules/projekt/projekt-api';
+import {LinkedDataset} from 'micro_service_modules/projekt/projekt-model';
+import {from, Observable} from 'rxjs';
+import {map, mergeMap, reduce, switchMap} from 'rxjs/operators';
+import {KonsultMetierService} from '../../konsult-metier.service';
+import {SnackBarService} from '../../snack-bar.service';
+import {LinkedDatasetMetadatas} from './project-dependencies.service';
+import {ProjektMetierService} from './projekt-metier.service';
 
 @Injectable({
     providedIn: 'root'

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Project} from '@app/projekt/projekt-api';
+import {Project} from 'micro_service_modules/projekt/projekt-api';
 
 @Component({
     selector: 'app-project-main-informations',

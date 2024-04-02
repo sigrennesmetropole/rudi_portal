@@ -1,5 +1,5 @@
+import {DataSize} from '@shared/models/data-size';
 import {Observable} from 'rxjs';
-import {DataSize} from '../../shared/models/data-size';
 import {map, shareReplay} from 'rxjs/operators';
 
 function get<P, V, M>(key: string, properties: P, mapper: (value: V) => M): M | undefined {

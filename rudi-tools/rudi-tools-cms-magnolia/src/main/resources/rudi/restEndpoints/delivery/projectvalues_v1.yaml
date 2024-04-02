@@ -1,0 +1,27 @@
+class: info.magnolia.rest.delivery.jcr.v2.JcrDeliveryEndpointDefinition
+workspace: projectvalues
+rootPath: /
+nodeTypes:
+  - lib:projectvalue
+  - mgnl:category
+  - mgnl:contentNode    
+childNodeTypes:
+  - mgnl:category
+  - mgnl:contentNode  
+includeSystemProperties: true
+bypassWorkspaceAcls: false
+limit: 20
+
+references:
+  - name: image1Reference
+    propertyName: image
+    referenceResolver:
+      class: info.magnolia.rest.reference.dam.AssetReferenceResolverDefinition
+      assetRenditions:
+        - 960x720
+  - name: shortimageReference        
+    propertyName: shortimage
+    referenceResolver:
+      class: info.magnolia.rest.reference.dam.AssetReferenceResolverDefinition
+      assetRenditions:
+        - 960x720        

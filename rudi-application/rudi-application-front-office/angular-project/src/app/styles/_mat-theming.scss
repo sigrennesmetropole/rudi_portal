@@ -1,4 +1,10 @@
-@import "../styles/colors";
+@import "colors";
+
+button {
+    --mdc-filled-button-label-text-tracking: normal !important;
+    --mdc-text-button-label-text-tracking: normal !important;
+    --mdc-protected-button-label-text-tracking: normal !important;
+}
 
 .mat-expansion-panel {
     box-shadow: none;
@@ -27,6 +33,14 @@
         left: -40px;
         line-height: 28px;
     }
+}
+
+.mat-expansion-panel:not(.mat-elevation-z) {
+    box-shadow: none;
+}
+
+.mat-expansion-panel-header {
+    padding: 0;
 }
 
 .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled="true"]) {
@@ -94,10 +108,6 @@ button.mat-menu-item:hover {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-}
-
-.mat-expansion-panel-header {
-    padding: 0 15px 0 0;
 }
 
 ::ng-deep.mat-form-field-appearance-outline .mat-form-field-infix {

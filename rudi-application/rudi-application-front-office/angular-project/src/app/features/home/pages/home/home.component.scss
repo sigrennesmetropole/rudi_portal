@@ -1,0 +1,60 @@
+@import "variables-rudi";
+@import "responsive";
+@import "colors";
+
+$themes-section-height: 225px;
+$themes-section-overflow: 135px;
+
+.home-container {
+    padding-top: $app-header-height;
+}
+
+.themes-section {
+    z-index: 1;
+    width: 100%;
+    height: calc(#{$themes-section-height} - #{$themes-section-overflow});
+    margin-bottom: 20px;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+
+    .themes-container {
+        z-index: 2;
+        width: 100%;
+        height: $themes-section-height;
+        position: absolute;
+        top: calc(-1 * #{$themes-section-overflow});
+    }
+}
+
+@mixin themes-section-for-small-screens {
+    .themes-section {
+        margin-top: 20px;
+        height: $themes-section-height;
+
+        .themes-container {
+            top: 0;
+        }
+    }
+}
+.projects-section{
+    display: flex;
+    justify-content: center;
+    .projects-container{
+        width: 90%;
+    }
+}
+
+
+@include md() {
+    @include themes-section-for-small-screens;
+}
+
+@include sm() {
+    @include themes-section-for-small-screens;
+}
+
+@include xs() {
+    @include themes-section-for-small-screens;
+}

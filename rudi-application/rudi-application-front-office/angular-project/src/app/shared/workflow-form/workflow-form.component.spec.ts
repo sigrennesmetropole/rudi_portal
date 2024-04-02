@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WorkflowFormComponent } from './workflow-form.component';
+import {WorkflowFormComponent} from './workflow-form.component';
 
 describe('WorkflowFormComponent', () => {
   let component: WorkflowFormComponent;

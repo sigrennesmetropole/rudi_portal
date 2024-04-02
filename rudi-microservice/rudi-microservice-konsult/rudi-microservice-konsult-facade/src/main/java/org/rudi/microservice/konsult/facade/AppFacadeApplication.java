@@ -23,6 +23,7 @@ import org.springframework.context.annotation.PropertySource;
 		"org.rudi.facet.selfdata",
 		"org.rudi.facet.rva",
 		"org.rudi.facet.organization",
+		"org.rudi.facet.cms",
 		"org.rudi.microservice.konsult.facade",
 		"org.rudi.microservice.konsult.service",
 		"org.rudi.facet.apimremote",

@@ -1,29 +1,26 @@
 package org.rudi.facet.apimaccess.helper.rest;
 
-import org.rudi.facet.apimaccess.api.registration.ClientAccessKey;
+import org.rudi.facet.apimaccess.api.registration.Application;
 import org.rudi.facet.apimaccess.api.registration.ClientRegistrationResponse;
-import org.rudi.facet.apimaccess.api.registration.ClientRegistrationV017OperationAPI;
+import org.rudi.facet.apimaccess.api.registration.OAuth2DynamicClientRegistrationOperationAPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.stereotype.Component;
 
-
 @Component
-class ClientRegistererForAdmin extends ClientRegisterer<ClientAccessKey> {
+class ClientRegistererForAdmin extends ClientRegisterer<Application> {
 
 	private final String adminRegistrationId;
 	private final String adminClientId;
 	private final String adminClientSecret;
 
-	ClientRegistererForAdmin(
-			@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
+	ClientRegistererForAdmin(@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
 			@Value("${apimanager.oauth2.client.admin.registration.scopes}") String[] scopes,
 			@Value("${apimanager.oauth2.client.admin.registration.id}") String adminRegistrationId,
 			@Value("${apimanager.oauth2.client.admin.registration.client-id}") String adminClientId,
 			@Value("${apimanager.oauth2.client.admin.registration.client-secret}") String adminClientSecret,
-			ClientRegistrationV017OperationAPI clientRegistrationOperationAPI
-	) {
+			OAuth2DynamicClientRegistrationOperationAPI clientRegistrationOperationAPI) {
 		super(tokenUri, scopes, clientRegistrationOperationAPI, false);
 		this.adminRegistrationId = adminRegistrationId;
 		this.adminClientId = adminClientId;
@@ -31,18 +28,16 @@ class ClientRegistererForAdmin extends ClientRegisterer<ClientAccessKey> {
 	}
 
 	@Override
-	public ClientRegistration buildClientRegistration(String registrationId, ClientRegistrationResponse clientRegistrationResponse) {
-		return ClientRegistration.withRegistrationId(registrationId)
-				.tokenUri(tokenUri)
+	public ClientRegistration buildClientRegistration(String registrationId,
+			ClientRegistrationResponse clientRegistrationResponse) {
+		return ClientRegistration.withRegistrationId(registrationId).tokenUri(tokenUri)
 				.clientId(clientRegistrationResponse.getClientId())
 				.clientSecret(clientRegistrationResponse.getClientSecret())
-				.authorizationGrantType(AuthorizationGrantType.PASSWORD)
-				.scope(scopes)
-				.build();
+				.authorizationGrantType(AuthorizationGrantType.PASSWORD).scope(scopes).build();
 	}
 
 	public ClientRegistration buildClientRegistration() {
-		final var adminClientAccessKey = new ClientAccessKey();
+		final var adminClientAccessKey = new Application();
 		adminClientAccessKey.setClientId(adminClientId);
 		adminClientAccessKey.setClientSecret(adminClientSecret);
 		return buildClientRegistration(adminRegistrationId, adminClientAccessKey);

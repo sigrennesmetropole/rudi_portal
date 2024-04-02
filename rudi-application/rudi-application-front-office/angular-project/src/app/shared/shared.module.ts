@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTableModule} from '@angular/material/table';
 import {CoreModule} from '@core/core.module';
+import {NgbPopoverModule} from '@ng-bootstrap/ng-bootstrap';
+import {BotDetectCaptchaModule} from '@shared/angular-captcha/botdetect-captcha.module';
 import {ClipboardFieldComponent} from '@shared/clipboard-field/clipboard-field.component';
 import {ListOrganizationCardComponent} from '@shared/list-organization-card/list-organization-card.component';
 import {OrganizationCardComponent} from '@shared/organization-card/organization-card.component';
@@ -17,9 +19,9 @@ import {
 import {SearchBoxComponent} from '@shared/search-box/search-box.component';
 import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
 import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
+import {IsSectionDisplayedPipe} from '@shared/workflow-form/pipes/is-section-displayed.pipe';
+import {IsSectionOnlyHelpPipe} from '@shared/workflow-form/pipes/is-section-only-help.pipe';
 import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
-import {BotDetectCaptchaModule} from 'angular-captcha';
-import {PopoverModule} from 'ngx-smart-popover';
 import {AccountErrorBoxComponent} from './account-error-box/account-error-box.component';
 import {BackPaginationComponent} from './back-pagination/back-pagination.component';
 import {BannerButtonComponent} from './banner-button/banner-button.component';
@@ -74,6 +76,7 @@ import {ProjectMainInformationsComponent} from './project-main-informations/proj
 import {RadioListComponent} from './radio-list/radio-list.component';
 import {ResetPasswordErrorBoxComponent} from './reset-password-error-box/reset-password-error-box.component';
 import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
+import {RudiSwiperComponent} from './rudi-swiper/rudi-swiper.component';
 import {SearchAutocompleteComponent} from './search-autocomplete/search-autocomplete.component';
 import {SearchCountComponent} from './search-count/search-count.component';
 import {MaterialModules} from './shared.constant';
@@ -93,8 +96,6 @@ import {WorkflowFieldTextComponent} from './workflow-field-text/workflow-field-t
 import {WorkflowFieldComponent} from './workflow-field/workflow-field.component';
 import {WorkflowFormSubmitSuccessComponent} from './workflow-form-submit-success/workflow-form-submit-success.component';
 import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
-import { IsSectionDisplayedPipe } from '@shared/workflow-form/pipes/is-section-displayed.pipe';
-import { IsSectionOnlyHelpPipe } from '@shared/workflow-form/pipes/is-section-only-help.pipe';
 
 @NgModule({
     declarations:
@@ -118,7 +119,6 @@ import { IsSectionOnlyHelpPipe } from '@shared/workflow-form/pipes/is-section-on
             ProjectListComponent,
             ProjectCardComponent,
             ContactButtonComponent,
-            ProjectCardComponent,
             PopoverComponent,
             PageTitleComponent,
             LoaderComponent,
@@ -183,19 +183,21 @@ import { IsSectionOnlyHelpPipe } from '@shared/workflow-form/pipes/is-section-on
             DatasetTableComponent,
             ClipboardFieldComponent,
             IsSectionDisplayedPipe,
-            IsSectionOnlyHelpPipe
+            IsSectionOnlyHelpPipe,
+            RudiSwiperComponent
         ],
     imports: [
         CommonModule,
         ...MaterialModules,
         CoreModule,
-        PopoverModule,
         FilePickerModule,
         MatAutocompleteModule,
         BotDetectCaptchaModule,
-        MatTableModule
+        MatTableModule,
+        NgbPopoverModule
     ],
     exports: [
+        ProjectCardComponent,
         OrganizationCardComponent,
         ListOrganizationCardComponent,
         SearchBoxComponent,
@@ -268,7 +270,8 @@ import { IsSectionOnlyHelpPipe } from '@shared/workflow-form/pipes/is-section-on
         NewDatasetRequestTableComponent,
         RestrictedDatasetTableComponent,
         DeletionConfirmationPopinComponent,
-        ClipboardFieldComponent
+        ClipboardFieldComponent,
+        RudiSwiperComponent
     ],
     providers: [
         {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'},

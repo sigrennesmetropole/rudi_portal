@@ -1,6 +1,14 @@
 package org.rudi.facet.organization.helper;
 
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.organization.bean.Organization;
@@ -16,14 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -49,6 +50,28 @@ public class OrganizationHelper {
 
 	public OrganizationMember addMemberToOrganization(OrganizationMember member, UUID organizationUuid)
 			throws AddUserToOrganizationException {
+		var mono = organizationWebClient.post()
+				.uri(uriBuilder -> uriBuilder.path(organizationProperties.getMembersPath()).build(organizationUuid))
+				.body(Mono.just(member), OrganizationMember.class).retrieve().bodyToMono(OrganizationMember.class);
+		return MonoUtils.blockOrThrow(mono, AddUserToOrganizationException.class);
+	}
+
+	public OrganizationMember addMemberToOrganizationIfNotExists(OrganizationMember member, UUID organizationUuid)
+			throws AddUserToOrganizationException, GetOrganizationMembersException {
+
+		// Récupération des membres de l'organisation
+		final var members = getOrganizationMembers(organizationUuid);
+
+		// On vérifie si l'utilisateur est déjà présent avant d'essayer de l'ajouter
+		if(!members.isEmpty()){
+			Optional<OrganizationMember> existingMember = members
+					.stream()
+					.filter(m -> member.getUserUuid().equals(m.getUserUuid())).findFirst();
+
+			if(existingMember.isPresent()){
+				return existingMember.get();
+			}
+		}
 		var mono = organizationWebClient.post()
 				.uri(uriBuilder -> uriBuilder.path(organizationProperties.getMembersPath()).build(organizationUuid))
 				.body(Mono.just(member), OrganizationMember.class).retrieve().bodyToMono(OrganizationMember.class);

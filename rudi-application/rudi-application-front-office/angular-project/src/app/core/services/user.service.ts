@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {EMPTY, Observable, of} from 'rxjs';
-import {AclService, AddressType, EmailAddress, User} from '../../acl/acl-api';
-import {AuthenticationService} from './authentication.service';
-import {map, switchMap, take} from 'rxjs/operators';
-import {AuthenticationState} from './authentication/authentication-method';
 import {FormBuilder} from '@angular/forms';
+import {AclService, AddressType, EmailAddress, User} from 'micro_service_modules/acl/acl-api';
+import {EMPTY, Observable, of} from 'rxjs';
+import {map, switchMap, take} from 'rxjs/operators';
+import {AuthenticationService} from './authentication.service';
+import {AuthenticationState} from './authentication/authentication-method';
 
 @Injectable({
     providedIn: 'root'

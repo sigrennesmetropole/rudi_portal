@@ -2,6 +2,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
         "outDir": "./dist/out-tsc",
         "forceConsistentCasingInFileNames": true,
@@ -16,7 +17,7 @@
         "moduleResolution": "node",
         "importHelpers": true,
         "skipLibCheck": true, // obligé depuis openlayer 6.6 car les standards typescript ont changé mais pas été propagé dans toutes les deps
-        "target": "es2015",
+        "target": "es2022",
         "module": "es2020",
         "lib": [
             "es2018",
@@ -28,6 +29,7 @@
             "@app/*": ["./src/app/*"],
             "@shared/*": ["./src/app/shared/*"],
             "@core/*": ["./src/app/core/*"],
+            "@features/*": ["./src/app/features/*"]
         }
     },
     "angularCompilerOptions": {

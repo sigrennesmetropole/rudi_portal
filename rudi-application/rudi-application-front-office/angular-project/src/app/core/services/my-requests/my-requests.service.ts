@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
+import {LinkedDatasetSearchCriteria, ProjektService} from 'micro_service_modules/projekt/projekt-api';
+import {NewDatasetRequestSearchCriteria, PagedLinkedDatasetList} from 'micro_service_modules/projekt/projekt-model';
+import {SelfdataInformationRequestSearchCriteria, SelfdataService} from 'micro_service_modules/selfdata/selfdata-api';
 import {Observable} from 'rxjs';
-import {NewDatasetRequestSearchCriteria, PagedLinkedDatasetList} from '../../../projekt/projekt-model';
-import {LinkedDatasetSearchCriteria, ProjektService} from '../../../projekt/projekt-api';
-import {SelfdataInformationRequestSearchCriteria, SelfdataService} from '../../../selfdata/selfdata-api';
 
 @Injectable({
     providedIn: 'root'

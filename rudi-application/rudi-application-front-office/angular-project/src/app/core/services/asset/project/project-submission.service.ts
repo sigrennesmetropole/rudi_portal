@@ -1,8 +1,42 @@
 import {Injectable} from '@angular/core';
-import {ProjektMetierService} from './projekt-metier.service';
+import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {
+    SelectProjectDialogComponent,
+    SelectProjectDialogData
+} from '@features/data-set/components/select-project-dialog/select-project-dialog.component';
+import {DialogClosedData} from '@features/data-set/models/dialog-closed-data';
+import {LinkedDatasetFromProject} from '@features/data-set/models/linked-dataset-from-project';
+import {AddDataSetDialogData} from '@features/project/components/add-data-set-dialog/add-data-set-dialog-data';
+import {AddDataSetDialogComponent} from '@features/project/components/add-data-set-dialog/add-data-set-dialog.component';
+import {
+    EditNewDataSetDialogComponent,
+    NewDataSetDialogData
+} from '@features/project/components/edit-new-data-set-dialog/edit-new-data-set-dialog.component';
+import {
+    RequestDetailsDialogComponent,
+    RequestDetailsDialogData
+} from '@features/project/components/request-details-dialog/request-details-dialog.component';
+import {
+    SuccessProjectCreationDialogComponent
+} from '@features/project/components/success-project-creation-dialog/success-project-creation-dialog.component';
+import {DataRequestItem} from '@features/project/model/data-request-item';
+import {ProjectDatasetItem} from '@features/project/model/project-dataset-item';
+import {ProjectDatasetPictoType} from '@features/project/model/project-dataset-picto-type';
+import {UpdateAction} from '@features/project/model/upate-action';
+import {consistentPeriodValidator} from '@core/validators/consistent-period-validator';
+import {TranslateService} from '@ngx-translate/core';
+import {RequestDetails} from '@shared/models/request-details';
+import {TitleIconType} from '@shared/models/title-icon-type';
+import {Level} from '@shared/notification-template/notification-template.component';
 import {RadioListItem} from '@shared/radio-list/radio-list-item';
-import {forkJoin, Observable, of} from 'rxjs';
-import {map, mapTo, switchMap} from 'rxjs/operators';
+import {AccessConditionConfidentiality} from '@shared/utils/access-condition-confidentiality';
+import {ActionFallbackUtils} from '@shared/utils/action-fallback-utils';
+import {MetadataUtils} from '@shared/utils/metadata-utils';
+import {User} from 'micro_service_modules/acl/acl-api';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {DatasetConfidentiality, ReutilisationStatus} from 'micro_service_modules/projekt/projekt-api';
+import {Task} from 'micro_service_modules/projekt/projekt-api/model/task';
 import {
     Confidentiality,
     LinkedDataset,
@@ -14,56 +48,22 @@ import {
     Support,
     TargetAudience,
     TerritorialScale
-} from '@app/projekt/projekt-model';
-import {TranslateService} from '@ngx-translate/core';
-import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {UserService} from '../../user.service';
-import {User} from '@app/acl/acl-api';
-import {Metadata} from '@app/api-kaccess';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AddDataSetDialogComponent} from '@app/project/components/add-data-set-dialog/add-data-set-dialog.component';
-import {Level} from '@shared/notification-template/notification-template.component';
-import {SnackBarService} from '../../snack-bar.service';
-import {KonsultMetierService} from '../../konsult-metier.service';
-import {
-    SuccessProjectCreationDialogComponent
-} from '@app/project/components/success-project-creation-dialog/success-project-creation-dialog.component';
-import {ProjectDatasetItem} from '@app/project/model/project-dataset-item';
-import {ProjectDatasetPictoType} from '@app/project/model/project-dataset-picto-type';
-import {
-    EditNewDataSetDialogComponent,
-    NewDataSetDialogData
-} from '@app/project/components/edit-new-data-set-dialog/edit-new-data-set-dialog.component';
-import {DataRequestItem} from '@app/project/model/data-request-item';
-import {AddDataSetDialogData} from '@app/project/components/add-data-set-dialog/add-data-set-dialog-data';
-import {RequestDetails} from '@shared/models/request-details';
-import {
-    RequestDetailsDialogComponent,
-    RequestDetailsDialogData
-} from '@app/project/components/request-details-dialog/request-details-dialog.component';
-import {TitleIconType} from '@shared/models/title-icon-type';
-import {UpdateAction} from '@app/project/model/upate-action';
-import {DefaultMatDialogConfig} from '../../default-mat-dialog-config';
-import {
-    SelectProjectDialogComponent,
-    SelectProjectDialogData
-} from '@app/data-set/components/select-project-dialog/select-project-dialog.component';
-import {DialogClosedData} from '@app/data-set/models/dialog-closed-data';
-import {LinkedDatasetFromProject} from '@app/data-set/models/linked-dataset-from-project';
-import {Organization} from '@app/strukture/strukture-model';
-import {OrganizationMetierService} from '../../organization/organization-metier.service';
-import {Task} from 'src/app/projekt/projekt-api/model/task';
+} from 'micro_service_modules/projekt/projekt-model';
+import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {Moment} from 'moment';
-import {consistentPeriodValidator} from '@core/validators/consistent-period-validator';
-import {ProjectTaskMetierService} from '../../tasks/projekt/project-task-metier.service';
-import {LinkedDatasetTaskMetierService} from '../../tasks/projekt/linked-dataset-task-metier.service';
-import {ActionFallbackUtils} from '@shared/utils/action-fallback-utils';
-import {AccessStatusFiltersType} from '../../filters/access-status-filters-type';
-import {MetadataUtils} from '@shared/utils/metadata-utils';
-import {AccessConditionConfidentiality} from '@shared/utils/access-condition-confidentiality';
-import {NewDatasetRequestTaskMetierService} from '../../tasks/projekt/new-dataset-request-task-metier.service';
-import {DatasetConfidentiality, ReutilisationStatus} from '@app/projekt/projekt-api';
-import { ObjectType } from '../../tasks/object-type.enum';
+import {forkJoin, Observable, of} from 'rxjs';
+import {map, mapTo, switchMap} from 'rxjs/operators';
+import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
+import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
+import {KonsultMetierService} from '@core/services/konsult-metier.service';
+import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {ObjectType} from '@core/services/tasks/object-type.enum';
+import {LinkedDatasetTaskMetierService} from '@core/services/tasks/projekt/linked-dataset-task-metier.service';
+import {NewDatasetRequestTaskMetierService} from '@core/services/tasks/projekt/new-dataset-request-task-metier.service';
+import {ProjectTaskMetierService} from '@core/services/tasks/projekt/project-task-metier.service';
+import {UserService} from '@core/services/user.service';
+import {ProjektMetierService} from './projekt-metier.service';
 
 /**
  * Liste des codes de niveaux de restriction connus
@@ -385,7 +385,7 @@ export class ProjectSubmissionService {
      */
     public metadataToProjectDatasetItem(metadata: Metadata): ProjectDatasetItem {
         let iconTitle: TitleIconType;
-        let accessConditionConfidentiality = MetadataUtils.getAccessConditionConfidentiality(metadata);
+        const accessConditionConfidentiality = MetadataUtils.getAccessConditionConfidentiality(metadata);
         if (accessConditionConfidentiality === AccessConditionConfidentiality.Restricted) {
             iconTitle = RESTRICTED_DATASET_ICON;
         }
@@ -661,7 +661,7 @@ export class ProjectSubmissionService {
             return of(null);
           });
 
-          return forkJoin(link$);
+        return forkJoin(link$);
     }
 
     /**

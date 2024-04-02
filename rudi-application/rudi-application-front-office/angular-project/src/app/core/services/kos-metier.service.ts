@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {SimpleSkosConcept, SkosConceptsService} from '../../kos/kos-api';
-import {LanguageService} from '../../i18n/language.service';
+import {LanguageService} from '@core/i18n/language.service';
+import {PageResultUtils} from '@shared/utils/page-result-utils';
+import {SimpleSkosConcept, SkosConceptsService} from 'micro_service_modules/kos/kos-api';
 import {EMPTY, Observable, of} from 'rxjs';
 import {defaultIfEmpty, switchMap} from 'rxjs/operators';
-import {PageResultUtils} from '../../shared/utils/page-result-utils';
 
 const THEMES_AND_KEYWORDS_SCHEME_CODE = 'scheme-keyword';
 

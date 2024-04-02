@@ -22,6 +22,7 @@ import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.gateway.handlers.Utils;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,22 +42,22 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 	private static final String BINARY_CONTENT_TYPE = "application/octet-stream";
 
 	/**
-	 * Réponse renvoyée par {@link #handleRequest(MessageContext)} ou {@link #handleResponse(MessageContext)}
-	 * pour indiquer qu'on peut continuer le traitement par le(s) Handler(s).
+	 * Réponse renvoyée par {@link #handleRequest(MessageContext)} ou {@link #handleResponse(MessageContext)} pour indiquer qu'on peut continuer le
+	 * traitement par le(s) Handler(s).
 	 */
 	private static final boolean CONTINUE = true;
 
 	/**
-	 * Réponse renvoyée par {@link #handleRequest(MessageContext)} ou {@link #handleResponse(MessageContext)}
-	 * pour indiquer qu'on ne doit pas continuer le traitement par le(s) Handler(s). En cas d'erreurs, par exemple.
+	 * Réponse renvoyée par {@link #handleRequest(MessageContext)} ou {@link #handleResponse(MessageContext)} pour indiquer qu'on ne doit pas continuer le
+	 * traitement par le(s) Handler(s). En cas d'erreurs, par exemple.
 	 */
 	private static final boolean ABORT = true;
 	protected static final String DEFAULT_ERROR_MESSAGE_PREFIX = "Failed to handle response for API: ";
 	private APIManager fixedAPIManager;
 
 	/**
-	 * @return true si on doit continuer l'exécution du handler
-	 * Si on renvoie false dans handleRequest et true dans handleResponse, WSO2 renvoie un HTTP 202 sans body
+	 * @return true si on doit continuer l'exécution du handler Si on renvoie false dans handleRequest et true dans handleResponse, WSO2 renvoie un HTTP
+	 *         202 sans body
 	 */
 	@Override
 	public boolean handleRequest(MessageContext messageContext) {
@@ -65,7 +66,8 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 		try {
 			if (engageRequest(messageContext)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("EncryptedHandler engaged for" + messageContext.getProperty(RESTConstants.REST_API_CONTEXT));
+					LOGGER.debug("EncryptedHandler engaged for"
+							+ messageContext.getProperty(RESTConstants.REST_API_CONTEXT));
 				}
 				doHandleRequest(messageContext);
 			}
@@ -92,8 +94,8 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 	}
 
 	/**
-	 * @return true si on doit continuer l'exécution du handler
-	 * Si on renvoie false, il faut appeler {@link #onError(MessageContext, int, String)} sinon WSO2 ne transmet plus la réponse et laisse tomber le client en timeout (socket hang up)
+	 * @return true si on doit continuer l'exécution du handler Si on renvoie false, il faut appeler {@link #onError(MessageContext, int, String)} sinon
+	 *         WSO2 ne transmet plus la réponse et laisse tomber le client en timeout (socket hang up)
 	 */
 	@Override
 	public boolean handleResponse(MessageContext messageContext) {
@@ -102,7 +104,8 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 		try {
 			if (engageResponse(messageContext)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("EncryptedHandler engaged for" + messageContext.getProperty(RESTConstants.REST_API_CONTEXT));
+					LOGGER.debug("EncryptedHandler engaged for"
+							+ messageContext.getProperty(RESTConstants.REST_API_CONTEXT));
 				}
 				doHandleResponse(messageContext);
 			}
@@ -130,9 +133,7 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 
 	protected void replaceBody(MessageContext messageContext, BodyReplacer bodyReplacer,
 			Function<MessageContext, String> contentTypeComputer,
-			@Nullable
-					Function<MessageContext, String> contentDispositionComputer
-	) throws Exception {
+			@Nullable Function<MessageContext, String> contentDispositionComputer) throws Exception {
 
 		// On sauvegarde le Content-Type original
 		final var originalContentType = getContentType(messageContext);
@@ -210,7 +211,8 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 	protected API getEngagedApi(MessageContext messageContext) throws APIManagementException {
 		final var apiIdentifier = createAPIIdentifier(messageContext);
 		final var apiManager = getAPIManager();
-		return apiManager.getAPI(apiIdentifier);
+		return apiManager.getLightweightAPIByUUID(apiIdentifier.getUUID(),
+				MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
 	}
 
 	/**
@@ -257,9 +259,10 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void logMessageContextProperties(MessageContext messageContext) {
 		if (LOGGER.isDebugEnabled()) {
-			//noinspection unchecked : la classe MessageContext n'est pas modifiable
+			// noinspection unchecked : la classe MessageContext n'est pas modifiable
 			for (final var key : (Iterable<String>) messageContext.getPropertyKeySet()) {
 				Object value = messageContext.getProperty(key);
 				if (!key.equals(OPEN_API_STRING_PROPERTY_KEY) && !key.equals(OPEN_API_OBJECT_PROPERTY_KEY)) {

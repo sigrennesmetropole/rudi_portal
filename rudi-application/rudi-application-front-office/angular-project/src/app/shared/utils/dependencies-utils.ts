@@ -1,6 +1,6 @@
 import {forkJoin, Observable, ObservedValueOf, of, pipe, throwError, UnaryFunction} from 'rxjs';
 import {map, mapTo, switchMap} from 'rxjs/operators';
-import {OwnerType} from '../../projekt/projekt-model';
+import {OwnerType} from 'micro_service_modules/projekt/projekt-model';
 
 /**
  * Récupérateur de dépendance à injecter dans un champ donné d'un objet

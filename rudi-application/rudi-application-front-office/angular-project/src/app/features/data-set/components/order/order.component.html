@@ -1,0 +1,35 @@
+<div class="pointer d-flex justify-content-end sort-component">
+
+    <!--Choix du tri-->
+    <button (onMenuClose)="toggleMenu()"
+            (onMenuOpen)="toggleMenu()"
+            [matMenuTriggerFor]="sortMenu"
+            class="button rudi-simple-menu-button"
+            disableRipple="true"
+            mat-button
+    >
+        <ng-container *ngIf="selectedItems?.length">
+            {{'sortBox.orderedBy'|translate|uppercase}} :
+            <span class="selected aligned">
+                {{ selectedItems[0].name }}
+            </span>
+        </ng-container>
+        <ng-container *ngIf="!selectedItems || !selectedItems.length">
+            {{'sortBox.sort'|translate|uppercase}}
+        </ng-container>
+        <mat-icon iconPositionEnd class="rudi-select-arrow">
+            <ng-container *ngIf="!menuIsOpened">keyboard_arrow_down</ng-container>
+            <ng-container *ngIf="menuIsOpened">keyboard_arrow_up</ng-container>
+        </mat-icon>
+        <mat-menu #sortMenu="matMenu" class="rudi-sort-menu" xPosition="after">
+            <div class="rudi-select-panel" fxLayout="column">
+                <button (click)="order = orderItem.value" *ngFor="let orderItem of items"
+                        [ngClass]="{selected: isSelected(orderItem)}"
+                        mat-menu-item>
+                    {{orderItem.name}}
+                </button>
+            </div>
+        </mat-menu>
+    </button>
+
+</div>

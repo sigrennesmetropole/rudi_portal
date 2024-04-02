@@ -19,7 +19,7 @@
 
         <!-- Title du JDD -->
         <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef class="table-header second-row text-left">
+            <th mat-header-cell *matHeaderCellDef class="table-header second-row text-start">
                 {{'personalSpace.project.tabs.datasets.openDatasets.columnDataset'|translate}}
             </th>
             <td mat-cell *matCellDef="let element" class="titre-jdd">
@@ -28,15 +28,19 @@
                     [organizationName]="element?.organization_name"
                     [organizationId]="element?.datasetOrganizationId"
                     [resourceTitle]="element?.datasetTitle"
-                    [popover]="myPopover"
+                    [ngbPopover]="myPopover"
+                    placement="bottom"
+                    triggers="mouseenter:mouseleave"
+                    popoverClass="popover-content"
+                    [autoClose]="true"
                 ></app-dataset-infos>
-                <popover-content #myPopover placement="bottom" [closeOnClickOutside]="true">
+                <ng-template #myPopover>
                     <div class="popover-content-child">
                         <div class="popover-text-style">
                             <p class="firstParagraph">{{element?.datasetTitle}}</p>
                         </div>
                     </div>
-                </popover-content>
+                </ng-template>
 
             </td>
         </ng-container>
@@ -55,7 +59,7 @@
         <ng-container matColumnDef="delete-action">
             <th mat-header-cell *matHeaderCellDef class="table-header">
             </th>
-            <td mat-cell *matCellDef="let element" class="text-right">
+            <td mat-cell *matCellDef="let element" class="text-end">
                 <button
                     mat-icon-button
                     class="delete-action"
@@ -71,7 +75,7 @@
         <ng-container matColumnDef="comment-action">
             <th mat-header-cell *matHeaderCellDef class="table-header">
             </th>
-            <td mat-cell *matCellDef="let element" class="text-right">
+            <td mat-cell *matCellDef="let element" class="text-end">
                 <button
                     mat-icon-button
                     class="comment-action"

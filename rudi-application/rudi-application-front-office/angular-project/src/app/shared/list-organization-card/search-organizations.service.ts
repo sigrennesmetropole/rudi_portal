@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {MetadataFacets} from '@app/api-kaccess';
-import {KonsultService} from '@app/konsult/konsult-api';
-import {Order} from '@app/organization/components/order/type';
-import {ProjektService} from '@app/projekt/projekt-api';
-import {ProjectByOwner} from '@app/projekt/projekt-model';
-import {OrganizationBean, OrganizationService, PagedOrganizationBeanList} from '@app/strukture/api-strukture';
+import {Order} from '@features/organization/components/order/type';
+import {MetadataFacets} from 'micro_service_modules/api-kaccess';
+import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {ProjektService} from 'micro_service_modules/projekt/projekt-api';
+import {ProjectByOwner} from 'micro_service_modules/projekt/projekt-model';
+import {OrganizationBean, OrganizationService, PagedOrganizationBeanList} from 'micro_service_modules/strukture/api-strukture';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ export interface SearchOrganisationsRequest {
     sortOrder?: Order;
 }
 
-export const searchDefaultPageSize: number = 12;
+export const searchDefaultPageSize = 12;
 const searchDefaultOrder: Order = '-openingDate';
 
 @Injectable({
@@ -59,10 +59,8 @@ export class SearchOrganizationsService {
             this.currentRequest.itemPerPage = itemPerPage;
         }
         this.subscription = new Subscription();
-        this.subscription
-            .add(this.initCurrentPageSubscription())
-            .add(this.initCurrentSortOrderSubscription())
-        ;
+        this.subscription.add(this.initCurrentPageSubscription());
+        this.subscription.add(this.initCurrentSortOrderSubscription());
     }
 
     complete(): void {

@@ -8,9 +8,9 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import {TabContentDirective} from '../tab-content.directive';
 import {TabComponent} from '../tab/tab.component';
 import {TabsLayoutDirective} from '../tabs-layout.directive';
-import {TabContentDirective} from '../tab-content.directive';
 import {WorkInProgressComponent} from '../work-in-progress/work-in-progress.component';
 
 @Component({
@@ -44,7 +44,7 @@ export class TabsComponent implements AfterViewInit {
             .find((tab) => tab.active);
     }
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver,) {
+    constructor(private componentFactoryResolver: ComponentFactoryResolver, ) {
     }
 
     private static displayTabInto(tab: TabComponent, viewContainer: ViewContainerRef): void {

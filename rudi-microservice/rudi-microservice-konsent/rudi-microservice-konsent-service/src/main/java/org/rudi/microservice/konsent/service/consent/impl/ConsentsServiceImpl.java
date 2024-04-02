@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.persistence.NoResultException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.util.UtilPageable;
@@ -59,11 +60,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 /**
  * @author FNI18300
@@ -123,11 +122,8 @@ public class ConsentsServiceImpl implements ConsentsService {
 	@Override
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public Consent createConsent(UUID treatmentVersionUuid) throws AppServiceException {
-		// Vérifications utiles
-		val consentor = aclHelper.getAuthenticatedUser();
-		if (consentor == null) {
-			throw new AppServiceUnauthorizedException("Consenteur non connecté");
-		}
+		val consentor = aclHelper.getAuthenticatedUser(); // Ne peut pas être null
+
 		TreatmentEntity treatmentEntity;
 		try {
 			treatmentEntity = treatmentsCustomDao.getTreatmentByVersionUuid(treatmentVersionUuid);
@@ -175,10 +171,8 @@ public class ConsentsServiceImpl implements ConsentsService {
 		if (searchCriteria == null) {
 			searchCriteria = new ConsentSearchCriteria();
 		}
-		val userUuid = aclHelper.getAuthenticatedUserUuid();
-		if (userUuid == null) {
-			throw new AppServiceUnauthorizedException("Aucun utilisateur connecté");
-		}
+		val userUuid = aclHelper.getAuthenticatedUserUuid();// ne peut pas être null
+
 		val myOrganizationsUuids = organizationHelper.getMyOrganizationsUuids(userUuid);
 		searchCriteria.setMyOrganizationsUuids(myOrganizationsUuids);
 		searchCriteria.setUserUuids(List.of(userUuid));
@@ -297,7 +291,7 @@ public class ConsentsServiceImpl implements ConsentsService {
 	}
 
 	@Override
-	public void checkConsentValidities(List<UUID> consentUuids) throws AppServiceException {
+	public void checkConsentValidities(List<UUID> consentUuids) {
 		if (CollectionUtils.isNotEmpty(consentUuids)) {
 			for (UUID uuid : consentUuids) {
 				ConsentEntity consent = consentDao.findByUuid(uuid);
@@ -314,11 +308,12 @@ public class ConsentsServiceImpl implements ConsentsService {
 	}
 
 	@Override
-	public void checkRevokeValidities(List<UUID> consentUuids) throws AppServiceException {
+	public void checkRevokeValidities(List<UUID> consentUuids) {
 		if (CollectionUtils.isNotEmpty(consentUuids)) {
 			for (UUID uuid : consentUuids) {
 				ConsentEntity consent = consentDao.findByUuid(uuid);
-				if (consent.getRevokeHash() != null) {
+
+				if (consent != null && consent.getRevokeHash() != null) {
 					try {
 						if (!checkRevokeHash(consent)) {
 							LOGGER_CHECKER.error("Consent ({}) has invalid revoke hash", uuid);

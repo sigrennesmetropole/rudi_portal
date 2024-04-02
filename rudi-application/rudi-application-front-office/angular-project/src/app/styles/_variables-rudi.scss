@@ -1,7 +1,7 @@
 $icon: 32px;
 
 $header-index: 2;
-$app-header-height: 148px;
+$app-header-height: 100px;
 $app-footer-height: 231px;
 $content-margin-top: 106px;
 $bloc-min-width: 360px;
@@ -10,11 +10,10 @@ $bloc-space-width: 16px;
  ********************************** Screen size ***********************************************
  **********************************************************************************************/
 // Mini smarphones
-$screen-sm-min: 360px;
-$screen-sm-max: 460px;
+$screen-xs-max: 459px;
 
 // smarphones modernes
-$screen-sm-min: 360px;
+$screen-sm-min: 460px;
 $screen-sm-max: 767px;
 $card-height-sm: 200px;
 

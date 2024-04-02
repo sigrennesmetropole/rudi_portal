@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {BreakpointObserverService, MediaSize} from '../../core/services/breakpoint-observer.service';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 
 /**
  * Le error-box est une div générique capable d'afficher un message d'erreur et collé un message cliquable qui fait quelque-chose

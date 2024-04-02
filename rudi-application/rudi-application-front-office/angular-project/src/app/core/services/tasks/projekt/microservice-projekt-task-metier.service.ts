@@ -1,7 +1,7 @@
-import {TaskMetierService} from '../task-metier.service';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {TaskService as ProjektTaskService} from 'micro_service_modules/projekt/projekt-api';
 import {Observable} from 'rxjs';
-import {Task} from '../../../../api-bpmn';
-import {TaskService as ProjektTaskService} from '../../../../projekt/projekt-api';
+import {TaskMetierService} from '../task-metier.service';
 import {ProjektTaskSearchCriteria} from './projekt-task-search-criteria.interface';
 
 export abstract class MicroserviceProjektTaskMetierService<T> extends TaskMetierService<T> {

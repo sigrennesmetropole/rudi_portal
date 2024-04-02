@@ -1,5 +1,13 @@
 package org.rudi.facet.kaccess.helper.search.mapper;
 
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.DOI;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.GDPR_SENSITIVE;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.GLOBAL_ID;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.LOCAL_ID;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.RESTRICTED_ACCESS;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.TEMPORAL_SPREAD_END_DATE;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.TEMPORAL_SPREAD_START_DATE;
+
 import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
@@ -22,13 +30,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.DOI;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.GDPR_SENSITIVE;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.GLOBAL_ID;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.LOCAL_ID;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.RESTRICTED_ACCESS;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.TEMPORAL_SPREAD_END_DATE;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.TEMPORAL_SPREAD_START_DATE;
 
 /**
  * Mapper qui construit la requete SOLR pour le dataverse à partir des critères de recherche définis dans DatasetSearchCriteria.
@@ -67,10 +68,10 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 		// tri
 		final var sortParam = extractSortParams(datasetSearchCriteria);
 
-		return SearchParams.builder().q(getQuery(datasetSearchCriteria))
-				.type(EnumSet.of(SearchType.DATASET)).subtree(rudiAlias).start(datasetSearchCriteria.getOffset())
-				.perPage(datasetSearchCriteria.getLimit()).filterQuery(createFilterQueryFrom(datasetSearchCriteria))
-				.sortBy(sortParam.field).sortOrder(sortParam.order.stringValue).showFacets(withFacets).build();
+		return SearchParams.builder().q(getQuery(datasetSearchCriteria)).type(EnumSet.of(SearchType.DATASET))
+				.subtree(rudiAlias).start(datasetSearchCriteria.getOffset()).perPage(datasetSearchCriteria.getLimit())
+				.filterQuery(createFilterQueryFrom(datasetSearchCriteria)).sortBy(sortParam.field)
+				.sortOrder(sortParam.order.stringValue).showFacets(withFacets).build();
 	}
 
 	@Nonnull
@@ -92,10 +93,7 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 		if (CollectionUtils.isEmpty(keywords)) {
 			throw new IllegalArgumentException("Missing keywords criterion whereas orderByScoreOfKeywords is true");
 		}
-		return new FilterQuery()
-				.add(RudiMetadataField.KEYWORDS, keywords)
-				.addAnyFieldWithAnyValue()
-				.joinWithOr();
+		return new FilterQuery().add(RudiMetadataField.KEYWORDS, keywords).addAnyFieldWithAnyValue().joinWithOr();
 	}
 
 	@Nonnull
@@ -131,7 +129,8 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 	private FilterQuery createFilterQueryFrom(DatasetSearchCriteria datasetSearchCriteria) {
 		val fqFilter = new FilterQuery().withExactMatch();
 
-		if (!CollectionUtils.isEmpty(datasetSearchCriteria.getKeywords()) && BooleanUtils.isNotTrue(datasetSearchCriteria.getOrderByScoreOfKeywords())) {
+		if (!CollectionUtils.isEmpty(datasetSearchCriteria.getKeywords())
+				&& BooleanUtils.isNotTrue(datasetSearchCriteria.getOrderByScoreOfKeywords())) {
 			fqFilter.add(RudiMetadataField.KEYWORDS.getIndex(), datasetSearchCriteria.getKeywords());
 		}
 
@@ -213,7 +212,7 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 		return extractSortParams(order);
 	}
 
-	private void createQueryFilterGlobalIds(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter){
+	private void createQueryFilterGlobalIds(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter) {
 		final var globalIds = datasetSearchCriteria.getGlobalIds();
 		if (globalIds != null) {
 			if (globalIds.size() == 1) {
@@ -224,25 +223,25 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 		}
 	}
 
-	private void createQueryFilterRestrictedAccess(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter){
+	private void createQueryFilterRestrictedAccess(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter) {
 		final Boolean restrictedAccess = datasetSearchCriteria.getRestrictedAccess();
 		if (Boolean.TRUE.equals(restrictedAccess)) {
 			// Dans le cas d'un jdd restreint
 			fqFilter.add(RESTRICTED_ACCESS, true);
 			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
-		} else if(Boolean.FALSE.equals(restrictedAccess)){
+		} else if (Boolean.FALSE.equals(restrictedAccess)) {
 			// Dans le cas d'un jdd Ouvert
 			fqFilter.add(RESTRICTED_ACCESS, Boolean.TRUE, true);
 		}
 	}
 
-	private void createQueryFilterGDPRSensitive(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter){
+	private void createQueryFilterGDPRSensitive(DatasetSearchCriteria datasetSearchCriteria, FilterQuery fqFilter) {
 		final Boolean gdprSensitive = datasetSearchCriteria.getGdprSensitive();
 		if (Boolean.TRUE.equals(gdprSensitive)) {
 			// Dans le cas d'un jdd selfdata
 			fqFilter.add(GDPR_SENSITIVE, true);
 			fqFilter.add(RESTRICTED_ACCESS, true);
-		} else if(Boolean.FALSE.equals(gdprSensitive)){
+		} else if (Boolean.FALSE.equals(gdprSensitive)) {
 			// Dans le cas d'un jdd qui est tout sauf selfdata
 			fqFilter.add(GDPR_SENSITIVE, Boolean.TRUE, true);
 		}

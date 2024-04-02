@@ -1,0 +1,60 @@
+@import "colors";
+@import "variables-rudi";
+@import "common-style";
+
+
+.p-large {
+    padding: 150px 80px 30px 80px !important;
+}
+
+.strong-p {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-count {
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.data-set-full-height {
+    height: calc(100% - 170px);
+}
+
+.mat-sidenav {
+    margin-top: 106px;
+    width: 100%;
+}
+
+.mat-drawer-content {
+    overflow-x: hidden;
+}
+
+.rudi-sidenav-container-filter {
+    font-size: 15px;
+    padding: 20px 0 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-top: 1px solid grey;
+    color: $primary-text;
+
+    .mat-badge-content {
+        background: $focus;
+        top: 20px !important;
+        font-size: 14px;
+        font-weight: normal;
+        width: 30px;
+        height: 30px;
+        left: -20px;
+    }
+
+}
+
+.rudi-sidenav-container-footer {
+    display: flex;
+    justify-content: center;
+}

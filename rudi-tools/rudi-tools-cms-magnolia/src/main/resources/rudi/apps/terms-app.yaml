@@ -1,0 +1,21 @@
+!content-type:term
+name: terms-app
+icon: icon-content-app
+permissions:
+  roles:
+    editors: terms_editor
+    publishers: terms_editor
+subApps:
+  detail:
+    form:
+      properties:
+        link:
+          rows: 1
+          maxLength: 32
+          required: true
+        title:
+          rows: 1
+          maxLength: 256
+          required: true
+        body:
+          rows: 20

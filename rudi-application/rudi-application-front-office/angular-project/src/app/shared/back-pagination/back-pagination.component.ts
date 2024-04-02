@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BreakpointObserverService, MediaSize, NgClassObject} from '../../core/services/breakpoint-observer.service';
+import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
 import {BackPaginationSort} from './back-pagination-sort';
 import {SortTableInterface} from './sort-table-interface';
 
@@ -28,7 +28,7 @@ export class BackPaginationComponent {
     readonly maxPageMobile = 5;
 
     constructor(
-        private readonly breakpointObserver: BreakpointObserverService,) {
+        private readonly breakpointObserver: BreakpointObserverService, ) {
         this.mediaSize = this.breakpointObserver.getMediaSize();
     }
 

@@ -1,0 +1,100 @@
+@import "colors";
+@import "common-style";
+
+.search-box-container {
+
+    /* clears the ‘X’ from Chrome */
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+        display: none;
+    }
+    .search-box-title {
+        color: $primary-color;
+        height: 56px;
+
+        span {
+            color: $accent-color;
+            font-weight: normal;
+        }
+
+    }
+
+    .search-input {
+        border-radius: 6px;
+        border: 0.8px solid $blocks-and-menus-outline;
+        height: 48px;
+        margin: 22px 25px 42px 15px;
+    }
+
+    .search-zone {
+        margin: auto;
+        position: relative;
+
+        .search-box {
+            margin-bottom: 30px;
+
+            &-clear {
+                position: absolute;
+                color: darkgrey;
+                padding-right: 10px;
+            }
+
+            &-icon {
+                color: $primary-color;
+                position: absolute;
+                margin-left: 16px;
+            }
+
+            &-close-icon {
+                position: absolute;
+            }
+
+            .search-box-filter {
+                float: right;
+                color: darkgrey;
+            }
+        }
+
+        .form-control {
+            padding: 15px 46px 13px 46px;
+            border-radius: 6px;
+            height: 48px;
+            color: black;
+        }
+    }
+
+    input::placeholder {
+        color: $primary-text-light !important;
+    }
+
+    .text-indent {
+        text-indent: 10px;
+    }
+
+    .search-size {
+        width: 600px;
+    }
+
+    .search-box {
+        right: 0;
+        top: 12px;
+    }
+}
+
+::ng-deep {
+    .mat-checkbox-inner-container-no-side-margin {
+        margin-bottom: 6px !important;
+    }
+}
+
+.tabulatedData {
+    font-weight: 600;
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+
+.btn-outline {
+    outline: none;
+}

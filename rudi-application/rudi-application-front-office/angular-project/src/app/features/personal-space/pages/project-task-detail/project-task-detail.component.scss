@@ -1,0 +1,64 @@
+@import "colors";
+@import "variables-rudi";
+@import "common-style";
+@import "bootstrap/scss/bootstrap-grid";
+
+.bandeau {
+    padding-top: 38px;
+}
+
+.project-header {
+    display: flex;
+    margin-left: 80px;
+    padding-top: 20px;
+}
+
+.title {
+    font-weight: bold;
+    display: block;
+    margin: 10px auto;
+}
+
+.section-title {
+    @extend .title;
+    font-size: 18px;
+}
+
+.section-sub-title {
+    @extend .title;
+    font-size: 15px;
+}
+
+.project-section {
+    border: 1px solid $self-data-border-color;
+    border-radius: 7px;
+    box-sizing: border-box;
+    padding: 15px 30px;
+    margin-top: 15px;
+}
+
+.project-details-container {
+    display: flex;
+
+    @extend .flex-sm-wrap;
+    @extend .flex-lg-nowrap;
+    @extend .align-items-md-start;
+    @extend .justify-content-md-between;
+
+    .project-metadata-container {
+        @extend .col-sm-12;
+        @extend .col-lg-8;
+        @extend .pe-lg-4;
+        padding: 0;
+
+        .project-metadata {
+            @extend .project-section;
+        }
+    }
+
+    .project-owner {
+        @extend .col-sm-12;
+        @extend .col-lg-4;
+        @extend .project-section;
+    }
+}

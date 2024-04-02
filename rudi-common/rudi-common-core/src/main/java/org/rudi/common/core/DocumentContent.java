@@ -5,11 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.net.URLConnection;
 
 import javax.annotation.Nonnull;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -98,6 +100,29 @@ public class DocumentContent {
 			documentContent = new DocumentContent(fileName, mimeType, tmpFile);
 		}
 		return documentContent;
+	}
+
+	/**
+	 * Permet de transformer une resource en Document content via son path
+	 *
+	 * @param path Le chemin vers le fichier que l'on souhaite transformer en DocumentContent
+	 * @return un document content contenant le fichier au path indiqué.
+	 * @throws IOException en cas de problème avec la lecture du fichier
+	 */
+	public static DocumentContent fromResourcePath(String path) throws IOException {
+		URL url = Thread.currentThread().getContextClassLoader().getResource( path);
+
+		try(InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream( path);){
+			String file = url.getFile();
+			String extension = FilenameUtils.getExtension(file);
+			String mimeType = URLConnection.guessContentTypeFromName(file);
+			String fileName = FilenameUtils.getName(file);
+
+			File tmpFile = File.createTempFile(TEMP_FILE_PREFIX, "."+extension);
+			FileUtils.copyInputStreamToFile(inputStream, tmpFile);
+			return new DocumentContent(fileName, mimeType, tmpFile);
+		}
+
 	}
 
 	/**

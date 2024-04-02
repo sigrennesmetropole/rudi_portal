@@ -3,6 +3,15 @@
  */
 package org.rudi.wso2.userstore.internal;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory;
@@ -12,14 +21,6 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.apache.commons.httpclient.util.EncodingUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Arrays;
 
 /**
  * Cette classe est inspirée de {@link SSLProtocolSocketFactory} afin de laisser passer les certificats autosignées
@@ -142,17 +143,18 @@ public class RudiSSLProtocolSockerFactory implements SecureProtocolSocketFactory
 	/**
 	 * Verifies that the given hostname in certicifate is the hostname we are trying to connect to http://www.cvedetails.com/cve/CVE-2012-5783/
 	 * 
-	 * @param host
-	 * @param ssl
+	 * @param host             l'hote
+	 * @param ssl              la socket ssl
+	 * @param hostNameVerifier le vérifieur d'hote
 	 * @throws IOException
 	 */
-
 	protected static void verifyHostName(String host, SSLSocket ssl, String hostNameVerifier) throws IOException {
 		if (host == null) {
-			throw new IllegalArgumentException("host to verify was null");
+			throw new IOException("host to verify was null");
 		}
 		// Always ok
-		LOGGER.debug("verifyHostName done:" + host);
+		LOGGER.debug("verifyHostName done:" + host + "  " + (ssl != null ? ssl.getApplicationProtocol() : "none") + " "
+				+ hostNameVerifier);
 	}
 
 	static boolean isLocalhost(String host) {

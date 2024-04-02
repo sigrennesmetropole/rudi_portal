@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {WorkflowFieldComponent} from '../workflow-field/workflow-field.component';
 
 @Component({
     selector: 'app-workflow-field-boolean',

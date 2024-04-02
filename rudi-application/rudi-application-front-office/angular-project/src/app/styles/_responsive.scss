@@ -1,38 +1,37 @@
 @import 'variables-rudi';
 
-// very small devices
+// Small devices
 @mixin xs {
-    @media (min-width: 0) and (max-width: #{$screen-sm-min}) {
+    @media (min-width: 0) and (max-width: #{$screen-xs-max}) {
         @content;
     }
 }
 
-// Small devices
 @mixin sm {
-  @media (min-width: #{$screen-sm-min}) and (max-width: #{$screen-sm-max}) {
-    @content;
-  }
+    @media (min-width: #{$screen-sm-min}) and (max-width: #{$screen-sm-max}) {
+        @content;
+    }
 }
 
 
 // medium devices
 @mixin md {
-  @media (min-width: #{$screen-md-min}) and (max-width: #{$screen-md-max}) {
-    @content;
-  }
+    @media (min-width: #{$screen-md-min}) and (max-width: #{$screen-md-max}) {
+        @content;
+    }
 }
 
 
 // Large devices
 @mixin lg {
-  @media (min-width: #{$screen-lg-min}) and (max-width: #{$screen-lg-max}) {
-    @content;
-  }
+    @media (min-width: #{$screen-lg-min}) and (max-width: #{$screen-lg-max}) {
+        @content;
+    }
 }
 
 // X Large devices
 @mixin xl {
-  @media (min-width: #{$screen-xl-min}) {
-    @content;
-  }
+    @media (min-width: #{$screen-xl-min}) {
+        @content;
+    }
 }

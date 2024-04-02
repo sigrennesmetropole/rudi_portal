@@ -1,7 +1,7 @@
-import {Observable} from 'rxjs';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {AppInfo, MiscellaneousService} from '../../acl/acl-api';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {AppInfo, MiscellaneousService} from 'micro_service_modules/acl/acl-api';
+import {Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'

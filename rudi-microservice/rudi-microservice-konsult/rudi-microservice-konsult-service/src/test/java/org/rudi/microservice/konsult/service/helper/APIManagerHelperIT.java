@@ -32,6 +32,7 @@ import org.rudi.facet.apimaccess.exception.APINotUniqueException;
 import org.rudi.facet.apimaccess.exception.APIsOperationWithIdException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertiesException;
 import org.rudi.facet.apimaccess.exception.MissingAPIPropertyException;
+import org.rudi.facet.apimaccess.helper.api.AdditionalPropertiesHelper;
 import org.rudi.facet.apimaccess.service.APIsService;
 import org.rudi.facet.apimaccess.service.ApplicationService;
 import org.rudi.facet.kaccess.bean.Media;
@@ -53,6 +54,7 @@ import lombok.val;
 class APIManagerHelperIT {
 
 	private static String anonymousUsername;
+	private AdditionalPropertiesHelper additionalPropertiesHelper;
 	private APIManagerHelper apiManagerHelper;
 	@Mock
 	private APIsService apIsService;
@@ -75,13 +77,13 @@ class APIManagerHelperIT {
 	@BeforeEach
 	void beforeEachTest() {
 		apiManagerHelper = new APIManagerHelper(apIsService, applicationService, metadataDetailsHelper,
-				anonymousUsername, aclHelper, organizationHelper, projektHelper);
+				anonymousUsername, aclHelper, organizationHelper, projektHelper, additionalPropertiesHelper);
 	}
 
 	private User getUserWithUsername(String username) {
 		final User authenticatedUser = new User();
 		authenticatedUser.setType(org.rudi.facet.acl.bean.UserType.PERSON);
-		val userUuid = UUID.randomUUID();
+		UUID userUuid = UUID.randomUUID();
 		authenticatedUser.setLogin(username);
 		authenticatedUser.setUuid(userUuid);
 		return authenticatedUser;
@@ -322,7 +324,8 @@ class APIManagerHelperIT {
 
 		final Map<String, String> apiProperties = new HashMap<>();
 		apiProperties.put("test", "test");
-		final API api = new API().id(apiId).additionalProperties(apiProperties);
+		final API api = new API().id(apiId)
+				.additionalProperties(additionalPropertiesHelper.getAdditionalPropertiesMapAsList(apiProperties));
 		when(apIsService.getAPI(apiId)).thenReturn(api);
 
 		assertThatThrownBy(() -> apiManagerHelper.getGlobalIdFromMediaId(mediaId))
@@ -343,7 +346,8 @@ class APIManagerHelperIT {
 
 		final Map<String, String> apiProperties = new HashMap<>();
 		apiProperties.put(APISearchPropertyKey.GLOBAL_ID, globalId.toString());
-		final API api = new API().id(apiId).additionalProperties(apiProperties);
+		final API api = new API().id(apiId)
+				.additionalProperties(additionalPropertiesHelper.getAdditionalPropertiesMapAsList(apiProperties));
 		when(apIsService.getAPI(apiId)).thenReturn(api);
 
 		assertThat(apiManagerHelper.getGlobalIdFromMediaId(mediaId))

@@ -1,7 +1,7 @@
-import {ErrorWithCause} from './error-with-cause';
-import {BYTES, DataUnit, fromSuffix} from './data-unit';
 import {MathUtils} from '../utils/math-utils';
 import {StringUtils} from '../utils/string-utils';
+import {BYTES, DataUnit, fromSuffix} from './data-unit';
+import {ErrorWithCause} from './error-with-cause';
 
 const PATTERN = /^([+\-]?\d+)([a-zA-Z]{0,2})$/;
 

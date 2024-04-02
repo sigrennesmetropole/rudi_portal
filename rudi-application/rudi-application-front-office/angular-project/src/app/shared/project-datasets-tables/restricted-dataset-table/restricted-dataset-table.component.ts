@@ -1,9 +1,8 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {Metadata} from '@app/api-kaccess';
-import {DialogClosedData} from '@app/data-set/models/dialog-closed-data';
-import {LinkedDatasetFromProject} from '@app/data-set/models/linked-dataset-from-project';
+import {DialogClosedData} from '@features/data-set/models/dialog-closed-data';
+import {LinkedDatasetFromProject} from '@features/data-set/models/linked-dataset-from-project';
 import {ProjectConsultationService} from '@core/services/asset/project/project-consultation.service';
 import {LinkedDatasetMetadatas} from '@core/services/asset/project/project-dependencies.service';
 import {ProjectSubmissionService} from '@core/services/asset/project/project-submission.service';
@@ -13,6 +12,7 @@ import {AccessStatusFiltersType} from '@core/services/filters/access-status-filt
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {DatasetsTableData, RowTableData} from '@shared/project-datasets-tables/dataset.interface';
+import {Metadata} from 'micro_service_modules/api-kaccess';
 import * as moment from 'moment';
 
 

@@ -1,0 +1,50 @@
+datasource:
+  workspace: terms
+  rootPath: /
+  namespaces:
+    lib: https://www.magnolia-travel.com/jcr/1.0/lib
+  autoCreate: true
+
+model:
+  nodeType: lib:term
+  properties:
+    - name: link
+      type: localizedmessage    
+      multiple: true 
+    - name: title
+      type: localizedmessage
+      multiple: true
+    - name: body
+      type: localizedrichtext
+      multiple: true
+    - name: categories
+      type: reference:category
+      multiple: true
+  subModels:
+    - name: localizedmessage
+      properties:
+        - name: locale
+          options:
+            - value: fr
+              label: France
+            - value: en
+              label: English
+            - value: de
+              label: Deutschland
+            - value: it
+              label: Italia                            
+        - name: message 
+    - name: localizedrichtext     
+      properties:
+        - name: locale
+          options:
+            - value: fr
+              label: France
+            - value: en
+              label: English
+            - value: de
+              label: Deutschland
+            - value: it
+              label: Italia
+        - name: message  
+          type: richText          

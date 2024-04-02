@@ -598,7 +598,7 @@
 						"type": "string"
 					},
 					"additionalProperties": {
-						"description": "Paramètres additionnels libres. Cf swagger WSO2 publisher-v1.yaml : definitions.API.properties.additionalProperties.",
+						"description": "Paramètres additionnels libres. Cf swagger WSO2 publisher-v4.yaml : definitions.API.properties.additionalProperties.",
 						"type": "object",
 						"additionalProperties": {
 							"type": "string"

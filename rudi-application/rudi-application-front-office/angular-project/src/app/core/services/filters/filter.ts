@@ -1,7 +1,7 @@
+import {Filters} from '@shared/models/filters';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {FiltersService} from '../filters.service';
-import {Filters} from '../../../shared/models/filters';
 import {switchMap} from 'rxjs/operators';
+import {FiltersService} from '../filters.service';
 
 export abstract class Filter<T> {
 

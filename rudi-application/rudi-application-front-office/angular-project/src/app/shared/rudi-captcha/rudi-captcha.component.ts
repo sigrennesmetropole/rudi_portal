@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {CaptchaComponent} from 'angular-captcha';
-import {CaptchaModel, CaptchaService} from '../../acl/acl-api';
+import {CaptchaComponent} from '@shared/angular-captcha/captcha.component';
+import {CaptchaModel, CaptchaService} from 'micro_service_modules/acl/acl-api';
 import {Observable} from 'rxjs';
 
 const ACL_SERVICE_BASEPATH = '/acl/v1';

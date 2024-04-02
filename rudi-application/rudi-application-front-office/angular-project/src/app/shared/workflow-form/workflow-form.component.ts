@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
-import {Form, Section} from '@app/api-bpmn';
+import {Form, Section} from 'micro_service_modules/api-bpmn';
 import {LogService} from '@core/services/log.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';

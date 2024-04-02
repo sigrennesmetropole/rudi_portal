@@ -1,0 +1,109 @@
+<!-- On ajoute ce contexte de sidenav pour éviter trop de régressions suite à la refonte du front -->
+<mat-sidenav-container>
+    <mat-sidenav-content class="sidebar-content-pd">
+        <app-loader [active]="loading"></app-loader>
+        <div *ngIf="project" [ngClass]="{'project-container-sm': mediaSize.isSm  || mediaSize.isMd,
+            'project-container-lg':  mediaSize.isLg, 'project-container-xl': mediaSize.isXl, 'project-container-xxl': mediaSize.isXxl}"
+             class="project-container ps-0 pe-0 container-fluid">
+            <!-- Icon et titre de la ressource -->
+            <div class="project-header ml">
+                <app-project-heading [logo]="projectLogo" [ownerDescription]="userIdentity"
+                                     [projectTitle]="project.title"
+                                     [status]="project.functional_status"></app-project-heading>
+            </div>
+            <!-- Fin Icon et titre de la ressource -->
+
+            <!-- Bandeau-->
+            <div class="bandeau">
+                <mat-toolbar class="bandeau-card">
+                    <button class="button button-info" disabled mat-raised-button>
+                        <mat-icon [ngClass]="mediaSize.isSm ? 'icon-information-sm' : 'icon-information'"
+                                  svgIcon="icon-info">
+                            error_outline
+                        </mat-icon>
+                        <span
+                            [ngClass]="{'bandeau-icon-libelle': mediaSize.isSm}">{{'project.detail.informations'|translate}}</span>
+                    </button>
+                    <span class="spacer"></span>
+                    <button (click)="onClickAccessUrl()" *ngIf="project.access_url" class="button bandeau-btn-access"
+                            mat-raised-button>
+                        <mat-icon class="icon-style">launch</mat-icon>
+                        &nbsp;
+                        <span
+                            [ngClass]="{'bandeau-icon-libelle': mediaSize.isSm}">{{'project.detail.access'|translate}}</span>
+                    </button>
+                </mat-toolbar>
+            </div>
+            <!-- Fin Bandeau -->
+            <!-- Card Description et Colonne de droite -->
+            <div class="row mt-3 px-80 card-description-keyword-row">
+
+                <!--  Card Description -->
+                <div [ngClass]="{'col-7': mediaSize.isMd,
+                    'col-8':  mediaSize.isSm  || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+                     class="card-description-keyword">
+                    <mat-card class="project-card project-card-description">
+
+                        <app-project-main-informations [project]="project"></app-project-main-informations>
+
+                    </mat-card>
+
+                </div>
+
+                <!-- Colonne de droite -->
+                <div [ngClass]="{'col-5': mediaSize.isMd,
+                    'col-4':  mediaSize.isSm  || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+                     class="card-project-type">
+
+                    <!-- Informations générales -->
+                    <mat-card class="card-main-information project-card pb-4">
+                        <div class="card-project-type-title">
+                            <label class="card-label">{{'project.detail.type'|translate}}</label>
+                            <span class="project-type">{{projectType}}</span>
+                        </div>
+
+                        <div *ngIf="userIdentity" class="contact">
+                            <label class="card-label">{{userIdentity}}</label><br/>
+                            <app-contact-button [email]="project.contact_email"
+                                                *ngIf="isKnownUser"></app-contact-button>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="date-created" fxLayoutAlign="space-between center">
+                                <span class="label-date">{{'project.detail.creation_date'|translate}}</span>
+                                <span
+                                    class="date-value float-right">{{project.creation_date | date :'dd/MM/yyyy'}}
+                                </span>
+                            </div>
+                            <div class="date-modified mt-3" fxLayoutAlign="space-between center">
+                                <span class="label-date">{{'project.detail.updated_date'|translate}}</span>
+                                <span
+                                    class="date-value float-right">{{project.updated_date | date :'dd/MM/yyyy'}}
+                                </span>
+                            </div>
+                        </div>
+
+                    </mat-card>
+
+                    <!-- Jeux de données utilisés -->
+                    <mat-card class="card-datasets project-card rudi-card-border">
+                        <mat-card-title>
+                            <h2 class="card-label">{{'project.detail.datasets'|translate}}
+                                ({{linkedDatasets?.length || 0}})</h2>
+                        </mat-card-title>
+                        <app-dataset-infos class="dataset-card-infos"
+                                           *ngFor="let element of linkedDatasets" [showLogo]="true"
+                                           [organizationName]="element?.dataset.producer.organization_name"
+                                           [organizationId]="element?.dataset.producer.organization_id"
+                                           [isRestricted]="element?.dataset.access_condition?.confidentiality?.restricted_access"
+                                           [resourceTitle]="element?.dataset.resource_title"
+                                           [divider]="true"
+                                           [goToDetails]="true"
+                                           [currentJddId]="element?.dataset.global_id"></app-dataset-infos>
+
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

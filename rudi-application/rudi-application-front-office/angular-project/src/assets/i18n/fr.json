@@ -1,5 +1,29 @@
 {
     "headerAppTitle": "App blanche",
+    "home": {
+        "heroSection": {
+            "title1": "Portail de partage et d'accès aux données territoriales",
+            "title2": "de Rennes Métropole",
+            "searchbarPlaceholder": "Rechercher un jeu de données..."
+        },
+        "themesSection": {
+            "title": "Thématiques de recherche"
+        },
+        "projectsSection": {
+            "title1": "Découvrez",
+            "title2": "les réutilisations",
+            "subtitle": "Les réutilisations RUDI",
+            "description": "Une Réutilisation est la description par un Utilisateur de l’usage d’un ou plusieurs jeux de données du catalogue. Tout Utilisateur inscrit peut déclarer une Réutilisation en décrivant le résultat produit (article, application, etc) et en indiquant le ou les jeux de données utilisés.",
+            "seeMoreProjects": "Voir toutes les réutilisations"
+        },
+        "jddSection": {
+            "title": "Dernières publications",
+            "seeMore": "Voir tous les jeux de données"
+        },
+        "keyFiguresSection": {
+            "altLogo": "Logo de la section des chiffres clés"
+        }
+    },
     "pageTitle": {
         "/": "Catalogue",
         "/organization": "Organisations",
@@ -493,7 +517,7 @@
         "licenceRestreinte": "Licence restreinte",
         "ensavoirPlus": "En savoir plus",
         "telechargerLicence": "Télécharger la license",
-        "informations": "informations",
+        "informations": "Informations",
         "informationsComplémentaires": "Informations complémentaires",
         "date": "Dates",
         "derniereMajDonnee": "Dernière mise à jour des données",

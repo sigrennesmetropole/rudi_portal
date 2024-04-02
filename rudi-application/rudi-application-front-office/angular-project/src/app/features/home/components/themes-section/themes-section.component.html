@@ -1,0 +1,18 @@
+<div class="themes-section-container">
+    <h2 class="title">{{ 'home.themesSection.title' | translate }}</h2>
+    <app-loader [isTransparent]="true" [noText]="true" [allPage]="false" [active]="isLoading"></app-loader>
+    <app-rudi-swiper
+        *ngIf="!isLoading"
+        containerName="rudi-themes"
+        [autoplay]="false"
+        [loop]="true"
+        [breakpoints]="cardSwiperBreakpoints"
+    >
+        <div *ngFor="let theme of themes">
+            <div class="theme-card" (click)="onClickThemeCard(theme.code)">
+                <mat-icon class="theme-picto" [svgIcon]="theme.code"></mat-icon>
+                <span class="theme-name">{{theme.name}}</span>
+            </div>
+        </div>
+    </app-rudi-swiper>
+</div>

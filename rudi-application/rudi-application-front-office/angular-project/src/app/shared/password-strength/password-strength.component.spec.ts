@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PasswordStrengthComponent } from './password-strength.component';
+import {PasswordStrengthComponent} from './password-strength.component';
 
 describe('PasswordStrengthComponent', () => {
   let component: PasswordStrengthComponent;

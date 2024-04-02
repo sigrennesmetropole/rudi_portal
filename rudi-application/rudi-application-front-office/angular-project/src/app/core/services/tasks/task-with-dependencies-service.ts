@@ -1,16 +1,16 @@
-import {AssetDescription, Task} from '../../../api-bpmn';
+import {HttpErrorResponse} from '@angular/common/http';
+import {DependencyFetcher} from '@shared/utils/dependencies-utils';
+import {mapEach} from '@shared/utils/ObservableUtils';
+import {TaskWithDependencies} from '@shared/utils/task-utils';
+import {AclService, User} from 'micro_service_modules/acl/acl-api';
+import {AssetDescription, Task} from 'micro_service_modules/api-bpmn';
+import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
+import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {mapEach} from '../../../shared/utils/ObservableUtils';
-import {TaskSearchCriteria} from './task-search-criteria.interface';
-import {TaskMetierService} from './task-metier.service';
-import {DependencyFetcher} from '../../../shared/utils/dependencies-utils';
-import {Organization} from '../../../strukture/strukture-model';
 import {validate as validateUuid} from 'uuid';
-import {TaskWithDependencies} from '../../../shared/utils/task-utils';
-import {AclService, User} from '../../../acl/acl-api';
-import {OrganizationService} from '../../../strukture/api-strukture';
-import {HttpErrorResponse} from '@angular/common/http';
+import {TaskMetierService} from './task-metier.service';
+import {TaskSearchCriteria} from './task-search-criteria.interface';
 
 /**
  * Service définissant le comportement permettant de charger une Tâche RUDI et ses dépendances (éléments calculables à partir d'infos dans

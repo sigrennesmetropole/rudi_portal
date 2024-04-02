@@ -1,16 +1,18 @@
-import {Observable} from 'rxjs';
-import {KindOfData} from '../../../api-kmedia';
-import {shareReplay, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {Base64EncodedLogo, ImageLogoService} from '../image-logo.service';
+import {PageResultUtils} from '@shared/utils/page-result-utils';
+import {KindOfData} from 'micro_service_modules/api-kmedia';
+import {OrganizationService, PasswordUpdate} from 'micro_service_modules/strukture/api-strukture';
 import {
-    Organization, OrganizationMember, OrganizationMemberType,
+    Organization,
+    OrganizationMember,
+    OrganizationMemberType,
     OrganizationSearchCriteria,
     PagedOrganizationList,
     PagedOrganizationUserMembers
-} from '../../../strukture/strukture-model';
-import {OrganizationService, PasswordUpdate} from '../../../strukture/api-strukture';
-import {PageResultUtils} from '../../../shared/utils/page-result-utils';
+} from 'micro_service_modules/strukture/strukture-model';
+import {Observable} from 'rxjs';
+import {shareReplay, switchMap} from 'rxjs/operators';
+import {Base64EncodedLogo, ImageLogoService} from '../image-logo.service';
 
 @Injectable({
     providedIn: 'root'

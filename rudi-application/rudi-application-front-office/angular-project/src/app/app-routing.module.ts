@@ -1,16 +1,16 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './home/home.component';
-import {AuthGuardService as AuthGuard} from './core/services/auth-guard.service';
-import {NotAuthorizedComponent} from './login/pages/not-authorized/not-authorized.component';
-import {UserGuardService} from './core/services/user-guard.service';
-import {AclConfigurationResolver} from './shared/resolver/acl-configuration-resolver';
+import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
+import {UserGuardService} from '@core/services/user-guard.service';
+import {HomeComponent} from '@features/home/pages/home/home.component';
+import {NotAuthorizedComponent} from '@features/login/pages/not-authorized/not-authorized.component';
+import {AclConfigurationResolver} from '@shared/resolver/acl-configuration-resolver';
 
 const routes: Routes = [
 
     {
         path: 'catalogue',
-        loadChildren: () => import('./data-set/data-set.module')
+        loadChildren: () => import('./features/data-set/data-set.module')
             .then(m => m.DataSetModule),
         canActivate: [AuthGuard],
         resolve: {
@@ -19,13 +19,13 @@ const routes: Routes = [
     },
     {
         path: 'projets',
-        loadChildren: () => import('./project/project.module')
+        loadChildren: () => import('./features/project/project.module')
             .then(m => m.ProjectModule),
         canActivate: [AuthGuard]
     },
     {
         path: 'login',
-        loadChildren: () => import('./login/login.module')
+        loadChildren: () => import('./features/login/login.module')
             .then(m => m.LoginModule),
         canActivate: [AuthGuard],
         resolve: {
@@ -34,13 +34,13 @@ const routes: Routes = [
     },
     {
         path: 'personal-space',
-        loadChildren: () => import('./personal-space/personal-space.module')
+        loadChildren: () => import('./features/personal-space/personal-space.module')
             .then(m => m.PersonalSpaceModule),
         canActivate: [UserGuardService]
     },
     {
         path: 'organization',
-        loadChildren: () => import('./organization/organization.module')
+        loadChildren: () => import('./features/organization/organization.module')
             .then(m => m.OrganizationModule),
         canActivate: [AuthGuard],
         resolve: {
@@ -48,11 +48,9 @@ const routes: Routes = [
         }
     },
     {
-        // Path vide
         path: '',
-        redirectTo: 'catalogue',
+        redirectTo: 'home',
         pathMatch: 'full',
-        canActivate: [AuthGuard]
     },
 
     {
@@ -60,7 +58,6 @@ const routes: Routes = [
         component: NotAuthorizedComponent,
     },
     {
-        // Path Home
         path: 'home',
         component: HomeComponent,
         canActivate: [AuthGuard]
@@ -70,7 +67,7 @@ const routes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, {
-        initialNavigation: 'enabled',
+        initialNavigation: 'enabledBlocking',
         scrollPositionRestoration: 'enabled'
     })],
     exports: [RouterModule],

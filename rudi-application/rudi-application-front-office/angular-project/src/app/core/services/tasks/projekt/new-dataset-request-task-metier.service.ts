@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {TaskService as ProjektTaskService} from '../../../../projekt/projekt-api';
+import {Task} from 'micro_service_modules/api-bpmn';
+import {TaskService as ProjektTaskService} from 'micro_service_modules/projekt/projekt-api';
+import {NewDatasetRequest} from 'micro_service_modules/projekt/projekt-model';
 import {Observable} from 'rxjs';
-import {Task} from '../../../../api-bpmn';
-import {NewDatasetRequest} from '../../../../projekt/projekt-model';
-import {MicroserviceProjektTaskMetierService} from './microservice-projekt-task-metier.service';
 import {ObjectType} from '../object-type.enum';
+import {MicroserviceProjektTaskMetierService} from './microservice-projekt-task-metier.service';
 
 @Injectable({
     providedIn: 'root'

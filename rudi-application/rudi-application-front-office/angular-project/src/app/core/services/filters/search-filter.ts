@@ -1,4 +1,4 @@
-import {Filters} from '../../../shared/models/filters';
+import {Filters} from '@shared/models/filters';
 import {BehaviorSubject} from 'rxjs';
 import {FiltersService} from '../filters.service';
 import {Filter} from './filter';

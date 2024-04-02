@@ -3,8 +3,6 @@
  */
 package org.rudi.tools.nodestub.controller;
 
-import javax.validation.Valid;
-
 import org.rudi.microservice.kalim.core.bean.Method;
 import org.rudi.tools.nodestub.component.KalimHelper;
 import org.rudi.tools.nodestub.controller.api.SubmitApi;
@@ -23,7 +21,7 @@ public class SubmitApiController implements SubmitApi {
 	private KalimHelper kalimHelper;
 
 	@Override
-	public ResponseEntity<Void> submitMetadata(Method method, @Valid org.rudi.facet.kaccess.bean.Metadata body)
+	public ResponseEntity<Void> submitMetadata(Method method, org.rudi.facet.kaccess.bean.Metadata body)
 			throws Exception {
 		kalimHelper.submit(method, body);
 		return ResponseEntity.ok().build();

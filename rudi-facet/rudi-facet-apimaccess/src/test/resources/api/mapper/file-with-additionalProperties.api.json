@@ -24,20 +24,41 @@
 	},
 	"name": "0faf1661-37d8-4194-b806-b5de4f3121b6_dwnl",
 	"context": "\/datasets\/0faf1661-37d8-4194-b806-b5de4f3121b6\/dwnl",
-	"gatewayEnvironments": [
-		"Production and Sandbox"
-	],
-	"additionalProperties": {
-		"provider_uuid": "5596b5b2-b227-4c74-a9a1-719e7c1008c7",
-		"interface_contract": "dwnl",
-		"extension": "csv",
-		"media_uuid": "0faf1661-37d8-4194-b806-b5de4f3121b6",
-		"global_id": "69784084-fdd1-4c28-aac7-306332ff53bb",
-		"provider_code": "NODE_STUB",
-		"paramètre%201": "valeur 1",
-		"paramètre%202": "valeur 2"
-	},
+	  "additionalProperties" : [ {
+	    "name" : "interface_contract",
+	    "value" : "dwnl",
+	    "display" : false
+	  }, {
+	    "name" : "provider_uuid",
+	    "value" : "5596b5b2-b227-4c74-a9a1-719e7c1008c7",
+	    "display" : false
+	  }, {
+	    "name" : "extension",
+	    "value" : "csv",
+	    "display" : false
+	  }, {
+	    "name" : "paramètre%201",
+	    "value" : "valeur 1",
+	    "display" : false
+	  }, {
+	    "name" : "paramètre%202",
+	    "value" : "valeur 2",
+	    "display" : false
+	  }, {
+	    "name" : "media_uuid",
+	    "value" : "0faf1661-37d8-4194-b806-b5de4f3121b6",
+	    "display" : false
+	  }, {
+	    "name" : "global_id",
+	    "value" : "69784084-fdd1-4c28-aac7-306332ff53bb",
+	    "display" : false
+	  }, {
+	    "name" : "provider_code",
+	    "value" : "NODE_STUB",
+	    "display" : false
+	  } ],
 	"categories": [
 		"RUDI"
-	]
+	],
+	"isRevision" : true
 }

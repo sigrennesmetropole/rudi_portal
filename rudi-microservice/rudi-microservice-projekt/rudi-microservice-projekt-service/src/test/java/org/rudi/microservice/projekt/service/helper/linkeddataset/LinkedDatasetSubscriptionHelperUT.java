@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.Role;
+import org.rudi.common.core.security.RoleCodes;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
@@ -128,14 +131,18 @@ class LinkedDatasetSubscriptionHelperUT {
 		}
 	}
 
-	private void mockAuthenticatedUserToCreateProject(Project project) throws GetOrganizationMembersException {
+	private void mockAuthenticatedUserToCreateProject(Project project)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException {
 		mockAuthenticatedUserFromManager(project.getOwnerUuid());
 	}
 
-	private void mockAuthenticatedUserFromManager(UUID managerUserUuid) throws GetOrganizationMembersException {
-		final User user = new User().login("mpokora").uuid(managerUserUuid);
+	private void mockAuthenticatedUserFromManager(UUID managerUserUuid)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException {
+		org.rudi.facet.acl.bean.Role roleUser = new org.rudi.facet.acl.bean.Role().code(RoleCodes.USER);
+		final User user = new User().login("mpokora").uuid(managerUserUuid).roles(Arrays.asList(roleUser));
 		when(aclHelper.getUserByLogin(user.getLogin())).thenReturn(user);
 		when(aclHelper.getUserByUUID(user.getUuid())).thenReturn(user);
+		when(aclHelper.getAuthenticatedUser()).thenReturn(user);
 
 		final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin(user.getLogin());

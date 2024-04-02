@@ -3,16 +3,16 @@ package org.rudi.microservice.kalim.service.integration.impl.validator.map;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.rudi.facet.dataset.bean.InterfaceContract;
 import org.rudi.facet.kaccess.bean.ConnectorConnectorParametersInner;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
 
+import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.ALPHANUMERIC_REGEX;
 import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.APP_JSON_FORMAT;
 import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.FORMATS_PARAMETER;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.ALPHANUMERIC_REGEX;
 import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.GML2_FORMAT;
 import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.GML3_FORMAT;
-import static org.rudi.microservice.kalim.service.integration.impl.validator.map.ConnectorParametersConstants.WFS_INTERFACE_CONTRACT;
 
 @Component
 public class FormatsValidator extends AbstractConnectorParametersValidator {
@@ -21,7 +21,11 @@ public class FormatsValidator extends AbstractConnectorParametersValidator {
 	public Set<IntegrationRequestErrorEntity> validate(ConnectorConnectorParametersInner connectorConnectorParametersInner, String interfaceContract) {
 		Set<IntegrationRequestErrorEntity> integrationRequestsErrors = new HashSet<>();
 		final String value = connectorConnectorParametersInner.getValue();
-		if (WFS_INTERFACE_CONTRACT.equalsIgnoreCase(interfaceContract)) { // WFS
+
+		InterfaceContract interfaceContractEnum = InterfaceContract.from(interfaceContract,interfaceContract, (contract -> interfaceContract.equalsIgnoreCase(contract.getCode())), true);
+
+
+		if (interfaceContractEnum == InterfaceContract.WFS) { // WFS
 			if (!(value.equals(APP_JSON_FORMAT) || value.equals(GML2_FORMAT) || value.equals(GML3_FORMAT))) {
 				integrationRequestsErrors.add(
 						buildError302(FORMATS_PARAMETER, value, String.join(",", APP_JSON_FORMAT, GML2_FORMAT, GML3_FORMAT))

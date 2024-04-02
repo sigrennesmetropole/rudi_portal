@@ -1,20 +1,20 @@
 import {ComponentType} from '@angular/cdk/portal';
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {DialogClosedData} from '@app/data-set/models/dialog-closed-data';
+import {DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {
     DeletionMemberConfirmationPopinComponent
-} from '@app/organization/components/administration-tab/deletion-member-confirmation-popin/deletion-member-confirmation-popin.component';
+} from '@features/organization/components/administration-tab/deletion-member-confirmation-popin/deletion-member-confirmation-popin.component';
 import {
     OrganizationMemberDialogData
-} from '@app/organization/components/administration-tab/organization-members-table/organization-member-dialog-data';
+} from '@features/organization/components/administration-tab/organization-members-table/organization-member-dialog-data';
 import {
     OrganizationTableDialogData
-} from '@app/organization/components/administration-tab/organization-table/organization-table-dialog-data';
+} from '@features/organization/components/administration-tab/organization-table/organization-table-dialog-data';
 import {
     UpdateUserPasswordPopinComponent
-} from '@app/organization/components/administration-tab/update-user-password-popin/update-user-password-popin.component';
-import {OrganizationMember} from '@app/strukture/strukture-model';
+} from '@features/organization/components/administration-tab/update-user-password-popin/update-user-password-popin.component';
+import {OrganizationMember} from 'micro_service_modules/strukture/strukture-model';
 import {MemberPopinComponent} from '@shared/member-popin/member-popin.component';
 import {Observable} from 'rxjs';
 

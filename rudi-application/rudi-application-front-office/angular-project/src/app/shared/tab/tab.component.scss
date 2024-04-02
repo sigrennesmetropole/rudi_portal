@@ -1,4 +1,4 @@
-@import "src/app/styles/common-style";
+@import "common-style";
 
 :host {
     position: relative;
@@ -21,17 +21,6 @@ button, .button {
         color: $secondary-color;
         background-color: var(--0-classic-blue);
     }
-
-    &.with-icon {
-        padding-left: 14px;
-    }
-}
-
-mat-icon {
-    top: -3px;
-    position: relative;
-    height: 20px;
-    margin-right: 5px;
 }
 
 ::ng-deep {

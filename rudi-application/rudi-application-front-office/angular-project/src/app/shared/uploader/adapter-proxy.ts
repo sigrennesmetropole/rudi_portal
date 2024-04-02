@@ -1,12 +1,12 @@
-import {FilePickerAdapter, FilePreviewModel, UploadResponse, UploadStatus} from '@sleiss/ngx-awesome-uploader';
-import {UploaderAdapter} from './uploader.adapter';
+import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {AbstractControl} from '@angular/forms';
-import {SnackBarService} from '../../core/services/snack-bar.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
+import {FilePickerAdapter, FilePreviewModel, UploadResponse, UploadStatus} from '@sleiss/ngx-awesome-uploader';
 import {Observable} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {ErrorWithCause} from '../models/error-with-cause';
-import {HttpEvent, HttpEventType} from '@angular/common/http';
+import {UploaderAdapter} from './uploader.adapter';
 import {UploaderComponent} from './uploader.component';
 
 export class AdapterProxy<T> extends FilePickerAdapter {

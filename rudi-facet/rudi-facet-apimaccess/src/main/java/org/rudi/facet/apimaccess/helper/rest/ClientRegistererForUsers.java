@@ -13,19 +13,19 @@ import org.springframework.stereotype.Component;
 @Component
 class ClientRegistererForUsers extends ClientRegisterer<Application> {
 
-	public ClientRegistererForUsers(
-			@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
-			@Value("${apimanager.oauth2.client.default.registration-v1.1.scopes:" + APIManagerProperties.Scopes.INTERNAL_SUBSCRIBER + "}") String[] scopes,
-			OAuth2DynamicClientRegistrationOperationAPI clientRegistrationOperationAPI
-	) {
+	public ClientRegistererForUsers(@Value("${apimanager.oauth2.client.provider.token-uri}") String tokenUri,
+			@Value("${apimanager.oauth2.client.default.registration-v1.1.scopes:"
+					+ APIManagerProperties.Scopes.INTERNAL_SUBSCRIBER + "}") String[] scopes,
+			OAuth2DynamicClientRegistrationOperationAPI clientRegistrationOperationAPI) {
 		super(tokenUri, scopes, clientRegistrationOperationAPI, false);
 	}
 
 	@Override
 	public RegistrationRequestV11 buildRegistrationRequest(String username) {
-		return RegistrationRequestV11.builder()
-				.clientName(username)
-				.grantTypes(List.of(AuthorizationGrantType.PASSWORD.getValue(), AuthorizationGrantType.CLIENT_CREDENTIALS.getValue(), AuthorizationGrantType.REFRESH_TOKEN.getValue()))
+		return RegistrationRequestV11.builder().clientName(username).redirectUris(List.of())
+				.grantTypes(List.of(AuthorizationGrantType.PASSWORD.getValue(),
+						AuthorizationGrantType.CLIENT_CREDENTIALS.getValue(),
+						AuthorizationGrantType.REFRESH_TOKEN.getValue()))
 				.clientId(null) // null pour laisser WSO2 générer lui-même un client_id
 				.clientSecret(null) // null pour laisser WSO2 générer lui-même un client_password
 				.build();

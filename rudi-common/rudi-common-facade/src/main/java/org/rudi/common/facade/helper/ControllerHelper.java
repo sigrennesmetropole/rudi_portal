@@ -34,7 +34,7 @@ public class ControllerHelper {
 			responseHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
 			responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, HttpHeaders.CONTENT_TYPE);
 			InputStreamResource inputStreamResource = new InputStreamResource(documentContent.getFileStream());
-
+			
 			return new ResponseEntity<>(inputStreamResource, responseHeaders, HttpStatus.OK);
 
 		} else {

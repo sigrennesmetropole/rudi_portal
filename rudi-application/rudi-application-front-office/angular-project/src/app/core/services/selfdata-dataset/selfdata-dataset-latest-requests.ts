@@ -1,4 +1,4 @@
-import {SelfdataInformationRequest} from '../../../selfdata/selfdata-model';
+import {SelfdataInformationRequest} from 'micro_service_modules/selfdata/selfdata-model';
 
 /**
  * L'ensemble des dernières demandes effectuées par un utilisateur sur un JDD selfdata

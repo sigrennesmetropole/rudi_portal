@@ -1,9 +1,10 @@
 package org.rudi.microservice.acl.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_ACL_ADMINISTRATOR;
+
 import java.util.List;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.rudi.microservice.acl.core.bean.AddressRole;
 import org.rudi.microservice.acl.core.bean.AddressRoleSearchCriteria;
@@ -14,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_ACL_ADMINISTRATOR;
 
 /**
  * Controleur pour la gestion des roles d'adresses
@@ -35,7 +33,7 @@ public class AddressRoleController implements AddressRolesApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
-	public ResponseEntity<AddressRole> createAddressRole(@Valid AddressRole addressRole) throws Exception {
+	public ResponseEntity<AddressRole> createAddressRole(AddressRole addressRole) throws Exception {
 		return ResponseEntity.ok(addressRoleService.createAddressRole(addressRole));
 	}
 
@@ -52,8 +50,7 @@ public class AddressRoleController implements AddressRolesApi {
 	}
 
 	@Override
-	public ResponseEntity<List<AddressRole>> searchAddressRoles(@Valid Boolean active, @Valid AddressType type)
-			throws Exception {
+	public ResponseEntity<List<AddressRole>> searchAddressRoles(Boolean active, AddressType type) throws Exception {
 		AddressRoleSearchCriteria searchCriteria = new AddressRoleSearchCriteria();
 		searchCriteria.setActive(active);
 		searchCriteria.setType(type);
@@ -62,7 +59,7 @@ public class AddressRoleController implements AddressRolesApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_ACL_ADMINISTRATOR + ")")
-	public ResponseEntity<AddressRole> updateAddressRole(@Valid AddressRole addressRole) throws Exception {
+	public ResponseEntity<AddressRole> updateAddressRole(AddressRole addressRole) throws Exception {
 		return ResponseEntity.ok(addressRoleService.updateAddressRole(addressRole));
 	}
 }

@@ -1,21 +1,22 @@
-import {from, Observable, of, throwError} from 'rxjs';
-import {UserService} from '../user.service';
-import {catchError, filter, map, mapTo, mergeMap, reduce, switchMap} from 'rxjs/operators';
-import {AclService, User} from '../../../acl/acl-api';
 import {HttpErrorResponse} from '@angular/common/http';
-import {OrganizationService} from '../../../strukture/api-strukture';
-import {ErrorWithCause} from '../../../shared/models/error-with-cause';
-import {LinkedDatasetMetadatas} from '../asset/project/project-dependencies.service';
 import {TranslateService} from '@ngx-translate/core';
-import {SubscriptionRequestStatus} from './subscription-request-status.enum';
+import {ErrorWithCause} from '@shared/models/error-with-cause';
+import {AclService} from 'micro_service_modules/acl/acl-api';
+import {User} from 'micro_service_modules/acl/acl-model';
+import {OwnerType} from 'micro_service_modules/konsent/konsent-model';
+import {ApiKeys, ApiKeysType, KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {Project, ProjektService} from 'micro_service_modules/projekt/projekt-api';
+import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
+import {from, Observable, of, throwError} from 'rxjs';
+import {catchError, filter, map, mapTo, mergeMap, reduce, switchMap} from 'rxjs/operators';
+import {LinkedDatasetMetadatas} from '../asset/project/project-dependencies.service';
+import {UserService} from '@core/services/user.service';
+import {Credentials} from './credentials';
+import {LinkWithSubscribability} from './link-with-subscribability';
+import {SubscriptionData} from './subscription-data';
 import {SubscriptionRequestReport} from './subscription-request-report';
 import {SubscriptionRequestResult} from './subscription-request-result';
-import {LinkWithSubscribability} from './link-with-subscribability';
-import {Credentials} from './credentials';
-import {SubscriptionData} from './subscription-data';
-import {ApiKeys, ApiKeysType, KonsultService} from '../../../konsult/konsult-api';
-import {ProjektService} from '../../../projekt/projekt-api';
-import {OwnerType, Project} from '../../../projekt/projekt-model';
+import {SubscriptionRequestStatus} from './subscription-request-status.enum';
 
 /**
  * Nombre maximal de souscriptions qu'on peut appeler en parallèle

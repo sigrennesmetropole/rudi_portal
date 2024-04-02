@@ -651,6 +651,39 @@
 				}
 			}
 		},
+		"/users/count": {
+			"get": {
+				"tags": [
+					"acl"
+				],
+				"summary": "Nombre d'utilisateurs",
+				"description": "Retourne le nombre d'utilisateurs de type USER",
+				"operationId": "countUsers",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+						          "type": "integer",
+						          "format": "int64"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/user-info-uuid/{userUuid}": {
 			"get": {
 				"tags": [

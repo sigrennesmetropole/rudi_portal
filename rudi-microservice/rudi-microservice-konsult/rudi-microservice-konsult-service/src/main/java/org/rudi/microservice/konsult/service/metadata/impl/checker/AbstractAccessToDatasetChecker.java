@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,10 +44,8 @@ public abstract class AbstractAccessToDatasetChecker {
 	public abstract void checkAuthenticatedUserHasAccessToDataset(UUID globalId, Optional<UUID> requestUuid) throws AppServiceException;
 
 	protected User getAuthenticatedUser() throws AppServiceUnauthorizedException, AppServiceForbiddenException {
-		val authenticatedUser = aclHelper.getAuthenticatedUser();
-		if (authenticatedUser == null) {
-			throw new AppServiceUnauthorizedException("User anonymous not authorized");
-		}
+		// Non-null, sinon throw une exception
+		User authenticatedUser = aclHelper.getAuthenticatedUser();
 
 		final var user = aclHelper.getUserByLogin(authenticatedUser.getLogin());
 		if (user == null) {

@@ -1,5 +1,5 @@
-@import "src/app/styles/common-style";
-@import "src/app/styles/add-link-to-project";
+@import "common-style";
+@import "add-link-to-project";
 
 #dialog-content {
     max-width: 768px;
@@ -23,12 +23,9 @@
 
 ::ng-deep {
     .icon-close {
-        float: right;
-        margin: -63px 0 0 96%;
-
         svg {
-            height: 36px;
-            width: 36px;
+            height: 24px;
+            width: 24px;
             fill: black;
             opacity: 0.54;
             border: solid 1px grey;
