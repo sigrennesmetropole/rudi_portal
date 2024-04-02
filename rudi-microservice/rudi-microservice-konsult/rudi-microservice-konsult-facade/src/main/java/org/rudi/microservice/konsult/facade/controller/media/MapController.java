@@ -1,4 +1,4 @@
-package org.rudi.microservice.konsult.facade.controller;
+package org.rudi.microservice.konsult.facade.controller.media;
 
 import java.util.List;
 

@@ -1,7 +1,16 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
+.rudi-filter-box-libelle {
+    color: var(--primary-color);
+    font-style: normal;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: normal;
+}
+
+.rudi-filter-box-libelle-hover {
+    color: var(--secondary-color);
+}
 
 .p-large {
     padding: 150px 80px 30px 80px !important;
@@ -40,10 +49,10 @@
     align-items: center;
     cursor: pointer;
     border-top: 1px solid grey;
-    color: $primary-text;
+    color: var(--primary-text);
 
     .mat-badge-content {
-        background: $focus;
+        background: var(--focus);
         top: 20px !important;
         font-size: 14px;
         font-weight: normal;

@@ -1,0 +1,53 @@
+// Références couleur du Lot 2 : https://app.zeplin.io/project/619271d5fbb02d10a27a06f4/screen/61927fd23f3fe4121a5acd6b
+
+:root {
+    // Couleurs principales
+    --primary-color: #004680; // --0-classic-blue                Bleu Rudi
+    --rudi-header-primary-color: #002748; // --bleu-menu                     Marine Rudi
+    --accent-color-svg: #ff8d6d; // --0-p-che                       Pêche Rudi
+    --accent-color: #f36b43; // --0-charte-p-che-rgaa           Orange
+
+    // Couleurs secondaires
+    --focus: #0270e7; // --1-s-lection-active            Sélection active
+    --background-s-lection-active: #b3c7d9; // --background-s-lection-active   Background selection active
+    --secondary-text: #000000; // --texte-noir                    Texte noir
+    --primary-text: #323643; // --3-texte-gris-fonc             Texte Anthracite
+    --primary-text-light: #71757e; // --3-texte-gris-clair            Texte Gris
+    --error-color: #d04838; // --erreurs                       Erreurs
+    --error-color-text: white;
+    --success-color: #498100; //                                 Succès
+
+    // Couleurs de décoration
+    --banner-solid-color: #e7e9ed; // --2-aplat-bandeau               Bandeau Menu
+    --banner-solid-color-60: #f1f2f4; // --2-aplat-bandeau-60            Background
+    --rudi-login-background-color: #f8f8fa;
+    --blocks-and-menus-outline: #cbcdd1; // --4-contours-blocs-menus        Contours Blocs
+    --keywords-outline: #d5d8de; // --4-contours-logos-mots-cl-s    Contours Logos et mots-clés
+    --fake-line: #d8d8d8;
+
+    // Couleurs du loader
+    --light-background: rgba(255, 255, 255, 0.5);
+    --dark-background: rgba(0, 0, 0, 0.5);
+    --white: #ffff;
+    --min-loader: #f3f3f3;
+    --black: #000;
+
+
+    // Autres références couleur
+    --secondary-color: #ffffff;
+    --green-color-svg: #4eff5b;
+    --focus-background: rgba(2, 112, 231, 0.1);
+    --encircled-color: #999999;
+    --selected-table-row: #e6f1fd;
+    --input-hover-background: #f3f6fb;
+    --self-data-color: #e1eefc;
+    --self-data-border-color: #c8c8c8;
+    --accent-color-svg-self-data: #259da5;
+
+    // Variables de couleurs telles que définies dans les maquettes Zeplin
+    --0-classic-blue: var(--primary-color);
+    --2-aplat-bandeau: var(--banner-solid-color);
+    --3-texte-gris-fonc: var(--primary-text);
+    --4-contours-blocs-menus: var(--blocks-and-menus-outline);
+    --background-s-lection-active-tableau: var(--selected-table-row);
+}

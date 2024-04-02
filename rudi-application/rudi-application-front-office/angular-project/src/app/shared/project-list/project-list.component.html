@@ -12,11 +12,12 @@
                               currentPage: page,
                               totalItems: projectList.total
                             }"
-                [ngClass]="{'project-card-container-sm': mediaSize.isSm || mediaSize.isMd,
-                                        'project-card-container-lg':  mediaSize.isLg,
-                                        'project-card-container-xl': mediaSize.isXl,
-                                        'project-card-container-xxl': mediaSize.isXxl}"
-                [class]="resultsPerRow ? 'project-card-container-'+resultsPerRow+'-cards': ''"
+                [ngClass]="{'project-card-container-xs': mediaSize.isXs,
+                            'project-card-container-sm': mediaSize.isSm || mediaSize.isMd,
+                            'project-card-container-lg':  mediaSize.isLg,
+                            'project-card-container-xl': mediaSize.isXl,
+                            'project-card-container-xxl': mediaSize.isXxl}"
+
             >
                 <app-project-card (click)="clickProject.emit(project)" [projectCatalogItem]="project">
                 </app-project-card>

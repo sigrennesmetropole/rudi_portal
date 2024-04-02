@@ -1,6 +1,6 @@
 <mat-card class="main-container">
     <app-loader [allPage]="false" [isLight]="true" [noText]="true" [active]="isMapLoading"></app-loader>
-    <ng-container *ngIf="!isMapLoading">
+    <ng-container *ngIf="!isMapLoading && !isErrorAccess">
         <div class="map-header"></div>
         <div class="map-container">
             <app-map [mapId]="'rudi-map-tab'"

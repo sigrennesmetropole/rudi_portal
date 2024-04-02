@@ -1,0 +1,16 @@
+<div class="news-section-container" *ngIf="displayComponent">
+    <h2 class="title">{{ 'home.newsSection.title' | translate }}</h2>
+
+    <div class="row">
+        <div
+            [ngClass]="{'col-6 news-with-image': displayNewsWithoutImage && mediaSize.isDeviceDesktop, 'col-12': mediaSize.isDeviceMobile || !displayNewsWithoutImage}"
+            [innerHTML]="news.contentNewsWithImage">
+        </div>
+        <div *ngIf="displayNewsWithoutImage"
+             [ngClass]="{'news-without-image col-6': mediaSize.isDeviceDesktop, 'col-12': mediaSize.isDeviceMobile}">
+            <div *ngFor="let newsWithoutImage of news.contentsNewsWithoutImage"
+                 [ngClass]="{'divider': mediaSize.isDeviceMobile}"
+                 [innerHTML]="newsWithoutImage"></div>
+        </div>
+    </div>
+</div>

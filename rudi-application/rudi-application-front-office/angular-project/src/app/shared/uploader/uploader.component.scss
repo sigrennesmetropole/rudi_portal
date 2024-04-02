@@ -1,11 +1,6 @@
-@import "colors";
 @import "common-style";
-@import "variables-rudi";
 
 .block-upload {
-    font-family: OpenSans, Helvetica, Arial, sans-serif;
-
-
     ::ng-deep {
         :host {
             display: block;
@@ -22,7 +17,7 @@
         }
 
         .cropperJsBox .cropper-actions .cropSubmit {
-            background: $primary-color !important;
+            background: var(--primary-color) !important;
             color: #fff;
         }
 

@@ -1,13 +1,13 @@
-@import "variables-rudi";
 @import "common-style";
 
 .card-title {
-    color: $secondary-text;
+    color: var(--secondary-text);
     font-size: 18px;
     font-weight: bold;
     font-style: normal;
     font-stretch: normal;
     line-height: 1.72;
+    margin-bottom: 8px;
 }
 
 .periode-container {

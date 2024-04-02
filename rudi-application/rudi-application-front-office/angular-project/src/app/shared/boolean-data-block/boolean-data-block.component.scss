@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .data-block {
     width: 460px;
@@ -14,7 +12,7 @@
 
 .libelle {
     font-size: 15px;
-    color: $primary-text;
+    color: var(--primary-text);
     font-weight: 600;
     margin: 2px 0 0 7px;
 }

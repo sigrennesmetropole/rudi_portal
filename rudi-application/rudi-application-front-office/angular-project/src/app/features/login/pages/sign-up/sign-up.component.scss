@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "common-style";
 
 .main-container {
     @include card-container-bgcolor;
@@ -12,7 +10,7 @@
 
 .signup-text-title {
     @include card-text-title;
-    color: $secondary-text;
+    color: var(--secondary-text);
     margin-bottom: 33px;
 }
 
@@ -35,7 +33,7 @@ div.p-mb {
 
 .hidePassword {
     font-size: 25px;
-    color: $primary-text-light;
+    color: var(--primary-text-light);
 }
 
 mat-form-field {
@@ -45,7 +43,7 @@ mat-form-field {
 ::ng-deep {
     .mat-focused .mat-form-field-label {
         /*change color of label*/
-        color: $focus !important;
+        color: var(--focus) !important;
     }
 }
 
@@ -60,13 +58,13 @@ mat-error {
 
 .password-msg {
     font-size: 14px;
-    color: $primary-text;
+    color: var(--primary-text);
     margin-top: 1em;
 }
 
 mat-progress-spinner {
     margin: auto;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 .p-19 {
@@ -90,7 +88,7 @@ mat-progress-spinner {
 }
 
 .signup-cgu {
-    color: $primary-color;
+    color: var(--primary-color);
     text-decoration: underline;
     font-weight: bold;
 }
@@ -110,8 +108,8 @@ mat-progress-spinner {
 #rgpd {
     @extend .m-large-negative, .p-large;
     padding-top: 2em !important;
-    background: $secondary-color;
-    color: $primary-text-light;
+    background: var(--secondary-color);
+    color: var(--primary-text-light);
 
     h3 {
         font-weight: bold;

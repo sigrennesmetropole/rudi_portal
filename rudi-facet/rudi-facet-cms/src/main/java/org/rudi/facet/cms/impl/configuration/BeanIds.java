@@ -11,6 +11,7 @@ public class BeanIds {
 
 	public static final String CMS_CATEGORY_EHCACHE = "cms_magnolia_category";
 	public static final String CMS_ASSET_EHCACHE = "cms_magnolia_asset";
+	public static final String CMS_RESOURCES_EHCACHE = "cms_magnolia_resource";
 
 	public static final String CMS_WEB_CLIENT = "cms-web-client";
 

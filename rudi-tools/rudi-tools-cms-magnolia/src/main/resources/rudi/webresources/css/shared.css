@@ -1,0 +1,16 @@
+.btn {
+    background: #004680;
+    border-radius: 28px;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    filter: brightness(125%);
+    background: #004680;
+    border-radius: 28px;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+}

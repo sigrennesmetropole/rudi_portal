@@ -20,7 +20,9 @@
         <!-- Title du JDD -->
         <ng-container matColumnDef="title">
             <th mat-header-cell *matHeaderCellDef class="table-header second-row text-start">
+                <div class="table-header-content">
                 {{'personalSpace.project.tabs.datasets.openDatasets.columnDataset'|translate}}
+                </div>
             </th>
             <td mat-cell *matCellDef="let element" class="titre-jdd">
                 <app-dataset-infos
@@ -99,7 +101,7 @@
             (mouseleave)="onMouseLeaveAddButton()"
             (click)="addAction()"
         >
-            <mat-icon [svgIcon]="addButtonIcon" class="icon-add-jdd"></mat-icon>
+            <mat-icon [svgIcon]="addButtonIcon"></mat-icon>
             <span>{{'personalSpace.project.tabs.datasets.addButton' | translate}}</span>
         </button>
     </div>

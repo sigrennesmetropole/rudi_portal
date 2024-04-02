@@ -1,6 +1,25 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
+
+::ng-deep {
+    .rudi-blue-large-button {
+        width: 100%;
+        margin: 20px 0 0 0;
+        padding: 14px 0 14px 0;
+        border-radius: 3px;
+        background-color: var(--focus);
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.mat-raised-button.mat-button-disabled {
+            background-color: var(--primary-text-light) !important;
+            color: white;
+            font-size: 16px;
+        }
+    }
+}
 
 ::ng-deep .ngx-pagination {
   padding-left: 0;
@@ -9,20 +28,20 @@
 
 
 ::ng-deep .ngx-pagination .pagination-previous {
-  color: $primary-text-light !important;
+  color: var(--primary-text-light) !important;
   font-weight: normal !important;
   font-stretch: normal;
 }
 
 ::ng-deep .ngx-pagination .pagination-next {
-  color: $primary-text-light !important;
+  color: var(--primary-text-light) !important;
   font-weight: normal !important;
   font-stretch: normal;
 }
 
 ::ng-deep .ngx-pagination .current {
   padding: 0.1875rem 0.625rem;
-  background: $primary-color !important;
+  background: var(--primary-color) !important;
   color: #fefefe;
   cursor: default;
   font-size: 14px;
@@ -32,7 +51,7 @@
 }
 
 ::ng-deep .ngx-pagination a, .ngx-pagination button {
-  color: $primary-color !important;
+  color: var(--primary-color) !important;
   display: block;
   padding: 0.1875rem 0.625rem;
   font-weight: 600 !important;
@@ -65,7 +84,7 @@
 .data-set-container {
 
   &-sm {
-    min-height: $card-height-sm;
+    min-height: var(--card-height-sm);
     width: 100%;
 
     .container-filter-box {
@@ -73,12 +92,12 @@
         width: 90px;
         height: 34px;
         border-radius: 17px;
-        background-color: $focus;
+        background-color: var(--focus);
       }
     }
 
     ::ng-deep .ngx-pagination .pagination-previous {
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
       font-weight: normal !important;
       font-stretch: normal;
       font-size: 15px;
@@ -86,7 +105,7 @@
 
     ::ng-deep .ngx-pagination .pagination-next {
       padding-left: 0 !important;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
       font-weight: normal !important;
       font-stretch: normal;
       font-size: 15px;
@@ -96,7 +115,7 @@
 
 
   &-lg {
-    height: $card-height-lg;
+    height: var(--card-height-lg);
     min-width: 362px;
     width: 48%;
     margin: 16px 16px 0 0;
@@ -105,20 +124,20 @@
       margin-right: 40px !important;
       font-weight: normal !important;
       font-stretch: normal;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
     }
 
     ::ng-deep .ngx-pagination .pagination-next {
       padding-left: 40px !important;
       font-weight: normal !important;
       font-stretch: normal;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
     }
 
   }
 
   &-xl {
-    min-height: $card-height-lg;
+    min-height: var(--card-height-lg);
     margin: 16px 16px 0 0;
     width: 32%;
 
@@ -126,19 +145,19 @@
       margin-right: 40px !important;
       font-weight: normal !important;
       font-stretch: normal;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
     }
 
     ::ng-deep .ngx-pagination .pagination-next {
       padding-left: 40px !important;
       font-weight: normal !important;
       font-stretch: normal;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
     }
   }
 
   &-xxl {
-    min-height: $card-height-lg;
+    min-height: var(--card-height-lg);
     margin: 16px 16px 0 0;
     width: 24%;
 
@@ -146,14 +165,14 @@
       margin-right: 40px !important;
       font-weight: normal !important;
       font-stretch: normal;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
     }
 
     ::ng-deep .ngx-pagination .pagination-next {
       padding-left: 40px !important;
       font-weight: normal !important;
       font-stretch: normal;
-      color: $primary-text-light !important;
+      color: var(--primary-text-light) !important;
     }
   }
 }
@@ -183,10 +202,10 @@
   align-items: center;
   cursor: pointer;
   border-top: 1px solid grey;
-  color: $primary-text;
+  color: var(--primary-text);
 
   .mat-badge-content {
-    background : $focus;
+    background : var(--focus);
     top: 20px !important;
     font-size: 14px;
     font-weight: normal;

@@ -1,4 +1,3 @@
-@import "variables-rudi";
 @import "common-style";
 @import "_responsive.scss";
 @import "bootstrap/scss/bootstrap-grid";
@@ -9,6 +8,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 0 18px;
+    align-items: center;
 
     .logo-container{
         @extend .col-sm-12;
@@ -26,18 +26,18 @@
 
 
 .dataset-info {
-    font-family: OpenSans, sans-serif;
+    margin-left: 5px;
 
     &-organization_name {
         font-size: 12px;
         line-height: 1.67;
-        color: $primary-text;
+        color: var(--primary-text);
         min-height: 12px;
     }
 
     &-resource_title {
         font-size: 16px;
-        color: $primary-color;
+        color: var(--primary-color);
         font-weight: 600;
         margin-top: 5px;
     }
@@ -87,4 +87,39 @@
 
 @include xl {
     @include desktop();
+}
+
+.jdd-card {
+    &-lg{
+        display: flex;
+        flex-wrap: nowrap;
+
+        .text-container {
+            margin-left: 15px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+            white-space: pre-wrap; /* let the text wrap preserving spaces */
+        }
+    }
+
+    &-md{
+        @extend .jdd-card-lg;
+
+        .text-container {
+            margin-left: 5px;
+        }
+    }
+
+    &-xs {
+
+         @extend .jdd-card-lg;
+        flex-wrap: nowrap;
+        height: 100px;
+
+        .text-container {
+            margin-left: 5px;
+        }
+    }
 }

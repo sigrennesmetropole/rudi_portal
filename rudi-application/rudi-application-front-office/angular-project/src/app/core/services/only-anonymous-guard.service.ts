@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AuthenticationService} from './authentication.service';
@@ -8,7 +8,7 @@ import {AuthenticationState} from './authentication/authentication-method';
 @Injectable({
     providedIn: 'root'
 })
-export class OnlyAnonymousGuardService implements CanActivate, CanActivateChild {
+export class OnlyAnonymousGuardService {
 
     constructor(
         public readonly authenticationService: AuthenticationService,

@@ -2,7 +2,7 @@
 @import "create-project-stepper";
 
 @mixin title-properties() {
-    color: $primary-color;
+    color: var(--primary-color);
     font-weight: bold;
     text-align: center;
 }
@@ -13,15 +13,13 @@
 }
 
 .step-subTitle {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
     @include title-properties;
 }
 
 .step-description {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
-    color: $primary-text;
+    color: var(--primary-text);
     text-align: center;
 }
 

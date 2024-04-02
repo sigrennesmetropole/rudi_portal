@@ -9,6 +9,10 @@
         "themesSection": {
             "title": "Thématiques de recherche"
         },
+        "newsSection": {
+            "title": "Actualités à la une",
+            "seeMoreNews": "Toutes les actualités"
+        },
         "projectsSection": {
             "title1": "Découvrez",
             "title2": "les réutilisations",
@@ -1321,6 +1325,7 @@
             "required": "Champ obligatoire",
             "consumerKey": "Consumer Key",
             "consumerSecret": "Consumer Secret",
+            "errorPassword": "Le mot de passe que vous avez saisi n'est pas valide. Veuillez re-saisir le mot de passe.",
             "textConsumerKey": "Votre Consumer Key est le login à renseigner pour vous authentifier lorsque vous requêtez des API.",
             "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API."
         },

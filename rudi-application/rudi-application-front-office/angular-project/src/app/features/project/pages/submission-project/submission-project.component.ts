@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {MatStepper} from '@angular/material/stepper';
 import {Router} from '@angular/router';
-import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {FormProjectDependencies, ProjectSubmissionService} from '@core/services/asset/project/project-submission.service';
 import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {AuthenticationService} from '@core/services/authentication.service';
@@ -11,6 +10,7 @@ import {FiltersService} from '@core/services/filters.service';
 import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
 import {RedirectService} from '@core/services/redirect.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
+import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {TranslateService} from '@ngx-translate/core';
 import {RequestDetails} from '@shared/models/request-details';
 import {RadioListItem} from '@shared/radio-list/radio-list-item';
@@ -18,7 +18,7 @@ import {User} from 'micro_service_modules/acl/acl-api';
 import {Metadata} from 'micro_service_modules/api-kaccess';
 import {ReutilisationStatus} from 'micro_service_modules/projekt/projekt-api';
 import {Confidentiality, OwnerType, Project, Support, TargetAudience, TerritorialScale} from 'micro_service_modules/projekt/projekt-model';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {catchError, switchMap, tap} from 'rxjs/operators';
 import {ReuseProjectCommonComponent} from '../../components/reuse-project-common/reuse-project-common.component';
 import {DataRequestItem} from '../../model/data-request-item';
@@ -153,16 +153,17 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
         // On récupère l'index de la demande, obligé de faire reverse() non destructif avec [...] car les demandes sont rangées inversement
         const indexOfOriginal = [...this.datasetRequests].reverse().indexOf(original) + 1;
         this.projectSubmissionService.openDialogEditNewDatasetRequest(original, indexOfOriginal)
-            .subscribe((modified: DataRequestItem) => {
-                if (modified) {
-                    const view = this.mapDatasetItemModelView.get(original);
-                    view.title = modified.title;
-                    original.title = modified.title;
-                    original.description = modified.description;
-                    this.linkedDatasetsError = false;
-                }
-            }, (e) => {
-                console.error(e);
+            .subscribe({
+                next: (modified: DataRequestItem) => {
+                    if (modified) {
+                        const view = this.mapDatasetItemModelView.get(original);
+                        view.title = modified.title;
+                        original.title = modified.title;
+                        original.description = modified.description;
+                        this.linkedDatasetsError = false;
+                    }
+                },
+                error: (e) => console.error(e)
             });
     }
 
@@ -174,13 +175,14 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
         const original: Metadata = this.mapDatasetItemViewModel.get(originalView);
         const request: RequestDetails = this.mapRequestDetailsByDatasetUuid.get(original.global_id);
         this.projectSubmissionService.openDialogEditRequest(request)
-            .subscribe((modified: DialogClosedData<RequestDetails>) => {
-                if (modified && modified.closeEvent === CloseEvent.VALIDATION) {
-                    request.comment = modified.data.comment;
-                    request.endDate = modified.data.endDate;
-                }
-            }, (e) => {
-                console.error(e);
+            .subscribe({
+                next: (modified: DialogClosedData<RequestDetails>) => {
+                    if (modified && modified.closeEvent === CloseEvent.VALIDATION) {
+                        request.comment = modified.data.comment;
+                        request.endDate = modified.data.endDate;
+                    }
+                },
+                error: (e) => console.error(e)
             });
     }
 
@@ -298,34 +300,37 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
         if (this.createdProject) {
             this.updateProjectFromForm();
             this.isLoading = true;
-            this.projectSubmissionService.updateProject(this.createdProject, this.linkedDatasets, this.datasetRequests,
-                this.mapRequestDetailsByDatasetUuid, image, this.updateImageAction).subscribe(
-                (created: Project) => {
-                    this.onSaveOrCreateSuccess(image, created);
-                    this.projectSubmissionService.openDialogSuccess();
-                },
-                (e) => {
-                    console.error(e);
-                    this.snackBarService.add(
-                        this.translateService.instant('project.stepper.submission.publish.error-update')
-                    );
-                    this.isLoading = false;
-                }
-            );
+            this.projectSubmissionService.updateProject(this.createdProject, this.linkedDatasets, this.datasetRequests, this.mapRequestDetailsByDatasetUuid, image, this.updateImageAction)
+                .subscribe({
+                    next: (created: Project) => {
+                        this.onSaveOrCreateSuccess(image, created);
+                        this.projectSubmissionService.openDialogSuccess();
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        this.snackBarService.add(
+                            this.translateService.instant('project.stepper.submission.publish.error-update')
+                        );
+                        this.isLoading = false;
+                    }
+                });
         }
         // Sinon on créé le projet en + des liens
         else {
             const project: Project = this.createProjectFromForm();
             this.isLoading = true;
-            this.projectSubmissionService.createProject(project, this.linkedDatasets, this.datasetRequests,
-                image, this.mapRequestDetailsByDatasetUuid).subscribe((created: Project) => {
-                this.onSaveOrCreateSuccess(image, created);
-                this.projectSubmissionService.openDialogSuccess();
-            }, e => {
-                console.error(e);
-                this.snackBarService.add(this.translateService.instant('project.stepper.submission.publish.error'));
-                this.isLoading = false;
-            });
+            this.projectSubmissionService.createProject(project, this.linkedDatasets, this.datasetRequests, image, this.mapRequestDetailsByDatasetUuid)
+                .subscribe({
+                    next: (created: Project) => {
+                        this.onSaveOrCreateSuccess(image, created);
+                        this.projectSubmissionService.openDialogSuccess();
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        this.snackBarService.add(this.translateService.instant('project.stepper.submission.publish.error'));
+                        this.isLoading = false;
+                    }
+                });
         }
     }
 
@@ -423,7 +428,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
             // Si erreur project on l'indique techniquement
             catchError((e) => {
                 console.error(e);
-                throw Error('Erreur lors de la création/mise à jour du Project');
+                return throwError(() => Error('Erreur lors de la création/mise à jour du Project'));
             }),
 
             // Création/MAJ est OK, on démarre le workflow
@@ -432,7 +437,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
                     // Si erreur workflow on l'indique techniquement
                     catchError((e) => {
                         console.error(e);
-                        throw Error('Erreur lors du lancement du workflow ');
+                        return throwError(() => Error('Erreur lors du lancement du workflow '));
                     })
                 );
             })

@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {Level} from '@shared/notification-template/notification-template.component';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
-import {catchError, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AuthenticationService} from '../services/authentication.service';
 import {SnackBarService} from '../services/snack-bar.service';
 
@@ -139,7 +139,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
         }
 
         // toute autre erreur est gérée normalement
-        return throwError(error);
+        return throwError(() => error);
     }
 
     /**
@@ -174,10 +174,10 @@ export class HttpTokenInterceptor implements HttpInterceptor {
         ).pipe(
             catchError((error) => {
                 this.refreshIsRunning.next(false);
-                return throwError(error);
+                return throwError(() => error);
             }),
             tap(() => this.refreshIsRunning.next(false)),
-            mapTo(null)
+            map(null)
         );
     }
 

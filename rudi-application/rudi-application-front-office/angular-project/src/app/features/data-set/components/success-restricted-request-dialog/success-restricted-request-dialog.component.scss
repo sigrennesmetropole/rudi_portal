@@ -1,20 +1,17 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 
 .title {
     text-align: center;
     font-size: 26px;
     font-weight: bold;
-    color: $primary-color;
+    color: var(--primary-color);
     margin: 0 50px 40px 50px;
     line-height: 30px;
 }
 
 
 .content-text {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
     line-height: 1.5;
     margin: 0 70px 0px 70px;
@@ -22,13 +19,13 @@
 }
 
 .description-text {
-    color: $primary-text;
+    color: var(--primary-text);
     margin-right: 5px;
 }
 
 .link-text {
     font-weight: bold;
-    color: $primary-color;
+    color: var(--primary-color);
     text-decoration: underline;
     cursor: pointer;
 }

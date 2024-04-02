@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Observable, throwError} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {Metadata} from 'micro_service_modules/api-kaccess';
 import {IconRegistryService} from '@core/services/icon-registry.service';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
 import {SelfdataDatasetLatestRequests} from '@core/services/selfdata-dataset/selfdata-dataset-latest-requests';
 import {SelfdataDatasetService} from '@core/services/selfdata-dataset/selfdata-dataset.service';
-import {MatchingData} from 'micro_service_modules/selfdata/selfdata-api';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
 import {MetadataUtils} from '@shared/utils/metadata-utils';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {MatchingData} from 'micro_service_modules/selfdata/selfdata-api';
+import {Observable, throwError} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 import {MatchingDataView} from '../../components/matching-data-card/matching-data-view';
 
 @Component({
@@ -79,7 +79,7 @@ export class SelfdataDatasetDetailsComponent implements OnInit {
                     this.metadata = metadata;
                     return this.selfdataDatasetService.searchAllMyLatestRequests(metadata);
                 }
-                return throwError('Aucun metadata trouvé');
+                return throwError(() => 'Aucun metadata trouvé');
             })
         );
     }

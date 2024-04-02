@@ -1,5 +1,5 @@
 <div class="header-container mat-typography" [ngClass]="ngClass">
-    <div *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl">
+    <div *ngIf="mediaSize.isXl || mediaSize.isXxl">
         <nav class="header-nav rudi-header-container navbar navbar-expand pe-0"
              aria-label="navbar-desktop">
             <div class="header-logo-container navbar-brand">
@@ -9,14 +9,15 @@
                               svgIcon="logo-bleu-orange"></mat-icon>
                 </a>
             </div>
-            <div class="justify-content-end navbar-menu-items header-container-lg not-clickable navbar-expand collapse show"
-                 id="main-nav">
+            <div
+                class="justify-content-end navbar-menu-items header-container-lg not-clickable navbar-expand collapse show"
+                id="main-nav">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 me-2">
                     <li class="nav-item">
                         <a class="nav-link text-uppercase"
                            rel="noopener noreferrer"
                            routerLink="home"
-                           routerLinkActive="active-item"
+                           [routerLinkActive]="'active'"
                         >
                             <em class="fa fa-home fa-1x me-2"></em>
                             <span>{{'header.accueil'| translate}}</span>
@@ -79,7 +80,7 @@
         </nav>
     </div>
 
-    <div *ngIf="mediaSize.isSm || mediaSize.isMd">
+    <div *ngIf="mediaSize.isXs || mediaSize.isSm || mediaSize.isMd || mediaSize.isLg">
         <nav class="navbar header-nav rudi-header-container" aria-label="navbar-mobile">
             <span>
                 <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
@@ -128,7 +129,8 @@
             </div>
 
             <!-- Fin button menu burger -->
-            <div class="justify-content-end navbar-menu-items header-container-sm collapse" [ngClass]="{ show: !isCollapsed }" id="main-nav2">
+            <div class="justify-content-end navbar-menu-items header-container-sm collapse"
+                 [ngClass]="{ show: !isCollapsed }" id="main-nav2">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="#" routerLink="home"

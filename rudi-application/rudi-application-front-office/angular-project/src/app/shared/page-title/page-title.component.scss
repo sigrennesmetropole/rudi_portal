@@ -1,27 +1,51 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .page-title-container{
     padding: 0 80px;
 }
 .search-box-title {
-    font-family: Montserrat, sans-serif;
+    span {
+        display: contents;
+        line-height: 1.8rem;
+    }
 }
 
 .subtitle-3 {
     font-size: 16px;
     line-height: 1.5;
     text-align: center;
-    color: $primary-text;
+    color: var(--primary-text);
     width: 730px;
 }
 
 .subtitle-4 {
     font-weight: 600;
-    color: $primary-color;
+    color: var(--primary-color);
     text-align: center;
     margin-bottom: 20px;
     cursor: pointer;
     text-decoration: underline;
+}
+
+.search-box-title {
+    color: var(--primary-color);
+    height: 56px;
+
+    span {
+        color: var(--accent-color);
+        font-weight: normal;
+    }
+
+    &-sm {
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    &-lg {
+        font-weight: bold;
+        font-size: 38px;
+        margin-bottom: 20px;
+    }
+
 }

@@ -35,16 +35,17 @@ export class FooterComponent implements OnInit {
         forkJoin({
             twitterLinkHref: this.propertiesService.get('rudidatarennes.twitter'),
             linkedinLinkHref: this.propertiesService.get('rudidatarennes.linkedin'),
-        }).subscribe(
-            ({twitterLinkHref, linkedinLinkHref}) => {
+        }).subscribe({
+            next: ({twitterLinkHref, linkedinLinkHref}) => {
                 this.loading = false;
                 this.twitterLinkHref = twitterLinkHref;
                 this.linkedinLinkHref = linkedinLinkHref;
             },
-            (error) => {
+            error: (error) => {
                 this.loading = false;
                 this.logService.error(error);
-            });
+            }
+        });
     }
 
     goToTop(): void {

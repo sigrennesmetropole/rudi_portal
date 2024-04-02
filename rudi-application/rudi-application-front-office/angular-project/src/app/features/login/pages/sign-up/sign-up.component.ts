@@ -134,24 +134,21 @@ export class SignUpComponent implements OnInit {
         // Validation du captcha avant tout puis appel du nextStep
         this.captchaCheckerService.validateCaptchaAndDoNextStep(this.enableCaptchaOnPage, this.rudiCaptcha,
             this.accountService.createAccount(this.signupForm))
-            .subscribe(
-                () => {
+            .subscribe({
+                next: () => {
                     this.loading = false;
                     this.routeHistoryService.goBackOrElseGoAccount();
                     this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
                         this.snackBarService.openSnackBar({
-                            message: `
-                        ${this.translateService.instant('snackbarTemplate.successIncription')}
-                        <a href="${rudidatarennesContactLink}">
-                            ${this.translateService.instant('snackbarTemplate.successIncriptionLinkText')}
-                        </a>
-                    `,
+                            message: `${this.translateService.instant('snackbarTemplate.successIncription')}
+                                        <a href="${rudidatarennesContactLink}">
+                                            ${this.translateService.instant('snackbarTemplate.successIncriptionLinkText')}
+                                        </a>`,
                             keepBeforeSecondRouteChange: true
                         });
                     });
                 },
-                // Si erreur lors de la création du compte ou de l'authent auto
-                (error: Error) => {
+                error: (error: Error) => {
                     this.loading = false;
                     console.error(error);
                     if (error instanceof ErrorWithCause && error.code === CAPTCHA_NOT_VALID_CODE) {
@@ -159,6 +156,7 @@ export class SignUpComponent implements OnInit {
                         return;
                     }
                     this.errorString = error.message;
-                });
+                }
+            });
     }
 }

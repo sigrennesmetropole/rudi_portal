@@ -4,7 +4,6 @@
     width: 100%;
 }
 .table-title-style {
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: left;
@@ -13,11 +12,10 @@
     text-align: left;
 }
 .titre-jdd{
-    font-family: OpenSans, sans-serif;
     font-size: 15px;
     font-weight: bold;
     text-align: left;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 .table-jdd {
     margin-top: 3em;
@@ -27,10 +25,9 @@
     width: 1.5em;
 }
 .table-header{
-    font-family: OpenSans, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color:$primary-text;
+    color:var(--primary-text);
     //overide the mat table margin css
     padding: 0px !important
 }
@@ -41,7 +38,7 @@
     width: 20%;
 }
 .fake-btn-status {
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     border-radius: 14px;
     white-space: nowrap;
     padding: 5px 18px;

@@ -1,4 +1,4 @@
-package org.rudi.microservice.konsult.facade.controller;
+package org.rudi.microservice.konsult.facade.controller.media;
 
 import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
 import static org.rudi.common.core.security.QuotedRoleCodes.ANONYMOUS;

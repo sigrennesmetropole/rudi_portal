@@ -1,9 +1,9 @@
 @import "common-style";
 
 .p-large {
-    padding: $padding-top 0 30px 0 !important;
+    padding: var(--padding-top) 0 30px 0 !important;
 }
 
 mat-sidenav-content {
-    min-height: calc(100vh - #{$app-footer-height});
+    min-height: calc(100vh - var(--app-footer-height));
 }

@@ -1,8 +1,8 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {ListComponent} from '@features/organization/pages/list/list.component';
+import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
+import {ListComponent} from '@features/organization/pages/list/list.component';
 import {DetailComponent} from './pages/detail/detail.component';
 
 
@@ -12,19 +12,19 @@ const routes: Routes = [
         path: '',
         pathMatch: 'full',
         component: ListComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
     {
         // Path details
         path: 'detail/:organizationUuid',
         component: DetailComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
     {
         // Path details
         path: 'detail/:organizationUuid/:name',
         component: DetailComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     }
 ];
 

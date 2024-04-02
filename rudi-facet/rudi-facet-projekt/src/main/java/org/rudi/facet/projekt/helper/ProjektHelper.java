@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -56,9 +57,12 @@ public class ProjektHelper {
 	 * @return true si l'uuid to check est autorisé à accéder au jeu de données, null sinon
 	 */
 	public boolean hasAccessToDataset(UUID uuidToCheck, UUID globalId) {
-		return Boolean.TRUE.equals(
-				projektWebClient.get().uri(uriBuilder -> uriBuilder.path(projektProperties.getHasAccessToDatasetPath())
-						.build(uuidToCheck, globalId)).retrieve().bodyToMono(Boolean.class).block());
+		return Boolean.TRUE.equals(hasMonoAccessToDataset(uuidToCheck, globalId).block());
+	}
+
+	public Mono<Boolean> hasMonoAccessToDataset(UUID uuidToCheck, UUID globalId) {
+		return projektWebClient.get().uri(uriBuilder -> uriBuilder.path(projektProperties.getHasAccessToDatasetPath())
+				.build(uuidToCheck, globalId)).retrieve().bodyToMono(Boolean.class);
 	}
 
 	/**

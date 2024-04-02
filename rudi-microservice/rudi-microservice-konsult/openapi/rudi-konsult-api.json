@@ -1133,6 +1133,42 @@
 				}
 			}
 		},
+		"/cms/resources": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Téléchargement d'une resource du CMS",
+				"description": "Téléchargement d'une resource du CMS",
+				"operationId": "downloadResource",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "resourcePath",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
 		"/customizations": {
 			"get": {
 				"tags": [

@@ -1,12 +1,10 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 @import "bootstrap/scss/bootstrap-grid";
 
 .project-detail-label {
     @extend .pb-1;
 
-    color: $primary-color;
+    color: var(--primary-color);
     font-size: 13px;
     font-weight: 600;
     font-stretch: normal;
@@ -23,7 +21,7 @@
     @extend .mb-3;
     @extend .mt-3;
 
-    color: $secondary-text;
+    color: var(--secondary-text);
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;

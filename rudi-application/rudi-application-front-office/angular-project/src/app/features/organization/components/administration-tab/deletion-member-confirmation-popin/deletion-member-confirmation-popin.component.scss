@@ -1,9 +1,7 @@
 @import "common-style";
-@import "variables-rudi";
 
 #dialog-content {
     max-width: 768px;
-    font-family: "Open Sans", sans-serif;
 }
 
 .mat-dialog-container {
@@ -36,7 +34,7 @@
 
         svg:hover {
             opacity: 1;
-            background-color: $primary-color;
+            background-color: var(--primary-color);
             fill: white;
         }
     }
@@ -47,9 +45,9 @@
     }
 
     .dialog-cancel {
-        background-color: $secondary-color;
-        border: solid 1px $blocks-and-menus-outline;
-        color: $primary-text-light;
+        background-color: var(--secondary-color);
+        border: solid 1px var(--blocks-and-menus-outline);
+        color: var(--primary-text-light);
         width: 160px;
         height: 42px;
         border-radius: 6px;
@@ -57,15 +55,15 @@
         font-weight: bold;
 
         &:hover {
-            background-color: $primary-color;
-            color: $secondary-color;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
         }
     }
 
 
     .dialog-validate {
-        background-color: $primary-color;
-        color: $secondary-color;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         width: 160px;
         height: 42px;
         border-radius: 6px;
@@ -73,8 +71,8 @@
         font-weight: bold;
 
         &:hover {
-            background-color: $focus;
-            color: $secondary-color;
+            background-color: var(--focus);
+            color: var(--secondary-color);
         }
     }
 }
@@ -92,5 +90,4 @@
 
 .description {
     font-size: 14px;
-    font-family: OpenSans, sans-serif;
 }

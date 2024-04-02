@@ -1,95 +1,127 @@
 @import "common-style";
 @import "add-link-to-project";
+@import "_responsive";
 
 #dialog-content {
     max-width: 768px;
-    font-family: "Open Sans", sans-serif;
 }
 
-.mat-dialog-container {
-    padding: 66px 40px 66px 40px;
-    overflow-x: hidden;
-    max-height: 92vh;
-}
-
-.mat-dialog-content {
-    display: block;
-    margin: 0 -24px;
-    padding: 0 59px;
-    max-height: 65vh;
-    overflow: inherit;
-    -webkit-overflow-scrolling: touch;
-}
-
-::ng-deep {
-    .icon-close {
-        svg {
-            height: 24px;
-            width: 24px;
-            fill: black;
-            opacity: 0.54;
-            border: solid 1px grey;
-            border-radius: 20px;
-            padding: 5px;
-        }
-
-        svg:hover {
-            opacity: 1;
-            background-color: $primary-color;
-            fill: white;
-        }
+.icon-close {
+    svg {
+        height: 24px;
+        width: 24px;
+        fill: black;
+        opacity: 0.54;
+        border: solid 1px grey;
+        border-radius: 20px;
+        padding: 5px;
     }
 
-    .dialog-footer-button {
-        padding: 0 37px 51px 25px;
-        margin-top: 1em;
+    svg:hover {
+        opacity: 1;
+        background-color: var(--primary-color);
+        fill: white;
+    }
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 50px 20px 50px;
+
+    .title-blue-theme {
+        color: #004680;
+        line-height: 28px;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .description {
+        line-height: 20px;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+}
+
+.buttons-container {
+    margin-top: 20px;
+    width: 100%;
+
+    .button {
+        width: 160px;
+        height: 42px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0;
     }
 
     .dialog-cancel {
-        background-color: $secondary-color;
-        border: solid 1px $blocks-and-menus-outline;
-        color: $primary-text-light;
-        width: 160px;
-        height: 42px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: bold;
+        background-color: var(--secondary-color);
+        color: var(--primary-text-light);
 
         &:hover {
-            background-color: $primary-color;
-            color: $secondary-color;
+            background-color: var(--focus);
+            color: var(--secondary-color);
         }
     }
-
 
     .dialog-validate {
-        background-color: $primary-color;
-        color: $secondary-color;
-        width: 160px;
-        height: 42px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: bold;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
 
         &:hover {
-            background-color: $focus;
-            color: $secondary-color;
+            background-color: var(--focus);
         }
     }
 }
 
-.blue-theme {
-    color: #004680;
-    font-size: 28px;
-    font-weight: bold;
+
+@mixin desktop-screen {
+    .buttons-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .dialog-cancel {
+            margin-bottom: 0;
+        }
+    }
 }
 
-.text-alignement {
-    text-align: center;
-    margin-bottom: 1em;
+@mixin mobile-screen {
+    .buttons-container {
+        display: flex;
+        flex-direction: column;
+
+        .dialog-cancel {
+            margin-bottom: 20px;
+        }
+    }
 }
 
-.description {
-    font-size: 14px;
-    font-family: OpenSans, sans-serif;
+@include xs() {
+    @include mobile-screen;
 }
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include desktop-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include desktop-screen;
+}
+
+
+

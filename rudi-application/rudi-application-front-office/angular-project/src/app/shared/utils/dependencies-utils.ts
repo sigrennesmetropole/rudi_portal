@@ -1,6 +1,6 @@
-import {forkJoin, Observable, ObservedValueOf, of, pipe, throwError, UnaryFunction} from 'rxjs';
-import {map, mapTo, switchMap} from 'rxjs/operators';
 import {OwnerType} from 'micro_service_modules/projekt/projekt-model';
+import {forkJoin, Observable, ObservedValueOf, of, pipe, throwError, UnaryFunction} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 
 /**
  * Récupérateur de dépendance à injecter dans un champ donné d'un objet
@@ -89,7 +89,7 @@ function injectDependenciesInto<T extends ObjectWithDependencies<D>, D>(fetchers
     // On lance la récupération en parallèle des dépendances pour chaque clé
     // alimentation de objectsWithDependencies à la complétion du forkjoin (on se fiche du résultat de retour)
     return forkJoin(dependencie$).pipe(
-        mapTo(objectOrObjects instanceof Array ? objectsWithDependencies : objectsWithDependencies[0])
+        map(() => objectOrObjects instanceof Array ? objectsWithDependencies : objectsWithDependencies[0])
     );
 }
 
@@ -113,7 +113,7 @@ function injectDependencyIntoObjects<T extends ObjectWithDependencies<D>, D, R>(
 
         // Check si on peut charger la dépendance
         if (!fetcher.hasPrerequisites(objectWithDependencies)) {
-            return throwError(new Error('Erreur la dépendance : ' + fieldName + ' ne possède pas ses prérequis.' +
+            return throwError(() => new Error('Erreur la dépendance : ' + fieldName + ' ne possède pas ses prérequis.' +
                 ' Changez le chaînage RXJS.'));
         }
 

@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .table-and-loader-container {
     margin-top: 3em;
@@ -12,17 +10,15 @@
 }
 
 .table-header {
-    font-family: OpenSans, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: $primary-text;
+    color: var(--primary-text);
 }
 
 .table-header-role {
-    font-family: OpenSans, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: $primary-text;
+    color: var(--primary-text);
     padding-left: 43px !important;
     width: 1%;
 }
@@ -37,20 +33,9 @@
         display: none;
     }
 
-    .search-box-title {
-        color: $primary-color;
-        height: 56px;
-
-        span {
-            color: $accent-color;
-            font-weight: normal;
-        }
-
-    }
-
     .search-input {
         border-radius: 6px;
-        border: 0.8px solid $blocks-and-menus-outline;
+        border: 0.8px solid var(--blocks-and-menus-outline);
         height: 48px;
         margin: 22px 25px 42px 15px;
     }
@@ -69,7 +54,7 @@
             }
 
             &-icon {
-                color: $primary-color;
+                color: var(--primary-color);
                 position: absolute;
                 margin-left: 16px;
             }
@@ -93,7 +78,7 @@
     }
 
     input::placeholder {
-        color: $primary-text-light !important;
+        color: var(--primary-text-light) !important;
     }
 
     .text-indent {
@@ -121,7 +106,6 @@
 }
 
 .blue-theme {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
     font-weight: bold;
     line-height: 1.08;
@@ -133,11 +117,10 @@
     white-space: nowrap;
     padding: 5px 18px;
     font-size: 13px;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 .title-label {
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: left;
@@ -168,7 +151,6 @@ button {
 }
 
 .button-menu {
-    font-family: OpenSans, sans-serif;
     cursor: pointer;
     font-weight: 600;
     height: 42px;
@@ -177,10 +159,9 @@ button {
 }
 
 .menu-open {
-    font-family: OpenSans, sans-serif;
     cursor: pointer;
     font-weight: 600;
-    color: $secondary-color;
+    color: var(--secondary-color);
     border: solid 1px var(--4-contours-blocs-menus);
     background-color: var(--0-classic-blue);
     border-radius: 100px;
@@ -202,6 +183,6 @@ mat-icon {
 }
 
 .add-button {
-    color: $secondary-color;
+    color: var(--secondary-color);
     background-color: var(--0-classic-blue);
 }

@@ -9,6 +9,20 @@ subApps:
   detail:
     form:
       properties:
+        link:
+          locale:
+            rows: 1
+            maxLength: 5
+          message:
+            rows: 1
+            maxLength: 256
+        modified:
+          locale:
+            rows: 1
+            maxLength: 256
+          message:
+            rows: 1
+            maxLength: 256
         title1:
           locale:
             rows: 1

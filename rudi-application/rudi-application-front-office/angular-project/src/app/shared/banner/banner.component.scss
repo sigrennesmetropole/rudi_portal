@@ -1,11 +1,9 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 @import "responsive";
 
 :host {
     display: flex;
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     padding: 8px 80px;
 }
 

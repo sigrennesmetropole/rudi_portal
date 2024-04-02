@@ -1,5 +1,12 @@
 package org.rudi.microservice.selfdata.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_APIGATEWAY;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_APIGATEWAY_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
+
 import java.util.UUID;
 
 import org.rudi.microservice.selfdata.facade.controller.api.MatchingApi;
@@ -9,10 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KONSULT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_SELFDATA_ADMINISTRATOR;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,7 +29,8 @@ public class MatchingController implements MatchingApi {
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ", " + MODULE_KONSULT + ")")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_KONSULT_ADMINISTRATOR + ", " + MODULE_KONSULT + ","
+			+ MODULE_APIGATEWAY + "," + MODULE_APIGATEWAY_ADMINISTRATOR + ")")
 	public ResponseEntity<Boolean> hasMatchingToDataset(UUID userUuid, UUID datasetUuid) throws Exception {
 		return ResponseEntity.ok(matchingService.hasMatchingToDataset(userUuid, datasetUuid));
 	}

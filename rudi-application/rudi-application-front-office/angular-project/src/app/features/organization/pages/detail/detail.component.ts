@@ -1,12 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
-import {User} from 'micro_service_modules/acl/acl-api';
-import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {LogService} from '@core/services/log.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
 import {UserService} from '@core/services/user.service';
-import {TranslateService} from '@ngx-translate/core';
+import {User} from 'micro_service_modules/acl/acl-api';
+import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {switchMap, tap} from 'rxjs/operators';
 
 
@@ -24,9 +22,7 @@ export class DetailComponent implements OnInit {
     constructor(private readonly route: ActivatedRoute,
                 private readonly organizationService: OrganizationMetierService,
                 private readonly userService: UserService,
-                private readonly logService: LogService,
-                private readonly translateService: TranslateService,
-                private readonly snackbarService: SnackBarService) {
+                private readonly logService: LogService) {
     }
 
     ngOnInit(): void {
@@ -62,13 +58,14 @@ export class DetailComponent implements OnInit {
     }
 
     isAdministrator(organizationUuid: string): void {
-        this.organizationService.isAdministrator(organizationUuid).subscribe(
-            (isAdministrator: boolean) => {
-                this._displayAdministrationTab = isAdministrator;
-            },
-            (error) => {
-                this.logService.error(error);
-            }
-        );
+        this.organizationService.isAdministrator(organizationUuid)
+            .subscribe({
+                next: (isAdministrator: boolean) => {
+                    this._displayAdministrationTab = isAdministrator;
+                },
+                error: (error) => {
+                    this.logService.error(error);
+                }
+            });
     }
 }

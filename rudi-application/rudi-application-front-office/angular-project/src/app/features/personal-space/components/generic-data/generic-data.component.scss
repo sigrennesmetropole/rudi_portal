@@ -1,5 +1,3 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
 
@@ -12,7 +10,7 @@
     height: 45px;
     border-radius: 4px;
     margin-bottom: 10px;
-    border: solid 1px $blocks-and-menus-outline;
+    border: solid 1px var(--blocks-and-menus-outline);
 
     .rudi-panel-data-data-language {
         font-size: 12px;
@@ -20,7 +18,7 @@
         font-stretch: normal;
         font-style: normal;
         letter-spacing: normal;
-        color: $primary-text;
+        color: var(--primary-text);
     }
 
     .rudi-panel-language-value {
@@ -42,7 +40,7 @@
 }
 
 .rudi-panel-tbody-border {
-    border-left: 1px solid $blocks-and-menus-outline;
-    border-right: 1px solid $blocks-and-menus-outline;
-    border-bottom: 1px solid $blocks-and-menus-outline;
+    border-left: 1px solid var(--blocks-and-menus-outline);
+    border-right: 1px solid var(--blocks-and-menus-outline);
+    border-bottom: 1px solid var(--blocks-and-menus-outline);
 }

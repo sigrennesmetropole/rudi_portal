@@ -1,33 +1,29 @@
-@import "variables-rudi";
 @import "common-style";
 
 @mixin button-blue {
-    background-color: $primary-color;
+    background-color: var(--primary-color);
     font-weight: bold;
-    color: $banner-solid-color;
-    font-family: OpenSans, sans-serif;
+    color: var(--banner-solid-color);
 }
 
 @mixin button-inactive {
-    background-color: $primary-text-light;
+    background-color: var(--primary-text-light);
     font-weight: bold;
-    color: $banner-solid-color;
-    font-family: OpenSans, sans-serif;
+    color: var(--banner-solid-color);
     pointer-events: none;
 }
 
 
 #content {
-    margin: $content-margin-top auto 0 auto;
+    margin: var(--content-margin-top) auto 0 auto;
     max-width: 768px;
-    font-family: OpenSans, sans-serif;
 }
 
 h1 {
     // TODO À adapter lors de l'ajout du fil d'Ariane
-    margin-top: 171px; // $content-margin-top + 65px
+    margin-top: var(--content-margin-top) + 65px;
 
-    color: $primary-color;
+    color: var(--primary-color);
     text-align: center;
 
     font-size: 38px;
@@ -40,15 +36,13 @@ h1 {
     }
 
     .title-2 {
-        color: $accent-color;
+        color: var(--accent-color);
     }
 }
 
 .description {
     text-align: center;
-    color: $primary-text;
-
-    font-family: OpenSans, sans-serif;
+    color: var(--primary-text);
     font-size: 16px;
     font-weight: normal;
     font-stretch: normal;
@@ -69,23 +63,21 @@ h1 {
     }
 
     .step-title {
-        color: $primary-color;
+        color: var(--primary-color);
         font-size: 26px;
         font-weight: bold;
         text-align: center;
     }
 
     .step-description {
-        font-family: OpenSans, sans-serif;
         font-size: 16px;
-        color: $primary-text;
+        color: var(--primary-text);
         text-align: center;
     }
 
     .step-required-information {
-        font-family: OpenSans, sans-serif;
         font-size: 14px;
-        color: $primary-text-light;
+        color: var(--primary-text-light);
         text-align: center;
     }
 
@@ -93,16 +85,14 @@ h1 {
         margin-bottom: 0.7em;
 
         &-title {
-            font-family: OpenSans, sans-serif;
             font-size: 16px;
-            color: $secondary-text;
+            color: var(--secondary-text);
             line-height: 2;
         }
 
         &-description {
-            font-family: OpenSans, sans-serif;
             font-size: 14px;
-            color: $primary-text-light;
+            color: var(--primary-text-light);
         }
 
     }
@@ -118,10 +108,9 @@ h1 {
         margin: 1px 1px 35px 0;
         padding: 28px 60px 24px 19px;
         border-radius: 4px;
-        border: solid 1px $keywords-outline;
+        border: solid 1px var(--keywords-outline);
 
         mat-radio-button {
-            font-family: OpenSans, sans-serif;
             font-size: 16px;
             font-weight: bold;
             color: #1e1e1e;
@@ -139,9 +128,8 @@ h1 {
         .mat-radio-button-description {
             margin-top: -4px;
             margin-bottom: 2em;
-            font-family: OpenSans, sans-serif;
             font-size: 14px;
-            color: $primary-text-light;
+            color: var(--primary-text-light);
         }
 
     }
@@ -155,14 +143,14 @@ h1 {
         width: 300px;
         height: 50px;
         border-radius: 4px;
-        background-color: $primary-color;
-        color: $secondary-color;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         font-size: 16px;
         font-weight: bold;
 
         &:hover {
-            background-color: $focus;
-            color: $secondary-color;
+            background-color: var(--focus);
+            color: var(--secondary-color);
         }
     }
 
@@ -171,7 +159,7 @@ h1 {
             margin: -12px 0 0 -8px;
 
             svg {
-                fill: $secondary-color;
+                fill: var(--secondary-color);
                 height: 22px;
                 width: 22px;
                 margin: 0 0 0 -4px;
@@ -185,10 +173,9 @@ h1 {
 
         &-header {
             .count {
-                font-family: OpenSans, sans-serif;
                 font-size: 15px;
                 font-weight: bold;
-                color: $secondary-text;
+                color: var(--secondary-text);
                 text-align: left;
             }
         }
@@ -197,7 +184,7 @@ h1 {
             display: flex;
             flex-direction: column;
 
-            $border-color: $keywords-outline;
+            $border-color: var(--keywords-outline);
 
             border-bottom: solid 1px $border-color;
             padding-bottom: 1em;
@@ -220,7 +207,6 @@ h1 {
     margin-top: 39px;
 
     .button {
-        font-family: OpenSans, sans-serif;
         font-weight: bold;
         height: 42px;
         width: 160px;
@@ -228,14 +214,14 @@ h1 {
     }
 
     .previous-button {
-        color: $primary-text-light;
+        color: var(--primary-text-light);
     }
 
     .next-button {
         @include button-blue;
     }
 
-    .submit{
+    .submit {
         @include button-inactive
     }
 
@@ -272,7 +258,7 @@ mat-error {
     line-height: normal;
     letter-spacing: normal;
     text-align: center;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 .title-hint {
@@ -307,7 +293,7 @@ mat-error {
     font-style: normal;
     line-height: 1.43;
     letter-spacing: normal;
-    color: $error-color;
+    color: var(--error-color);
 }
 
 
@@ -319,7 +305,6 @@ mat-error {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: OpenSans, sans-serif;
 }
 
 *:focus-visible {
@@ -331,7 +316,7 @@ mat-error {
 ::ng-deep {
     .mat-focused .mat-form-field-label {
         /*change color of label*/
-        color: $focus !important;
+        color: var(--focus) !important;
     }
 
     // Customization du formulaire Angular Material
@@ -340,7 +325,7 @@ mat-error {
         .mat-form-field-outline-start,
         .mat-form-field-outline-gap,
         .mat-form-field-outline-end {
-            background: $banner-solid-color-60;
+            background: var(--banner-solid-color-60);
         }
 
         .mat-form-field-infix {
@@ -348,9 +333,8 @@ mat-error {
         }
 
         input {
-            font-family: OpenSans, sans-serif;
             font-size: 15px;
-            color: $primary-text !important;
+            color: var(--primary-text) !important;
             height: 2em;
         }
 
@@ -361,7 +345,6 @@ mat-error {
 
         $height: 34px;
         $offset-top: -4px; // pour combler l'augmentation de la hauteur
-        $focused-height: 38px;
 
         .mat-horizontal-stepper-header-container {
             width: 55%;
@@ -376,7 +359,7 @@ mat-error {
             background: none;
 
             .mat-step-icon {
-                box-shadow: white 0 0 0 2px, $primary-color 0 0 0 3px; // double bordure
+                box-shadow: white 0 0 0 2px, var(--primary-color) 0 0 0 3px; // double bordure
             }
 
         }
@@ -386,13 +369,13 @@ mat-error {
             .mat-step-icon {
                 background: white;
                 box-shadow: white 0 0 0 2px, #909090 0 0 0 3px; // double bordure
-                color: $primary-text-light;
+                color: var(--primary-text-light);
             }
 
             .mat-step-text-label,
             .mat-step-icon-content {
                 font-weight: normal; // Si on active normal, alors le texte peut se déplacer à la sélection
-                color: $primary-text-light;
+                color: var(--primary-text-light);
             }
 
         }
@@ -407,10 +390,9 @@ mat-error {
 
         .mat-step-text-label {
             margin-top: $offset-top;
-            font-family: OpenSans, sans-serif;
             font-size: 14px;
             font-weight: bold;
-            color: $primary-color;
+            color: var(--primary-color);
         }
 
         .mat-icon {
@@ -418,15 +400,15 @@ mat-error {
         }
 
         .mat-step-icon-content {
-            font-family: OpenSans, sans-serif;
             line-height: 1px; // pour centrer la police verticalement
         }
     }
 
     .mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate{
-        background: $primary-color !important;
+        background: var(--primary-color) !important;
     }
+
     .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
-        color: $primary-color;
+        color: var(--primary-color);
     }
 }

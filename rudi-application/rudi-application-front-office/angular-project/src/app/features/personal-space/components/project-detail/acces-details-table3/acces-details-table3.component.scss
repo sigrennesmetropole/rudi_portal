@@ -6,7 +6,6 @@
 }
 
 .table-title-style {
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: left;
@@ -20,19 +19,17 @@
     }
 
     .titre-jdd {
-        font-family: OpenSans, sans-serif;
         font-size: 15px;
         font-weight: bold;
         text-align: left;
-        color: $primary-color;
+        color: var(--primary-color);
         padding-bottom: 0.3em;
     }
 
     .table-header {
-        font-family: OpenSans, sans-serif;
         font-size: 13px;
         font-weight: 600;
-        color: $primary-text;
+        color: var(--primary-text);
         //overide the mat table margin css
         padding: 0px !important
     }
@@ -42,10 +39,9 @@
     }
 
     .data-town-name {
-        font-family: OpenSans, sans-serif;
         font-size: 13px;
         line-height: 1.54;
-        color: $primary-text;
+        color: var(--primary-text);
         padding-top: 0.2em;
         display: flex;
     }

@@ -1,5 +1,3 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
 .detail-wrapper {
@@ -19,10 +17,10 @@
 .contact {
     margin: 0 37px 5px 0;
     padding: 20px 0;
-    border-top: 1px solid $blocks-and-menus-outline;
+    border-top: 1px solid var(--blocks-and-menus-outline);
 
     a {
-        color: $focus !important;
+        color: var(--focus) !important;
         text-decoration: underline;
     }
 

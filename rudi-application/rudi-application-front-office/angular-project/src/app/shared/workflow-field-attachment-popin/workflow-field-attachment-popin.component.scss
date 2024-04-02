@@ -1,5 +1,3 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
 #content-style {
@@ -11,7 +9,6 @@
     height: 80px;
     margin: 15px 21px 95px 0.2px;
     padding: 30px 158px 22px 203px;
-    font-family: OpenSans, sans-serif;
     font-size: 32px;
     font-weight: bold;
     line-height: 1.25;
@@ -31,8 +28,8 @@
 
 .button {
     margin-top: 1em;
-    background-color: $primary-color;
-    color: $banner-solid-color;
+    background-color: var(--primary-color);
+    color: var(--banner-solid-color);
     font-weight: 600;
     padding: 7px 22px;
     $line-height: 1.84rem;
@@ -51,8 +48,8 @@
 .confirm-btn {
     margin-left: 2%;
     width: 140px;
-    background-color: $primary-color;
-    color: $banner-solid-color;
+    background-color: var(--primary-color);
+    color: var(--banner-solid-color);
 }
 
 .cancel-btn {

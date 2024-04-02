@@ -1,11 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {HeroDescription} from 'micro_service_modules/konsult/konsult-model';
 import {FiltersService} from '@core/services/filters.service';
 import {Base64EncodedLogo, ImageLogoService} from '@core/services/image-logo.service';
 import {LogService} from '@core/services/log.service';
 import {TranslateService} from '@ngx-translate/core';
 import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {HeroDescription} from 'micro_service_modules/konsult/konsult-model';
 import {Observable, of, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 
@@ -43,34 +43,40 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     initLeftPicto(): void {
         this.loadingLeftPicto = true;
         this.konsultService.downloadCustomizationResource(this.heroDescription.left_image)
-            .subscribe((blob: Blob) => {
-                this.leftPictoSrc$ = this.imageLogoService.createImageFromBlob(blob)
-                    .pipe(
-                        tap(() => {
-                            this.loadingLeftPicto = false;
-                        })
-                    );
-            }, error => {
-                this.logger.error(error);
-                this.leftPictoSrc$ = of(DEFAULT_PICTO);
-                this.loadingLeftPicto = false;
+            .subscribe({
+                next: (blob: Blob) => {
+                    this.leftPictoSrc$ = this.imageLogoService.createImageFromBlob(blob)
+                        .pipe(
+                            tap(() => {
+                                this.loadingLeftPicto = false;
+                            })
+                        );
+                },
+                error: (error) => {
+                    this.logger.error(error);
+                    this.leftPictoSrc$ = of(DEFAULT_PICTO);
+                    this.loadingLeftPicto = false;
+                }
             });
     }
 
     initRightPicto(): void {
         this.loadingRightPicto = true;
         this.konsultService.downloadCustomizationResource(this.heroDescription.right_image)
-            .subscribe((blob: Blob) => {
-                this.rightPictoSrc$ = this.imageLogoService.createImageFromBlob(blob)
-                    .pipe(
-                        tap(() => {
-                            this.loadingRightPicto = false;
-                        })
-                    );
-            }, error => {
-                this.logger.error(error);
-                this.rightPictoSrc$ = of(DEFAULT_PICTO);
-                this.loadingRightPicto = false;
+            .subscribe({
+                next: (blob: Blob) => {
+                    this.rightPictoSrc$ = this.imageLogoService.createImageFromBlob(blob)
+                        .pipe(
+                            tap(() => {
+                                this.loadingRightPicto = false;
+                            })
+                        );
+                },
+                error: (error) => {
+                    this.logger.error(error);
+                    this.rightPictoSrc$ = of(DEFAULT_PICTO);
+                    this.loadingRightPicto = false;
+                }
             });
     }
 

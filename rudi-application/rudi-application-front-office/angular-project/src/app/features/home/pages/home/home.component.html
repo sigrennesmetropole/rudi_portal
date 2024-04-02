@@ -15,6 +15,12 @@
         </div>
     </div>
 
+    <div class="news-section">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="customizationDescriptionIsLoading"></app-loader>
+        <app-cms-news-section *ngIf="!customizationDescriptionIsLoading"
+                              [cmsNewsDescription]="customizationDescription.cms_news_description"></app-cms-news-section>
+    </div>
+
     <div class="jdd-section">
         <app-jdd-section [isLoading]="jddsIsLoading" [jdds]="jdds"></app-jdd-section>
     </div>

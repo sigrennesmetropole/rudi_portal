@@ -1,4 +1,5 @@
-<div class="container-global my-3" (click)="handleClickOnDatasetCard(currentJddId, resourceTitle)">
+<div class="container-global my-3" [ngClass]="{'jdd-card-lg': mediaSize.isLg,'jdd-card-md': mediaSize.isMd || mediaSize.isSm,
+'jdd-card-xs': mediaSize.isXs}" (click)="handleClickOnDatasetCard(currentJddId, resourceTitle)">
     <div class="logo-container" *ngIf="showLogo">
         <app-organization-logo [organizationId]="organizationId"
                                [isANewRequest]="isANewRequest"

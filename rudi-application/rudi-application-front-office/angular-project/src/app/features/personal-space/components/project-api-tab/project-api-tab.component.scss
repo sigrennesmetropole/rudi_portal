@@ -1,4 +1,3 @@
-@import "variables-rudi";
 @import "common-style";
 
 *:focus-visible {
@@ -43,14 +42,12 @@
 
 .title-keys {
     margin: 25px 420px 2px 3px;
-    font-family: OpenSans, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 .identification-title {
-    font-family: OpenSans, sans-serif;
     font-size: 19px;
     font-weight: 600;
     line-height: 1.72;

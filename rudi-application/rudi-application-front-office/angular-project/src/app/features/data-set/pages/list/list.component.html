@@ -132,9 +132,9 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <div
-            [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd, 'p-large':mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
-            class="container-fluid">
+        <div class="container-fluid"
+             [ngClass]="{'p-small': mediaSize.isXs || mediaSize.isSm,'p-medium': mediaSize.isMd, 'p-large': mediaSize.isDeviceDesktop}">
+
 
             <app-page-title [title1]="'searchbox.jeux'|translate"
                             [title2]="'searchbox.donnees'|translate"

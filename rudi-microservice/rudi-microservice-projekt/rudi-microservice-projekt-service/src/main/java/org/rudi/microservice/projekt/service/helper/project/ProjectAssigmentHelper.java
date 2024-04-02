@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.helper.workflow.AbstractAssignmentHelper;
 import org.rudi.facet.organization.bean.OrganizationMember;
 import org.rudi.facet.organization.helper.OrganizationHelper;
@@ -40,6 +41,10 @@ public class ProjectAssigmentHelper extends AbstractAssignmentHelper<ProjectEnti
 	@Getter(value = AccessLevel.PROTECTED)
 	private OrganizationHelper organizationHelper;
 
+	@Autowired
+	@Getter(value = AccessLevel.PROTECTED)
+	private ACLHelper aclHelper;
+
 	@Override
 	public List<String> computeAssignees(ProjectEntity assetDescription, String roleCode) {
 		List<User> users = getAclHelper().searchUsers(roleCode);
@@ -56,16 +61,26 @@ public class ProjectAssigmentHelper extends AbstractAssignmentHelper<ProjectEnti
 		}
 	}
 
-	public List<String> computeOrganizationMembers(UUID organizationUuid) {
+	public List<String> computeOrganizationMembersLogins(UUID organizationUuid) {
 		List<String> membersLogins = new ArrayList<>();
 
+		List<User> users = computeOrganizationMembers(organizationUuid);
+		if (CollectionUtils.isNotEmpty(users)) {
+			CollectionUtils.addAll(membersLogins, aclHelper.lookupEmailAddresses(users));
+		}
+
+		return membersLogins;
+	}
+
+	public List<User> computeOrganizationMembers(UUID organizationUuid){
+		List<User> membersUser = new ArrayList<>();
 		try {
 			Collection<OrganizationMember> members = getOrganizationHelper().getOrganizationMembers(organizationUuid);
 			if (CollectionUtils.isNotEmpty(members)) {
 				for (OrganizationMember member : members) {
 					final var user = getAclHelper().getUserByUUID(member.getUserUuid());
 					if (user != null) {
-						membersLogins.add(user.getLogin());
+						membersUser.add(user);
 					} else {
 						log.warn("Member with user uuid \"{}\" does not exist as user in ACL", member.getUserUuid());
 					}
@@ -74,7 +89,8 @@ public class ProjectAssigmentHelper extends AbstractAssignmentHelper<ProjectEnti
 		} catch (GetOrganizationMembersException e) {
 			log.error("Erreur de récupération des membres de l'organization {}", organizationUuid, e);
 		}
-		return membersLogins;
+
+		return membersUser;
 	}
 
 }

@@ -3,6 +3,9 @@
  */
 package org.rudi.facet.bpmn.bean.workflow;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.Getter;
@@ -26,9 +29,18 @@ public class EMailData {
 
 	private String body;
 
+	private Map<String, Object> data;
+
 	public EMailData(String subject, String body) {
 		this.subject = subject;
 		this.body = body;
+	}
+
+	public void addData(String key, Object value){
+		if (data == null) {
+			data = new HashMap<>();
+		}
+		data.put(key, value);
 	}
 
 	public boolean hasSubject() {

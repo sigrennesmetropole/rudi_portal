@@ -1,8 +1,4 @@
-@import "../../styles/common-style";
-
-:host {
-    font-family: "Open Sans", sans-serif;
-}
+@import "common-style";
 
 ::ng-deep {
 
@@ -45,7 +41,7 @@
         svg:hover {
             fill: white;
             opacity: 1;
-            background-color: $primary-color;
+            background-color: var(--primary-color);
         }
     }
 
@@ -55,13 +51,12 @@
         margin-bottom: 20px;
         text-align: center;
         display: block;
-        color: $primary-color;
+        color: var(--primary-color);
     }
 
     .description {
         text-align: center;
-        color: $primary-text;
-        font-family: OpenSans, sans-serif;
+        color: var(--primary-text);
         font-size: 16px;
         font-weight: normal;
         font-stretch: normal;
@@ -71,20 +66,15 @@
 
 
     .step-required-information {
-        font-family: OpenSans, sans-serif;
         font-size: 14px;
-        color: $primary-text-light;
+        color: var(--primary-text-light);
         text-align: center;
     }
 
-    .required-symbol {
-        color: $error-color;
-    }
-
     .dialog-cancel {
-        background-color: $secondary-color;
-        border: solid 1px $blocks-and-menus-outline;
-        color: $primary-text-light;
+        background-color: var(--secondary-color);
+        border: solid 1px var(--blocks-and-menus-outline);
+        color: var(--primary-text-light);
         width: 160px;
         height: 42px;
         border-radius: 6px;
@@ -92,22 +82,22 @@
         font-weight: bold;
 
         &:hover {
-            background-color: $primary-color;
-            color: $secondary-color;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
         }
     }
 
     .dialog-validate {
-        background-color: $primary-color;
-        color: $secondary-color;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         height: 42px;
         border-radius: 6px;
         font-size: 14px;
         font-weight: bold;
 
         &:hover {
-            background-color: $focus;
-            color: $secondary-color;
+            background-color: var(--focus);
+            color: var(--secondary-color);
         }
     }
 

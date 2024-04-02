@@ -130,7 +130,6 @@ public class OrganizationMembersHelper {
 	}
 
 	/**
-	 *
 	 * @param login    de l'utilisateur
 	 * @param userUuid de l'utilsateur
 	 * @return le user correspondant soit au login soit à l'uuid, si les deux sont passés, l'uuid prime
@@ -161,14 +160,14 @@ public class OrganizationMembersHelper {
 		// Si seulement le userUuid a été passé
 		if (userUuid != null) {
 			if (userByUUID == null) {
-				throw new UserNotFoundException("L'utilisateur dont l'uuid a été passé n'est pas connu de Rudi",
+				throw new UserNotFoundException("L'UUID renseignée n'est pas rattachée à un utilisateur RUDI.",
 						AppServiceExceptionsStatus.NOT_FOUND);
 			}
 			return userByUUID;
 		}
 		// Si seulement le login a été passé
 		if (userByLogin == null) {
-			throw new UserNotFoundException("L'utilisateur dont le login a été passé n'est pas connu de Rudi",
+			throw new UserNotFoundException("L'adresse e-mail renseignée n'est pas rattachée à un utilisateur RUDI.",
 					AppServiceExceptionsStatus.NOT_FOUND);
 		}
 		return userByLogin;

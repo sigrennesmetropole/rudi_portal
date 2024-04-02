@@ -4,20 +4,20 @@
 }
 
 ::ng-deep .ngx-pagination .pagination-previous {
-    color: $primary-text-light !important;
+    color: var(--primary-text-light) !important;
     font-weight: normal !important;
     font-stretch: normal;
 }
 
 ::ng-deep .ngx-pagination .pagination-next {
-    color: $primary-text-light !important;
+    color: var(--primary-text-light) !important;
     font-weight: normal !important;
     font-stretch: normal;
 }
 
 ::ng-deep .ngx-pagination .current {
     padding: 0.1875rem 0.625rem;
-    background: $primary-color !important;
+    background: var(--primary-color) !important;
     color: #fefefe;
     cursor: default;
     font-size: 14px;
@@ -27,7 +27,7 @@
 }
 
 ::ng-deep .ngx-pagination a, .ngx-pagination button {
-    color: $primary-color !important;
+    color: var(--primary-color) !important;
     display: block;
     padding: 0.1875rem 0.625rem;
     font-weight: 600 !important;

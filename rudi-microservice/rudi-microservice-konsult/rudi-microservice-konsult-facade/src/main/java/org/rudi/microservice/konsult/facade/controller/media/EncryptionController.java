@@ -1,4 +1,4 @@
-package org.rudi.microservice.konsult.facade.controller;
+package org.rudi.microservice.konsult.facade.controller.media;
 
 import org.rudi.common.facade.helper.ControllerHelper;
 import org.rudi.microservice.konsult.facade.controller.api.EncryptionKeyApi;

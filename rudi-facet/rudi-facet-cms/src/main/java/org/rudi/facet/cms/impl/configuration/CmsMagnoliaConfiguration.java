@@ -39,6 +39,12 @@ public class CmsMagnoliaConfiguration {
 
 	private String temporaryFilePrefix = "rudi-cms-";
 
+	@Value("${front-office.route-to-cms:/cms/detail}")
+	private String frontOfficeRoute;
+
+	@Value("${front-office.route-to-cms-resources:/cms/resources?resourcePath=%s}")
+	private String frontOfficeResourcesRoute;
+
 	public String getDefaultCategory(CmsAssetType cmsAssetType) {
 		return assetTypeCategories.get(cmsAssetType.name().toLowerCase());
 	}

@@ -1,9 +1,15 @@
 package org.rudi.facet.acl.helper;
 
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,16 +43,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
+import reactor.core.publisher.Mono;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
@@ -55,7 +56,6 @@ import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class ACLHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
@@ -115,11 +115,15 @@ public class ACLHelper {
 	 */
 	@Nullable
 	public User getUserByUUID(UUID userUuid) {
+		return getMonoUserByUUID(userUuid).block();
+	}
+
+	@Nullable
+	public Mono<User> getMonoUserByUUID(UUID userUuid) {
 		if (userUuid == null) {
 			throw new IllegalArgumentException("user uuid required");
 		}
-		return loadBalancedWebClient.get().uri(buildUsersGetDeleteURL(userUuid)).retrieve().bodyToMono(User.class)
-				.block();
+		return loadBalancedWebClient.get().uri(buildUsersGetDeleteURL(userUuid)).retrieve().bodyToMono(User.class);
 	}
 
 	/**
@@ -174,21 +178,27 @@ public class ACLHelper {
 	 */
 	@Nullable
 	private User getUser(UserSearchCriteria criteria) {
-
-		UserPageResult pageResult = loadBalancedWebClient.get()
-				.uri(buildUsersSearchURL(),
-						uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
-								.queryParam(UserSearchCriteria.USER_LOGIN_PARAMETER, criteria.getLogin())
-								.queryParam(UserSearchCriteria.USER_PASSWORD_PARAMETER, criteria.getPassword())
-								.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
-										formatListParameter(criteria.getRoleUuids()))
-								.build())
-				.retrieve().bodyToMono(UserPageResult.class).block();
+		UserPageResult pageResult = getMonoUsers(criteria).block();
 		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
 			return pageResult.getElements().get(0);
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * @return l'utilisateur correspondant aux critères, null sinon
+	 */
+	@Nullable
+	public Mono<UserPageResult> getMonoUsers(UserSearchCriteria criteria) {
+
+		return loadBalancedWebClient.get().uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
+				.queryParam(LIMIT_PARAMETER, 1)
+				.queryParamIfPresent(UserSearchCriteria.USER_LOGIN_PARAMETER, Optional.ofNullable(criteria.getLogin()))
+				.queryParamIfPresent(UserSearchCriteria.USER_PASSWORD_PARAMETER,
+						Optional.ofNullable(criteria.getPassword()))
+				.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER, formatListParameter(criteria.getRoleUuids()))
+				.build()).retrieve().bodyToMono(UserPageResult.class);
 	}
 
 	@Nullable
@@ -278,8 +288,6 @@ public class ACLHelper {
 			UserPageResult pageResult = loadBalancedWebClient.get()
 					.uri(buildUsersSearchURL(),
 							uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
-									.queryParam(UserSearchCriteria.USER_LOGIN_PARAMETER, criteria.getLogin())
-									.queryParam(UserSearchCriteria.USER_PASSWORD_PARAMETER, criteria.getPassword())
 									.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
 											formatListParameter(criteria.getRoleUuids()))
 									.build())

@@ -1,1 +1,104 @@
-@import "project-card";
+@import "common-style";
+
+.project-card {
+    box-shadow: none;
+    border: solid 1px var(--blocks-and-menus-outline);
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+
+    mat-card-content {
+        height: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 16px;
+    }
+
+    img {
+        max-height: 220px;
+        object-fit: cover;
+    }
+
+    .project-card-producer {
+        font-size: 13px;
+        color: #323643;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .project-card-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--primary-color);
+        display: -webkit-box;
+        margin-bottom: 5px;
+        hyphens: auto;
+        min-height: 1.2em;
+        line-height: 1.3em;
+        @include truncate-text(3);
+    }
+
+    .project-card-content {
+        height: auto;
+        flex-wrap: wrap;
+        align-content: baseline;
+        flex-direction: column;
+    }
+
+    .project-card-summary {
+        font-size: 15px;
+        @include truncate-text(3);
+        hyphens: auto;
+        padding-bottom: 0;
+        color: #323643;
+    }
+
+    &-xs {
+        width: 100%;
+    }
+
+    &-sm, &-md {
+
+        min-height: 300px;
+        width: 100%;
+
+        .project-card-producer {
+            font-size: 12px;
+        }
+
+        .project-card-title {
+            font-size: 19px;
+        }
+
+        .project-card-summary {
+            font-size: 14px;
+        }
+
+        .project-card-content {
+            height: auto;
+            flex-direction: revert;
+        }
+
+        &:hover {
+            background-color: var(--banner-solid-color);
+        }
+
+    }
+
+    &-lg, &-xl, &-xxl {
+        height: var(--card-project-height-lg);
+        border-radius: 8px;
+
+        &:hover {
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.05), 0 1px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .project-card-content {
+            flex-direction: column;
+        }
+
+        .project-card-title {
+            line-height: 1.2em;
+        }
+    }
+}

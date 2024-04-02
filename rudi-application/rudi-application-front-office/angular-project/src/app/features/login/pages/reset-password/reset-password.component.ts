@@ -117,28 +117,24 @@ export class ResetPasswordComponent implements OnInit {
         const token = this.route.snapshot.queryParams.token;
         this.loading = true;
         const passwordChange = {token, password: this.password};
-        this.accountService.validatePasswordChange(passwordChange).subscribe(
-            () => {
-                this.loading = false;
-
-                // Si on s'est bien authentifié on revient sur la page d'avant Si on peut go back on go back
-                this.router.navigate(['/login']);
-                this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
-                    this.snackBarService.openSnackBar({
-                        message: `
-                        ${this.translateService.instant('snackbarTemplate.successResetPassword')}
-                    `,
-                        keepBeforeSecondRouteChange: true
+        this.accountService.validatePasswordChange(passwordChange)
+            .subscribe({
+                next: () => {
+                    this.loading = false;
+                    // Si on s'est bien authentifié on revient sur la page d'avant Si on peut go back on go back
+                    this.router.navigate(['/login']);
+                    this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
+                        this.snackBarService.openSnackBar({
+                            message: `${this.translateService.instant('snackbarTemplate.successResetPassword')}`,
+                            keepBeforeSecondRouteChange: true
+                        });
                     });
-                });
-
-            },
-            // Si erreur lors de la création du compte ou de l'authent auto
-            (errorString: string) => {
-                this.loading = false;
-                this.errorString = errorString;
-            }
-        );
+                },
+                error: (errorString: string) => {
+                    this.loading = false;
+                    this.errorString = errorString;
+                }
+            });
     }
 
     handleClickGoResetPassword(): void {

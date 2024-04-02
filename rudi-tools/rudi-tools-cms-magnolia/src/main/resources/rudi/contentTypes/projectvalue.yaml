@@ -8,6 +8,9 @@ datasource:
 model:
   nodeType: lib:projectvalue
   properties:
+    - name: link
+      type: localizedmessage    
+      multiple: true   
     - name: shorttitle
       type: localizedmessage
       multiple: true

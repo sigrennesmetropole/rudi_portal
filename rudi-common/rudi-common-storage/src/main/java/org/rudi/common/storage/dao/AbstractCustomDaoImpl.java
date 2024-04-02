@@ -16,6 +16,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -168,7 +169,7 @@ public class AbstractCustomDaoImpl<E, C> {
 
 	protected Predicate buildPredicateStringCriteria(String criteria, String type, CriteriaBuilder builder,
 			From<?, ?> root) {
-		if (criteria != null) {
+		if (StringUtils.isNotEmpty(criteria)) {
 			if (criteria.indexOf('*') == -1) {
 				return builder.equal(root.get(type), criteria);
 			} else {

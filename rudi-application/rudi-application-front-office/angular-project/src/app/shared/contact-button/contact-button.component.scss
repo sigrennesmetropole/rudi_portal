@@ -1,24 +1,27 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
 .button {
     margin-top: 1em;
-    background-color: $primary-color;
-    color: $banner-solid-color;
+    background-color: var(--primary-color);
+    color: var(--banner-solid-color);
     font-weight: 600;
-    padding: 7px 22px;
+    padding: 10px 22px;
     $line-height: 1.84rem;
     line-height: $line-height;
 
     &:hover {
-        background-color: $focus;
-        color: $secondary-color;
+        background-color: var(--focus);
+        color: var(--secondary-color);
     }
 
     &.email {
-        text-align: left;
         width: 100%;
+        padding-right: 0;
+        font-weight: bold;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
 
         overflow: hidden;
         white-space: nowrap;
@@ -30,8 +33,8 @@
     }
 
     mat-icon {
-        right: 0.6rem;
-        position: absolute;
-        top: 25%;
+        font-size: 24px;
+        height: 24px;
+        width: 24px;
     }
 }

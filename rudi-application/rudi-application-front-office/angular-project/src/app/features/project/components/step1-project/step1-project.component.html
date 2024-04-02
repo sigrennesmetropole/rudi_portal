@@ -13,7 +13,7 @@
         <ng-container>
             <div class="d-flex">
                 <mat-label>{{'project.stepper.submission.step1.title'|translate}}</mat-label>
-                <span class="ms-1 mat-error">{{'signup.etoile'|translate}}</span>
+                <span class="ms-1 required-symbol">{{'signup.etoile'|translate}}</span>
             </div>
             <mat-hint class="title-hint">{{'project.stepper.submission.step1.titleHint'|translate}}
             </mat-hint>
@@ -31,7 +31,7 @@
         <ng-container>
             <div class="d-flex">
                 <mat-label>{{'project.stepper.submission.step1.description'|translate}}</mat-label>
-                <span class="ms-1 mat-error">{{'signup.etoile'|translate}}</span>
+                <span class="ms-1 required-symbol">{{'signup.etoile'|translate}}</span>
             </div>
 
             <mat-hint
@@ -83,7 +83,7 @@
         <ng-container>
             <div class="d-flex">
                 <mat-label>{{'project.stepper.submission.step1.reuseStatus'|translate}}</mat-label>
-                <span class="ms-1 mat-error">{{'signup.etoile'|translate}}</span>
+                <span class="ms-1 required-symbol">{{'signup.etoile'|translate}}</span>
             </div>
             <mat-hint
                 class="title-hint">{{'project.stepper.submission.step1.reuseStatusHint'|translate}}
@@ -184,7 +184,7 @@
         <ng-container>
             <div class="d-flex">
                 <mat-label>{{'project.stepper.submission.step1.reuseType'|translate}}</mat-label>
-                <span class="ms-1 mat-error">{{'signup.etoile'|translate}}</span>
+                <span class="ms-1 required-symbol">{{'signup.etoile'|translate}}</span>
             </div>
 
             <mat-hint
@@ -246,8 +246,8 @@
         <ng-container>
             <div class="d-flex">
                 <mat-label
-                    class="margin-to-11">{{'project.stepper.submission.step1.projectConfidentiality'|translate}}</mat-label>
-                <span class="ms-1 mat-error margin-to-11">{{'signup.etoile'|translate}}</span>
+                    class="mb-1">{{'project.stepper.submission.step1.projectConfidentiality'|translate}}</mat-label>
+                <span class="ms-1 required-symbol">{{'signup.etoile'|translate}}</span>
             </div>
             <app-radio-list [formGroup]="step1FormGroup" controlName="confidentiality"
                             [suggestions]="suggestions"></app-radio-list>

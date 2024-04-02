@@ -4,12 +4,6 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
-import {
-    SuccessRestrictedRequestDialogComponent
-} from '@features/data-set/components/success-restricted-request-dialog/success-restricted-request-dialog.component';
-import {LinkedDatasetFromProject} from '@features/data-set/models/linked-dataset-from-project';
-import {DetailFunctions} from '@features/data-set/pages/detail/detail-functions';
 import {ProjectSubmissionService} from '@core/services/asset/project/project-submission.service';
 import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {AuthenticationService} from '@core/services/authentication.service';
@@ -25,6 +19,12 @@ import {PageTitleService} from '@core/services/page-title.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {ThemeCacheService} from '@core/services/theme-cache.service';
+import {
+    SuccessRestrictedRequestDialogComponent
+} from '@features/data-set/components/success-restricted-request-dialog/success-restricted-request-dialog.component';
+import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
+import {LinkedDatasetFromProject} from '@features/data-set/models/linked-dataset-from-project';
+import {DetailFunctions} from '@features/data-set/pages/detail/detail-functions';
 import {TranslateService} from '@ngx-translate/core';
 import {RequestDetails} from '@shared/models/request-details';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
@@ -38,8 +38,8 @@ import * as mediaType from 'micro_service_modules/api-kaccess/model/media';
 import {ProjectStatus} from 'micro_service_modules/projekt/projekt-api';
 import {Project} from 'micro_service_modules/projekt/projekt-model';
 import * as moment from 'moment';
-import {BehaviorSubject, combineLatest, from, Observable, of} from 'rxjs';
-import {catchError, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, from, Observable, of, throwError} from 'rxjs';
+import {catchError, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import LicenceTypeEnum = Licence.LicenceTypeEnum;
 import MediaTypeEnum = Media.MediaTypeEnum;
 
@@ -224,7 +224,7 @@ export class DetailComponent implements OnInit {
 
             // on veut initialiser les médias téléchargeables
             switchMap((metadata: Metadata) => {
-                return this.initDownloadableMedias().pipe(mapTo(metadata));
+                return this.initDownloadableMedias().pipe(map(() => metadata));
             })
         ).subscribe({
             next: () => {
@@ -343,12 +343,12 @@ export class DetailComponent implements OnInit {
         if (selectedItem) {
 
             this.konsultMetierService.downloadMetadataMedia(this.metadata.global_id, selectedItem.media_id)
-                .subscribe(
-                    (response) => {
+                .subscribe({
+                    next: (response) => {
                         this.isLoading = false;
                         this.downLoadFile(response);
                     },
-                    () => {
+                    error: () => {
                         this.isLoading = false;
                         const message = this.translateService.instant('common.echec');
                         const linkLabel = this.translateService.instant('snackbarTemplate.ici');
@@ -358,7 +358,8 @@ export class DetailComponent implements OnInit {
                                 level: Level.ERROR
                             });
                         });
-                    });
+                    }
+                });
             this.clickMenuFormatTrigger.closeMenu();
         }
     }
@@ -565,7 +566,7 @@ export class DetailComponent implements OnInit {
             switchMap((linkToCreate: LinkedDatasetFromProject) => this.callbackCreateLinkedDataset(linkToCreate)),
 
             // Renvoie vrai
-            mapTo(true)
+            map(() => true)
         );
     }
 
@@ -581,7 +582,7 @@ export class DetailComponent implements OnInit {
             return this.projectSubmissionService.createLinkedDatasetFromProject(linkToCreate).pipe(
                 catchError((error) => {
                     this.isLoading = false;
-                    throw error;
+                    return throwError(() => error);
                 }),
                 tap(() => {
                     this.isLoading = false;

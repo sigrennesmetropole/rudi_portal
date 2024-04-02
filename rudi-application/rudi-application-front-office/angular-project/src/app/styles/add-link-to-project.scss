@@ -1,11 +1,8 @@
-@import "colors";
-
 .mat-table-demandes-acces {
     width: 100%;
 }
 
 .table-title-style {
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: left;
@@ -16,11 +13,11 @@
 }
 
 .titre-jdd {
-    font-family: OpenSans, sans-serif;
     font-size: 15px;
     font-weight: bold;
     text-align: left;
-    color: $primary-color;
+    color: var(--primary-color);
+    padding-left: 0;
 }
 
 .table-jdd {
@@ -36,7 +33,7 @@
     text-align: center;
     font-size: 13px;
     font-weight: 600;
-    color: $primary-text;
+    color: var(--primary-text);
     //overide the mat table margin css
     padding: 0 !important
 }
@@ -50,7 +47,7 @@
 }
 
 .fake-btn-status {
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     border-radius: 14px;
     white-space: nowrap;
     padding: 5px 18px;
@@ -62,6 +59,9 @@
 
 .second-row {
     width: 50%;
+    .table-header-content {
+        margin-left: 16px;
+    }
 }
 
 
@@ -70,22 +70,11 @@
     height: 50px;
     border-radius: 4px;
     margin-top: 10px;
-    color: $primary-color;
+    color: var(--primary-color);
     font-size: 16px;
     font-weight: bold;
 }
 
-::ng-deep {
-    .icon-add-jdd {
-        margin: -12px 5px 0 -8px;
-
-        svg {
-            height: 22px;
-            width: 22px;
-            margin: 7px 0 0 -4px;
-        }
-    }
-}
 .delete-img {
     width: 35px;
     height: 35px;

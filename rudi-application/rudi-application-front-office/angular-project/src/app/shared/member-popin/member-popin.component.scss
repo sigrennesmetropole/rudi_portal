@@ -1,9 +1,7 @@
 @import "common-style";
-@import "variables-rudi";
 
 #dialog-content {
     max-width: 768px;
-    font-family: "Opensans", sans-serif;
 }
 
 .mat-dialog-container {
@@ -36,7 +34,7 @@
 
         svg:hover {
             opacity: 1;
-            background-color: $primary-color;
+            background-color: var(--primary-color);
             fill: white;
         }
     }
@@ -47,9 +45,9 @@
     }
 
     .dialog-cancel {
-        background-color: $secondary-color;
-        border: solid 1px $blocks-and-menus-outline;
-        color: $primary-text-light;
+        background-color: var(--secondary-color);
+        border: solid 1px var(--blocks-and-menus-outline);
+        color: var(--primary-text-light);
         width: 160px;
         height: 42px;
         border-radius: 6px;
@@ -57,15 +55,15 @@
         font-weight: bold;
 
         &:hover {
-            background-color: $primary-color;
-            color: $secondary-color;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
         }
     }
 
 
     .dialog-validate {
-        background-color: $primary-color;
-        color: $secondary-color;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         width: 160px;
         height: 42px;
         border-radius: 6px;
@@ -73,8 +71,8 @@
         font-weight: bold;
 
         &:hover {
-            background-color: $focus;
-            color: $secondary-color;
+            background-color: var(--focus);
+            color: var(--secondary-color);
         }
     }
 }
@@ -92,7 +90,6 @@
 
 .description {
     font-size: 14px;
-    font-family: OpenSans, sans-serif;
 }
 
 .dialog-title {
@@ -101,39 +98,32 @@
     margin-bottom: 20px;
     text-align: center;
     display: block;
-    color: $primary-color;
-}
-
-.required-symbol {
-    color: $error-color;
+    color: var(--primary-color);
 }
 
 .description1 {
-    font-family: OpenSans, sans-serif;
     font-size: 14px;
-    color: $primary-text-light;
+    color: var(--primary-text-light);
     margin-bottom: 2px;
 }
 
 .title {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
-    color: $secondary-text;
+    color: var(--secondary-text);
     line-height: 2;
     margin-bottom: 2px;
 }
 
 .mail-input {
     text-align: left;
-    font-family: OpenSans, sans-serif;
     width: 97%;
-    border: 0.5px solid $blocks-and-menus-outline;
+    border: 0.5px solid var(--blocks-and-menus-outline);
     height: 25px;
     padding-left: 5px;
     margin-bottom: 10px;
     border-radius: 4px;
     &:disabled {
-        background-color: $banner-solid-color-60;
-        color: $secondary-text;
+        background-color: var(--banner-solid-color-60);
+        color: var(--secondary-text);
     }
 }

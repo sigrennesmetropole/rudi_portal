@@ -1,4 +1,3 @@
-@import "colors";
 @import "responsive";
 @import "swiper/css";
 
@@ -9,7 +8,7 @@
 
     .title {
         text-align: center;
-        color: $primary-color;
+        color: var(--primary-color);
         font-weight: 700;
         font-size: 20px;
     }
@@ -19,7 +18,7 @@
         width: 155px;
         height: 170px;
         border-radius: 15px;
-        border: 1.1px solid $blocks-and-menus-outline;
+        border: 1.1px solid var(--blocks-and-menus-outline);
         display: flex;
         flex-direction: column;
         justify-items: center;
@@ -39,7 +38,7 @@
 
         .theme-name {
             text-align: center;
-            color: $primary-color;
+            color: var(--primary-color);
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 20px;

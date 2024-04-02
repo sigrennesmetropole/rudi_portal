@@ -14,7 +14,7 @@ import {Level} from '@shared/notification-template/notification-template.compone
 import {Metadata} from 'micro_service_modules/api-kaccess';
 import {OwnerType} from 'micro_service_modules/projekt/projekt-api';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, mapTo, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-selfdata-dataset-data-tab',
@@ -49,7 +49,7 @@ export class SelfdataDatasetDataTabComponent implements OnInit {
                 private readonly translateService: TranslateService,
                 private readonly logService: LogService,
                 private readonly selfdataService: SelfdataDatasetService,
-                private readonly propertiesMetierService: PropertiesMetierService, ) {
+                private readonly propertiesMetierService: PropertiesMetierService,) {
     }
 
     ngOnInit(): void {
@@ -121,7 +121,7 @@ export class SelfdataDatasetDataTabComponent implements OnInit {
                     }
                 }),
 
-                mapTo(null)
+                map(() => null)
             );
     }
 

@@ -35,7 +35,7 @@ export class PageResultUtils {
             if (elements?.total) {
                 return of(elements.elements[0]);
             } else {
-                return throwError(e);
+                return throwError(() => e);
             }
         }));
     }

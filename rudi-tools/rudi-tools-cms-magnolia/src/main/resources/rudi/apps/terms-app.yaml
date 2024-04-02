@@ -10,9 +10,12 @@ subApps:
     form:
       properties:
         link:
-          rows: 1
-          maxLength: 32
-          required: true
+          locale:
+            rows: 1
+            maxLength: 5
+          message:
+            rows: 1
+            maxLength: 256        
         title:
           rows: 1
           maxLength: 256

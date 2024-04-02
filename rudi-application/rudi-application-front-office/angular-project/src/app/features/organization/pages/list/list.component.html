@@ -1,6 +1,7 @@
 <mat-sidenav-container>
     <mat-sidenav-content>
-        <div class="container-fluid" [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd, 'p-large':mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+        <div class="container-fluid"
+             [ngClass]="{'p-small': mediaSize.isXs || mediaSize.isSm,'p-medium': mediaSize.isMd, 'p-large': mediaSize.isDeviceDesktop}">
 
             <app-page-title [title1]="'organization.catalogue'|translate"
                             [title2]="'organization.desOrganisations'|translate"

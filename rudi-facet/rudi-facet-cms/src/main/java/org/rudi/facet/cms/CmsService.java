@@ -6,6 +6,7 @@ package org.rudi.facet.cms;
 import java.util.List;
 import java.util.Locale;
 
+import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.cms.bean.CmsAsset;
 import org.rudi.facet.cms.bean.CmsAssetType;
 import org.rudi.facet.cms.bean.CmsCategory;
@@ -55,8 +56,6 @@ public interface CmsService {
 	 * @param assetType     le type
 	 * @param assetTemplate le template
 	 * @param request       la requête vers le CMS
-	 * @param locale        la locale
-	 * @param categories    les catégories
 	 * @param offset
 	 * @param limit
 	 * @param order
@@ -65,4 +64,6 @@ public interface CmsService {
 	 */
 	List<CmsAsset> renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
 			Integer limit, String order) throws CmsException;
+
+	DocumentContent downloadResource(String resourcePath) throws CmsException;
 }

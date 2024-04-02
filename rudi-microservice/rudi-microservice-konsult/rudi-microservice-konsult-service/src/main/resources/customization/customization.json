@@ -1,5 +1,5 @@
 {
-    "overrideCssFile": "/style-override.css",
+	"overrideCssFile": "/style-override.css",
 	"mainLogo": "/assets/main-logo.png",
 	"heroDescription": {
 		"leftImage": "/assets/hero/left-image.png",
@@ -123,6 +123,27 @@
 				]
 			}
 		]
-
+	},
+	"cmsNewsDescription": {
+		"category": "/rudi/news",
+		"alauneCategory": "/rudi/news/a-la-une",
+		"templateDetailed": "rudi-news@one-news-detailed",
+		"templateSimple": "rudi-news@one-news",
+		"templateSimpleWithImage": "rudi-news@one-news-with-image"
+	},
+	"cmsTermsDescription": {
+		"category": "/rudi/terms",
+		"cguCategory": "/rudi/terms/cgu",
+		"legalMentionCategory": "/rudi/terms/legal-mention",
+		"privacyPolicyCategory": "/rudi/terms/privacy-policy",
+		"copyrightsCategory": "/rudi/terms/copyrights",
+		"templateDetailed": "rudi-terms@one-term-detailed",
+		"templateSimple": "rudi-terms@one-term"
+	},
+	"cmsProjectValuesDescription": {
+		"category": "/rudi/projectvalues",
+		"mainCategory": "/rudi/projectvalues/main",
+		"templateDetailed": "rudi-project-values@one-projectvalue-detailed",
+		"templateSimple": "rudi-project-values@one-projectvalue"
 	}
 }

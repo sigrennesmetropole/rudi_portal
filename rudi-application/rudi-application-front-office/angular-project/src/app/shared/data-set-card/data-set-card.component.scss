@@ -1,19 +1,17 @@
-@import "variables-rudi";
-@import "colors";
 @import "common-style";
 
 .data-set-card {
     box-shadow: none;
-    border: solid 1.1px $blocks-and-menus-outline;
+    border: solid 1.1px var(--blocks-and-menus-outline);
     cursor: pointer;
     padding: 17px 17px 17px 17px;
     overflow: hidden;
 
     // card sélectionnée
     &:focus {
-        box-shadow: 0 0 10px 0 $focus-background;
-        border-color: $primary-color;
-        background-color: $focus-background;
+        box-shadow: 0 0 10px 0 var(--focus-background);
+        border-color: var(--primary-color);
+        background-color: var(--focus-background);
     }
 
     .keyword-padding {
@@ -35,12 +33,12 @@
         height: 70px;
         padding: 10px 4px 10px 4px;
         border-radius: 3.4px;
-        border: solid 0.9px $blocks-and-menus-outline;
+        border: solid 0.9px var(--blocks-and-menus-outline);
     }
 
     .data-set-card-producer {
         font-size: 14px;
-        color: $primary-text;
+        color: var(--primary-text);
         font-weight: 600;
         margin-bottom: 5px;
     }
@@ -48,7 +46,7 @@
     .data-set-card-title {
         font-size: 20px;
         font-weight: 400;
-        color: $primary-color;
+        color: var(--primary-color);
         display: -webkit-box;
         margin-bottom: 5px;
         hyphens: auto;
@@ -73,7 +71,7 @@
 
     &-sm, &-md {
 
-        min-height: $card-height-sm;
+        min-height: var(--card-height-sm);
         border-left: none;
         border-right: none;
         border-radius: unset;
@@ -102,14 +100,14 @@
         }
 
         &:hover {
-            background-color: $banner-solid-color;
+            background-color: var(--banner-solid-color);
         }
     }
 
 
     &-lg, &-xl, &-xxl {
         border-radius: 8.6px;
-        height: $card-height-lg;
+        height: var(--card-height-lg);
 
         &:hover {
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.05), 0 1px 10px rgba(0, 0, 0, 0.22);
@@ -131,9 +129,9 @@
 }
 
 .restricted {
-    background: $primary-color;
-    color: $secondary-color;
-    border: solid 0.5px $primary-text-light;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: solid 0.5px var(--primary-text-light);
 
     .data-set-card-producer,
     .data-set-card-summary {
@@ -141,7 +139,7 @@
     }
 
     .data-set-card-title {
-        color: $secondary-color;
+        color: var(--secondary-color);
     }
 
     .key-icon {
@@ -151,12 +149,12 @@
 
     .triangle-restricted {
         @extend %triangle;
-        fill: $accent-color-svg;
+        fill: var(--accent-color-svg);
     }
 
     .keywords-row button {
-        background: $primary-color;
-        color: $secondary-color;
+        background: var(--primary-color);
+        color: var(--secondary-color);
     }
 
     &:focus {
@@ -187,8 +185,8 @@
 }
 
 .selfdata {
-    background: $self-data-color;
-    border: solid 0.5px $self-data-border-color;
+    background: var(--self-data-color);
+    border: solid 0.5px var(--self-data-border-color);
 
     .self-data-icon {
         width: 16px;
@@ -197,7 +195,7 @@
 
     .triangle-selfdata {
         @extend %triangle;
-        fill: $accent-color-svg-self-data;
+        fill: var(--accent-color-svg-self-data);
     }
 
     &:focus {
