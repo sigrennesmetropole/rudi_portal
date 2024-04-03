@@ -1,6 +1,6 @@
 <app-shared-banner>
     <app-tab *ngFor="let tab of tabs" [icon]="tab.icon" [label]="tab.label" (click)="selectTab(tab)"
-             [active]="tab.active"></app-tab>
+             [active]="tab.active" [invisible]="tab.invisible"></app-tab>
     <span class="spacer"></span>
     <ng-content select="app-banner-button"></ng-content>
 </app-shared-banner>

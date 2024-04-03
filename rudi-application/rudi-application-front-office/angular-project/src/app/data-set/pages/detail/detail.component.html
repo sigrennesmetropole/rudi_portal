@@ -50,9 +50,12 @@
                         </app-spreadsheet-tab>
                     </ng-template>
                 </app-tab>
+
                 <app-tab *ngIf="isMapDisplayed"
                          [label]="'metaData.mapData'|translate"
-                         [icon]="'map'">
+                         [icon]="'map'"
+                         [invisible]="true"
+                >
                     <ng-template>
                         <app-map-tab
                             [metadata]="metadata"
@@ -61,6 +64,7 @@
                         </app-map-tab>
                     </ng-template>
                 </app-tab>
+
 
                 <!-- Faire une demande d'information sur ses données personnelles detenues -->
                 <app-banner-button *ngIf="!isSelfdata && downloadableMedias.length > 0">

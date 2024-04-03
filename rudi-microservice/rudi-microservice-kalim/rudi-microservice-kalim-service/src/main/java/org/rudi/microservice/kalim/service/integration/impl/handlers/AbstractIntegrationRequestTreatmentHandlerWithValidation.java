@@ -1,8 +1,14 @@
 package org.rudi.microservice.kalim.service.integration.impl.handlers;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -14,6 +20,7 @@ import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.organization.helper.exceptions.AddUserToOrganizationException;
 import org.rudi.facet.organization.helper.exceptions.CreateOrganizationException;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationMembersException;
 import org.rudi.facet.strukture.exceptions.StruktureApiException;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.exception.IntegrationException;
@@ -26,12 +33,8 @@ import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequest
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.annotation.Nullable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation extends IntegrationRequestTreatmentHandler {
@@ -92,13 +95,13 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 		}
 	}
 
-	private void addNodeProviderToOrganization(UUID nodeProviderId, @Nullable org.rudi.facet.kaccess.bean.Organization metadataOrganization) throws AddUserToOrganizationException {
+	private void addNodeProviderToOrganization(UUID nodeProviderId, @Nullable org.rudi.facet.kaccess.bean.Organization metadataOrganization) throws AddUserToOrganizationException, GetOrganizationMembersException {
 		if (metadataOrganization != null) {
 			final var organizationId = metadataOrganization.getOrganizationId();
 			final var member = new OrganizationMember()
 					.userUuid(nodeProviderId)
 					.role(OrganizationRole.ADMINISTRATOR);
-			organizationHelper.addMemberToOrganization(member, organizationId);
+			organizationHelper.addMemberToOrganizationIfNotExists(member, organizationId);
 		}
 	}
 

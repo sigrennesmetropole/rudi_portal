@@ -6,7 +6,7 @@
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>1.2.4</version>
+	<version>1.2.5</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 

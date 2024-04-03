@@ -1,5 +1,13 @@
 package org.rudi.microservice.projekt.service.project;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,13 +65,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 /**
  * Class de test de la couche service
@@ -75,8 +76,7 @@ class LinkedDatasetServiceUT {
 	private static final KnownProject PROJET_LAMPADAIRES = new KnownProject("lampadaires",
 			"Projet de comptage des lampadaires");
 
-	private static final KnownProject PROJECT_IN_NAME_OF_ORGANIZATION = new KnownProject(
-			"project_for_organization",
+	private static final KnownProject PROJECT_IN_NAME_OF_ORGANIZATION = new KnownProject("project_for_organization",
 			"Projet d'une organisation donc créé par un membre d'organisation. La création par le membre ne fait pas de lui le porteur de projet");
 
 	private static final KnownReutilisationStatus PROJECT = new KnownReutilisationStatus("project");
@@ -84,7 +84,6 @@ class LinkedDatasetServiceUT {
 
 	private static final String COMMENTAIRE_KEY_MAP = "messageToProjectOwner";
 	private static final String DATE_KEY_MAP = "commentDate";
-
 
 	private final ProjectService projectService;
 
@@ -142,20 +141,21 @@ class LinkedDatasetServiceUT {
 		return reutilisationStatusService.createReutilisationStatus(statusToCreate);
 	}
 
-	private void mockAuthenticatedUserToCreateProject(Project project) throws AppServiceUnauthorizedException, GetOrganizationMembersException {
+	private void mockAuthenticatedUserToCreateProject(Project project)
+			throws AppServiceUnauthorizedException, GetOrganizationMembersException {
 		mockAuthenticatedUserFromManager(project.getOwnerUuid(), project.getOwnerType().equals(OwnerType.ORGANIZATION));
 	}
 
-	private void mockAuthenticatedUserFromManager(UUID managerUserUuid, boolean isOrganization) throws AppServiceUnauthorizedException, GetOrganizationMembersException {
+	private void mockAuthenticatedUserFromManager(UUID managerUserUuid, boolean isOrganization)
+			throws AppServiceUnauthorizedException, GetOrganizationMembersException {
 		final User user = new User();
 		user.setLogin("mpokora");
 
-		//Si le projet est créé par un user et non au nom d'une organization.
-		if(!isOrganization){
+		// Si le projet est créé par un user et non au nom d'une organization.
+		if (!isOrganization) {
 			user.setUuid(managerUserUuid);
-		}
-		else {
-			//Un UUID au hasard pour ne pas avoir le même que celui de l'orga
+		} else {
+			// Un UUID au hasard pour ne pas avoir le même que celui de l'orga
 			user.setUuid(UUID.randomUUID());
 			when(organizationHelper.organizationContainsUser(managerUserUuid, user.getUuid())).thenReturn(true);
 		}
@@ -176,12 +176,13 @@ class LinkedDatasetServiceUT {
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 	}
 
-	private void mockAuthenticatedUserOtherUser(UUID managerUserUuid, List<String> roleCodes) throws AppServiceUnauthorizedException {
+	private void mockAuthenticatedUserOtherUser(UUID managerUserUuid, List<String> roleCodes)
+			throws AppServiceUnauthorizedException {
 		final User user = new User().login("shakira").uuid(managerUserUuid);
 
 		final List<Role> roles = new ArrayList<>();
 
-		for(String code : roleCodes){
+		for (String code : roleCodes) {
 			Role userRole = new Role();
 			userRole.setCode(code);
 			roles.add(userRole);
@@ -249,9 +250,8 @@ class LinkedDatasetServiceUT {
 				.hasFieldOrPropertyWithValue("comment", "link opened");
 
 		// et qu'il a bien aucune date de fin malgré l'alimentation initiale
-		assertThat(
-				linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0).getEndDate())
-						.isNull();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0)
+				.getEndDate()).isNull();
 	}
 
 	@Test
@@ -310,8 +310,7 @@ class LinkedDatasetServiceUT {
 
 	@Test
 	@DisplayName("Je crée un projet, l'annule puis lui ajoute un JDD ouvert, l'ajout est refusé")
-	void linkOpenDatasetToProject_CANCELLED()
-			throws IOException, AppServiceException, DataverseAPIException {
+	void linkOpenDatasetToProject_CANCELLED() throws IOException, AppServiceException, DataverseAPIException {
 
 		// Création projet
 		Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -338,7 +337,8 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isEmpty();
 	}
 
 	@Test
@@ -411,15 +411,15 @@ class LinkedDatasetServiceUT {
 		linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isNotEmpty();
 		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.VALIDATED)
 				.hasFieldOrPropertyWithValue("comment", "link opened");
 
 		// et qu'il a bien aucune date de fin malgré l'alimentation initiale
-		assertThat(
-				linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0).getEndDate())
-						.isNull();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0)
+				.getEndDate()).isNull();
 	}
 
 	@Test
@@ -496,7 +496,8 @@ class LinkedDatasetServiceUT {
 		linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isNotEmpty();
 		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.VALIDATED)
 				.hasFieldOrPropertyWithValue("comment", "link opened");
@@ -546,8 +547,7 @@ class LinkedDatasetServiceUT {
 
 	@Test
 	@DisplayName("Je crée un projet avec une réutilisation 'finalisée', le valide puis lui ajoute un JDD ouvert, l'ajout est refusé")
-	void linkOpenDatasetToProject_VALIDATED_FINISHED()
-			throws IOException, AppServiceException, DataverseAPIException {
+	void linkOpenDatasetToProject_VALIDATED_FINISHED() throws IOException, AppServiceException, DataverseAPIException {
 
 		// Création projet
 		Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -576,7 +576,8 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isEmpty();
 	}
 
 	@Test
@@ -623,8 +624,7 @@ class LinkedDatasetServiceUT {
 
 	@Test
 	@DisplayName("Je crée un projet, le soumet à validation puis lui ajoute un JDD ouvert, l'ajout est refusé")
-	void linkOpenDatasetToProject_INPROGRESS()
-			throws IOException, AppServiceException, DataverseAPIException {
+	void linkOpenDatasetToProject_INPROGRESS() throws IOException, AppServiceException, DataverseAPIException {
 
 		// Création projet
 		Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -651,7 +651,8 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isEmpty();
 	}
 
 	@Test
@@ -696,8 +697,7 @@ class LinkedDatasetServiceUT {
 
 	@Test
 	@DisplayName("Je crée un projet, l'annule puis lui ajoute un JDD ouvert, l'ajout est refusé")
-	void linkOpenDatasetToProject_DISENGAGED()
-			throws IOException, AppServiceException, DataverseAPIException {
+	void linkOpenDatasetToProject_DISENGAGED() throws IOException, AppServiceException, DataverseAPIException {
 
 		// Création projet
 		Project createdProject = createProject(PROJET_LAMPADAIRES);
@@ -723,7 +723,8 @@ class LinkedDatasetServiceUT {
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 
 		// Check que le JDD n'a pas été ajouté
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isEmpty();
 	}
 
 	@Test
@@ -795,14 +796,15 @@ class LinkedDatasetServiceUT {
 
 		// Check que le JDD lié restreint est bien en cours
 		assertThat(linkedDatasetService.getLinkedDataset(projectUuid, ld1Uuid)).isNotNull();
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT)))
+				.isNotEmpty();
 		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT)).get(0))
 				.hasFieldOrPropertyWithValue("linkedDatasetStatus", LinkedDatasetStatus.DRAFT)
 				.hasFieldOrPropertyWithValue("comment", "link restreint");
 
 		// la date de fin est obligatoire pour une demande d'accès restreinte
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT)).get(0).getEndDate())
-				.isNotNull();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.DRAFT)).get(0)
+				.getEndDate()).isNotNull();
 	}
 
 	@Test
@@ -834,8 +836,7 @@ class LinkedDatasetServiceUT {
 
 	@Test
 	@DisplayName("Je crée un projet, puis un autre tente d'y rajouter un JDD avec un utilisateur non autorisé")
-	void linkOpenDatasetToProject_unauthorized()
-			throws IOException, AppServiceException, DataverseAPIException {
+	void linkOpenDatasetToProject_unauthorized() throws IOException, AppServiceException, DataverseAPIException {
 		// Création du projet
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
@@ -857,7 +858,7 @@ class LinkedDatasetServiceUT {
 		// Ajout du JDD lié restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
 		when(datasetService.getDataset(any(UUID.class))).thenReturn(associated1);
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> linkedDatasetService.linkProjectToDataset(projectUuid, ld1));
 	}
 
@@ -887,12 +888,13 @@ class LinkedDatasetServiceUT {
 		UUID linkedDatasetUuid = linkedDataset.getDatasetUuid();
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isNotEmpty();
 
 		// On se connecte avec quelqu'un d'autre.
 		mockAuthenticatedUserOtherUser(UUID.randomUUID(), List.of(RoleCodes.USER));
 
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> linkedDatasetService.unlinkProjectToDataset(projectUuid, linkedDatasetUuid));
 	}
 
@@ -922,14 +924,15 @@ class LinkedDatasetServiceUT {
 		UUID linkedDatasetUuid = linkedDataset.getDatasetUuid();
 
 		// Check que le JDD lié ouvert est bien completé
-		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED))).isNotEmpty();
+		assertThat(linkedDatasetService.getLinkedDatasets(projectUuid, List.of(LinkedDatasetStatus.VALIDATED)))
+				.isNotEmpty();
 
 		// On se connecte avec quelqu'un d'autre.
 		mockAuthenticatedUserOtherUser(UUID.randomUUID(), List.of(RoleCodes.USER));
 		val newComment = "Shakira est dans la place !";
 		linkedDataset.comment(newComment);
 
-		assertThrows(AppServiceForbiddenException.class,
+		assertThrows(AppServiceUnauthorizedException.class,
 				() -> linkedDatasetService.updateLinkedDataset(projectUuid, linkedDataset));
 		assertThat(linkedDatasetService.getLinkedDataset(projectUuid, linkedDatasetUuid)).isNotEqualTo(newComment);
 	}
@@ -937,7 +940,7 @@ class LinkedDatasetServiceUT {
 	@Test
 	@DisplayName("Je récupère une décision en tant que Owner du projet, mais elle ne contient aucun commentaire")
 	void getDecisionInformationsEmptyData() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -951,7 +954,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -959,17 +961,16 @@ class LinkedDatasetServiceUT {
 		val linkedDataset = linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 		UUID linkedDatasetUuid = linkedDataset.getUuid();
 
-
-		//Normalement le form retourné est null, car il ne contient aucune informations pour l'instant
-		assertThat(linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid))
-				.as("Le formulaire retourné doit être null, car aucune information n'a été saisie par que qui ce soit pour l'instant.")
+		// Normalement le form retourné est null, car il ne contient aucune informations pour l'instant
+		assertThat(linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid)).as(
+				"Le formulaire retourné doit être null, car aucune information n'a été saisie par que qui ce soit pour l'instant.")
 				.isNull();
 	}
 
 	@Test
 	@DisplayName("Je récupère une décision en tant que Owner du projet qui contient commentaire et date")
 	void getDecisionInformationsFullFilledData() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -983,7 +984,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -996,41 +996,39 @@ class LinkedDatasetServiceUT {
 		val dataNull = linkedDatasetEntity.getData();
 		assertThat(dataNull).as("On ne doit avoir aucune data à ce stade").isNull();
 
-
 		// On rajoute le commentaire à la date du jour
 		val commentaire = "Ce formulaire contient bien un commentaire, la preuve !";
 		val date = LocalDateTime.now();
-		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date, LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
+		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date,
+				LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
 		linkedDatasetEntity.setData(formHelper.deshydrateData(data));
 		linkedDatasetDao.save(linkedDatasetEntity);
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire doit contenir le commentaire saisi précédemment.")
-				.isNotNull();
+		assertThat(decision).as("Le formulaire doit contenir le commentaire saisi précédemment.").isNotNull();
 		// Le formulaire retourné doit contenir au moins une section
-		assertThat(decision.getSections()).as("Le form doit contenir au moins une section").matches(sections -> !sections.isEmpty());
+		assertThat(decision.getSections()).as("Le form doit contenir au moins une section")
+				.matches(sections -> !sections.isEmpty());
 
 		// Cette section doit contenir les champs commentaire et date
-		val section = decision.getSections().stream().findFirst().isPresent() ? decision.getSections().stream().findFirst().get() : null;
-		assertThat(section)
-				.as("La section ne doit pas être null")
-				.isNotNull()
-				.as("La section doit contenir des field (commentaire et date)")
-				.matches(s -> !s.getFields().isEmpty());
+		val section = decision.getSections().stream().findFirst().isPresent()
+				? decision.getSections().stream().findFirst().get()
+				: null;
+		assertThat(section).as("La section ne doit pas être null").isNotNull()
+				.as("La section doit contenir des field (commentaire et date)").matches(s -> !s.getFields().isEmpty());
 
-		//Test sur les contenu des map
-		val commentaireField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP)).findFirst();
-		assertThat(commentaireField)
-				.as("Le field commentaire doit être renseigné")
-				.matches(Optional::isPresent)
+		// Test sur les contenu des map
+		val commentaireField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP))
+				.findFirst();
+		assertThat(commentaireField).as("Le field commentaire doit être renseigné").matches(Optional::isPresent)
 				.as("Le field commentaire doit contenir le bon commentaire")
 				.matches(f -> f.isPresent() && f.get().getValues().get(0).equals(commentaire));
-		val dateField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP)).findFirst();
-		assertThat(dateField)
-				.as("Le field date doit être renseigné")
-				.matches(Optional::isPresent)
+		val dateField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP))
+				.findFirst();
+		assertThat(dateField).as("Le field date doit être renseigné").matches(Optional::isPresent)
 				.as("Le field date doit contenir la bonne date")
 				.matches((f -> f.isPresent() && LocalDateTime.parse(f.get().getValues().get(0)).equals(date)));
 	}
@@ -1038,7 +1036,7 @@ class LinkedDatasetServiceUT {
 	@Test
 	@DisplayName("Je récupère une décision en tant que Owner du projet qui ne contient qu'une date, donc le résultat est null")
 	void getDecisionInformationsOnlyDate() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1052,7 +1050,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1073,15 +1070,13 @@ class LinkedDatasetServiceUT {
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire ne contenant pas de date doit envoyer null")
-				.isNull();
+		assertThat(decision).as("Le formulaire ne contenant pas de date doit envoyer null").isNull();
 	}
 
 	@Test
 	@DisplayName("Je récupère une décision en tant que Owner du projet qui contient commentaire mais pas de date")
 	void getDecisionInformationsOnlyComment() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1095,7 +1090,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1116,32 +1110,30 @@ class LinkedDatasetServiceUT {
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire doit contenir le commentaire saisi précédemment.")
-				.isNotNull();
+		assertThat(decision).as("Le formulaire doit contenir le commentaire saisi précédemment.").isNotNull();
 		// Le formulaire retourné doit contenir au moins une section
-		assertThat(decision.getSections()).as("Le form doit contenir au moins une section").matches(sections -> !sections.isEmpty());
+		assertThat(decision.getSections()).as("Le form doit contenir au moins une section")
+				.matches(sections -> !sections.isEmpty());
 
 		// Cette section doit contenir les champs commentaire et date
-		val section = decision.getSections().stream().findFirst().isPresent() ? decision.getSections().stream().findFirst().get() : null;
-		assertThat(section)
-				.as("La section ne doit pas être null")
-				.isNotNull()
-				.as("La section doit contenir des field (commentaire et date)")
-				.matches(s -> !s.getFields().isEmpty());
+		val section = decision.getSections().stream().findFirst().isPresent()
+				? decision.getSections().stream().findFirst().get()
+				: null;
+		assertThat(section).as("La section ne doit pas être null").isNotNull()
+				.as("La section doit contenir des field (commentaire et date)").matches(s -> !s.getFields().isEmpty());
 
-		//Test sur les contenu des map
-		val commentaireField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP)).findFirst();
-		assertThat(commentaireField)
-				.as("Le field commentaire doit être renseigné")
-				.matches(Optional::isPresent)
+		// Test sur les contenu des map
+		val commentaireField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP))
+				.findFirst();
+		assertThat(commentaireField).as("Le field commentaire doit être renseigné").matches(Optional::isPresent)
 				.as("Le field commentaire doit contenir le bon commentaire")
 				.matches(f -> f.isPresent() && f.get().getValues().get(0).equals(commentaire));
 
-		val dateField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP)).findFirst();
-		assertThat(dateField)
-				.as("Le field date est présent")
-				.matches(Optional::isPresent)
+		val dateField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP))
+				.findFirst();
+		assertThat(dateField).as("Le field date est présent").matches(Optional::isPresent)
 				.as("Le field est présent, mais il doit être null")
 				.matches(f -> f.isPresent() && f.get().getValues() == null);
 	}
@@ -1149,7 +1141,7 @@ class LinkedDatasetServiceUT {
 	@Test
 	@DisplayName("Je tente de récupérer une décision concernant un linkedDataset et un ProjectUuid non liés")
 	void getDecisionInformationsNotRelatedUuids() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1163,7 +1155,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1171,17 +1162,19 @@ class LinkedDatasetServiceUT {
 		val linkedDataset = linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 		UUID linkedDatasetUuid = linkedDataset.getUuid();
 
-
-		assertThrows(AppServiceNotFoundException.class, ()-> linkedDatasetService.getDecisionInformations(UUID.randomUUID(), linkedDatasetUuid));
-		assertThrows(AppServiceNotFoundException.class, ()-> linkedDatasetService.getDecisionInformations(projectUuid, UUID.randomUUID()));
-		assertThrows(AppServiceNotFoundException.class, ()-> linkedDatasetService.getDecisionInformations(UUID.randomUUID(), UUID.randomUUID()));
+		assertThrows(AppServiceNotFoundException.class,
+				() -> linkedDatasetService.getDecisionInformations(UUID.randomUUID(), linkedDatasetUuid));
+		assertThrows(AppServiceNotFoundException.class,
+				() -> linkedDatasetService.getDecisionInformations(projectUuid, UUID.randomUUID()));
+		assertThrows(AppServiceNotFoundException.class,
+				() -> linkedDatasetService.getDecisionInformations(UUID.randomUUID(), UUID.randomUUID()));
 
 	}
 
 	@Test
 	@DisplayName("Je tente de récupérer une décision, mais authentifié en tant qu'Administrateur")
 	void getDecisionInformationAsAdministrator() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1195,7 +1188,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1211,7 +1203,8 @@ class LinkedDatasetServiceUT {
 		// On rajoute le commentaire à la date du jour
 		val commentaire = "Ce formulaire contient bien un commentaire, la preuve !";
 		val date = LocalDateTime.now();
-		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date, LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
+		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date,
+				LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
 		linkedDatasetEntity.setData(formHelper.deshydrateData(data));
 		linkedDatasetDao.save(linkedDatasetEntity);
 
@@ -1221,24 +1214,24 @@ class LinkedDatasetServiceUT {
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire doit contenir le commentaire saisi précédemment.")
-				.isNotNull();
+		assertThat(decision).as("Le formulaire doit contenir le commentaire saisi précédemment.").isNotNull();
 
 		// Cette section doit contenir les champs commentaire et date
-		val section = decision.getSections().stream().findFirst().isPresent() ? decision.getSections().stream().findFirst().get() : null;
+		val section = decision.getSections().stream().findFirst().isPresent()
+				? decision.getSections().stream().findFirst().get()
+				: null;
 		assertThat(section).as("La sectionj ne doit pas être null").isNotNull();
-		//Test sur les contenu des map
-		val commentaireField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP)).findFirst();
-		assertThat(commentaireField)
-				.as("Le field commentaire doit être renseigné")
-				.matches(Optional::isPresent)
+		// Test sur les contenu des map
+		val commentaireField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP))
+				.findFirst();
+		assertThat(commentaireField).as("Le field commentaire doit être renseigné").matches(Optional::isPresent)
 				.as("Le field commentaire doit contenir le bon commentaire")
 				.matches(f -> f.isPresent() && f.get().getValues().get(0).equals(commentaire));
-		val dateField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP)).findFirst();
-		assertThat(dateField)
-				.as("Le field date doit être renseigné")
-				.matches(Optional::isPresent)
+		val dateField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP))
+				.findFirst();
+		assertThat(dateField).as("Le field date doit être renseigné").matches(Optional::isPresent)
 				.as("Le field date doit contenir la bonne date")
 				.matches((f -> f.isPresent() && LocalDateTime.parse(f.get().getValues().get(0)).equals(date)));
 	}
@@ -1246,7 +1239,7 @@ class LinkedDatasetServiceUT {
 	@Test
 	@DisplayName("Je tente de récupérer une décision, mais authentifié en tant que producteur")
 	void getDecisionInformationAsProducer() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1260,7 +1253,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1276,7 +1268,8 @@ class LinkedDatasetServiceUT {
 		// On rajoute le commentaire à la date du jour
 		val commentaire = "Ce formulaire contient bien un commentaire, la preuve !";
 		val date = LocalDateTime.now();
-		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date, LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
+		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date,
+				LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
 		linkedDatasetEntity.setData(formHelper.deshydrateData(data));
 		linkedDatasetDao.save(linkedDatasetEntity);
 
@@ -1291,29 +1284,29 @@ class LinkedDatasetServiceUT {
 		val fakeMetadata = new Metadata();
 		fakeMetadata.setProducer(fakeOrganization);
 		when(datasetService.getDataset(linkedDataset.getDatasetUuid())).thenReturn(fakeMetadata);
-		List<UUID> meAndMyOrganizations = List.of(aclHelper.getAuthenticatedUserUuid(),fakeOrganizationUuid);
+		List<UUID> meAndMyOrganizations = List.of(aclHelper.getAuthenticatedUserUuid(), fakeOrganizationUuid);
 		when(myInformationsHelper.getMeAndMyOrganizationUuids()).thenReturn(meAndMyOrganizations);
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire doit contenir le commentaire saisi précédemment.")
-				.isNotNull();
+		assertThat(decision).as("Le formulaire doit contenir le commentaire saisi précédemment.").isNotNull();
 
 		// Cette section doit contenir les champs commentaire et date
-		val section = decision.getSections().stream().findFirst().isPresent() ? decision.getSections().stream().findFirst().get() : null;
+		val section = decision.getSections().stream().findFirst().isPresent()
+				? decision.getSections().stream().findFirst().get()
+				: null;
 		assertThat(section).as("La sectionj ne doit pas être null").isNotNull();
-		//Test sur les contenu des map
-		val commentaireField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP)).findFirst();
-		assertThat(commentaireField)
-				.as("Le field commentaire doit être renseigné")
-				.matches(Optional::isPresent)
+		// Test sur les contenu des map
+		val commentaireField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP))
+				.findFirst();
+		assertThat(commentaireField).as("Le field commentaire doit être renseigné").matches(Optional::isPresent)
 				.as("Le field commentaire doit contenir le bon commentaire")
 				.matches(f -> f.isPresent() && f.get().getValues().get(0).equals(commentaire));
-		val dateField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP)).findFirst();
-		assertThat(dateField)
-				.as("Le field date doit être renseigné")
-				.matches(Optional::isPresent)
+		val dateField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP))
+				.findFirst();
+		assertThat(dateField).as("Le field date doit être renseigné").matches(Optional::isPresent)
 				.as("Le field date doit contenir la bonne date")
 				.matches((f -> f.isPresent() && LocalDateTime.parse(f.get().getValues().get(0)).equals(date)));
 	}
@@ -1321,7 +1314,7 @@ class LinkedDatasetServiceUT {
 	@Test
 	@DisplayName("Je tente de récupérer une décision, mais authentifié en tant qu'utilisateur extérieur au projet")
 	void getDecisionInformationAsOtherUser() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1335,7 +1328,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1351,7 +1343,8 @@ class LinkedDatasetServiceUT {
 		// On rajoute le commentaire à la date du jour
 		val commentaire = "Ce formulaire contient bien un commentaire, la preuve !";
 		val date = LocalDateTime.now();
-		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date, LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
+		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date,
+				LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
 		linkedDatasetEntity.setData(formHelper.deshydrateData(data));
 		linkedDatasetDao.save(linkedDatasetEntity);
 
@@ -1368,18 +1361,19 @@ class LinkedDatasetServiceUT {
 		when(datasetService.getDataset(linkedDataset.getDatasetUuid())).thenReturn(fakeMetadata);
 
 		// L'utilisateur n'est pas membre de l'organization liée au JDD.
-		List<UUID> meAndMyOrganizations = List.of(aclHelper.getAuthenticatedUserUuid(),UUID.randomUUID());
+		List<UUID> meAndMyOrganizations = List.of(aclHelper.getAuthenticatedUserUuid(), UUID.randomUUID());
 		when(myInformationsHelper.getMeAndMyOrganizationUuids()).thenReturn(meAndMyOrganizations);
 
 		// La fonction doit retourner une exception car l'utilisateur n'a pas les accès
-		assertThrows(AppServiceUnauthorizedException.class, () -> linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid));
+		assertThrows(AppServiceUnauthorizedException.class,
+				() -> linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid));
 
 	}
 
 	@Test
 	@DisplayName("Je tente de récupérer une décision, mais authentifié en tant qu'utilisateur extérieur au projet sans role")
 	void getDecisionInformationAsOtherUserWithNoRole() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJET_LAMPADAIRES);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1394,7 +1388,6 @@ class LinkedDatasetServiceUT {
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
 
-
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
 		when(datasetService.getDataset(any(UUID.class))).thenReturn(associated1);
@@ -1409,7 +1402,8 @@ class LinkedDatasetServiceUT {
 		// On rajoute le commentaire à la date du jour
 		val commentaire = "Ce formulaire contient bien un commentaire, la preuve !";
 		val date = LocalDateTime.now();
-		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date, LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
+		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date,
+				LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
 		linkedDatasetEntity.setData(formHelper.deshydrateData(data));
 		linkedDatasetDao.save(linkedDatasetEntity);
 
@@ -1418,14 +1412,15 @@ class LinkedDatasetServiceUT {
 		mockAuthenticatedUserOtherUser(UUID.randomUUID(), List.of());
 
 		// La fonction doit retourner une exception car l'utilisateur n'a pas les accès
-		assertThrows(AppServiceUnauthorizedException.class, () -> linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid));
+		assertThrows(AppServiceUnauthorizedException.class,
+				() -> linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid));
 
 	}
 
 	@Test
 	@DisplayName("Je récupère une décision en tant que membre d'une organisation owner du projet, mais elle ne contient aucun commentaire")
 	void getDecisionInformationsEmptyDataForOrganization() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJECT_IN_NAME_OF_ORGANIZATION);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1439,7 +1434,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1447,17 +1441,16 @@ class LinkedDatasetServiceUT {
 		val linkedDataset = linkedDatasetService.linkProjectToDataset(projectUuid, ld1);
 		UUID linkedDatasetUuid = linkedDataset.getUuid();
 
-
-		//Normalement le form retourné est null, car il ne contient aucune informations pour l'instant
-		assertThat(linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid))
-				.as("Le formulaire retourné doit être null, car aucune information n'a été saisie par que qui ce soit pour l'instant.")
+		// Normalement le form retourné est null, car il ne contient aucune informations pour l'instant
+		assertThat(linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid)).as(
+				"Le formulaire retourné doit être null, car aucune information n'a été saisie par que qui ce soit pour l'instant.")
 				.isNull();
 	}
 
 	@Test
 	@DisplayName("Je récupère une décision en tant que membre d'une organisation owner du projet qui contient commentaire et date")
 	void getDecisionInformationsFullFilledDataForOrganization() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJECT_IN_NAME_OF_ORGANIZATION);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1471,7 +1464,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1484,41 +1476,39 @@ class LinkedDatasetServiceUT {
 		val dataNull = linkedDatasetEntity.getData();
 		assertThat(dataNull).as("On ne doit avoir aucune data à ce stade").isNull();
 
-
 		// On rajoute le commentaire à la date du jour
 		val commentaire = "Ce formulaire contient bien un commentaire, la preuve !";
 		val date = LocalDateTime.now();
-		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date, LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
+		Map<String, Object> data = Map.of(LinkedDatasetServiceUT.DATE_KEY_MAP, date,
+				LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP, commentaire);
 		linkedDatasetEntity.setData(formHelper.deshydrateData(data));
 		linkedDatasetDao.save(linkedDatasetEntity);
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire doit contenir le commentaire saisi précédemment.")
-				.isNotNull();
+		assertThat(decision).as("Le formulaire doit contenir le commentaire saisi précédemment.").isNotNull();
 		// Le formulaire retourné doit contenir au moins une section
-		assertThat(decision.getSections()).as("Le form doit contenir au moins une section").matches(sections -> !sections.isEmpty());
+		assertThat(decision.getSections()).as("Le form doit contenir au moins une section")
+				.matches(sections -> !sections.isEmpty());
 
 		// Cette section doit contenir les champs commentaire et date
-		val section = decision.getSections().stream().findFirst().isPresent() ? decision.getSections().stream().findFirst().get() : null;
-		assertThat(section)
-				.as("La section ne doit pas être null")
-				.isNotNull()
-				.as("La section doit contenir des field (commentaire et date)")
-				.matches(s -> !s.getFields().isEmpty());
+		val section = decision.getSections().stream().findFirst().isPresent()
+				? decision.getSections().stream().findFirst().get()
+				: null;
+		assertThat(section).as("La section ne doit pas être null").isNotNull()
+				.as("La section doit contenir des field (commentaire et date)").matches(s -> !s.getFields().isEmpty());
 
-		//Test sur les contenu des map
-		val commentaireField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP)).findFirst();
-		assertThat(commentaireField)
-				.as("Le field commentaire doit être renseigné")
-				.matches(Optional::isPresent)
+		// Test sur les contenu des map
+		val commentaireField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP))
+				.findFirst();
+		assertThat(commentaireField).as("Le field commentaire doit être renseigné").matches(Optional::isPresent)
 				.as("Le field commentaire doit contenir le bon commentaire")
 				.matches(f -> f.isPresent() && f.get().getValues().get(0).equals(commentaire));
-		val dateField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP)).findFirst();
-		assertThat(dateField)
-				.as("Le field date doit être renseigné")
-				.matches(Optional::isPresent)
+		val dateField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP))
+				.findFirst();
+		assertThat(dateField).as("Le field date doit être renseigné").matches(Optional::isPresent)
 				.as("Le field date doit contenir la bonne date")
 				.matches((f -> f.isPresent() && LocalDateTime.parse(f.get().getValues().get(0)).equals(date)));
 	}
@@ -1526,7 +1516,7 @@ class LinkedDatasetServiceUT {
 	@Test
 	@DisplayName("Je récupère une décision en tant que membre d'une organisation owner du projet qui ne contient qu'une date, donc le résultat est null")
 	void getDecisionInformationsOnlyDateForOrganization() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJECT_IN_NAME_OF_ORGANIZATION);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1540,7 +1530,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1561,15 +1550,13 @@ class LinkedDatasetServiceUT {
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire ne contenant pas de date doit envoyer null")
-				.isNull();
+		assertThat(decision).as("Le formulaire ne contenant pas de date doit envoyer null").isNull();
 	}
 
 	@Test
 	@DisplayName("Je récupère une décision en tant que membre d'une organisation owner du projet qui contient commentaire mais pas de date")
 	void getDecisionInformationsOnlyCommentForOrganization() throws Exception {
-		//Create project
+		// Create project
 		final Project createdProject = createProject(PROJECT_IN_NAME_OF_ORGANIZATION);
 		final var projectUuid = createdProject.getUuid();
 
@@ -1583,7 +1570,6 @@ class LinkedDatasetServiceUT {
 
 		// On met une date de fin à ce JDD restreint
 		ld1.setEndDate(LocalDateTime.now().plusMonths(1));
-
 
 		// Ajout du JDD lié Restreint
 		Metadata associated1 = createMetadataAssociated(ld1);
@@ -1604,36 +1590,33 @@ class LinkedDatasetServiceUT {
 
 		// Le forumlaire retourné ne doit pas être null
 		val decision = linkedDatasetService.getDecisionInformations(projectUuid, linkedDatasetUuid);
-		assertThat(decision)
-				.as("Le formulaire doit contenir le commentaire saisi précédemment.")
-				.isNotNull();
+		assertThat(decision).as("Le formulaire doit contenir le commentaire saisi précédemment.").isNotNull();
 		// Le formulaire retourné doit contenir au moins une section
-		assertThat(decision.getSections()).as("Le form doit contenir au moins une section").matches(sections -> !sections.isEmpty());
+		assertThat(decision.getSections()).as("Le form doit contenir au moins une section")
+				.matches(sections -> !sections.isEmpty());
 
 		// Cette section doit contenir les champs commentaire et date
-		val section = decision.getSections().stream().findFirst().isPresent() ? decision.getSections().stream().findFirst().get() : null;
-		assertThat(section)
-				.as("La section ne doit pas être null")
-				.isNotNull()
-				.as("La section doit contenir des field (commentaire et date)")
-				.matches(s -> !s.getFields().isEmpty());
+		val section = decision.getSections().stream().findFirst().isPresent()
+				? decision.getSections().stream().findFirst().get()
+				: null;
+		assertThat(section).as("La section ne doit pas être null").isNotNull()
+				.as("La section doit contenir des field (commentaire et date)").matches(s -> !s.getFields().isEmpty());
 
-		//Test sur les contenu des map
-		val commentaireField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP)).findFirst();
-		assertThat(commentaireField)
-				.as("Le field commentaire doit être renseigné")
-				.matches(Optional::isPresent)
+		// Test sur les contenu des map
+		val commentaireField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.COMMENTAIRE_KEY_MAP))
+				.findFirst();
+		assertThat(commentaireField).as("Le field commentaire doit être renseigné").matches(Optional::isPresent)
 				.as("Le field commentaire doit contenir le bon commentaire")
 				.matches(f -> f.isPresent() && f.get().getValues().get(0).equals(commentaire));
 
-		val dateField = section.getFields().stream().filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP)).findFirst();
-		assertThat(dateField)
-				.as("Le field date est présent")
-				.matches(Optional::isPresent)
+		val dateField = section.getFields().stream()
+				.filter(field -> field.getDefinition().getName().equals(LinkedDatasetServiceUT.DATE_KEY_MAP))
+				.findFirst();
+		assertThat(dateField).as("Le field date est présent").matches(Optional::isPresent)
 				.as("Le field est présent, mais il doit être null")
 				.matches(f -> f.isPresent() && f.get().getValues() == null);
 	}
-
 
 	@Data
 	private static class KnownProject {

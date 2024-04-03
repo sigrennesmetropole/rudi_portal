@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.common.service.exception.AppServiceException;
-import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequestSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.PagedNewDatasetRequestList;
@@ -19,7 +18,7 @@ public interface NewDatasetRequestService {
 	Project findProjectByNewDatasetRequest(UUID newDatasetRequestUuid) throws AppServiceException;
 
 	PagedNewDatasetRequestList searchMyNewDatasetRequests(NewDatasetRequestSearchCriteria criteria, Pageable pageable)
-			throws AppServiceNotFoundException, AppServiceException;
+			throws AppServiceException;
 
 	Form getDecisionInformations(UUID projectUuid, UUID newDatasetRequestUUID)
 			throws AppServiceException, FormDefinitionException;

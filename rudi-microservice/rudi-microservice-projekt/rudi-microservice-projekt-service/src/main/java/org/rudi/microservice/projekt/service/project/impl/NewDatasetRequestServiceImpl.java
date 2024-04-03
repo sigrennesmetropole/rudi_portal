@@ -14,6 +14,7 @@ import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.service.TaskService;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
@@ -142,9 +143,10 @@ public class NewDatasetRequestServiceImpl implements NewDatasetRequestService {
 	 * @throws GetOrganizationMembersException
 	 * @throws GetOrganizationException
 	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
 	 */
 	private void checkRightsGetDecisionInformations(ProjectEntity projectEntity)
-			throws GetOrganizationMembersException, AppServiceUnauthorizedException {
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
 		Map<String, Boolean> accessRightsByRole = ProjektAuthorisationHelper.getADMINISTRATOR_MODERATOR_ACCESS();
 		// Vérification des droits d'accès
 		// les droits autorisés dans accessRights doivent être cohérents avec ceux définis en PreAuth coté Controller

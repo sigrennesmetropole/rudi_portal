@@ -16,6 +16,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.rudi.common.core.security.RoleCodes;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.helper.ACLHelper;
@@ -114,8 +115,10 @@ public class ProjektAuthorisationHelper {
 	 * @param projectEntity le projet
 	 * @return true si l'utilisateur a accès
 	 * @throws GetOrganizationMembersException en cas de problème avec la récupération des membres de l'organisation
+	 * @throws MissingParameterException       en cas d'inforamtion manquante sur le projet
 	 */
-	public Boolean isAccessGrantedForUserOnProject(ProjectEntity projectEntity) throws GetOrganizationMembersException {
+	public Boolean isAccessGrantedForUserOnProject(ProjectEntity projectEntity)
+			throws GetOrganizationMembersException, MissingParameterException {
 
 		try {
 			User user = aclHelper.getAuthenticatedUser();
@@ -124,12 +127,16 @@ public class ProjektAuthorisationHelper {
 				// Vérification comme dans le ownerprocessor
 				val ownerUuid = projectEntity.getOwnerUuid();
 
+				if (ownerUuid == null) {
+					throw new MissingParameterException("owner_uuid manquant");
+				}
+
 				switch (projectEntity.getOwnerType()) {
 				case USER:
-					return ownerUuid != null && user.getUuid() != null && ownerUuid.equals(user.getUuid());
+					return user.getUuid() != null && ownerUuid.equals(user.getUuid());
 
 				case ORGANIZATION:
-					return ownerUuid != null && user.getUuid() != null
+					return user.getUuid() != null
 							&& organizationHelper.organizationContainsUser(ownerUuid, user.getUuid());
 
 				default:
@@ -170,8 +177,54 @@ public class ProjektAuthorisationHelper {
 		}
 	}
 
-	private boolean hasAnyRole(User user, List<String> acceptedRoles) {
+	private boolean hasAnyRole(User user, List<String> acceptedRoles) throws AppServiceUnauthorizedException {
+		if (user == null) { // NOSONAR il faut pouvoir traiter le cas où le user n'est pas positionné (pour les TU par exemple)
+			throw new AppServiceUnauthorizedException("No user");
+		}
+		if (user.getRoles() == null) {
+			throw new AppServiceUnauthorizedException("Role list for user is null");
+		}
 		List<String> userRoles = user.getRoles().stream().map(Role::getCode).collect(Collectors.toList());
 		return CollectionUtils.isNotEmpty(CollectionUtils.intersection(userRoles, acceptedRoles));
+	}
+
+	/**
+	 * Définition de l'ouverture des droits la fonctionnalité de création de projet ou d'administration des new dataset request associé : Le projectowner
+	 * ou un membre de l'organisation peut / L'administrateur peut (uniquement via Postman) / Un autre user ne peut pas
+	 * 
+	 * Les droits autorisés doivent être cohérents avec ceux définis en PreAuth coté Controller
+	 * 
+	 * @param projectEntity l'entité projet pour laquelle vérifier le droit d'accès
+	 * @throws GetOrganizationMembersException
+	 * @throws GetOrganizationException
+	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
+	 */
+	public void checkRightsInitProject(ProjectEntity projectEntity)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
+		Map<String, Boolean> accessRightsByRole = ProjektAuthorisationHelper.getADMINISTRATOR_ACCESS();
+		// Vérification des droits d'accès
+		// les droits autorisés dans accessRights doivent être cohérents avec ceux définis en PreAuth coté Controller
+		if (!(isAccessGrantedByRole(accessRightsByRole) || isAccessGrantedForUserOnProject(projectEntity))) {
+			throw new AppServiceUnauthorizedException("Accès non autorisé à la fonctionnalité pour l'utilisateur");
+		}
+	}
+
+	/**
+	 * Définition de l'ouverture des droits la fonctionnalité de d'administration des new dataset request associé : Le projectowner ou un membre de
+	 * l'organisation peut / L'administrateur peut (uniquement via Postman) / Un autre user ne peut pas
+	 * 
+	 * Les droits autorisés doivent être cohérents avec ceux définis en PreAuth coté Controller
+	 * 
+	 * @param projectEntity l'entité projet pour laquelle vérifier le droit d'accès
+	 * @throws GetOrganizationMembersException
+	 * @throws GetOrganizationException
+	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
+	 */
+	public void checkRightsAdministerProjectDataset(ProjectEntity projectEntity)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
+		// pour le moment les droits d'accès à cette fonction sont les mêmes que la fonction de création de projet
+		checkRightsInitProject(projectEntity);
 	}
 }

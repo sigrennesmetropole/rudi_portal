@@ -18,6 +18,7 @@ import org.rudi.bpmn.core.bean.Form;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.service.TaskService;
@@ -85,6 +86,8 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 		// 1) traduction DTO en entité
 		ProjectEntity project = getRequiredProjectEntity(projectUuid);
+
+		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant d'ajouter le lien sur le dataset
 		for (final AddDatasetToProjectProcessor processor : addDatasetToProjectProcessors) {
@@ -164,6 +167,7 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 			throws AppServiceException, APIManagerException {
 
 		val project = getRequiredProjectEntity(projectUuid);
+		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant de modifier le lien sur le dataset
 		for (final UpdateDatasetInProjectProcessor processor : updateDatasetInProjectProcessors) {
@@ -195,6 +199,8 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	public void unlinkProjectToDataset(UUID projectUuid, UUID linkedDatasetUuid)
 			throws AppServiceException, APIManagerException {
 		val project = getRequiredProjectEntity(projectUuid);
+
+		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant de supprimer le lien sur le dataset
 		for (final DeleteDatasetFromProjectProcessor processor : deleteDatasetFromProjectProcessors) {
@@ -293,10 +299,11 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	 * @throws GetOrganizationMembersException
 	 * @throws GetOrganizationException
 	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
 	 */
 	private void checkRightsGetDecisionInformations(ProjectEntity projectEntity,
-			LinkedDatasetEntity linkedDatasetEntity)
-			throws GetOrganizationMembersException, GetOrganizationException, AppServiceUnauthorizedException {
+			LinkedDatasetEntity linkedDatasetEntity) throws GetOrganizationMembersException, GetOrganizationException,
+			AppServiceUnauthorizedException, MissingParameterException {
 
 		Map<String, Boolean> accessRightsByRole = ProjektAuthorisationHelper.getADMINISTRATOR_ACCESS();
 

@@ -5,9 +5,6 @@ import java.util.List;
 public class ConnectorParametersConstants {
 	public static final String EPSG_TEXT = "EPSG";
 	public static final String ALPHANUMERIC_REGEX = "^[a-z0-9_-]+";
-	public static final String WFS_INTERFACE_CONTRACT = "wfs";
-	public static final String WMS_INTERFACE_CONTRACT = "wms";
-	public static final String WMTS_INTERFACE_CONTRACT = "wmts";
 	public static final String DEFAULT_CRS_PARAMETER = "default_crs";
 	public static final String FORMATS_PARAMETER = "formats";
 	public static final String APP_JSON_FORMAT = "application/json";

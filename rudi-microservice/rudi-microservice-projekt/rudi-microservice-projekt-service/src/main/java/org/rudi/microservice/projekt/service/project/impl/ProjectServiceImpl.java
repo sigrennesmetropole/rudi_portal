@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -13,6 +14,8 @@ import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.helper.ACLHelper;
@@ -22,6 +25,7 @@ import org.rudi.facet.kmedia.bean.MediaOrigin;
 import org.rudi.facet.kmedia.service.MediaService;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationMembersException;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
@@ -30,6 +34,7 @@ import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.service.exception.DataverseExternalServiceException;
 import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
+import org.rudi.microservice.projekt.service.helper.ProjektAuthorisationHelper;
 import org.rudi.microservice.projekt.service.mapper.NewDatasetRequestMapper;
 import org.rudi.microservice.projekt.service.mapper.ProjectMapper;
 import org.rudi.microservice.projekt.service.project.ProjectService;
@@ -92,20 +97,23 @@ public class ProjectServiceImpl implements ProjectService {
 	private final OrganizationHelper organizationHelper;
 	private final ACLHelper aclHelper;
 	private final MyInformationsHelper myInformationsHelper;
+	private final ProjektAuthorisationHelper projektAuthorisationHelper;
 
 	@Override
 	@Transactional // readOnly = false
 	public Project createProject(Project project) throws AppServiceException {
-		val entity = projectMapper.dtoToEntity(project);
+		ProjectEntity entity = projectMapper.dtoToEntity(project);
+		projektAuthorisationHelper.checkRightsInitProject(entity);
+
 		for (final CreateProjectFieldProcessor processor : createProjectProcessors) {
 			processor.process(entity, null);
 		}
 		entity.setUuid(UUID.randomUUID());
-		final var now = LocalDateTime.now();
+		final LocalDateTime now = LocalDateTime.now();
 		entity.setCreationDate(now);
 		entity.setUpdatedDate(now);
-		val savedEntity = projectDao.save(entity);
-		val savedProject = projectMapper.entityToDto(savedEntity);
+		ProjectEntity savedEntity = projectDao.save(entity);
+		Project savedProject = projectMapper.entityToDto(savedEntity);
 
 		try {
 			createProjectDataset(savedProject);
@@ -135,7 +143,10 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional // readOnly = false
 	public Project updateProject(Project projectToUpdate) throws AppServiceException {
 		ProjectEntity entity = projectMapper.dtoToEntity(projectToUpdate);
-		val existingProject = getRequiredProjectEntity(projectToUpdate.getUuid());
+		ProjectEntity existingProject = getRequiredProjectEntity(projectToUpdate.getUuid());
+
+		checkRightsAdministerProject(existingProject);
+		checkRightsAdministerProject(entity);
 
 		for (final UpdateProjectFieldProcessor processor : updateProjectProcessors) {
 			processor.process(entity, existingProject);
@@ -158,11 +169,11 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional // readOnly = false
 	public void deleteProject(UUID uuid) throws AppServiceException {
-		val existingProject = projectDao.findByUuid(uuid);
+		ProjectEntity existingProject = projectDao.findByUuid(uuid);
 		if (existingProject == null) {
 			return;
 		}
-
+		checkRightsAdministerProject(existingProject);
 		for (final DeleteProjectFieldProcessor processor : deleteProjectProcessors) {
 			processor.process(null, existingProject);
 		}
@@ -204,6 +215,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void uploadMedia(UUID projectUuid, KindOfData kindOfData, Resource media) throws AppServiceException {
 		ProjectEntity existingProject = getRequiredProjectEntity(projectUuid);
+		checkRightsAdministerProjectMedia(existingProject);
 
 		// vérification des droits sur le projet
 		for (final UpdateMediaInProjectProcessor processor : updateMediaInProjectProcessors) {
@@ -222,6 +234,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void deleteMedia(UUID projectUuid, KindOfData kindOfData) throws AppServiceException {
 		ProjectEntity existingProject = getRequiredProjectEntity(projectUuid);
+		checkRightsAdministerProjectMedia(existingProject);
 
 		// vérification des droits sur le projet
 		for (final DeleteMediaFromProjectProcessor processor : deleteMediaFromProjectProcessors) {
@@ -252,12 +265,14 @@ public class ProjectServiceImpl implements ProjectService {
 		// Recuperer le projet pour vérifier son statut
 		ProjectEntity associatedProject = getRequiredProjectEntity(projectUuid);
 
+		projektAuthorisationHelper.checkRightsAdministerProjectDataset(associatedProject);
+
 		// Vérification des droits de l'utilisateur et du statut du projet avant d'ajouter le lien sur le dataset
 		for (final AddDatasetToProjectProcessor processor : addDatasetToProjectProcessors) {
 			processor.process(null, associatedProject);
 		}
 
-		val entity = datasetRequestMapper.dtoToEntity(datasetRequest);
+		NewDatasetRequestEntity entity = datasetRequestMapper.dtoToEntity(datasetRequest);
 
 		entity.setUuid(UUID.randomUUID());
 		entity.setCreationDate(LocalDateTime.now());
@@ -269,7 +284,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 		associatedProject.getDatasetRequests().add(entity);
 		// Enregistrer les 2 entités (mettre tout ça dans le bloc try..catch)
-		val savedEntity = datasetRequestDao.save(entity);
+		NewDatasetRequestEntity savedEntity = datasetRequestDao.save(entity);
 		projectDao.save(associatedProject);
 		return datasetRequestMapper.entityToDto(savedEntity);
 	}
@@ -294,14 +309,15 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional // readOnly = false
 	public NewDatasetRequest updateNewDatasetRequest(UUID projectUuid, NewDatasetRequest newDatasetRequest)
 			throws AppServiceException {
-		val project = getRequiredProjectEntity(projectUuid);
+		ProjectEntity project = getRequiredProjectEntity(projectUuid);
+		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant de modifier le lien sur le dataset
 		for (final UpdateDatasetInProjectProcessor processor : updateDatasetInProjectProcessors) {
 			processor.process(null, project);
 		}
 
-		val entity = datasetRequestMapper.dtoToEntity(newDatasetRequest);
+		NewDatasetRequestEntity entity = datasetRequestMapper.dtoToEntity(newDatasetRequest);
 		if (CollectionUtils.isNotEmpty(project.getDatasetRequests())) {
 			for (NewDatasetRequestEntity newDatasetRequestEntity : project.getDatasetRequests()) {
 				if (newDatasetRequestEntity.getUuid().equals(newDatasetRequest.getUuid())) {
@@ -323,7 +339,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional // readOnly = false
 	public void deleteNewDatasetRequest(UUID projectUuid, UUID requestUuid) throws AppServiceException {
-		val project = getRequiredProjectEntity(projectUuid);
+		ProjectEntity project = getRequiredProjectEntity(projectUuid);
+		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant de supprimer le lien sur le dataset
 		for (final DeleteDatasetFromProjectProcessor processor : deleteDatasetFromProjectProcessors) {
@@ -397,5 +414,47 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectByOwner> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria) {
 		return projectCustomDao.getNumberOfProjectsPerOwners(criteria.getOwnerUuids());
+	}
+
+	/**
+	 * Définition de l'ouverture des droits la fonctionnalité de d'administration de media associé à un projet : Le projectowner ou un membre de
+	 * l'organisation peut / L'administrateur peut (uniquement via Postman) / Un autre user ne peut pas
+	 * 
+	 * Les droits autorisés doivent être cohérents avec ceux définis en PreAuth coté Controller
+	 * 
+	 * @param projectEntity l'entité projet pour laquelle vérifier le droit d'accès
+	 * @throws GetOrganizationMembersException
+	 * @throws GetOrganizationException
+	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
+	 */
+	private void checkRightsAdministerProjectMedia(ProjectEntity projectEntity)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
+		// pour le moment les droits d'accès à cette fonction sont les mêmes que la fonction de création de projet
+		projektAuthorisationHelper.checkRightsInitProject(projectEntity);
+	}
+
+	/**
+	 * Définition de l'ouverture des droits la fonctionnalité d'administration de projet : Le projectowner ou un membre de l'organisation peut modifier un
+	 * projet / L'administrateur peut modifier un projet (uniquement via Postman) / L'animateur peut modifier un projet (via postman) / Un autre user ne
+	 * peut pas modifier un projet
+	 * 
+	 * Les droits autorisés doivent être cohérents avec ceux définis en PreAuth coté Controller
+	 * 
+	 * @param projectEntity l'entité projet pour laquelle vérifier le droit d'accès
+	 * @throws GetOrganizationMembersException
+	 * @throws GetOrganizationException
+	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
+	 */
+	private void checkRightsAdministerProject(ProjectEntity projectEntity)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
+		Map<String, Boolean> accessRightsByRole = ProjektAuthorisationHelper.getADMINISTRATOR_MODERATOR_ACCESS();
+		// Vérification des droits d'accès
+		// les droits autorisés dans accessRights doivent être cohérents avec ceux définis en PreAuth coté Controller
+		if (!(projektAuthorisationHelper.isAccessGrantedByRole(accessRightsByRole)
+				|| projektAuthorisationHelper.isAccessGrantedForUserOnProject(projectEntity))) {
+			throw new AppServiceUnauthorizedException("Accès non autorisé à la fonctionnalité pour l'utilisateur");
+		}
 	}
 }
