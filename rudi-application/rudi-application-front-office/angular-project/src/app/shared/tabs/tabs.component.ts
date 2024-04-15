@@ -44,7 +44,7 @@ export class TabsComponent implements AfterViewInit {
             .find((tab) => tab.active);
     }
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver, ) {
+    constructor() {
     }
 
     private static displayTabInto(tab: TabComponent, viewContainer: ViewContainerRef): void {
@@ -98,7 +98,6 @@ export class TabsComponent implements AfterViewInit {
 
     private displayWorkInProgressIntoCurrentTab() {
         this.viewContainerRef.clear();
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(WorkInProgressComponent);
-        this.viewContainerRef.createComponent<WorkInProgressComponent>(componentFactory);
+        this.viewContainerRef.createComponent(WorkInProgressComponent);
     }
 }

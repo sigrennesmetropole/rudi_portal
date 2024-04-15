@@ -6,21 +6,10 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
     padding: 0 18px;
-    align-items: center;
 
     .logo-container{
-        @extend .col-sm-12;
-        @extend .col-md-2;
-        @extend .col-lg-3;
         padding: 0;
-        margin-bottom: 10px;
-    }
-    .text-container{
-        @extend .col-sm-12;
-        @extend .col-md-10;
-        @extend .col-lg-9;
     }
 }
 
@@ -52,14 +41,8 @@
 }
 
 @mixin mobile() {
-    .container-global {
-        flex-direction: column;
-    }
     .text-container{
         margin-left: 0;
-    }
-    .logo-container{
-        margin-bottom: 15px;
     }
 
 }
@@ -93,9 +76,12 @@
     &-lg{
         display: flex;
         flex-wrap: nowrap;
+        padding: 0 18px;
+        align-items: center;
+        margin-bottom: auto;
 
         .text-container {
-            margin-left: 15px;
+            margin-left: 5px;
             overflow: hidden;
             display: -webkit-box;
             -webkit-box-orient: vertical;

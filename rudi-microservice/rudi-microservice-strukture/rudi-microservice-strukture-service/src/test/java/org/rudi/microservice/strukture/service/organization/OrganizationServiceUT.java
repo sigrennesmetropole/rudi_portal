@@ -1,16 +1,5 @@
 package org.rudi.microservice.strukture.service.organization;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -50,6 +39,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import lombok.val;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @StruktureSpringBootTest
 class OrganizationServiceUT {
@@ -93,7 +92,7 @@ class OrganizationServiceUT {
 	}
 
 	private void mockExternalCalls() throws AppServiceException {
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(true);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(true);
 		doNothing().when(projektHelper).notifyUserHasBeenAdded(any(), any());
 	}
 
@@ -546,7 +545,7 @@ class OrganizationServiceUT {
 		updateDto.setUserUuid(userUuidModified);
 		updateDto.setRole(OrganizationRole.ADMINISTRATOR);
 
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(true);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(true);
 
 		// J'essaye de MAJ les infos d'un autre membre (membre 1) alors que j'ai un DTO qui concerne quelqu'un d'autre (membre 2)
 		assertThrows(AppServiceBadRequestException.class, () -> organizationService
@@ -566,7 +565,7 @@ class OrganizationServiceUT {
 		updateDto.setUserUuid(userUuidModified);
 		updateDto.setRole(OrganizationRole.ADMINISTRATOR);
 
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(true);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(true);
 
 		// J'essaye de MAJ les infos d'un membre d'une autre organisation ( orga 1) alors que j'ai un DTO qui concerne l'orga 2
 		assertThrows(AppServiceBadRequestException.class,
@@ -584,7 +583,7 @@ class OrganizationServiceUT {
 		updateDto.setUserUuid(userUuidModified);
 		updateDto.setRole(OrganizationRole.ADMINISTRATOR);
 
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(false);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(false);
 
 		// Je suis pas administrateur de l'orga, j'ai pas le droit
 		assertThrows(AppServiceUnauthorizedException.class, () -> organizationService
@@ -599,7 +598,7 @@ class OrganizationServiceUT {
 
 		var oldMembers = organizationService.getOrganizationMembers(organization.getUuid());
 
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(false);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(false);
 		assertThrows(AppServiceUnauthorizedException.class,
 				() -> organizationService.removeOrganizationMembers(organization.getUuid(), userRemovedUuid));
 
@@ -612,7 +611,7 @@ class OrganizationServiceUT {
 	@Test
 	void updateUserOrganizationPassword_forbidden_when_not_admin_of_organization() throws AppServiceException {
 		createTestOrganization();
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(false);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(false);
 		PasswordUpdate passwordUpdate = new PasswordUpdate();
 		passwordUpdate.setOldPassword("manemajeff");
 		passwordUpdate.setNewPassword("Peut1mp0rt3!");

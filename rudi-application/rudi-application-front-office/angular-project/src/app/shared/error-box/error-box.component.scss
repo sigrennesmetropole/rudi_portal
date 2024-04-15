@@ -1,17 +1,16 @@
-
-.error-icon {
-    margin-right: 0.5em;
+.icon-container {
+    .error-icon {
+        margin-right: 0.5em;
+    }
 }
 
+
 .error-zone {
-    margin-top: 1em;
     padding: 1em;
     display: flex;
-    flex-direction: row;
     background-color: #d04838;
     border-radius: 5px;
-    border-width: 2px;
-    border-color: #dd4b39;
+    border: 2px solid #dd4b39;
     color: white;
     font-size: 14px;
 }

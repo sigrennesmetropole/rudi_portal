@@ -1,0 +1,12 @@
+.term-link {
+    font-size: 13px;
+    color: #323643;
+    margin: 0 9px 0 6px;
+    font-weight: 600;
+
+}
+.term-link:hover {
+    color: #ff8d6d;
+    text-decoration: none !important;
+}
+

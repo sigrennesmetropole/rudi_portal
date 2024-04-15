@@ -28,7 +28,6 @@ import static org.rudi.microservice.konsult.service.constant.BeanIds.CUSTOMIZATI
 
 /**
  * @author FNI18300
- *
  */
 @Component
 @Slf4j
@@ -54,7 +53,7 @@ public class CustomizationHelper extends ResourcesHelper {
 
 	private CustomizationDescriptionData customizationDescriptionData = null;
 
-	CustomizationHelper(@Qualifier(CUSTOMIZATION_RESOURCES_CACHE) Cache<String, DocumentContent> cache, List<KeyFigureComputer> keyFigureComputers, ObjectMapper objectMapper){
+	CustomizationHelper(@Qualifier(CUSTOMIZATION_RESOURCES_CACHE) Cache<String, DocumentContent> cache, List<KeyFigureComputer> keyFigureComputers, ObjectMapper objectMapper) {
 		this.cache = cache;
 		this.keyFigureComputers = keyFigureComputers;
 		this.objectMapper = objectMapper;
@@ -83,7 +82,6 @@ public class CustomizationHelper extends ResourcesHelper {
 	/**
 	 * Remplit le resourceMapping avec les valeurs receuillis dans le JSON et les remplace dans l'objet de retour par des UUIDs ou des identifiants.
 	 *
-	 *
 	 * @param data données issues de la lecture du fichier .json
 	 * @return ces mêmes data, en ayant remplacé les chemins vers les fichiers par des UUIDs
 	 */
@@ -93,10 +91,11 @@ public class CustomizationHelper extends ResourcesHelper {
 		data.setMainLogo(fillResourceMapping(data.getMainLogo(), UUID.randomUUID().toString()));
 
 		data.getHeroDescription().setLeftImage(fillResourceMapping(data.getHeroDescription().getLeftImage(), UUID.randomUUID().toString()));
-
 		data.getHeroDescription().setRightImage(fillResourceMapping(data.getHeroDescription().getRightImage(), UUID.randomUUID().toString()));
 
 		data.getKeyFiguresDescription().setKeyFiguresLogo(fillResourceMapping(data.getKeyFiguresDescription().getKeyFiguresLogo(), UUID.randomUUID().toString()));
+
+		data.getFooterDescription().getSocialNetworks().forEach(socialNetwork -> socialNetwork.setIcon(fillResourceMapping(socialNetwork.getIcon(), UUID.randomUUID().toString())));
 
 		return data;
 	}
@@ -113,7 +112,7 @@ public class CustomizationHelper extends ResourcesHelper {
 	}
 
 
-	private void fillKeyFiguresData(CustomizationDescriptionData data){
+	private void fillKeyFiguresData(CustomizationDescriptionData data) {
 		if (data.getKeyFiguresDescription() != null
 				&& CollectionUtils.isNotEmpty(data.getKeyFiguresDescription().getKeyFigures())) {
 
@@ -121,8 +120,8 @@ public class CustomizationHelper extends ResourcesHelper {
 			for (KeyFigureData keyFigure : data.getKeyFiguresDescription().getKeyFigures()) {
 
 				// Parcours de la liste des KeyFigureComputer pour trouver celui qui correspond au KeyFigure
-				for (KeyFigureComputer computer: keyFigureComputers) {
-					if(computer.accept(keyFigure.getType())){
+				for (KeyFigureComputer computer : keyFigureComputers) {
+					if (computer.accept(keyFigure.getType())) {
 						computer.compute(keyFigure);
 					}
 				}

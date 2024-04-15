@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.ehcache.Cache;
 import org.rudi.common.core.DocumentContent;
 
-
 public abstract class ResourcesHelper {
 	protected abstract String getBasePackage();
 	protected abstract String getBaseDirectory();
@@ -63,4 +62,6 @@ public abstract class ResourcesHelper {
 		// Soit la clé insérée précédemment, soit celle déjà présente.
 		return resourceMapping.getKey(value);
 	}
+
+
 }

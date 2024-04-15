@@ -24,8 +24,10 @@ public class CustomizationDescriptionData {
 
 	private CmsNewsDescriptionData cmsNewsDescription;
 
-	private CmsTermsDescriptionData termsDescription;
+	private CmsTermsDescriptionData cmsTermsDescription;
 
 	private CmsProjectValuesDescriptionData cmsProjectValuesDescription;
+
+	private FooterDescriptionData footerDescription;
 
 }

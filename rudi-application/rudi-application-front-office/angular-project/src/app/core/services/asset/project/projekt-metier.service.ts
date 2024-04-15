@@ -381,7 +381,7 @@ export class ProjektMetierService {
             mapBackFront.set(addedBack, add);
         });
 
-        const observables = [];
+        const observables: Observable<any>[] = [];
 
         // On fait chaque ajout
         newDatasetRequests.forEach((newDatasetRequest: NewDatasetRequest) => {
@@ -430,7 +430,7 @@ export class ProjektMetierService {
             return of(true);
         }
 
-        const observables = [];
+        const observables: Observable<any>[] = [];
 
         newDatasetRequests.forEach((toEdit: NewDatasetRequest) => {
             observables.push(this.projektService.updateNewDatasetRequest(project.uuid, toEdit));

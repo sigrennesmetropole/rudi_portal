@@ -58,15 +58,18 @@
         align-items: center;
         justify-content: flex-end;
 
-        mat-icon {
+        .rudi-icon-encircled {
             cursor: pointer;
             margin-right: 14px;
-        }
-
-        .rudi-icon-encircled {
             font-size: 18px;
             border-color: var(--encircled-color);
-            color: var(--encircled-color)
+            color: var(--encircled-color);
+
+            &:hover {
+                border: none;
+                color: var(--secondary-color);
+                background-color: var(--primary-color);
+            }
         }
     }
 

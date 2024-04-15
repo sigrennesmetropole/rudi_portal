@@ -60,10 +60,10 @@ export class CmsNewsSectionComponent implements OnInit {
 
         this.konsultService.renderAssets('NEWS', this.cmsNewsDescription.template_simple_with_image, DEFAULT_CATEGORIES, [publishDateFilter, unpublishDateFilter], this.translateService.currentLang, OFFSET_TEMPLATE_WITH_IMAGE, LIMIT_TEMPLATE_WITH_IMAGE, DEFAULT_ORDER)
             .subscribe({
-                next: (cmsAsset: Array<CmsAsset>) => {
-                    this.displayComponent = cmsAsset.length > 0;
+                next: (cmsAssets: Array<CmsAsset>) => {
+                    this.displayComponent = cmsAssets.length > 0;
                     if (this.displayComponent) {
-                        this.news.contentNewsWithImage = this.domSanitizer.bypassSecurityTrustHtml(cmsAsset.pop()?.content);
+                        this.news.contentNewsWithImage = this.domSanitizer.bypassSecurityTrustHtml(cmsAssets.pop()?.content);
                     }
                 },
                 error: (err) => {
@@ -74,10 +74,10 @@ export class CmsNewsSectionComponent implements OnInit {
 
         this.konsultService.renderAssets('NEWS', this.cmsNewsDescription.template_simple, DEFAULT_CATEGORIES, [publishDateFilter, unpublishDateFilter], this.translateService.currentLang, OFFSET_TEMPLATE_WITHOUT_IMAGE, LIMIT_TEMPLATE_WITHOUT_IMAGE, DEFAULT_ORDER)
             .subscribe({
-                next: (cmsAsset: Array<CmsAsset>) => {
-                    this.displayNewsWithoutImage = cmsAsset.length > 0;
+                next: (cmsAssets: Array<CmsAsset>) => {
+                    this.displayNewsWithoutImage = cmsAssets.length > 0;
                     if (this.displayNewsWithoutImage) {
-                        cmsAsset.forEach((cmsAsset: CmsAsset) => {
+                        cmsAssets.forEach((cmsAsset: CmsAsset) => {
                             this.news.contentsNewsWithoutImage.push(this.domSanitizer.bypassSecurityTrustHtml(cmsAsset.content));
                         });
                     }

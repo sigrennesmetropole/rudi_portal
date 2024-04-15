@@ -1,6 +1,7 @@
-package org.rudi.facet.apimaccess.api;
+package org.rudi.common.core.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -78,4 +79,17 @@ public class ContentTypeUtils {
 		return parameters;
 	}
 
+	/**
+	 * @param contentType contentType du file à tester
+	 * @param allowedContentTypes liste des contentType autorisés
+	 * @throws IllegalArgumentException si le content type n'est pas dans la liste des contentTypes autorisés
+	 */
+	public static void checkMediaType(String contentType, List<String> allowedContentTypes) {
+		List<MediaType> mediaTypes = MediaType.parseMediaTypes(allowedContentTypes);
+		if(!mediaTypes
+				.contains(ContentTypeUtils.normalize(contentType))){
+			throw new IllegalArgumentException(
+					String.format("Not allowed content type for attachment : %s", contentType));
+		}
+	}
 }

@@ -10,7 +10,7 @@ import org.rudi.microservice.konsult.core.customization.CustomizationDescription
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { HeroDescriptionMapper.class,
 		ProjectsDescriptionMapper.class, KeyFiguresDescriptionMapper.class, CmsNewsDescriptionMapper.class,
-		CmsProjectValuesDescriptionMapper.class, CmsTermsDescriptionMapper.class })
+		CmsProjectValuesDescriptionMapper.class, CmsTermsDescriptionMapper.class, FooterDescriptionMapper.class })
 public interface CustomizationDescriptionMapper {
 
 	CustomizationDescription dataToDto(CustomizationDescriptionData descriptionData, @Context Locale locale);

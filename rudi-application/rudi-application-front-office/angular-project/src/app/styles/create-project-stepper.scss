@@ -200,33 +200,6 @@ h1 {
 
 }
 
-.buttons {
-
-    display: flex;
-    justify-content: space-between;
-    margin-top: 39px;
-
-    .button {
-        font-weight: bold;
-        height: 42px;
-        width: 160px;
-        border-radius: 6px;
-    }
-
-    .previous-button {
-        color: var(--primary-text-light);
-    }
-
-    .next-button {
-        @include button-blue;
-    }
-
-    .submit {
-        @include button-inactive
-    }
-
-}
-
 mat-label {
     margin: 0 0 5px 0;
     font-size: 16px;
@@ -244,6 +217,9 @@ mat-form-field {
     border-radius: 4px;
 }
 
+.text-area-height {
+    min-height: 260px !important;
+}
 
 mat-error {
     padding-bottom: 4em;
@@ -278,12 +254,6 @@ mat-error {
     display: flex;
     flex-direction: column;
     width: 90%;
-}
-
-.text-area-height {
-    max-height: 260px;
-    height: 260px;
-    border-radius: 4px;
 }
 
 .stepper-mat-error {
@@ -404,7 +374,7 @@ mat-error {
         }
     }
 
-    .mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate{
+    .mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
         background: var(--primary-color) !important;
     }
 

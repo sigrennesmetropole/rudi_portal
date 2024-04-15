@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.reactivestreams.Publisher;
-import org.rudi.facet.apimaccess.api.ContentTypeUtils;
+import org.rudi.common.core.util.ContentTypeUtils;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -20,7 +20,6 @@ import org.springframework.web.reactive.function.BodyExtractor;
 import org.springframework.web.reactive.function.UnsupportedMediaTypeException;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.support.ClientResponseWrapper;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

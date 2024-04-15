@@ -100,7 +100,7 @@
 					}
 				}
 			},
-			"Proj4Information":  {
+			"Proj4Information": {
 				"description": "Informations nécessaires pour récupérer les informations sur une projection (genre EPSG:3948)",
 				"type": "object",
 				"properties": {
@@ -181,7 +181,7 @@
 					"PROJEKT"
 				]
 			},
-			"KeyFigure":{
+			"KeyFigure": {
 				"description": "Element correspondant à 1 chiffre clé",
 				"type": "object",
 				"properties": {
@@ -279,6 +279,15 @@
 						"properties": {
 							"main_category": {
 								"type": "string"
+							},
+							"title1": {
+								"type": "string"
+							},
+							"title2": {
+								"type": "string"
+							},
+							"description": {
+								"type": "string"
 							}
 						}
 					}
@@ -311,6 +320,36 @@
 					},
 					"cms_project_values_description": {
 						"$ref": "#/components/schemas/CmsProjectValuesDescription"
+					},
+					"footer_description": {
+						"$ref": "#/components/schemas/FooterDescription"
+					}
+				}
+			},
+			"SocialNetwork": {
+				"description": "Elements du footer, correspondant aux réseaux sociaux",
+				"type": "object",
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"icon": {
+						"type": "string"
+					}
+				}
+			},
+			"FooterDescription": {
+				"description": "Elements du footer",
+				"type": "object",
+				"properties": {
+					"socialNetworks": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SocialNetwork"
+						}
 					}
 				}
 			}

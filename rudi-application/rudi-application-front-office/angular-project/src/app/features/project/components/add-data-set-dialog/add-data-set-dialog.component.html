@@ -1,27 +1,32 @@
-<mat-dialog-content>
-    <div class="dialog-header-close-button" fxLayoutAlign="end center">
-        <button mat-icon-button [mat-dialog-close]="null">
-            <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
-        </button>
-    </div>
+<div id="dialog-container">
+    <mat-dialog-content>
+        <div class="dialog-cross-button">
+            <button mat-icon-button [mat-dialog-close]="null">
+                <mat-icon svgIcon="icon-close" class="cross-button"></mat-icon>
+            </button>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-title">{{'project.addDatasetPopup.title1'|translate}}</div>
+            <app-list-container class="list-container" [hidePagination]="true" [limit]="maxResultPerPage"
+                                [resultsPerRow]="3"
+                                [isSelectable]="true"
+                                (dbSelectMetadata)="doubleSelect($event)  "
+                                (selectMetadata)="selectMetadata($event)"
+                                [accessStatusForcedValue]="accessStatusForcedValue"
+                                [accessStatusHiddenValues]="accessStatusHiddenValues" [orders]="orders"
+                                [mediaSize]="mediaSize"></app-list-container>
 
-    <div id="content">
-        <app-page-title class="dialog-title"
-                        [title1]="'project.addDatasetPopup.title1'|translate"></app-page-title>
-        <app-list-container [hidePagination]="true" [limit]="maxResultPerPage" [resultsPerRow]="3" [isSelectable]="true"
-                            (dbSelectMetadata)="doubleSelect($event)  " (selectMetadata)="selectMetadata($event)"
-                            [accessStatusForcedValue]="accessStatusForcedValue"
-                            [accessStatusHiddenValues]="accessStatusHiddenValues" [orders]="orders"
-                            [mediaSize]="mediaSize"></app-list-container>
-    </div>
 
-    <div class="d-flex justify-content-between">
-        <button class="buttons mat-stroked-button btn dialog-cancel" mat-raised-button [mat-dialog-close]="null">
-            <span>{{'project.addDatasetPopup.cancel'|translate}}</span>
-        </button>
-        <button class="buttons mat-stroked-button btn dialog-validate" mat-raised-button (click)="validate()"
-                [disabled]="!selectedMetadata" color="primary">
-            <span>{{'project.addDatasetPopup.validate'|translate}}</span>
-        </button>
-    </div>
-</mat-dialog-content>
+            <mat-dialog-actions class="dialog-buttons">
+                <button class="secondary-raised-button" mat-raised-button [mat-dialog-close]="null">
+                    <span>{{'project.addDatasetPopup.cancel'|translate}}</span>
+                </button>
+                <button class="primary-raised-button" mat-raised-button (click)="validate()"
+                        [disabled]="!selectedMetadata">
+                    <span>{{'project.addDatasetPopup.validate'|translate}}</span>
+                </button>
+            </mat-dialog-actions>
+        </div>
+    </mat-dialog-content>
+
+</div>

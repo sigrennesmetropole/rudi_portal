@@ -1,8 +1,5 @@
 package org.rudi.facet.cms.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -28,6 +25,9 @@ import org.rudi.facet.cms.impl.mapper.CmsCategoryMapperImpl;
 import org.rudi.facet.cms.impl.utils.ResourceUriRewriter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
+
 @ExtendWith(MockitoExtension.class)
 @CmsSpringBootTest
 class MagnoliaServiceImplUT {
@@ -38,15 +38,6 @@ class MagnoliaServiceImplUT {
 	private static final String FILE_WITH_RESOURCES_IMAGE_IMG = "inputFiles/resourcesImagesInImageBalise.html";
 	private static final String FILE_WITH_RESOURCES_FILE_AHREF = "inputFiles/resourcesFileInLink.html";
 	private static final String FILE_WITH_ALL_SELF_AND_RESOURCES = "inputFiles/completeExemple.html";
-
-	private static final String SELF_CSS_QUERY = "a[href~=^@self/([^/]+)/([^/]+)/([^/]+)$]";
-
-	private static final String IMAGE_BACKGROUND_CSS_QUERY = "[style~=background-image: url\\(/dam/jcr:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/[A-Za-z0-9_]+\\.[a-z]{3,4}\\);]";
-	private static final String IMAGE_IMG_CSS_QUERY = "img[src~=/dam/jcr:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/[A-Za-z0-9_]+\\.[a-z]{3,4}]";
-	private static final String RESOURCE_HREF_CSS_QUERY = "a[href~=/dam/jcr:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/[A-Za-z0-9_]+\\.[a-z]{3,4}]";
-
-	private static final String RESOURCES_REGEX = "/\\.resources/[a-zA-Z0-9_./-]*";
-	private static final String LINK_CSS_QUERY = "link[href~=" + RESOURCES_REGEX + "]";
 
 	private MagnoliaServiceImpl magnoliaService;
 
@@ -91,13 +82,13 @@ class MagnoliaServiceImplUT {
 		Element elementUnchanged = element.clone();
 
 		assertThat(element).as("Le fichier contient bel et bien au moins un self")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.SELF_CSS_QUERY).isEmpty());
+				.matches(e -> !e.select(MagnoliaServiceImpl.SELF_CSS_QUERY).isEmpty());
 
 		Element modifiedElement = magnoliaService.replaceSelfLinks(element);
 
 		assertThat(modifiedElement).as("Le résultat doit être différent de l'input").isNotEqualTo(elementUnchanged)
 				.as("Le résultat ne doit plus contenir de @self")
-				.matches(e -> e.select(MagnoliaServiceImplUT.SELF_CSS_QUERY).isEmpty());
+				.matches(e -> e.select(MagnoliaServiceImpl.SELF_CSS_QUERY).isEmpty());
 	}
 
 	@Test
@@ -106,13 +97,13 @@ class MagnoliaServiceImplUT {
 		Element elementUnchanged = element.clone();
 
 		assertThat(element).as("Le fichier contient bel et bien au moins un self")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.SELF_CSS_QUERY).isEmpty());
+				.matches(e -> !e.select(MagnoliaServiceImpl.SELF_CSS_QUERY).isEmpty());
 
 		Element modifiedElement = magnoliaService.replaceSelfLinks(element);
 
 		assertThat(modifiedElement).as("Le résultat doit être différent de l'input").isNotEqualTo(elementUnchanged)
 				.as("Le résultat ne doit plus contenir de @self")
-				.matches(e -> e.select(MagnoliaServiceImplUT.SELF_CSS_QUERY).isEmpty());
+				.matches(e -> e.select(MagnoliaServiceImpl.SELF_CSS_QUERY).isEmpty());
 	}
 
 	@Test
@@ -122,13 +113,13 @@ class MagnoliaServiceImplUT {
 		Element elementUnchanged = element.clone();
 
 		assertThat(element).as("Le fichier contient bel et bien une image en background")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.IMAGE_BACKGROUND_CSS_QUERY).isEmpty());
+				.matches(e -> !e.select(MagnoliaServiceImpl.STYLE_CSS_QUERY).isEmpty());
 
 		Element modifiedElement = magnoliaService.replaceResourcesLinks(element);
 
 		assertThat(modifiedElement).as("Le resultat doit être different de l'input").isNotEqualTo(elementUnchanged)
 				.as("Le résultat ne doit plus contenir le même lien dans le background")
-				.matches(e -> e.select(MagnoliaServiceImplUT.IMAGE_BACKGROUND_CSS_QUERY).isEmpty());
+				.matches(e -> e.select(MagnoliaServiceImpl.STYLE_CSS_QUERY).isEmpty());
 	}
 
 	@Test
@@ -138,13 +129,13 @@ class MagnoliaServiceImplUT {
 		Element elementUnchanged = element.clone();
 
 		assertThat(element).as("Le fichier contient bel et bien une image dans une balise img")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.IMAGE_IMG_CSS_QUERY).isEmpty());
+				.matches(e -> !e.select(MagnoliaServiceImpl.IMAGE1_CSS_QUERY).isEmpty());
 
 		Element modifiedElement = magnoliaService.replaceResourcesLinks(element);
 
 		assertThat(modifiedElement).as("Le resultat doit être different de l'input").isNotEqualTo(elementUnchanged)
 				.as("Le résultat ne doit plus contenir le même lien dans la balise")
-				.matches(e -> e.select(MagnoliaServiceImplUT.IMAGE_IMG_CSS_QUERY).isEmpty());
+				.matches(e -> e.select(MagnoliaServiceImpl.IMAGE1_CSS_QUERY).isEmpty());
 	}
 
 	@Test
@@ -154,13 +145,13 @@ class MagnoliaServiceImplUT {
 		Element elementUnchanged = element.clone();
 
 		assertThat(element).as("Le fichier contient bel et bien une ressource dans un href")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.RESOURCE_HREF_CSS_QUERY).isEmpty());
+				.matches(e -> !e.select(MagnoliaServiceImpl.ANCHOR_CSS_QUERY).isEmpty());
 
 		Element modifiedElement = magnoliaService.replaceResourcesLinks(element);
 
 		assertThat(modifiedElement).as("Le resultat doit être different de l'input").isNotEqualTo(elementUnchanged)
 				.as("Le résultat ne doit plus contenir le même lien dans le href de la balise a")
-				.matches(e -> e.select(MagnoliaServiceImplUT.RESOURCE_HREF_CSS_QUERY).isEmpty());
+				.matches(e -> e.select(MagnoliaServiceImpl.ANCHOR_CSS_QUERY).isEmpty());
 	}
 
 	@Test
@@ -170,30 +161,30 @@ class MagnoliaServiceImplUT {
 		Element elementUnchanged = element.clone();
 
 		assertThat(element).as("Le fichier contient bel et bien au moins un self")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.SELF_CSS_QUERY).isEmpty())
+				.matches(e -> !e.select(MagnoliaServiceImpl.SELF_CSS_QUERY).isEmpty())
 				.as("Le fichier contient bel et bien une image en background")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.IMAGE_BACKGROUND_CSS_QUERY).isEmpty())
+				.matches(e -> !e.select(MagnoliaServiceImpl.STYLE_CSS_QUERY).isEmpty())
 				.as("Le fichier contient bel et bien une image dans une balise img")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.IMAGE_IMG_CSS_QUERY).isEmpty())
+				.matches(e -> !e.select(MagnoliaServiceImpl.IMAGE1_CSS_QUERY).isEmpty())
 				.as("Le fichier contient bel et bien une ressource dans un href")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.RESOURCE_HREF_CSS_QUERY).isEmpty())
+				.matches(e -> !e.select(MagnoliaServiceImpl.ANCHOR_CSS_QUERY).isEmpty())
 				.as("Le fichier contient bel et bien un link")
-				.matches(e -> !e.select(MagnoliaServiceImplUT.LINK_CSS_QUERY).isEmpty());
+				.matches(e -> !e.select(MagnoliaServiceImpl.LINK_CSS_QUERY).isEmpty());
 
 		magnoliaService.replaceSelfLinks(element);
 		magnoliaService.replaceResourcesLinks(element);
 
 		assertThat(element).as("Le résultat doit être différent de l'input").isNotEqualTo(elementUnchanged)
 				.as("Le résultat ne doit plus contenir de @self")
-				.matches(e -> e.select(MagnoliaServiceImplUT.SELF_CSS_QUERY).isEmpty())
+				.matches(e -> e.select(MagnoliaServiceImpl.SELF_CSS_QUERY).isEmpty())
 				.as("Le résultat ne doit plus contenir le même lien dans le background")
-				.matches(e -> e.select(MagnoliaServiceImplUT.IMAGE_BACKGROUND_CSS_QUERY).isEmpty())
+				.matches(e -> e.select(MagnoliaServiceImpl.STYLE_CSS_QUERY).isEmpty())
 				.as("Le résultat ne doit plus contenir le même lien dans la balise")
-				.matches(e -> e.select(MagnoliaServiceImplUT.IMAGE_IMG_CSS_QUERY).isEmpty())
+				.matches(e -> e.select(MagnoliaServiceImpl.IMAGE1_CSS_QUERY).isEmpty())
 				.as("Le résultat ne doit plus contenir le même lien dans le href de la balise a")
-				.matches(e -> e.select(MagnoliaServiceImplUT.RESOURCE_HREF_CSS_QUERY).isEmpty())
+				.matches(e -> e.select(MagnoliaServiceImpl.ANCHOR_CSS_QUERY).isEmpty())
 				.as("Le résultat ne doit plus contenir le même link")
-				.matches(e -> e.select(MagnoliaServiceImplUT.LINK_CSS_QUERY).isEmpty());
+				.matches(e -> e.select(MagnoliaServiceImpl.LINK_CSS_QUERY).isEmpty());
 	}
 
 }

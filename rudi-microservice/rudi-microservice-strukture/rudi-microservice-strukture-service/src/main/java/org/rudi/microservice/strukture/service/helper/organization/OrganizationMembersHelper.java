@@ -50,7 +50,7 @@ public class OrganizationMembersHelper {
 	 * @return si le droit ou non
 	 * @throws AppServiceException erreur non autorisé, ou erreur technique
 	 */
-	public boolean isConnectedUserOrganizationAdministrator(UUID organizationUuid) throws AppServiceException {
+	public boolean isAuthenticatedUserOrganizationAdministrator(UUID organizationUuid) throws AppServiceException {
 
 		OrganizationEntity organization = organizationDao.findByUuid(organizationUuid);
 		if (organization == null) {
@@ -70,6 +70,26 @@ public class OrganizationMembersHelper {
 
 		return organization.getMembers().stream().anyMatch(member -> member.getUserUuid().equals(user.getUuid())
 				&& member.getRole().equals(OrganizationRole.ADMINISTRATOR));
+	}
+
+	public boolean isAuthenticatedUserOrganizationMember(UUID organizationUuid) throws AppServiceException {
+		OrganizationEntity organization = organizationDao.findByUuid(organizationUuid);
+		if (organization == null) {
+			throw new AppServiceNotFoundException(OrganizationEntity.class, organizationUuid);
+		}
+
+		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
+		if (authenticatedUser == null) {
+			throw new AppServiceUnauthorizedException("Aucun utilisateur connecté");
+		}
+
+		User user = aclHelper.getUserByLogin(authenticatedUser.getLogin());
+		if (user == null) {
+			throw new AppServiceUnauthorizedException(
+					"Aucun utilisateur correspondant à l'utilisateur connecté dans ACL");
+		}
+
+		return organization.getMembers().stream().anyMatch(member -> member.getUserUuid().equals(user.getUuid()));
 	}
 
 	/**

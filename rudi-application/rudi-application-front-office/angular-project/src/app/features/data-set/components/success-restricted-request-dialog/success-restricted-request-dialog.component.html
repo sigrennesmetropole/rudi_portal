@@ -1,15 +1,18 @@
-<div id="content">
-    <mat-dialog-content class="justify-content-center">
-        <div class="dialog-header-close-button" fxLayoutAlign="end center">
-            <button mat-icon-button [mat-dialog-close]="null">
-                <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
+<div id="dialog-container">
+    <mat-dialog-content>
+        <div class="dialog-cross-button">
+            <button mat-icon-button (click)="handleClose()">
+                <mat-icon svgIcon="icon-close" class="cross-button"></mat-icon>
             </button>
         </div>
-        <div [translate]="'metaData.restrictedDatasetRequestDialog.ok.title'" class="title"></div>
-        <div class="content-text">
-            <span
-                class="description-text">{{'metaData.restrictedDatasetRequestDialog.ok.description1' | translate}}</span>
-            <span class="link-text" (click)="goToMyReuses()">{{'metaData.restrictedDatasetRequestDialog.ok.description2' | translate}}</span>
+        <div class="dialog-content">
+
+
+            <div class="dialog-title">{{'metaData.restrictedDatasetRequestDialog.ok.title' | translate}}</div>
+            <div class="dialog-description">{{'metaData.restrictedDatasetRequestDialog.ok.description1' | translate}}
+                <span class="link-text"
+                      (click)="goToMyReuses()">{{'metaData.restrictedDatasetRequestDialog.ok.description2' | translate}}</span>
+            </div>
         </div>
     </mat-dialog-content>
 </div>

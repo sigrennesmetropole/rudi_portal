@@ -3,6 +3,8 @@
  */
 package org.rudi.wso2.userstore;
 
+import static org.wso2.carbon.user.core.util.DatabaseUtil.getLoggableSqlString;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,8 +49,6 @@ import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.Secret;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import static org.wso2.carbon.user.core.util.DatabaseUtil.getLoggableSqlString;
-
 /**
  * @author FNI18300
  *
@@ -89,6 +89,12 @@ public class RudiUserStoreManager extends AbstractDefaultUserStoreManager {
 	}
 
 	@Override
+	public boolean isUniqueUserIdEnabled() {
+		LOGGER.info("isUniqueUserIdEnabled parent:" + super.isUniqueUserIdEnabled());
+		return false;
+	}
+
+	@Override
 	public String[] getProfileNames(String userName) throws UserStoreException {
 		LOGGER.warn("getProfileNames " + userName);
 		userName = UserCoreUtil.removeDomainFromName(userName);
@@ -112,7 +118,7 @@ public class RudiUserStoreManager extends AbstractDefaultUserStoreManager {
 			names = new String[] { UserCoreConstants.DEFAULT_PROFILE };
 		} else {
 			Arrays.sort(names);
-			if (Arrays.binarySearch(names, UserCoreConstants.DEFAULT_PROFILE) < 0){
+			if (Arrays.binarySearch(names, UserCoreConstants.DEFAULT_PROFILE) < 0) {
 				// Créer un nouveau tableau de taille augmentée pour ajouter le profile par défaut
 				names = Arrays.copyOf(names, names.length + 1);
 
@@ -1527,4 +1533,3 @@ public class RudiUserStoreManager extends AbstractDefaultUserStoreManager {
 	}
 
 }
-

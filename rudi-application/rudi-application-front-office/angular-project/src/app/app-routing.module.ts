@@ -47,6 +47,7 @@ const routes: Routes = [
             aclAppInfo: AclConfigurationResolver
         }
     },
+
     {
         path: '',
         redirectTo: 'home',
@@ -61,7 +62,14 @@ const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         canActivate: mapToCanActivate([AuthGuard])
+    },
+    {
+        path: 'cms',
+        loadChildren: () => import('./features/cms/cms.module')
+            .then(m => m.CmsModule),
+        canActivate: mapToCanActivate([AuthGuard])
     }
+
 
 ];
 

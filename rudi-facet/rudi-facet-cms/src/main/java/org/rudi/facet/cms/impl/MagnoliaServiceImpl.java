@@ -3,8 +3,6 @@
  */
 package org.rudi.facet.cms.impl;
 
-import static java.nio.file.StandardOpenOption.WRITE;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.FileNameMap;
@@ -47,10 +45,11 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 /**
  * @author FNI18300
@@ -68,21 +67,25 @@ public class MagnoliaServiceImpl implements CmsService {
 	// les uris de la forme : "/dam/jrc:{UUID}/"
 	private static final String URI_REGEX = "/dam/jcr:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/";
 
-	private static final String RESOURCES_REGEX = "/\\.resources/[a-zA-Z0-9_./-]*";
+	// /.imaging/default/dam/rudi/png.png/jcr:content.png
+	private static final String IMAGING_REGEX = "/.imaging/default/dam/[a-zA-Z0-9._%#!%$=+@:-]";
 
-	private static final String FILENAME_REGEX = "[A-Za-z0-9_-]+\\.[a-zA-Z0-9]{3,4}";
+	private static final String RESOURCES_REGEX = "/\\.resources/[a-zA-Z0-9_./ -]*";
+
+	private static final String FILENAME_REGEX = "[A-Za-z0-9_%#!%$=+@: -]+\\.[a-zA-Z0-9]{3,4}";
 
 	private static final String URI_AND_FILENAME_REGEX = URI_REGEX + FILENAME_REGEX;
 
-	private static final String IMAGE_CSS_QUERY = "img[src~=" + URI_AND_FILENAME_REGEX + "]";
-	private static final String STYLE_CSS_QUERY = "[style~=background-image: url\\(" + URI_AND_FILENAME_REGEX + "\\);]";
-	private static final String ANCHOR_CSS_QUERY = "a[href~=" + URI_AND_FILENAME_REGEX + "]";
-	private static final String LINK_CSS_QUERY = "link[href~=" + RESOURCES_REGEX + "]";
+	public static final String IMAGE1_CSS_QUERY = "img[src~=" + URI_AND_FILENAME_REGEX + "]";
+	private static final String IMAGE2_CSS_QUERY = "img[src~=" + IMAGING_REGEX + "]";
+	public static final String STYLE_CSS_QUERY = "[style~=background-image: url\\(" + URI_AND_FILENAME_REGEX + "\\);]";
+	public static final String ANCHOR_CSS_QUERY = "a[href~=" + URI_AND_FILENAME_REGEX + "]";
+	public static final String LINK_CSS_QUERY = "link[href~=" + RESOURCES_REGEX + "]";
 
-	private static final String RESOURCES_CSS_QUERY = IMAGE_CSS_QUERY + "," + STYLE_CSS_QUERY + "," + ANCHOR_CSS_QUERY
-			+ "," + LINK_CSS_QUERY;
+	public static final String RESOURCES_CSS_QUERY = IMAGE1_CSS_QUERY + "," + IMAGE2_CSS_QUERY + "," + STYLE_CSS_QUERY
+			+ "," + ANCHOR_CSS_QUERY + "," + LINK_CSS_QUERY;
 
-	private static final String SELF_CSS_QUERY = "a[href~=^@self/([^/]+)/([^/]+)/([^/]+)$]";
+	public static final String SELF_CSS_QUERY = "a[href~=^@self/([^/]+)/([^/]+)/([^/]+)/([^/]+)$]";
 
 	public static final String CATAGORIES_PARAM = "categories";
 
@@ -317,7 +320,7 @@ public class MagnoliaServiceImpl implements CmsService {
 		Elements resources = element.select(MagnoliaServiceImpl.RESOURCES_CSS_QUERY);
 
 		if (!resources.isEmpty()) {
-			List<String> regexes = List.of(URI_AND_FILENAME_REGEX, RESOURCES_REGEX);
+			List<String> regexes = List.of(URI_AND_FILENAME_REGEX, RESOURCES_REGEX, IMAGING_REGEX);
 			resources.forEach(e -> resourceUriRewriters.forEach(rewriter -> {
 				if (rewriter.accept(e)) {
 					rewriter.compute(e, regexes, cmsMagnoliaConfiguration.getFrontOfficeResourcesRoute());
@@ -328,7 +331,7 @@ public class MagnoliaServiceImpl implements CmsService {
 	}
 
 	protected Element replaceSelfLinks(Element element) {
-		// recherche de tous les liens de la forme @self/{type}/{id}/{template} et remplacement de leur attributs
+		// recherche de tous les liens de la forme @self/{type}/{id}/{template}/{titre} et remplacement de leur attributs
 		element.select(MagnoliaServiceImpl.SELF_CSS_QUERY).replaceAll(a -> a.attr("href",
 				StringUtils.replace(a.attr("href"), "@self", cmsMagnoliaConfiguration.getFrontOfficeRoute())));
 		return element;

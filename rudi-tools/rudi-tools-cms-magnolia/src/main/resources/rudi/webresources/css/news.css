@@ -1,5 +1,5 @@
 @media screen and (max-width: 1023px) {
-    .news-sumup {
+    .news-sumup-container {
         display: none;
     }
 
@@ -21,11 +21,6 @@
 }
 
 
-.modified-at {
-    color: #71757e;
-    margin: 10px 0 10px 0;
-}
-
 .news-title1 {
     color: #004680;
     font-size: 20px;
@@ -35,6 +30,11 @@
 
 .news-sumup {
     color: #004680;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Nombre de lignes à afficher */
+    -webkit-box-orient: vertical;
 }
 
 .img-container img {

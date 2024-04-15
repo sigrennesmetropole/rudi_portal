@@ -3,12 +3,6 @@
 .page-title-container{
     padding: 0 80px;
 }
-.search-box-title {
-    span {
-        display: contents;
-        line-height: 1.8rem;
-    }
-}
 
 .subtitle-3 {
     font-size: 16px;
@@ -34,6 +28,8 @@
     span {
         color: var(--accent-color);
         font-weight: normal;
+        display: contents;
+        line-height: 1.8rem;
     }
 
     &-sm {

@@ -17,6 +17,7 @@ import {
     ProjectMainInformationLabelComponent
 } from '@shared/project-main-informations/project-main-information-label/project-main-information-label.component';
 import {SearchBoxComponent} from '@shared/search-box/search-box.component';
+import {SocialMediaSectionComponent} from '@shared/social-media-section/social-media-section.component';
 import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
 import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
 import {IsSectionDisplayedPipe} from '@shared/workflow-form/pipes/is-section-displayed.pipe';
@@ -184,7 +185,8 @@ import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
             ClipboardFieldComponent,
             IsSectionDisplayedPipe,
             IsSectionOnlyHelpPipe,
-            RudiSwiperComponent
+            RudiSwiperComponent,
+            SocialMediaSectionComponent
         ],
     imports: [
         CommonModule,
@@ -194,7 +196,7 @@ import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
         MatAutocompleteModule,
         BotDetectCaptchaModule,
         MatTableModule,
-        NgbPopoverModule
+        NgbPopoverModule,
     ],
     exports: [
         ProjectCardComponent,

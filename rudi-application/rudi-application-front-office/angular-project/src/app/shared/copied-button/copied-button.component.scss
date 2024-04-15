@@ -31,6 +31,7 @@ mat-icon {
     cursor: pointer;
     color: var(--primary-text-light);
     right: 2em;
+    z-index: 99;
 }
 
 .btn-action {

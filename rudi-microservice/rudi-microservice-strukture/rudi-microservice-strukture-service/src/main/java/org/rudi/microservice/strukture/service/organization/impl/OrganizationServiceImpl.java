@@ -201,7 +201,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			throws Exception {
 		// Verifier que l'utilisateur connecté a le droit d'agir
 		if (!(utilContextHelper.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR, RoleCodes.MODULE_KALIM))
-				|| isConnectedUserOrganizationAdministrator(organizationUuid))) {
+				|| isAuthenticatedOrganizationAdministrator(organizationUuid))) {
 			throw new UserIsNotOrganizationAdministratorException(String.format(
 					"L'utilisateur connecté n'est pas autorisé à agir sur l'organisation %s", organizationUuid));
 		}
@@ -236,7 +236,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	// readOnly = false
 	public void removeOrganizationMembers(UUID organizationUuid, UUID userUuid) throws AppServiceException {
 		// Vérification des droits pour l'utilisation de cette fonction
-		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid) && !utilContextHelper
+		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organizationUuid) && !utilContextHelper
 				.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de manipuler cette organisation");
@@ -275,7 +275,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public Page<OrganizationUserMember> searchOrganizationMembers(OrganizationMembersSearchCriteria searchCriteria,
 			Pageable pageable) throws AppServiceException {
 
-		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(searchCriteria.getOrganizationUuid())
+		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(searchCriteria.getOrganizationUuid())
 				&& !utilContextHelper
 				.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
 			throw new AppServiceUnauthorizedException(
@@ -294,8 +294,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public Boolean isConnectedUserOrganizationAdministrator(UUID organizationUuid) throws AppServiceException {
-		return organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid);
+	public Boolean isAuthenticatedOrganizationAdministrator(UUID organizationUuid) throws AppServiceException {
+		return organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organizationUuid);
 	}
 
 	@Override
@@ -304,7 +304,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			OrganizationMember organizationMember) throws AppServiceException {
 
 		// Vérifie que l'utilisateur connecté est bien administrateur de l'organisation
-		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid)) {
+		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organizationUuid)) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de chercher des membres pour cette organisation");
 		}
@@ -361,7 +361,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			throws AppServiceException {
 
 		// vérification que l'utilisateur connecté a bien le droit de faire ça
-		if (!organizationMembersHelper.isConnectedUserOrganizationAdministrator(organizationUuid)) {
+		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organizationUuid)) {
 			throw new AppServiceForbiddenException(
 					"L'utilisateur connecté n'a pas le droit de modifier le mot de passe.");
 		}

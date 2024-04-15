@@ -1,0 +1,18 @@
+@import "variables-rudi";
+
+.footer-icon-container {
+    a {
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            filter: brightness(175%);
+            text-decoration: none;
+        }
+
+        img {
+            margin-right: 5px;
+        }
+    }
+}

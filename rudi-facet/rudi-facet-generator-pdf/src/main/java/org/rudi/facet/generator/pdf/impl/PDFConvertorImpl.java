@@ -12,24 +12,34 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.multipdf.PDFCloneUtility;
+import org.apache.pdfbox.cos.COSObject;
+import org.apache.pdfbox.cos.COSStream;
+import org.apache.pdfbox.io.IOUtils;
+import org.apache.pdfbox.io.RandomAccessReadBufferedFile;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.pdmodel.common.COSObjectable;
 import org.apache.pdfbox.pdmodel.common.PDMetadata;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.encoding.Encoding;
 import org.apache.pdfbox.pdmodel.graphics.color.PDOutputIntent;
-import org.apache.pdfbox.preflight.PreflightDocument;
 import org.apache.pdfbox.preflight.ValidationResult;
 import org.apache.pdfbox.preflight.ValidationResult.ValidationError;
 import org.apache.pdfbox.preflight.parser.PreflightParser;
@@ -247,7 +257,7 @@ public class PDFConvertorImpl implements PDFConvertor {
 			throws IOException, BadFieldValueException, TransformerException {
 		File output = temporaryHelper.createOutputFile();
 
-		PDDocument inputDoc = PDDocument.load(getSourceFile(input));
+		PDDocument inputDoc = Loader.loadPDF(new RandomAccessReadBufferedFile(getSourceFile(input)));
 		PDDocument outputDoc = new PDDocument();
 		outputDoc.getDocument().setVersion(inputDoc.getDocument().getVersion());
 		outputDoc.setDocumentInformation(inputDoc.getDocumentInformation());
@@ -259,14 +269,16 @@ public class PDFConvertorImpl implements PDFConvertor {
 		addMetadata(outputDoc, input.getFileName());
 
 		// copie des pages
-		PDFCloneUtility cloner = new PDFCloneUtility(outputDoc);
+		Map<Object, COSBase> clonedVersion = new HashMap<>();
+		Set<COSBase> clonedValues = new HashSet<>();
 		PDPageTree pages = inputDoc.getDocumentCatalog().getPages();
 		for (PDPage inputPage : pages) {
 
-			COSDictionary outputPageDictionnary = (COSDictionary) cloner.cloneForNewDocument(inputPage);
+			COSDictionary outputPageDictionnary = (COSDictionary) cloneForNewDocument(outputDoc, inputPage,
+					clonedVersion, clonedValues);
 			PDPage outputPage = new PDPage(outputPageDictionnary);
 			outputPage.setActions(null);
-			outputPage.setAnnotations(null);
+			outputPage.setAnnotations(List.of());
 			outputDoc.addPage(outputPage);
 		}
 
@@ -275,6 +287,130 @@ public class PDFConvertorImpl implements PDFConvertor {
 		outputDoc.close();
 
 		return output;
+	}
+
+	public COSBase cloneForNewDocument(PDDocument destination, Object base, Map<Object, COSBase> clonedVersion,
+			Set<COSBase> clonedValues) throws IOException {
+		if (base == null) {
+			return null;
+		}
+		COSBase retval = clonedVersion.get(base);
+		if (retval != null) {
+			// we are done, it has already been converted.
+			return retval;
+		}
+		if (base instanceof COSBase && clonedValues.contains(base)) {
+			// Don't clone a clone
+			return (COSBase) base;
+		}
+		if (base instanceof List) {
+			retval = cloneForNewDocumentList(destination, base, clonedVersion, clonedValues);
+		} else if (base instanceof COSObjectable && !(base instanceof COSBase)) {
+			retval = cloneForNewDocument(destination, ((COSObjectable) base).getCOSObject(), clonedVersion,
+					clonedValues);
+		} else if (base instanceof COSObject) {
+			COSObject object = (COSObject) base;
+			retval = cloneForNewDocument(destination, object.getObject(), clonedVersion, clonedValues);
+		} else if (base instanceof COSArray) {
+			retval = cloneForNewDocumentArray(destination, base, clonedVersion, clonedValues);
+		} else if (base instanceof COSStream) {
+			retval = cloneForNewDocumentStream(destination, base, clonedVersion, clonedValues);
+		} else if (base instanceof COSDictionary) {
+			retval = cloneForNewDocumentDictionnary(destination, base, clonedVersion, clonedValues);
+		} else {
+			retval = (COSBase) base;
+		}
+		clonedVersion.put(base, retval);
+		clonedValues.add(retval);
+		return retval;
+	}
+
+	private COSBase cloneForNewDocumentStream(PDDocument destination, Object base, Map<Object, COSBase> clonedVersion,
+			Set<COSBase> clonedValues) throws IOException {
+		COSBase retval;
+		COSStream originalStream = (COSStream) base;
+		COSStream stream = destination.getDocument().createCOSStream();
+		try (InputStream input = originalStream.createRawInputStream();
+				OutputStream output = stream.createRawOutputStream();) {
+			IOUtils.copy(input, output);
+		}
+		clonedVersion.put(base, stream);
+		for (Map.Entry<COSName, COSBase> entry : originalStream.entrySet()) {
+			COSBase value = entry.getValue();
+			if (hasSelfReference(base, value)) {
+				stream.setItem(entry.getKey(), stream);
+			} else {
+				stream.setItem(entry.getKey(), cloneForNewDocument(destination, value, clonedVersion, clonedValues));
+			}
+		}
+		retval = stream;
+		return retval;
+	}
+
+	private COSBase cloneForNewDocumentDictionnary(PDDocument destination, Object base,
+			Map<Object, COSBase> clonedVersion, Set<COSBase> clonedValues) throws IOException {
+		COSBase retval;
+		COSDictionary dic = (COSDictionary) base;
+		retval = new COSDictionary();
+		clonedVersion.put(base, retval);
+		for (Map.Entry<COSName, COSBase> entry : dic.entrySet()) {
+			COSBase value = entry.getValue();
+			if (hasSelfReference(base, value)) {
+				((COSDictionary) retval).setItem(entry.getKey(), retval);
+			} else {
+				((COSDictionary) retval).setItem(entry.getKey(),
+						cloneForNewDocument(destination, value, clonedVersion, clonedValues));
+			}
+		}
+		return retval;
+	}
+
+	private COSBase cloneForNewDocumentArray(PDDocument destination, Object base, Map<Object, COSBase> clonedVersion,
+			Set<COSBase> clonedValues) throws IOException {
+		COSBase retval;
+		COSArray newArray = new COSArray();
+		COSArray array = (COSArray) base;
+		for (int i = 0; i < array.size(); i++) {
+			COSBase value = array.get(i);
+			if (hasSelfReference(base, value)) {
+				newArray.add(newArray);
+			} else {
+				newArray.add(cloneForNewDocument(destination, value, clonedVersion, clonedValues));
+			}
+		}
+		retval = newArray;
+		return retval;
+	}
+
+	private COSBase cloneForNewDocumentList(PDDocument destination, Object base, Map<Object, COSBase> clonedVersion,
+			Set<COSBase> clonedValues) throws IOException {
+		COSBase retval;
+		COSArray array = new COSArray();
+		List<?> list = (List<?>) base;
+		for (Object obj : list) {
+			array.add(cloneForNewDocument(destination, obj, clonedVersion, clonedValues));
+		}
+		retval = array;
+		return retval;
+	}
+
+	/**
+	 * Check whether an element (of an array or a dictionary) points to its parent.
+	 *
+	 * @param parent COSArray or COSDictionary
+	 * @param value  an element
+	 */
+	protected boolean hasSelfReference(Object parent, COSBase value) {
+		if (value instanceof COSObject) {
+			COSBase actual = ((COSObject) value).getObject();
+			if (actual == parent) {
+				COSObject cosObj = ((COSObject) value);
+				log.warn(parent.getClass().getSimpleName() + " object has a reference to itself: "
+						+ cosObj.getObjectNumber() + " " + cosObj.getGenerationNumber() + " R");
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected PDFont loadFont(PDDocument document, String fontPath) throws IOException {
@@ -336,11 +472,9 @@ public class PDFConvertorImpl implements PDFConvertor {
 	public org.rudi.facet.generator.pdf.model.ValidationResult validatePDFA(DocumentContent input)
 			throws ValidationException, IOException {
 		org.rudi.facet.generator.pdf.model.ValidationResult result = new org.rudi.facet.generator.pdf.model.ValidationResult();
-		PreflightParser parser = new PreflightParser(input.getFile());
-		parser.parse();
-		try (PreflightDocument document = parser.getPreflightDocument()) {
-			document.validate();
-			ValidationResult internalResult = document.getResult();
+
+		try {
+			ValidationResult internalResult = PreflightParser.validate(input.getFile());
 			result.setValid(internalResult.isValid());
 			if (CollectionUtils.isNotEmpty(internalResult.getErrorsList())) {
 				for (ValidationError error : internalResult.getErrorsList()) {

@@ -13,6 +13,11 @@
             "title": "Actualités à la une",
             "seeMoreNews": "Toutes les actualités"
         },
+        "projectValuesSection": {
+            "title1": "Découvrez",
+            "title2": "tous les usages",
+            "description": "Comprendre les usages, gérer mes données et faciliter la création de nouvelles initiatives locales."
+        },
         "projectsSection": {
             "title1": "Découvrez",
             "title2": "les réutilisations",
@@ -256,9 +261,10 @@
         }
     },
     "footer": {
-        "rudiCopyright": "© {currentYear} RUDI",
+        "rudiCopyright": "© RUDI - Version: ",
         "accessibilte": "Accessibilité",
         "cgu": "CGU",
+        "conditionsUtilisation": "Conditions d'utilisation",
         "mentionLegale": "Mentions légales",
         "reseau": "Suivez-nous sur",
         "twitter": "Twitter",
@@ -266,8 +272,10 @@
         "linkedin": "LinkedIn",
         "politiqueConfidentialite": "Politique de confidentialité",
         "tousDroits": "Tous droits réservés",
-        "nousContacter": "Nous contacter",
-        "version": "Version : "
+        "contactezNous": "Contactez-nous",
+        "version": "Version : ",
+        "ccByCa": "CC-BY-CA",
+        "propulsePar": "Propulsé par:"
     },
     "authentification": {
         "title": "Bienvenue",

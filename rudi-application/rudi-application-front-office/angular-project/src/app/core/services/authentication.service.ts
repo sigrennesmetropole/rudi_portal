@@ -177,9 +177,7 @@ export class AuthenticationService {
         return this.accountService.isAccountCreatedNotValidated(form.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION).value).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('error server is not active :', error.message);
-                return throwError(() => {
-                    new Error(AuthenticationService.ERROR_SERVER_IS_NOT_ACTIVE);
-                });
+                return throwError(() =>  new Error(AuthenticationService.ERROR_SERVER_IS_NOT_ACTIVE));
             }),
             switchMap((isAccountCreatedNotValidated: boolean) => {
                 if (isAccountCreatedNotValidated) {
@@ -190,13 +188,9 @@ export class AuthenticationService {
                         catchError((error: HttpErrorResponse) => {
                             console.error('error server authent :', error.message);
                             if (error.status >= 400 && error.status < 500) {
-                                return throwError(() => {
-                                    new Error('' + error.status);
-                                });
+                                return throwError(() => new Error('' + error.status));
                             }
-                            return throwError(() => {
-                                new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE);
-                            });
+                            return throwError(() => new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE));
                         })
                     );
                 }
@@ -216,9 +210,7 @@ export class AuthenticationService {
             catchError((error: HttpErrorResponse) => {
                 AuthenticationService.clearTokens();
                 this.setAuthenticationErrorForUsername(login, error);
-                return throwError(() => {
-                    new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE);
-                });
+                return throwError(() => new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE));
             })
         );
     }

@@ -27,6 +27,10 @@
         height: 100%;
     }
 
+    .project-card {
+        padding: 16px;
+    }
+
     &-sm {
 
         .card-description-keyword {
@@ -44,6 +48,7 @@
 
     }
 }
+
 // On annule la règle /pages/list/list.component.scss "::ng-deep .row"
 .row {
     margin-right: -15px;

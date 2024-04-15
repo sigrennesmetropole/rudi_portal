@@ -17,6 +17,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 		"org.rudi.facet.generator",
 		"org.rudi.facet.dataverse", 
 		"org.rudi.facet.kmedia",
+		"org.rudi.facet.kaccess",
 		"org.rudi.facet.projekt.helper",
 		"org.rudi.microservice.strukture.service", 
 		"org.rudi.microservice.strukture.storage",

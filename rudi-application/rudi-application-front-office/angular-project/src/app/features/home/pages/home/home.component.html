@@ -21,6 +21,11 @@
                               [cmsNewsDescription]="customizationDescription.cms_news_description"></app-cms-news-section>
     </div>
 
+    <div class="projectvalues-section">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="customizationDescriptionIsLoading"></app-loader>
+        <app-cms-project-values-section *ngIf="!customizationDescriptionIsLoading" [cmsProjectValuesDescription]="customizationDescription.cms_project_values_description"></app-cms-project-values-section>
+    </div>
+
     <div class="jdd-section">
         <app-jdd-section [isLoading]="jddsIsLoading" [jdds]="jdds"></app-jdd-section>
     </div>

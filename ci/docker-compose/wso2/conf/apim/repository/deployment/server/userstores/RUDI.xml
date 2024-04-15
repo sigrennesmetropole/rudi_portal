@@ -5,6 +5,7 @@
       <Property name="driverName">org.postgresql.Driver</Property>
       <Property name="Disabled">false</Property>
       <Property name="ReadOnly">true</Property>
+      <Property name="DisplayNameAttribute">RUDI</Property>
       <Property name="ReadGroups">true</Property>
       <Property name="WriteGroups">false</Property>
       <Property name="UsernameJavaRegEx">[a-zA-Z0-9._\-|//]{3,30}$</Property>
@@ -20,8 +21,16 @@
       <Property name="PasswordDigest">SHA-256</Property>
       <Property name="MultiAttributeSeparator">,</Property>
       <Property name="StoreSaltedPassword">false</Property>
+      <Property name="maxActive">40</Property>
+      <Property name="minIdle">5</Property>
+      <Property name="maxIdle">6</Property>
+      <Property name="maxWait">60000</Property>
+      <Property name="testWhileIdle">false</Property>
+      <Property name="timeBetweenEvictionRunsMillis">5000</Property>
+      <Property name="minEvictableIdleTimeMillis">60000</Property>
       <Property name="MaxUserNameListLength">100</Property>
       <Property name="MaxRoleNameListLength">100</Property>
+      <Property name="MaxSearchQueryTime">1000</Property>
       <Property name="UserRolesCacheEnabled">false</Property>
       <Property name="UserNameUniqueAcrossTenants">false</Property>
       <Property name="validationQuery"/>
@@ -99,6 +108,7 @@
       <Property name="GetUserPropertyForProfileWithIDSQL">SELECT UM_ATTR_VALUE FROM acl_data.UM_USER_ATTRIBUTE, acl_data.UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND UM_USER.UM_USER_ID=? AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?</Property>
       <Property name="GetUserPropertyForProfileSQLCaseInsensitive">SELECT UM_ATTR_VALUE FROM acl_data.UM_USER_ATTRIBUTE, acl_data.UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND LOWER(UM_USER.UM_USER_NAME)=LOWER(?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?</Property>
       <Property name="GetUserLisForPropertySQL">SELECT DISTINCT UM_USER_NAME FROM acl_data.UM_USER, acl_data.UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND UM_USER_ATTRIBUTE.UM_ATTR_VALUE LIKE ? AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?</Property>
+      <Property name="GetUserListForClaimValueSQL">SELECT DISTINCT UM_USER_NAME FROM acl_data.UM_USER, acl_data.UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND UM_USER_ATTRIBUTE.UM_ATTR_VALUE =? AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?</Property>
       <Property name="GetUserLisForPropertyWithIDSQL">SELECT DISTINCT UM_USER.UM_USER_ID FROM acl_data.UM_USER, acl_data.UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND UM_USER_ATTRIBUTE.UM_ATTR_VALUE LIKE ? AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?</Property>
       <Property name="GetUserListForPropertyWithIDSQLCaseInsensitive">SELECT DISTINCT UM_USER.UM_USER_ID FROM acl_data.UM_USER, acl_data.UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND LOWER(UM_USER_ATTRIBUTE.UM_ATTR_VALUE) LIKE LOWER(?) AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?</Property>
       <Property name="GetProfileNamesSQL">SELECT DISTINCT UM_PROFILE_ID FROM acl_data.UM_USER_ATTRIBUTE WHERE UM_TENANT_ID=?</Property>

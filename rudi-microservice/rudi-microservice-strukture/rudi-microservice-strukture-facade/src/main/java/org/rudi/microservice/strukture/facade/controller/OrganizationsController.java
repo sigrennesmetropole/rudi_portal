@@ -119,8 +119,8 @@ public class OrganizationsController implements OrganizationsApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + USER + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<Boolean> isConnectedUserOrganizationAdministrator(UUID organizationUuid) throws Exception {
-		return ResponseEntity.ok(organizationService.isConnectedUserOrganizationAdministrator(organizationUuid));
+	public ResponseEntity<Boolean> isAuthenticatedUserOrganizationAdministrator(UUID organizationUuid) throws Exception {
+		return ResponseEntity.ok(organizationService.isAuthenticatedOrganizationAdministrator(organizationUuid));
 	}
 
 	@Override

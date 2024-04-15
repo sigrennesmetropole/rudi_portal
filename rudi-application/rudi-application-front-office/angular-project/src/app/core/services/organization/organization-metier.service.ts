@@ -74,7 +74,7 @@ export abstract class OrganizationMetierService {
     }
 
     isAdministrator(organizationUuid?: string): Observable<boolean> {
-        return this.organizationService.isConnectedUserOrganizationAdministrator(organizationUuid);
+        return this.organizationService.isAuthenticatedUserOrganizationAdministrator(organizationUuid);
     }
 
     addOrganizationMember(organizationUuid: string, organizationMember: OrganizationMember): Observable<OrganizationMember> {

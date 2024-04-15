@@ -2,15 +2,16 @@
 @import "add-link-to-project";
 
 .comment-action, .delete-action {
-    mat-icon {
-        width: 40px;
-        height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--blocks-and-menus-outline);
+    
+    &:hover {
+        stroke: var(--secondary-color);
+        background-color: var(--primary-color);
+    }
 
-        &:hover {
-            border-radius: 50%;
-            stroke: var(--secondary-color);
-            background-color: var(--primary-color);
-        }
+    mat-icon {
+        transform: scale(1.5);
     }
 }
 

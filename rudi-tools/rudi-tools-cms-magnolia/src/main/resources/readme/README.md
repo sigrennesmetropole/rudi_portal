@@ -22,7 +22,7 @@ Il existe 3 types de contenu :
 ## Applications
 
 A chaque type de contenu est associé une application (Exemple: *apps/news-app.yaml*).
-Cette application permet d'éditer de nouveaux contenus pour chacun des types.
+Cette application permet d'éditer de nouveaux contenus pour chacun des types et de définir les règles d'affichage.
 
 ## APIs
 
@@ -101,6 +101,46 @@ Il est donc possible - afin d'afficher tous les "News" en mode simple ou détail
  
 **http(s)://<host:port>/<nom de la page>**
 
+## Répliquer les données de Magnolia entre 2 environnements
+
+Sur l'environnement source :
+
+* Faire un dump de la base de données (schéma public) (ci-après *magnolia.yyyymmdd.dump*)
+* Faire un tgz du répertoire *[...]/data/repository* (ci-après *repository.yyyymmdd.tgz*)
+
+```
+ sudo tar zcvf repository.yyyymmdd.tgz data.repository
+```
+
+Sur l'environnement cible
+
+* Dans l'interface Magnolia :
+ 
+  - Saisir dans la barre de recherche *"magnoliaPublic8080"*
+    
+  Un item de configuration apparait. [magnoliaPublic8080.png](magnoliaPublic8080.png)
+  Copier la valeur de l'attribut *"url"*
+    
+  - Saisir dans la barre de recherche *"publicKey"*
+    
+   Un item de configuration apparait. [publicKey.png](publicKey.png)
+   Copier la valeur de l'attribut *"publicKey"*
+    
+* Stopper le container Magnolia (pas la base)
+* Faire un dump de sauvegarde de la base de données (schéma public)
+* Supprimer le schema public et le récréer
+* Restaurer la sauvegarde *magnolia.yyyymmdd.dump* réalisée sur l'environnement *source*
+* Faire un tgz de sauvegarde du répertoire *[...]/data/repository*
+* Supprimer le contenu du répertoire *[...]/data/repository*
+* Détarrer le *repository.yyyymmdd.tgz* 
+
+```
+ sudo tar zxvf repository.yyyymmdd.tgz
+```
+
+* Purger le répertoire *[...]/data/workspaces*
+* Rédémarrer le container Magnolia
+* Restaurer les valeurs de *magnoliaPublic8080.url" et *"publicKey"*
 
 ## Tips
 

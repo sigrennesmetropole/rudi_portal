@@ -196,7 +196,7 @@ class OrganizationBeanServiceUT {
 	 * @throws AppServiceException exceptions
 	 */
 	private void mockExternalCalls() throws AppServiceException {
-		when(organizationMembersHelper.isConnectedUserOrganizationAdministrator(any())).thenReturn(true);
+		when(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(any())).thenReturn(true);
 
 		doNothing().when(projektHelper).notifyUserHasBeenAdded(any(), any());
 	}

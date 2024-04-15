@@ -141,9 +141,58 @@
 		"templateSimple": "rudi-terms@one-term"
 	},
 	"cmsProjectValuesDescription": {
+		"titles1": [
+			{
+				"locale": "fr_FR",
+				"text": "Découvrez"
+			},
+			{
+				"locale": "en_GB",
+				"text": "Discover"
+			}
+		],
+		"titles2": [
+			{
+				"locale": "fr_FR",
+				"text": "tous les usages"
+			},
+			{
+				"locale": "en_GB",
+				"text": "all the uses"
+			}
+		],
+		"descriptions": [
+			{
+				"locale": "fr_FR",
+				"text": "Comprendre les usages, gérer mes données et faciliter la création de nouvelles initiatives locales."
+			},
+			{
+				"locale": "en_GB",
+				"text": "Understand usage, manage my data and facilitate the creation of new local initiatives."
+			}
+		],
 		"category": "/rudi/projectvalues",
 		"mainCategory": "/rudi/projectvalues/main",
 		"templateDetailed": "rudi-project-values@one-projectvalue-detailed",
 		"templateSimple": "rudi-project-values@one-projectvalue"
+	},
+	"footerDescription": {
+		"socialNetworks": [
+			{
+				"label": "Linkedin",
+				"url": "https://www.linkedin.com/company/portail-rudi",
+				"icon": "/assets/footer/linkedin.svg"
+			},
+			{
+				"label": "Loopedin",
+				"url": "https://app.loopedin.io/rudi",
+				"icon": "/assets/footer/loopedin.svg"
+			},
+			{
+				"label": "Github",
+				"url": "https://github.com/sigrennesmetropole/rudi_portal",
+				"icon": "/assets/footer/github.svg"
+			}
+		]
 	}
 }

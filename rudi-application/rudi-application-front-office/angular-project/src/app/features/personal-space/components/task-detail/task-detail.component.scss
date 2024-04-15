@@ -1,8 +1,15 @@
 @import "common-style";
 
+.card {
+    padding: 16px;
+
+    mat-card-content {
+        padding: 0;
+    }
+}
+
 .card-demand-label {
     height: 36px;
-    margin: 0 105px 8px 2px;
     font-size: 18px;
     font-weight: bold;
     font-stretch: normal;
@@ -45,27 +52,4 @@
 
 .mat-drawer-content {
     overflow-x: hidden;
-}
-
-.specific-infos {
-    width: 654px;
-    height: 36px;
-    margin: 16px 105px 8px 2px;
-    font-size: 18px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.72;
-    letter-spacing: normal;
-    text-align: left;
-    color: var(--black);
-}
-
-.contact-label {
-    width: 400px;
-    height: 320px;
-    margin: 32px 36.5px 627.9px 40px;
-    padding: 70px 119px 26px 35px;
-    border-radius: 6px;
-    border: solid 1px ;
 }

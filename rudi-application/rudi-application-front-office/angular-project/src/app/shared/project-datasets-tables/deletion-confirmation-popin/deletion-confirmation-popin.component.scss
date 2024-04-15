@@ -2,126 +2,14 @@
 @import "add-link-to-project";
 @import "_responsive";
 
-#dialog-content {
-    max-width: 768px;
-}
-
-.icon-close {
-    svg {
-        height: 24px;
-        width: 24px;
-        fill: black;
-        opacity: 0.54;
-        border: solid 1px grey;
-        border-radius: 20px;
-        padding: 5px;
-    }
-
-    svg:hover {
-        opacity: 1;
-        background-color: var(--primary-color);
-        fill: white;
-    }
-}
-
-.content-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 0 50px 20px 50px;
-
-    .title-blue-theme {
-        color: #004680;
-        line-height: 28px;
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
-
-    .description {
-        line-height: 20px;
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
-}
-
-.buttons-container {
-    margin-top: 20px;
-    width: 100%;
-
-    .button {
-        width: 160px;
-        height: 42px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: bold;
-        margin: 0;
-    }
-
-    .dialog-cancel {
-        background-color: var(--secondary-color);
-        color: var(--primary-text-light);
-
-        &:hover {
-            background-color: var(--focus);
-            color: var(--secondary-color);
-        }
-    }
-
-    .dialog-validate {
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
-
-        &:hover {
-            background-color: var(--focus);
-        }
-    }
-}
 
 
-@mixin desktop-screen {
-    .buttons-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
 
-        .dialog-cancel {
-            margin-bottom: 0;
-        }
-    }
-}
 
-@mixin mobile-screen {
-    .buttons-container {
-        display: flex;
-        flex-direction: column;
 
-        .dialog-cancel {
-            margin-bottom: 20px;
-        }
-    }
-}
 
-@include xs() {
-    @include mobile-screen;
-}
 
-@include sm() {
-    @include mobile-screen;
-}
 
-@include md() {
-    @include desktop-screen;
-}
-
-@include lg() {
-    @include desktop-screen;
-}
-
-@include xl() {
-    @include desktop-screen;
-}
 
 
 

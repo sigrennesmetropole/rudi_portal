@@ -14,7 +14,7 @@
                 id="main-nav">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 me-2">
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase"
+                        <a class="nav-link text-uppercase text-decoration-none"
                            rel="noopener noreferrer"
                            routerLink="home"
                            [routerLinkActive]="'active'"
@@ -24,29 +24,31 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="#" routerLink="catalogue"
+                        <a class="nav-link text-uppercase text-decoration-none" href="#" routerLink="catalogue"
                            [routerLinkActive]="'active'"><span
                             class="ul-items-mobile">{{'header.catalogue'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="#" routerLink="projets"
-                           rel="noopener noreferrer" class="nav-link text-uppercase"
+                           rel="noopener noreferrer" class="nav-link text-uppercase text-decoration-none"
                            [routerLinkActive]="'active'"><span>{{'header.reutilisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="#" routerLink="organization"
+                        <a class="nav-link text-uppercase text-decoration-none" href="#" routerLink="organization"
                            [routerLinkActive]="'active'"><span
                             class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc"
+                        <a class="nav-link text-uppercase text-decoration-none" [routerLinkActive]="'active'"
+                           [href]="urlToDoc"
                            rel="noopener noreferrer" target="_blank">
                             <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
                             <span>{{'header.documentation'| translate}}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
+                        <a class="nav-link text-uppercase text-decoration-none"
+                           href="{{'rudidatarennes.index'|getBackendProperty|async}}"
                            target="_blank"
                            rel="noopener noreferrer" [routerLinkActive]="'active'">
                             <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
@@ -133,33 +135,35 @@
                  [ngClass]="{ show: !isCollapsed }" id="main-nav2">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="home"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="home"
                            rel="noopener noreferrer" routerLinkActive="active-item">
                             <span class="ul-items-mobile">{{'header.accueil'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="catalogue"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="catalogue"
                            routerLinkActive="active-item"><span
                             class="ul-items-mobile">{{'header.catalogue'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="projets"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="projets"
                            routerLinkActive="active-item"><span
                             class="ul-items-mobile">{{'header.reutilisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="organization"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="organization"
                            routerLinkActive="active-item"><span
                             class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"
+                        <a class="nav-link text-decoration-none"
+                           href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"
                            rel="noopener noreferrer"
                            [routerLinkActive]="'active-item'"><span
                             class="ul-items-mobile">{{'header.documentation'| translate}}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
+                        <a class="nav-link text-decoration-none"
+                           href="{{'rudidatarennes.index'|getBackendProperty|async}}"
                            rel="noopener noreferrer" [routerLinkActive]="'active'">
                             <span class="ul-items-mobile">{{'header.blogProjet'| translate}}</span></a>
                     </li>

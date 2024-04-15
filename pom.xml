@@ -6,7 +6,7 @@
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>2.0.1</version>
+	<version>2.0.2</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 
@@ -28,7 +28,7 @@
 		<spring-cloud-security.version>2.2.5.RELEASE</spring-cloud-security.version>
 		<spring-cloud-loadbalancer.version>2.2.9.RELEASE</spring-cloud-loadbalancer.version>
 
-		<commons.io.version>2.15.1</commons.io.version>
+		<commons.io.version>2.16.1</commons.io.version>
 		<commons.collections4.version>4.4</commons.collections4.version>
 		<commons.lang3.version>3.14.0</commons.lang3.version>
 		<commons.text.version>1.11.0</commons.text.version>
@@ -38,18 +38,18 @@
 		<json.simple.version>1.1</json.simple.version>
 		<javax.validation.version>2.0.1.Final</javax.validation.version>
 		<springfox.version>3.0.0</springfox.version>
-		<openapi.version>1.7.0</openapi.version>
-		<openapi.plugin.version>7.1.0</openapi.plugin.version>
+		<openapi.version>1.8.0</openapi.version>
+		<openapi.plugin.version>7.4.0</openapi.plugin.version>
 		<openapi.jackson.version>0.2.6</openapi.jackson.version>
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
-		<jackson-core.version>2.16.1</jackson-core.version>
+		<jackson-core.version>2.17.0</jackson-core.version>
 		<apache.directory.api.version>2.1.6</apache.directory.api.version>
 		<google.maps.version>0.2.7</google.maps.version>
 		<jasig.cas.client.version>3.6.4</jasig.cas.client.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<lombok.version>1.18.20</lombok.version>
 		<swagger.codegen.version>3.0.21</swagger.codegen.version>
-		<swagger.version>2.2.20</swagger.version>
+		<swagger.version>2.2.21</swagger.version>
 		<flyway.version>9.19.4</flyway.version>
 		<freemarker.version>2.3.32</freemarker.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
@@ -60,21 +60,21 @@
 		<activiti.version>7.1.0.M6</activiti.version>
 		<log4j.version>2.23.1</log4j.version>
 		<jaxb-api.version>2.3.1</jaxb-api.version>
-		<tika.version>2.9.1</tika.version>
+		<tika.version>2.9.2</tika.version>
 		<s3.version>2.6.0</s3.version>
 		<gson.version>2.8.9</gson.version>
-		<xdocreport.version>2.0.4</xdocreport.version>
+		<xdocreport.version>2.0.6</xdocreport.version>
 		<apache.poi.version>5.2.5</apache.poi.version>
-		<pdf.box.version>2.0.29</pdf.box.version>
-		<xmpbox.version>2.0.29</xmpbox.version>
+		<pdf.box.version>3.0.2</pdf.box.version>
+		<xmpbox.version>3.0.2</xmpbox.version>
 		<ghost4j.version>1.0.1</ghost4j.version>
 		<guice.version>5.0.1</guice.version>
 		<servlet.api.version>2.5</servlet.api.version>
 		<google-findbugs.version>3.0.2</google-findbugs.version>
 		<jsonassert.version>1.5.1</jsonassert.version>
-		<boucycastle.version>1.77</boucycastle.version>
+		<boucycastle.version>1.78</boucycastle.version>
 		<activation.version>1.1</activation.version>
-		<reactor-test.version>3.6.4</reactor-test.version>
+		<reactor-test.version>3.6.5</reactor-test.version>
 		<h2.version>2.2.224</h2.version>
 
 		<maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
@@ -91,12 +91,12 @@
 		<ant.plugin.version>3.1.0</ant.plugin.version>
 		<flyway-plugin.version>9.22.3</flyway-plugin.version>
 		<maven-scr-plugin.version>1.0.10</maven-scr-plugin.version>
-		<build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
 
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
 		<sonar.projectName>${project.artifactId}</sonar.projectName>
-		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 
 		<sonar.coverage.exclusions>
