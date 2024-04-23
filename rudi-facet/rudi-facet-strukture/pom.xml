@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-facet</artifactId>
-		<version>1.2.5</version>
+		<version>1.2.6</version>
 	</parent>
 
 	<artifactId>rudi-facet-strukture</artifactId>
