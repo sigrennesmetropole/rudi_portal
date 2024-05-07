@@ -1,10 +1,12 @@
 @import "common-style";
 
 .data-set-card {
+    display: flex;
+    justify-content: space-between;
     box-shadow: none;
     border: solid 1.1px var(--blocks-and-menus-outline);
     cursor: pointer;
-    padding: 17px 17px 17px 17px;
+    padding: 17px;
     overflow: hidden;
 
     // card sélectionnée
@@ -14,14 +16,10 @@
         background-color: var(--focus-background);
     }
 
-    .keyword-padding {
-        margin: 22px 0 0 -4px;
-    }
 
     mat-card-content {
+        padding: 0;
         height: 80%;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .mat-icon {
@@ -69,14 +67,14 @@
         padding-bottom: 0;
     }
 
-    &-sm, &-md {
-
+    &-xs, &-sm, &-md {
+        height: 100%;
         min-height: var(--card-height-sm);
         border-left: none;
         border-right: none;
         border-radius: unset;
         border-bottom: none;
-        padding: 17px 25px 17px 0;
+        padding: 28px;
 
         img, .logo-container {
             margin: 0 16px 12px 0;
@@ -98,19 +96,36 @@
             flex-direction: revert;
             height: auto;
         }
-
+        
         &:hover {
             background-color: var(--banner-solid-color);
+
+            .keywords-row button {
+                background-color: var(--banner-solid-color);
+                color: var(--secondary-text);
+                border: 1px solid var(--blocks-and-menus-outline);
+            }
+
+            .data-set-card-producer {
+                color: var(--secondary-text);
+            }
+
+            .data-set-card-title {
+                color: var(--primary-color);
+            }
+
+            .data-set-card-summary {
+                color: var(--secondary-text);
+            }
         }
     }
 
-
     &-lg, &-xl, &-xxl {
         border-radius: 8.6px;
-        height: var(--card-height-lg);
+        height: 100%;
 
         &:hover {
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.05), 0 1px 10px rgba(0, 0, 0, 0.22);
+            box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
         }
 
         .logo-container {
@@ -131,7 +146,6 @@
 .restricted {
     background: var(--primary-color);
     color: var(--secondary-color);
-    border: solid 0.5px var(--primary-text-light);
 
     .data-set-card-producer,
     .data-set-card-summary {
@@ -222,20 +236,6 @@
         }
 
     }
-}
-
-@mixin restricted-card-padding($padding) {
-    margin-left: -$padding;
-    margin-right: -$padding;
-    padding-left: $padding;
-}
-
-.data-set-card-sm.restricted {
-    @include restricted-card-padding(20px);
-}
-
-.data-set-card-md.restricted {
-    @include restricted-card-padding(40px);
 }
 
 %triangle {

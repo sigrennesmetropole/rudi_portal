@@ -40,7 +40,7 @@ export class ListComponent implements OnInit, OnDestroy {
     selectedProducerItems: Item[] = [];
 
     selectedAccessStatusFilterItems: AccessStatusFilterItem[] = [];
-    private isDestroyed$ = new Subject<void>();
+    private isDestroyed$: Subject<void> = new Subject<void>();
 
     constructor(
         private readonly konsultMetierService: KonsultMetierService,
@@ -75,11 +75,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     submitFilters(): void {
+        this.filtersService.deleteAllFilters();
         this.sidenav.close();
     }
-
-    deleteAllFilters(): void {
-        this.filtersService.deleteAllFilters();
-    }
-
 }

@@ -249,11 +249,11 @@ export class ProjectSubmissionService {
      * @param reuseStatus statut de la réutilisation (réutilisation en cours ou terminé)
      */
     public projectFormGroupToProject(step1FormGroup: FormGroup,
-                                     step2FormGroup: FormGroup,
                                      user: User,
                                      projectType: ProjectType,
                                      confidentiality: Confidentiality,
-                                     reuseStatus: ReutilisationStatus): Project {
+                                     reuseStatus: ReutilisationStatus,
+                                     step2FormGroup?: FormGroup): Project {
         const ownerType = step2FormGroup.get('ownerType').value as OwnerType;
         return {
             title: step1FormGroup.get('title').value,
@@ -917,6 +917,29 @@ export class ProjectSubmissionService {
                 }
             })
         );
+    }
+
+    /**
+     * Mets à jour les champs du task avec les valeurs du premier formulaire
+     * @param toUpdate le task à modifier
+     * @param form le formulaire qui contient les valeurs à jour
+     */
+    // tslint:disable-next-line:no-any
+    public updateProjectTaskField(toUpdate: any, form: FormGroup, confidentialities: Confidentiality[]): void {
+        toUpdate.asset.title = form.value.title;
+        toUpdate.asset.description = form.value.description;
+        toUpdate.asset.expected_completion_start_date = form.value.begin_date;
+        toUpdate.asset.expected_completion_end_date = form.value.end_date;
+        toUpdate.asset.target_audiences = form.value.publicCible;
+        toUpdate.asset.territorial_scale = form.value.echelle;
+        toUpdate.asset.detailed_territorial_scale = form.value.territoire;
+        toUpdate.asset.desired_supports = form.value.accompagnement;
+        toUpdate.asset.access_url = form.value.url;
+        toUpdate.asset.reutilisation_status = form.value.reuse_status;
+        toUpdate.asset.confidentiality = this.searchConfidentiality(
+            form.value.confidentiality.code, confidentialities
+        );
+        toUpdate.asset.type = form.value.type;
     }
 }
 

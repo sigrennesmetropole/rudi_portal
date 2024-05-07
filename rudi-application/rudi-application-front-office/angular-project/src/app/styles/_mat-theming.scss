@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+
 @include mat.core();
 
 $open-sans-typography: mat.define-typography-config(
@@ -20,23 +21,29 @@ $app-theme: mat.define-light-theme((
 html .mat-accent {
     --mdc-circular-progress-active-indicator-color: #0270e7 !important;
 }
+
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
     --mdc-filled-text-field-container-color: transparent !important;
 }
+
 .mdc-text-field--filled .mdc-floating-label {
     --mdc-filled-text-field-label-text-size: 14px !important;
 }
+
 .mat-mdc-form-field-subscript-wrapper, .mat-mdc-form-field-bottom-align::before {
     --mat-form-field-subscript-text-size: 10.5px !important;
     --mat-form-field-subscript-text-tracking: 0px !important;
 }
+
 .mat-mdc-form-field {
     --mat-form-field-container-text-size: 14px !important;
 }
-.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle,
-.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled+.mdc-radio__background .mdc-radio__inner-circle {
+
+.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked + .mdc-radio__background .mdc-radio__outer-circle,
+.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled + .mdc-radio__background .mdc-radio__inner-circle {
     --mdc-radio-selected-icon-color: #0270e7 !important;
 }
+
 .mat-mdc-radio-button.mat-accent {
     --mdc-radio-selected-focus-icon-color: #0270e7 !important;
     --mdc-radio-selected-hover-icon-color: #0270e7 !important;
@@ -44,34 +51,44 @@ html .mat-accent {
     --mdc-radio-selected-pressed-icon-color: #0270e7 !important;
     --mat-radio-checked-ripple-color: #0270e7 !important;
 }
-.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled ~ .mdc-checkbox__background {
     --mdc-checkbox-selected-hover-icon-color: #0270e7 !important;
     --mdc-checkbox-selected-icon-color: #0270e7 !important;
 }
-.mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:indeterminate~.mdc-checkbox__background {
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:indeterminate ~ .mdc-checkbox__background {
     --mdc-checkbox-selected-focus-icon-color: #0270e7 !important;
 }
-.mdc-checkbox:hover .mdc-checkbox__native-control:checked~.mdc-checkbox__ripple {
+
+.mdc-checkbox:hover .mdc-checkbox__native-control:checked ~ .mdc-checkbox__ripple {
     --mdc-checkbox-selected-hover-state-layer-color: #0270e7 !important;
 }
-.mdc-checkbox .mdc-checkbox__native-control:focus:checked~.mdc-checkbox__ripple {
+
+.mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
     --mdc-checkbox-selected-focus-state-layer-color: #0270e7 !important;
 }
-.mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background, .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
+
+.mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control[data-indeterminate=true]:enabled ~ .mdc-checkbox__background {
     --mdc-checkbox-selected-pressed-icon-color: #0270e7 !important;
 }
-.mdc-checkbox .mdc-checkbox__native-control:focus~.mdc-checkbox__ripple {
+
+.mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__ripple {
     --mdc-checkbox-selected-pressed-state-layer-color: #0270e7 !important;
 }
+
 .mat-mdc-raised-button.mat-primary {
     --mdc-protected-button-container-color: var(--primary-color) !important;
 }
+
 .mat-mdc-dialog-container .mdc-dialog__surface {
     overflow: hidden;
 }
+
 .mat-mdc-dialog-content {
     overflow-x: hidden !important;
 }
+
 .mat-icon svg {
     vertical-align: top;
 }
@@ -243,4 +260,8 @@ button.mat-menu-item:hover {
 ::ng-deep.mat-checkbox-layout {
     white-space: normal;
     margin-top: 1em;
+}
+
+.signup-form-container .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+    margin-bottom: 22px !important;
 }

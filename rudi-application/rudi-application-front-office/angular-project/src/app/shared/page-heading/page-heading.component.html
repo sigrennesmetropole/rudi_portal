@@ -1,4 +1,7 @@
-<div class="header-metadata">
+<div class="header-metadata" [ngClass]="{
+                'p-small': mediaSize.isDeviceMobile,
+                'p-large': mediaSize.isDeviceDesktop
+            }">
 
     <div class="header-img-container mb-sm-2">
         <div class="header-img">

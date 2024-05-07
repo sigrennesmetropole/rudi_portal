@@ -1,26 +1,19 @@
 <app-loader [allPage]="false" [isLight]="true" [noText]="true"
             [active]="isLoading"></app-loader>
 <ng-container class="dataset-list" *ngIf="!isLoading">
-    <div class="content">
-        <div fxLayout="row wrap" class="gap">
-            <div
-                *ngFor="let metadata of metadataListItems | paginate: {
+    <div [ngClass]="{'data-set-container-sm': mediaSize.isXs || mediaSize.isSm || mediaSize.isMd, 'data-set-container-lg':  mediaSize.isLg,
+        'data-set-container-xl': mediaSize.isXl, 'data-set-container-xxl': mediaSize.isXxl}">
+        <div *ngFor="let metadata of metadataListItems | paginate: {
               itemsPerPage: limit,
               currentPage: page,
               totalItems: metadataList.total
-            }"
-                [ngClass]="{'data-set-container-sm': mediaSize.isSm || mediaSize.isMd, 'data-set-container-lg':  mediaSize.isLg,
-        'data-set-container-xl': mediaSize.isXl, 'data-set-container-xxl': mediaSize.isXxl}"
-                [class]="resultsPerRow ? 'data-set-container-'+resultsPerRow+'-cards': ''"
-            >
-                <app-data-set-card
-                    [metadata]="metadata"
-                    [isSelectable]="isSelectable"
-                    (selectMetadata)="selectMetadata.emit($event)"
-                    (dbSelectMetadata)="dbSelectMetadata.emit($event)"
-                ></app-data-set-card>
-            </div>
-
+            }">
+            <app-data-set-card
+                [metadata]="metadata"
+                [isSelectable]="isSelectable"
+                (selectMetadata)="selectMetadata.emit($event)"
+                (dbSelectMetadata)="dbSelectMetadata.emit($event)"
+            ></app-data-set-card>
         </div>
     </div>
     <!-- Pagination des jdd -->
@@ -29,7 +22,7 @@
         *ngIf="metadataList?.total > limit"
         (pageChange)="handlePageChange($event)"
         [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
-        class="d-flex justify-content-center mt-4 pagination-font-size pagination-container"
+        class="d-flex justify-content-center mt-4"
         [ngClass]="paginationControlsNgClass"
         [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
         [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate">

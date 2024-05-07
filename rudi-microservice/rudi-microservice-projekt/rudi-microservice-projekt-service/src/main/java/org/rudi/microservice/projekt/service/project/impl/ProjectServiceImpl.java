@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -19,6 +18,7 @@ import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.kmedia.bean.MediaOrigin;
@@ -38,20 +38,19 @@ import org.rudi.microservice.projekt.service.helper.ProjektAuthorisationHelper;
 import org.rudi.microservice.projekt.service.mapper.NewDatasetRequestMapper;
 import org.rudi.microservice.projekt.service.mapper.ProjectMapper;
 import org.rudi.microservice.projekt.service.project.ProjectService;
-import org.rudi.microservice.projekt.service.project.impl.fields.AddDatasetToProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.CreateProjectFieldProcessor;
-import org.rudi.microservice.projekt.service.project.impl.fields.DeleteDatasetFromProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.DeleteMediaFromProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.DeleteProjectFieldProcessor;
-import org.rudi.microservice.projekt.service.project.impl.fields.UpdateDatasetInProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.UpdateMediaInProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.UpdateProjectFieldProcessor;
+import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.DeleteLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.newdatasetrequest.CreateNewDatasetRequestFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.newdatasetrequest.DeleteNewDatasetRequestFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.newdatasetrequest.UpdateNewDatasetRequestFieldProcessor;
 import org.rudi.microservice.projekt.storage.dao.newdatasetrequest.NewDatasetRequestDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectDao;
+import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.newdatasetrequest.NewDatasetRequestEntity;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.core.io.Resource;
@@ -79,10 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private final List<CreateNewDatasetRequestFieldProcessor> createNewDatasetRequestProcessors;
 	private final List<UpdateNewDatasetRequestFieldProcessor> updateNewDatasetRequestProcessors;
 	private final List<DeleteNewDatasetRequestFieldProcessor> deleteNewDatasetRequestProcessors;
-
-	private final List<AddDatasetToProjectProcessor> addDatasetToProjectProcessors;
-	private final List<DeleteDatasetFromProjectProcessor> deleteDatasetFromProjectProcessors;
-	private final List<UpdateDatasetInProjectProcessor> updateDatasetInProjectProcessors;
+	private final List<DeleteLinkedDatasetFieldProcessor> deleteLinkedDatasetProcessors;
 
 	private final ProjectMapper projectMapper;
 	private final ProjectDao projectDao;
@@ -145,8 +141,8 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectEntity entity = projectMapper.dtoToEntity(projectToUpdate);
 		ProjectEntity existingProject = getRequiredProjectEntity(projectToUpdate.getUuid());
 
-		checkRightsAdministerProject(existingProject);
-		checkRightsAdministerProject(entity);
+		projektAuthorisationHelper.checkRightsAdministerProject(existingProject);
+		projektAuthorisationHelper.checkRightsAdministerProject(entity);
 
 		for (final UpdateProjectFieldProcessor processor : updateProjectProcessors) {
 			processor.process(entity, existingProject);
@@ -173,17 +169,35 @@ public class ProjectServiceImpl implements ProjectService {
 		if (existingProject == null) {
 			return;
 		}
-		checkRightsAdministerProject(existingProject);
+		projektAuthorisationHelper.checkRightsAdministerProject(existingProject);
 		for (final DeleteProjectFieldProcessor processor : deleteProjectProcessors) {
 			processor.process(null, existingProject);
 		}
 
+		deleteProjectDataset(existingProject);
+
 		projectDao.delete(existingProject);
-		deleteProjectDataset(uuid);
 	}
 
-	private void deleteProjectDataset(UUID uuid) throws DataverseExternalServiceException {
-		// TODO RUDI-1301
+	private void deleteProjectDataset(ProjectEntity existingProject) throws AppServiceException {
+		// suppression de tous les linkeddataset et des souscriptions associées si besoin
+		if (CollectionUtils.isNotEmpty(existingProject.getLinkedDatasets())) {
+			Iterator<LinkedDatasetEntity> it = existingProject.getLinkedDatasets().iterator();
+			while (it.hasNext()) {
+				LinkedDatasetEntity linkedDataset = it.next();
+				for (final DeleteLinkedDatasetFieldProcessor processor : deleteLinkedDatasetProcessors) {
+					try {
+						processor.process(null, linkedDataset);
+					} catch (APIManagerException e) {
+						throw new AppServiceException(String.format(
+								"Erreur de suppression du linkedDataset %s (dataset %s) dans le projet %s",
+								linkedDataset.getUuid(), linkedDataset.getDatasetUuid(), existingProject.getUuid()), e);
+					}
+				}
+				it.remove();
+			}
+			projectDao.save(existingProject);
+		}
 	}
 
 	@Override
@@ -267,10 +281,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 		projektAuthorisationHelper.checkRightsAdministerProjectDataset(associatedProject);
 
-		// Vérification des droits de l'utilisateur et du statut du projet avant d'ajouter le lien sur le dataset
-		for (final AddDatasetToProjectProcessor processor : addDatasetToProjectProcessors) {
-			processor.process(null, associatedProject);
-		}
+		// Vérification du statut du projet avant d'ajouter le lien sur le dataset
+		projektAuthorisationHelper.checkStatusForProjectModification(associatedProject);
 
 		NewDatasetRequestEntity entity = datasetRequestMapper.dtoToEntity(datasetRequest);
 
@@ -312,10 +324,8 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectEntity project = getRequiredProjectEntity(projectUuid);
 		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
-		// Vérification des droits de l'utilisateur et du statut du projet avant de modifier le lien sur le dataset
-		for (final UpdateDatasetInProjectProcessor processor : updateDatasetInProjectProcessors) {
-			processor.process(null, project);
-		}
+		// Vérification du statut du projet avant de modifier le lien sur le dataset
+		projektAuthorisationHelper.checkStatusForProjectModification(project);
 
 		NewDatasetRequestEntity entity = datasetRequestMapper.dtoToEntity(newDatasetRequest);
 		if (CollectionUtils.isNotEmpty(project.getDatasetRequests())) {
@@ -342,10 +352,9 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectEntity project = getRequiredProjectEntity(projectUuid);
 		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
-		// Vérification des droits de l'utilisateur et du statut du projet avant de supprimer le lien sur le dataset
-		for (final DeleteDatasetFromProjectProcessor processor : deleteDatasetFromProjectProcessors) {
-			processor.process(null, project);
-		}
+		// Vérification du statut du projet avant de supprimer le lien sur le dataset
+		projektAuthorisationHelper.checkStatusForProjectModification(project);
+
 		Iterator<NewDatasetRequestEntity> iterator = project.getDatasetRequests().iterator();
 		NewDatasetRequestEntity currentElement = null;
 		while (iterator.hasNext()) {
@@ -405,7 +414,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception {
+	public boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws GetOrganizationException, AppServiceUnauthorizedException, AppServiceNotFoundException {
 		var uuids = myInformationsHelper.getMeAndMyOrganizationUuids();
 		final var projectEntity = getRequiredProjectEntity(projectUuid);
 		return CollectionUtils.containsAny(uuids, projectEntity.getOwnerUuid());
@@ -432,29 +441,5 @@ public class ProjectServiceImpl implements ProjectService {
 			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
 		// pour le moment les droits d'accès à cette fonction sont les mêmes que la fonction de création de projet
 		projektAuthorisationHelper.checkRightsInitProject(projectEntity);
-	}
-
-	/**
-	 * Définition de l'ouverture des droits la fonctionnalité d'administration de projet : Le projectowner ou un membre de l'organisation peut modifier un
-	 * projet / L'administrateur peut modifier un projet (uniquement via Postman) / L'animateur peut modifier un projet (via postman) / Un autre user ne
-	 * peut pas modifier un projet
-	 * 
-	 * Les droits autorisés doivent être cohérents avec ceux définis en PreAuth coté Controller
-	 * 
-	 * @param projectEntity l'entité projet pour laquelle vérifier le droit d'accès
-	 * @throws GetOrganizationMembersException
-	 * @throws GetOrganizationException
-	 * @throws AppServiceUnauthorizedException
-	 * @throws MissingParameterException
-	 */
-	private void checkRightsAdministerProject(ProjectEntity projectEntity)
-			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
-		Map<String, Boolean> accessRightsByRole = ProjektAuthorisationHelper.getADMINISTRATOR_MODERATOR_ACCESS();
-		// Vérification des droits d'accès
-		// les droits autorisés dans accessRights doivent être cohérents avec ceux définis en PreAuth coté Controller
-		if (!(projektAuthorisationHelper.isAccessGrantedByRole(accessRightsByRole)
-				|| projektAuthorisationHelper.isAccessGrantedForUserOnProject(projectEntity))) {
-			throw new AppServiceUnauthorizedException("Accès non autorisé à la fonctionnalité pour l'utilisateur");
-		}
 	}
 }

@@ -89,7 +89,7 @@
                 class="title-hint">{{'project.stepper.submission.step1.reuseStatusHint'|translate}}
             </mat-hint>
             <mat-form-field appearance="outline" hideRequiredMarker>
-                <mat-select placeholder="{{'project.stepper.submission.step1.selectOptions'|translate}}"
+                <mat-select placeholder="{{'project.stepper.submission.step1.selectOptions'|translate}}" [compareWith]="compareObjects"
                             formControlName="reuse_status">
                     <mat-option *ngFor="let status of reuseStatus" [value]="status">
                         {{ status.label }}
@@ -113,7 +113,7 @@
                 class="title-hint">{{'project.stepper.submission.step1.periodeHint'|translate}}
             </mat-hint>
 
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between flex-wrap text-sm-center">
                 <app-month-year-datepicker [formGroup]="step1FormGroup" controlName="begin_date"
                                            [errorMessage]="'project.stepper.submission.step1.periodeBeginError' | translate"
                                            [placeholder]="'project.stepper.submission.step1.periodeBeginPlaceholder' | translate">
@@ -136,6 +136,7 @@
             </mat-hint>
             <mat-form-field appearance="outline">
                 <mat-select multiple placeholder="{{'project.stepper.submission.step1.selectOptions'|translate}}"
+                            [compareWith]="compareObjects"
                             formControlName="publicCible">
                     <mat-option *ngFor="let cible of publicCible" [value]="cible">
                         {{ cible.label }}
@@ -155,6 +156,7 @@
             </mat-hint>
             <mat-form-field appearance="outline">
                 <mat-select placeholder="{{'project.stepper.submission.step1.selectOption'|translate}}"
+                            [compareWith]="compareObjects"
                             formControlName="echelle">
                     <mat-option *ngFor="let echelle of territoireScale"
                                 [value]="echelle">
@@ -192,9 +194,10 @@
             </mat-hint>
             <mat-form-field appearance="outline" hideRequiredMarker>
                 <mat-select placeholder="{{'project.stepper.submission.step1.selectOption'|translate}}"
+                            [compareWith]="compareObjects"
                             formControlName="type">
                     <mat-option *ngFor="let project of projectType"
-                                [value]="project.code">{{project.label}}</mat-option>
+                                [value]="project">{{project.label}}</mat-option>
                 </mat-select>
                 <mat-error class="stepper-mat-error"
                            *ngIf="step1FormGroup.get('type').errors?.required">
@@ -215,6 +218,7 @@
             <mat-form-field appearance="outline">
                 <mat-select multiple
                             placeholder="{{'project.stepper.submission.step1.selectOptions'|translate}}"
+                            [compareWith]="compareObjects"
                             formControlName="accompagnement">
                     <mat-option *ngFor="let support of supports"
                                 [value]="support">

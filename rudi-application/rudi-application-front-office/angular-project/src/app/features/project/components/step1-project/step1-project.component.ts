@@ -74,4 +74,8 @@ export class Step1ProjectComponent implements OnInit {
             this.imageModified.emit(null);
         }
     }
+
+    compareObjects(object1: any, object2: any) {
+        return object1 && object2 && object1.uuid === object2.uuid;
+    }
 }

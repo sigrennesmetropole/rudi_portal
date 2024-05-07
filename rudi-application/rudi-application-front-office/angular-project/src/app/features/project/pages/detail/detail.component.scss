@@ -38,6 +38,10 @@
     padding-top: 115px;
     height: calc(100% - 170px);
 
+    .bandeau-icon-libelle {
+        display: none;
+    }
+
     .card-project-type-sm-title {
         border-bottom: 1px solid var(--blocks-and-menus-outline);
         padding-top: 15px;
@@ -247,14 +251,14 @@
 
     }
 
-    &-sm {
+    .button-info {
+        background-color: var(--primary-color);
+        color: var(--banner-solid-color);
+    }
 
+    &-xs, &-sm {
         .bandeau {
             margin: 0 -60px 0 -60px;
-        }
-
-        .bandeau-icon-libelle {
-            display: none;
         }
 
         .card-margin-top {
@@ -318,11 +322,6 @@
             background-color: var(--secondary-color);
             font-size: 14px;
             font-weight: normal;
-        }
-
-        .button-info {
-            background-color: var(--primary-color);
-            color: var(--banner-solid-color);
         }
 
         .card-description-keyword {

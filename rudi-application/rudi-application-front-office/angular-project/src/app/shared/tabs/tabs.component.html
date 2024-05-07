@@ -5,7 +5,10 @@
     <ng-content select="app-banner-button"></ng-content>
 </app-shared-banner>
 
-<div id="tab-content-container">
+<div id="tab-content-container" [ngClass]="{
+                'p-small': mediaSize.isDeviceMobile,
+                'p-large': mediaSize.isDeviceDesktop
+            }">
     <!-- Layout par défaut -->
     <ng-container #defaultLayoutTabContent></ng-container>
     <!-- Layout personnalisé -->

@@ -17,12 +17,13 @@
             <div class="bandeau">
                 <mat-toolbar class="bandeau-card">
                     <button class="button button-info" disabled mat-raised-button>
-                        <mat-icon [ngClass]="mediaSize.isSm ? 'icon-information-sm' : 'icon-information'"
-                                  svgIcon="icon-info">
+                        <mat-icon
+                            [class]="(mediaSize.isXs || mediaSize.isSm) ? 'icon-information-sm' : 'icon-information'"
+                            svgIcon="icon-info">
                             error_outline
                         </mat-icon>
                         <span
-                            [ngClass]="{'bandeau-icon-libelle': mediaSize.isSm}">{{'project.detail.informations'|translate}}</span>
+                            [class]="{'bandeau-icon-libelle': mediaSize.isSm || mediaSize.isXs}">{{'project.detail.informations'|translate}}</span>
                     </button>
                     <span class="spacer"></span>
                     <button (click)="onClickAccessUrl()" *ngIf="project.access_url" class="button bandeau-btn-access"

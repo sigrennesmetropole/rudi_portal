@@ -1,9 +1,9 @@
 <div *ngIf="!isError">
     <app-loader [isTransparent]="true" [allPage]="false" [active]="isLoading != 0"></app-loader>
     <div class="d-flex gap-3" *ngIf="isLoading == 0">
-        <div class="footer-icon-container" *ngFor="let socialNetwork of footerDescription?.socialNetworks">
-            <a href="{{socialNetwork.url}}">
-                <img [src]="socialNetwork.icon" alt="{{socialNetwork.label}}-icon"/>
+        <div class="footer-icon-container" *ngFor="let socialNetwork of this.socialsNetworks">
+            <a class="footer-link" href="{{socialNetwork.url}}">
+                <div class="icon-container" [innerHTML]="socialNetwork.icon"></div>
                 {{socialNetwork.label}}
             </a>
         </div>

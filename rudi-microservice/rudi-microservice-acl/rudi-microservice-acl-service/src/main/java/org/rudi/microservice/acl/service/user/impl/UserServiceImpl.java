@@ -66,8 +66,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 /**
  * Service de gestion des utilisateurs RUDI
@@ -464,8 +464,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public org.rudi.microservice.acl.core.bean.ClientRegistrationDto getClientRegistration(String login)
-			throws Exception {
+	public org.rudi.microservice.acl.core.bean.ClientRegistrationDto getClientRegistration(String login) throws GetClientRegistrationException, BuildClientRegistrationException, SSLException {
 		ClientRegistration registration = null;
 		// Register anonymous et rudi
 		if (login.equals(anonymousUsername)) {
@@ -481,7 +480,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ClientRegistrationDto registerClientByPassword(String login, String password) throws Exception {
+	public ClientRegistrationDto registerClientByPassword(String login, String password) throws GetClientRegistrationException, BuildClientRegistrationException, SSLException {
 		return clientRegistrationMapper
 				.entityToDto(rudiClientRegistrationRepository.findRegistrationOrRegister(login, password));
 	}

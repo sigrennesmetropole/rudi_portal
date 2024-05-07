@@ -1,7 +1,13 @@
 @import "common-style";
 
-.selected {
+.selected-in-button {
     font-weight: bold;
+}
+
+.selected {
+    --mat-menu-item-label-text-weight: bold;
+    font-weight: bold !important;
+    background-color: var(--blocks-and-menus-outline);
 }
 
 .aligned {

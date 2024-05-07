@@ -1,5 +1,6 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {LogService} from '@core/services/log.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
 import {UserService} from '@core/services/user.service';
@@ -20,13 +21,13 @@ export class DetailComponent implements OnInit {
     public _displayAdministrationTab: boolean;
 
     constructor(private readonly route: ActivatedRoute,
+                private readonly router: Router,
                 private readonly organizationService: OrganizationMetierService,
                 private readonly userService: UserService,
                 private readonly logService: LogService) {
     }
 
     ngOnInit(): void {
-
         this.route.params.pipe(
             switchMap((params: Params) => {
                 // Si uuid, on charge l'organization
@@ -45,8 +46,14 @@ export class DetailComponent implements OnInit {
                     this.isLoading = false;
                     this.organization = organization;
                 },
-                error: err => {
-                    this.logService.error(err);
+                error: (error: HttpErrorResponse) => {
+                    this.logService.error(error);
+                    if (error.status == 400) {
+                        this.router.navigate(['/error/400']);
+                    }
+                    if (error.status == 404) {
+                        this.router.navigate(['/error/404']);
+                    }
                     this.isLoading = false;
                 }
             }

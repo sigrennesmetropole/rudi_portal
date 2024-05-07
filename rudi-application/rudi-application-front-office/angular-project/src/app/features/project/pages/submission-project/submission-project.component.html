@@ -8,11 +8,10 @@
     </h1>
     <p class="description">{{'project.stepper.submission.description' | translate}}</p>
 
-    <mat-stepper orientation="horizontal" [disableRipple]="true" class="rudi-stepper" labelPosition="bottom" linear>
+    <mat-stepper #submissionStepper orientation="horizontal" [disableRipple]="true" class="rudi-stepper" labelPosition="bottom" linear>
         <ng-template matStepperIcon="edit">
             <mat-icon>check</mat-icon>
         </ng-template>
-
 
         <!-- Etape 1 -->
         <mat-step [editable]="true" [stepControl]="step1FormGroup"
@@ -91,8 +90,8 @@
                     <span>{{ 'project.stepper.submission.publish.enregistrer' | translate }}</span>
                 </button>
 
-                <button mat-raised-button class="primary-raised-button" matStepperNext [disabled]="!isSubmit"
-                        (click)="submit()">
+                <button mat-raised-button class="primary-raised-button" [disabled]="!isSubmit"
+                        (click)="submit()" matStepperNext>
                     <span>{{ 'project.stepper.submission.publish.submit' | translate }}</span>
                 </button>
             </div>

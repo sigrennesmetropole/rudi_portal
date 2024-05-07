@@ -1,5 +1,38 @@
 @import "common-style";
 
+.button-filter-container {
+    @extend .rudi-btn-md;
+    padding: 0 7px 0 10px;
+    margin: 5px 5px 0 0;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+
+    .button-filter-texte {
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        padding-top: 1px;
+    }
+
+    .button-filter-icon-container {
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            cursor: pointer;
+            background-color: var(--keywords-outline);
+            border-radius: 50%;
+        }
+
+        mat-icon {
+            transform: scale(0.8);
+        }
+    }
+}
+
+
 .filter-link {
     margin-left: 15px;
     font-size: 14px;

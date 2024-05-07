@@ -24,15 +24,19 @@ import {ReuseProjectCommonComponent} from '../../components/reuse-project-common
 import {DataRequestItem} from '../../model/data-request-item';
 import {ProjectDatasetItem} from '../../model/project-dataset-item';
 import {UpdateAction} from '../../model/upate-action';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @Component({
     selector: 'app-submission-reuse',
     templateUrl: './submission-project.component.html',
-    styleUrls: ['./submission-project.component.scss']
+    styleUrls: ['./submission-project.component.scss'],
+    providers: [{
+        provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false }
+    }]
 })
 export class SubmissionProjectComponent extends ReuseProjectCommonComponent implements OnInit, OnDestroy {
 
-    @ViewChild(MatStepper)
+    @ViewChild('submissionStepper')
     public stepper: MatStepper;
 
     public publicCible: TargetAudience[];
@@ -254,10 +258,9 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
     private createProjectFromForm(): Project {
         return this.projectSubmissionService.projectFormGroupToProject(
             this.step1FormGroup,
-            this.step2FormGroup,
             this.user,
             this.projectSubmissionService.searchProjectType(
-                this.step1FormGroup.get('type').value,
+                this.step1FormGroup.get('type').value.code,
                 this.projectType
             ),
             this.projectSubmissionService.searchConfidentiality(
@@ -265,7 +268,8 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
             ),
             this.projectSubmissionService.findCorrespondingReutilisationStatus(
                 this.step1FormGroup.get('reuse_status').value.code, this.reuseStatus
-            )
+            ),
+            this.step2FormGroup
         );
     }
 

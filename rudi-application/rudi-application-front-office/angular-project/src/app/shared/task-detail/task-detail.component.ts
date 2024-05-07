@@ -49,7 +49,8 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
         });
     }
 
-    openPopinForAction(action: Action): void {
+    openPopinForAction(action: Action, disable = false): void {
+        if (disable) return;
         const dialogConfig: DefaultMatDialogConfig<WorkflowFormDialogInputData> = new DefaultMatDialogConfig();
 
         if (this.task && !this.task.actions.some((current: Action): boolean => current === action)) {

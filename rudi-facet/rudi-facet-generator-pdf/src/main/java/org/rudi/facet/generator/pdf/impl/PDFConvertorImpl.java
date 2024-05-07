@@ -20,6 +20,8 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.Loader;
@@ -63,8 +65,6 @@ import org.rudi.facet.generator.pdf.exception.ValidationException;
 import org.rudi.facet.generator.pdf.model.ValidationResultItem;
 import org.springframework.stereotype.Component;
 
-import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
-import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -329,22 +329,24 @@ public class PDFConvertorImpl implements PDFConvertor {
 			Set<COSBase> clonedValues) throws IOException {
 		COSBase retval;
 		COSStream originalStream = (COSStream) base;
-		COSStream stream = destination.getDocument().createCOSStream();
-		try (InputStream input = originalStream.createRawInputStream();
-				OutputStream output = stream.createRawOutputStream();) {
-			IOUtils.copy(input, output);
-		}
-		clonedVersion.put(base, stream);
-		for (Map.Entry<COSName, COSBase> entry : originalStream.entrySet()) {
-			COSBase value = entry.getValue();
-			if (hasSelfReference(base, value)) {
-				stream.setItem(entry.getKey(), stream);
-			} else {
-				stream.setItem(entry.getKey(), cloneForNewDocument(destination, value, clonedVersion, clonedValues));
+
+		try(COSStream stream = destination.getDocument().createCOSStream()){
+			try (InputStream input = originalStream.createRawInputStream();
+				 OutputStream output = stream.createRawOutputStream();) {
+				IOUtils.copy(input, output);
 			}
+			clonedVersion.put(base, stream);
+			for (Map.Entry<COSName, COSBase> entry : originalStream.entrySet()) {
+				COSBase value = entry.getValue();
+				if (hasSelfReference(base, value)) {
+					stream.setItem(entry.getKey(), stream);
+				} else {
+					stream.setItem(entry.getKey(), cloneForNewDocument(destination, value, clonedVersion, clonedValues));
+				}
+			}
+			retval = stream;
+			return retval;
 		}
-		retval = stream;
-		return retval;
 	}
 
 	private COSBase cloneForNewDocumentDictionnary(PDDocument destination, Object base,

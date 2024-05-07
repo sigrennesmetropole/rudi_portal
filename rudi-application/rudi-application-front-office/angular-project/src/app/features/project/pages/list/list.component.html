@@ -19,13 +19,19 @@
                 class="data-set-full-height mt-4 px-80">
                 <div class="list-headers">
                     <!--Nombre de résultats-->
-                    <div class="search-count">
+                    <div class=" w-50 search-count">
                         <ng-container *ngIf="searchIsRunning">
                             {{'searchbox.searchIsRunning'|translate}}
                         </ng-container>
                         <ng-container *ngIf="!searchIsRunning">
-                            {{projectListTotal}} {{'searchbox.results'|translate}}{{projectListTotal > 1 ? 's' : ''}}
+                            <div *ngIf="projectListTotal >= 1">
+                                <span>{{projectListTotal}} {{'searchbox.results'|translate}}{{projectListTotal > 1 ? 's' : ''}}</span>
+                            </div>
+                            <div *ngIf="projectListTotal == 0">
+                                <span>{{'searchbox.noResult'|translate}}</span>
+                            </div>
                         </ng-container>
+
                     </div>
 
                     <app-order *ngIf="mediaSize.isXl || mediaSize.isLg || mediaSize.isXxl" [(order)]="order">

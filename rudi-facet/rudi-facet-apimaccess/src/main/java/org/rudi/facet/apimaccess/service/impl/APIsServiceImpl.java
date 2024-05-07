@@ -1,9 +1,5 @@
 package org.rudi.facet.apimaccess.service.impl;
 
-import static org.rudi.facet.apimaccess.constant.QueryParameterKey.DEFAULT_API_VERSION;
-import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
-import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.buildAPIContext;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,15 +33,17 @@ import org.springframework.stereotype.Service;
 import org.wso2.carbon.apimgt.rest.api.admin.APICategory;
 import org.wso2.carbon.apimgt.rest.api.admin.APICategoryList;
 import org.wso2.carbon.apimgt.rest.api.admin.Environment;
-import org.wso2.carbon.apimgt.rest.api.gateway.DeployResponse;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIRevision;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIRevisionDeployment;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import static org.rudi.facet.apimaccess.constant.QueryParameterKey.DEFAULT_API_VERSION;
+import static org.rudi.facet.apimaccess.constant.QueryParameterKey.LIMIT_MAX_VALUE;
+import static org.rudi.facet.apimaccess.helper.api.APIContextHelper.buildAPIContext;
 
 @Service
 @RequiredArgsConstructor
@@ -106,7 +104,7 @@ public class APIsServiceImpl implements APIsService {
 		updateAPILifecycleStatus(apiResult.getId(), APILifecycleStatusAction.PUBLISH);
 
 		// Déploiement dans la gateway
-		final DeployResponse deploymentResult = apIsOperationAPI.redeployApiInGateway(apiResult.getName(),
+		apIsOperationAPI.redeployApiInGateway(apiResult.getName(),
 				apiResult.getVersion(), apiResult.getId());
 
 		return apIsOperationAPI.getAPI(apiResult.getId());
@@ -176,8 +174,8 @@ public class APIsServiceImpl implements APIsService {
 
 	private API getAPIByName(APIDescription apiDescription)
 			throws APINotFoundException, APIsOperationException, APIsOperationWithIdException {
-		val apis = searchAPIByName(apiDescription);
-		if (apis != null && apis.getCount() == 0) {
+		APIList apis = searchAPIByName(apiDescription);
+		if (apis == null || apis.getCount() == 0) {
 			throw new APINotFoundException(apiDescription);
 		}
 		// il y a normalement qu'une seule api avec ce nom
@@ -203,15 +201,6 @@ public class APIsServiceImpl implements APIsService {
 			throw new IllegalArgumentException(APIsServiceImpl.API_ID_NOT_GIVEN);
 		}
 		return apIsOperationAPI.getAPI(apiId);
-	}
-
-	@Override
-	public org.wso2.carbon.apimgt.rest.api.devportal.API getAPIFromDevportal(String apiId, String username)
-			throws APIsOperationWithIdException {
-		if (StringUtils.isEmpty(apiId)) {
-			throw new IllegalArgumentException(APIsServiceImpl.API_ID_NOT_GIVEN);
-		}
-		return apIsOperationAPI.getAPIFromDevportal(apiId, username);
 	}
 
 	@Override

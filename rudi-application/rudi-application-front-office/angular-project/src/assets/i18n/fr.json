@@ -7,7 +7,7 @@
             "searchbarPlaceholder": "Rechercher un jeu de données..."
         },
         "themesSection": {
-            "title": "Thématiques de recherche"
+            "title": "Rechercher par thématique"
         },
         "newsSection": {
             "title": "Actualités à la une",
@@ -26,12 +26,19 @@
             "seeMoreProjects": "Voir toutes les réutilisations"
         },
         "jddSection": {
-            "title": "Dernières publications",
+            "title": "Derniers jeux de données publiés",
             "seeMore": "Voir tous les jeux de données"
         },
         "keyFiguresSection": {
             "altLogo": "Logo de la section des chiffres clés"
         }
+    },
+    "pageNotFound": {
+        "invalidUrlErrorMessage": "L'URL saisie est invalide",
+        "ressourceNotFoundErrorMessage": "La ressource est introuvable.",
+        "defaultErrorMessage": "Une erreur interne est survenue",
+        "contactAdmin": "Merci de contacter un administrateur si le problème persiste",
+        "clickHere": "en cliquant ici"
     },
     "pageTitle": {
         "/": "Catalogue",
@@ -261,7 +268,7 @@
         }
     },
     "footer": {
-        "rudiCopyright": "© RUDI - Version: ",
+        "rudiCopyright": "© RUDI - Version : ",
         "accessibilte": "Accessibilité",
         "cgu": "CGU",
         "conditionsUtilisation": "Conditions d'utilisation",
@@ -275,7 +282,7 @@
         "contactezNous": "Contactez-nous",
         "version": "Version : ",
         "ccByCa": "CC-BY-CA",
-        "propulsePar": "Propulsé par:"
+        "propulsePar": "Propulsé par :"
     },
     "authentification": {
         "title": "Bienvenue",
@@ -398,6 +405,8 @@
         "errorLoginNotMail": "Le champ login n'est pas au format : adresse e-mail",
         "errorLoginAlreadyExists": "Le login renseigné est déjà associé à un compte utilisateur",
         "errorPasswordLength": "Le mot de passe renseigné ne respecte pas les contraintes de longueur",
+        "infoName": "Votre nom sera renseigné dans votre espace \"Mon compte\" ainsi que sur vos demandes d’accès et vos réutilisations effectuées sur Rudi.",
+        "infoFirstName": "Votre prénom sera renseigné dans votre espace \"Mon compte\" ainsi que sur vos demandes d’accès et vos réutilisations effectuées sur Rudi.",
         "rgpd": {
             "title": "Protection des données personnelles",
             "p1": "Les données personnelles vous concernant recueillies dans ce formulaire seront utilisées uniquement pour la gestion de votre compte Rudi et afin de vous contacter concernant l'utilisation du service et ses évolutions. Ces données seront supprimées en l'absence d'utilisation de votre compte durant 24 mois.",
@@ -568,7 +577,7 @@
         "contact": "Contacter",
         "motsclesAssocies": "Mots-clés associés",
         "themes": "Thèmes :",
-        "themeEtMotCle": "Thème et mots-clés",
+        "thematiqueEtMotCle": "Thématique et mots-clés",
         "autre": "autre",
         "file": "Fichier",
         "service": "API",
@@ -1225,6 +1234,9 @@
             "territorialScale": "Territoire concerné",
             "desiredSupport": "Accompagnement souhaité",
             "confidentiality": "Confidentialité",
+            "updateInformations": "Modifier les informations",
+            "annuler": "Annuler",
+            "confirmer": "Confirmer",
             "re-use": "Type de réutilisation",
             "basicInfos": {
                 "projectType": "Type de réutilisation",
@@ -1266,6 +1278,16 @@
                     }
                 },
                 "information": "Information",
+                "update": {
+                    "title": "Modifier les informations",
+                    "text": "Vous vous apprêtez à modifier les informations de votre réutilisation. Celle-ci sera mise à jour de façon irrémédiable au clic sur “Confirmer”.",
+                    "confirmationPopup": {
+                        "cancel": "Annuler",
+                        "validate": "Confirmer"
+                    },
+                    "success": "Votre réutilisation a été mis à jour.",
+                    "error": "Modification echouée."
+                },
                 "deletion": {
                     "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande n'a pas encore été traitée par l'équipe Rudi.",
                     "title": "Retirer un jeu de données",

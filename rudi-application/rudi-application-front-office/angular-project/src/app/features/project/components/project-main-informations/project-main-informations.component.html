@@ -1,10 +1,22 @@
 <div class="project-container">
+    <app-loader [active]="isLoading"></app-loader>
+    <div class="d-flex justify-content-between" *ngIf="!isUpdating">
+        <mat-card-title class="card-title">
+            {{'personalSpace.project.reutilisation'|translate}}
+        </mat-card-title>
 
-    <mat-card-title class="card-title">
-        {{'personalSpace.project.reutilisation'|translate}}
-    </mat-card-title>
+        <!--bouton modification réutilisation-->
+        <button mat-raised-button class="primary-raised-button right"
+                *ngIf="isRefusedProject"
+                (click)="updateProjectTaskInfo()">
+            {{ 'personalSpace.project.updateInformations'|translate }}
+        </button>
+    </div>
+
 
     <mat-card-content *ngIf="project" class="p-0">
+
+<ng-container *ngIf="!isUpdating; else updateProjectForm">
         <!--titre de la réutilisation-->
         <app-project-main-information-label
             [label]="'personalSpace.project.reutilisationTitle'|translate"
@@ -65,6 +77,34 @@
             [label]="'personalSpace.project.confidentiality'|translate"
             [value]="project.confidentiality?.label | toString"
         ></app-project-main-information-label>
+
+</ng-container>
+
+        <ng-template #updateProjectForm>
+            <app-step1-project [isPublished]="isPublished"
+                               [step1FormGroup]="step1FormGroup"
+                               [suggestions]="suggestions"
+                               [publicCible]="publicCible"
+                               [reuseStatus]="reuseStatus"
+                               [territoireScale]="territorialScales"
+                               [supports]="supports"
+                               [projectType]="projectType"
+                               (imageModified)="handleImageChanged($event)">
+            </app-step1-project>
+
+            <div class="d-flex justify-content-between flex-wrap">
+                <button mat-stroked-button class="secondary-stroked-button"
+                        (click)="updateProjectTaskInfo()">
+                    {{ 'personalSpace.project.annuler'|translate }}
+                </button>
+
+                <button mat-raised-button class="primary-raised-button right"
+                        (click)="updateConfirmation()">
+                    {{ 'personalSpace.project.confirmer'|translate }}
+                </button>
+            </div>
+        </ng-template>
+
 
     </mat-card-content>
 </div>

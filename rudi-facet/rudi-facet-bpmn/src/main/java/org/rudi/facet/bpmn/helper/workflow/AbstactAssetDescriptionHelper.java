@@ -61,7 +61,7 @@ public abstract class AbstactAssetDescriptionHelper<E extends AssetDescriptionEn
 	}
 
 	@Override
-	public void updateAssetEntity(D assetDescription, E assetDescriptionEntity) {
+	public void updateAssetEntity(D assetDescription, E assetDescriptionEntity) throws InvalidDataException {
 		assetDescriptionMapper.dtoToEntity(assetDescription, assetDescriptionEntity);
 	}
 

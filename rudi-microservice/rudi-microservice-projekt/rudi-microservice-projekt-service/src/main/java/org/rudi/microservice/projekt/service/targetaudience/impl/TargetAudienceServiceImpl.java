@@ -1,8 +1,7 @@
 package org.rudi.microservice.projekt.service.targetaudience.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.rudi.common.service.exception.AppServiceException;
+import java.util.UUID;
+
 import org.rudi.microservice.projekt.core.bean.TargetAudience;
 import org.rudi.microservice.projekt.core.bean.TargetAudienceSearchCriteria;
 import org.rudi.microservice.projekt.service.mapper.TargetAudienceMapper;
@@ -14,7 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class TargetAudienceServiceImpl implements TargetAudienceService {
 
 	@Override
 	@Transactional
-	public TargetAudience createTargetAudience(TargetAudience targetAudience) throws AppServiceException {
+	public TargetAudience createTargetAudience(TargetAudience targetAudience) {
 		targetAudience.setUuid(UUID.randomUUID());
 		val entity = targetAudienceMapper.dtoToEntity(targetAudience);
 		val saved = targetAudienceDao.save(entity);
@@ -44,8 +44,10 @@ public class TargetAudienceServiceImpl implements TargetAudienceService {
 
 	@Override
 	@Transactional
-	public TargetAudience updateTargetAudience(TargetAudience targetAudience) throws AssertionError {
-		assert targetAudience.getUuid() != null;
+	public TargetAudience updateTargetAudience(TargetAudience targetAudience) throws IllegalArgumentException {
+		if(targetAudience.getUuid() == null){
+			throw new IllegalArgumentException("UUID targetaudience missing");
+		}
 		final var entity = targetAudienceDao.findByUUID(targetAudience.getUuid());
 		targetAudienceMapper.dtoToEntity(targetAudience, entity);
 		targetAudienceDao.save(entity);

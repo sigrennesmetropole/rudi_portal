@@ -146,7 +146,7 @@ public class OrganizationMembersHelper {
 			userType = searchCriteria.getType() != null ? searchCriteria.getType().toString() : "";
 		}
 
-		return aclHelper.searchUsersWithCriteria(memberUuids, searchText, userType);
+		return aclHelper.searchUsersWithCriteria(memberUuids, searchText, userType, searchCriteria.getLimit());
 	}
 
 	/**

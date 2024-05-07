@@ -53,7 +53,6 @@ export class RouteHistoryService {
     private goBack(): Promise<boolean> {
         // Si on a les infos sur la page précédente
         if (this.isAbleToGoBack()) {
-
             // On reconstruit l'URL de destination
             // Si plus tard route avec paramètre GET peut-être que NavigationEnd ne conviendrait pas
             const url = this.historique[0].url;
@@ -76,9 +75,13 @@ export class RouteHistoryService {
         if (this.isAbleToGoBack()) {
             return this.goBack();
         }
-        // Sinon go /account si on est connecté
+        // Sinon go /catalogue si on est connecté
         else {
-            return this.router.navigate(['/personal-space/my-account']);
+            return this.router.navigate(['/catalogue']);
         }
+    }
+
+    resetHistory() {
+        this.historique = [];
     }
 }

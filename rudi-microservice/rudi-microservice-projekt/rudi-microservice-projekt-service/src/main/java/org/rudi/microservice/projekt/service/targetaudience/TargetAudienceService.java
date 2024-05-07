@@ -1,12 +1,12 @@
 package org.rudi.microservice.projekt.service.targetaudience;
 
+import java.util.UUID;
+
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.TargetAudience;
 import org.rudi.microservice.projekt.core.bean.TargetAudienceSearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.UUID;
 
 public interface TargetAudienceService {
 	/**
@@ -29,7 +29,7 @@ public interface TargetAudienceService {
 	/**
 	 * Update a targetAudience entity
 	 */
-	TargetAudience updateTargetAudience(TargetAudience targetAudience) throws AssertionError;
+	TargetAudience updateTargetAudience(TargetAudience targetAudience) throws IllegalArgumentException;
 
 	/**
 	 * Delete a targetAudience entity

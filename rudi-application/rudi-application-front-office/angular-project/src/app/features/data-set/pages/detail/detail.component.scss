@@ -416,8 +416,6 @@
             padding-top: 21px;
 
             &-header {
-                padding-left: 15px;
-                padding-right: 15px;
 
                 button {
                     margin-top: 15px;
@@ -453,11 +451,6 @@
         }
     }
 
-}
-
-@mixin cards-margin-horizontal {
-    margin-left: calc(var(--bootstrap-gutter) * -1);
-    margin-right: calc(var(--bootstrap-gutter) * -1);
 }
 
 .banner-reuses {
@@ -498,13 +491,7 @@
 
     &-cards {
         margin-top: 22px;
-        @include cards-margin-horizontal;
-
-        @include sm() {
-            padding: 0 15px;
-        }
     }
-
 }
 
 .metadata-theme-lg {

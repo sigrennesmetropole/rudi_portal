@@ -118,8 +118,22 @@ mat-progress-spinner {
     }
 
     a {
-        color: #71757e;
+        //color: #71757e;
         font-weight: bold;
         text-decoration: underline;
     }
 }
+
+.icon-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px !important;
+}
+
+.signup-hint {
+    color: var(--primary-text-light)
+}
+
+
+

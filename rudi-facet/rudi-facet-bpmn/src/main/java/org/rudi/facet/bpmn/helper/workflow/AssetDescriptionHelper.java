@@ -22,6 +22,6 @@ public interface AssetDescriptionHelper<E extends AssetDescriptionEntity, D exte
 
 	Task createTaskFromWorkflow(org.activiti.engine.task.Task originalTask, E assetDescriptionEntity);
 
-	void updateAssetEntity(D assetDescription, E assetDescriptionEntity);
+	void updateAssetEntity(D assetDescription, E assetDescriptionEntity) throws InvalidDataException;
 
 }

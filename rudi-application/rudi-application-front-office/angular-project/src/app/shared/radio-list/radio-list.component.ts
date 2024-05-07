@@ -18,6 +18,9 @@ export class RadioListComponent {
     @Input()
     public suggestions: RadioListItem[];
 
+    @Input()
+    public comp: RadioListItem[];
+
     /**
      * FormGroup contenant le contrôle de la valeur choisie
      */

@@ -254,6 +254,8 @@ public abstract class AbstractWorkflowContext<E extends AssetDescriptionEntity, 
 
 	/**
 	 * Retourne la liste des users candidats pour la tâche
+	 * Utilisable via une balise bpmn:humanPerformer
+	 * cf rudi-facet/rudi-facet-bpmn/README.md
 	 * 
 	 * @param scriptContext   le context
 	 * @param executionEntity l'entité d'execution

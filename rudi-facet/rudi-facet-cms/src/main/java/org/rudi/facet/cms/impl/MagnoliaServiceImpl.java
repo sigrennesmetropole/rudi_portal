@@ -171,16 +171,26 @@ public class MagnoliaServiceImpl implements CmsService {
 			Integer limit, String order) throws CmsException {
 		final List<CmsAsset> result = new ArrayList<>();
 		String defaultCategory = cmsMagnoliaConfiguration.getDefaultCategory(assetType);
+
 		List<String> categories = new ArrayList<>();
+
+		// On ajoute les categories présente dans la requête
 		if (request.getCategories() != null) {
-			categories.addAll(request.getCategories());
+			// Ces catégories sont converties en UUID correspondant dans Magnolia
+			//  Si une catégorie passé ne correspond à rien dans magnolia --> vide
+			categories.addAll(convertCategories(request.getCategories()));
 		}
-		if (!categories.contains(defaultCategory)) {
-			categories.add(defaultCategory);
+
+		// Si aucune des catégories passées en paramètre ne correspond à une catégorie présente dans magnolia
+		// Ou si aucune catégorie n'a été passée en paramètre
+		if (CollectionUtils.isEmpty(categories)) {
+			// On rajoute la catégorie par défaut correspondant au type d'asset souhaité.
+			categories.addAll(convertCategories(List.of(defaultCategory)));
 		}
+
 		AbstractCmsMagnoliaHandler<?> abstractCmsMagnoliaHandler = lookupHandler(assetType);
 		if (abstractCmsMagnoliaHandler != null) {
-			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(convertCategories(categories),
+			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(categories,
 					request.getFilters(), offset, limit, order);
 			if (page.getTotal() > 0 && CollectionUtils.isNotEmpty(page.getResults())) {
 				page.getResults().forEach(item -> {
@@ -364,7 +374,8 @@ public class MagnoliaServiceImpl implements CmsService {
 		return GET_API_URL;
 	}
 
-	protected AbstractCmsMagnoliaHandler<? extends CmsMagnoliaNode> lookupHandler(CmsAssetType assetType) {
+
+	protected AbstractCmsMagnoliaHandler<? extends CmsMagnoliaNode> lookupHandler(CmsAssetType assetType) {//NOSONAR
 		return cmsMagnoliaHandlers.stream().filter(h -> h.getAssetType() == assetType).findFirst().orElse(null);
 	}
 

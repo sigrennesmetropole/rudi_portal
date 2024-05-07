@@ -1,9 +1,10 @@
 package org.rudi.facet.dataverse.api;
 
+import java.io.Serializable;
+import java.util.Collections;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.dataverse.helper.RestTemplateHelper;
@@ -15,7 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class AbstractDataverseAPI {
@@ -67,7 +69,7 @@ public abstract class AbstractDataverseAPI {
 		}
 	}
 
-	protected <T> T getDataBody(ResponseEntity<DataverseResponse<T>> responseEntity) {
+	protected <T extends Serializable> T getDataBody(ResponseEntity<DataverseResponse<T>> responseEntity) {
 		DataverseResponse<T> dataverseResponse = responseEntity.getBody();
 		return dataverseResponse != null ? dataverseResponse.getData() : null;
 	}

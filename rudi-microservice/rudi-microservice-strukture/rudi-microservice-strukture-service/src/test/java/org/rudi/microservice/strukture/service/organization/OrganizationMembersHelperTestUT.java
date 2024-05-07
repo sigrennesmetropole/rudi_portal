@@ -249,9 +249,9 @@ class OrganizationMembersHelperTestUT {
 		OrganizationMemberEntity member2 = new OrganizationMemberEntity();
 		member2.setUserUuid(robot.getUuid());
 
-		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq("")))
+		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(""),any()))
 				.thenReturn(List.of(person, robot));
-		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(null)))
+		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(null),any()))
 				.thenReturn(List.of(person, robot));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
@@ -273,7 +273,7 @@ class OrganizationMembersHelperTestUT {
 		member2.setUserUuid(robot.getUuid());
 
 		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(),
-				eq(UserType.PERSON.getValue()))).thenReturn(List.of(person));
+				eq(UserType.PERSON.getValue()),any())).thenReturn(List.of(person));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
 		assertEquals(1, users.size());
@@ -296,7 +296,7 @@ class OrganizationMembersHelperTestUT {
 		member2.setUserUuid(robot.getUuid());
 
 		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(),
-				eq(UserType.ROBOT.getValue()))).thenReturn(List.of(robot));
+				eq(UserType.ROBOT.getValue()),any())).thenReturn(List.of(robot));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
 		assertEquals(1, users.size());

@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {Router} from '@angular/router';
-import {SimpleSkosConcept} from 'micro_service_modules/kos/kos-model';
 import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {FiltersService} from '@core/services/filters.service';
 import {OrderValue} from '@core/services/filters/order-filter';
@@ -10,6 +9,7 @@ import {SidenavOpeningsService} from '@core/services/sidenav-openings.service';
 import {ThemeCacheService} from '@core/services/theme-cache.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Metadata, MetadataList} from 'micro_service_modules/api-kaccess';
+import {SimpleSkosConcept} from 'micro_service_modules/kos/kos-model';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {AccessStatusFilterItem} from '../filter-forms/access-status-filter-form/access-status-filter-form.component';
@@ -37,7 +37,6 @@ export class ListContainerComponent implements OnInit, OnDestroy {
      * maximum = 12 (current limit in SCSS rule : .data-set-container-*-cards).
      * Default : automatic (based on screen width).
      */
-    @Input() resultsPerRow: number | undefined;
     @Input() accessStatusForcedValue;
     @Input() accessStatusHiddenValues;
     /** On peut sélectionner une carte dans la liste ? */
@@ -63,7 +62,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     selectedProducerItems: Item[] = [];
 
     selectedAccessStatusItems: AccessStatusFilterItem[] = [];
-    private isDestroyed$ = new Subject<void>();
+    private isDestroyed$: Subject<void> = new Subject<void>();
 
     constructor(
         private readonly konsultMetierService: KonsultMetierService,
@@ -77,11 +76,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         this.searche$ = this.filtersService.searchFilter.value$;
         themeCacheService.init();
     }
-
-    get isFiltered(): boolean {
-        return this.filtersService.isFiltered;
-    }
-
+    
     get hasSelectedItems(): boolean {
         return (
             this.selectedDatesItems?.length > 0 ||
@@ -110,7 +105,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.mediaSize = this.breakpointObserver.getMediaSize();
         this.sidenavOpeningsService.sideNavOpening$.pipe(takeUntil(this.isDestroyed$)).subscribe(() => {
-            this.sidenav.open();
+            this.sidenav?.open();
         });
         this.konsultMetierService.getProducerNames().subscribe(
             producerNames => this.producerNames = producerNames

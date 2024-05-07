@@ -1,0 +1,107 @@
+@import "responsive";
+
+$headerHeight: 150px;
+
+.page-container {
+    padding-top: $headerHeight;
+
+
+    .image1 {
+        position: absolute;
+        top: $headerHeight;
+        right: 0;
+    }
+
+    .image2 {
+        transform: scaleX(-1);
+    }
+
+    .texte-container {
+        padding-top: 75px;
+        margin: auto;
+        width: 50%;
+        text-align: center;
+
+        h1 {
+            color: var(--error-color);
+            font-size: 150px;
+            line-height: 150px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .texte {
+            color: var(--primary-text);
+            font-size: 18px;
+            line-height: 22px;
+
+            a {
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+        }
+
+    }
+}
+
+
+@mixin mobile-screen {
+    .page-container {
+        img {
+            height: 30vh;
+            opacity: 0.4;
+        }
+
+        .texte-container {
+            width: 50%;
+
+            h1 {
+
+                font-size: 100px;
+                line-height: 100px;
+            }
+
+        }
+    }
+}
+
+
+@mixin desktop-screen {
+    .page-container {
+        .texte-container {
+            width: 40%;
+        }
+    }
+}
+
+@mixin large-screen {
+    .page-container {
+        img {
+            height: 60vh;
+        }
+
+        .texte-container {
+            width: 30%;
+        }
+    }
+}
+
+@include xs() {
+    @include mobile-screen;
+}
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include desktop-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include large-screen;
+}

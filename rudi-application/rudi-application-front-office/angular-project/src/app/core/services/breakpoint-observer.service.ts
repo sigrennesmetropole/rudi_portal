@@ -131,6 +131,7 @@ export class BreakpointObserverService {
      */
     getNgClassFromMediaSize(baseClass: string): NgClassObject {
         return {
+            [`${baseClass}-xs`]: this.mediaSize.isXs,
             [`${baseClass}-sm`]: this.mediaSize.isSm,
             [`${baseClass}-md`]: this.mediaSize.isMd,
             [`${baseClass}-lg`]: this.mediaSize.isLg,

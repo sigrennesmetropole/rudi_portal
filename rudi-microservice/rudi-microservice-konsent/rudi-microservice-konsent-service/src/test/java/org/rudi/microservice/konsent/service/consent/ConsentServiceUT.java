@@ -619,7 +619,7 @@ class ConsentServiceUT {
 	 * fais partie
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_user_in_organisation() throws AppServiceException,
 			DocumentStorageException {
 
@@ -646,7 +646,7 @@ class ConsentServiceUT {
 	 * concernant les traitements dont je suis le owner
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_user_not_in_organisation() throws AppServiceException,
 			DocumentStorageException {
 
@@ -673,7 +673,7 @@ class ConsentServiceUT {
 	 * concernant un traitement d'une autre organisation
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_user_in_organisation_no_consent_from_other_organisation()
 			throws AppServiceException, DocumentStorageException {
 
@@ -697,7 +697,7 @@ class ConsentServiceUT {
 	 * Recherche des consentements des autres concernant mes traitements => Ne remonte pas de consentement concernant un traitement ne m'appartenant pas
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_no_consent_from_other_owner() throws AppServiceException,
 			DocumentStorageException {
 
@@ -720,7 +720,7 @@ class ConsentServiceUT {
 	 * Recherche des consentements des autres alors que je n'ai aucun traitement => ne répondre aucun consentement
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_user_without_treatments() throws AppServiceException,
 			DocumentStorageException {
 
@@ -750,7 +750,7 @@ class ConsentServiceUT {
 	 * consentement remonté
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_unknown_owner() throws AppServiceException,
 			DocumentStorageException {
 
@@ -781,7 +781,7 @@ class ConsentServiceUT {
 	 * des owners non fournis
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_consent_owners() throws AppServiceException,
 			DocumentStorageException {
 
@@ -828,7 +828,7 @@ class ConsentServiceUT {
 	 * fournis
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_treatments() throws AppServiceException,
 			DocumentStorageException {
 
@@ -870,7 +870,7 @@ class ConsentServiceUT {
 	 * mes organisations => aucun consentement renvoyé
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_for_another_treatment() throws AppServiceException,
 			DocumentStorageException {
 
@@ -906,7 +906,7 @@ class ConsentServiceUT {
 	 * Recherche des consentements des autres sur mes traitements qui sont invalides => Les consentements invalides ne sont pas remontés
 	 */
 	@Test
-	@Disabled
+	@Disabled("Non passant - A revoir")
 	void searchMyTreatmentsConsents_consents_are_valid() throws AppServiceException,
 			DocumentStorageException {
 

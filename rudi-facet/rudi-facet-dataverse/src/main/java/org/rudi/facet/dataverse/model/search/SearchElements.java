@@ -1,5 +1,6 @@
 package org.rudi.facet.dataverse.model.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import org.rudi.facet.dataverse.bean.SearchItemInfo;
 import lombok.Data;
 
 @Data
-public class SearchElements<T extends SearchItemInfo> {
+public class SearchElements<T extends SearchItemInfo & Serializable> implements Serializable {
 
 	@JsonProperty(value = "total_count")
 	private Long total;

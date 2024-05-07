@@ -49,6 +49,10 @@ export class FiltersService {
         this.accessStatusFilter
     ];
 
+    getChildrenFilters() {
+        return this.childrenFilters;
+    }
+
     get currentFilters(): Filters {
         return this.filters.value;
     }

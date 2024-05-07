@@ -8,7 +8,6 @@
         <div class="dialog-content">
             <div class="dialog-title">{{'project.addDatasetPopup.title1'|translate}}</div>
             <app-list-container class="list-container" [hidePagination]="true" [limit]="maxResultPerPage"
-                                [resultsPerRow]="3"
                                 [isSelectable]="true"
                                 (dbSelectMetadata)="doubleSelect($event)  "
                                 (selectMetadata)="selectMetadata($event)"

@@ -281,9 +281,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de chercher des membres pour cette organisation");
 		}
+		//Gestion de la taille de la partition, inutile de charger 50 membres si on a une limite à 10
+		int partitionSize = Math.min(MAX_AMOUNT_OF_ORGANIZATION_MEMBERS, searchCriteria.getLimit());
 
 		List<Pageable> partitions = organizationMembersPartitionerHelper.getOrganizationMembersPartition(searchCriteria,
-				MAX_AMOUNT_OF_ORGANIZATION_MEMBERS);
+				partitionSize);
 
 		List<OrganizationUserMember> members = new ArrayList<>();
 		for (Pageable partition : partitions) {

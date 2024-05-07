@@ -28,7 +28,7 @@ export class AddDataSetDialogComponent implements OnInit {
         'producer.organization_name',
         '-producer.organization_name',
     ];
-    maxResultPerPage = 6;
+    maxResultPerPage = 12;
     private _selectedMetadata: Metadata;
     public readonly accessStatusForcedValue: AccessStatusFiltersType;
     public readonly accessStatusHiddenValues: AccessStatusFiltersType[];

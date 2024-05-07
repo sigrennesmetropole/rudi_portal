@@ -15,6 +15,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.rudi.common.core.security.RoleCodes;
+import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.common.service.exception.AppServiceForbiddenException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.exception.MissingParameterException;
 import org.rudi.facet.acl.bean.Role;
@@ -226,5 +228,56 @@ public class ProjektAuthorisationHelper {
 			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
 		// pour le moment les droits d'accès à cette fonction sont les mêmes que la fonction de création de projet
 		checkRightsInitProject(projectEntity);
+	}
+
+	public void checkStatusForProjectModification(ProjectEntity existingProject) throws AppServiceException {
+		if (existingProject != null) {
+
+			switch (existingProject.getProjectStatus()) {
+			case DRAFT:
+			case REJECTED:
+				// l'opération d'ajout ou de suppression de dataset est autorisée
+				break;
+			case VALIDATED:
+				if (!existingProject.getReutilisationStatus().isDatasetSetModificationAllowed()) {
+					throw new AppServiceForbiddenException(
+							String.format("Cannot modify linkeddataset in project status %s",
+									existingProject.getReutilisationStatus().getCode()));
+				}
+				break;
+			case IN_PROGRESS:
+			case CANCELLED:
+			case DISENGAGED:
+			default:
+				throw new AppServiceForbiddenException(String.format("Cannot modify linkeddataset in project status %s",
+						existingProject.getProjectStatus()));
+
+			}
+		}
+
+	}
+
+	/**
+	 * Définition de l'ouverture des droits la fonctionnalité d'administration de projet : Le projectowner ou un membre de l'organisation peut modifier un
+	 * projet / L'administrateur peut modifier un projet (uniquement via Postman) / L'animateur peut modifier un projet (via postman) / Un autre user ne
+	 * peut pas modifier un projet
+	 * 
+	 * Les droits autorisés doivent être cohérents avec ceux définis en PreAuth coté Controller
+	 * 
+	 * @param projectEntity l'entité projet pour laquelle vérifier le droit d'accès
+	 * @throws GetOrganizationMembersException
+	 * @throws GetOrganizationException
+	 * @throws AppServiceUnauthorizedException
+	 * @throws MissingParameterException
+	 */
+	public void checkRightsAdministerProject(ProjectEntity projectEntity)
+			throws GetOrganizationMembersException, AppServiceUnauthorizedException, MissingParameterException {
+		Map<String, Boolean> accessRightsByRole = ProjektAuthorisationHelper.getADMINISTRATOR_MODERATOR_ACCESS();
+		// Vérification des droits d'accès
+		// les droits autorisés dans accessRights doivent être cohérents avec ceux définis en PreAuth coté Controller
+		if (!(isAccessGrantedByRole(accessRightsByRole)
+				|| isAccessGrantedForUserOnProject(projectEntity))) {
+			throw new AppServiceUnauthorizedException("Accès non autorisé à la fonctionnalité pour l'utilisateur");
+		}
 	}
 }

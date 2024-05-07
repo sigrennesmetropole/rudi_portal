@@ -4,6 +4,7 @@ import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
 import {UserGuardService} from '@core/services/user-guard.service';
 import {HomeComponent} from '@features/home/pages/home/home.component';
 import {NotAuthorizedComponent} from '@features/login/pages/not-authorized/not-authorized.component';
+import {ErrorPageComponent} from '@shared/error-page/error-page.component';
 import {AclConfigurationResolver} from '@shared/resolver/acl-configuration-resolver';
 
 const routes: Routes = [
@@ -68,9 +69,16 @@ const routes: Routes = [
         loadChildren: () => import('./features/cms/cms.module')
             .then(m => m.CmsModule),
         canActivate: mapToCanActivate([AuthGuard])
+    },
+    {
+        path: 'error/:status',
+        component: ErrorPageComponent
+    },
+    {
+        path: '**',
+        pathMatch: 'full',
+        redirectTo: 'error/404'
     }
-
-
 ];
 
 @NgModule({

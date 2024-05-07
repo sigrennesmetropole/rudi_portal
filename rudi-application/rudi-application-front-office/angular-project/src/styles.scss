@@ -19,11 +19,28 @@ body {
     font-family: OpenSans, sans-serif;
 }
 
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    max-width: unset !important;
+}
+
 .red-snackbar {
-    background: var(--error-color);
+    --mdc-snackbar-container-color: var(--error-color) !important;
+    max-width: unset !important;
+
 
     a {
-        color: var(--error-color-text);
+        color: var(--error-color-text) !important;
+        text-decoration: underline;
+    }
+}
+
+.blue-snackbar {
+    --mdc-snackbar-container-color: var(--primary-color) !important;
+    max-width: unset !important;
+
+
+    a {
+        color: var(--primary-color) !important;
         text-decoration: underline;
     }
 }
@@ -385,7 +402,7 @@ a {
 .base-button {
     font-weight: bold !important;
     height: 42px !important;
-    width: 160px !important;
+    min-width: 160px !important;
     border-radius: 6px !important;
 
     &:disabled {

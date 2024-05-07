@@ -1,5 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatIconRegistry} from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PASSWORD_REGEX} from '@core/const';
 import {AccountService} from '@core/services/account.service';
@@ -14,6 +16,8 @@ import {ErrorWithCause} from '@shared/models/error-with-cause';
 import {RudiCaptchaComponent} from '@shared/rudi-captcha/rudi-captcha.component';
 import {RudiValidators} from '@shared/validators/rudi-validators';
 import {ConfirmedValidator} from './confirmed-validator';
+
+const ICON_INFO: string = '../assets/icons/icon_info.svg';
 
 @Component({
     selector: 'app-sign-up',
@@ -74,9 +78,15 @@ export class SignUpComponent implements OnInit {
                 private router: Router,
                 private accountService: AccountService,
                 private propertiesService: PropertiesMetierService,
+                private readonly matIconRegistry: MatIconRegistry,
+                private readonly domSanitizer: DomSanitizer,
                 private readonly captchaCheckerService: CaptchaCheckerService,
                 private readonly route: ActivatedRoute,
     ) {
+        this.matIconRegistry.addSvgIcon(
+            'icon-info',
+            this.domSanitizer.bypassSecurityTrustResourceUrl(ICON_INFO)
+        );
     }
 
     /**

@@ -1,155 +1,75 @@
 @import "common-style";
 
-.dataset-list{
-::ng-deep .ngx-pagination {
-    padding-left: 0;
-    margin-left: -6px !important;
-}
-
-
-::ng-deep .ngx-pagination .pagination-previous {
-    color: var(--primary-text-light) !important;
-    font-weight: normal !important;
-    font-stretch: normal;
-}
-
-::ng-deep .ngx-pagination .pagination-next {
-    color: var(--primary-text-light) !important;
-    font-weight: normal !important;
-    font-stretch: normal;
-}
-
-::ng-deep .ngx-pagination .current {
-    padding: 0.1875rem 0.625rem;
-    background: var(--primary-color) !important;
-    color: #fefefe;
-    cursor: default;
-    font-size: 14px;
-    border-radius: 3px;
-    text-decoration: none;
-
-}
-
-::ng-deep .ngx-pagination a, .ngx-pagination button {
-    color: var(--primary-color) !important;
-    display: block;
-    padding: 0.1875rem 0.625rem;
-    font-weight: 600 !important;
-    font-stretch: normal !important;
-    font-style: normal !important;
-
-}
-}
-.pagination-font-size {
-    font-size: 14px;
-}
-
-.gap {
-    gap: var(--gap);
-}
 .data-set-container {
-
-    &-sm {
-        min-height: var(--card-height-sm);
-        width: 100%;
-
-        .container-filter-box {
-            .rudi-filter-box {
-                width: 90px;
-                height: 34px;
-                border-radius: 17px;
-                background-color: var(--focus);
-            }
-        }
-
-        ::ng-deep .ngx-pagination .pagination-previous {
-            color: var(--primary-text-light) !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            font-size: 15px;
-        }
-
-        ::ng-deep .ngx-pagination .pagination-next {
-            padding-left: 0 !important;
-            color: var(--primary-text-light) !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            font-size: 15px;
-
-        }
+    &-xs, &-sm, &-md {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(200px, 1fr));
+        grid-auto-rows: 1fr;
     }
 
-
     &-lg {
-        height: var(--card-height-lg);
-        min-width: 362px;
-        width: 48%;
-
-        ::ng-deep .ngx-pagination .pagination-previous {
-            margin-right: 40px !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            color: var(--primary-text-light) !important;
-        }
-
-        ::ng-deep .ngx-pagination .pagination-next {
-            padding-left: 40px !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            color: var(--primary-text-light) !important;
-        }
-
+        display: grid;
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        grid-auto-rows: 1fr;
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
     }
 
     &-xl {
-        min-height: var(--card-height-lg);
-        width: 32%;
-
-        ::ng-deep .ngx-pagination .pagination-previous {
-            margin-right: 40px !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            color: var(--primary-text-light) !important;
-        }
-
-        ::ng-deep .ngx-pagination .pagination-next {
-            padding-left: 40px !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            color: var(--primary-text-light) !important;
-        }
+        display: grid;
+        grid-template-columns: repeat(3, minmax(200px, 1fr));
+        grid-auto-rows: 1fr;
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
     }
 
     &-xxl {
-        min-height: var(--card-height-lg);
-        width: 24%;
-
-        ::ng-deep .ngx-pagination .pagination-previous {
-            margin-right: 40px !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            color: var(--primary-text-light) !important;
-        }
-
-        ::ng-deep .ngx-pagination .pagination-next {
-            padding-left: 40px !important;
-            font-weight: normal !important;
-            font-stretch: normal;
-            color: var(--primary-text-light) !important;
-        }
-    }
-
-    @for $resultsPerRow from 1 through 12 {
-        &-#{$resultsPerRow}-cards {
-            width: calc-shared-space($resultsPerRow, var(--gap));
-        }
+        display: grid;
+        grid-template-columns: repeat(4, minmax(200px, 1fr));
+        grid-auto-rows: 1fr;
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
     }
 }
 
-.pagination-spacing-sm {
-    ::ng-deep .ngx-pagination a,
-    ::ng-deep .ngx-pagination .current,
-    ::ng-deep .ngx-pagination .disabled {
-        padding: 0.1875rem 0.425rem;
+/*
+Définition du style de la pagination,
+ce style est necessaire uniquement pour le cas d'utilisation du composant dans une popin
+*/
+::ng-deep .ngx-pagination {
+    padding-left: 0;
+    margin-left: -6px !important;
+
+    .pagination-previous {
+        color: var(--primary-text-light) !important;
+        font-weight: normal !important;
+        font-stretch: normal;
+    }
+
+    .pagination-next {
+        color: var(--primary-text-light) !important;
+        font-weight: normal !important;
+        font-stretch: normal;
+    }
+
+    .current {
+        padding: 0.1875rem 0.625rem;
+        background: var(--primary-color) !important;
+        color: #fefefe;
+        cursor: default;
+        font-size: 14px;
+        border-radius: 3px;
+        text-decoration: none;
+
+    }
+
+    a, .ngx-pagination button {
+        color: var(--primary-color) !important;
+        display: block;
+        padding: 0.1875rem 0.625rem;
+        font-weight: 600 !important;
+        font-stretch: normal !important;
+        font-style: normal !important;
+
     }
 }

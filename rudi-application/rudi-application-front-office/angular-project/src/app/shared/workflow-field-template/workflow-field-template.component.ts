@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
 import {Field, Section} from 'micro_service_modules/api-bpmn';

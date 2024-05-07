@@ -1,13 +1,5 @@
-import {
-    AfterViewInit,
-    Component,
-    ComponentFactoryResolver,
-    ContentChild,
-    ContentChildren,
-    QueryList,
-    ViewChild,
-    ViewContainerRef
-} from '@angular/core';
+import {AfterViewInit, Component, ContentChild, ContentChildren, QueryList, ViewChild, ViewContainerRef} from '@angular/core';
+import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {TabContentDirective} from '../tab-content.directive';
 import {TabComponent} from '../tab/tab.component';
 import {TabsLayoutDirective} from '../tabs-layout.directive';
@@ -38,13 +30,16 @@ export class TabsComponent implements AfterViewInit {
      */
     @ContentChild(TabContentDirective)
     customLayoutTabContent: TabContentDirective;
+    mediaSize: MediaSize;
 
     get selectedTab(): TabComponent {
         return this.tabs
             .find((tab) => tab.active);
     }
 
-    constructor() {
+    constructor(private readonly breakpointObserverService: BreakpointObserverService,
+    ) {
+        this.mediaSize = this.breakpointObserverService.getMediaSize();
     }
 
     private static displayTabInto(tab: TabComponent, viewContainer: ViewContainerRef): void {

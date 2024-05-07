@@ -121,6 +121,7 @@ export class ResetPasswordComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.loading = false;
+                    this.routeHistoryService.resetHistory();
                     // Si on s'est bien authentifié on revient sur la page d'avant Si on peut go back on go back
                     this.router.navigate(['/login']);
                     this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
@@ -165,11 +166,7 @@ export class ResetPasswordComponent implements OnInit {
                         config.horizontalPosition = 'center';
                         this.snackbar.openFromComponent(ResetPasswordErrorBoxComponent, config);
                     }
-
-                },
-                complete: () => {
-                    this.router.navigate(['reset-password']);
-                },
+                }
             });
     }
 }

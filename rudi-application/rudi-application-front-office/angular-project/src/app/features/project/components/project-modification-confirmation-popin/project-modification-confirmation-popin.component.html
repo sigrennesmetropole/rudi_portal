@@ -1,0 +1,21 @@
+<div id="dialog-container">
+    <mat-dialog-content>
+        <div class="dialog-cross-button">
+            <button mat-icon-button (click)="handleClose()">
+                <mat-icon svgIcon="icon-close" class="cross-button"></mat-icon>
+            </button>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-title" [translate]="'personalSpace.project.tabs.update.title'"></div>
+            <div class="dialog-description"> {{'personalSpace.project.tabs.update.text' | translate}}</div>
+            <mat-dialog-actions class="dialog-buttons">
+                <button class="secondary-raised-button" mat-raised-button (click)="handleClose()">
+                    <span>{{'personalSpace.project.tabs.update.confirmationPopup.cancel'| translate}}</span>
+                </button>
+                <button class="primary-raised-button" mat-raised-button (click)="validate()">
+                    <span>{{'personalSpace.project.tabs.update.confirmationPopup.validate'| translate}}</span>
+                </button>
+            </mat-dialog-actions>
+        </div>
+    </mat-dialog-content>
+</div>

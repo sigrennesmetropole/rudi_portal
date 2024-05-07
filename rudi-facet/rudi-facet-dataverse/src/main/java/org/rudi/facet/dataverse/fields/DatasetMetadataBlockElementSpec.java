@@ -62,10 +62,10 @@ public class DatasetMetadataBlockElementSpec {
 	}
 
 	public Stream<FieldSpec> streamAllFields() {
-		final var level1Fields = this.level1Fields.keySet();
-		var allFieldsStream = level1Fields.stream();
+		final var localLevel1Fields = this.level1Fields.keySet();
+		var allFieldsStream = localLevel1Fields.stream();
 
-		for (final var level1Field : level1Fields) {
+		for (final var level1Field : localLevel1Fields) {
 			allFieldsStream = Stream.concat(allFieldsStream, streamChildrenOf(level1Field));
 		}
 

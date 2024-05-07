@@ -50,5 +50,4 @@ public class TaskService2TestImpl extends
 	protected AbstractTaskServiceImpl<AssetDescription2TestEntity, AssetDescription2TestData, AssetDescription2TestDao, AssetDescription2TestWorkflowHelper, Assigment2TestHelper> lookupMe() {
 		return ApplicationContext.getBean(TaskService2TestImpl.class);
 	}
-
 }

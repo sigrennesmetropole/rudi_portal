@@ -16,6 +16,7 @@
                                 <mat-card-content>
                                     <app-project-main-informations
                                         [project]="dependencies.project"
+                                        (updateInProgressEvent)="updateInProgress($event)"
                                     ></app-project-main-informations>
 
                                     <app-open-dataset-table
@@ -74,9 +75,11 @@
 
             </app-tab>
 
-            <app-banner-button *ngFor="let action of actions" (click)="openPopinForAction(action)">
-                {{action.label}}
-            </app-banner-button>
+                <app-banner-button [projectIsUpdating]="isUpdateInProgress"  *ngFor="let action of actions" (click)="openPopinForAction(action, isUpdateInProgress)">
+                    {{action.label}}
+                </app-banner-button>
+
+
         </app-tabs>
     </div>
 </app-page>

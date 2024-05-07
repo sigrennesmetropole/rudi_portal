@@ -39,7 +39,7 @@ public class CmsMagnoliaCacheConfig {
 			throws CmsException {
 		Cache<String, CmsAsset> cache = cacheManager.getCache(BeanIds.CMS_ASSET_EHCACHE, String.class, CmsAsset.class);
 		if (cache == null) {
-			throw new CmsException("Erreur lors de la configuration du cache " + BeanIds.CMS_ASSET_EHCACHE);
+			throw new CmsException("Erreur lors de la configuration du cache des assets :" + BeanIds.CMS_ASSET_EHCACHE);
 		}
 
 		return cache;
@@ -51,7 +51,7 @@ public class CmsMagnoliaCacheConfig {
 		Cache<String, CmsCategory> cache = cacheManager.getCache(BeanIds.CMS_CATEGORY_EHCACHE, String.class,
 				CmsCategory.class);
 		if (cache == null) {
-			throw new CmsException("Erreur lors de la configuration du cache " + BeanIds.CMS_CATEGORY_EHCACHE);
+			throw new CmsException("Erreur lors de la configuration du cache des catégories : " + BeanIds.CMS_CATEGORY_EHCACHE);
 		}
 
 		return cache;
@@ -63,7 +63,7 @@ public class CmsMagnoliaCacheConfig {
 		Cache<String, DocumentContent> cache = cacheManager.getCache(BeanIds.CMS_RESOURCES_EHCACHE, String.class,
 				DocumentContent.class);
 		if (cache == null) {
-			throw new CmsException("Erreur lors de la configuration du cache " + BeanIds.CMS_RESOURCES_EHCACHE);
+			throw new CmsException("Erreur lors de la configuration du cache des ressources : " + BeanIds.CMS_RESOURCES_EHCACHE);
 		}
 
 		return cache;

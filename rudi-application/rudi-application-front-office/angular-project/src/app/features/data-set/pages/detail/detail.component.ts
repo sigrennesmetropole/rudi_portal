@@ -1,4 +1,4 @@
-import {HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
 import {IconRegistryService} from '@core/services/icon-registry.service';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
 import {KosMetierService} from '@core/services/kos-metier.service';
+import {LogService} from '@core/services/log.service';
 import {MAP_PROTOCOLS_SUPPORTED} from '@core/services/map/map-protocols';
 import {PageTitleService} from '@core/services/page-title.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
@@ -104,7 +105,8 @@ export class DetailComponent implements OnInit {
         private readonly activatedRoute: ActivatedRoute,
         private readonly propertiesMetierService: PropertiesMetierService,
         private readonly pageTitleService: PageTitleService,
-        private readonly uriComponentCodec: URIComponentCodec
+        private readonly uriComponentCodec: URIComponentCodec,
+        private readonly logService: LogService
     ) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
         this.form = this.fb.group({
@@ -234,9 +236,15 @@ export class DetailComponent implements OnInit {
             complete: () => {
                 this.isLoading = false;
             },
-            error: (e) => {
+            error: (error: HttpErrorResponse) => {
+                this.logService.error(error);
                 this.isLoading = false;
-                console.error(e);
+                if (error.status == 400) {
+                    this.router.navigate(['/error/400']);
+                }
+                if (error.status == 404) {
+                    this.router.navigate(['/error/404']);
+                }
                 this.snackBarService.openSnackBar({
                     message: this.translateService.instant('error.technicalError'),
                     level: Level.ERROR

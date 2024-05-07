@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class SidenavOpeningsService {
 
-  private readonly sidenavOpening = new Subject<void>();
-  readonly sideNavOpening$ = this.sidenavOpening.asObservable();
+    private readonly sidenavOpening: Subject<void> = new Subject<void>();
+    readonly sideNavOpening$: Observable<void> = this.sidenavOpening.asObservable();
 
-  openSidenav(): void {
-    this.sidenavOpening.next();
-  }
+    openSidenav(): void {
+        this.sidenavOpening.next();
+    }
 
 }

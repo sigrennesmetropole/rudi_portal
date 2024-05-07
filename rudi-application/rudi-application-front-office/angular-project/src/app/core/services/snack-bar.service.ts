@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from '@angular/material/snack-bar';
 import {TranslateService} from '@ngx-translate/core';
 import {Data, Level, NotificationTemplateComponent} from '@shared/notification-template/notification-template.component';
 import {Observable, of} from 'rxjs';
@@ -11,6 +11,8 @@ import {switchMap} from 'rxjs/operators';
 export class SnackBarService {
     duration = 3000;
     setAutoDuratione = true;
+    verticalPosition: MatSnackBarVerticalPosition = 'top';
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center';
 
     /**
      *  Constructeur
@@ -26,6 +28,8 @@ export class SnackBarService {
         const level = (data as Data).level;
         if (level === Level.ERROR) {
             return 'red-snackbar';
+        } else if (level === Level.SUCCESS) {
+            return 'blue-snackbar';
         }
         return undefined;
     }
@@ -45,6 +49,8 @@ export class SnackBarService {
         this.snackBar.openFromComponent(NotificationTemplateComponent, {
             data,
             duration,
+            verticalPosition: this.verticalPosition,
+            horizontalPosition: this.horizontalPosition,
             panelClass: SnackBarService.getPanelClass(data)
         });
     }
@@ -57,6 +63,14 @@ export class SnackBarService {
             };
             this.openSnackBar(data, duration);
         });
+    }
+
+    showSuccess(i18nMessageKey: string, duration?: number): void {
+            const data: Data = {
+                level: Level.SUCCESS,
+                message: i18nMessageKey,
+            };
+            this.openSnackBar(data, duration);
     }
 
     showError(i18nMessageKey: string, duration?: number): void {

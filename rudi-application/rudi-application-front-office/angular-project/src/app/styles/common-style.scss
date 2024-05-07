@@ -1,6 +1,12 @@
 @import 'mixins';
 @import 'functions';
 
+.rudi-select-panel-footer {
+    button {
+        width: 100%;
+    }
+}
+
 .pagination-container {
     margin-top: 40px;
     width: 100%;

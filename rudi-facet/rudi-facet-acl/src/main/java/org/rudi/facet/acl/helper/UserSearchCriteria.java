@@ -24,6 +24,7 @@ public class UserSearchCriteria {
 	public static final String ROLE_UUIDS_PARAMETER = "role-uuids";
 	public static final String USER_UUIDS_PARAMETER = "user-uuids";
 	public static final String USER_TYPE_PARAMETER = "type";
+	public static final String USER_LIMIT_PARAMETER = "limit";
 
 	private final String login;
 	private final String password;

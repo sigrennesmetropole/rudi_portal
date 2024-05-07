@@ -1,18 +1,23 @@
-@import "variables-rudi";
-
 .footer-icon-container {
-    a {
+    .footer-link {
         color: var(--primary-color);
         display: flex;
         align-items: center;
 
-        &:hover {
-            filter: brightness(175%);
-            text-decoration: none;
+        .icon-container {
+            margin-right: 5px;
         }
 
-        img {
-            margin-right: 5px;
+        &:hover {
+            color: var(--accent-color-svg);
+            text-decoration: none;
+
+            .icon-container {
+                //Les icons doivent posséder la classe suivant:
+                .social-network-logo {
+                    stroke: var(--accent-color-svg);
+                }
+            }
         }
     }
 }

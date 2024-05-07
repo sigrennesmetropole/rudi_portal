@@ -2,8 +2,14 @@
 
 #dialog-container {
     max-width: 1706px;
+    width: 80vw;
 }
 
 .list-container {
     text-align: left;
+}
+
+mat-dialog-content {
+    --mdc-dialog-supporting-text-line-height: 20px;
+    --mdc-dialog-supporting-text-color: var(--secondary-text)
 }

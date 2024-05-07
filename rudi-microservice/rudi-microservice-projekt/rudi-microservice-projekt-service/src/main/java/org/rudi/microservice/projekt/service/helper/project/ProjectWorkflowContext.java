@@ -208,11 +208,11 @@ public class ProjectWorkflowContext
 			UUID uuid = UUID.fromString(processInstanceBusinessKey);
 			ProjectEntity assetDescription = getAssetDescriptionDao().findByUuid(uuid);
 			startSubProcessNewDatasetRequests(assetDescription);
-			startProcessLinkedDatasets(assetDescription);
+			startSubProcessLinkedDatasets(assetDescription);
 		}
 	}
 
-	private void startProcessLinkedDatasets(ProjectEntity project) {
+	private void startSubProcessLinkedDatasets(ProjectEntity project) {
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
 			for (LinkedDatasetEntity linkedDataset : project.getLinkedDatasets()) {
 				if (linkedDataset.getDatasetConfidentiality() == DatasetConfidentiality.RESTRICTED) {
@@ -290,5 +290,6 @@ public class ProjectWorkflowContext
 		}
 		return result;
 	}
+
 
 }

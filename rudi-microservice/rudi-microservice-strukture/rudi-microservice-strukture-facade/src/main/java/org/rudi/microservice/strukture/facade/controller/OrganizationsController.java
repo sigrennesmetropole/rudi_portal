@@ -108,6 +108,8 @@ public class OrganizationsController implements OrganizationsApi {
 				.organizationUuid(uuid)
 				.searchText(searchText)
 				.type(memberType)
+				//Rajout de la limit pour que les deux listes à mapper soient de la même taille
+				.limit(limit)
 				.build();
 		val page = organizationService.searchOrganizationMembers(criteria, pageable);
 		return ResponseEntity.ok(

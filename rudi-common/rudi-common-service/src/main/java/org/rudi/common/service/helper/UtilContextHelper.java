@@ -1,6 +1,11 @@
 package org.rudi.common.service.helper;
 
-import lombok.val;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
@@ -13,10 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import lombok.val;
 
 /**
  * Service utilitaire pour récupérer les infos sur l'utilisateur connecté.
@@ -91,7 +93,7 @@ public class UtilContextHelper {
 
 	public boolean hasAnyRoles(List<String> roles) throws AppServiceUnauthorizedException {
 		if(getAuthenticatedUser()==null){
-			throw new AppServiceUnauthorizedException(String.format("Cannot informations without authentication"));
+			throw new AppServiceUnauthorizedException("Cannot informations without authentication");
 		}
 
 		for(String role : roles){

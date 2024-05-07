@@ -137,6 +137,11 @@
 }
 
 ::ng-deep {
+    .mat-expansion-panel {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
     .stockage-expansion-panel .rudi-expansion-panel {
         .stockage-panel {
             margin-bottom: 12px;

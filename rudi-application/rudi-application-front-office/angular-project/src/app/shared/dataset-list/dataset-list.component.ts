@@ -33,7 +33,6 @@ export class DatasetListComponent implements OnInit {
     @Input() producerUuid?: string;
     @Input() limit = MAX_RESULTS_PER_PAGE;
     @Input() mediaSize: MediaSize;
-    @Input() resultsPerRow: number | undefined;
     /** On peut sélectionner une carte dans la liste ? */
     @Input() isSelectable = false;
     @Input() accessStatusHiddenValues;

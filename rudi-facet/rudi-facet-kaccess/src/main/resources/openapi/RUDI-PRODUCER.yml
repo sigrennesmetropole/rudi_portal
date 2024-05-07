@@ -1032,7 +1032,6 @@ components:
         both joined by an hyphen-minus sign, or alternatively the 
         lowercase ISO-639 language code alone
       type: string
-      pattern: '^[a-z]{2}(-[A-Z]{2})?$'
       enum:
         [
           # On conserve les langues déjà existantes pour éviter de faire planter les JDD existants :

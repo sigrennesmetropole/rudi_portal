@@ -1,8 +1,8 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AclService} from 'micro_service_modules/acl/acl-api';
 import {
     LinkedDatasetMetadatas,
     ProjectDependenciesFetchers,
@@ -11,9 +11,11 @@ import {
 import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {Base64EncodedLogo} from '@core/services/image-logo.service';
+import {LogService} from '@core/services/log.service';
 import {PageTitleService} from '@core/services/page-title.service';
 import {TranslateService} from '@ngx-translate/core';
 import {injectDependencies} from '@shared/utils/dependencies-utils';
+import {AclService} from 'micro_service_modules/acl/acl-api';
 import {OwnerInfo, ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {LinkedDatasetStatus, Project} from 'micro_service_modules/projekt/projekt-model';
 import {Observable} from 'rxjs';
@@ -60,6 +62,7 @@ export class DetailComponent implements OnInit {
         private readonly pageTitleService: PageTitleService,
         private readonly projectDependenciesService: ProjectDependenciesService,
         private readonly projectDependenciesFetchers: ProjectDependenciesFetchers,
+        private readonly logService: LogService
     ) {
         this.mediaSize = this.breakpointObserverService.getMediaSize();
         this.matIconRegistry.addSvgIcon(
@@ -92,11 +95,15 @@ export class DetailComponent implements OnInit {
                         this.projectLogo = PROJECT_LOGO;
                     }
                 },
-                error: (e) => {
-                    console.error(e);
-                    this.router.navigate(['/projets']);
-                    // Si on a une erreur
+                error: (error: HttpErrorResponse) => {
+                    this.logService.error(error);
                     this.loading = false;
+                    if (error.status == 400) {
+                        this.router.navigate(['/error/400']);
+                    }
+                    if (error.status == 404) {
+                        this.router.navigate(['/error/404']);
+                    }
                 },
                 complete: () => {
                     // Une fois qu'on a toutes les dépendances, on enlève le loader

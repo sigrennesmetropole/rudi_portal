@@ -1,10 +1,5 @@
 package org.rudi.facet.acl.helper;
 
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,11 +38,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import reactor.core.publisher.Mono;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LIMIT_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
@@ -285,9 +285,11 @@ public class ACLHelper {
 			final var criteria = UserSearchCriteria.builder()
 					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList())).build();
 
+			// Retrait de la limit à 1 : envoie de mail au role MODERATOR
+			// et pas seulement à 1 membre ayant le role MODERATOR
 			UserPageResult pageResult = loadBalancedWebClient.get()
 					.uri(buildUsersSearchURL(),
-							uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
+							uriBuilder -> uriBuilder
 									.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
 											formatListParameter(criteria.getRoleUuids()))
 									.build())
@@ -302,7 +304,7 @@ public class ACLHelper {
 
 	@NotNull
 	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText,
-			@Nullable String type) {
+			@Nullable String type, @Nullable Integer limit) {
 		List<User> result = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(userUuids)) {
 			if (searchText == null) {
@@ -326,6 +328,7 @@ public class ACLHelper {
 							.queryParam(USER_LOGIN_AND_DENOMINATION_PARAMETER, criteria.getLoginAndDenomination())
 							.queryParam(USER_TYPE_PARAMETER,
 									criteria.getUserType() != null ? criteria.getUserType().toString() : null)
+							.queryParam(USER_LIMIT_PARAMETER, limit)
 							.build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {

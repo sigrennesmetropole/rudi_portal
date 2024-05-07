@@ -35,8 +35,8 @@ export class OrganizationTabComponent implements OnInit, OnDestroy {
         this.itemsPerPage = 9;
         this.organizations$ = searchOrganizationsService.organizations$;
         this.totalOrganizations$ = searchOrganizationsService.totalOrganizations$;
-        this.datasetCountLoading$ = searchOrganizationsService.datasetCountLoading;
-        this.projectCountLoading$ = searchOrganizationsService.projectsCountLoading;
+        this.datasetCountLoading$ = searchOrganizationsService.datasetCountLoading$;
+        this.projectCountLoading$ = searchOrganizationsService.projectsCountLoading$;
     }
 
     get paginationControlsNgClass(): NgClassObject {

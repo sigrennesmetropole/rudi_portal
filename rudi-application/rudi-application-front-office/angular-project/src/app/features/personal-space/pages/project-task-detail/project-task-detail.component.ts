@@ -41,6 +41,8 @@ export class ProjectTaskDetailComponent
     isLoadingRestrictedDataset: boolean;
     isLoadingNewDatasetRequest: boolean;
 
+    isUpdateInProgress = false;
+
     public dependencies: ProjectDependencies;
     addingInProgress = false;
 
@@ -247,5 +249,10 @@ export class ProjectTaskDetailComponent
                 });
             }
         });
+    }
+
+    // Mettre à jour le mode modification de la réutilisation
+    updateInProgress(data: boolean) {
+        this.isUpdateInProgress = data;
     }
 }
