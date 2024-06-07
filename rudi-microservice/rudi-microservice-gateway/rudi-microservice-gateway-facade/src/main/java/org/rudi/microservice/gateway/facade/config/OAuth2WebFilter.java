@@ -117,7 +117,7 @@ public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 			parameters.entrySet().forEach(item -> map.add(item.getKey(), item.getValue()));
 		}
 
-		return new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		return new HttpEntity<>(map, headers);
 	}
 
 }

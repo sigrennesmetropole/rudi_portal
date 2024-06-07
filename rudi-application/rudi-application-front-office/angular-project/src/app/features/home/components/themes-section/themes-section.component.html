@@ -1,5 +1,5 @@
 <div class="themes-section-container">
-    <h2 class="title">{{ 'home.themesSection.title' | translate }}</h2>
+    <h2 *ngIf="!isLoading && themes.length > 0" class="title">{{ 'home.themesSection.title' | translate }}</h2>
     <app-loader [isTransparent]="true" [noText]="true" [allPage]="false" [active]="isLoading"></app-loader>
     <app-rudi-swiper
         *ngIf="!isLoading"

@@ -28,6 +28,7 @@ import org.rudi.facet.cms.CmsService;
 import org.rudi.facet.cms.bean.CmsAsset;
 import org.rudi.facet.cms.bean.CmsAssetType;
 import org.rudi.facet.cms.bean.CmsCategory;
+import org.rudi.facet.cms.bean.PagedCmsAssets;
 import org.rudi.facet.cms.exception.CmsException;
 import org.rudi.facet.cms.impl.configuration.BeanIds;
 import org.rudi.facet.cms.impl.configuration.CmsMagnoliaConfiguration;
@@ -167,9 +168,10 @@ public class MagnoliaServiceImpl implements CmsService {
 	}
 
 	@Override
-	public List<CmsAsset> renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
+	public PagedCmsAssets renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
 			Integer limit, String order) throws CmsException {
-		final List<CmsAsset> result = new ArrayList<>();
+		final PagedCmsAssets result = new PagedCmsAssets();
+		final List<CmsAsset> elements = new ArrayList<>();
 		String defaultCategory = cmsMagnoliaConfiguration.getDefaultCategory(assetType);
 
 		List<String> categories = new ArrayList<>();
@@ -193,6 +195,7 @@ public class MagnoliaServiceImpl implements CmsService {
 			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(categories,
 					request.getFilters(), offset, limit, order);
 			if (page.getTotal() > 0 && CollectionUtils.isNotEmpty(page.getResults())) {
+				result.setTotal(page.getTotal());
 				page.getResults().forEach(item -> {
 					CmsAsset asset = cacheAssets.get(computeAssetKeyCache(assetType, item.getId(), assetTemplate));
 					if (asset == null) {
@@ -201,11 +204,12 @@ public class MagnoliaServiceImpl implements CmsService {
 					if (asset != null) {
 						asset.setCreationDate(item.getCreated());
 						asset.setUpdateDate(item.getLastModified());
-						result.add(asset);
+						elements.add(asset);
 					}
 				});
 			}
 		}
+		result.setElements(elements);
 		return result;
 	}
 

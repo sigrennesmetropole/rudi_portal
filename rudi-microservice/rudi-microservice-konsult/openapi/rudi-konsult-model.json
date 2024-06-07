@@ -240,6 +240,12 @@
 							},
 							"template_simple_with_image": {
 								"type": "string"
+							},
+							"template_news_list": {
+								"type": "string"
+							},
+							"news_list_path": {
+								"type": "string"
 							}
 						}
 					}
@@ -323,6 +329,9 @@
 					},
 					"footer_description": {
 						"$ref": "#/components/schemas/FooterDescription"
+					},
+					"news_page_description": {
+						"$ref": "#/components/schemas/NewsPageDescription"
 					}
 				}
 			},
@@ -352,6 +361,45 @@
 						}
 					}
 				}
+			},
+			"AssetsPageOrder": {
+				"description": "Tri pour la page de liste des assets",
+				"type": "object",
+				"properties": {
+					"libelle":{
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			},
+			"AssetsPageDescription": {
+				"description": "Elements minimaux nécessaire à l'affichage d'une page de list de cms assets",
+				"type": "object",
+				"properties": {
+					"title1":{
+						"type": "string"
+					},
+					"title2": {
+						"type": "string"
+					},
+					"orders": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AssetsPageOrder"
+						}
+					}
+
+				}
+			},
+			"NewsPageDescription": {
+				"description": "Elements de la page d'affichage de toutes les actualités",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AssetsPageDescription"
+					}
+				]
 			}
 		}
 	}

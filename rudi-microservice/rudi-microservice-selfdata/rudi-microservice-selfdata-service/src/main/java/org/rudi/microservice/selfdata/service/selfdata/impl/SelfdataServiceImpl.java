@@ -48,7 +48,7 @@ import org.rudi.microservice.selfdata.service.selfdata.SelfdataService;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestCustomDao;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestCustomSearchCriteria;
 import org.rudi.microservice.selfdata.storage.dao.selfdatainformationrequest.SelfdataInformationRequestDao;
-import org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDatasetEntity;
+import org.rudi.microservice.selfdata.storage.entity.selfdatadataset.SelfdataDatasetEntity;
 import org.rudi.microservice.selfdata.storage.entity.selfdatainformationrequest.SelfdataInformationRequestEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

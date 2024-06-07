@@ -9,7 +9,7 @@
 
 @mixin mobile-screen {
     :host {
-        padding: 18px 80px 8px 80px;
+        padding: 18px 80px 8px 20px;
         flex-direction: column;
         height: unset;
         gap: 10px;

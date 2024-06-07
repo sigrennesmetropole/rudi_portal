@@ -1,5 +1,6 @@
 package org.rudi.microservice.projekt.service.project.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -9,15 +10,21 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.core.util.ContentTypeUtils;
+import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.common.service.exception.MissingParameterException;
-import org.rudi.common.service.helper.ResourceHelper;
 import org.rudi.common.service.helper.UtilContextHelper;
+import org.rudi.facet.acl.bean.ProjectKey;
+import org.rudi.facet.acl.bean.ProjectKeystore;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.acl.helper.ProjectKeystoreSearchCriteria;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kmedia.bean.KindOfData;
@@ -31,6 +38,7 @@ import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
+import org.rudi.microservice.projekt.core.bean.ProjectKeySearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.service.exception.DataverseExternalServiceException;
 import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
@@ -53,9 +61,10 @@ import org.rudi.microservice.projekt.storage.dao.project.ProjectDao;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.newdatasetrequest.NewDatasetRequestEntity;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +94,6 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectCustomDao projectCustomDao;
 
 	private final MediaService mediaService;
-	private final ResourceHelper resourceHelper;
 	private final ResourceLoader resourceLoader;
 	private final NewDatasetRequestMapper datasetRequestMapper;
 	private final NewDatasetRequestDao datasetRequestDao;
@@ -94,6 +102,9 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ACLHelper aclHelper;
 	private final MyInformationsHelper myInformationsHelper;
 	private final ProjektAuthorisationHelper projektAuthorisationHelper;
+
+	@Value("${rudi.producer.attachement.allowed.types:image/jpeg,image/png}")
+	List<String> allowedLogoType;
 
 	@Override
 	@Transactional // readOnly = false
@@ -227,7 +238,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void uploadMedia(UUID projectUuid, KindOfData kindOfData, Resource media) throws AppServiceException {
+	public void uploadMedia(UUID projectUuid, KindOfData kindOfData, DocumentContent documentContent)
+			throws AppServiceException {
 		ProjectEntity existingProject = getRequiredProjectEntity(projectUuid);
 		checkRightsAdministerProjectMedia(existingProject);
 
@@ -237,7 +249,15 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 
 		try {
-			val tempFile = resourceHelper.copyResourceToTempFile(media);
+			if (kindOfData.equals(KindOfData.LOGO)) {
+				// Vérifie que le type de contenu est bien autorisé pour un logo
+				ContentTypeUtils.checkMediaType(documentContent.getContentType(), allowedLogoType);
+			}
+
+			File tempFile = File.createTempFile(UUID.randomUUID().toString(),
+					"." + FilenameUtils.getExtension(documentContent.getFileName()));
+			FileUtils.copyInputStreamToFile(documentContent.getFileStream(), tempFile);
+
 			mediaService.setMediaFor(MediaOrigin.PROJECT, projectUuid, kindOfData, tempFile);
 		} catch (final DataverseAPIException | IOException e) {
 			throw new AppServiceException(String.format("Erreur lors de l'upload du %s du projet d'uuid %s",
@@ -414,7 +434,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws GetOrganizationException, AppServiceUnauthorizedException, AppServiceNotFoundException {
+	public boolean isAuthenticatedUserProjectOwner(UUID projectUuid)
+			throws GetOrganizationException, AppServiceUnauthorizedException, AppServiceNotFoundException {
 		var uuids = myInformationsHelper.getMeAndMyOrganizationUuids();
 		final var projectEntity = getRequiredProjectEntity(projectUuid);
 		return CollectionUtils.containsAny(uuids, projectEntity.getOwnerUuid());
@@ -423,6 +444,43 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectByOwner> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria) {
 		return projectCustomDao.getNumberOfProjectsPerOwners(criteria.getOwnerUuids());
+	}
+
+	@Override
+	public ProjectKey createProjectKey(UUID projectUuid, ProjectKey projectKey) throws AppServiceException {
+		ProjectEntity project = getRequiredProjectEntity(projectUuid);
+		projektAuthorisationHelper.checkRightsAdministerProject(project);
+		if (projectKey == null || projectKey.getName() == null) {
+			throw new AppServiceBadRequestException("Project key with name is required");
+		}
+		return aclHelper.createProjectKey(projectUuid, projectKey);
+	}
+
+	@Override
+	public void deleteProjectKey(UUID projectUuid, UUID projectKeyUuid) throws AppServiceException {
+		ProjectEntity project = getRequiredProjectEntity(projectUuid);
+		projektAuthorisationHelper.checkRightsAdministerProject(project);
+		if (projectKeyUuid == null) {
+			throw new AppServiceBadRequestException("Project key uuid is required");
+		}
+		aclHelper.deleteProjectKey(projectUuid, projectKeyUuid);
+	}
+
+	@Override
+	public List<ProjectKey> searchProjectKeys(ProjectKeySearchCriteria searchCriteria) throws AppServiceException {
+		if (searchCriteria.getProjectUuid() == null) {
+			throw new AppServiceBadRequestException("Project uuid is required");
+		}
+		ProjectEntity project = getRequiredProjectEntity(searchCriteria.getProjectUuid());
+		projektAuthorisationHelper.checkRightsAdministerProject(project);
+		ProjectKeystoreSearchCriteria projectKeystoreSearchCriteria = ProjectKeystoreSearchCriteria.builder()
+				.projectUuids(List.of(searchCriteria.getProjectUuid())).build();
+		Page<ProjectKeystore> projectKeystores = aclHelper.searchProjectKeystores(projectKeystoreSearchCriteria,
+				PageRequest.of(0, 1));
+		if (!projectKeystores.isEmpty()) {
+			return projectKeystores.getContent().get(0).getProjectKeys();
+		}
+		return List.of();
 	}
 
 	/**
@@ -442,4 +500,5 @@ public class ProjectServiceImpl implements ProjectService {
 		// pour le moment les droits d'accès à cette fonction sont les mêmes que la fonction de création de projet
 		projektAuthorisationHelper.checkRightsInitProject(projectEntity);
 	}
+
 }

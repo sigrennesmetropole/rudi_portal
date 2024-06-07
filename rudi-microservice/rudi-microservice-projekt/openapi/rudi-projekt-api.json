@@ -2024,10 +2024,15 @@
 				],
 				"requestBody": {
 					"content": {
-						"application/octet-stream": {
+						"multipart/form-data": {
 							"schema": {
-								"type": "string",
-								"format": "binary"
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
 							}
 						}
 					}
@@ -4981,6 +4986,127 @@
 								}
 							}
 						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/projects/{project-uuid}/keys": {
+			"get": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Retourne la liste des clés d'un projet",
+				"description": "Retourne la liste des clés d'un projet",
+				"operationId": "searchProjectKeys",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "Uuid du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-acl/openapi/rudi-acl-model.json#/components/schemas/ProjectKeyPageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Génère une nouvelle clé",
+				"description": "Génère une nouvelle clé",
+				"operationId": "createProjectKey",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "Uuid du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./../../../rudi-facet/rudi-facet-acl/openapi/rudi-acl-model.json#/components/schemas/ProjectKey"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./../../../rudi-facet/rudi-facet-acl/openapi/rudi-acl-model.json#/components/schemas/ProjectKey"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/projects/{project-uuid}/keys/{project-key-uuid}": {
+			"delete": {
+				"tags": [
+					"projekt"
+				],
+				"summary": "Supprime/revoke une clé",
+				"description": "Supprime/revoke une clé",
+				"operationId": "deleteProjectKey",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "project-uuid",
+						"description": "Uuid du projet",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "path",
+						"name": "project-key-uuid",
+						"description": "Uuid de la clé",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "OK"
 					},
 					"500": {
 						"$ref": "#/components/responses/InternalServerError"

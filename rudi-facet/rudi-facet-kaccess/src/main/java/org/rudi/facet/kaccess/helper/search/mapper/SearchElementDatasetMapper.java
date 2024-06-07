@@ -1,6 +1,9 @@
 package org.rudi.facet.kaccess.helper.search.mapper;
 
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
@@ -16,9 +19,7 @@ import org.rudi.facet.kaccess.bean.MetadataList;
 import org.rudi.facet.kaccess.bean.MetadataListFacets;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class SearchElementDatasetMapper implements SearchElementMapper<SearchDatasetInfo> {
@@ -53,10 +54,12 @@ public abstract class SearchElementDatasetMapper implements SearchElementMapper<
 		if (searchDatasetInfo == null) {
 			return new Metadata();
 		}
-		return metadataBLockHelper.datasetMetadataBlockToMetadata(getDatasetMetadataBlock(searchDatasetInfo), getPersistentId(searchDatasetInfo));
+		return metadataBLockHelper.datasetMetadataBlockToMetadata(getDatasetMetadataBlock(searchDatasetInfo),
+				getPersistentId(searchDatasetInfo));
 	}
 
-	protected abstract DatasetMetadataBlock getDatasetMetadataBlock(SearchDatasetInfo searchDatasetInfo) throws DataverseAPIException;
+	protected abstract DatasetMetadataBlock getDatasetMetadataBlock(SearchDatasetInfo searchDatasetInfo)
+			throws DataverseAPIException;
 
 	private String getPersistentId(SearchDatasetInfo searchDatasetInfo) {
 		return searchDatasetInfo.getGlobalId();
@@ -89,7 +92,7 @@ public abstract class SearchElementDatasetMapper implements SearchElementMapper<
 					MetadataFacet metadataFacet = new MetadataFacet().propertyName(metadataKey)
 							.values(metadataFacetValuesList);
 
-					metadataFacets.addItemsItem(metadataFacet);
+					metadataFacets.additemsItem(metadataFacet);
 				}
 			});
 		}

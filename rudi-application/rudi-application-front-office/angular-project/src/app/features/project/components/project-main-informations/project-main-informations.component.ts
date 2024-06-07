@@ -29,6 +29,7 @@ import {switchMap, tap} from 'rxjs/operators';
 export class ProjectMainInformationsComponent extends ReuseProjectCommonComponent implements OnInit {
     @Input() project: Project;
     @Output() updateInProgressEvent = new EventEmitter<boolean>();
+    @Output() updateCurrentTaskEvent = new EventEmitter<Task>();
 
     isUpdating = false;
 
@@ -38,10 +39,11 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
     public territorialScales: TerritorialScale[];
     private confidentialities: Confidentiality[];
     public supports: Support[];
-    isRefusedProject: boolean;
-    user: User;
-    taskId: string = '';
-    currentTask: Task;
+    public isRefusedProject: boolean;
+    public user: User;
+    public taskId = '';
+    public currentTask: Task;
+    @Input() isProjectUpdatable = false;
 
     /**
      * L'action de mise à jour d'image à apppliquer pour un projet
@@ -75,6 +77,10 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
         this.isRefusedProject = this.project?.project_status === ProjectStatus.Rejected;
         // Récupération de l'uuid du task
         this.taskId = this.route.snapshot.paramMap.get('taskId') || '0';
+    }
+
+    // Chargement des infos de la réutilisation
+    loadProjectInformations(): void {
         this.projektTaskMetierService.getTask(this.taskId).subscribe(task => {
             this.currentTask = task;
         });
@@ -94,11 +100,6 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
                 this.reuseStatus = dependencies.reuseStatus;
             }
         );
-        this.loadProjectInformations();
-    }
-
-    // Chargement des infos de la réutilisation
-    loadProjectInformations() {
         this.step1FormGroup.patchValue({
             title: this.project.title,
             description: this.project.description,
@@ -116,7 +117,8 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
     }
 
     // Activation du mode modification
-    updateProjectTaskInfo() {
+    updateProjectTaskInfo(): void {
+        this.loadProjectInformations();
         this.isUpdating = !this.isUpdating;
         this.updateInProgressEvent.emit(this.isUpdating);
     }
@@ -144,11 +146,9 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
     public updateConfirmation(): void {
         this.personalSpaceProjectService.openDialogUpdateConfirmation()
             .subscribe(item => {
-
                 if (item && item.closeEvent === CloseEvent.VALIDATION) {
                     this.updateProjectTask();
                 }
-
             });
     }
 
@@ -173,6 +173,7 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
             next: () => {
                 this.isUpdating = false;
                 this.updateInProgressEvent.emit(this.isUpdating);
+                this.updateCurrentTaskEvent.emit(this.currentTask);
                 this.isLoading = false;
                 this.snackBarService.showSuccess(this.translateService.instant('personalSpace.project.tabs.update.success'));
             },
@@ -191,6 +192,4 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
     private updateTaskFromForm(): void {
         this.projectSubmissionService.updateProjectTaskField(this.currentTask, this.step1FormGroup, this.confidentialities);
     }
-
-
 }

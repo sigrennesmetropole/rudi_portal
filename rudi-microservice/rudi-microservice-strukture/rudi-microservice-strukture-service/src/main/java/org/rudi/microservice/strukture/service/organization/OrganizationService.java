@@ -15,7 +15,6 @@ import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriter
 import org.rudi.microservice.strukture.core.bean.OrganizationSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
 import org.rudi.microservice.strukture.core.bean.PasswordUpdate;
-import org.rudi.microservice.strukture.service.exception.CannotRemoveLastAdministratorException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -41,18 +40,20 @@ public interface OrganizationService {
 	Page<Organization> searchOrganizations(OrganizationSearchCriteria searchCriteria, Pageable pageable);
 
 	OrganizationMember addOrganizationMember(UUID organizationUuid, OrganizationMember organizationMember)
-			throws Exception;
+			throws AppServiceException;
 
 	List<OrganizationMember> getOrganizationMembers(UUID organizationUuid) throws AppServiceNotFoundException;
 
-	void removeOrganizationMembers(UUID organizationUuid, UUID userUuid)
-			throws AppServiceNotFoundException, CannotRemoveLastAdministratorException, AppServiceException;
+	void removeOrganizationMembers(UUID organizationUuid, UUID userUuid) throws AppServiceException;
 
-	Page<OrganizationUserMember> searchOrganizationMembers(OrganizationMembersSearchCriteria searchCriteria, Pageable pageable) throws AppServiceException;
+	Page<OrganizationUserMember> searchOrganizationMembers(OrganizationMembersSearchCriteria searchCriteria,
+			Pageable pageable) throws AppServiceException;
 
 	Boolean isAuthenticatedOrganizationAdministrator(UUID organizationUuid) throws AppServiceException;
 
-	OrganizationMember updateOrganizationMember(UUID organizationUuid, UUID userUuid, OrganizationMember organizationMember) throws AppServiceException;
+	OrganizationMember updateOrganizationMember(UUID organizationUuid, UUID userUuid,
+			OrganizationMember organizationMember) throws AppServiceException;
 
-	void updateUserOrganizationPassword(UUID organizationUuid, PasswordUpdate passwordUpdate) throws AppServiceException;
+	void updateUserOrganizationPassword(UUID organizationUuid, PasswordUpdate passwordUpdate)
+			throws AppServiceException;
 }

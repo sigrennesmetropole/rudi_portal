@@ -1,6 +1,22 @@
 package org.rudi.microservice.kalim.service.integration.impl.handlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +36,7 @@ import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.bean.Method;
 import org.rudi.microservice.kalim.core.bean.ProgressStatus;
+import org.rudi.microservice.kalim.service.helper.ApiManagerHelper;
 import org.rudi.microservice.kalim.service.helper.Error500Builder;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.integration.impl.validator.AbstractMetadataValidator;
@@ -28,22 +45,7 @@ import org.rudi.microservice.kalim.service.integration.impl.validator.MetadataIn
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class PutIntegrationRequestTreatmentHandlerUT {
@@ -51,13 +53,15 @@ class PutIntegrationRequestTreatmentHandlerUT {
 	private final ObjectMapper objectMapper = new DefaultJackson2ObjectMapperBuilder().build();
 	private final Error500Builder error500Builder = new Error500Builder();
 	private final JsonResourceReader jsonResourceReader = new JsonResourceReader();
-	private IntegrationRequestTreatmentHandler handler;
+	private AbstractIntegrationRequestTreatmentHandler handler;
 	@Mock
 	private AbstractMetadataValidator<?> validator;
 	@Mock
 	private DatasetService datasetService;
 	@Mock
 	private APIManagerHelper apiManagerHelper;
+	@Mock
+	private ApiManagerHelper apiGatewayManagerHelper;
 	@Mock
 	private MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator;
 	@Mock
@@ -69,14 +73,9 @@ class PutIntegrationRequestTreatmentHandlerUT {
 
 	@BeforeEach
 	void setUp() {
-		handler = new PutIntegrationRequestTreatmentHandler(
-				datasetService,
-				apiManagerHelper,
-				objectMapper,
-				Collections.singletonList(validator),
-				error500Builder,
-				metadataInfoProviderIsAuthenticatedValidator,
-				datasetCreatorIsAuthenticatedValidator,
+		handler = new PutIntegrationRequestTreatmentHandler(datasetService, apiGatewayManagerHelper, apiManagerHelper,
+				objectMapper, Collections.singletonList(validator), error500Builder,
+				metadataInfoProviderIsAuthenticatedValidator, datasetCreatorIsAuthenticatedValidator,
 				organizationHelper);
 
 		when(validator.canBeUsedBy(handler)).thenReturn(true);
@@ -88,14 +87,9 @@ class PutIntegrationRequestTreatmentHandlerUT {
 
 		final Metadata metadataToUpdate = buildMetadataToUpdate();
 		final String metadataJson = jsonResourceReader.getObjectMapper().writeValueAsString(metadataToUpdate);
-		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder()
-				.method(Method.PUT)
-				.uuid(UUID.randomUUID())
-				.globalId(metadataToUpdate.getGlobalId())
-				.progressStatus(ProgressStatus.CREATED)
-				.file(metadataJson)
-				.errors(new HashSet<>())
-				.build();
+		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder().method(Method.PUT)
+				.uuid(UUID.randomUUID()).globalId(metadataToUpdate.getGlobalId()).progressStatus(ProgressStatus.CREATED)
+				.file(metadataJson).errors(new HashSet<>()).build();
 
 		final Set<IntegrationRequestErrorEntity> errors = Collections.singleton(new IntegrationRequestErrorEntity());
 		when(validator.validateMetadata(any(Metadata.class))).thenReturn(errors);
@@ -115,14 +109,9 @@ class PutIntegrationRequestTreatmentHandlerUT {
 
 		final Metadata metadataToUpdate = buildMetadataToUpdate();
 		final String metadataJson = jsonResourceReader.getObjectMapper().writeValueAsString(metadataToUpdate);
-		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder()
-				.method(Method.PUT)
-				.uuid(UUID.randomUUID())
-				.globalId(metadataToUpdate.getGlobalId())
-				.progressStatus(ProgressStatus.CREATED)
-				.file(metadataJson)
-				.errors(new HashSet<>())
-				.build();
+		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder().method(Method.PUT)
+				.uuid(UUID.randomUUID()).globalId(metadataToUpdate.getGlobalId()).progressStatus(ProgressStatus.CREATED)
+				.file(metadataJson).errors(new HashSet<>()).build();
 
 		final Set<IntegrationRequestErrorEntity> errors = Collections.emptySet();
 		when(validator.validateMetadata(metadataArgumentCaptor.capture())).thenReturn(errors);
@@ -145,14 +134,9 @@ class PutIntegrationRequestTreatmentHandlerUT {
 
 		final Metadata metadataToUpdate = buildMetadataToUpdate();
 		final String metadataJson = jsonResourceReader.getObjectMapper().writeValueAsString(metadataToUpdate);
-		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder()
-				.method(Method.PUT)
-				.uuid(UUID.randomUUID())
-				.globalId(metadataToUpdate.getGlobalId())
-				.progressStatus(ProgressStatus.CREATED)
-				.file(metadataJson)
-				.errors(new HashSet<>())
-				.build();
+		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder().method(Method.PUT)
+				.uuid(UUID.randomUUID()).globalId(metadataToUpdate.getGlobalId()).progressStatus(ProgressStatus.CREATED)
+				.file(metadataJson).errors(new HashSet<>()).build();
 
 		final IntegrationRequestErrorEntity nonExistingError = mock(IntegrationRequestErrorEntity.class);
 		final Set<IntegrationRequestErrorEntity> errors = Collections.singleton(nonExistingError);
@@ -174,14 +158,9 @@ class PutIntegrationRequestTreatmentHandlerUT {
 		final Metadata actualMetadata = buildMetadataBeforeUpdate();
 		final Metadata metadataToUpdate = buildMetadataToUpdate();
 		final String metadataToUpdateJson = jsonResourceReader.getObjectMapper().writeValueAsString(metadataToUpdate);
-		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder()
-				.method(Method.PUT)
-				.uuid(UUID.randomUUID())
-				.globalId(metadataToUpdate.getGlobalId())
-				.progressStatus(ProgressStatus.CREATED)
-				.file(metadataToUpdateJson)
-				.errors(new HashSet<>())
-				.build();
+		final IntegrationRequestEntity integrationRequest = IntegrationRequestEntity.builder().method(Method.PUT)
+				.uuid(UUID.randomUUID()).globalId(metadataToUpdate.getGlobalId()).progressStatus(ProgressStatus.CREATED)
+				.file(metadataToUpdateJson).errors(new HashSet<>()).build();
 
 		final Set<IntegrationRequestErrorEntity> errors = Collections.emptySet();
 		when(validator.validateMetadata(any(Metadata.class))).thenReturn(errors);
@@ -190,12 +169,12 @@ class PutIntegrationRequestTreatmentHandlerUT {
 		when(datasetService.updateDataset(metadataToUpdate)).thenReturn(metadataToUpdate);
 		when(datasetService.updateDataset(actualMetadata)).thenReturn(actualMetadata);
 
-		doThrow(new APIManagerException("Erreur test")).when(apiManagerHelper).updateAPI(eq(integrationRequest), any(), any());
+		doThrow(new APIManagerException("Erreur test")).when(apiManagerHelper).updateAPI(eq(integrationRequest), any(),
+				any());
 
 		handler.handle(integrationRequest);
 
-		assertThat(integrationRequest.getIntegrationStatus())
-				.as("L'intégration est KO car WSO a renvoyé une erreur")
+		assertThat(integrationRequest.getIntegrationStatus()).as("L'intégration est KO car WSO a renvoyé une erreur")
 				.isEqualTo(IntegrationStatus.KO);
 
 		InOrder inOrderToVerifyDatasetServiceUpdateCall = inOrder(datasetService);

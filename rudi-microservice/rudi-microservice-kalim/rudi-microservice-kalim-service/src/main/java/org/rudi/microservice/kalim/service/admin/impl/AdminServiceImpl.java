@@ -55,12 +55,14 @@ import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.organization.helper.exceptions.AddUserToOrganizationException;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.facet.providers.helper.ProviderHelper;
+import org.rudi.microservice.apigateway.core.bean.Api;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequest;
 import org.rudi.microservice.kalim.core.bean.IntegrationRequestSearchCriteria;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.bean.Method;
 import org.rudi.microservice.kalim.core.bean.OrganizationsReparationReport;
 import org.rudi.microservice.kalim.service.admin.AdminService;
+import org.rudi.microservice.kalim.service.helper.apigateway.ApiGatewayManagerHelper;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.integration.IntegrationRequestService;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,6 +86,7 @@ public class AdminServiceImpl implements AdminService {
 	private final MetadataBlockHelper metadataBLockHelper;
 	private final DatasetService datasetService;
 	private final APIManagerHelper apiManagerHelper;
+	private final ApiGatewayManagerHelper apiGatewayManagerHelper;
 	private final APIsService apIsService;
 	private final ProviderHelper providerHelper;
 	private final IntegrationRequestService integrationRequestService;
@@ -173,8 +176,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 
 			OrganizationMember member = new OrganizationMember().userUuid(organizationUser.getUuid())
-					.role(OrganizationRole.EDITOR)
-					.addedDate(LocalDateTime.now());
+					.role(OrganizationRole.EDITOR).addedDate(LocalDateTime.now());
 			try {
 				organizationHelper.addMemberToOrganization(member, organization.getUuid());
 			} catch (AddUserToOrganizationException exception) {
@@ -271,6 +273,7 @@ public class AdminServiceImpl implements AdminService {
 	public void createMissingApis(List<UUID> globalIds) {
 		log.info("Starting createMissingApis...");
 		fetchAllMetadata(globalIds).map(this::createMissingApis).blockLast();
+		fetchAllMetadata(globalIds).map(this::synchronizeApis).blockLast();
 		log.info("createMissingApis terminated.");
 	}
 
@@ -301,6 +304,27 @@ public class AdminServiceImpl implements AdminService {
 		} catch (DataverseAPIException e) {
 			log.error("Cannot fetch Datasets at offset {}", offset, e);
 			throw new RuntimeException(e);
+		}
+	}
+
+	private List<Api> synchronizeApis(Metadata metadata) {
+		try {
+			log.info("Synchronize apis for dataset {}.", metadata.getGlobalId());
+
+			final var medias = metadata.getAvailableFormats();
+			if (CollectionUtils.isEmpty(medias)) {
+				return Collections.emptyList();
+			}
+
+			List<Api> apis = apiGatewayManagerHelper.synchronizeMedias(metadata);
+
+			log.info("Synchronize apis {} for dataset {} done.", apis.size(), metadata.getGlobalId());
+
+			return apis;
+
+		} catch (Exception e) {
+			log.error("Failed to synchronize apis for dataset {}.", metadata.getGlobalId(), e);
+			return Collections.emptyList();
 		}
 	}
 

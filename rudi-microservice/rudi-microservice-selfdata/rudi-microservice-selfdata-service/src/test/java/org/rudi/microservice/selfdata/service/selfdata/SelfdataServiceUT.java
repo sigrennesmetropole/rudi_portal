@@ -1,5 +1,9 @@
 package org.rudi.microservice.selfdata.service.selfdata;
 
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
@@ -33,9 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import lombok.RequiredArgsConstructor;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SelfdataSpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -57,18 +58,20 @@ class SelfdataServiceUT {
 		datas.put("code1", null);
 		datas.put("code2", "test");
 		datas.put("code3", "test2");
-		datas.put("code4", SelfdataMatchingDataHelper.SELFDATA_CRYPTED_VALUE_IDENTIFIER + matchingDataCipherOperator.encrypt("test", "selfdata-matchingdata-key-20220101"));
-		datas.put("code5", SelfdataMatchingDataHelper.SELFDATA_CRYPTED_VALUE_IDENTIFIER + matchingDataCipherOperator.encrypt("test"));
+		datas.put("code4", SelfdataMatchingDataHelper.SELFDATA_CRYPTED_VALUE_IDENTIFIER
+				+ matchingDataCipherOperator.encrypt("test", "selfdata-matchingdata-key-20220101"));
+		datas.put("code5", SelfdataMatchingDataHelper.SELFDATA_CRYPTED_VALUE_IDENTIFIER
+				+ matchingDataCipherOperator.encrypt("test"));
 		for (int i = 0; i < 15; i++) {
 			createSelfdataInformationRequest("Description" + i, uuid, datas);
 		}
 		MetadataExtMetadata extMetadata = new MetadataExtMetadata();
 		MetadataExtMetadataExtSelfdata extSelfdata = new MetadataExtMetadataExtSelfdata();
 		SelfdataContent selfdataContent = new SelfdataContent();
-		selfdataContent.addMatchingDataItem(createMatchingData("code1"));
-		selfdataContent.addMatchingDataItem(createMatchingData("code2"));
-		selfdataContent.addMatchingDataItem(createMatchingData("code4"));
-		selfdataContent.addMatchingDataItem(createMatchingData("code5"));
+		selfdataContent.addmatchingDataItem(createMatchingData("code1"));
+		selfdataContent.addmatchingDataItem(createMatchingData("code2"));
+		selfdataContent.addmatchingDataItem(createMatchingData("code4"));
+		selfdataContent.addmatchingDataItem(createMatchingData("code5"));
 		extSelfdata.setExtSelfdataContent(selfdataContent);
 		extMetadata.setExtSelfdata(extSelfdata);
 		Metadata metadata = new Metadata();

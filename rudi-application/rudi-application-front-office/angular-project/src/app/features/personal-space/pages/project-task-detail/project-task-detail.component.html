@@ -17,6 +17,8 @@
                                     <app-project-main-informations
                                         [project]="dependencies.project"
                                         (updateInProgressEvent)="updateInProgress($event)"
+                                        [isProjectUpdatable]="true"
+                                        (updateCurrentTaskEvent)="updateCurrentTask($event)"
                                     ></app-project-main-informations>
 
                                     <app-open-dataset-table
@@ -75,7 +77,7 @@
 
             </app-tab>
 
-                <app-banner-button [projectIsUpdating]="isUpdateInProgress"  *ngFor="let action of actions" (click)="openPopinForAction(action, isUpdateInProgress)">
+                    <app-banner-button [projectIsUpdating]="isUpdateInProgress"  *ngFor="let action of actions" (click)="openPopinForAction(action, isUpdateInProgress, this.currentTask)">
                     {{action.label}}
                 </app-banner-button>
 

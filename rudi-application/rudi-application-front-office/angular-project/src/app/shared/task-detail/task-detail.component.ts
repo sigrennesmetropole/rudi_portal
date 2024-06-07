@@ -49,8 +49,10 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
         });
     }
 
-    openPopinForAction(action: Action, disable = false): void {
-        if (disable) return;
+    openPopinForAction(action: Action, disable = false, updatedTask?: Task): void {
+        if (disable) {
+            return;
+        }
         const dialogConfig: DefaultMatDialogConfig<WorkflowFormDialogInputData> = new DefaultMatDialogConfig();
 
         if (this.task && !this.task.actions.some((current: Action): boolean => current === action)) {
@@ -67,15 +69,15 @@ export abstract class TaskDetailComponent<A extends AssetDescription, D, T exten
             .afterClosed()
             .subscribe(data => {
                 if (data.closeEvent === CloseEvent.VALIDATION) {
-                    this.doAction(action);
+                    this.doAction(action, updatedTask);
                 }
             });
     }
 
     protected abstract goBackToList(): Promise<boolean>;
 
-    private doAction(action: Action): void {
-        this.taskMetierService.doAction(action, this.taskWithDependencies.task).subscribe({
+    private doAction(action: Action, updatedTask?: Task): void {
+        this.taskMetierService.doAction(action, updatedTask ?? this.taskWithDependencies.task).subscribe({
             complete: () => {
                 this.translateService.get('task.success').subscribe(message => {
                     this.snackBarService.openSnackBar({

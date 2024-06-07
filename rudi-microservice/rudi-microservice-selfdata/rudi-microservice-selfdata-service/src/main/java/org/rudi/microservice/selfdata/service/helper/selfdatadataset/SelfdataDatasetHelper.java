@@ -25,7 +25,7 @@ import org.rudi.microservice.selfdata.core.bean.SelfdataDatasetSearchCriteria;
 import org.rudi.microservice.selfdata.storage.dao.selfdatadataset.SelfdataDatasetCustomDao;
 import org.rudi.microservice.selfdata.storage.dao.selfdatadataset.SelfdataDatasetCustomSearchCriteria;
 import org.rudi.microservice.selfdata.storage.dao.selfdatadataset.SelfdataDatasetDao;
-import org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDatasetEntity;
+import org.rudi.microservice.selfdata.storage.entity.selfdatadataset.SelfdataDatasetEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 import static org.rudi.microservice.selfdata.storage.RepositoryConstants.FUNCTIONAL_STATUS_FIELD;
 import static org.rudi.microservice.selfdata.storage.RepositoryConstants.PROCESS_DEFINITION_KEY_FIELD;
 import static org.rudi.microservice.selfdata.storage.RepositoryConstants.UPDATED_DATE_FIELD;
-import static org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDatasetEntity.TITLE_FIELD;
+import static org.rudi.microservice.selfdata.storage.entity.selfdatadataset.SelfdataDatasetEntity.TITLE_FIELD;
 
 @Component
 @RequiredArgsConstructor

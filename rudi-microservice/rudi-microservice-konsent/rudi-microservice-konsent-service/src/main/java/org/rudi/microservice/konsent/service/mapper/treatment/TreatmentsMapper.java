@@ -13,19 +13,20 @@ import org.rudi.common.service.mapper.MapperUtils;
 import org.rudi.common.service.util.ApplicationContext;
 import org.rudi.microservice.konsent.core.bean.Treatment;
 import org.rudi.microservice.konsent.service.mapper.treatmentversion.TreatmentVersionMapper;
-import org.rudi.microservice.konsent.storage.entity.treatment.TreatmentEntity;
 import org.rudi.microservice.konsent.storage.entity.common.TreatmentStatus;
+import org.rudi.microservice.konsent.storage.entity.treatment.TreatmentEntity;
 import org.rudi.microservice.konsent.storage.entity.treatmentversion.TreatmentVersionEntity;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { MapperUtils.class, TreatmentVersionMapper.class })
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { MapperUtils.class,
+		TreatmentVersionMapper.class })
 public interface TreatmentsMapper extends AbstractMapper<TreatmentEntity, Treatment> {
 	@Override
 	@InheritInverseConfiguration
 	TreatmentEntity dtoToEntity(Treatment dto);
 
 	/**
-	 * Utilisé uniquement pour la modification d'une entité.
-	 * On ignore toutes les entités filles (sinon l'id de chaque entité fille est supprimé et elles sont recréées en base)
+	 * Utilisé uniquement pour la modification d'une entité. On ignore toutes les entités filles (sinon l'id de chaque entité fille est supprimé et elles
+	 * sont recréées en base)
 	 */
 	@Override
 	@Mapping(target = "versions", ignore = true)
@@ -71,8 +72,7 @@ public interface TreatmentsMapper extends AbstractMapper<TreatmentEntity, Treatm
 
 	// ApplicationContext.getBean(XX.class) pushée sur dev à recup dans common-service
 	private void setVersion(Treatment dto, Optional<TreatmentVersionEntity> currentVersion) {
-		currentVersion.ifPresent(versionEntity -> {
-			dto.setVersion(ApplicationContext.getBean(TreatmentVersionMapper.class).entityToDto(versionEntity));
-		});
+		currentVersion.ifPresent(versionEntity -> dto
+				.setVersion(ApplicationContext.getBean(TreatmentVersionMapper.class).entityToDto(versionEntity)));
 	}
 }

@@ -64,7 +64,7 @@ import {ProjectRoutingModule} from './project-routing.module';
         DataSetModule,
         MatStepperModule
     ],
-    exports: [ProjectMainInformationsComponent, ProjectMainInformationLabelComponent, ProjectMainInformationDateComponent],
+    exports: [ProjectMainInformationsComponent, ProjectMainInformationLabelComponent, ProjectMainInformationDateComponent, BannerComponent],
     providers:
         [
             {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'}

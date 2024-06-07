@@ -6,7 +6,7 @@ import {PropertiesMetierService} from '@core/services/properties-metier.service'
 import {RedirectService} from '@core/services/redirect.service';
 import {TranslateService} from '@ngx-translate/core';
 import {AppInfo} from 'micro_service_modules/acl/acl-api/model/models';
-import {CmsAsset} from 'micro_service_modules/api-cms';
+import {CmsAsset, PagedCmsAssets} from 'micro_service_modules/api-cms';
 import {CustomizationDescription, KonsultService, MiscellaneousService} from 'micro_service_modules/konsult/konsult-api';
 import {CmsTermsDescription} from 'micro_service_modules/konsult/konsult-model';
 import {forkJoin} from 'rxjs';
@@ -84,10 +84,10 @@ export class FooterComponent implements OnInit {
             OFFSET,
             LIMIT
         ).subscribe({
-            next: (cmsAssets: Array<CmsAsset>): void => {
-                this.displayComponent = cmsAssets.length > 0;
+            next: (pagedCmsAssets: PagedCmsAssets): void => {
+                this.displayComponent = pagedCmsAssets.total > 0;
                 if (this.displayComponent) {
-                    cmsAssets.forEach((cmsAsset: CmsAsset) => {
+                    pagedCmsAssets.elements.forEach((cmsAsset: CmsAsset) => {
                         this.termsValues.push(this.domSanitizer.bypassSecurityTrustHtml(cmsAsset.content));
                     });
                 }
@@ -113,7 +113,7 @@ export class FooterComponent implements OnInit {
             .subscribe({
                 next: (customizationDescription: CustomizationDescription) => {
                     this.customizationDescription = customizationDescription;
-                    this.cmsTermsDescription = customizationDescription.cms_terms_description
+                    this.cmsTermsDescription = customizationDescription.cms_terms_description;
                     this.customizationDescriptionIsLoading = false;
                     this.initTerms();
                 },

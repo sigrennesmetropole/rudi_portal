@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.bean.Metadata;
@@ -24,6 +23,7 @@ import org.rudi.facet.organization.helper.exceptions.GetOrganizationMembersExcep
 import org.rudi.facet.strukture.exceptions.StruktureApiException;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
 import org.rudi.microservice.kalim.core.exception.IntegrationException;
+import org.rudi.microservice.kalim.service.helper.ApiManagerHelper;
 import org.rudi.microservice.kalim.service.helper.Error500Builder;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.integration.impl.validator.AbstractMetadataValidator;
@@ -33,11 +33,14 @@ import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequest
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation extends IntegrationRequestTreatmentHandler {
+public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation
+		extends AbstractIntegrationRequestTreatmentHandler {
 
 	protected final ObjectMapper objectMapper;
 	protected final List<AbstractMetadataValidator<?>> metadataValidators;
@@ -48,8 +51,13 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 	@Value("${default.organization.password:12345678Mm$}")
 	private String defaultOrganizationPassword;
 
-	protected AbstractIntegrationRequestTreatmentHandlerWithValidation(DatasetService datasetService, APIManagerHelper apiManagerHelper, ObjectMapper objectMapper, List<AbstractMetadataValidator<?>> metadataValidators, Error500Builder error500Builder, MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator, DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator, OrganizationHelper organizationHelper) {
-		super(datasetService, apiManagerHelper, error500Builder);
+	protected AbstractIntegrationRequestTreatmentHandlerWithValidation(DatasetService datasetService,
+			ApiManagerHelper apiGatewayManagerHelper, APIManagerHelper apiManagerHelper, ObjectMapper objectMapper,
+			List<AbstractMetadataValidator<?>> metadataValidators, Error500Builder error500Builder,
+			MetadataInfoProviderIsAuthenticatedValidator metadataInfoProviderIsAuthenticatedValidator,
+			DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator,
+			OrganizationHelper organizationHelper) {
+		super(datasetService, apiGatewayManagerHelper, apiManagerHelper, error500Builder);
 		this.objectMapper = objectMapper;
 		this.metadataValidators = metadataValidators;
 		this.metadataInfoProviderIsAuthenticatedValidator = metadataInfoProviderIsAuthenticatedValidator;
@@ -57,7 +65,8 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 		this.organizationHelper = organizationHelper;
 	}
 
-	protected void handleInternal(IntegrationRequestEntity integrationRequest) throws IntegrationException, DataverseAPIException, APIManagerException {
+	protected void handleInternal(IntegrationRequestEntity integrationRequest)
+			throws IntegrationException, DataverseAPIException, APIManagerException {
 		final var metadata = hydrateMetadata(integrationRequest.getFile());
 		if (validateAndSetErrors(metadata, integrationRequest)) {
 			treat(integrationRequest, metadata);
@@ -83,24 +92,23 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 		}
 	}
 
-	private void createOrganization(@Nullable org.rudi.facet.kaccess.bean.Organization metadataOrganization) throws GetOrganizationException, CreateOrganizationException {
+	private void createOrganization(@Nullable org.rudi.facet.kaccess.bean.Organization metadataOrganization)
+			throws GetOrganizationException, CreateOrganizationException {
 		if (metadataOrganization != null) {
 			final var organizationId = metadataOrganization.getOrganizationId();
-			organizationHelper.createOrganizationIfNotExists(new Organization()
-					.uuid(organizationId)
-					.name(metadataOrganization.getOrganizationName())
-					.openingDate(LocalDateTime.now())
-					.password(defaultOrganizationPassword) //Password identique pour toutes les organisations des JDDs
+			organizationHelper.createOrganizationIfNotExists(
+					new Organization().uuid(organizationId).name(metadataOrganization.getOrganizationName())
+							.openingDate(LocalDateTime.now()).password(defaultOrganizationPassword) // Password identique pour toutes les organisations des JDDs
 			);
 		}
 	}
 
-	private void addNodeProviderToOrganization(UUID nodeProviderId, @Nullable org.rudi.facet.kaccess.bean.Organization metadataOrganization) throws AddUserToOrganizationException, GetOrganizationMembersException {
+	private void addNodeProviderToOrganization(UUID nodeProviderId,
+			@Nullable org.rudi.facet.kaccess.bean.Organization metadataOrganization)
+			throws AddUserToOrganizationException, GetOrganizationMembersException {
 		if (metadataOrganization != null) {
 			final var organizationId = metadataOrganization.getOrganizationId();
-			final var member = new OrganizationMember()
-					.userUuid(nodeProviderId)
-					.role(OrganizationRole.ADMINISTRATOR);
+			final var member = new OrganizationMember().userUuid(nodeProviderId).role(OrganizationRole.ADMINISTRATOR);
 			organizationHelper.addMemberToOrganizationIfNotExists(member, organizationId);
 		}
 	}
@@ -146,5 +154,6 @@ public abstract class AbstractIntegrationRequestTreatmentHandlerWithValidation e
 		return integrationRequestsErrors;
 	}
 
-	protected abstract void treat(IntegrationRequestEntity integrationRequest, Metadata metadata) throws DataverseAPIException, APIManagerException;
+	protected abstract void treat(IntegrationRequestEntity integrationRequest, Metadata metadata)
+			throws DataverseAPIException, APIManagerException;
 }

@@ -405,6 +405,17 @@
 					}
 				]
 			},
+			"ProjectKeySearchCriteria": {
+				"description": "Critère de recherche d'un projet",
+				"type": "object",
+				"properties": {
+					"projectUuid": {
+						"description": "uuid d'un projet",
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			},
 			"LinkedDatasetStatus": {
 				"description": "Etat de la demande",
 				"type": "string",

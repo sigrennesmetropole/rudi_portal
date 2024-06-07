@@ -6,7 +6,11 @@ import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-ob
 import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
 import {OrderValue} from '@core/services/filters/order-filter';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
+import {KosMetierService} from '@core/services/kos-metier.service';
 import {Metadata} from 'micro_service_modules/api-kaccess';
+import {SimpleSkosConcept} from 'micro_service_modules/kos/kos-model';
+import {of} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 import {AddDataSetDialogData} from './add-data-set-dialog-data';
 
 @Component({
@@ -19,6 +23,7 @@ export class AddDataSetDialogComponent implements OnInit {
         return this._selectedMetadata;
     }
 
+    themes: SimpleSkosConcept[];
     @Input() mediaSize: MediaSize;
     orders: OrderValue[] = [
         'resource_title',
@@ -39,6 +44,7 @@ export class AddDataSetDialogComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         public dialogRef: MatDialogRef<AddDataSetDialogComponent>,
         private readonly breakpointObserver: BreakpointObserverService,
+        private readonly kosMetierService: KosMetierService,
         @Inject(MAT_DIALOG_DATA) public data: AddDataSetDialogData
     ) {
 
@@ -51,6 +57,11 @@ export class AddDataSetDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.konsultMetierService.getThemeCodes().pipe(
+            switchMap(themeCodes => themeCodes.length > 0 ? this.kosMetierService.getThemes(themeCodes) : of([]))
+        ).subscribe(concepts => {
+            this.themes = concepts;
+        });
         this.mediaSize = this.breakpointObserver.getMediaSize();
     }
 

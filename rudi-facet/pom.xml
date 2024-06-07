@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-parent</artifactId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 
 	<artifactId>rudi-facet</artifactId>
@@ -44,6 +44,7 @@
 		<module>rudi-facet-projekt</module>
 		<module>rudi-facet-rva</module>
 		<module>rudi-facet-selfdata</module>
+		<module>rudi-facet-apigateway</module>
 
 	</modules>
 

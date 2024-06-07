@@ -3,7 +3,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {LogService} from '@core/services/log.service';
 import {TranslateService} from '@ngx-translate/core';
-import {CmsAsset} from 'micro_service_modules/api-cms';
+import {CmsAsset, PagedCmsAssets} from 'micro_service_modules/api-cms';
 import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {CmsProjectValuesDescription} from 'micro_service_modules/konsult/konsult-model';
 
@@ -52,10 +52,10 @@ export class CmsProjectValuesSectionComponent implements OnInit {
             OFFSET,
             LIMIT
         ).subscribe({
-            next: (cmsAssets: Array<CmsAsset>): void => {
-                this.displayComponent = cmsAssets.length > 0;
+            next: (pagedCmsAssets: PagedCmsAssets): void => {
+                this.displayComponent = pagedCmsAssets.total > 0;
                 if (this.displayComponent) {
-                    cmsAssets.forEach((cmsAsset: CmsAsset) => {
+                    pagedCmsAssets.elements.forEach((cmsAsset: CmsAsset) => {
                         this.projectValues.push(this.domSanitizer.bypassSecurityTrustHtml(cmsAsset.content));
                     });
                 }

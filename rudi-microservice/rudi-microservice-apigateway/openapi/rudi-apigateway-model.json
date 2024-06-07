@@ -1,0 +1,339 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Apigateway Rudi",
+		"version": "0.0.1",
+		"title": "rudi-apigateway-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "rudi@datarennes.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Apigateway API",
+			"variables": {
+				"basePath": {
+					"default": "apigateway/v1"
+				}
+			}
+		}
+	],
+	"paths": {},
+	"components": {
+		"schemas": {
+			"AbstractLongIdDto": {
+				"type": "object",
+				"properties": {
+					"uuid": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					}
+				}
+			},
+			"AbstractLabelizedDto": {
+				"type": "object",
+				"required": [
+					"code"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"code": {
+								"type": "string"
+							},
+							"label": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"AbstractStampedDto": {
+				"type": "object",
+				"required": [
+					"opening_date",
+					"order"
+				],
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLabelizedDto"
+					},
+					{
+						"properties": {
+							"opening_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"closing_date": {
+								"$ref": "#/components/schemas/RudiDate"
+							},
+							"order": {
+								"type": "integer"
+							}
+						}
+					}
+				]
+			},
+			"Throttling": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractStampedDto"
+					},
+					{
+						"properties": {
+							"rate": {
+								"type": "int"
+							},
+							"burstCapacity": {
+								"type": "int"
+							}
+						}
+					}
+				]
+			},
+			"Confidentiality": {
+				"description": "Type du JDD (Ouvert | Restreint)",
+				"type": "string",
+				"enum": [
+					"OPENED",
+					"RESTRICTED",
+					"SELFDATA"
+				]
+			},
+			"ApiMethod": {
+				"type": "string",
+				"enum": [
+					"GET",
+					"HEAD",
+					"POST",
+					"PUT",
+					"PATCH",
+					"DELETE",
+					"OPTIONS",
+					"TRACE"
+				]
+			},
+			"ApiParameter": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"value": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"Api": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"apiId": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"globalId": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"providerId": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"nodeProviderId": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"producerId": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"mediaId": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"contract": {
+								"type": "string"
+							},
+							"url": {
+								"type": "string"
+							},
+							"methods": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/ApiMethod"
+								}
+							},
+							"throttlings": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Throttling"
+								}
+							},
+							"parameters": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/ApiParameter"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ApiSearchCriteria": {
+				"description": "Critère de recherche d'un apigateway",
+				"type": "object",
+				"properties": {
+					"apiId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"globalId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"providerId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"nodeProviderId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"producerId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"mediaId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"contract": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"confidentiality": {
+						"$ref": "#/components/schemas/Confidentiality"
+					}
+				}
+			},
+			"ThrottlingSearchCriteria": {
+				"description": "Critère de recherche d'un throttling",
+				"type": "object",
+				"properties": {
+					"active": {
+						"type": "boolean"
+					},
+					"code": {
+						"type": "string"
+					}
+				}
+			},
+			"ProjectApplication": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AbstractLongIdDto"
+					},
+					{
+						"properties": {
+							"projectUuid": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					}
+				]
+			},
+			"PagedList": {
+				"description": "Liste paginée d'éléments",
+				"type": "object",
+				"required": [
+					"total",
+					"elements"
+				],
+				"properties": {
+					"total": {
+						"description": "Nombre total d'éléments pour cette recherche (peut être supérieur au nombre d'éléments de la page courante)",
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"PagedApiList": {
+				"description": "Liste paginée de apigateways",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Apigateways de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Api"
+								}
+							}
+						}
+					}
+				]
+			},
+			"PagedThrottlingList": {
+				"description": "Liste paginée de throttlings",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Throttlings de la page courante pour cette recherche",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Throttling"
+								}
+							}
+						}
+					}
+				]
+			},
+			"ReadOnlyDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time",
+				"readOnly": true
+			},
+			"RudiDate": {
+				"description": "Date in the ISO 8601 format",
+				"type": "string",
+				"format": "date-time"
+			}
+		}
+	}
+}

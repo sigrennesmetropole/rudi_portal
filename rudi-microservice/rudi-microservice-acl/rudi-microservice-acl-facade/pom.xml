@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-acl</artifactId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-acl-facade</artifactId>
@@ -172,6 +172,7 @@
 					<verbose>false</verbose>
 					<configOptions>
 						<interfaceOnly>true</interfaceOnly>
+						<containerDefaultToNull>true</containerDefaultToNull>
 					</configOptions>
 				</configuration>
 				<executions>

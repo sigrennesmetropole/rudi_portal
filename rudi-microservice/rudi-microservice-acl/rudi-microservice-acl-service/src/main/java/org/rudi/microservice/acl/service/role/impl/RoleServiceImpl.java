@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import org.rudi.microservice.acl.core.bean.Role;
 import org.rudi.microservice.acl.core.bean.RoleSearchCriteria;
-import org.rudi.microservice.acl.service.mapper.RoleMapper;
+import org.rudi.microservice.acl.service.mapper.role.RoleMapper;
 import org.rudi.microservice.acl.service.role.RoleService;
 import org.rudi.microservice.acl.storage.dao.role.RoleCustomDao;
 import org.rudi.microservice.acl.storage.dao.role.RoleDao;

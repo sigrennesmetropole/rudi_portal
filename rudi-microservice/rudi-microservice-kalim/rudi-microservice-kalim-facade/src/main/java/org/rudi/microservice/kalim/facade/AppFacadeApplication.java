@@ -24,6 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 		"org.rudi.facet.strukture",
 		"org.rudi.facet.providers",
 		"org.rudi.facet.organization",
+		"org.rudi.facet.apigateway",
 		"org.rudi.microservice.kalim.facade",
 		"org.rudi.microservice.kalim.service",
 		"org.rudi.microservice.kalim.storage",

@@ -26,6 +26,10 @@
         cursor: pointer;
     }
 
+    .jdd-item:hover {
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.05), 0 1px 10px rgba(0, 0, 0, 0.22);
+    }
+
     .desktop-jdds-list {
         display: flex;
         flex-wrap: wrap;

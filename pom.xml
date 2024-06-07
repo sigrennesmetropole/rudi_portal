@@ -6,7 +6,7 @@
 
 	<groupId>org.rudi</groupId>
 	<artifactId>rudi-parent</artifactId>
-	<version>2.0.3</version>
+	<version>3.0.0</version>
 	<packaging>pom</packaging>
 	<description>RUDI ${project.version}</description>
 
@@ -32,14 +32,14 @@
 		<commons.collections4.version>4.4</commons.collections4.version>
 		<commons.lang3.version>3.14.0</commons.lang3.version>
 		<commons.text.version>1.12.0</commons.text.version>
-		<common.validator.version>1.8.0</common.validator.version>
+		<common.validator.version>1.9.0</common.validator.version>
 
 		<httpclient.version>4.5.2</httpclient.version>
 		<json.simple.version>1.1</json.simple.version>
 		<javax.validation.version>2.0.1.Final</javax.validation.version>
 		<springfox.version>3.0.0</springfox.version>
 		<openapi.version>1.8.0</openapi.version>
-		<openapi.plugin.version>7.4.0</openapi.plugin.version>
+		<openapi.plugin.version>7.6.0</openapi.plugin.version>
 		<openapi.jackson.version>0.2.6</openapi.jackson.version>
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
 		<jackson-core.version>2.17.1</jackson-core.version>
@@ -49,12 +49,12 @@
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<lombok.version>1.18.20</lombok.version>
 		<swagger.codegen.version>3.0.21</swagger.codegen.version>
-		<swagger.version>2.2.21</swagger.version>
+		<swagger.version>2.2.22</swagger.version>
 		<flyway.version>9.19.4</flyway.version>
 		<freemarker.version>2.3.32</freemarker.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
-		<nimbus.jose.jwt.version>9.37.3</nimbus.jose.jwt.version>
+		<nimbus.jose.jwt.version>9.39.1</nimbus.jose.jwt.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<jsoup.version>1.17.2</jsoup.version>
 		<activiti.version>7.1.0.M6</activiti.version>
@@ -74,7 +74,7 @@
 		<jsonassert.version>1.5.1</jsonassert.version>
 		<boucycastle.version>1.78.1</boucycastle.version>
 		<activation.version>1.1.1</activation.version>
-		<reactor-test.version>3.6.5</reactor-test.version>
+		<reactor-test.version>3.6.6</reactor-test.version>
 		<h2.version>2.2.224</h2.version>
 
 		<maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
@@ -91,7 +91,7 @@
 		<ant.plugin.version>3.1.0</ant.plugin.version>
 		<flyway-plugin.version>9.22.3</flyway-plugin.version>
 		<maven-scr-plugin.version>1.0.10</maven-scr-plugin.version>
-		<build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
@@ -152,6 +152,11 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>rudi-facet-acl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>rudi-facet-apigateway</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

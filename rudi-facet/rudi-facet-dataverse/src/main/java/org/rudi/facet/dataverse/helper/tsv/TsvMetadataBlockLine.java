@@ -1,9 +1,10 @@
 package org.rudi.facet.dataverse.helper.tsv;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import java.util.Objects;
 
 import lombok.Builder;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @see <a href="https://guides.dataverse.org/en/latest/admin/metadatacustomization.html#metadatablock-properties">Documentation Dataverse</a>
@@ -16,13 +17,15 @@ class TsvMetadataBlockLine extends TsvLine {
 	 * <ul>
 	 * <li>No spaces or punctuation, except underscore.</li>
 	 * <li>By convention, should start with a letter, and use lower camel case.</li>
-	 * <li>Must not collide with a field of the same name in the same or any other #datasetField definition, including metadata blocks defined elsewhere.</li>
+	 * <li>Must not collide with a field of the same name in the same or any other #datasetField definition, including metadata blocks defined
+	 * elsewhere.</li>
 	 * </ul>
 	 */
 	final String name;
 
 	/**
-	 * If specified, this metadata block will be available only to the Dataverse collection designated here by its alias and to children of that Dataverse collection.
+	 * If specified, this metadata block will be available only to the Dataverse collection designated here by its alias and to children of that Dataverse
+	 * collection.
 	 * <p>
 	 * Free text. For an example, see custom_hbgdki.tsv.
 	 */
@@ -36,23 +39,39 @@ class TsvMetadataBlockLine extends TsvLine {
 	final String displayName;
 
 	/**
-	 * Associates the properties in a block with an external URI. Properties will be assigned the global identifier blockURI<name> in the OAI_ORE metadata and archival Bags
+	 * Associates the properties in a block with an external URI. Properties will be assigned the global identifier blockURI<name> in the OAI_ORE metadata
+	 * and archival Bags
 	 * <p>
-	 * The citation #metadataBlock has the blockURI <a href="https://dataverse.org/schema/citation/">https://dataverse.org/schema/citation/</a> which assigns a default global URI to terms such as <a href="https://dataverse.org/schema/citation/subtitle">https://dataverse.org/schema/citation/subtitle</a>
+	 * The citation #metadataBlock has the blockURI <a href="https://dataverse.org/schema/citation/">https://dataverse.org/schema/citation/</a> which
+	 * assigns a default global URI to terms such as
+	 * <a href="https://dataverse.org/schema/citation/subtitle">https://dataverse.org/schema/citation/subtitle</a>
 	 */
 	final String blockURI;
 
 	@Override
 	public String toString() {
-		return String.format("\t%s\t%s\t%s\t%s\t\t\t\t\t\t\t\t\t\t\t\t",
-				name,
-				Objects.toString(dataverseAlias, EMPTY),
-				displayName,
-				Objects.toString(blockURI, EMPTY));
+		return String.format("\t%s\t%s\t%s\t%s\t\t\t\t\t\t\t\t\t\t\t\t", name, Objects.toString(dataverseAlias, EMPTY),
+				displayName, Objects.toString(blockURI, EMPTY));
 	}
 
 	@Override
 	protected String getHashString() {
 		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return obj instanceof TsvMetadataBlockLine;
 	}
 }

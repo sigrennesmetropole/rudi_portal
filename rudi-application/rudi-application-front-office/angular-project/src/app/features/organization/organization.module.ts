@@ -50,7 +50,10 @@ import {DetailComponent} from './pages/detail/detail.component';
         DataSetModule,
     ],
     providers: [
-            {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'}
+        {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'}
+    ],
+    exports: [
+        OrderComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

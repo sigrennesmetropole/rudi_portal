@@ -4,3 +4,7 @@
 .uploader-container{
     margin-bottom: 31px;
 }
+
+::ng-deep.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
+    color: var(--white) !important;
+}

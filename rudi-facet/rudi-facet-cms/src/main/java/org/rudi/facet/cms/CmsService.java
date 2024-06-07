@@ -10,6 +10,7 @@ import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.cms.bean.CmsAsset;
 import org.rudi.facet.cms.bean.CmsAssetType;
 import org.rudi.facet.cms.bean.CmsCategory;
+import org.rudi.facet.cms.bean.PagedCmsAssets;
 import org.rudi.facet.cms.exception.CmsException;
 import org.rudi.facet.cms.impl.model.CmsRequest;
 
@@ -62,7 +63,7 @@ public interface CmsService {
 	 * @return
 	 * @throws CmsException
 	 */
-	List<CmsAsset> renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
+	PagedCmsAssets renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
 			Integer limit, String order) throws CmsException;
 
 	DocumentContent downloadResource(String resourcePath) throws CmsException;

@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 public class AccessToOpenedDatasetChecker extends AbstractAccessToDatasetChecker {
 	private final ProjektHelper projektHelper;
 
-	protected AccessToOpenedDatasetChecker(UtilContextHelper utilContextHelper, ACLHelper aclHelper, MetadataDetailsHelper metadataDetailsHelper, ProjektHelper projektHelper) {
+	protected AccessToOpenedDatasetChecker(UtilContextHelper utilContextHelper, ACLHelper aclHelper,
+			MetadataDetailsHelper metadataDetailsHelper, ProjektHelper projektHelper) {
 		super(utilContextHelper, aclHelper, metadataDetailsHelper);
 		this.projektHelper = projektHelper;
 	}
@@ -26,9 +27,9 @@ public class AccessToOpenedDatasetChecker extends AbstractAccessToDatasetChecker
 	}
 
 	@Override
-	public void checkAuthenticatedUserHasAccessToDataset(UUID globalId, Optional<UUID> requestUuid) throws AppServiceException {
+	public void checkAuthenticatedUserHasAccessToDataset(UUID globalId, Optional<UUID> requestUuid)
+			throws AppServiceException {
 		// Opened dataset, nothing to do as control
-		return;
 	}
 
 	@Override

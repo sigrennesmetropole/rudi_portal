@@ -1,6 +1,6 @@
 package org.rudi.microservice.kalim.service.integration.impl.validator;
 
-import org.rudi.microservice.kalim.service.integration.impl.handlers.IntegrationRequestTreatmentHandler;
+import org.rudi.microservice.kalim.service.integration.impl.handlers.AbstractIntegrationRequestTreatmentHandler;
 import org.rudi.microservice.kalim.service.integration.impl.handlers.PostIntegrationRequestTreatmentHandler;
 
 abstract class AbstractUniqueMetadataIdValidator<T> extends AbstractMetadataIdValidator<T> {
@@ -10,7 +10,7 @@ abstract class AbstractUniqueMetadataIdValidator<T> extends AbstractMetadataIdVa
 	}
 
 	@Override
-	public boolean canBeUsedBy(IntegrationRequestTreatmentHandler handler) {
+	public boolean canBeUsedBy(AbstractIntegrationRequestTreatmentHandler handler) {
 		return handler instanceof PostIntegrationRequestTreatmentHandler;
 	}
 

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-konsult</artifactId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-konsult-facade</artifactId>
@@ -152,7 +152,7 @@
 					<schemaMappings>
 						Metadata=org.rudi.facet.kaccess.bean.Metadata,MetadataList=org.rudi.facet.kaccess.bean.MetadataList,MetadataFacets=org.rudi.facet.kaccess.bean.MetadataFacets,Credentials=org.rudi.facet.apimaccess.bean.Credentials,Address=org.rudi.rva.core.bean.Address,
 						CmsCategory=org.rudi.facet.cms.bean.CmsCategory,CmsAsset=org.rudi.facet.cms.bean.CmsAsset,
-						CmsAssetType=org.rudi.facet.cms.bean.CmsAssetType
+						CmsAssetType=org.rudi.facet.cms.bean.CmsAssetType,PagedCmsAssets=org.rudi.facet.cms.bean.PagedCmsAssets
 					</schemaMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>
@@ -169,6 +169,7 @@
 							et à false pour la génération -->
 						<interfaceOnly>true</interfaceOnly>
 						<dateLibrary>java8</dateLibrary>
+						<containerDefaultToNull>true</containerDefaultToNull>
 					</configOptions>
 				</configuration>
 				<executions>

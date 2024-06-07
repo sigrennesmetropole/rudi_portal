@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-selfdata</artifactId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-selfdata-facade</artifactId>
@@ -172,6 +172,7 @@
 							et à false pour la génération -->
 						<interfaceOnly>true</interfaceOnly>
 						<dateLibrary>java8</dateLibrary>
+						<containerDefaultToNull>true</containerDefaultToNull>
 					</configOptions>
 				</configuration>
 				<executions>

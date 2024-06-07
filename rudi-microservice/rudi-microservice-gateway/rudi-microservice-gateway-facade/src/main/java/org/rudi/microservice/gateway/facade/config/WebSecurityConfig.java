@@ -51,8 +51,8 @@ public class WebSecurityConfig {
 	private final RestTemplate internalRestTemplate;
 
 	@Bean
-	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
-		http.authorizeExchange((exchanges) -> {
+	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+		http.authorizeExchange(exchanges -> {
 			exchanges.matchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll();
 			if (!disableAuthentification) {
 				exchanges.pathMatchers(SB_PERMIT_ALL_URL).permitAll();

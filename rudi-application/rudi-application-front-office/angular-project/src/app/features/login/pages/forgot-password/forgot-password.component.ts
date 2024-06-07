@@ -99,7 +99,7 @@ export class ForgotPasswordComponent implements OnInit {
         return this.loginForm.get('login').value;
     }
 
-    handleClickResetPassword() {
+    handleClickResetPassword(): void {
         this.loading = true;
 
         this.accountService.requestPasswordChange(this.email).pipe(
@@ -115,6 +115,20 @@ export class ForgotPasswordComponent implements OnInit {
                 })
             ),
         ).subscribe({
+            next: () => {
+                this.loading = false;
+                this.propertiesService.get('rudidatarennes.contact').subscribe(rudidatarennesContactLink => {
+                    this.snackBarService.openSnackBar({
+                        message: `${this.translateService.instant('snackbarTemplate.successInitPassword')}
+                                        <a href="${rudidatarennesContactLink}">
+                                            ${this.translateService.instant('snackbarTemplate.successIncriptionLinkText')}
+                                        </a>`,
+                        keepBeforeSecondRouteChange: true,
+                        level: Level.SUCCESS
+                    });
+                });
+
+            },
             error: () => {
                 this.loading = false;
                 this.translateService.get('error.internalError').subscribe(message => {

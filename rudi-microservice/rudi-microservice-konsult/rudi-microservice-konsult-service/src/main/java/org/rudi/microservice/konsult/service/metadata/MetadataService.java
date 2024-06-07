@@ -16,9 +16,6 @@ import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.bean.MetadataFacets;
 import org.rudi.facet.kaccess.bean.MetadataList;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 
 public interface MetadataService {
 
@@ -58,42 +55,44 @@ public interface MetadataService {
 	 * @return DocumentContent
 	 * @throws AppServiceException Erreur lors de la récupération des données
 	 */
-	DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException, GetClientRegistrationException;
+	DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId)
+			throws AppServiceException, IOException, GetClientRegistrationException;
 
 	/**
-	 * @return true si l'utilisateur connecté ou une de ses organisations a souscrit à tous les médias (API du point de vue Developer Portal)
-	 * du jeu de données
+	 * @return true si l'utilisateur connecté ou une de ses organisations a souscrit à tous les médias (API du point de vue Developer Portal) du jeu de
+	 *         données
 	 */
 	boolean hasSubscribeToSelfdataDataset(UUID globalId) throws AppServiceException, APIManagerException;
 
 	/**
-	 * @return true si l'utilisateur connecté ou une de ses organisations a souscrit à tous les médias (API du point de vue Developer Portal)
-	 * du jeu de données
+	 * @return true si l'utilisateur connecté ou une de ses organisations a souscrit à tous les médias (API du point de vue Developer Portal) du jeu de
+	 *         données
 	 */
-	boolean hasSubscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws AppServiceException, APIManagerException;
+	boolean hasSubscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid)
+			throws AppServiceException, APIManagerException;
 
 	/**
-	 * Souscrit à un jeu de données, ce qui signifie que l'utilisateur connecté va souscrire à tous les médias
-	 * (API du point de vue Developer Portal).
+	 * Souscrit à un jeu de données, ce qui signifie que l'utilisateur connecté va souscrire à tous les médias (API du point de vue Developer Portal).
 	 */
 	void subscribeToSelfdataDataset(UUID globalId) throws APIManagerException, AppServiceException;
 
 	/**
-	 * Désouscrit à un jeu de données, ce qui signifie que l'utilisateur connecté va désouscrire à tous les médias
-	 * (API du point de vue Developer Portal).
+	 * Désouscrit à un jeu de données, ce qui signifie que l'utilisateur connecté va désouscrire à tous les médias (API du point de vue Developer Portal).
 	 */
-	void unsubscribeToDataset(UUID globalId, UUID souscriptionOwnerUuid) throws APIManagerException, AppServiceException;
+	void unsubscribeToDataset(UUID globalId, UUID souscriptionOwnerUuid)
+			throws APIManagerException, AppServiceException;
 
 	/**
-	 * Souscrit à un jeu de données restreint, ce qui signifie que l'utilisateur connecté va souscrire à tous les médias
-	 * (API du point de vue Developer Portal).
+	 * Souscrit à un jeu de données restreint, ce qui signifie que l'utilisateur connecté va souscrire à tous les médias (API du point de vue Developer
+	 * Portal).
 	 *
 	 * @param globalId          Id du JDD (restreint à priori)
 	 * @param linkedDatasetUuid (
 	 * @throws APIManagerException
 	 * @throws AppServiceException
 	 */
-	void subscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws APIManagerException, AppServiceException;
+	void subscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid)
+			throws APIManagerException, AppServiceException;
 
 	/**
 	 * Permet de savoir si l'utilisateur connecté a souscrit à l'api
@@ -125,5 +124,6 @@ public interface MetadataService {
 	 * @throws GetClientRegistrationException
 	 * @throws IOException
 	 */
-	DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws AppServiceException, GetClientRegistrationException, IOException;
+	DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters)
+			throws AppServiceException, GetClientRegistrationException, IOException;
 }

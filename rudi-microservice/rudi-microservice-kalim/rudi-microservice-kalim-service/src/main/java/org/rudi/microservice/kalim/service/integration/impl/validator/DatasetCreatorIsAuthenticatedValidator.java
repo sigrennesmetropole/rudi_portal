@@ -1,5 +1,7 @@
 package org.rudi.microservice.kalim.service.integration.impl.validator;
 
+import static org.rudi.microservice.kalim.service.IntegrationError.ERR_403;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,14 +13,13 @@ import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.constant.RudiMetadataField;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.kalim.service.helper.Error500Builder;
-import org.rudi.microservice.kalim.service.integration.impl.handlers.IntegrationRequestTreatmentHandler;
+import org.rudi.microservice.kalim.service.integration.impl.handlers.AbstractIntegrationRequestTreatmentHandler;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestEntity;
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static org.rudi.microservice.kalim.service.IntegrationError.ERR_403;
 
 /**
  * Le nœud fournisseur authentifié correspond à celui qui a créé le JDD ?
@@ -34,7 +35,7 @@ public class DatasetCreatorIsAuthenticatedValidator {
 	 * @param handler de la requête
 	 * @return false -- contrôle désactivé
 	 */
-	public boolean canBeUsedBy(IntegrationRequestTreatmentHandler handler) {
+	public boolean canBeUsedBy(AbstractIntegrationRequestTreatmentHandler handler) {
 		// Contrôle désactivé par la RUDI-1459
 		return false;
 	}
@@ -49,11 +50,8 @@ public class DatasetCreatorIsAuthenticatedValidator {
 
 				final var authenticatedProviderId = integrationRequest.getNodeProviderId();
 				if (!creatorProviderId.equals(authenticatedProviderId)) {
-					errors.add(new IntegrationRequestErrorEntity(
-							UUID.randomUUID(),
-							ERR_403.getCode(),
-							ERR_403.getMessage(),
-							RudiMetadataField.METADATA_INFO_PROVIDER.getName(),
+					errors.add(new IntegrationRequestErrorEntity(UUID.randomUUID(), ERR_403.getCode(),
+							ERR_403.getMessage(), RudiMetadataField.METADATA_INFO_PROVIDER.getName(),
 							LocalDateTime.now()));
 				}
 

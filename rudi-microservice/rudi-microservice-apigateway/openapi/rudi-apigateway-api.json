@@ -1,0 +1,707 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "API Public Apigateway Rudi",
+		"version": "0.0.1",
+		"title": "rudi-apigateway-api",
+		"termsOfService": "https://swagger.io/terms/",
+		"contact": {
+			"email": "rudi@datarennes.fr"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/{basePath}",
+			"description": "Rudi Apigateway API",
+			"variables": {
+				"basePath": {
+					"default": "apigateway/v1"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "administration",
+			"description": "Services d'administration"
+		},
+		{
+			"name": "api",
+			"description": "Services Api"
+		},
+		{
+			"name": "throttling",
+			"description": "Services Throttling"
+		},
+		{
+			"name": "miscellaneous",
+			"description": "Services divers"
+		}
+	],
+	"paths": {
+		"/application-information": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Récupération de la version applicative",
+				"description": "Récupération d'information sur la version de l'application",
+				"operationId": "getApplicationInformation",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppInfo"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthCheck": {
+			"get": {
+				"tags": [
+					"miscellaneous"
+				],
+				"summary": "Test de vie de l'application'",
+				"description": "Test de vie de l'application",
+				"operationId": "checkHealth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/throttlings": {
+			"get": {
+				"tags": [
+					"throttling"
+				],
+				"summary": "Search Thorttlings",
+				"description": "Return a list of Thorttlings",
+				"operationId": "searchThorttlings",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "active",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "code",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/PagedThrottlingList"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"throttling"
+				],
+				"summary": "Create a Throttling",
+				"description": "Create a Throttling",
+				"operationId": "createThrottling",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-apigateway-model.json#/components/schemas/Throttling"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/Throttling"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"throttling"
+				],
+				"summary": "Update an Throttling",
+				"description": "Update an Throttling",
+				"operationId": "updateThrottling",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-apigateway-model.json#/components/schemas/Throttling"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/Throttling"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/throttlings/{throttling-uuid}": {
+			"get": {
+				"tags": [
+					"throttling"
+				],
+				"summary": "get Thorttling",
+				"description": "Return a Thorttling",
+				"operationId": "getThorttling",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "throttling-uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/Throttling"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"throttling"
+				],
+				"summary": "Delete an Throttling",
+				"description": "Delete an Throttling",
+				"operationId": "deleteThrottling",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "throttling-uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/apis": {
+			"get": {
+				"tags": [
+					"api"
+				],
+				"summary": "Search APIs",
+				"description": "Return a list of APIs",
+				"operationId": "searchApis",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "apiId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "globalId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "providerId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nodeProviderId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "producerId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "mediaId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contract",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "url",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "confidentiality",
+						"required": false,
+						"schema": {
+							"$ref": "rudi-apigateway-model.json#/components/schemas/Confidentiality"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/LimitParam"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetParam"
+					},
+					{
+						"$ref": "#/components/parameters/OrderParam"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/PagedApiList"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"api"
+				],
+				"summary": "Create an API",
+				"description": "Create an API",
+				"operationId": "createApi",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-apigateway-model.json#/components/schemas/Api"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/Api"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"api"
+				],
+				"summary": "Update an API",
+				"description": "Update an API",
+				"operationId": "updateApi",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "rudi-apigateway-model.json#/components/schemas/Api"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/Api"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/apis/{api-id}": {
+			"get": {
+				"tags": [
+					"api"
+				],
+				"summary": "Get an API",
+				"description": "Get an API",
+				"operationId": "getApi",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "api-id",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "rudi-apigateway-model.json#/components/schemas/Api"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"api"
+				],
+				"summary": "Delete an API",
+				"description": "Delete an API",
+				"operationId": "deleteApi",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "api-id",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"LimitParam": {
+				"in": "query",
+				"name": "limit",
+				"description": "Le nombre de résultats à retourner par page",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OffsetParam": {
+				"in": "query",
+				"name": "offset",
+				"description": "Index de début (positionne le curseur pour parcourir les résultats de la recherche)",
+				"schema": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"OrderParam": {
+				"in": "query",
+				"name": "order",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"ActiveParam": {
+				"name": "active",
+				"in": "query",
+				"description": "Permet de savoir si on doit récupérer un skos scheme actif (la date actuelle est comprise entre openingDate et closingDate)",
+				"required": false,
+				"schema": {
+					"type": "boolean"
+				}
+			}
+		},
+		"responses": {
+			"InternalServerError": {
+				"description": "Internal server error"
+			},
+			"BadRequestError": {
+				"description": "Bad Request Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Unauthorized": {
+				"description": "Unauthorized",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"Forbidden": {
+				"description": "Forbidden",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"NotAcceptable": {
+				"description": "Not Acceptable",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"RequestTimeout": {
+				"description": "Request Timeout",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"TooManyRequests": {
+				"description": "Too Many Requests",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/ApiError"
+						}
+					}
+				}
+			},
+			"ServiceUnavailable": {
+				"description": "Service Unavailable"
+			}
+		},
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
+			},
+			"AppInfo": {
+				"type": "object",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Numéro de version de l'application"
+					},
+					"comment": {
+						"type": "string",
+						"description": "Description de la version de l'application"
+					}
+				}
+			}
+		}
+	}
+}

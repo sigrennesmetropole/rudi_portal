@@ -32,6 +32,7 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     @Input() mediaSize: MediaSize;
     @Input() hidePagination = false;
     @Input() limit = MAX_RESULTS_PER_PAGE;
+    @Input() themes: SimpleSkosConcept[];
     /**
      * Set fixed number of cards to be displayed in a row.
      * maximum = 12 (current limit in SCSS rule : .data-set-container-*-cards).
@@ -51,18 +52,13 @@ export class ListContainerComponent implements OnInit, OnDestroy {
     searche$: Observable<string>;
     metadataListTotal: number;
     private filtersServiceSubscription?: Subscription;
-
-    get themes(): SimpleSkosConcept[] {
-        return this.themeCacheService.themes;
-    }
-
     producerNames: string[];
+    private isDestroyed$: Subject<void> = new Subject<void>();
     selectedDatesItems: Item[] = [];
     selectedThemeItems: Item[] = [];
     selectedProducerItems: Item[] = [];
-
     selectedAccessStatusItems: AccessStatusFilterItem[] = [];
-    private isDestroyed$: Subject<void> = new Subject<void>();
+
 
     constructor(
         private readonly konsultMetierService: KonsultMetierService,
@@ -71,12 +67,11 @@ export class ListContainerComponent implements OnInit, OnDestroy {
         private readonly filtersService: FiltersService,
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly sidenavOpeningsService: SidenavOpeningsService,
-        private readonly themeCacheService: ThemeCacheService
+        private readonly themeCacheService: ThemeCacheService,
     ) {
         this.searche$ = this.filtersService.searchFilter.value$;
-        themeCacheService.init();
     }
-    
+
     get hasSelectedItems(): boolean {
         return (
             this.selectedDatesItems?.length > 0 ||

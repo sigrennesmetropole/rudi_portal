@@ -129,7 +129,9 @@
 		"alauneCategory": "/rudi/news/a-la-une",
 		"templateDetailed": "rudi-news@one-news-detailed",
 		"templateSimple": "rudi-news@one-news",
-		"templateSimpleWithImage": "rudi-news@one-news-with-image"
+		"templateSimpleWithImage": "rudi-news@one-news-with-image",
+		"templateNewsList": "rudi-news@one-news-with-image-card",
+		"newsListPath": "cms/news/rudi-news@one-news-with-image-card"
 	},
 	"cmsTermsDescription": {
 		"category": "/rudi/terms",
@@ -192,6 +194,48 @@
 				"label": "Github",
 				"url": "https://github.com/sigrennesmetropole/rudi_portal",
 				"icon": "/assets/footer/github.svg"
+			}
+		]
+	},
+	"newsPageDescription": {
+		"titles1": [
+			{
+				"locale": "fr_FR",
+				"text": "Découvrir"
+			},
+			{
+				"locale": "en_GB",
+				"text": "Discover"
+			}
+		],
+		"titles2": [
+			{
+				"locale": "fr_FR",
+				"text": "toutes les actualités"
+			},
+			{
+				"locale": "en_GB",
+				"text": "all news"
+			}
+		],
+		"orders": [
+			{
+				"libelles": [
+					{
+						"locale": "fr_FR",
+						"text": "La plus récente"
+					}
+				],
+				"value": "-publishdate"
+			},
+			{
+				"libelles": [
+					{
+						"locale": "fr_FR",
+						"text": "La plus ancienne"
+					}
+				],
+				"value": "publishdate"
 			}
 		]
 	}

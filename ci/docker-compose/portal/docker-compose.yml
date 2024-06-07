@@ -4,6 +4,7 @@ version: "3"
 volumes:
   postgresql_data:
   registry_data:
+  apigateway_data:
   gateway_data:
   template_data:
   strukture_data:
@@ -14,6 +15,7 @@ volumes:
   projekt_data:
   selfdata_data:
   konsent_data:
+  
 
 services:
   database:
@@ -168,6 +170,21 @@ services:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4451 -Dcom.sun.management.jmxremote.rmi.port=4451 -Djava.rmi.server.hostname=konsent -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:4529
       - XMX=2G
+      
+  apigateway:
+    image: apigateway-image
+    depends_on:
+      - database
+    ports:
+      - "8092:8092"
+      - "4452:4452"
+    volumes:
+      - ./config:/etc/rudi/config
+      - ./data:/opt/rudi/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4452 -Dcom.sun.management.jmxremote.rmi.port=4452 -Djava.rmi.server.hostname=gateway -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - XMX=512M      
 
   nodestub:
     image: nodestub-image

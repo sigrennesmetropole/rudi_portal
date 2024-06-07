@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -85,6 +85,7 @@
 								<interfaceOnly>true</interfaceOnly>
 								<dateLibrary>java8</dateLibrary>
 								<serializableModel>true</serializableModel>
+								<containerDefaultToNull>true</containerDefaultToNull>
 							</configOptions>
 						</configuration>
 					</execution>

@@ -1,0 +1,1 @@
+CREATE SCHEMA if not exists apigateway_data;

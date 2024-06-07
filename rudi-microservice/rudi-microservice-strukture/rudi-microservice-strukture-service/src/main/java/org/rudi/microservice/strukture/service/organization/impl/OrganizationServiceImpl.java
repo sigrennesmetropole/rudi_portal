@@ -55,8 +55,8 @@ import org.springframework.web.reactive.function.client.UnknownHttpStatusCodeExc
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
@@ -110,8 +110,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 		final var organization = getOrganizationEntity(organizationUuid);
 
-		if (!(containsUserAsMember(organization, authenticatedUserEntity.getUuid())
-				|| utilContextHelper.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR)))) {
+		if (!(containsUserAsMember(organization, authenticatedUserEntity.getUuid()) || utilContextHelper
+				.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR)))) {
 			throw new AppServiceForbiddenException(
 					String.format("Authenticated user %s is not member of organization %s",
 							authenticatedUserEntity.getLogin(), organizationUuid));
@@ -198,9 +198,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	@Transactional // readOnly = false
 	public OrganizationMember addOrganizationMember(UUID organizationUuid, OrganizationMember organizationMember)
-			throws Exception {
+			throws AppServiceException {
 		// Verifier que l'utilisateur connecté a le droit d'agir
-		if (!(utilContextHelper.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR, RoleCodes.MODULE_KALIM))
+		if (!(utilContextHelper.hasAnyRoles(
+				List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR, RoleCodes.MODULE_KALIM))
 				|| isAuthenticatedOrganizationAdministrator(organizationUuid))) {
 			throw new UserIsNotOrganizationAdministratorException(String.format(
 					"L'utilisateur connecté n'est pas autorisé à agir sur l'organisation %s", organizationUuid));
@@ -236,8 +237,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 	// readOnly = false
 	public void removeOrganizationMembers(UUID organizationUuid, UUID userUuid) throws AppServiceException {
 		// Vérification des droits pour l'utilisation de cette fonction
-		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organizationUuid) && !utilContextHelper
-				.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
+		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organizationUuid)
+				&& !utilContextHelper
+						.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de manipuler cette organisation");
 		}
@@ -275,13 +277,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public Page<OrganizationUserMember> searchOrganizationMembers(OrganizationMembersSearchCriteria searchCriteria,
 			Pageable pageable) throws AppServiceException {
 
-		if (!organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(searchCriteria.getOrganizationUuid())
+		if (!organizationMembersHelper
+				.isAuthenticatedUserOrganizationAdministrator(searchCriteria.getOrganizationUuid())
 				&& !utilContextHelper
-				.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
+						.hasAnyRoles(List.of(RoleCodes.ADMINISTRATOR, RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR))) {
 			throw new AppServiceUnauthorizedException(
 					"L'utilisateur connecté n'a pas le droit de chercher des membres pour cette organisation");
 		}
-		//Gestion de la taille de la partition, inutile de charger 50 membres si on a une limite à 10
+		// Gestion de la taille de la partition, inutile de charger 50 membres si on a une limite à 10
 		int partitionSize = Math.min(MAX_AMOUNT_OF_ORGANIZATION_MEMBERS, searchCriteria.getLimit());
 
 		List<Pageable> partitions = organizationMembersPartitionerHelper.getOrganizationMembersPartition(searchCriteria,

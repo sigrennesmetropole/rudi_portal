@@ -138,6 +138,8 @@
 				"type": "string",
 				"enum": [
 					"PERSON",
+					"API",
+					"MICROSERVICE",
 					"ROBOT"
 				]
 			},
@@ -522,6 +524,67 @@
 						"type": "string"
 					}
 				}
+			},
+			"ProjectKey": {
+				"description": "Object conteneur d'une clé d'accès d'un projet",
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "Nom de la clé",
+						"type": "string"
+					},
+					"creationDate": {
+						"description": "Date de création de la clé",
+						"type": "string",
+						"format": "date-time"						
+					},
+					"expirationDate": {
+						"description": "Date d'expiration de la clé",
+						"type": "string",
+						"format": "date-time"						
+					},
+					"client_id": {
+						"type": "string"
+					},
+					"client_secret": {
+						"type": "string"
+					}
+				}
+			},
+			"ProjectKeystore": {
+				"description": "Objet de liaison entre un client et une liste d'utilisateurs",
+				"type": "object",
+				"properties": {
+					"projectUuid": {
+						"description": "Date de création de la clé",
+						"type": "string",
+						"format": "uuid"						
+					},
+					"projectKeys": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ProjectKey"
+						}
+					}
+				}
+			},
+			"ProjectKeystorePageResult": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PageResult"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"elements": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/ProjectKeystore"
+								}
+							}
+						}
+					}
+				]
 			}
 		}
 	}

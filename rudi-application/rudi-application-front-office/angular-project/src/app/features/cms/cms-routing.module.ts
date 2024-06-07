@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
 import {DetailComponent} from '@features/cms/pages/detail/detail.component';
+import {ListComponent} from '@features/cms/pages/list/list.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,14 @@ const routes: Routes = [
         pathMatch: 'full',
         component: DetailComponent,
         canActivate: mapToCanActivate([AuthGuard])
+    },
+    {
+        path: ':type/:template',
+        pathMatch: 'full',
+        component: ListComponent,
+        canActivate: mapToCanActivate([AuthGuard])
     }
+
 ];
 
 @NgModule({

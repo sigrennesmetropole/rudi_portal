@@ -119,7 +119,7 @@ public class WebClientConfig {
 	@Bean(name = "rudi_oauth2_builder")
 	public WebClient.Builder webClientBuilder(
 			@Qualifier("rudi_oauth2_client_manager") ReactiveOAuth2AuthorizedClientManager authorizedClientManager,
-			@Qualifier("rudi_oauth2_httpclient") HttpClient httpClient) throws SSLException {
+			@Qualifier("rudi_oauth2_httpclient") HttpClient httpClient) {
 		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
 				authorizedClientManager);
 		oauthFilter.setDefaultClientRegistrationId(REGISTRATION_ID);

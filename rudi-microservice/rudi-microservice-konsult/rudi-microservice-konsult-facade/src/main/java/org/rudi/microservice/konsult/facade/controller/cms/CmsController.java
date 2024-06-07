@@ -12,6 +12,7 @@ import org.rudi.facet.cms.CmsService;
 import org.rudi.facet.cms.bean.CmsAsset;
 import org.rudi.facet.cms.bean.CmsAssetType;
 import org.rudi.facet.cms.bean.CmsCategory;
+import org.rudi.facet.cms.bean.PagedCmsAssets;
 import org.rudi.facet.cms.impl.model.CmsRequest;
 import org.rudi.microservice.konsult.facade.controller.api.CmsApi;
 import org.springframework.core.io.Resource;
@@ -44,7 +45,7 @@ public class CmsController implements CmsApi {
 	}
 
 	@Override
-	public ResponseEntity<List<CmsAsset>> renderAssets(CmsAssetType assetType, String assetTemplate,
+	public ResponseEntity<PagedCmsAssets> renderAssets(CmsAssetType assetType, String assetTemplate,
 			List<String> categories, List<String> filters, String locale, Integer offset, Integer limit, String order)
 			throws Exception {
 		CmsRequest request = CmsRequest.builder().categories(categories).filters(filters)

@@ -14,7 +14,7 @@ import org.rudi.facet.generator.exception.GenerationModelNotFoundException;
 import org.rudi.facet.generator.text.impl.TemplateGeneratorImpl;
 import org.rudi.microservice.acl.core.bean.User;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
-import org.rudi.microservice.acl.service.mapper.UserMapper;
+import org.rudi.microservice.acl.service.mapper.user.UserMapper;
 import org.rudi.microservice.acl.storage.dao.user.UserCustomDao;
 import org.rudi.microservice.acl.storage.dao.user.UserDao;
 import org.rudi.microservice.acl.storage.entity.accountregistration.AccountRegistrationEntity;

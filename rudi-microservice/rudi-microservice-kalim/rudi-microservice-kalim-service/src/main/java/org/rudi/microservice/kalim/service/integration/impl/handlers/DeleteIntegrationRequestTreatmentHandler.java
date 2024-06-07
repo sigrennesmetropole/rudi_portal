@@ -1,12 +1,16 @@
 package org.rudi.microservice.kalim.service.integration.impl.handlers;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.dataverse.api.exceptions.DatasetNotFoundException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.microservice.kalim.core.bean.IntegrationStatus;
+import org.rudi.microservice.kalim.service.helper.ApiManagerHelper;
 import org.rudi.microservice.kalim.service.helper.Error500Builder;
 import org.rudi.microservice.kalim.service.helper.apim.APIManagerHelper;
 import org.rudi.microservice.kalim.service.integration.impl.validator.DatasetCreatorIsAuthenticatedValidator;
@@ -14,24 +18,27 @@ import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequest
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class DeleteIntegrationRequestTreatmentHandler extends IntegrationRequestTreatmentHandler {
+public class DeleteIntegrationRequestTreatmentHandler extends AbstractIntegrationRequestTreatmentHandler {
 	protected final DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator;
 	protected final MetadataDetailsHelper metadataDetailsHelper;
 
-	protected DeleteIntegrationRequestTreatmentHandler(DatasetService datasetService, APIManagerHelper apiManagerHelper, Error500Builder error500Builder, DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator, MetadataDetailsHelper metadataDetailsHelper) {
-		super(datasetService, apiManagerHelper, error500Builder);
+	protected DeleteIntegrationRequestTreatmentHandler(DatasetService datasetService,
+			ApiManagerHelper apigatewayManagerHelper, APIManagerHelper apiManagerHelper,
+			Error500Builder error500Builder,
+			DatasetCreatorIsAuthenticatedValidator datasetCreatorIsAuthenticatedValidator,
+			MetadataDetailsHelper metadataDetailsHelper) {
+		super(datasetService, apigatewayManagerHelper, apiManagerHelper, error500Builder);
 		this.datasetCreatorIsAuthenticatedValidator = datasetCreatorIsAuthenticatedValidator;
 		this.metadataDetailsHelper = metadataDetailsHelper;
 	}
 
 	@Override
-	protected void handleInternal(IntegrationRequestEntity integrationRequest) throws DataverseAPIException, APIManagerException {
+	protected void handleInternal(IntegrationRequestEntity integrationRequest)
+			throws DataverseAPIException, APIManagerException {
 		if (validateAndSetErrors(integrationRequest)) {
 			treat(integrationRequest);
 			integrationRequest.setIntegrationStatus(IntegrationStatus.OK);
@@ -63,6 +70,15 @@ public class DeleteIntegrationRequestTreatmentHandler extends IntegrationRequest
 			log.info("Dataset {} to delete was not found", globalId);
 		}
 
-		apiManagerHelper.archiveAllAPI(integrationRequest);
+		try {
+			apiManagerHelper.archiveAllAPI(integrationRequest);
+		} catch (Exception e) {
+			log.info("Dataset {} to delete apis", globalId);
+		}
+		try {
+			apiGatewayManagerHelper.deleteApis(integrationRequest);
+		} catch (Exception e) {
+			log.info("Dataset {} to delete gateway apis", globalId);
+		}
 	}
 }

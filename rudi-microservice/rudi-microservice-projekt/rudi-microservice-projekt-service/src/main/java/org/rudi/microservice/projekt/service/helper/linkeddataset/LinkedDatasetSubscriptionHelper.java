@@ -24,11 +24,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class LinkedDatasetSubscriptionHelper {
 	private final ACLHelper aclHelper;
 	private final ApplicationService applicationService;
@@ -87,9 +89,13 @@ public class LinkedDatasetSubscriptionHelper {
 	 * @param datasetUuid           uuid du jdd
 	 * @throws APIManagerException Execption WSO2
 	 */
-	protected void deleteSubscription(LinkedDatasetEntity existingLinkedDataset, String ownerName, UUID datasetUuid)
-			throws APIManagerException {
-		applicationService.deleteUserSubscriptionsForDatasetAPIs(ownerName, datasetUuid);
+	protected void deleteSubscription(LinkedDatasetEntity existingLinkedDataset, String ownerName, UUID datasetUuid) throws APIManagerException {
+		try {
+			applicationService.deleteUserSubscriptionsForDatasetAPIs(ownerName, datasetUuid);
+		} catch (APIManagerException e) {
+			log.error("Erreur lors de la suppresion du JDD {} pour le owner {}", datasetUuid, ownerName, e);
+			blockSubscription(existingLinkedDataset, ownerName);
+		}
 		archivedLinkedDataset(existingLinkedDataset);
 	}
 

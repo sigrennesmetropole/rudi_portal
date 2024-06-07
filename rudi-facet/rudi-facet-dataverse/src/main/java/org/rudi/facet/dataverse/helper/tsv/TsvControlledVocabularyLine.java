@@ -7,18 +7,20 @@ import org.apache.commons.lang3.StringUtils;
 import lombok.Builder;
 
 /**
- * @see <a href="https://guides.dataverse.org/en/latest/admin/metadatacustomization.html#controlledvocabulary-enumerated-properties">Documentation Dataverse</a>
+ * @see <a href="https://guides.dataverse.org/en/latest/admin/metadatacustomization.html#controlledvocabulary-enumerated-properties">Documentation
+ *      Dataverse</a>
  */
 @Builder
 class TsvControlledVocabularyLine extends TsvLine {
-	private static final Comparator<TsvControlledVocabularyLine> COMPARATOR =
-			Comparator.<TsvControlledVocabularyLine, String>comparing(line -> line.datasetField)
-					.thenComparing(line -> line.value);
+	public static final Comparator<TsvControlledVocabularyLine> COMPARATOR = Comparator
+			.<TsvControlledVocabularyLine, String>comparing(line -> line.datasetField)
+			.thenComparing(line -> line.value);
 
 	/**
 	 * Specifies the #datasetField to which #datasetField to which this entry applies.
 	 * <p>
-	 * Must reference an existing #datasetField. As a best practice, the value should reference a #datasetField in the current metadata block definition. (It is technically possible to reference an existing #datasetField from another metadata block.)
+	 * Must reference an existing #datasetField. As a best practice, the value should reference a #datasetField in the current metadata block definition.
+	 * (It is technically possible to reference an existing #datasetField from another metadata block.)
 	 */
 	final String datasetField;
 
@@ -28,7 +30,8 @@ class TsvControlledVocabularyLine extends TsvLine {
 	final String value;
 
 	/**
-	 * A string used to encode the selected enumerated value of a field. If this property is empty, the value of the “Value” field is used as the identifier.
+	 * A string used to encode the selected enumerated value of a field. If this property is empty, the value of the “Value” field is used as the
+	 * identifier.
 	 */
 	final String identifier;
 
@@ -41,16 +44,27 @@ class TsvControlledVocabularyLine extends TsvLine {
 
 	@Override
 	public String toString() {
-		return StringUtils.joinWith("\t",
-				firstColumn,
-				datasetField,
-				value,
-				identifier,
-				displayOrder);
+		return StringUtils.joinWith("\t", firstColumn, datasetField, value, identifier, displayOrder);
 	}
 
 	@Override
 	protected String getHashString() {
 		return datasetField + ":" + value;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return obj instanceof TsvControlledVocabularyLine;
 	}
 }

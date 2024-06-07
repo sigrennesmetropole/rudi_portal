@@ -7,7 +7,7 @@
 
         <!--bouton modification réutilisation-->
         <button mat-raised-button class="primary-raised-button right"
-                *ngIf="isRefusedProject"
+                *ngIf="isRefusedProject && isProjectUpdatable"
                 (click)="updateProjectTaskInfo()">
             {{ 'personalSpace.project.updateInformations'|translate }}
         </button>

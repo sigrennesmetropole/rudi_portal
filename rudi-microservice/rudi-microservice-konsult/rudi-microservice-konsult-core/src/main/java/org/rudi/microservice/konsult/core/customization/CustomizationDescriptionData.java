@@ -30,4 +30,6 @@ public class CustomizationDescriptionData {
 
 	private FooterDescriptionData footerDescription;
 
+	private NewsPageDescriptionData newsPageDescription;
+
 }

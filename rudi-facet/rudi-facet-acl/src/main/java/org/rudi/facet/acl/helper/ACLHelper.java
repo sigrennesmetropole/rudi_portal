@@ -1,5 +1,11 @@
 package org.rudi.facet.acl.helper;
 
+import static org.rudi.facet.acl.helper.ACLConstants.PROJECT_KEY_STORE_UUID_PARAMETER;
+import static org.rudi.facet.acl.helper.ACLConstants.PROJECT_KEY_UUID_PARAMETER;
+import static org.rudi.facet.acl.helper.ACLConstants.USER_LOGIN_AND_DENOMINATION_PARAMETER;
+import static org.rudi.facet.acl.helper.ACLConstants.USER_TYPE_PARAMETER;
+import static org.rudi.facet.acl.helper.ACLConstants.USER_UUIDS_PARAMETER;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +30,9 @@ import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.bean.ClientRegistrationDto;
 import org.rudi.facet.acl.bean.EmailAddress;
 import org.rudi.facet.acl.bean.PasswordUpdate;
+import org.rudi.facet.acl.bean.ProjectKey;
+import org.rudi.facet.acl.bean.ProjectKeystore;
+import org.rudi.facet.acl.bean.ProjectKeystorePageResult;
 import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserPageResult;
@@ -33,21 +42,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LIMIT_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
-import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
+import reactor.core.publisher.Mono;
 
 /**
  * L'utilisation de ce helper requiert l'ajout de 2 propriétés dans le fichier de configuration associé
@@ -99,6 +106,22 @@ public class ACLHelper {
 	private String updateUserPasswordEndpointUrl;
 
 	@Getter
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores}")
+	private String searchOrCreateProjectKeystoresUrl;
+
+	@Getter
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores/{project-key-store-uuid}}")
+	private String getOrDeleteProjectKeystoresUrl;
+
+	@Getter
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores/{project-key-store-uuid}/project-keys}")
+	private String createProjectKeyUrl;
+
+	@Getter
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores/{project-key-store-uuid}/project-keys/{project-key-uuid}}")
+	private String deleteProjectKeyUrl;
+
+	@Getter
 	@Value("${rudi.facet.acl.service.url:lb://RUDI-ACL/}")
 	private String aclServiceURL;
 
@@ -134,7 +157,7 @@ public class ACLHelper {
 			throw new IllegalArgumentException("user uuid required");
 		}
 		ClientResponse response = loadBalancedWebClient.delete().uri(buildUsersGetDeleteURL(userUuid))
-				.exchangeToMono(c -> Mono.just(c)).block();
+				.exchangeToMono(Mono::just).block();
 		if (response != null && response.statusCode() != HttpStatus.OK) {
 			LOGGER.warn("Failed to delete user :{}", userUuid);
 		}
@@ -194,11 +217,10 @@ public class ACLHelper {
 
 		return loadBalancedWebClient.get().uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
 				.queryParam(LIMIT_PARAMETER, 1)
-				.queryParamIfPresent(UserSearchCriteria.USER_LOGIN_PARAMETER, Optional.ofNullable(criteria.getLogin()))
-				.queryParamIfPresent(UserSearchCriteria.USER_PASSWORD_PARAMETER,
-						Optional.ofNullable(criteria.getPassword()))
-				.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER, formatListParameter(criteria.getRoleUuids()))
-				.build()).retrieve().bodyToMono(UserPageResult.class);
+				.queryParamIfPresent(ACLConstants.USER_LOGIN_PARAMETER, Optional.ofNullable(criteria.getLogin()))
+				.queryParamIfPresent(ACLConstants.USER_PASSWORD_PARAMETER, Optional.ofNullable(criteria.getPassword()))
+				.queryParam(ACLConstants.ROLE_UUIDS_PARAMETER, formatListParameter(criteria.getRoleUuids())).build())
+				.retrieve().bodyToMono(UserPageResult.class);
 	}
 
 	@Nullable
@@ -213,27 +235,26 @@ public class ACLHelper {
 
 	@Nullable
 	public ClientKey getClientKeyByLogin(String login) {
-		return loadBalancedWebClient.get()
-				.uri(buildClientKeyGetURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, login)).retrieve()
-				.bodyToMono(ClientKey.class).block();
+		return loadBalancedWebClient.get().uri(buildClientKeyGetURL(), Map.of(ACLConstants.USER_LOGIN_PARAMETER, login))
+				.retrieve().bodyToMono(ClientKey.class).block();
 	}
 
 	@Nullable
 	public ClientRegistrationDto getClientRegistrationByLogin(String login) {
 		return loadBalancedWebClient.get()
-				.uri(buildClientRegistrationURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, login)).retrieve()
+				.uri(buildClientRegistrationURL(), Map.of(ACLConstants.USER_LOGIN_PARAMETER, login)).retrieve()
 				.bodyToMono(ClientRegistrationDto.class).block();
 	}
 
 	public void addClientRegistration(String username, AccessKeyDto clientAccessKey) {
 		loadBalancedWebClient.post()
-				.uri(buildClientRegistrationURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, username))
+				.uri(buildClientRegistrationURL(), Map.of(ACLConstants.USER_LOGIN_PARAMETER, username))
 				.bodyValue(clientAccessKey).retrieve().bodyToMono(void.class).block();
 	}
 
 	public ClientRegistrationDto findRegistrationOrRegister(String username, String password) {
 		return loadBalancedWebClient.post()
-				.uri(buildClientRegistrationByPasswordURL(), Map.of(UserSearchCriteria.USER_LOGIN_PARAMETER, username))
+				.uri(buildClientRegistrationByPasswordURL(), Map.of(ACLConstants.USER_LOGIN_PARAMETER, username))
 				.bodyValue(password).retrieve().bodyToMono(ClientRegistrationDto.class).block();
 	}
 
@@ -289,10 +310,8 @@ public class ACLHelper {
 			// et pas seulement à 1 membre ayant le role MODERATOR
 			UserPageResult pageResult = loadBalancedWebClient.get()
 					.uri(buildUsersSearchURL(),
-							uriBuilder -> uriBuilder
-									.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
-											formatListParameter(criteria.getRoleUuids()))
-									.build())
+							uriBuilder -> uriBuilder.queryParam(ACLConstants.ROLE_UUIDS_PARAMETER,
+									formatListParameter(criteria.getRoleUuids())).build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 
 			if (pageResult != null && pageResult.getElements() != null) {
@@ -303,8 +322,8 @@ public class ACLHelper {
 	}
 
 	@NotNull
-	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText,
-			@Nullable String type, @Nullable Integer limit) {
+	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText, @Nullable String type,
+			@Nullable Integer limit) {
 		List<User> result = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(userUuids)) {
 			if (searchText == null) {
@@ -328,8 +347,7 @@ public class ACLHelper {
 							.queryParam(USER_LOGIN_AND_DENOMINATION_PARAMETER, criteria.getLoginAndDenomination())
 							.queryParam(USER_TYPE_PARAMETER,
 									criteria.getUserType() != null ? criteria.getUserType().toString() : null)
-							.queryParam(USER_LIMIT_PARAMETER, limit)
-							.build())
+							.queryParam(LIMIT_PARAMETER, limit).build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {
 				result.addAll(pageResult.getElements());
@@ -469,7 +487,7 @@ public class ACLHelper {
 		passwordUpdate.setNewPassword(newPassword);
 		passwordUpdate.setOldPassword(oldPassword);
 
-		loadBalancedWebClient.put().uri(buildUpdateUserPasswordURL(), Map.of(USER_LOGIN_PARAMETER, login))
+		loadBalancedWebClient.put().uri(buildUpdateUserPasswordURL(), Map.of(ACLConstants.USER_LOGIN_PARAMETER, login))
 				.bodyValue(passwordUpdate).retrieve().toBodilessEntity().block();
 	}
 
@@ -481,4 +499,68 @@ public class ACLHelper {
 		}
 		return 0L;
 	}
+
+	protected String buildSearchOrCreateProjectKeystoreUrl() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getSearchOrCreateProjectKeystoresUrl());
+		return urlBuilder.toString();
+	}
+
+	protected String buildGetOrDeleteProjectKeystoresUrl() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getGetOrDeleteProjectKeystoresUrl());
+		return urlBuilder.toString();
+	}
+
+	protected String buildCreateProjectKeyUrl() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getCreateProjectKeyUrl());
+		return urlBuilder.toString();
+	}
+
+	protected String buildDeleteProjectKeyUrl() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(getAclServiceURL()).append(getDeleteProjectKeyUrl());
+		return urlBuilder.toString();
+	}
+
+	public ProjectKeystore createProjectKeyStore(UUID projectUuid) {
+		ProjectKeystore input = new ProjectKeystore();
+		input.setProjectUuid(projectUuid);
+		return loadBalancedWebClient.post().uri(buildSearchOrCreateProjectKeystoreUrl()).bodyValue(input).retrieve()
+				.bodyToMono(ProjectKeystore.class).block();
+	}
+
+	public ProjectKeystore getProjectKeyStore(UUID projectKeystoreUuid) {
+		return loadBalancedWebClient.get()
+				.uri(buildGetOrDeleteProjectKeystoresUrl(),
+						Map.of(PROJECT_KEY_STORE_UUID_PARAMETER, projectKeystoreUuid))
+				.retrieve().bodyToMono(ProjectKeystore.class).block();
+	}
+
+	public void deleteProjectKeyStore(UUID projectKeystoreUuid) {
+		loadBalancedWebClient.delete()
+				.uri(buildGetOrDeleteProjectKeystoresUrl(),
+						Map.of(PROJECT_KEY_STORE_UUID_PARAMETER, projectKeystoreUuid))
+				.retrieve().toBodilessEntity().block();
+	}
+
+	public ProjectKey createProjectKey(UUID projectKeyStoreUuid, ProjectKey projectKey) {
+		return loadBalancedWebClient.post()
+				.uri(buildCreateProjectKeyUrl(), Map.of(PROJECT_KEY_STORE_UUID_PARAMETER, projectKeyStoreUuid))
+				.bodyValue(projectKey).retrieve().bodyToMono(ProjectKey.class).block();
+	}
+
+	public void deleteProjectKey(UUID projectKeyStoreUuid, UUID projectKeyUuid) {
+		loadBalancedWebClient.post().uri(buildDeleteProjectKeyUrl(), Map.of(PROJECT_KEY_STORE_UUID_PARAMETER,
+				projectKeyStoreUuid, PROJECT_KEY_UUID_PARAMETER, projectKeyUuid)).retrieve().toBodilessEntity().block();
+	}
+
+	public Page<ProjectKeystore> searchProjectKeystores(ProjectKeystoreSearchCriteria searchCriteria, Pageable page) {
+		ProjectKeystorePageResult projectKeystorePageResult = loadBalancedWebClient.get()
+				.uri(getSearchOrCreateProjectKeystoresUrl()).retrieve().bodyToMono(ProjectKeystorePageResult.class)
+				.block();
+		return new PageImpl<>(projectKeystorePageResult.getElements(), page, projectKeystorePageResult.getTotal());
+	}
+
 }

@@ -7,6 +7,7 @@ import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.AppServiceUnauthorizedException;
+import org.rudi.facet.acl.bean.ProjectKey;
 import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
@@ -14,8 +15,8 @@ import org.rudi.microservice.projekt.core.bean.Indicators;
 import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
+import org.rudi.microservice.projekt.core.bean.ProjectKeySearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -61,12 +62,13 @@ public interface ProjectService {
 	/**
 	 * Uploade le média du projet, dans le dataverse Rudi Media
 	 *
-	 * @param projectUuid l'uuid du projet
-	 * @param kindOfData  le type de média
-	 * @param media       le média à remplacer dans Dataverse
+	 * @param projectUuid     l'uuid du projet
+	 * @param kindOfData      le type de média
+	 * @param documentContent le média à remplacer dans Dataverse
 	 * @throws AppServiceException En cas d'erreur avec le service d'upload
 	 */
-	void uploadMedia(UUID projectUuid, KindOfData kindOfData, Resource media) throws AppServiceException;
+	void uploadMedia(UUID projectUuid, KindOfData kindOfData, DocumentContent documentContent)
+			throws AppServiceException;
 
 	/**
 	 * Supprime le média associé à ce projet
@@ -117,8 +119,7 @@ public interface ProjectService {
 	 * @param requestUuid UUID de la requête
 	 * @return
 	 */
-	void deleteNewDatasetRequest(UUID projectUuid, UUID requestUuid)
-			throws AppServiceException;
+	void deleteNewDatasetRequest(UUID projectUuid, UUID requestUuid) throws AppServiceException;
 
 	/**
 	 * @param searchCriteria {projet dont on cherche les autres demandes, producteur non concerné par ses demandes (optionnel)}
@@ -131,7 +132,6 @@ public interface ProjectService {
 	 */
 	Integer getNumberOfRequests(UUID projectUuid) throws AppServiceNotFoundException;
 
-
 	/**
 	 * Recherche mes projets et ceux de mon organisation
 	 *
@@ -140,18 +140,49 @@ public interface ProjectService {
 	 * @return Une page de project (limit max sinon 10)
 	 * @throws GetOrganizationException si erreur
 	 */
-	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException;
+	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable)
+			throws GetOrganizationException;
 
 	/**
 	 * Détermine si l'utilisateur connecté est owner du projet passé en paramètre.
 	 *
 	 * @param projectUuid UUID du projet
 	 * @return true si l'authenticatedUser est owner du projet, false sinon
-	 * @throws GetOrganizationException exception lors de la récupération de l'organization liée au projet
+	 * @throws GetOrganizationException        exception lors de la récupération de l'organization liée au projet
 	 * @throws AppServiceUnauthorizedException erreur lors de l'identification de l'utilisateur connecté
-	 * @throws AppServiceNotFoundException erreur lors de la récupération du projet
+	 * @throws AppServiceNotFoundException     erreur lors de la récupération du projet
 	 */
-	boolean isAuthenticatedUserProjectOwner(UUID projectUuid)  throws GetOrganizationException, AppServiceUnauthorizedException, AppServiceNotFoundException;
+	boolean isAuthenticatedUserProjectOwner(UUID projectUuid)
+			throws GetOrganizationException, AppServiceUnauthorizedException, AppServiceNotFoundException;
 
 	List<ProjectByOwner> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria);
+
+	/**
+	 * Création d'une nouvelle clé pour une projet donné
+	 * 
+	 * @param projectUuid l'uuid du projet
+	 * @param projectKey  la demande de clé
+	 * @return la clé
+	 * @throws AppServiceException
+	 */
+	ProjectKey createProjectKey(UUID projectUuid, ProjectKey projectKey) throws AppServiceException;
+
+	/**
+	 * Révocation d'un clé d'un projet donné
+	 * 
+	 * @param projectUuid    l'uuid du projet
+	 * @param projectKeyUuid l'uuid de la clé
+	 * @throws AppServiceException
+	 */
+	void deleteProjectKey(UUID projectUuid, UUID projectKeyUuid) throws AppServiceException;
+
+	/**
+	 * Recherche paginée des clés d'un projet
+	 * 
+	 * @param searchCriteria
+	 * @param page
+	 * @return
+	 * @throws AppServiceException
+	 */
+	List<ProjectKey> searchProjectKeys(ProjectKeySearchCriteria searchCriteria) throws AppServiceException;
 }

@@ -12,5 +12,16 @@
 			<heap unit="entries">50</heap>
 		</resources>
 	</cache>
+	<cache alias="customizationData">
+		<key-type>java.lang.String</key-type>
+		<value-type>org.rudi.microservice.konsult.core.customization.CustomizationDescriptionData</value-type>
+		<expiry>
+<!--			<ttl unit="hours">6</ttl>-->
+			<ttl unit="minutes">5</ttl>
+		</expiry>
+		<resources>
+			<heap unit="entries">50</heap>
+		</resources>
+	</cache>
 
 </config>

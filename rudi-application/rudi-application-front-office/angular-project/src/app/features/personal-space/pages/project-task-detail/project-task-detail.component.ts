@@ -26,6 +26,7 @@ import {injectDependencies} from '@shared/utils/dependencies-utils';
 import {NewDatasetRequest, ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {Project} from 'micro_service_modules/projekt/projekt-model';
 import {map, switchMap, tap} from 'rxjs/operators';
+import {Task} from 'micro_service_modules/projekt/projekt-api/model/task';
 
 @Component({
     selector: 'app-project-task-detail',
@@ -42,6 +43,8 @@ export class ProjectTaskDetailComponent
     isLoadingNewDatasetRequest: boolean;
 
     isUpdateInProgress = false;
+
+    currentTask: Task;
 
     public dependencies: ProjectDependencies;
     addingInProgress = false;
@@ -252,7 +255,12 @@ export class ProjectTaskDetailComponent
     }
 
     // Mettre à jour le mode modification de la réutilisation
-    updateInProgress(data: boolean) {
+    updateInProgress(data: boolean): void {
         this.isUpdateInProgress = data;
+    }
+
+    // Mettre à jour la task en cours
+    updateCurrentTask(data: Task): void {
+        this.currentTask = data;
     }
 }

@@ -26,6 +26,7 @@ import org.springframework.security.web.server.util.matcher.NegatedServerWebExch
 import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -63,7 +64,7 @@ public abstract class AbstractAuthenticationWebFilter implements WebFilter {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-		return requiresAuthenticationMatcher.matches(exchange).filter(matchResult -> matchResult.isMatch())
+		return requiresAuthenticationMatcher.matches(exchange).filter(MatchResult::isMatch)
 				.flatMap(matchResult -> authenticationConvert(exchange))
 				.switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
 				.flatMap(token -> onAuthenticationSuccess(token, new WebFilterExchange(exchange, chain)));

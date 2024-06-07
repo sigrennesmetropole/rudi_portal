@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
 import {Order} from '@core/services/asset/project/projekt-metier.service';
 import {FiltersService} from '@core/services/filters.service';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
 import {LogService} from '@core/services/log.service';
 import {ThemeCacheService} from '@core/services/theme-cache.service';
 import {Theme} from '@features/home/types';
+import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
 import {TranslateService} from '@ngx-translate/core';
 import {mapEach} from '@shared/utils/ObservableUtils';
 import {Metadata, MetadataList} from 'micro_service_modules/api-kaccess';
@@ -13,7 +13,7 @@ import {CustomizationDescription, KonsultService} from 'micro_service_modules/ko
 import {SimpleSkosConcept} from 'micro_service_modules/kos/kos-api';
 import {PagedProjectList, Project, ProjectStatus, ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {Subject} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, takeUntil} from 'rxjs/operators';
 
 const DEFAULT_PROJECT_ORDER: Order = '-updatedDate';
 const PROJECT_STATUS: ProjectStatus[] = [ProjectStatus.Validated];
@@ -65,16 +65,22 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.themeCacheService.isLoading$
             .pipe(
                 takeUntil(this.destroyed$),
+                distinctUntilChanged(),
                 filter((isLoading: boolean) => !isLoading)
             )
-            .subscribe((): void => {
-                this.themes = this.themeCacheService.themes.map((concept: SimpleSkosConcept): Theme => ({
-                    picto: concept.concept_code,
-                    name: concept.text,
-                    code: concept.concept_code
-                }));
-
-                this.themesIsLoading = false;
+            .subscribe({
+                next: (): void => {
+                    this.themes = this.themeCacheService.themes.map((concept: SimpleSkosConcept): Theme => ({
+                        picto: concept.concept_code,
+                        name: concept.text,
+                        code: concept.concept_code
+                    }));
+                    this.themesIsLoading = false;
+                },
+                error: (error): void => {
+                    this.logger.error(error);
+                    this.themesIsLoading = false;
+                }
             });
     }
 

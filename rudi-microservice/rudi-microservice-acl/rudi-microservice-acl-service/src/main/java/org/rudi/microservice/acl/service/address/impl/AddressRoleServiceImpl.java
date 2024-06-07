@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.rudi.microservice.acl.core.bean.AddressRole;
 import org.rudi.microservice.acl.core.bean.AddressRoleSearchCriteria;
 import org.rudi.microservice.acl.service.address.AddressRoleService;
-import org.rudi.microservice.acl.service.mapper.AddressRoleMapper;
+import org.rudi.microservice.acl.service.mapper.address.AddressRoleMapper;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleCustomDao;
 import org.rudi.microservice.acl.storage.dao.address.AddressRoleDao;
 import org.rudi.microservice.acl.storage.entity.address.AddressRoleEntity;

@@ -23,7 +23,8 @@ public class MatchingController implements MatchingApi {
 	private final MatchingService matchingService;
 
 	@Override
-	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_SELFDATA_ADMINISTRATOR + ")")
+	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_SELFDATA_ADMINISTRATOR + "," + MODULE_APIGATEWAY + ","
+			+ MODULE_APIGATEWAY_ADMINISTRATOR + ")")
 	public ResponseEntity<UUID> getMatchingToken(UUID datasetUuid, String login) throws Exception {
 		return ResponseEntity.ok(matchingService.getMatchingToken(datasetUuid, login));
 	}

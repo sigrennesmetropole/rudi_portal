@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -65,6 +65,7 @@
 					</typeMappings>
 					<configOptions>
 						<dateLibrary>java8</dateLibrary>
+						<containerDefaultToNull>true</containerDefaultToNull>
 					</configOptions>
 				</configuration>
 				<executions>

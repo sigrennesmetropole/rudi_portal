@@ -1,0 +1,2 @@
+alter table if exists apigateway_data.api add column creation_date timestamp not null default '2024-01-01';
+alter table if exists apigateway_data.api add column updated_date timestamp not null default '2024-01-01';

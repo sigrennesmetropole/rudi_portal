@@ -102,10 +102,7 @@ public abstract class AbstractAssetDescriptionEntity extends AbstractLongIdEntit
 		} else if (!getInitiator().equals(other.getInitiator())) {
 			return false;
 		}
-		if (getStatus() != other.getStatus()) {
-			return false;
-		}
-		return true;
+		return getStatus() == other.getStatus();
 	}
 
 }

@@ -11,7 +11,7 @@
         },
         "newsSection": {
             "title": "Actualités à la une",
-            "seeMoreNews": "Toutes les actualités"
+            "seeMoreNews": "Voir toutes les actualités"
         },
         "projectValuesSection": {
             "title1": "Découvrez",
@@ -47,7 +47,7 @@
         "/projets": "Réutilisations",
         "/projets/soumettre-un-projet": "Réutilisations",
         "/personal-space/my-account": "Mon compte",
-        "/login": "Mon compte",
+        "/login": "Connexion",
         "/personal-space/my-activity": "Mon activité",
         "/personal-space/selfdata-datasets": "Mes données personnelles",
         "/personal-space/my-notifications": "Mes notifications",
@@ -234,6 +234,10 @@
             "dateError": "la date de fin d'accès est obligatoire"
         }
     },
+    "news": {
+        "decouvrir": "Découvrir",
+        "toutes_actualites": "toutes les actualités"
+    },
     "popup": {
         "ok": "Ok",
         "close": "Fermer",
@@ -281,7 +285,7 @@
         "tousDroits": "Tous droits réservés",
         "contactezNous": "Contactez-nous",
         "version": "Version : ",
-        "ccByCa": "CC-BY-CA",
+        "ccByCa": "CC-BY-SA",
         "propulsePar": "Propulsé par :"
     },
     "authentification": {
@@ -429,7 +433,8 @@
         "errorAccountValidationEnd": "Vous pouvez saisir la même adresse mail que précédemment.",
         "successResetPassword": "Votre mot de passe a bien été modifié. Vous pouvez maintenant vous connecter au portail Rudi.",
         "resetPasswordError": "Le délai de réinitialisation de votre mot de passe est dépassé. Nous vous invitons à renouveler votre demande en cliquant ",
-        "ici": "ici"
+        "ici": "ici",
+        "successInitPassword": "Un mail de réinitialisation de votre mot de passe vous a été envoyé. Vous n'avez pas reçu de mail ? Consulter vos spams et si le mail n'y figure pas, veuillez contacter "
     },
     "searchbox": {
         "jeux": "Jeux",
@@ -463,7 +468,7 @@
         "valider": "Valider"
     },
     "sortBox": {
-        "sort": "Trie par",
+        "sort": "Trié par",
         "orderedBy": "Trié par",
         "resource_title": "Titre de A à Z",
         "-resource_title": "Titre de Z à A",

@@ -1,0 +1,83 @@
+<mat-sidenav-container>
+    <mat-sidenav-content>
+
+<div class="home-container">
+        <div class="hero-section-container">
+            <div class="hero-left-picto-container">
+                <app-loader [isTransparent]="true" [allPage]="false" [active]="loadingLeftPicto"></app-loader>
+                <img [src]="leftPictoSrc$ | async" alt="hero-section-left-picto"/>
+            </div>
+            <div class="hero-content-container">
+                <app-page-title [title1]="title1"
+                                [title2]="title2"
+                                class="d-flex justify-content-center w-100">
+                </app-page-title>
+
+                <div
+                    [ngClass]="{'news-list-container-sm': mediaSize.isSm  || mediaSize.isMd,
+                'news-list-container-lg':  mediaSize.isLg, 'news-list-container-xl': mediaSize.isXl, 'news-list-container-xxl': mediaSize.isXxl}"
+                    class="news-list-container container-fluid ps-0 pe-0"
+                >
+
+
+                    <div [ngClass]="{'px-30': mediaSize.isSm || mediaSize.isMd, 'px-20': mediaSize.isXs}">
+                        <div class="list-headers p-3">
+                            <!--Nombre de résultats-->
+                            <div class=" w-50 search-count">
+                                <ng-container *ngIf="searchIsRunning">
+                                    {{'searchbox.searchIsRunning'|translate}}
+                                </ng-container>
+                                <ng-container *ngIf="!searchIsRunning">
+                                    <div *ngIf="newsListTotal >= 1">
+                                        <span>{{newsListTotal}} {{'searchbox.results'|translate}}{{newsListTotal > 1 ? 's' : ''}}</span>
+                                    </div>
+                                    <div *ngIf="newsListTotal == 0">
+                                        <span>{{'searchbox.noResult'|translate}}</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <cms-order [items]="orderItems"
+                                       (orderChange)="onOrderChange($event)"
+                                       >
+                            </cms-order>
+                        </div>
+
+                                        <cms-news-list
+                                            [currentPage]="currentPage"
+                                            [displayComponent]="displayComponent"
+                                            [newsList]="newsList"
+                                            [newsListTotal]="newsListTotal"
+                                            [maxResultsPerPage]="limit"
+                                            [title1]="title1"
+                                            [title2]="title2"
+                                                >
+                                        ></cms-news-list>
+
+                        <pagination-controls
+                            *ngIf="(newsListTotal > limit)"
+                            (pageChange)="handlePageChange($event)"
+                            [maxSize]="mediaSize.isDeviceMobile ? maxPageMobile : maxPageDesktop"
+                            [nextLabel]="'paginator.NEXT_PAGE_LABEL' | translate"
+                            [ngClass]="paginationControlsNgClass"
+                            [previousLabel]="'paginator.PREVIOUS_PAGE_LABEL' | translate"
+                            class="d-flex justify-content-center mt-4 pagination-font-size pagination-container">
+                        </pagination-controls>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="hero-right-picto-container">
+                <app-loader [isTransparent]="true" [allPage]="false" [active]="loadingRightPicto"></app-loader>
+                <img [src]="rightPictoSrc$ | async" alt="hero-section-right-picto"/>
+            </div>
+        </div>
+
+
+
+    </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

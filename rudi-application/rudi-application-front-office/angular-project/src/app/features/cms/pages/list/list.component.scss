@@ -1,0 +1,243 @@
+
+@import "responsive";
+@import "common-style";
+@import "pagination";
+
+
+.mat-sidenav {
+    margin-top: 106px;
+    width: 100%;
+}
+
+.mat-drawer-content {
+    overflow-x: hidden;
+}
+
+.rudi-sidenav-container-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.search-count {
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.44;
+    letter-spacing: normal;
+    color: var(--secondary-text);
+}
+
+.list-headers {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+
+.hero-section-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hero-content-container {
+    margin: 110px auto 80px auto;
+}
+
+.hero-right-picto-container, .hero-left-picto-container {
+    margin-top: 110px;
+}
+
+.hero-text-container {
+    padding: 10px 50px;
+    position: relative;
+}
+
+.hero-text {
+    max-width: 550px;
+    text-align: center;
+    line-height: 45px;
+}
+
+.hero-title {
+    @extend .hero-text;
+    font-size: 38px;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin: 0;
+
+}
+
+.hero-subtitle {
+    @extend .hero-text;
+    font-size: 34px;
+    color: var(--accent-color);
+}
+
+.hero-section-right-edge-picto {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.hero-search-bar-container {
+    margin-top: 35px;
+    padding: 0 20px;
+}
+
+/**
+   Responsive
+*/
+@include xs() {
+    .hero-left-picto-container, .hero-right-picto-container {
+        display: none;
+    }
+}
+
+@include sm() {
+    .hero-left-picto-container, .hero-right-picto-container {
+        display: none;
+    }
+}
+
+@include md() {
+    .hero-left-picto-container, .hero-right-picto-container {
+        display: none;
+    }
+}
+
+.news-list-section-container {
+    margin: 30px auto 0 auto;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(to bottom,
+        var(--focus-background) 0%,
+        var(--focus-background) 70%,
+        transparent 70%,
+        transparent 100%
+    );
+}
+
+.news-list-container {
+    margin: auto;
+}
+
+.news-list-text-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .news-list-text {
+        max-width: 550px;
+        text-align: center;
+        line-height: 45px;
+    }
+
+    .news-list-title {
+        @extend .news-list-text;
+        padding-top: 20px;
+        font-size: 38px;
+        color: var(--primary-color);
+        font-weight: 700;
+        margin: 0;
+
+    }
+
+    .news-list-subtitle {
+        @extend .news-list-text;
+        font-size: 34px;
+        color: var(--accent-color);
+    }
+
+    .news-list-description {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        max-width: 550px;
+        text-align: center;
+    }
+}
+
+
+/* RESPONSIVE */
+@mixin mobile-screen {
+    .news-list-section-container {
+        background: linear-gradient(to bottom,
+            var(--focus-background) 0%,
+            var(--focus-background) 90%,
+            transparent 70%,
+            transparent 100%
+        );
+    }
+    .news-list-row {
+        align-items: center;
+        flex-direction: column;
+        gap: 20px;
+
+        .news-list {
+            flex: 1;
+            max-width: 280px;
+            width: 100%;
+        }
+    }
+}
+
+@mixin tablet-screen {
+    .news-list-section-container {
+        background: linear-gradient(to bottom,
+            var(--focus-background) 0%,
+            var(--focus-background) 85%,
+            transparent 70%,
+            transparent 100%
+        );
+    }
+    .news-list-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0 50px;
+
+        .news-list {
+            flex: 1 0 35%;
+        }
+    }
+}
+
+
+@mixin desktop-screen {
+    .news-list-row {
+        flex-direction: row;
+
+        .news-list {
+            flex: 1;
+            max-width: 280px;
+        }
+    }
+    .news-list {
+        flex: 1;
+        max-width: 280px;
+    }
+}
+
+@include xs() {
+    @include mobile-screen;
+}
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include tablet-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include desktop-screen;
+}
+
+
+
+

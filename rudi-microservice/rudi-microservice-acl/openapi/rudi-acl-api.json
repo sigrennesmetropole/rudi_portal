@@ -34,6 +34,10 @@
 			"description": "Services utilisateurs"
 		},
 		{
+			"name": "project-keys",
+			"description": "Services de gestiond des clés"
+		},
+		{
 			"name": "miscellaneous",
 			"description": "Services divers"
 		}
@@ -1832,6 +1836,331 @@
 						}
 					}
 				},
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/project-keystores": {
+			"get": {
+				"tags": [
+					"project-keys"
+				],
+				"summary": "Recherche des keystores",
+				"description": "Recherche des keystores selon certains critères",
+				"operationId": "searchProjectKeystores",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "project-uuids",
+						"description": "List d'uuids de projets",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "min-expiration-date",
+						"description": "Date minimale d'expiration",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"in": "query",
+						"name": "max-expiration-date",
+						"description": "Date maximale d'expiration",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"in": "query",
+						"name": "client-id",
+						"description": "identifiant de l'utilisateur associé à la clé",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"description": "Index de début",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"description": "Nombre de résultats à retourner",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"description": "liste des tris à réaliser. Exemple :  login,lastname"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-acl-model.json#/components/schemas/ProjectKeystorePageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"project-keys"
+				],
+				"summary": "Création d'un repository de clés pour un projet",
+				"description": "Création d'un repository de clés pour un projet",
+				"operationId": "createProjectKeystore",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./rudi-acl-model.json#/components/schemas/ProjectKeystore"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-acl-model.json#/components/schemas/ProjectKeystore"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/project-keystores/{project-keystore-uuid}": {
+			"get": {
+				"tags": [
+					"project-keys"
+				],
+				"summary": "Récupération d'un repository de clés pour un projet",
+				"description": "Récupération d'un repository de clés pour un projet",
+				"operationId": "getProjectKeystore",
+				"parameters": [
+					{
+						"name": "project-keystore-uuid",
+						"in": "path",
+						"description": "L'uuid du projet key store",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-acl-model.json#/components/schemas/ProjectKeystore"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"project-keys"
+				],
+				"summary": "Suppression d'un repository de clés pour un projet",
+				"description": "Suppression d'un repository de clés pour un projet",
+				"operationId": "deleteProjectKeystore",
+				"parameters": [
+					{
+						"name": "project-keystore-uuid",
+						"in": "path",
+						"description": "L'uuid du projet key store",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "OK"
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/project-keystores/{project-keystore-uuid}/project-keys": {
+			"put": {
+				"tags": [
+					"project-keys"
+				],
+				"summary": "Création d'un client_id/client_secret pour un projet",
+				"description": "Création d'un client_id/client_secret pour un projet",
+				"operationId": "createProjectKey",
+				"parameters": [
+					{
+						"name": "project-keystore-uuid",
+						"in": "path",
+						"description": "L'uuid du projet key store",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "./rudi-acl-model.json#/components/schemas/ProjectKey"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "./rudi-acl-model.json#/components/schemas/ProjectKey"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/project-keystores/{project-keystore-uuid}/project-keys/{project-key-uuid}": {
+			"delete": {
+				"tags": [
+					"project-keys"
+				],
+				"summary": "Suppression d'un client_id/client_secret pour un projet",
+				"description": "Suppression d'un client_id/client_secret pour un projet",
+				"operationId": "deleteProjectKey",
+				"parameters": [
+					{
+						"name": "project-keystore-uuid",
+						"in": "path",
+						"description": "L'uuid du projet key store",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "project-key-uuid",
+						"in": "path",
+						"description": "L'uuid du project key",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
 				"responses": {
 					"204": {
 						"description": "OK"

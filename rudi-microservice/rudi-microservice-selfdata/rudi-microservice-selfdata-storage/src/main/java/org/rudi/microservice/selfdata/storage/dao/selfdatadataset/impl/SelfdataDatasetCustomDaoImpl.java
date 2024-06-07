@@ -10,12 +10,12 @@ import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.selfdata.core.bean.SelfdataDatasetSearchCriteria;
 import org.rudi.microservice.selfdata.storage.dao.selfdatadataset.SelfdataDatasetCustomDao;
 import org.rudi.microservice.selfdata.storage.dao.selfdatadataset.SelfdataDatasetCustomSearchCriteria;
-import org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDatasetEntity;
+import org.rudi.microservice.selfdata.storage.entity.selfdatadataset.SelfdataDatasetEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.val;
 import static org.rudi.microservice.selfdata.storage.RepositoryConstants.DATASET_UUID_FIELD;
-import static org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDatasetEntity.INITIATOR_FIELD;
+import static org.rudi.microservice.selfdata.storage.entity.selfdatadataset.SelfdataDatasetEntity.INITIATOR_FIELD;
 
 @Repository
 public class SelfdataDatasetCustomDaoImpl

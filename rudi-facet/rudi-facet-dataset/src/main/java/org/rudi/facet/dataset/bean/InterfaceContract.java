@@ -13,11 +13,8 @@ import lombok.Getter;
 
 @Getter
 public enum InterfaceContract {
-	DOWNLOAD("dwnl", "dwnl", false),
-	GENERIC_DATA("gdata", "generic-data", false),
-	TEMPORAL_BAR_CHART("tpbc", "temporal-bar-chart", false),
-	WFS("wfs", "wfs", true),
-	WMS("wms", "wms", true),
+	DOWNLOAD("dwnl", "dwnl", false), GENERIC_DATA("gdata", "generic-data", false),
+	TEMPORAL_BAR_CHART("tpbc", "temporal-bar-chart", false), WFS("wfs", "wfs", true), WMS("wms", "wms", true),
 	WMTS("wmts", "wmts", true);
 
 	/**
@@ -47,8 +44,6 @@ public enum InterfaceContract {
 		this.validable = validable;
 	}
 
-
-
 	@JsonValue
 	public String getUrlPath() {
 		return urlPath;
@@ -62,7 +57,8 @@ public enum InterfaceContract {
 	@JsonCreator
 	@Nonnull
 	public static InterfaceContract fromUrlPath(String urlPath) {
-		final var enumValue = from("urlPath", urlPath, interfaceContract -> interfaceContract.urlPath.equals(urlPath), true);
+		final var enumValue = from("urlPath", urlPath, interfaceContract -> interfaceContract.urlPath.equals(urlPath),
+				true);
 		return Objects.requireNonNull(enumValue);
 	}
 
@@ -77,7 +73,8 @@ public enum InterfaceContract {
 		return from("code", code, interfaceContract -> interfaceContract.code.equals(code), false);
 	}
 
-	public static InterfaceContract from(String fieldName, String fieldValue, Predicate<InterfaceContract> predicate, boolean throwException) {
+	public static InterfaceContract from(String fieldName, String fieldValue, Predicate<InterfaceContract> predicate,
+			boolean throwException) {
 		for (final var interfaceContract : InterfaceContract.values()) {
 			if (predicate.test(interfaceContract)) {
 				return interfaceContract;

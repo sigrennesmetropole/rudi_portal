@@ -1,0 +1,12 @@
+create table apigateway_data.api (id  bigserial not null, uuid uuid not null, contract varchar(25) not null, global_id uuid not null, media_id uuid not null, node_provider_id uuid, producer_id uuid, provider_id uuid, url varchar(1024) not null, primary key (id));
+create table apigateway_data.api_throttling (api_fk int8 not null, throttling_fk int8 not null, primary key (api_fk, throttling_fk));
+create table apigateway_data.apiparameter (id  bigserial not null, uuid uuid not null, name varchar(100) not null, value_ varchar(2048), api_fk int8 not null, primary key (id));
+create table apigateway_data.throttling (id  bigserial not null, uuid uuid not null, code varchar(30) not null, label varchar(100), closing_date timestamp, opening_date timestamp not null, order_ int4 not null, burst_capacity int4 not null, rate int4 not null, primary key (id));
+alter table if exists apigateway_data.api add constraint UK_if23v3nx6c338ul0xumdgy1n5 unique (uuid);
+alter table if exists apigateway_data.apiparameter add constraint UK_rvqqpqm3o5sclxov8dl4u3fdx unique (uuid);
+alter table if exists apigateway_data.throttling add constraint UK_6xm5pqbfe9pefv5fv1y8s1ury unique (uuid);
+create table api_method (api_fk int8 not null, methods varchar(255));
+alter table if exists apigateway_data.api_throttling add constraint FK4l6irx1aqqfa8adpg4ftumquc foreign key (throttling_fk) references apigateway_data.throttling;
+alter table if exists apigateway_data.api_throttling add constraint FKorp75r3xv32dphxspr2yeo7sp foreign key (api_fk) references apigateway_data.api;
+alter table if exists apigateway_data.apiparameter add constraint FKqaiu0okwd3uxih3200a1h9h6h foreign key (api_fk) references apigateway_data.api;
+alter table if exists api_method add constraint FK12orjm6mia2ftbka9fhhgip4b foreign key (api_fk) references apigateway_data.api;

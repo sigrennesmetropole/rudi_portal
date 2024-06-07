@@ -93,7 +93,7 @@ public class SignatureUtils {
 			base = refArray.getObject(i);
 			if (base instanceof COSDictionary) {
 				int permission = getMDPPermissionFromCOSDictionnary(base);
-				if(permission != 0){
+				if (permission != 0) {
 					return permission;
 				}
 			}
@@ -101,8 +101,7 @@ public class SignatureUtils {
 		return 0;
 	}
 
-
-	private static int getMDPPermissionFromCOSDictionnary(COSBase base){
+	private static int getMDPPermissionFromCOSDictionnary(COSBase base) {
 		COSDictionary sigRefDict = (COSDictionary) base;
 		if (COSName.DOCMDP.equals(sigRefDict.getDictionaryObject(COSName.TRANSFORM_METHOD))) {
 			base = sigRefDict.getDictionaryObject(COSName.TRANSFORM_PARAMS);
@@ -235,9 +234,8 @@ public class SignatureUtils {
 	 * 
 	 * @param document to get its last signature
 	 * @return last signature or null when none found
-	 * @throws IOException
 	 */
-	public static PDSignature getLastRelevantSignature(PDDocument document) throws IOException {
+	public static PDSignature getLastRelevantSignature(PDDocument document) {
 		SortedMap<Integer, PDSignature> sortedMap = new TreeMap<>();
 		for (PDSignature signature : document.getSignatureDictionaries()) {
 			int sigOffset = signature.getByteRange()[1];

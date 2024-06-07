@@ -39,8 +39,8 @@ body {
     max-width: unset !important;
 
 
-    a {
-        color: var(--primary-color) !important;
+    a, a:hover {
+        color: var(--error-color-text) !important;
         text-decoration: underline;
     }
 }

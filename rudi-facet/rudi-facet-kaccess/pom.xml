@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>rudi-facet</artifactId>
 		<groupId>org.rudi</groupId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -108,6 +108,7 @@
 								<dateLibrary>java8</dateLibrary>
 								<performBeanValidation>true</performBeanValidation>
 								<useBeanValidation>true</useBeanValidation>
+								<containerDefaultToNull>true</containerDefaultToNull>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -144,6 +145,7 @@
 								<interfaceOnly>true</interfaceOnly>
 								<dateLibrary>java8</dateLibrary>
 								<performBeanValidation>true</performBeanValidation>
+								<containerDefaultToNull>true</containerDefaultToNull>
 							</configOptions>
 						</configuration>
 					</execution>

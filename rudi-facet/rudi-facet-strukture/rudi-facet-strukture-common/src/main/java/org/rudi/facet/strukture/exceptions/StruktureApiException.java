@@ -5,6 +5,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 public class StruktureApiException extends MicroserviceException {
 
+	private static final long serialVersionUID = 3614069698311775073L;
+
 	public StruktureApiException(WebClientResponseException cause) {
 		super("strukture", cause, cause.getStatusCode(), cause.getResponseBodyAsString());
 	}

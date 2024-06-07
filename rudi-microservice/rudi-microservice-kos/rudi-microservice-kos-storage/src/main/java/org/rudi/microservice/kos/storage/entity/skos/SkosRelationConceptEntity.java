@@ -61,9 +61,6 @@ public class SkosRelationConceptEntity extends AbstractLongIdEntity {
 		} else if (!getTarget().equals(other.getTarget())) {
 			return false;
 		}
-		if (getType() != other.getType()) {
-			return false;
-		}
-		return true;
+		return getType() == other.getType();
 	}
 }

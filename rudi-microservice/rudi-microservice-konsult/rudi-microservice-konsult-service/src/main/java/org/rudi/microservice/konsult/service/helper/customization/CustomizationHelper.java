@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import static org.rudi.microservice.konsult.service.constant.BeanIds.CUSTOMIZATION_DATA_CACHE;
 import static org.rudi.microservice.konsult.service.constant.BeanIds.CUSTOMIZATION_RESOURCES_CACHE;
 
 /**
@@ -32,6 +33,8 @@ import static org.rudi.microservice.konsult.service.constant.BeanIds.CUSTOMIZATI
 @Component
 @Slf4j
 public class CustomizationHelper extends ResourcesHelper {
+
+	private static final String CACHE_CUSTOMIZATION_DATA_KEY = "customization-data";
 
 	@Getter(AccessLevel.PROTECTED)
 	@Value("${customization.base-package:customization}")
@@ -44,6 +47,8 @@ public class CustomizationHelper extends ResourcesHelper {
 	@Getter(AccessLevel.PROTECTED)
 	private final Cache<String, DocumentContent> cache;
 
+	private final Cache<String, CustomizationDescriptionData> customizationCache;
+
 	@Value("${customization.filename:customization.json}")
 	private String customizationFilename;
 
@@ -51,10 +56,9 @@ public class CustomizationHelper extends ResourcesHelper {
 
 	private final List<KeyFigureComputer> keyFigureComputers;
 
-	private CustomizationDescriptionData customizationDescriptionData = null;
-
-	CustomizationHelper(@Qualifier(CUSTOMIZATION_RESOURCES_CACHE) Cache<String, DocumentContent> cache, List<KeyFigureComputer> keyFigureComputers, ObjectMapper objectMapper) {
+	CustomizationHelper(@Qualifier(CUSTOMIZATION_RESOURCES_CACHE) Cache<String, DocumentContent> cache, @Qualifier(CUSTOMIZATION_DATA_CACHE) Cache<String, CustomizationDescriptionData> customizationCache, List<KeyFigureComputer> keyFigureComputers, ObjectMapper objectMapper) {
 		this.cache = cache;
+		this.customizationCache = customizationCache;
 		this.keyFigureComputers = keyFigureComputers;
 		this.objectMapper = objectMapper;
 	}
@@ -101,14 +105,14 @@ public class CustomizationHelper extends ResourcesHelper {
 	}
 
 	public CustomizationDescriptionData getCustomizationDescriptionData() {
-		if (customizationDescriptionData == null) {
-			try {
-				customizationDescriptionData = loadCustomizationDescription();
-			} catch (Exception e) {
+		if(!customizationCache.containsKey(CACHE_CUSTOMIZATION_DATA_KEY)){
+			try{
+				customizationCache.put(CACHE_CUSTOMIZATION_DATA_KEY, loadCustomizationDescription());
+			}catch (Exception e) {
 				log.error("Failed to load customization", e);
 			}
 		}
-		return customizationDescriptionData;
+		return customizationCache.get(CACHE_CUSTOMIZATION_DATA_KEY);
 	}
 
 

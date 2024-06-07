@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-projekt</artifactId>
-		<version>2.0.3</version>
+		<version>3.0.0</version>
 	</parent>
 
 	<artifactId>rudi-microservice-projekt-facade</artifactId>
@@ -178,7 +178,9 @@
 						Status=org.rudi.bpmn.core.bean.Status,
 						Form=org.rudi.bpmn.core.bean.Form,
 						AssetDescription=org.rudi.bpmn.core.bean.AssetDescription,
-						Task=org.rudi.bpmn.core.bean.Task
+						Task=org.rudi.bpmn.core.bean.Task,
+						ProjectKey=org.rudi.facet.acl.bean.ProjectKey,
+						ProjectKeyPageResult=org.rudi.facet.acl.bean.ProjectKeyPageResult
 					</schemaMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>
@@ -197,6 +199,7 @@
 							et à false pour la génération -->
 						<interfaceOnly>true</interfaceOnly>
 						<dateLibrary>java8</dateLibrary>
+						<containerDefaultToNull>true</containerDefaultToNull>
 					</configOptions>
 				</configuration>
 				<executions>

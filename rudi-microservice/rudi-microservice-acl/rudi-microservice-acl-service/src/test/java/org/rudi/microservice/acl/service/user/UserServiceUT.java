@@ -216,7 +216,7 @@ class UserServiceUT {
 		assertEquals("Dupont", userCree.getLastname());
 		assertEquals("association de quartier", userCree.getCompany());
 
-		assertNull(userCree.getAddresses());
+		assertTrue(CollectionUtils.isEmpty(userCree.getAddresses()));
 		assertEquals(1, userCree.getRoles().size());
 		assertTrue(userCree.getRoles().contains(roleUtilisateur));
 
@@ -228,7 +228,7 @@ class UserServiceUT {
 		assertNotNull(userFull);
 		assertNull(userFull.getPassword());
 		assertEquals(userCree.getUuid(), userFull.getUuid());
-		assertNotNull(userFull.getRoles());
+		assertFalse(CollectionUtils.isEmpty(userFull.getRoles()));
 		assertTrue(userFull.getAddresses().isEmpty());
 
 		// chargement d'un user en fonction de son login

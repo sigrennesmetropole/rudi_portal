@@ -46,10 +46,7 @@ public class AddressRoleEntity extends AbstractStampedEntity {
 			return false;
 		}
 		AddressRoleEntity other = (AddressRoleEntity) obj;
-		if (getType() != other.getType()) {
-			return false;
-		}
-		return true;
+		return getType() == other.getType();
 	}
 
 }

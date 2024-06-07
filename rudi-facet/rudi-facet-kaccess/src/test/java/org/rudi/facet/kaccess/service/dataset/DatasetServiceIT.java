@@ -1,5 +1,12 @@
 package org.rudi.facet.kaccess.service.dataset;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.rudi.common.core.util.DateTimeUtils.toUTC;
+import static org.rudi.facet.kaccess.constant.ConstantMetadata.DOI_REGEX;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.DATASET_DATES_UPDATED;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.METADATA_INFO_DATES_UPDATED;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -36,14 +43,8 @@ import org.rudi.facet.kaccess.exceptions.DatasetAlreadyExistsException;
 import org.rudi.facet.kaccess.helper.dataset.metadatablock.MetadataBlockHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.rudi.common.core.util.DateTimeUtils.toUTC;
-import static org.rudi.facet.kaccess.constant.ConstantMetadata.DOI_REGEX;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.DATASET_DATES_UPDATED;
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.METADATA_INFO_DATES_UPDATED;
+import lombok.extern.slf4j.Slf4j;
 
 @KaccessSpringBootTest
 @Slf4j
@@ -120,11 +121,11 @@ class DatasetServiceIT {
 		// recherche tous critères renseignés
 		// -----------------------------------
 		MetadataList metadataList1 = datasetService.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100)
-						.globalIds(Collections.singletonList(metadata.getGlobalId())).freeText("exploitations").addThemesItem("environment")
-						.addKeywordsItem("agriculture").addKeywordsItem("biogaz").addProducerNamesItem("Producteur rudi")
-						.dateDebut(toUTC(LocalDateTime.of(2021, Month.JANUARY, 1, 0, 0, 0)))
-						.dateFin(OffsetDateTime.now().plusYears(1)),
-				Collections.emptyList()).getMetadataList();
+				.globalIds(Collections.singletonList(metadata.getGlobalId())).freeText("exploitations")
+				.addthemesItem("environment").addkeywordsItem("agriculture").addkeywordsItem("biogaz")
+				.addproducerNamesItem("Producteur rudi")
+				.dateDebut(toUTC(LocalDateTime.of(2021, Month.JANUARY, 1, 0, 0, 0)))
+				.dateFin(OffsetDateTime.now().plusYears(1)), Collections.emptyList()).getMetadataList();
 
 		Assertions.assertTrue(metadataList1.getTotal() > 0);
 		Assertions.assertTrue(metadataList1.getItems().stream()
@@ -159,9 +160,10 @@ class DatasetServiceIT {
 
 		// recherche sur global id
 		// -----------------------
-		MetadataList metadataList5 = datasetService.searchDatasets(
-				new DatasetSearchCriteria().offset(0).limit(100).globalIds(Collections.singletonList(metadataTransport.getGlobalId())),
-				Collections.emptyList()).getMetadataList();
+		MetadataList metadataList5 = datasetService
+				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100)
+						.globalIds(Collections.singletonList(metadataTransport.getGlobalId())), Collections.emptyList())
+				.getMetadataList();
 		Assertions.assertTrue(metadataList5.getTotal() > 0);
 		Assertions.assertTrue(metadataList5.getItems().stream()
 				.anyMatch(metadataItem -> metadataItem.getGlobalId().equals(metadataTransport.getGlobalId())));
@@ -171,15 +173,15 @@ class DatasetServiceIT {
 		// on doit récupérer les JDD qui ont transport OU tram OU wrongkeyword dans leur liste de mots clés
 		// bus et tram en font partie, mais pas wrongKeyword
 		MetadataList metadataList6 = datasetService
-				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addKeywordsItem("bus")
-						.addKeywordsItem("tram").addKeywordsItem("wrongKeyword"), Collections.emptyList())
+				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addkeywordsItem("bus")
+						.addkeywordsItem("tram").addkeywordsItem("wrongKeyword"), Collections.emptyList())
 				.getMetadataList();
 		Assertions.assertTrue(metadataList6.getTotal() > 0);
 		Assertions.assertTrue(metadataList6.getItems().stream()
 				.anyMatch(metadataItem -> metadataItem.getGlobalId().equals(metadataTransport.getGlobalId())));
 
 		MetadataList metadataList7 = datasetService
-				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addKeywordsItem("wrongKeyword"),
+				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addkeywordsItem("wrongKeyword"),
 						Collections.emptyList())
 				.getMetadataList();
 		Assertions.assertEquals(0, metadataList7.getTotal());
@@ -187,7 +189,7 @@ class DatasetServiceIT {
 		// recherche sur themes
 		// ---------------------
 		MetadataList metadataList8 = datasetService.searchDatasets(
-				new DatasetSearchCriteria().offset(0).limit(100).addThemesItem("transport").addThemesItem("wrongTheme"),
+				new DatasetSearchCriteria().offset(0).limit(100).addthemesItem("transport").addthemesItem("wrongTheme"),
 				Collections.emptyList()).getMetadataList();
 		Assertions.assertTrue(metadataList8.getTotal() > 0);
 		Assertions.assertTrue(metadataList8.getItems().stream()
@@ -197,7 +199,7 @@ class DatasetServiceIT {
 		// recherche sur ProducerNames
 		// ---------------------------
 		MetadataList metadataList9 = datasetService
-				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addProducerNamesItem("Metropole"),
+				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addproducerNamesItem("Metropole"),
 						Collections.emptyList())
 				.getMetadataList();
 		Assertions.assertTrue(metadataList9.getTotal() > 0);
@@ -209,18 +211,23 @@ class DatasetServiceIT {
 		// ----------------------------------------------------------
 		final Metadata metadataKeolisStarAgriculture = readMetadata("jdd_producer_keolis-star_theme_agriculture");
 		createDataset(metadataKeolisStarAgriculture);
-		final Metadata metadataStarAgricultureBiologique = readMetadata("jdd_producer_star_theme_agriculture_biologique");
+		final Metadata metadataStarAgricultureBiologique = readMetadata(
+				"jdd_producer_star_theme_agriculture_biologique");
 		createDataset(metadataStarAgricultureBiologique);
 
-		MetadataList metadataList10 = datasetService.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100)
-				.addProducerNamesItem("star"), Collections.emptyList()).getMetadataList();
+		MetadataList metadataList10 = datasetService
+				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addproducerNamesItem("star"),
+						Collections.emptyList())
+				.getMetadataList();
 		Assertions.assertTrue(metadataList10.getTotal() > 0);
 		// on s'assure que les jdd avec producer_name = Keolis star ne sont pas remontés
 		Assertions.assertTrue(metadataList10.getItems().stream()
 				.noneMatch(metadataItem -> metadataItem.getProducer().getOrganizationName().equals("Keolis star")));
 
-		MetadataList metadataList11 = datasetService.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100)
-				.addThemesItem("agriculture"), Collections.emptyList()).getMetadataList();
+		MetadataList metadataList11 = datasetService
+				.searchDatasets(new DatasetSearchCriteria().offset(0).limit(100).addthemesItem("agriculture"),
+						Collections.emptyList())
+				.getMetadataList();
 		Assertions.assertTrue(metadataList11.getTotal() > 0);
 		// on s'assure que les jdd avec theme = agriculture biologique ne sont pas remontés
 		Assertions.assertTrue(metadataList11.getItems().stream()
@@ -290,7 +297,8 @@ class DatasetServiceIT {
 
 		// test de la valeur metadata_info.metadata_dates.updated
 		metadataWithoutUpdatedDatasetDates.getDatasetDates().setUpdated(OffsetDateTime.now());
-		metadataWithoutUpdatedDatasetDates.getMetadataInfo().setMetadataDates(new ReferenceDates().created(OffsetDateTime.now()));
+		metadataWithoutUpdatedDatasetDates.getMetadataInfo()
+				.setMetadataDates(new ReferenceDates().created(OffsetDateTime.now()));
 		assertThatThrownBy(() -> createDataset(metadataWithoutUpdatedDatasetDates))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(MessageUtils.buildErrorMessageRequiredMandatoryAttributes(METADATA_INFO_DATES_UPDATED));
@@ -316,12 +324,10 @@ class DatasetServiceIT {
 	void testUpdateDataset() throws DataverseAPIException, IOException {
 
 		// création du jeu de données à mettre à jour
-		final List<Media> medias = jsonResourceReader.readList("metadata/available_format/available_format_for_update.json", Media.class);
-		final Metadata metadataToUpdate = readMetadata("jdd_to_update")
-				.theme("agriculture biologique")
-				.resourceTitle("JDD ouvert mise à jour effectué")
-				.addKeywordsItem("riz")
-				.availableFormats(medias);
+		final List<Media> medias = jsonResourceReader
+				.readList("metadata/available_format/available_format_for_update.json", Media.class);
+		final Metadata metadataToUpdate = readMetadata("jdd_to_update").theme("agriculture biologique")
+				.resourceTitle("JDD ouvert mise à jour effectué").addkeywordsItem("riz").availableFormats(medias);
 		createDataset(metadataToUpdate);
 
 		// mise à jour
@@ -340,12 +346,7 @@ class DatasetServiceIT {
 	 * RUDI-961 : Erreur dans la recherche plein texte
 	 */
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = {
-			"séparateurs",
-			"09/09/2021",
-			"2021-09-20",
-			"31.91",
-	})
+	@ValueSource(strings = { "séparateurs", "09/09/2021", "2021-09-20", "31.91", })
 	void searchDatasetsFreeTextFieldResourceTitle(final String freeText) throws DataverseAPIException, IOException {
 		searchDatasetsFreeText(freeText);
 	}
@@ -358,21 +359,19 @@ class DatasetServiceIT {
 		final Metadata metadata = readMetadata("jdd-avec-separateurs");
 		final String dataverseDoi = createDataset(metadata);
 
-		final DatasetSearchCriteria criteria = new DatasetSearchCriteria().offset(0).limit(100)
-				.freeText(freeText);
-		final MetadataList metadataList = datasetService.searchDatasets(criteria, Collections.emptyList()).getMetadataList();
+		final DatasetSearchCriteria criteria = new DatasetSearchCriteria().offset(0).limit(100).freeText(freeText);
+		final MetadataList metadataList = datasetService.searchDatasets(criteria, Collections.emptyList())
+				.getMetadataList();
 
-		assertThat(metadataList.getItems()).as("On retrouve le JDD attendu").extracting("dataverseDoi").contains(dataverseDoi);
+		assertThat(metadataList.getItems()).as("On retrouve le JDD attendu").extracting("dataverseDoi")
+				.contains(dataverseDoi);
 	}
 
 	/**
 	 * RUDI-961 : Erreur dans la recherche plein texte
 	 */
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = {
-			"Résumé court",
-			"français"
-	})
+	@ValueSource(strings = { "Résumé court", "français" })
 	void searchDatasetsFreeTextFieldAbstractTextFr(final String freeText) throws DataverseAPIException, IOException {
 		searchDatasetsFreeText(freeText);
 	}
@@ -381,9 +380,7 @@ class DatasetServiceIT {
 	 * RUDI-961 : Erreur dans la recherche plein texte
 	 */
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = {
-			"English short"
-	})
+	@ValueSource(strings = { "English short" })
 	void searchDatasetsFreeTextFieldAbstractTextEn(final String freeText) throws DataverseAPIException, IOException {
 		searchDatasetsFreeText(freeText);
 	}
@@ -392,10 +389,7 @@ class DatasetServiceIT {
 	 * RUDI-961 : Erreur dans la recherche plein texte
 	 */
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = {
-			"31/08+",
-			"09/09/2021",
-	})
+	@ValueSource(strings = { "31/08+", "09/09/2021", })
 	void searchDatasetsFreeTextSpecialCharacters(final String freeText) throws DataverseAPIException, IOException {
 		searchDatasetsFreeText(freeText);
 	}
@@ -404,10 +398,7 @@ class DatasetServiceIT {
 	 * RUDI-961 : Erreur dans la recherche plein texte
 	 */
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = {
-			"911992100 | 09/09/2021",
-			"911992100 09/09/2021",
-	})
+	@ValueSource(strings = { "911992100 | 09/09/2021", "911992100 09/09/2021", })
 	void searchDatasetsFreeTextSeparators(final String freeText) throws DataverseAPIException, IOException {
 		searchDatasetsFreeText(freeText);
 	}
@@ -423,17 +414,17 @@ class DatasetServiceIT {
 
 		final DatasetSearchCriteria existingCriteria = new DatasetSearchCriteria();
 		existingCriteria.doi(existingDoi);
-		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
+		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria,
+				Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
-		assertThat(existingResult.getMetadataList().getItems())
-				.extracting(Metadata::getDataverseDoi)
+		assertThat(existingResult.getMetadataList().getItems()).extracting(Metadata::getDataverseDoi)
 				.containsExactly(metadata.getDataverseDoi());
-
 
 		final DatasetSearchCriteria nonExistingDoiCriteria = new DatasetSearchCriteria();
 		nonExistingDoiCriteria.doi(nonExistingDoi);
-		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingDoiCriteria, Collections.emptyList());
+		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingDoiCriteria,
+				Collections.emptyList());
 
 		assertThat(nonExistingResult.getMetadataList().getTotal()).isZero();
 		assertThat(nonExistingResult.getMetadataList().getItems()).isEmpty();
@@ -451,17 +442,17 @@ class DatasetServiceIT {
 
 		final DatasetSearchCriteria existingCriteria = new DatasetSearchCriteria();
 		existingCriteria.localId(existingLocalId);
-		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
+		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria,
+				Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
-		assertThat(existingResult.getMetadataList().getItems())
-				.extracting(Metadata::getDataverseDoi)
+		assertThat(existingResult.getMetadataList().getItems()).extracting(Metadata::getDataverseDoi)
 				.containsExactly(metadata.getDataverseDoi());
-
 
 		final DatasetSearchCriteria nonExistingDoiCriteria = new DatasetSearchCriteria();
 		nonExistingDoiCriteria.localId(nonExistingLocalId);
-		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingDoiCriteria, Collections.emptyList());
+		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingDoiCriteria,
+				Collections.emptyList());
 
 		assertThat(nonExistingResult.getMetadataList().getTotal()).isZero();
 		assertThat(nonExistingResult.getMetadataList().getItems()).isEmpty();
@@ -479,22 +470,21 @@ class DatasetServiceIT {
 
 		final DatasetSearchCriteria existingCriteria = new DatasetSearchCriteria();
 		existingCriteria.globalIds(Collections.singletonList(existingGlobalId));
-		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria, Collections.emptyList());
+		final MetadataListFacets existingResult = datasetService.searchDatasets(existingCriteria,
+				Collections.emptyList());
 
 		assertThat(existingResult.getMetadataList().getTotal()).isEqualTo(1);
-		assertThat(existingResult.getMetadataList().getItems())
-				.extracting(Metadata::getDataverseDoi)
+		assertThat(existingResult.getMetadataList().getItems()).extracting(Metadata::getDataverseDoi)
 				.containsExactly(metadata.getDataverseDoi());
-
 
 		final DatasetSearchCriteria nonExistingCriteria = new DatasetSearchCriteria();
 		nonExistingCriteria.globalIds(Collections.singletonList(nonExistingGlobalId));
-		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingCriteria, Collections.emptyList());
+		final MetadataListFacets nonExistingResult = datasetService.searchDatasets(nonExistingCriteria,
+				Collections.emptyList());
 
 		assertThat(nonExistingResult.getMetadataList().getTotal()).isZero();
 		assertThat(nonExistingResult.getMetadataList().getItems()).isEmpty();
 
 	}
-
 
 }

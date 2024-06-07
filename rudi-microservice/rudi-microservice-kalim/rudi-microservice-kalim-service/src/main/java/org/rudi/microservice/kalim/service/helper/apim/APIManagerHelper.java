@@ -1,5 +1,7 @@
 package org.rudi.microservice.kalim.service.helper.apim;
 
+import static org.rudi.common.service.helper.ResourceHelper.DEFAULT_MIME_TYPE;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,9 +46,8 @@ import org.wso2.carbon.apimgt.rest.api.publisher.API;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import static org.rudi.common.service.helper.ResourceHelper.DEFAULT_MIME_TYPE;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @SuppressWarnings({ "java:S107" })
@@ -266,7 +267,7 @@ public class APIManagerHelper {
 			return connectorParameters.stream().collect(Collectors.toMap(ConnectorConnectorParametersInner::getKey,
 					ConnectorConnectorParametersInner::getValue));
 		}
-		return new HashMap<String, String>();
+		return new HashMap<>();
 	}
 
 	/**

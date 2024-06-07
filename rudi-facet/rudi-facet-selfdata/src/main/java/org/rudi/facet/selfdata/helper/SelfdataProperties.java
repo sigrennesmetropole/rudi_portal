@@ -17,4 +17,5 @@ public class SelfdataProperties {
 	 */
 	private String baseUrl = "lb://RUDI-SELFDATA/selfdata/v1";
 	private String hasMatchingToDatasetPath = "/matching/{userUuid}/check-my-matching/{datasetUuid}";
+	private String matchingTokenPath = "/matching/{datasetUuid}/{login}";
 }

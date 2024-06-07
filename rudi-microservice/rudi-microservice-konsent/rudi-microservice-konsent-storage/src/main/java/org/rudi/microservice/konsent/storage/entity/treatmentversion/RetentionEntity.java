@@ -1,7 +1,6 @@
 package org.rudi.microservice.konsent.storage.entity.treatmentversion;
 
 import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,8 +20,7 @@ import lombok.Setter;
 @Table(name = "retention", schema = SchemaConstants.DATA_SCHEMA)
 @Getter
 @Setter
-@AssociationOverrides({
-		@AssociationOverride(name = "labels", joinTable = @JoinTable(name = "retention_dictionary_entry", joinColumns = @JoinColumn(name = "retention_fk"), inverseJoinColumns = @JoinColumn(name = "dictionary_entry_fk"))) })
+@AssociationOverride(name = "labels", joinTable = @JoinTable(name = "retention_dictionary_entry", joinColumns = @JoinColumn(name = "retention_fk"), inverseJoinColumns = @JoinColumn(name = "dictionary_entry_fk")))
 public class RetentionEntity extends AbstractMultilangualStampedEntity {
 	private static final long serialVersionUID = 4513827721998162762L;
 

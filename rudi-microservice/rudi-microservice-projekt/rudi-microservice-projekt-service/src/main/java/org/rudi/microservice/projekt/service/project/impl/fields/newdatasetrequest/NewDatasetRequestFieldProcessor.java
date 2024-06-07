@@ -11,6 +11,6 @@ import org.rudi.microservice.projekt.storage.entity.newdatasetrequest.NewDataset
  *
  */
 interface NewDatasetRequestFieldProcessor {
-	void process(@Nullable NewDatasetRequestEntity NewDatasetRequest,
+	void process(@Nullable NewDatasetRequestEntity newDatasetRequest,
 			@Nullable NewDatasetRequestEntity existingNewDatasetRequest) throws AppServiceException;
 }

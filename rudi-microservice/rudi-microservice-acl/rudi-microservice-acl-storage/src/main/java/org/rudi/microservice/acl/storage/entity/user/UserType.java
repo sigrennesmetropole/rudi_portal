@@ -6,6 +6,12 @@ package org.rudi.microservice.acl.storage.entity.user;
  */
 public enum UserType {
 
-	PERSON, ROBOT;
-
+	/** utilisateur humain ... */
+	PERSON,
+	/** utilisateur de type API (associé à un projet) */
+	API,
+	/** utilisateur de type µservice */
+	MICROSERVICE,
+	/** utilisateur robot autre que les précédents */
+	ROBOT;
 }

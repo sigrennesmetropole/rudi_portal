@@ -1,0 +1,17 @@
+<app-loader [active]="!displayComponent" [allPage]="allPage" [isTransparent]="isTransparent">
+</app-loader>
+<div class="news-section-container" *ngIf="displayComponent">
+        <div class="w-100 row mx-auto">
+            <div class="p-3"
+                 [ngClass]="{'col-12': mediaSize.isSm || mediaSize.isXs, 'col-4': mediaSize.isXl || mediaSize.isMd, 'col-6': mediaSize.isLg, 'col-3':  mediaSize.isXxl }"
+                 *ngFor="let news of newsList | paginate: {
+                              itemsPerPage: maxResultsPerPage,
+                              currentPage: page,
+                              totalItems: newsListTotal
+                            }" [innerHTML]="news"
+                 ></div>
+        </div>
+
+</div>
+
+

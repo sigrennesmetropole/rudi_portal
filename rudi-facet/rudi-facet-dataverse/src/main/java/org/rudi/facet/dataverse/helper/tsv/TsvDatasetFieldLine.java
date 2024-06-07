@@ -153,5 +153,21 @@ class TsvDatasetFieldLine extends TsvLine {
 	protected String getHashString() {
 		return name;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return obj instanceof TsvDatasetFieldLine;
+	}
 
 }

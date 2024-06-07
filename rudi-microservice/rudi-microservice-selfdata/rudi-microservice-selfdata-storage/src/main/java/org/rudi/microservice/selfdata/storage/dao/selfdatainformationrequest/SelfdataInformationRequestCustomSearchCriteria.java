@@ -16,4 +16,21 @@ public class SelfdataInformationRequestCustomSearchCriteria extends SelfdataInfo
 	 * Le login d'un utilisateur ayant créé des demandes
 	 */
 	String login;
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return obj instanceof SelfdataInformationRequestCustomSearchCriteria;
+	}
+
 }

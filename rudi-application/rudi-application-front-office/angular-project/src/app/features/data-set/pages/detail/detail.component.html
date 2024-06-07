@@ -54,6 +54,7 @@
                 <app-tab *ngIf="isMapDisplayed"
                          [label]="'metaData.mapData'|translate"
                          [icon]="'map'"
+                         [invisible]="true"
                 >
                     <ng-template>
                         <app-map-tab

@@ -1,5 +1,13 @@
 package org.rudi.microservice.projekt.facade.controller;
 
+import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
+import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
+import static org.rudi.common.core.security.QuotedRoleCodes.USER;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +18,8 @@ import org.rudi.common.facade.helper.ControllerHelper;
 import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.facet.acl.bean.ProjectKey;
+import org.rudi.facet.acl.bean.ProjectKeyPageResult;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.bpmn.service.TaskService;
@@ -23,6 +33,7 @@ import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.PagedProjectList;
 import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
+import org.rudi.microservice.projekt.core.bean.ProjectKeySearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
 import org.rudi.microservice.projekt.facade.controller.api.ProjectsApi;
@@ -35,17 +46,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.rudi.common.core.security.QuotedRoleCodes.ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODERATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_PROJEKT_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROJECT_MANAGER;
-import static org.rudi.common.core.security.QuotedRoleCodes.PROVIDER;
-import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 
 @RestController
 @RequiredArgsConstructor
@@ -110,9 +115,10 @@ public class ProjectController implements ProjectsApi {
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
 			+ PROJECT_MANAGER + ", " + USER + ")")
-	public ResponseEntity<Void> uploadProjectMediaByType(UUID projectUuid, KindOfData kindOfData, Resource body)
+	public ResponseEntity<Void> uploadProjectMediaByType(UUID projectUuid, KindOfData kindOfData, MultipartFile file)
 			throws Exception {
-		projectService.uploadMedia(projectUuid, kindOfData, body);
+		DocumentContent documentContent = controllerHelper.documentContentFrom(file);
+		projectService.uploadMedia(projectUuid, kindOfData, documentContent);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -134,7 +140,7 @@ public class ProjectController implements ProjectsApi {
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
 			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<LinkedDataset> linkProjectToDataset(UUID projectUuid, LinkedDataset linkedDataset)
-			throws AppServiceNotFoundException, DataverseAPIException, AppServiceException, APIManagerException {
+			throws DataverseAPIException, AppServiceException, APIManagerException {
 		return ResponseEntity.ok(linkedDatasetService.linkProjectToDataset(projectUuid, linkedDataset));
 	}
 
@@ -165,7 +171,7 @@ public class ProjectController implements ProjectsApi {
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ", " + MODULE_PROJEKT_ADMINISTRATOR + ", " + MODULE_PROJEKT + ", "
 			+ PROJECT_MANAGER + ", " + USER + ")")
 	public ResponseEntity<NewDatasetRequest> createNewDatasetRequest(UUID projectUuid, NewDatasetRequest datasetRequest)
-			throws AppServiceNotFoundException, AppServiceException {
+			throws AppServiceException {
 		val createdRequest = projectService.createNewDatasetRequest(projectUuid, datasetRequest);
 		val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
 				.buildAndExpand(createdRequest.getUuid()).toUri();
@@ -318,4 +324,27 @@ public class ProjectController implements ProjectsApi {
 			throws Exception {
 		return ResponseEntity.ok(projectService.getNumberOfProjectsPerOwners(criteria));
 	}
+
+	@Override
+	public ResponseEntity<ProjectKey> createProjectKey(UUID projectUuid, ProjectKey projectKey) throws Exception {
+		return ResponseEntity.ok(projectService.createProjectKey(projectUuid, projectKey));
+	}
+
+	@Override
+	public ResponseEntity<Void> deleteProjectKey(UUID projectUuid, UUID projectKeyUuid) throws Exception {
+		projectService.deleteProjectKey(projectUuid, projectKeyUuid);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<ProjectKeyPageResult> searchProjectKeys(UUID projectUuid) throws Exception {
+		ProjectKeySearchCriteria searchCriteria = new ProjectKeySearchCriteria().projectUuid(projectUuid);
+
+		List<ProjectKey> projectKeys = projectService.searchProjectKeys(searchCriteria);
+		ProjectKeyPageResult result = new ProjectKeyPageResult();
+		result.setTotal((long)projectKeys.size());
+		result.setElements(projectKeys);
+		return ResponseEntity.ok(result);
+	}
+
 }

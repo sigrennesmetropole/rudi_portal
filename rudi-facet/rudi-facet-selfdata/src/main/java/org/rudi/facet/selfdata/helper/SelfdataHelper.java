@@ -35,4 +35,10 @@ public class SelfdataHelper {
 				.path(selfdataProperties.getHasMatchingToDatasetPath()).build(userUuid, datasetUuid)).retrieve()
 				.bodyToMono(Boolean.class);
 	}
+
+	public Mono<UUID> getMatchingToken(UUID datasetUuid, String login) {
+		return selfdataWebClient.get()
+				.uri(uriBuilder -> uriBuilder.path(selfdataProperties.getMatchingTokenPath()).build(datasetUuid, login))
+				.retrieve().bodyToMono(UUID.class);
+	}
 }

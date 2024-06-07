@@ -104,7 +104,7 @@ public class CompositeTemplateLoader implements TemplateLoader {
 		templateLoaders.add(fileTemplateLoader);
 	}
 
-	protected void addClassTemplateLoader(ClassLoader classLoader, String basePackagePath) throws IOException {
+	protected void addClassTemplateLoader(ClassLoader classLoader, String basePackagePath) {
 		classTemplateLoader = new ClassTemplateLoader(classLoader, basePackagePath);
 		templateLoaders.add(classTemplateLoader);
 	}

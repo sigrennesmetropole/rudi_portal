@@ -71,13 +71,13 @@ mkdir -p ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/dropins
 mkdir -p ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib
  
 cp rudi-tools/rudi-tools-wso2/target/org.rudi.wso2.userstore.jar                       ${CI_DIR}/docker/apim/org.rudi.wso2.userstore.jar
-cp rudi-tools/rudi-tools-wso2-handler/target/org.rudi.wso2.handler-${RUDI_VERSION}.jar ${CI_DIR}/docker/apim/org.rudi.wso2.handler.jar
-cp rudi-facet/rudi-facet-crypto/target/rudi-facet-crypto-${RUDI_VERSION}.jar           ${CI_DIR}/docker/apim/rudi-facet-crypto.jar
+cp rudi-tools/rudi-tools-wso2-handler/target/org.rudi.wso2.handler.jar ${CI_DIR}/docker/apim/org.rudi.wso2.handler.jar
+cp rudi-facet/rudi-facet-crypto/target/rudi-facet-crypto.jar           ${CI_DIR}/docker/apim/rudi-facet-crypto.jar
 cp rudi-common/rudi-common-core/target/rudi-common-core-${RUDI_VERSION}.jar            ${CI_DIR}/docker/apim/rudi-common.jar
 
 cp rudi-tools/rudi-tools-wso2/target/org.rudi.wso2.userstore.jar                       ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/dropins/org.rudi.wso2.userstore.jar
-cp rudi-tools/rudi-tools-wso2-handler/target/org.rudi.wso2.handler-${RUDI_VERSION}.jar ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/org.rudi.wso2.handler.jar
-cp rudi-facet/rudi-facet-crypto/target/rudi-facet-crypto-${RUDI_VERSION}.jar           ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/rudi-facet-crypto.jar
+cp rudi-tools/rudi-tools-wso2-handler/target/org.rudi.wso2.handler.jar ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/org.rudi.wso2.handler.jar
+cp rudi-facet/rudi-facet-crypto/target/rudi-facet-crypto.jar           ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/rudi-facet-crypto.jar
 cp rudi-common/rudi-common-core/target/rudi-common-core-${RUDI_VERSION}.jar            ${CI_DIR}/docker-compose/wso2/conf/apim/repository/components/lib/rudi-common-core.jar
 
 # JAR Dataverse

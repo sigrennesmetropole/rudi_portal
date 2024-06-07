@@ -3,20 +3,19 @@
  */
 package org.rudi.microservice.strukture.service.helper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.facet.acl.bean.Role;
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
-import org.rudi.facet.acl.helper.exceptions.CreateUserException;
 import org.rudi.microservice.strukture.storage.entity.provider.NodeProviderEntity;
 import org.rudi.microservice.strukture.storage.entity.provider.ProviderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author FNI18300
@@ -31,7 +30,7 @@ public class NodeProviderUserHelper {
 	@Autowired
 	private ACLHelper aclHelper;
 
-	public void updateAssociatedUser(ProviderEntity provider, NodeProviderEntity nodeProvider) throws CreateUserException {
+	public void updateAssociatedUser(ProviderEntity provider, NodeProviderEntity nodeProvider) {
 		User user = aclHelper.getUserByLogin(nodeProvider.getUuid().toString());
 		if (user == null) {
 			List<Role> roles = aclHelper.searchRoles();

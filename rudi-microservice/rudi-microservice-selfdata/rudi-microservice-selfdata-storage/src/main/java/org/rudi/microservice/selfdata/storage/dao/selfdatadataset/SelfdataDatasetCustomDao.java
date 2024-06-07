@@ -2,7 +2,7 @@ package org.rudi.microservice.selfdata.storage.dao.selfdatadataset;
 
 import java.util.List;
 
-import org.rudi.microservice.selfdata.storage.entity.SelfdataDataset.SelfdataDatasetEntity;
+import org.rudi.microservice.selfdata.storage.entity.selfdatadataset.SelfdataDatasetEntity;
 
 public interface SelfdataDatasetCustomDao {
 

@@ -19,6 +19,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 		"org.rudi.facet.kaccess",
 		"org.rudi.facet.kos",
 		"org.rudi.facet.providers",
+		"org.rudi.facet.apigateway",
 		"org.rudi.microservice.kalim.service",
 		"org.rudi.microservice.kalim.storage",
 		"org.rudi.facet.organization"

@@ -1,16 +1,17 @@
 package org.rudi.microservice.strukture.storage.entity.address;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.rudi.common.storage.entity.AbstractStampedEntity;
-import org.rudi.microservice.strukture.core.common.SchemaConstants;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+
+import org.rudi.common.storage.entity.AbstractStampedEntity;
+import org.rudi.microservice.strukture.core.common.SchemaConstants;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "address_role", schema = SchemaConstants.DATA_SCHEMA)
@@ -45,10 +46,7 @@ public class AddressRoleEntity extends AbstractStampedEntity {
 			return false;
 		}
 		AddressRoleEntity other = (AddressRoleEntity) obj;
-		if (getType() != other.getType()) {
-			return false;
-		}
-		return true;
+		return getType() == other.getType();
 	}
 
 }

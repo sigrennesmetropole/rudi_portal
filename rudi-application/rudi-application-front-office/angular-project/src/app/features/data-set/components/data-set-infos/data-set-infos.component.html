@@ -357,10 +357,10 @@
                         </tbody>
                     </table>
                     <div *ngIf="canDownloadMedia(media)" class="rudi-panel-source-download">
-                        <button (click)="onDownloadFile(media)"
-                                class="btn source-download-libelle" tabindex="-1">
+                        <div (click)="onDownloadFile(media)"
+                                class="source-download-libelle" tabindex="-1">
                             {{'common.telechargerFichier'|translate}}
-                        </button>
+                        </div>
                     </div>
                 </ng-container>
                 <!--Media de type Series -->

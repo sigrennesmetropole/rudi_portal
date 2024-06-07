@@ -69,7 +69,7 @@
 		{
 			"concept_code": "culture",
 			"concept_uri": "https://fr.wikipedia.org/wiki/Culture",
-			"concept_icon": "assets/pictos/farming.svg",
+			"concept_icon": "assets/pictos/culture.svg",
 			"concept_role": "theme",
 			"openingDate": "2021-04-29T14:47:00.000Z",
 			"pref_label": [
@@ -103,7 +103,7 @@
 		{
 			"concept_code": "children",
 			"concept_uri": "https://fr.wikipedia.org/wiki/Enfance",
-			"concept_icon": "assets/pictos/geoscientificInformation.svg",
+			"concept_icon": "assets/pictos/children.svg",
 			"concept_role": "theme",
 			"openingDate": "2021-04-29T14:47:00.000Z",
 			"pref_label": [
@@ -171,7 +171,7 @@
 		{
 			"concept_code": "education",
 			"concept_uri": "https://fr.wikipedia.org/wiki/%C3%89ducation",
-			"concept_icon": "assets/pictos/geoscientificInformation.svg",
+			"concept_icon": "assets/pictos/education.svg",
 			"concept_role": "theme",
 			"openingDate": "2021-04-29T14:47:00.000Z",
 			"pref_label": [

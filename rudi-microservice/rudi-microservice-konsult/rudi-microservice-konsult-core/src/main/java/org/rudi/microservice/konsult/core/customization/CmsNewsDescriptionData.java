@@ -19,4 +19,8 @@ public class CmsNewsDescriptionData extends AbstractCmsDescriptionData {
 	private String alauneCategory;
 
 	private String templateSimpleWithImage;
+
+	private String templateNewsList;
+
+	private String newsListPath;
 }

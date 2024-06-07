@@ -57,8 +57,7 @@ public class JwtTokenUtil extends AbstractJwtTokenUtil implements Serializable {
 
 	@Override
 	protected void handleExternalAccount(JwtTokenData token, JWTClaimsSet claims) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do
 	}
 
 	@Override

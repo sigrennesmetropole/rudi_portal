@@ -36,15 +36,9 @@ import org.rudi.microservice.konsult.service.exception.UnhandledMediaTypeExcepti
 import org.rudi.microservice.konsult.service.helper.APIManagerHelper;
 import org.rudi.microservice.konsult.service.metadata.MetadataService;
 import org.rudi.microservice.konsult.service.metadata.impl.checker.AbstractAccessToDatasetChecker;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,19 +100,25 @@ public class MetadataServiceImpl implements MetadataService {
 	/**
 	 * Exemple de réécriture :
 	 *
-	 * <pre>/medias/4ff87569-dafc-45ad-ae5b-fac9a5ccbbb1/dwnl/1.0.0</pre>
+	 * <pre>
+	 * /medias/4ff87569-dafc-45ad-ae5b-fac9a5ccbbb1/dwnl/1.0.0
+	 * </pre>
 	 *
 	 * <p>
-	 * Cette URL doit être configurée dans l'Apache qui va recevoir cette URL pour rediriger vers l'URL du média dans
-	 * WSO2.
+	 * Cette URL doit être configurée dans l'Apache qui va recevoir cette URL pour rediriger vers l'URL du média dans WSO2.
 	 * </p>
 	 *
-	 * <p>URL WSO2 ciblée par l'exemple précédent :</p>
+	 * <p>
+	 * URL WSO2 ciblée par l'exemple précédent :
+	 * </p>
 	 *
-	 * <pre>https://wso2.open-dev.com:8243/datasets/4ff87569-dafc-45ad-ae5b-fac9a5ccbbb1/dwnl/1.0.0</pre>
+	 * <pre>
+	 * https://wso2.open-dev.com:8243/datasets/4ff87569-dafc-45ad-ae5b-fac9a5ccbbb1/dwnl/1.0.0
+	 * </pre>
 	 */
 	private void rewriteMediaUrl(Metadata metadata, Media media) throws APIManagerException {
-		final String absoluteUrlString = applicationService.buildAPIAccessUrl(metadata.getGlobalId(), media.getMediaId());
+		final String absoluteUrlString = applicationService.buildAPIAccessUrl(metadata.getGlobalId(),
+				media.getMediaId());
 		final String path = getUrlPath(absoluteUrlString);
 		final String rewrittenPath = path.replace("/datasets/", "/medias/");
 		media.getConnector().setUrl(rewrittenPath);
@@ -137,7 +137,8 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException, IOException, GetClientRegistrationException {
+	public DocumentContent downloadMetadataMedia(UUID globalId, UUID mediaId)
+			throws AppServiceException, IOException, GetClientRegistrationException {
 
 		final Metadata metadata = getMetadataById(globalId);
 		final Media media = getMetadataMediaById(metadata, mediaId);
@@ -158,7 +159,8 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public boolean hasSubscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws AppServiceException, APIManagerException {
+	public boolean hasSubscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid)
+			throws AppServiceException, APIManagerException {
 		final var metadata = getMetadataById(globalId);
 		UUID ownerUuid = null; // Uuid à partir duquel on a souscrit (soi-même pour un selfdata)
 		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
@@ -188,12 +190,14 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public void subscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid) throws APIManagerException, AppServiceException {
+	public void subscribeToLinkedDataset(UUID globalId, UUID linkedDatasetUuid)
+			throws APIManagerException, AppServiceException {
 		final var metadata = getMetadataById(globalId);
 		UUID ownerUuid = null; // Uuid à partir duquel on va souscrire (soi-même ou une de nos organisations)
 		for (AbstractAccessToDatasetChecker accessToDatasetChecker : accessToDatasetCheckerList) {
 			if (accessToDatasetChecker.accept(metadata)) {
-				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId, Optional.of(linkedDatasetUuid));
+				accessToDatasetChecker.checkAuthenticatedUserHasAccessToDataset(globalId,
+						Optional.of(linkedDatasetUuid));
 				ownerUuid = accessToDatasetChecker.getOwnerUuidToUse(linkedDatasetUuid);
 			}
 		}
@@ -216,10 +220,14 @@ public class MetadataServiceImpl implements MetadataService {
 		return apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media);
 	}
 
-	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia, MultiValueMap<String, String> parameters) throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException, GetClientRegistrationException {
-		if (media.getMediaType().equals(Media.MediaTypeEnum.FILE) || media.getMediaType().equals(Media.MediaTypeEnum.SERVICE)) {
+	private DocumentContent downloadMetadataMedia(Metadata metadata, Media media, String loginAbleToDownloadMedia,
+			MultiValueMap<String, String> parameters)
+			throws UnhandledMediaTypeException, APIManagerExternalServiceException, IOException {
+		if (media.getMediaType().equals(Media.MediaTypeEnum.FILE)
+				|| media.getMediaType().equals(Media.MediaTypeEnum.SERVICE)) {
 			try {
-				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(), loginAbleToDownloadMedia, parameters);
+				return applicationService.downloadAPIContent(metadata.getGlobalId(), media.getMediaId(),
+						loginAbleToDownloadMedia, parameters);
 			} catch (APIManagerException e) {
 				throw new APIManagerExternalServiceException(e);
 			}
@@ -266,7 +274,8 @@ public class MetadataServiceImpl implements MetadataService {
 	}
 
 	@Override
-	public DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters) throws AppServiceException, GetClientRegistrationException, IOException {
+	public DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters)
+			throws AppServiceException, GetClientRegistrationException, IOException {
 		final Metadata metadata = getMetadataById(globalId);
 		final Media media = getMetadataMediaById(metadata, mediaId);
 		final String loginAbleToDownloadMedia = getLoginAbleToDownloadMedia(metadata, media);
