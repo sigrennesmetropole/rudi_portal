@@ -1,7 +1,7 @@
 /**
  * RUDI Portail
  */
-package org.rudi.microservice.acl.facade.config.security.oauth2;
+package org.rudi.microservice.acl.facade.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

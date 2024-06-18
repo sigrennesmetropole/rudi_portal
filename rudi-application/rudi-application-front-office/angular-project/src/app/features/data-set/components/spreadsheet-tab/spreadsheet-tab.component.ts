@@ -1,7 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {catchError, switchMap} from 'rxjs/operators';
-import {WorkBook} from 'xlsx';
-import {Media, Metadata} from 'micro_service_modules/api-kaccess';
 import {DataSetAccessService} from '@core/services/data-set/data-set-access.service';
 import {DisplayTableDataInterface} from '@core/services/data-set/display-table-data.interface';
 import {DisplayTableService} from '@core/services/data-set/display-table.service';
@@ -9,6 +6,9 @@ import {IconRegistryService} from '@core/services/icon-registry.service';
 import {LogService} from '@core/services/log.service';
 import {ErrorWithCause} from '@shared/models/error-with-cause';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
+import {Media, Metadata} from 'micro_service_modules/api-kaccess';
+import {catchError, switchMap} from 'rxjs/operators';
+import {WorkBook} from 'xlsx';
 
 const EMPTY_SEARCH = '';
 
@@ -55,11 +55,11 @@ export class SpreadsheetTabComponent implements OnInit {
     ngOnInit(): void {
         if (this.metadata && this.mediaToDisplay) {
             this.displayTableLoading = true;
-            this.datasetAccessService.hasAccess(this.metadata, this.mediaToDisplay).pipe(
+            this.datasetAccessService.hasAccess(this.metadata).pipe(
                 switchMap((hasAccess: boolean) => {
                     if (hasAccess) {
                         this.errorAccess = false;
-                        return this.displayTableService.downloadTableFile(this.metadata.global_id, this.mediaToDisplay.media_id).pipe(
+                        return this.displayTableService.downloadTableFile(this.mediaToDisplay.connector.url).pipe(
                             catchError((error) => {
                                 // Cas erreur avec un message à afficher côté front
                                 if (error instanceof ErrorWithCause && error.code != null) {

@@ -9,11 +9,11 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.apigateway.core.bean.PagedThrottlingList;
 import org.rudi.microservice.apigateway.core.bean.Throttling;
 import org.rudi.microservice.apigateway.core.bean.ThrottlingSearchCriteria;
 import org.rudi.microservice.apigateway.facade.controller.api.ThrottlingsApi;
-import org.rudi.microservice.apigateway.facade.util.UtilPageable;
 import org.rudi.microservice.apigateway.service.throttling.ThrottlingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

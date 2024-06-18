@@ -2,8 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {IconRegistryService} from '@core/services/icon-registry.service';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
+import {PageTitleService} from '@core/services/page-title.service';
 import {SelfdataDatasetLatestRequests} from '@core/services/selfdata-dataset/selfdata-dataset-latest-requests';
 import {SelfdataDatasetService} from '@core/services/selfdata-dataset/selfdata-dataset.service';
+import {TranslateService} from '@ngx-translate/core';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
 import {MetadataUtils} from '@shared/utils/metadata-utils';
 import {Metadata} from 'micro_service_modules/api-kaccess';
@@ -34,6 +36,8 @@ export class SelfdataDatasetDetailsComponent implements OnInit {
         private readonly route: ActivatedRoute,
         private readonly konsultMetierService: KonsultMetierService,
         private readonly selfdataDatasetService: SelfdataDatasetService,
+        private readonly pageTitleService: PageTitleService,
+        private readonly  translateService: TranslateService
     ) {
         iconRegistryService.addAllSvgIcons(ALL_TYPES);
     }
@@ -44,6 +48,7 @@ export class SelfdataDatasetDetailsComponent implements OnInit {
         this.route.params.pipe(
             switchMap(params => this.konsultMetierService.getMetadataByUuid(params.datasetUuid)),
             switchMap(metadata => {
+                this.pageTitleService.setPageTitle(metadata.resource_title, this.translateService.instant('pageTitle.defaultDetail'));
                 this.metadata = metadata;
                 this.getMySelfdataInformationRequestMatchingData(this.metadata.global_id);
                 return this.getLatestRequests(this.metadata.global_id);

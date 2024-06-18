@@ -19,4 +19,10 @@ public class ProjektConfiguration extends WebClientConfig {
 			ProjektProperties projektProperties) {
 		return webClientBuilder.baseUrl(projektProperties.getServiceBaseUrl()).build();
 	}
+
+	@Bean
+	public WebClient ownerInfoWebClient(@Qualifier("rudi_oauth2_builder") WebClient.Builder webClientBuilder,
+			ProjektProperties projektProperties) {
+		return webClientBuilder.baseUrl(projektProperties.getServiceBaseUrl()).build();
+	}
 }

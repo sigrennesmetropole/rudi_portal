@@ -6,29 +6,18 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = {
-		"org.rudi.common.facade",
-		"org.rudi.common.service",
-		"org.rudi.common.storage",
-		"org.rudi.common.core",
-		"org.rudi.facet.acl",
-		"org.rudi.facet.apimaccess",
-		"org.rudi.facet.dataverse",
-		"org.rudi.facet.kaccess",
-		"org.rudi.facet.projekt",
-		"org.rudi.facet.selfdata",
-		"org.rudi.facet.rva",
-		"org.rudi.facet.organization",
-		"org.rudi.facet.cms",
-		"org.rudi.microservice.konsult.facade",
-		"org.rudi.microservice.konsult.service",
-		"org.rudi.facet.apimremote",
-})
+@SpringBootApplication(scanBasePackages = { "org.rudi.common.facade", "org.rudi.common.service",
+		"org.rudi.common.storage", "org.rudi.common.core", "org.rudi.facet.acl", "org.rudi.facet.apimaccess",
+		"org.rudi.facet.dataverse", "org.rudi.facet.kaccess", "org.rudi.facet.projekt", "org.rudi.facet.selfdata",
+		"org.rudi.facet.rva", "org.rudi.facet.organization", "org.rudi.facet.cms",
+		"org.rudi.microservice.konsult.facade", "org.rudi.microservice.konsult.service", "org.rudi.facet.apimremote", })
 @EnableEurekaClient
+@EnableScheduling
 @PropertySource(value = { "classpath:konsult/konsult-common.properties" })
 public class AppFacadeApplication extends SpringBootServletInitializer {
 

@@ -169,6 +169,7 @@ export class LoginComponent implements OnInit {
         this.errorServerAuthenticate = false;
         this.errorAccountNotActif = false;
         this.errorUserLocked = false;
+        this.errorCaptchaInput = false;
         this.loading = true;
         // Validation du captcha avant tout
         this.captchaCheckerService.validateCaptchaAndDoNextStep(this.enableCaptchaOnPage, this.rudiCaptcha, this.authentificationService.authenticate(this.loginForm))

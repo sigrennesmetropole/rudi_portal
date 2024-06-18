@@ -3,7 +3,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {LogService} from '@core/services/log.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
+import {PageTitleService} from '@core/services/page-title.service';
 import {UserService} from '@core/services/user.service';
+import {TranslateService} from '@ngx-translate/core';
 import {User} from 'micro_service_modules/acl/acl-api';
 import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {switchMap, tap} from 'rxjs/operators';
@@ -24,7 +26,9 @@ export class DetailComponent implements OnInit {
                 private readonly router: Router,
                 private readonly organizationService: OrganizationMetierService,
                 private readonly userService: UserService,
-                private readonly logService: LogService) {
+                private readonly logService: LogService,
+                private readonly pageTitleService: PageTitleService,
+                private readonly translateService: TranslateService) {
     }
 
     ngOnInit(): void {
@@ -43,6 +47,11 @@ export class DetailComponent implements OnInit {
         ).subscribe(
             {
                 next: (organization: Organization) => {
+                    if (organization.name) {
+                        this.pageTitleService.setPageTitle(organization.name, this.translateService.instant('pageTitle.defaultDetail'));
+                    } else {
+                        this.pageTitleService.setPageTitleFromUrl('/organization');
+                    }
                     this.isLoading = false;
                     this.organization = organization;
                 },

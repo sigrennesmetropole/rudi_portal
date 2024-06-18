@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class FooterDescriptionData {
+	private String logo;
 	private List<SocialNetworkData> socialNetworks;
 }
 

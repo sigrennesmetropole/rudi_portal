@@ -6,9 +6,11 @@ import java.util.UUID;
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.facet.apimaccess.exception.APIManagerException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.LinkedDatasetStatus;
@@ -71,4 +73,12 @@ public interface LinkedDatasetService {
 	 */
 	Form getDecisionInformations(UUID projectUuid, UUID linkedDatasetUuid)
 			throws AppServiceException, FormDefinitionException;
+
+	/**
+	 * Permet de vérifier si l'utilisateur connecté a accès au JDD, ciblé par son uuid.
+	 *
+	 * @param datasetUuid globalId du dataset
+	 * @return true s'il a accès, false sinon.
+	 */
+	boolean isMyAccessGratedToDataset(UUID datasetUuid) throws GetOrganizationException, AppServiceUnauthorizedException;
 }

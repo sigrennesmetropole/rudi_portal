@@ -36,7 +36,7 @@ public class WebSecurityConfig {
 	private static final String[] SB_PERMIT_ALL_URL = {
 			// URL public
 			"/konsult/v1/application-information", "/konsult/v1/healthCheck", "/konsult/v1/cms/**",
-			"/konsult/v1/customizations", "/konsult/v1/customizations/**",
+			"/konsult/v1/customizations", "/konsult/v1/customizations/**", "/konsult/v1/sitemap/{resource}",
 			// swagger ui / openapi
 			"/konsult/v3/api-docs/**", "/konsult/swagger-ui/**", "/konsult/swagger-ui.html",
 			"/konsult/swagger-resources/**", "/configuration/ui", "/configuration/security", "/webjars/**" };

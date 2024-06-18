@@ -129,7 +129,11 @@ export class DetailComponent implements OnInit {
             this.metadataLoaded.next(metadata);
             this.loadLinkedProjects(metadata);
             this.loadOtherDatasets(metadata);
-            this.pageTitleService.setPageTitle(metadata.resource_title, 'Détail');
+            if (metadata.resource_title) {
+                this.pageTitleService.setPageTitle(metadata.resource_title, this.translateService.instant('pageTitle.defaultDetail'));
+            } else {
+                this.pageTitleService.setPageTitleFromUrl('/personal-space/selfdata-datasets');
+            }
         }
     }
 
@@ -346,11 +350,12 @@ export class DetailComponent implements OnInit {
      * Fonction permettant de télécharger un fichier suivant son format
      */
     onDownloadFormat(): void {
+        console.log(this.selectedItem);
         this.isLoading = true;
         const selectedItem = this.selectedItem;
         if (selectedItem) {
-
-            this.konsultMetierService.downloadMetadataMedia(this.metadata.global_id, selectedItem.media_id)
+            console.log(this.selectedItem);
+            this.konsultMetierService.downloadMetadataMedia(selectedItem.connector.url)
                 .subscribe({
                     next: (response) => {
                         this.isLoading = false;

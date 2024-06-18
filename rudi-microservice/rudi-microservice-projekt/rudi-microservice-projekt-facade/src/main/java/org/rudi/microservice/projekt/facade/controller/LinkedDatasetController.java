@@ -3,11 +3,14 @@
  */
 package org.rudi.microservice.projekt.facade.controller;
 
+import java.util.UUID;
+
 import org.rudi.bpmn.core.bean.Form;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.service.TaskService;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
 import org.rudi.microservice.projekt.facade.controller.api.LinkedDatasetApi;
+import org.rudi.microservice.projekt.service.project.LinkedDatasetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class LinkedDatasetController implements LinkedDatasetApi {
 
 	private final TaskService<LinkedDataset> linkedDatasetTaskService;
+	private final LinkedDatasetService linkedDatasetService;
 
 	@Override
 	public ResponseEntity<Task> claimLinkedDatasetTask(String taskId) throws Exception {
@@ -59,5 +63,17 @@ public class LinkedDatasetController implements LinkedDatasetApi {
 	@Override
 	public ResponseEntity<Task> updateLinkedDatasetTask(Task task) throws Exception {
 		return ResponseEntity.ok(linkedDatasetTaskService.updateTask(task));
+	}
+
+	/**
+	 * GET /linked-dataset/{datasetUuid}/myAccess : Définit si l&#39;utilisateur connecté à un linked dataset
+	 * Définit si l&#39;utilisateur connecté a accès au linked dataset ciblé
+	 *
+	 * @param datasetUuid Uuid du linkedDataset auquel on souhaite avoir accès. (required)
+	 * @return OK (status code 200)
+	 */
+	@Override
+	public ResponseEntity<Boolean> isMyAccessGratedToDataset(UUID datasetUuid) throws Exception {
+		return ResponseEntity.ok(linkedDatasetService.isMyAccessGratedToDataset(datasetUuid));
 	}
 }

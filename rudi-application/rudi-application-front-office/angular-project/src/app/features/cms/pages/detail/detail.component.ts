@@ -3,6 +3,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {ActivatedRoute, Params} from '@angular/router';
 import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
 import {LogService} from '@core/services/log.service';
+import {PageTitleService} from '@core/services/page-title.service';
 import {TranslateService} from '@ngx-translate/core';
 import {CmsAsset} from 'micro_service_modules/api-cms';
 import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
@@ -13,6 +14,7 @@ import {catchError, switchMap} from 'rxjs/operators';
 const TYPE_FIELD: string = 'type';
 const UUID_FIELD: string = 'uuid';
 const TEMPLATE_FIELD: string = 'template';
+const NEWS_TITLE: string = 'titre';
 
 @Component({
     selector: 'app-detail',
@@ -32,7 +34,8 @@ export class DetailComponent implements OnInit {
         private readonly logger: LogService,
         private readonly translateService: TranslateService,
         private readonly domSanitizer: DomSanitizer,
-        private readonly breakpointObserver: BreakpointObserverService
+        private readonly breakpointObserver: BreakpointObserverService,
+        private readonly pageTitleService: PageTitleService,
     ) {
         this.init();
     }
@@ -57,6 +60,10 @@ export class DetailComponent implements OnInit {
             })
         ).subscribe({
             next: (value: CmsAsset) => {
+                // Pour définir le titre de l'onglet de détail de la news, on récupère le titre de la news dans la réponse de la requête
+                if (value.title) {
+                    this.pageTitleService.setPageTitle(value.title, this.translateService.instant('pageTitle.defaultDetail'));
+                }
                 this.safeHtml = this.domSanitizer.bypassSecurityTrustHtml(value.content);
                 this.isLoading = false;
             },
@@ -67,4 +74,5 @@ export class DetailComponent implements OnInit {
             }
         });
     }
+
 }

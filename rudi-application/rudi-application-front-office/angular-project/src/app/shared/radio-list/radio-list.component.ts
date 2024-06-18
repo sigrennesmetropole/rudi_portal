@@ -19,6 +19,9 @@ export class RadioListComponent {
     public suggestions: RadioListItem[];
 
     @Input()
+    public isConfidentialityValid: boolean;
+
+    @Input()
     public comp: RadioListItem[];
 
     /**

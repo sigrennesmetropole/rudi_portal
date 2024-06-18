@@ -35,7 +35,7 @@ export class MapTabComponent implements OnInit {
     ngOnInit(): void {
         if (this.metadata && this.mediaToDisplay) {
             this.isMapLoading = true;
-            this.datasetAccessService.hasAccess(this.metadata, this.mediaToDisplay).pipe(
+            this.datasetAccessService.hasAccess(this.metadata).pipe(
                 switchMap((hasAccess: boolean) => {
                     this.isErrorAccess = !hasAccess;
                     return this.displayMapService.getDatasetBaseLayers();

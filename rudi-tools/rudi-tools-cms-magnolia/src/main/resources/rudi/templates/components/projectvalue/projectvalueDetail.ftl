@@ -24,8 +24,8 @@
             [#assign date = lastModifiedProperty.getDate()!]
         [/#if]
 
-        <div class="title1-detail">${localized(projectvalueContent,"title",lang)}</div>
-        <div class="title2-detail">${localized(projectvalueContent,"shorttitle",lang)}</div>
+        <div class="title1-detail">${localized(projectvalueContent,"shorttitle",lang)}</div>
+        <div class="title2-detail">${localized(projectvalueContent,"title",lang)}</div>
         <div class="modified-at">${localized(projectvalueContent,"modified",lang)} ${date?string("dd.MM.yyyy")}</div>
 
         <div class="img-container-detail">

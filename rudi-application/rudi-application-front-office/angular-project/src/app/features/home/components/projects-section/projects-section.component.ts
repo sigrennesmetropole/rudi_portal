@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
 import {TranslateService} from '@ngx-translate/core';
 import {ProjectsDescription} from 'micro_service_modules/konsult/konsult-api';
+import {from, Observable} from 'rxjs';
 
 @Component({
     selector: 'app-projects-section',
@@ -21,6 +22,10 @@ export class ProjectsSectionComponent implements OnInit {
 
     redirectToProject(): void {
         this.router.navigate(['/projets']);
+    }
+
+    submitProject(): Observable<boolean> {
+        return from(this.router.navigate(['/projets/soumettre-un-projet']));
     }
 
     ngOnInit(): void {

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-apigateway</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version>
 	</parent>
 
 	<artifactId>rudi-microservice-apigateway-facade</artifactId>
@@ -51,6 +51,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>rudi-common-storage</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rudi-common-facade</artifactId>
 		</dependency>
 
 		<dependency>

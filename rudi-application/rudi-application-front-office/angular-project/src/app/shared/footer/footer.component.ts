@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {BreakpointObserverService, MediaSize} from '@core/services/breakpoint-observer.service';
+import {CustomizationService} from '@core/services/customization.service';
+import {Base64EncodedLogo, ImageLogoService} from '@core/services/image-logo.service';
 import {LogService} from '@core/services/log.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
 import {RedirectService} from '@core/services/redirect.service';
@@ -9,11 +11,12 @@ import {AppInfo} from 'micro_service_modules/acl/acl-api/model/models';
 import {CmsAsset, PagedCmsAssets} from 'micro_service_modules/api-cms';
 import {CustomizationDescription, KonsultService, MiscellaneousService} from 'micro_service_modules/konsult/konsult-api';
 import {CmsTermsDescription} from 'micro_service_modules/konsult/konsult-model';
-import {forkJoin} from 'rxjs';
+import {forkJoin, switchMap} from 'rxjs';
 import {FooterUtils} from '../utils/footer-utils';
 
 const OFFSET: number = 0;
 const LIMIT: number = 3;
+const DEFAULT_PICTO: Base64EncodedLogo = '/assets/images/logo_bleu_orange.svg';
 
 @Component({
     selector: 'app-footer',
@@ -32,6 +35,9 @@ export class FooterComponent implements OnInit {
     cmsTermsDescription: CmsTermsDescription;
     customizationDescriptionIsLoading: boolean;
 
+    logoIsLoading: boolean;
+    logoSrc: Base64EncodedLogo;
+
     displayComponent: boolean;
     termsValues: Array<SafeHtml>;
 
@@ -45,11 +51,14 @@ export class FooterComponent implements OnInit {
         private readonly konsultService: KonsultService,
         private readonly logger: LogService,
         private readonly breakpointObserver: BreakpointObserverService,
-        private readonly domSanitizer: DomSanitizer
+        private readonly domSanitizer: DomSanitizer,
+        private readonly imageLogoService: ImageLogoService,
+        private readonly customizationService: CustomizationService
     ) {
         this.customizationDescriptionIsLoading = false;
         this.displayComponent = false;
         this.termsValues = [];
+        this.logoIsLoading = false;
         this.initCustomizationDescription();
 
     }
@@ -109,10 +118,11 @@ export class FooterComponent implements OnInit {
 
     private initCustomizationDescription(): void {
         this.customizationDescriptionIsLoading = true;
-        this.konsultService.getCustomizationDescription(this.translateService.currentLang)
+        this.customizationService.getCustomizationDescription()
             .subscribe({
                 next: (customizationDescription: CustomizationDescription) => {
                     this.customizationDescription = customizationDescription;
+                    this.initLogo(this.customizationDescription.footer_description.logo);
                     this.cmsTermsDescription = customizationDescription.cms_terms_description;
                     this.customizationDescriptionIsLoading = false;
                     this.initTerms();
@@ -123,4 +133,25 @@ export class FooterComponent implements OnInit {
                 }
             });
     }
+
+    private initLogo(uuid: string): void {
+        this.logoIsLoading = true;
+        this.konsultService.downloadCustomizationResource(uuid)
+            .pipe(
+                switchMap((blob: Blob) => {
+                    return this.imageLogoService.createImageFromBlob(blob);
+                })
+            ).subscribe({
+            next: (logo: Base64EncodedLogo) => {
+                this.logoSrc = logo;
+                this.logoIsLoading = false;
+            },
+            error: (error) => {
+                this.logger.error(error);
+                this.logoSrc = DEFAULT_PICTO;
+                this.logoIsLoading = false;
+            }
+        });
+    }
+
 }

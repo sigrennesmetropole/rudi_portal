@@ -5,7 +5,6 @@ import {FormProjectDependencies, ProjectSubmissionService} from '@core/services/
 import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {DialogSubscribeDatasetsService} from '@core/services/dialog-subscribe-datasets.service';
 import {FiltersService} from '@core/services/filters.service';
-import {ImageLogoService} from '@core/services/image-logo.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {ProjectTaskMetierService} from '@core/services/tasks/projekt/project-task-metier.service';
 import {CloseEvent} from '@features/data-set/models/dialog-closed-data';
@@ -67,8 +66,7 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
         private readonly personalSpaceProjectService: DialogSubscribeDatasetsService,
         private route: ActivatedRoute,
         private readonly snackBarService: SnackBarService,
-        private readonly translateService: TranslateService,
-        private imageLogoService: ImageLogoService
+        private readonly translateService: TranslateService
     ) {
         super(projektMetierService, filtersService, projectSubmissionService);
     }
@@ -104,8 +102,8 @@ export class ProjectMainInformationsComponent extends ReuseProjectCommonComponen
             title: this.project.title,
             description: this.project.description,
             reuse_status: this.project.reutilisation_status,
-            begin_date: moment(this.project.expected_completion_start_date),
-            end_date: moment(this.project.expected_completion_end_date),
+            begin_date: this.project.expected_completion_start_date ? moment(this.project.expected_completion_start_date) : null,
+            end_date: this.project.expected_completion_end_date ? moment(this.project.expected_completion_end_date) : null,
             publicCible: this.project.target_audiences,
             echelle: this.project.territorial_scale,
             territoire: this.project.detailed_territorial_scale,

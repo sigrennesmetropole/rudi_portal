@@ -63,33 +63,33 @@
                                     <app-rudi-captcha *ngIf="enableCaptchaOnPage"
                                                       [nomCaptcha]="'captchaFR'"></app-rudi-captcha>
                                     <!-- Box erreur sur le captcha -->
-                                    <app-error-box *ngIf="errorCaptchaInput"
+                                    <app-error-box *ngIf="errorCaptchaInput" class="pt-3"
                                                    [text]="'authentification.error-captcha'|translate">
                                     </app-error-box>
                                     <!-- Box erreur d'authent normale -->
-                                    <app-error-box *ngIf="isError4xx"
+                                    <app-error-box *ngIf="isError4xx" class="pt-3"
                                                    [text]="'authentification.error-body'|translate"
                                                    [clickableText]="'authentification.error-footer'|translate"
                                                    (clickableTextClicked)="handleClickGoInscrire()"
                                     >
                                     </app-error-box>
-                                    <app-error-box *ngIf="errorAccountNotActif"
+                                    <app-error-box *ngIf="errorAccountNotActif" class="pt-3"
                                                    [text]="'authentification.errorBodyAccountNotActif'|translate"
                                                    [clickableText]="'authentification.errorFooterAccountNotActif'|translate"
                                                    (clickableTextClicked)="handleClickContactRudi()"
                                     >
                                     </app-error-box>
                                     <!-- Box erreur d'authent 500 -->
-                                    <app-error-box *ngIf="errorServerAccountNotActive"
+                                    <app-error-box *ngIf="errorServerAccountNotActive" class="pt-3"
                                                    [text]="'authentification.errorServerIsNotActive'|translate"
                                     >
                                     </app-error-box>
-                                    <app-error-box *ngIf="errorServerAuthenticate"
+                                    <app-error-box *ngIf="errorServerAuthenticate" class="pt-3"
                                                    [text]="'authentification.errorServerAuthent'|translate"
                                     >
                                     </app-error-box>
                                     <!-- Box erreur d'authent dù à multiples tentatives de connection -->
-                                    <app-error-box *ngIf="errorUserLocked"
+                                    <app-error-box *ngIf="errorUserLocked" class="pt-3"
                                                    [text]="'authentification.errorLoginLocked'|translate"
                                                    [clickableText]="'authentification.errorLoginLockedFooter'|translate"
                                                    (clickableTextClicked)="handleClickToResetPassword()"

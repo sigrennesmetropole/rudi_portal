@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
@@ -34,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * @author FNI18300
  */
+@SuppressWarnings("deprecation")
 @Configuration
 @RequiredArgsConstructor
 public class AuthenticationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -116,7 +116,8 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 	}
 
 	@Override
-	public void configure(AuthorizationServerSecurityConfigurer cfg) {
+	public void configure(
+			org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer cfg) {
 		LOGGER.info("Configure AuthorizationServerSecurityConfigurer");
 		// Enable /oauth/token_key URL used by resource server to validate JWT tokens
 		cfg.tokenKeyAccess("permitAll");
@@ -143,7 +144,7 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 		// endpoints.tokenServices(null)
 	}
 
-	private ClientDetailsService clientDetailsService() {
+	protected ClientDetailsService clientDetailsService() {
 		return new ClientDetailServiceImpl();
 	}
 }

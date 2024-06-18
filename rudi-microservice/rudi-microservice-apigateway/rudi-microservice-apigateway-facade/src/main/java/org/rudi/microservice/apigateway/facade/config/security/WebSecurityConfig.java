@@ -3,6 +3,7 @@ package org.rudi.microservice.apigateway.facade.config.security;
 import java.util.Arrays;
 
 import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
@@ -78,7 +79,9 @@ public class WebSecurityConfig {
 
 	private final RestTemplate internalRestTemplate;
 
-	private final AbstractJwtTokenUtil jwtTokenUtil;
+	@Qualifier("JwtTokenUtilApiGateway")
+	@Autowired
+	private AbstractJwtTokenUtil jwtTokenUtil;
 
 	@Bean
 	public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {

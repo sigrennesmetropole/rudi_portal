@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Order} from '@core/services/asset/project/projekt-metier.service';
+import {CustomizationService} from '@core/services/customization.service';
 import {FiltersService} from '@core/services/filters.service';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
 import {LogService} from '@core/services/log.service';
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         private readonly logger: LogService,
         private readonly translateService: TranslateService,
         private readonly themeCacheService: ThemeCacheService,
+        private readonly customizationService: CustomizationService,
     ) {
         this.destroyed$ = new Subject<boolean>();
 
@@ -86,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     private initCustomizationDescription(): void {
         this.customizationDescriptionIsLoading = true;
-        this.konsultService.getCustomizationDescription(this.translateService.currentLang)
+        this.customizationService.getCustomizationDescription()
             .subscribe({
                 next: (customizationDescription: CustomizationDescription) => {
                     this.customizationDescription = customizationDescription;

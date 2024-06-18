@@ -19,6 +19,9 @@ import org.rudi.facet.bpmn.helper.workflow.BpmnHelper;
 import org.rudi.facet.bpmn.service.FormService;
 import org.rudi.facet.bpmn.service.InitializationService;
 import org.rudi.facet.bpmn.service.impl.AbstractTaskServiceImpl;
+import org.rudi.facet.organization.bean.Organization;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationMembersException;
 import org.rudi.microservice.projekt.core.bean.LinkedDataset;
 import org.rudi.microservice.projekt.service.helper.ProjektAuthorisationHelper;
@@ -26,15 +29,19 @@ import org.rudi.microservice.projekt.service.helper.linkeddataset.LinkedDatasetA
 import org.rudi.microservice.projekt.service.helper.linkeddataset.LinkedDatasetWorkflowHelper;
 import org.rudi.microservice.projekt.storage.dao.linkeddataset.LinkedDatasetDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
+import org.rudi.microservice.projekt.storage.entity.OwnerType;
 import org.rudi.microservice.projekt.storage.entity.linkeddataset.LinkedDatasetEntity;
 import org.rudi.microservice.projekt.storage.entity.project.ProjectEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author FNI18300
  */
 @Service
+@Slf4j
 public class LinkedDatasetTaskServiceImpl extends
 		AbstractTaskServiceImpl<LinkedDatasetEntity, LinkedDataset, LinkedDatasetDao, LinkedDatasetWorkflowHelper, LinkedDatasetAssigmentHelper> {
 
@@ -45,6 +52,9 @@ public class LinkedDatasetTaskServiceImpl extends
 
 	@Autowired
 	private ProjektAuthorisationHelper projektAuthorisationHelper;
+	@Autowired
+	private OrganizationHelper organizationHelper;
+
 
 	public LinkedDatasetTaskServiceImpl(ProcessEngine processEngine, FormHelper formHelper, BpmnHelper bpmnHelper,
 			UtilContextHelper utilContextHelper, InitializationService initializationService,
@@ -94,9 +104,22 @@ public class LinkedDatasetTaskServiceImpl extends
 		// Réécriture de l'initiator : initator de la demande de jeux de donnée = owner du projet associé
 		ProjectEntity projectEntity = projectCustomDao.findProjectByLinkedDatasetUuid(assetDescriptionEntity.getUuid());
 		if (projectEntity != null) {
-			User user = getAssignmentHelper().getUserByUuid(projectEntity.getOwnerUuid());
-			if (user != null) {
-				assetDescriptionEntity.setInitiator(user.getLogin());
+			if(projectEntity.getOwnerType().equals(OwnerType.USER)){
+				User user = getAssignmentHelper().getUserByUuid(projectEntity.getOwnerUuid());
+				if (user != null) {
+					assetDescriptionEntity.setInitiator(user.getLogin());
+				}
+			}
+			else {
+				//chargement de l'orga
+				try{
+					Organization organization = organizationHelper.getOrganization(projectEntity.getOwnerUuid());
+					if(organization != null){
+						assetDescriptionEntity.setInitiator(organization.getUuid().toString());
+					}
+				}catch (GetOrganizationException e){
+					log.error("Une erreur est survenue lors du chargement de l'organization d'uuid {} owner du projet {}",projectEntity.getUuid(), projectEntity.getUuid(),e);
+				}
 			}
 		}
 	}

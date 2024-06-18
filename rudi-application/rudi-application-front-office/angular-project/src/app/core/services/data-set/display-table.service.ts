@@ -40,11 +40,11 @@ export class DisplayTableService {
      * @param globalId ID du JDD contenant le média
      * @param mediaId ID du média XLS a télécharger
      */
-    downloadTableFile(globalId: string, mediaId: string): Observable<WorkBook> {
-        return this.konsultMetierService.downloadMetadataMedia(globalId, mediaId).pipe(
+    downloadTableFile(mediaUrl): Observable<WorkBook> {
+
+        return this.konsultMetierService.downloadMetadataMedia(mediaUrl).pipe(
             switchMap((responseBlob: HttpResponse<Blob>) => {
                 const blob = new Blob([responseBlob.body], {type: responseBlob.body.type});
-
                 // Vérification de la taille max autorisée pour télécharger
                 return this.getTableDisplayMaxFileSize().pipe(
                     switchMap((maxFileSize: number) => {
@@ -52,7 +52,6 @@ export class DisplayTableService {
                             const errorMessage = this.translateService.instant('metaData.tabulatedDataTab.errorFileSize');
                             throw new ErrorWithCause(errorMessage, null, DisplayTableService.FILE_SIZE_ERROR_CODE);
                         }
-
                         // Lecture du flux du blob
                         return readFile(blob);
                     })

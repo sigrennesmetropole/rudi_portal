@@ -2,7 +2,6 @@ package org.rudi.microservice.konsult.service.metadata;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -95,16 +94,6 @@ public interface MetadataService {
 			throws APIManagerException, AppServiceException;
 
 	/**
-	 * Permet de savoir si l'utilisateur connecté a souscrit à l'api
-	 *
-	 * @param globalId identifiant des métadonnées
-	 * @param mediaId  identifiant du média
-	 * @return true si l'utilisateur connecté a souscrit à l'api
-	 * @throws AppServiceException Pas de souscription à l'API
-	 */
-	Boolean hasSubscribeToMetadataMedia(UUID globalId, UUID mediaId) throws AppServiceException;
-
-	/**
 	 * @return liste des JDD partageant le même thème (cf RUDI-292)
 	 */
 	List<Metadata> getMetadatasWithSameTheme(UUID globalId, Integer limit) throws AppServiceException;
@@ -114,16 +103,4 @@ public interface MetadataService {
 	 * @return nombre de dataset sur le même thème
 	 */
 	Integer getNumberOfDatasetsOnTheSameTheme(UUID globalId) throws AppServiceException;
-
-	/**
-	 * @param globalId   uuid du JDD ayant les données carto
-	 * @param mediaId    uuid du média
-	 * @param parameters paramètres d'appels du service (autant qu'on en a besoin)
-	 * @return
-	 * @throws AppServiceException
-	 * @throws GetClientRegistrationException
-	 * @throws IOException
-	 */
-	DocumentContent callServiceMetadataMedia(UUID globalId, UUID mediaId, Map<String, String> parameters)
-			throws AppServiceException, GetClientRegistrationException, IOException;
 }

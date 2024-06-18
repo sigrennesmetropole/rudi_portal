@@ -3,10 +3,14 @@
  */
 package org.rudi.facet.cms.impl;
 
+import static java.nio.file.StandardOpenOption.WRITE;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -46,11 +50,10 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.nio.file.StandardOpenOption.WRITE;
+import reactor.core.publisher.Flux;
 
 /**
  * @author FNI18300
@@ -63,6 +66,8 @@ import static java.nio.file.StandardOpenOption.WRITE;
 public class MagnoliaServiceImpl implements CmsService {
 
 	public static final String GET_API_URL = "/.rest/delivery/{apps-name}/v1";
+
+	public static final String GET_API_URL_ITEM = "/.rest/delivery/{apps-name}";
 
 	public static final String APPS_NAME_PATH = "apps-name";
 	// les uris de la forme : "/dam/jrc:{UUID}/"
@@ -179,7 +184,7 @@ public class MagnoliaServiceImpl implements CmsService {
 		// On ajoute les categories présente dans la requête
 		if (request.getCategories() != null) {
 			// Ces catégories sont converties en UUID correspondant dans Magnolia
-			//  Si une catégorie passé ne correspond à rien dans magnolia --> vide
+			// Si une catégorie passé ne correspond à rien dans magnolia --> vide
 			categories.addAll(convertCategories(request.getCategories()));
 		}
 
@@ -189,11 +194,12 @@ public class MagnoliaServiceImpl implements CmsService {
 			// On rajoute la catégorie par défaut correspondant au type d'asset souhaité.
 			categories.addAll(convertCategories(List.of(defaultCategory)));
 		}
+		// on remplace les catégories par celles issues de la traduction
+		request.setCategories(categories);
 
 		AbstractCmsMagnoliaHandler<?> abstractCmsMagnoliaHandler = lookupHandler(assetType);
 		if (abstractCmsMagnoliaHandler != null) {
-			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(categories,
-					request.getFilters(), offset, limit, order);
+			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(request, offset, limit, order);
 			if (page.getTotal() > 0 && CollectionUtils.isNotEmpty(page.getResults())) {
 				result.setTotal(page.getTotal());
 				page.getResults().forEach(item -> {
@@ -301,13 +307,7 @@ public class MagnoliaServiceImpl implements CmsService {
 
 	protected CmsAsset downloadAsset(CmsAssetType assetType, String assetTemplate, Locale locale, String id) {
 		CmsAsset result = null;
-		Flux<DataBuffer> flux = magnoliaWebClient.get()
-				.uri("rudi/" + convertTemplateName(assetTemplate) + ".html",
-						uriBuilder -> uriBuilder.queryParam("id", id)
-								.queryParamIfPresent("lang",
-										locale != null ? Optional.of(locale.getLanguage()) : Optional.empty())
-								.build())
-				.retrieve().bodyToFlux(DataBuffer.class);
+		Flux<DataBuffer> flux = createAssetFlux(assetTemplate, locale, id);
 
 		try {
 			File outputFile = createOutputFile(cmsMagnoliaConfiguration.getTemporaryFileExtension());
@@ -321,6 +321,7 @@ public class MagnoliaServiceImpl implements CmsService {
 				result = new CmsAsset();
 				result.setId(id);
 				result.setContent(element.outerHtml());
+				result.setTitle(renderTitle(assetType, id, locale, result.getContent()));
 				cacheAssets.put(computeAssetKeyCache(assetType, id, assetTemplate), result);
 			}
 		} catch (Exception e) {
@@ -328,6 +329,35 @@ public class MagnoliaServiceImpl implements CmsService {
 		}
 
 		return result;
+	}
+
+	private String renderTitle(CmsAssetType assetType, String id, Locale locale, String defaultValue) {
+		String title = null;
+		try {
+			String templateTilte = cmsMagnoliaConfiguration.getAssetTypeTitleTemplates()
+					.get(assetType.name().toLowerCase());
+			Flux<DataBuffer> fluxTitle = createAssetFlux(templateTilte, locale, id);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataBufferUtils.write(fluxTitle, baos).blockFirst();
+			title = Jsoup.parse(baos.toString(StandardCharsets.UTF_8)).text();
+		} catch (Exception e) {
+			log.warn("Failed to generate title for " + id, e);
+		}
+		if (StringUtils.isEmpty(title)) {
+			String text = Jsoup.parse(defaultValue).text();
+			title = text.substring(0, Math.min(text.length(), 30));
+		}
+		return title;
+	}
+
+	private Flux<DataBuffer> createAssetFlux(String assetTemplate, Locale locale, String id) {
+		return magnoliaWebClient.get()
+				.uri("rudi/" + convertTemplateName(assetTemplate) + ".html",
+						uriBuilder -> uriBuilder.queryParam("id", id)
+								.queryParamIfPresent("lang",
+										locale != null ? Optional.of(locale.getLanguage()) : Optional.empty())
+								.build())
+				.retrieve().bodyToFlux(DataBuffer.class);
 	}
 
 	protected Element replaceResourcesLinks(Element element) {
@@ -378,8 +408,7 @@ public class MagnoliaServiceImpl implements CmsService {
 		return GET_API_URL;
 	}
 
-
-	protected AbstractCmsMagnoliaHandler<? extends CmsMagnoliaNode> lookupHandler(CmsAssetType assetType) {//NOSONAR
+	protected AbstractCmsMagnoliaHandler<? extends CmsMagnoliaNode> lookupHandler(CmsAssetType assetType) {// NOSONAR
 		return cmsMagnoliaHandlers.stream().filter(h -> h.getAssetType() == assetType).findFirst().orElse(null);
 	}
 

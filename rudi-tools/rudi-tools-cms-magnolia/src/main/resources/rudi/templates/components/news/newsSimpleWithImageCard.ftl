@@ -7,8 +7,8 @@
 [#-------------- RENDERING ----------------]
 [#if newsContent?has_content]
     <div class="news-container card-news-container">
-            <link rel="stylesheet" type="text/css" href="${ctx.contextPath}/.resources/rudi/webresources/css/shared.css"/>
-            <link rel="stylesheet" type="text/css" href="${ctx.contextPath}/.resources/rudi/webresources/css/news.css"/>
+        <link rel="stylesheet" type="text/css" href="${ctx.contextPath}/.resources/rudi/webresources/css/shared.css"/>
+        <link rel="stylesheet" type="text/css" href="${ctx.contextPath}/.resources/rudi/webresources/css/news.css"/>
 
         [#assign asset = damfn.getAsset(newsContent.image1)!]
         [#if asset?has_content]
@@ -23,24 +23,24 @@
             [#assign date = lastModifiedProperty.getDate()!]
             [#assign urlTitle = normalized(localized(newsContent,"title1",lang))!]
         [/#if]
-            <a class="card-click-redirection" href="@self/news/${id!}/rudi-news@one-news-detailed/${urlTitle}">
-                <div class="card-img-container">
-                    <img src="${url!}"/>
-                </div>
+        <a class="card-click-redirection" href="@self/news/${id!}/rudi-news@one-news-detailed/${urlTitle}">
+            <div class="card-img-container">
+                <img src="${url!}"/>
+            </div>
 
-                <div class="card-news-text-content">
-                    <div class="modified-at">${localized(newsContent,"modified",lang)} ${date?string("dd.MM.yyyy")}</div>
+            <div class="card-news-text-content">
+                <div class="modified-at">${localized(newsContent,"modified",lang)} ${date?string("dd.MM.yyyy")}</div>
 
-                        <div class="card-news-title1">${localized(newsContent,"title1",lang)}</div>
+                <div class="card-news-title1">${localized(newsContent,"title1",lang)}</div>
 
-                        <div class="card-news-sumup-container">
-                        <div class="card-news-sumup">
+                <div class="card-news-sumup-container">
+                    <div class="card-news-sumup">
                         ${localized(newsContent,"sumup",lang)}
-                        </div>
                     </div>
                 </div>
+            </div>
 
-            </a>
+        </a>
     </div>
 
 [/#if]

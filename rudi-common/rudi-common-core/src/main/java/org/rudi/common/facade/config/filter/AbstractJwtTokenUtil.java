@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.rudi.common.core.util.SecretKeyUtils;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -27,8 +30,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import org.rudi.common.core.util.SecretKeyUtils;
-import org.springframework.beans.factory.annotation.Value;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,9 +49,9 @@ public abstract class AbstractJwtTokenUtil implements Serializable {
 
 	public static final String HEADER_TOKEN_JWT_PREFIX = "Bearer ";
 
-	protected static final String CONNECTED_USER = "connectedUser";
+	public static final String ISSUER_RUDI = "Rudi#";
 
-	protected static final String ISSUER_RUDI = "Rudi#";
+	public static final String CONNECTED_USER = "connectedUser";
 
 	@Value("${security.jwt.access.tokenKey}")
 	private String secret;

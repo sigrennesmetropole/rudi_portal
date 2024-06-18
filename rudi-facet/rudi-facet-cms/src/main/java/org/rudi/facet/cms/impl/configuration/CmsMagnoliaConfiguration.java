@@ -32,6 +32,11 @@ public class CmsMagnoliaConfiguration {
 
 	private Map<String, String> assetTypeCssSelectors = new HashMap<>();
 
+	private Map<String, String> assetTypeTitleTemplates = new HashMap<>();
+
+	@Value("${cms.magnolia.fullTextLimit:500}")
+	private int fullTextLimit;
+
 	@Value("${temporary.directory:${java.io.tmpdir}}")
 	private String temporaryDirectory;
 

@@ -16,12 +16,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 		"org.rudi.common.core", 
 		"org.rudi.common.service", 
 		"org.rudi.common.storage",
+		"org.rudi.common.facade.controller",
+		"org.rudi.common.facade.util",
 		"org.rudi.facet.acl",
 		"org.rudi.facet.dataverse",
 		"org.rudi.facet.kaccess",
 		"org.rudi.facet.projekt",
 		"org.rudi.facet.selfdata",
-		"org.rudi.microservice.apigateway.facade", "org.rudi.microservice.apigateway.service",
+		"org.rudi.microservice.apigateway.facade", 
+		"org.rudi.microservice.apigateway.service",
 		"org.rudi.microservice.apigateway.storage", })
 @EnableEurekaClient
 @EnableJpaAuditing

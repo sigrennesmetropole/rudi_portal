@@ -28,6 +28,10 @@
     width: 13px;
 }
 
+.confidentiality {
+    border-color: var(--error-color) !important;
+}
+
 // Pouvoir modifier la taille du bouton radio
 :host ::ng-deep .mat-radio-inner-circle{
     height: 13px;

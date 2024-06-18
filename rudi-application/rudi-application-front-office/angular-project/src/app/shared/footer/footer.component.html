@@ -6,7 +6,7 @@
     <a class="button-redirect"
        [ngClass]="{'button-redirect-mobile': mediaSize.isXs || mediaSize.isSm, 'button-redirect-tablet': mediaSize.isMd, 'button-redirect-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
        href="{{'rudidatarennes.contact'|getBackendProperty|async}}"
-       rel="noopener noreferrer">{{'footer.contactezNous'|translate}}</a>
+       rel="noopener noreferrer">{{ 'footer.contactezNous'|translate }}</a>
 
 
     <div class="social-media-section-container"
@@ -33,24 +33,24 @@
          [ngClass]="{'copyright-section-mobile': mediaSize.isXs || mediaSize.isSm,
                         'copyright-section-tablet': mediaSize.isMd,
                         'copyright-section-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-        <p>{{'footer.propulsePar'|translate}}</p>
+        <p>{{ 'footer.propulsePar'|translate }}</p>
+
         <div class="d-flex">
             <div class="footer-logo-container navbar-brand me-2">
-                <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
-                    <mat-icon class="footer-logo" aria-hidden="false"
-                              aria-label="Logo bleu orange beta de rennes metropole"
-                              svgIcon="logo-bleu-orange"></mat-icon>
+                <a routerLink="/home">
+                    <img *ngIf="!logoIsLoading" class="footer-logo" [src]="logoSrc"
+                         alt="Logo bleu orange beta de rennes metropole"/>
                 </a>
             </div>
             <div>
-                <div class="footer-primary-text">{{'footer.ccByCa'|translate}}</div>
+                <div class="footer-primary-text">{{ 'footer.ccByCa'|translate }}</div>
                 <div class="d-flex align-items-center justify-content-center copyright-title"
                      [ngClass]="{'copyright-title-mobile': mediaSize.isXs || mediaSize.isSm,
                         'copyright-title-tablet': mediaSize.isMd,
                         'copyright-title-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
                     <span
-                        class="footer-primary-text rudi-version-label">{{'footer.rudiCopyright' | translate}}</span>
-                    <span class="footer-primary-text">{{appInfo?.version}}</span>
+                        class="footer-primary-text rudi-version-label">{{ 'footer.rudiCopyright' | translate }}</span>
+                    <span class="footer-primary-text">{{ appInfo?.version }}</span>
                 </div>
             </div>
         </div>
@@ -59,8 +59,8 @@
          [ngClass]="{'terms-section-mobile': mediaSize.isXs || mediaSize.isSm,
                         'terms-section-tablet': mediaSize.isMd,
                         'terms-section-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
-            <div *ngFor="let term of termsValues" [innerHTML]="term"
-                 [ngClass]="'rudi-label-lien-mobile-mention'"></div>
+        <div *ngFor="let term of termsValues" [innerHTML]="term"
+             [ngClass]="'rudi-label-lien-mobile-mention'"></div>
 
 
     </div>

@@ -230,7 +230,7 @@ export class ProjectSubmissionService {
             type: ['', Validators.required],
             url: ['', Validators.pattern(/^(http|https|ftp):\/\/.*$/)],
             reuse_status: ['', Validators.required],
-            confidentiality: this.formBuilder.control(DEFAULT_CONFIDENTIALITY_CODE, Validators.required),
+            confidentiality: ['', Validators.required],
         }, {
             // Contrôle cross champs sur la période
             validators: [consistentPeriodValidator({beginControlName: 'begin_date', endControlName: 'end_date'})],

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -36,10 +35,8 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationProcessingFilter.class);
 
-	@Value("${security.jwt.parameter.login:login}")
 	private String loginParameter;
 
-	@Value("${security.jwt.parameter.password:password}")
 	private String passwordParameter;
 
 	private AntPathRequestMatcher checkCredentialMatcher;
@@ -50,21 +47,26 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
 	 * Constructor
 	 *
 	 * @param authenticateUrl
+	 * @param loginParameter
+	 * @param passwordParameter
 	 * @param checkCredentialUrl
 	 * @param authenticationProvider
 	 * @param successHandler         - Success Handler
 	 * @param failureHandler         - Failure Handler
 	 * @param manager
 	 */
-	public JwtAuthenticationProcessingFilter(String authenticateUrl, String checkCredentialUrl,
-			JwtAuthenticationProvider authenticationProvider, final AuthenticationSuccessHandler successHandler,
-			final AuthenticationFailureHandler failureHandler, AuthenticationManager manager) {
+	public JwtAuthenticationProcessingFilter(String authenticateUrl, String loginParameter, String passwordParameter,
+			String checkCredentialUrl, JwtAuthenticationProvider authenticationProvider,
+			final AuthenticationSuccessHandler successHandler, final AuthenticationFailureHandler failureHandler,
+			AuthenticationManager manager) {
 		super(new AntPathRequestMatcher(authenticateUrl, "POST"));
 		setCheckCredential(checkCredentialUrl);
 		setAuthentificationProvider(authenticationProvider);
 		setAuthenticationSuccessHandler(successHandler);
 		setAuthenticationFailureHandler(failureHandler);
 		setAuthenticationManager(manager);
+		this.loginParameter = loginParameter;
+		this.passwordParameter = passwordParameter;
 	}
 
 	private void setAuthentificationProvider(JwtAuthenticationProvider authenticationProvider) {
@@ -117,14 +119,14 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
+		getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
 	}
 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
 		SecurityContextHolder.clearContext();
-		this.getFailureHandler().onAuthenticationFailure(request, response, failed);
+		getFailureHandler().onAuthenticationFailure(request, response, failed);
 	}
 
 	@Override

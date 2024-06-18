@@ -74,7 +74,7 @@ export class ProjectConsultationService {
      * @param rowTableData
      */
     isRowDelatable(rowTableData: RowTableData): boolean {
-        if (rowTableData.status === Status.Completed || rowTableData.status === Status.Draft) {
+        if (rowTableData.status === Status.Completed || rowTableData.status === Status.Draft || rowTableData.status === Status.Cancelled) {
             return true;
         }
         this.snackBarService.openSnackBar({

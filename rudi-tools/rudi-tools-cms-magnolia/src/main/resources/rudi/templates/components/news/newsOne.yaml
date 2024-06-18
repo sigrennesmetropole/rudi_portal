@@ -7,7 +7,9 @@ areas:
       newsDetail:
         id: rudi:components/news/newsDetail
       newsSimple:
-        id: rudi:components/news/newsSimple 
+        id: rudi:components/news/newsSimple
+      newsTitle:
+        id: rudi:components/news/newsTitle         
       newsSimpleWithImage:
         id: rudi:components/news/newsSimpleWithImage
       newsSimpleWithImageCard:

@@ -7,7 +7,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {CmsAsset, PagedCmsAssets} from 'micro_service_modules/api-cms';
 import {CmsNewsDescription, KonsultService, NewsPageDescription} from 'micro_service_modules/konsult/konsult-api';
 
-const DEFAULT_ORDER: string = '-updatedate';
+const DEFAULT_ORDER: string = '-mgnl:lastModified';
 const DEFAULT_CATEGORIES: string[] = ['/rudi/news/a-la-une'];
 
 const LIMIT_TEMPLATE_WITH_IMAGE: number = 1;
@@ -64,7 +64,7 @@ export class CmsNewsSectionComponent implements OnInit {
         this.konsultService.renderAssets('NEWS', this.cmsNewsDescription.template_simple_with_image, DEFAULT_CATEGORIES, [publishDateFilter, unpublishDateFilter], this.translateService.currentLang, OFFSET_TEMPLATE_WITH_IMAGE, LIMIT_TEMPLATE_WITH_IMAGE, DEFAULT_ORDER)
             .subscribe({
                 next: (pagedCmsAssets: PagedCmsAssets) => {
-                    this.displayComponent = pagedCmsAssets.total > 0;
+                    this.displayComponent = pagedCmsAssets.elements.length > 0;
                     if (this.displayComponent) {
                         this.news.contentNewsWithImage = this.domSanitizer.bypassSecurityTrustHtml(pagedCmsAssets.elements.pop()?.content);
                     }
@@ -78,7 +78,7 @@ export class CmsNewsSectionComponent implements OnInit {
         this.konsultService.renderAssets('NEWS', this.cmsNewsDescription.template_simple, DEFAULT_CATEGORIES, [publishDateFilter, unpublishDateFilter], this.translateService.currentLang, OFFSET_TEMPLATE_WITHOUT_IMAGE, LIMIT_TEMPLATE_WITHOUT_IMAGE, DEFAULT_ORDER)
             .subscribe({
                 next: (pagedCmsAssets: PagedCmsAssets) => {
-                    this.displayComponent = pagedCmsAssets.total > 0;
+                    this.displayNewsWithoutImage = pagedCmsAssets.elements.length > 0;
                     if (this.displayNewsWithoutImage) {
                         pagedCmsAssets.elements.forEach((cmsAsset: CmsAsset) => {
                             this.news.contentsNewsWithoutImage.push(this.domSanitizer.bypassSecurityTrustHtml(cmsAsset.content));

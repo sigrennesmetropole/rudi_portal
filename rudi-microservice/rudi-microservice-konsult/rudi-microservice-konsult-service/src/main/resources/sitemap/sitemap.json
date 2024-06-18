@@ -1,0 +1,44 @@
+{
+	"staticSitemapEntries": {
+		"urlList": [
+			{
+				"location": "/home",
+				"isRelative": true
+			},
+			{
+				"location": "/catalogue",
+				"isRelative": true
+			},
+			{
+				"location": "/projets",
+				"isRelative": true
+			},
+			{
+				"location": "/organization",
+				"isRelative": true
+			},
+			{
+				"location": "https://doc.rudi.bzh/",
+				"isRelative": false
+			},
+			{
+				"location": "/login",
+				"isRelative": true
+			}
+		]
+	},
+	"sitemapEntries": [
+		{
+			"type": "CMS"
+		},
+		{
+			"type": "DATASETS"
+		},
+		{
+			"type": "ORGANIZATIONS"
+		},
+		{
+			"type": "PROJECTS"
+		}
+	]
+}

@@ -1,10 +1,5 @@
 package org.rudi.microservice.konsult.service.helper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +9,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -40,7 +36,6 @@ import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelp
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.microservice.konsult.service.KonsultSpringBootTest;
-import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -49,6 +44,10 @@ import org.wso2.carbon.apimgt.rest.api.publisher.APIInfo;
 import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import lombok.val;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 //@ExtendWith(MockitoExtension.class)
 @KonsultSpringBootTest
@@ -159,6 +158,7 @@ class APIManagerHelperIT {
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd ouvert auquel le user connu a souscrit")
+	@Disabled("Fonction getLoginAbleToDownloadMedia(...) supprimée")
 	void getLoginAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
 			throws APIManagerException, AppServiceException {
 		val authenticatedUser = getUserWithUsername("username");
@@ -176,12 +176,13 @@ class APIManagerHelperIT {
 		when(apIsService.searchAPI(apiSearchCriteria)).thenReturn(new APIList().count(1)._list(List.of(apiInfo)));
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
 				.thenReturn(HasSubscriptionStatus.SUBSCRIBED);
-		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
-				.isEqualTo(authenticatedUser.getLogin());
+//		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
+//				.isEqualTo(authenticatedUser.getLogin());
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd ouvert auquel le user connu n'a pas souscrit")
+	@Disabled("Fonction getLoginAbleToDownloadMedia(...) supprimée")
 	void getLoginAbleToDownloadNotRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
 			throws APIManagerException, AppServiceException {
 		val authenticatedUser = getUserWithUsername("username");
@@ -201,11 +202,12 @@ class APIManagerHelperIT {
 				.thenReturn(HasSubscriptionStatus.NOT_SUBSCRIBED);
 		when(metadataDetailsHelper.isRestricted(metadata)).thenReturn(false);
 
-		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media)).isEqualTo(anonymousUsername);
+//		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media)).isEqualTo(anonymousUsername);
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd restreint auquel le user connu a souscrit")
+	@Disabled("Fonction getLoginAbleToDownloadMedia(...) supprimée")
 	void getLoginAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasSubscribed()
 			throws APIManagerException, AppServiceException {
 		val authenticatedUser = getUserWithUsername("username");
@@ -224,12 +226,13 @@ class APIManagerHelperIT {
 		when(applicationService.hasSubscribeAPIToDefaultUserApplication(apiInfo.getId(), authenticatedUser.getLogin()))
 				.thenReturn(HasSubscriptionStatus.SUBSCRIBED);
 
-		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
-				.isEqualTo(authenticatedUser.getLogin());
+//		assertThat(apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
+//				.isEqualTo(authenticatedUser.getLogin());
 	}
 
 	@Test
 	@DisplayName("Test de récupération du username qui peut télécharger un jdd restreint auquel le user connu n'a pas souscrit")
+	@Disabled("Fonction getLoginAbleToDownloadMedia(...) supprimée")
 	void getLoginAbleToDownloadRestrictedMetadataMediaWhenKnownUsernameHasNotSubscribed()
 			throws APIManagerException, AppServiceException {
 		val authenticatedUser = getUserWithUsername("mpokora");
@@ -249,9 +252,9 @@ class APIManagerHelperIT {
 				.thenReturn(HasSubscriptionStatus.NOT_SUBSCRIBED);
 		when(metadataDetailsHelper.isRestricted(metadata)).thenReturn(true);
 
-		assertThatThrownBy(() -> apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
-				.isInstanceOf(AccessDeniedMetadataMediaException.class).hasMessage(
-						"L'utilisateur connecté ne peut pas accéder au média media_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b du jeu de données global_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80");
+//		assertThatThrownBy(() -> apiManagerHelper.getLoginAbleToDownloadMedia(metadata, media))
+//				.isInstanceOf(AccessDeniedMetadataMediaException.class).hasMessage(
+//						"L'utilisateur connecté ne peut pas accéder au média media_id = 51ce9dfd-3d84-48d8-848e-6094b9de1e5b du jeu de données global_id = 92569f8a-2885-44d0-9fd6-f97d05f05b80");
 	}
 
 	@Test

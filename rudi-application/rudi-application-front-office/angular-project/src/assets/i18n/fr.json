@@ -14,16 +14,17 @@
             "seeMoreNews": "Voir toutes les actualités"
         },
         "projectValuesSection": {
-            "title1": "Découvrez",
-            "title2": "tous les usages",
-            "description": "Comprendre les usages, gérer mes données et faciliter la création de nouvelles initiatives locales."
+            "title1": "Les fonctionnalités",
+            "title2": "Rudi ",
+            "description": "Découvrez comment Rudi peut vous être utile, que vous soyez producteur de données, porteur de projet, usager des services de Rennes Métropole, ou en tant qu'autre collectivité."
         },
         "projectsSection": {
             "title1": "Découvrez",
             "title2": "les réutilisations",
             "subtitle": "Les réutilisations RUDI",
-            "description": "Une Réutilisation est la description par un Utilisateur de l’usage d’un ou plusieurs jeux de données du catalogue. Tout Utilisateur inscrit peut déclarer une Réutilisation en décrivant le résultat produit (article, application, etc) et en indiquant le ou les jeux de données utilisés.",
-            "seeMoreProjects": "Voir toutes les réutilisations"
+            "description": "Les données du catalogue Rudi peuvent être réutilisées librement ou sur demande pour réaliser des projets et des services nouveaux. Consultez les réutilisations soumises par les autres utilisateurs et renseignez vos propres projets ",
+            "seeMoreProjects": "Voir toutes les réutilisations",
+            "viaOurForm": "via notre formulaire."
         },
         "jddSection": {
             "title": "Derniers jeux de données publiés",
@@ -42,6 +43,7 @@
     },
     "pageTitle": {
         "/": "Catalogue",
+        "/home": "Accueil",
         "/organization": "Organisations",
         "/catalogue": "Catalogue",
         "/projets": "Réutilisations",
@@ -51,7 +53,9 @@
         "/personal-space/my-activity": "Mon activité",
         "/personal-space/selfdata-datasets": "Mes données personnelles",
         "/personal-space/my-notifications": "Mes notifications",
-        "/personal-space/new-request-detail": "Demande de nouvelles données"
+        "/personal-space/new-request-detail": "Demande de nouvelles données",
+        "/cms/news": "Actualités",
+        "defaultDetail": "Détail"
     },
     "project": {
         "confidentiality": {

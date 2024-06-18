@@ -248,13 +248,19 @@
 
         <!-- Niveau de confidentialité -->
         <ng-container>
+
             <div class="d-flex">
                 <mat-label
                     class="mb-1">{{'project.stepper.submission.step1.projectConfidentiality'|translate}}</mat-label>
                 <span class="ms-1 required-symbol">{{'signup.etoile'|translate}}</span>
             </div>
             <app-radio-list [formGroup]="step1FormGroup" controlName="confidentiality"
-                            [suggestions]="suggestions"></app-radio-list>
+                            [suggestions]="suggestions"
+                            [isConfidentialityValid]="isConfidentialityValid"></app-radio-list>
+            <mat-error class="stepper-mat-error"
+                       *ngIf="!isConfidentialityValid && step1FormGroup.get('confidentiality').errors?.required">
+                <em class="fa fa-info-circle fa-2x me-2"></em>{{'project.stepper.submission.step1.errorFieldRequired'|translate}}
+            </mat-error>
         </ng-container>
     </form>
 </div>

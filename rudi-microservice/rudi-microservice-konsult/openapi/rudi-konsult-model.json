@@ -354,6 +354,9 @@
 				"description": "Elements du footer",
 				"type": "object",
 				"properties": {
+					"logo": {
+						"type": "string"
+					},
 					"socialNetworks": {
 						"type": "array",
 						"items": {
@@ -366,7 +369,7 @@
 				"description": "Tri pour la page de liste des assets",
 				"type": "object",
 				"properties": {
-					"libelle":{
+					"libelle": {
 						"type": "string"
 					},
 					"value": {
@@ -378,7 +381,7 @@
 				"description": "Elements minimaux nécessaire à l'affichage d'une page de list de cms assets",
 				"type": "object",
 				"properties": {
-					"title1":{
+					"title1": {
 						"type": "string"
 					},
 					"title2": {
@@ -390,7 +393,6 @@
 							"$ref": "#/components/schemas/AssetsPageOrder"
 						}
 					}
-
 				}
 			},
 			"NewsPageDescription": {

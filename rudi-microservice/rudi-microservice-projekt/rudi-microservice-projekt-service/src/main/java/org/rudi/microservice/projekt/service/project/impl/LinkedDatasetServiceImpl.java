@@ -50,11 +50,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	private static final String VIEW_COMMENT_FORM_KEY = "VIEW-COMMENT";
 	private final List<CreateLinkedDatasetFieldProcessor> createLinkedDatasetProcessors;
@@ -300,5 +302,32 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 				|| projektAuthorisationHelper.isAccessGrantedForUserOnLinkedDataset(linkedDatasetEntity))) {
 			throw new AppServiceUnauthorizedException("Accès non autorisé à la fonctionnalité pour l'utilisateur");
 		}
+	}
+
+	/**
+	 * @param datasetUuid
+	 * @return
+	 */
+	@Override
+	public boolean isMyAccessGratedToDataset(UUID datasetUuid) throws GetOrganizationException, AppServiceUnauthorizedException {
+		if(datasetUuid == null){
+			log.error("Dataset Uuid null. Requête impossible.");
+			return false;
+		}
+
+		//on récupère l'utilisateur connecté et l'ensemble des organisations dont il fait partie.
+		List<UUID> meAndMyOrganizations = myInformationsHelper.getMeAndMyOrganizationUuids();
+		if(CollectionUtils.isEmpty(meAndMyOrganizations)){
+			log.error("Utilisateur connecté null");
+			return false;
+		}
+
+		var linkedDatasetSearchCriteria = new LinkedDatasetSearchCriteria()
+				.datasetUuid(datasetUuid)
+				.projectOwnerUuids(meAndMyOrganizations)
+				.status(List.of(LinkedDatasetStatus.VALIDATED))
+				.endDateIsNotOver(true);
+		final var linkedDatasetEntities = linkedDatasetCustomDao.searchLinkedDatasets(linkedDatasetSearchCriteria, Pageable.unpaged());
+		return linkedDatasetEntities.getTotalElements() > 0;
 	}
 }

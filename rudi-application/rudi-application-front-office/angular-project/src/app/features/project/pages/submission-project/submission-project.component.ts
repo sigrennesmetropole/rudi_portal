@@ -46,6 +46,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
     public suggestions: RadioListItem[];
     public supports: Support[];
     user: User;
+    public isConfidentialityValid = true;
 
     private confidentialities: Confidentiality[];
 
@@ -62,6 +63,7 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
      * @private
      */
     private updateImageAction: UpdateAction;
+
 
     constructor(
         readonly projektMetierService: ProjektMetierService,
@@ -359,6 +361,12 @@ export class SubmissionProjectComponent extends ReuseProjectCommonComponent impl
 
     clickCancel(): Promise<boolean> {
         return this.router.navigate(['/projets']);
+    }
+    clickNext(): void {
+        if (this.step1FormGroup.get('confidentiality').errors?.required) {
+            this.isConfidentialityValid = false;
+        }
+        this.stepper.next();
     }
 
     /**

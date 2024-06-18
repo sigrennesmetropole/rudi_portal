@@ -26,7 +26,9 @@
                                [territoireScale]="territorialScales"
                                [supports]="supports"
                                [projectType]="projectType"
-                               (imageModified)="handleImageChanged($event)">
+                               (imageModified)="handleImageChanged($event)"
+                               [isConfidentialityValid]="isConfidentialityValid"
+            >
             </app-step1-project>
 
             <!-- Boutons de gestion de l'étape -->
@@ -35,7 +37,7 @@
                     <span>{{ 'project.stepper.cancel' | translate }}</span>
                 </button>
 
-                <button mat-raised-button class="primary-raised-button" matStepperNext>
+                <button mat-raised-button class="primary-raised-button" (click)="clickNext()">
                     <span>{{ 'project.stepper.continue' | translate }}</span>
                 </button>
             </div>

@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
+import {PageTitleService} from '@core/services/page-title.service';
 import {LinkedDatasetFromProject} from '@features/data-set/models/linked-dataset-from-project';
 import {ProjectConsultationService} from '@core/services/asset/project/project-consultation.service';
 import {LinkedDatasetMetadatas} from '@core/services/asset/project/project-dependencies.service';
@@ -70,6 +71,7 @@ export class ProjectTaskDetailComponent
         readonly projektMetierService: ProjektMetierService,
         readonly projectSubmissionService: ProjectSubmissionService,
         readonly projectConsultService: ProjectConsultationService,
+        private readonly pageTitleService: PageTitleService,
     ) {
         super(dialog, translateService, snackBarService, taskWithDependenciesService, projectTaskMetierService, logger);
         iconRegistry.addSvgIcon('project-svg-icon',
@@ -87,7 +89,16 @@ export class ProjectTaskDetailComponent
         if (idTask) {
             this.isLoading = true;
             this.taskWithDependenciesService.getTaskWithDependencies(idTask).pipe(
-                tap(taskWithDependencies => this.taskWithDependencies = taskWithDependencies),
+                tap(taskWithDependencies => {
+                     // On définit ici le titre de l'onglet en se basant sur le titre de la réutilisation
+                     // et si undefined, on définit le titre de l'onglet sur "Mes notifications"
+                    if (taskWithDependencies.task.asset.title){
+                    this.pageTitleService.setPageTitle(taskWithDependencies.task.asset.title, this.translateService.instant('pageTitle.defaultDetail'));
+                    } else {
+                        this.pageTitleService.setPageTitleFromUrl('/personal-space/my-notifications');
+                    }
+                    this.taskWithDependencies = taskWithDependencies;
+                }),
                 injectDependencies({
                     project: this.projectTaskDependencyFetcher.project,
                     logo: this.projectTaskDependencyFetcher.logo,

@@ -18,6 +18,9 @@ export class Step1ProjectComponent implements OnInit {
     public isPublished: boolean;
 
     @Input()
+    public isConfidentialityValid: boolean;
+
+    @Input()
     public step1FormGroup: FormGroup;
 
     @Input()
@@ -75,7 +78,7 @@ export class Step1ProjectComponent implements OnInit {
         }
     }
 
-    compareObjects(object1: any, object2: any) {
+    compareObjects(object1: any, object2: any): boolean {
         return object1 && object2 && object1.uuid === object2.uuid;
     }
 }

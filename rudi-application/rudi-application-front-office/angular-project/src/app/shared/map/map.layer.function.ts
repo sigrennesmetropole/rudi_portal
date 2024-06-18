@@ -158,7 +158,7 @@ export class MapLayerFunction {
 
         const options = {
             url,
-            tileLoadFunction: (tile, src) => this.loadTile(globalId, media, tile, src),
+            tileLoadFunction: (tile, src) => this.loadTile(media, tile, src),
             layer: layerName,
             projection,
             params: {LAYERS: layerName, VERSION: version}
@@ -182,7 +182,7 @@ export class MapLayerFunction {
         const options = {
             style: getStyles(media),
             url,
-            tileLoadFunction: (tile, src) => this.loadTile(globalId, media, tile, src),
+            tileLoadFunction: (tile, src) => this.loadTile(media, tile, src),
             layer: getLayerName(media),
             matrixSet: getMatrixSet(media),
             projection: getDefaultCrs(media),
@@ -210,7 +210,7 @@ export class MapLayerFunction {
                 const src = '?service=WFS&version=' + version + '&request=GetFeature&typename=' + layerName + '&' +
                     'outputFormat=' + format + '&srsname=' + projection.getCode() + '&bbox=' + extent.join(',') +
                     ',' + projection.getCode();
-                this.displayMapService.getFeatureLayerContent(globalId, media.media_id, src).pipe(
+                this.displayMapService.getFeatureLayerContent(media.connector.url, src).pipe(
                     tap((geojsonObject: JSON) => {
                         const features = new GeoJSON().readFeatures(geojsonObject);
                         vectorSource.addFeatures(features);
@@ -232,26 +232,24 @@ export class MapLayerFunction {
 
     /**
      * Création d'un layer de données de JDD au format GeoJSON
-     * @param globalId l'UUId du jdd
      * @param media le média geojson
      */
-    createGeojsonDataLayer(globalId: string, media: Media): Observable<BaseLayer> {
-        return this.displayMapService.downloadGeojson(globalId, media.media_id).pipe(
+    createGeojsonDataLayer(media: Media): Observable<BaseLayer> {
+        return this.displayMapService.downloadGeojson(media.connector.url).pipe(
             map((geojson: JSON) => createGeoJsonLayer(geojson))
         );
     }
 
     /**
      * Fonction de chargement de tile pour un layer
-     * @param globalId UUID du JDD
      * @param media média cartographique
      * @param tile le tile à charger
      * @param src les arguments queryparam
      * @private
      */
     // tslint:disable-next-line:no-any OpenLayers gèrele type de tile comme ça
-    private loadTile(globalId: string, media: Media, tile: any, src: string): void {
-        this.displayMapService.getImageLayerContent(globalId, media.media_id, src).pipe(
+    private loadTile(media: Media, tile: any, src: string): void {
+        this.displayMapService.getImageLayerContent( media.connector.url, src).pipe(
             tap((arrayBuffer: ArrayBuffer) => {
                 const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
                 tile.getImage().src = 'data:image/png;base64,' + base64String;

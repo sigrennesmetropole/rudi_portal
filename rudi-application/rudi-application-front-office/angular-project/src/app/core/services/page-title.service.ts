@@ -4,7 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {defaultIfEmpty, filter, map, switchMap, take} from 'rxjs/operators';
 
-const DEFAULT_PAGE_TITLE = 'RUDI';
+const DEFAULT_PAGE_TITLE = 'Rudi';
 
 @Injectable({
     providedIn: 'root'

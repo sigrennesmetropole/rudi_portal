@@ -20,18 +20,19 @@
                         <mat-icon
                             [class]="(mediaSize.isXs || mediaSize.isSm) ? 'icon-information-sm' : 'icon-information'"
                             svgIcon="icon-info">
-                            error_outline
                         </mat-icon>
                         <span
-                            [class]="{'bandeau-icon-libelle': mediaSize.isSm || mediaSize.isXs}">{{'project.detail.informations'|translate}}</span>
+                            [class]="{'bandeau-icon-libelle': mediaSize.isSm || mediaSize.isXs}">{{ 'project.detail.informations'|translate }}</span>
                     </button>
                     <span class="spacer"></span>
                     <button (click)="onClickAccessUrl()" *ngIf="project.access_url" class="button bandeau-btn-access"
                             mat-raised-button>
-                        <mat-icon class="icon-style">launch</mat-icon>
-                        &nbsp;
+                        <mat-icon class="icon-style"
+                                  [class]="{'icon-style-mobile': mediaSize.isSm || mediaSize.isXs}">
+                            launch
+                        </mat-icon>
                         <span
-                            [ngClass]="{'bandeau-icon-libelle': mediaSize.isSm}">{{'project.detail.access'|translate}}</span>
+                            [ngClass]="{'bandeau-icon-libelle': mediaSize.isSm || mediaSize.isXs }">{{ 'project.detail.access'|translate }}</span>
                     </button>
                 </mat-toolbar>
             </div>
@@ -45,7 +46,8 @@
                      class="card-description-keyword">
                     <mat-card class="project-card project-card-description">
 
-                        <app-project-main-informations [isProjectUpdatable]="false" [project]="project"></app-project-main-informations>
+                        <app-project-main-informations [isProjectUpdatable]="false"
+                                                       [project]="project"></app-project-main-informations>
 
                     </mat-card>
 
@@ -59,27 +61,27 @@
                     <!-- Informations générales -->
                     <mat-card class="card-main-information project-card pb-4">
                         <div class="card-project-type-title">
-                            <label class="card-label">{{'project.detail.type'|translate}}</label>
-                            <span class="project-type">{{projectType}}</span>
+                            <label class="card-label">{{ 'project.detail.type'|translate }}</label>
+                            <span class="project-type">{{ projectType }}</span>
                         </div>
 
                         <div *ngIf="userIdentity" class="contact">
-                            <label class="card-label">{{userIdentity}}</label><br/>
+                            <label class="card-label">{{ userIdentity }}</label><br/>
                             <app-contact-button [email]="project.contact_email"
                                                 *ngIf="isKnownUser"></app-contact-button>
                         </div>
 
                         <div class="mt-4">
                             <div class="date-created" fxLayoutAlign="space-between center">
-                                <span class="label-date">{{'project.detail.creation_date'|translate}}</span>
+                                <span class="label-date">{{ 'project.detail.creation_date'|translate }}</span>
                                 <span
-                                    class="date-value float-right">{{project.creation_date | date :'dd/MM/yyyy'}}
+                                    class="date-value float-right">{{ project.creation_date | date :'dd/MM/yyyy' }}
                                 </span>
                             </div>
                             <div class="date-modified mt-3" fxLayoutAlign="space-between center">
-                                <span class="label-date">{{'project.detail.updated_date'|translate}}</span>
+                                <span class="label-date">{{ 'project.detail.updated_date'|translate }}</span>
                                 <span
-                                    class="date-value float-right">{{project.updated_date | date :'dd/MM/yyyy'}}
+                                    class="date-value float-right">{{ project.updated_date | date :'dd/MM/yyyy' }}
                                 </span>
                             </div>
                         </div>
@@ -89,8 +91,8 @@
                     <!-- Jeux de données utilisés -->
                     <mat-card class="card-datasets project-card rudi-card-border">
                         <mat-card-title>
-                            <h2 class="card-label">{{'project.detail.datasets'|translate}}
-                                ({{linkedDatasets?.length || 0}})</h2>
+                            <h2 class="card-label">{{ 'project.detail.datasets'|translate }}
+                                ({{ linkedDatasets?.length || 0 }})</h2>
                         </mat-card-title>
                         <app-dataset-infos class="dataset-card-infos"
                                            *ngFor="let element of linkedDatasets" [showLogo]="true"

@@ -388,7 +388,7 @@ export class MapComponent implements AfterViewInit {
             } else if (this.media.media_type === MediaTypeEnum.File) {
                 const mediaFile: MediaFile = this.media as MediaFile;
                 if (mediaFile.file_type === MediaType.ApplicationGeojson) {
-                    this.mapLayerFunction.createGeojsonDataLayer(this.metadata.global_id, this.media).subscribe({
+                    this.mapLayerFunction.createGeojsonDataLayer(this.media).subscribe({
                         next: (baseLayer: BaseLayer) => {
                             this.map.getLayers().push(baseLayer);
                             this.addFeatureInteraction(baseLayer);

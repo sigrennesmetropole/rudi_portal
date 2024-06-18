@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
+import {CustomizationService} from '@core/services/customization.service';
 import {Base64EncodedLogo, ImageLogoService} from '@core/services/image-logo.service';
 import {Order} from '@core/services/konsult-metier.service';
 import {LogService} from '@core/services/log.service';
@@ -8,8 +9,7 @@ import {Item} from '@features/data-set/components/filter-forms/array-filter-form
 import {TranslateService} from '@ngx-translate/core';
 import {CmsAsset, PagedCmsAssets} from 'micro_service_modules/api-cms';
 import {CustomizationDescription, KonsultService} from 'micro_service_modules/konsult/konsult-api';
-import {Observable, of, Subject} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {Subject, switchMap} from 'rxjs';
 
 
 const DEFAULT_NEWS_ORDER = '-publishdate';
@@ -45,9 +45,9 @@ export class ListComponent {
     customizationDescription: CustomizationDescription;
     customizationDescriptionIsLoading = false;
 
-    leftPictoSrc$: Observable<Base64EncodedLogo>;
+    leftPictoSrc: Base64EncodedLogo;
     loadingLeftPicto: boolean;
-    rightPictoSrc$: Observable<Base64EncodedLogo>;
+    rightPictoSrc: Base64EncodedLogo;
     loadingRightPicto: boolean;
 
 
@@ -71,7 +71,8 @@ export class ListComponent {
         private readonly domSanitizer: DomSanitizer,
         private readonly breakpointObserver: BreakpointObserverService,
         private imageLogoService: ImageLogoService,
-        private logService: LogService
+        private logService: LogService,
+        private customizationService: CustomizationService,
     ) {
         this.destroy$ = new Subject<boolean>();
         this.mediaSize = this.breakpointObserver.getMediaSize();
@@ -88,13 +89,13 @@ export class ListComponent {
         this.initCustomizationDescription();
         this.loadingLeftPicto = false;
         this.loadingRightPicto = false;
-        this.leftPictoSrc$ = of(DEFAULT_PICTO);
-        this.rightPictoSrc$ = of(DEFAULT_PICTO);
+        this.leftPictoSrc = DEFAULT_PICTO;
+        this.rightPictoSrc = DEFAULT_PICTO;
     }
 
     private initCustomizationDescription(): void {
         this.customizationDescriptionIsLoading = true;
-        this.konsultService.getCustomizationDescription(this.translateService.currentLang)
+        this.customizationService.getCustomizationDescription()
             .subscribe({
                 next: (customizationDescription: CustomizationDescription) => {
                     this.customizationDescription = customizationDescription;
@@ -116,45 +117,49 @@ export class ListComponent {
     initLeftPicto(): void {
         this.loadingLeftPicto = true;
         this.konsultService.downloadCustomizationResource(this.customizationDescription.hero_description?.left_image)
-            .subscribe({
-                next: (blob: Blob) => {
-                    this.leftPictoSrc$ = this.imageLogoService.createImageFromBlob(blob)
-                        .pipe(
-                            tap(() => {
-                                this.loadingLeftPicto = false;
-                            })
-                        );
-                },
-                error: (error) => {
-                    this.logger.error(error);
-                    this.leftPictoSrc$ = of(DEFAULT_PICTO);
-                    this.loadingLeftPicto = false;
-                }
-            });
+            .pipe(
+                switchMap((blob: Blob) => {
+                    return this.imageLogoService.createImageFromBlob(blob);
+                })
+            ).subscribe({
+            next: (image: Base64EncodedLogo) => {
+                this.leftPictoSrc = image;
+                this.loadingLeftPicto = false;
+            },
+            error: (error) => {
+                this.logger.error(error);
+                this.leftPictoSrc = DEFAULT_PICTO;
+                this.loadingLeftPicto = false;
+            }
+        });
     }
 
     initRightPicto(): void {
         this.loadingRightPicto = true;
         this.konsultService.downloadCustomizationResource(this.customizationDescription.hero_description?.right_image)
-            .subscribe({
-                next: (blob: Blob) => {
-                    this.rightPictoSrc$ = this.imageLogoService.createImageFromBlob(blob)
-                        .pipe(
-                            tap(() => {
-                                this.loadingRightPicto = false;
-                            })
-                        );
-                },
-                error: (error) => {
-                    this.logger.error(error);
-                    this.rightPictoSrc$ = of(DEFAULT_PICTO);
-                    this.loadingRightPicto = false;
-                }
-            });
+            .pipe(
+                switchMap((blob: Blob) => {
+                    return this.imageLogoService.createImageFromBlob(blob);
+                })
+            ).subscribe({
+            next: (image: Base64EncodedLogo) => {
+                this.rightPictoSrc = image;
+                this.loadingRightPicto = false;
+            },
+            error: (error) => {
+                this.logger.error(error);
+                this.rightPictoSrc = DEFAULT_PICTO;
+                this.loadingRightPicto = false;
+            }
+        });
     }
 
     private initCmsAssets(): void {
-        this.konsultService.renderAssets('NEWS', this.customizationDescription.cms_news_description.template_news_list, undefined, undefined, this.translateService.currentLang, this.offset, this.limit, this.order)
+        const date: Date = new Date();
+        const formattedDate: string = date.toISOString().slice(0, 10);
+        const publishDateFilter: string = 'publishdate[lte]=' + formattedDate;
+        const unpublishDateFilter: string = 'unpublishdate[gt]=' + formattedDate;
+        this.konsultService.renderAssets('NEWS', this.customizationDescription.cms_news_description.template_news_list, undefined, [publishDateFilter, unpublishDateFilter], this.translateService.currentLang, this.offset, this.limit, this.order)
             .subscribe({
                 next: (pagedCmsAssets: PagedCmsAssets) => {
                     this.newsListTotal = pagedCmsAssets.total;
@@ -175,7 +180,6 @@ export class ListComponent {
     }
 
     onOrderChange(order: string): void {
-        console.log(order);
         this.order = order;
         this.initCmsAssets();
     }

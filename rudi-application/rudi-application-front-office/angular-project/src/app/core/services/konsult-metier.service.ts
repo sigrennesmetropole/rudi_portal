@@ -1,10 +1,11 @@
-import {HttpResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParameterCodec, HttpParams} from '@angular/common/http';
+import {Inject, Injectable, Optional} from '@angular/core';
 import {Filters} from '@shared/models/filters';
 import {MetadataUtils} from '@shared/utils/metadata-utils';
 import {PageResultUtils} from '@shared/utils/page-result-utils';
 import {Media, MediaFile, Metadata, MetadataFacets, MetadataList} from 'micro_service_modules/api-kaccess';
-import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {BASE_PATH, Configuration, KonsultService} from 'micro_service_modules/konsult/konsult-api';
+import {CustomHttpParameterCodec} from 'micro_service_modules/konsult/konsult-api/encoder';
 import mime, {Mime} from 'mime';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -26,11 +27,60 @@ export const DEFAULT_PROJECT_ORDER: Order = '-updatedDate';
     providedIn: 'root'
 })
 export class KonsultMetierService {
+
+    public defaultHeaders = new HttpHeaders();
+    public configuration = new Configuration();
+    public encoder: HttpParameterCodec;
+
     constructor(
-        private readonly konsultService: KonsultService
+        private readonly konsultService: KonsultService,
+        protected httpClient: HttpClient,
+        @Optional()@Inject(BASE_PATH) basePath: string,
+        @Optional() configuration: Configuration
     ) {
         KonsultMetierService.loadCustomMimeType();
+        if (configuration) {
+            this.configuration = configuration;
+        }
+        this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
     }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                    throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
 
     private static loadCustomMimeType(): void {
         // Le fichier JSON est chargé dans notre objet sous la propriété default et est de type Module
@@ -98,13 +148,71 @@ export class KonsultMetierService {
     /**
      * Fonction qui permet de recuperer la methode downloadMetadataMedia du server
      */
-    downloadMetadataMedia(globalId: string, mediaId: string): Observable<HttpResponse<Blob>> {
-        return this.konsultService.downloadMetadataMedia(globalId, mediaId, 'response');
+    downloadMetadataMedia(mediaUrl: string, options?: {httpHeaderAccept?: 'application/octet-stream' | 'application/json'}): Observable<any> {
+        let headers = this.defaultHeaders;
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/octet-stream',
+                'application/json'
+            ];
+
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+        console.log(headers);
+        return this.httpClient.get(`${String(mediaUrl)}`,
+            {
+                responseType: 'blob',
+                withCredentials: this.configuration.withCredentials,
+                headers,
+            }
+        );
+    }
+
+/**
+ *  Fonction qui permet de récupérer des métadonnés de type WMS/WFS d\&#39;un jeu de données.
+ *  Récupère le flux WMS/WFS d\&#39;un média de type SERVICE
+ */
+    callServiceMetadataMedia(mediaUrl: string, parameters?: { [key: string]: string; }, options?: {httpHeaderAccept?: 'application/octet-stream' | 'application/json'}): Observable<any> {
+    let queryParameters = new HttpParams({encoder: this.encoder});
+    if (parameters !== undefined && parameters !== null) {
+        queryParameters = this.addToHttpParams(queryParameters,
+            <any>parameters, 'parameters');
+    }
+
+        let headers: HttpHeaders = this.defaultHeaders;
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            const httpHeaderAccepts: string[] = [
+                'application/octet-stream',
+                'application/json'
+            ];
+
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+        console.log(headers);
+        return this.httpClient.get(`${String(mediaUrl)}`,
+            {
+                params: queryParameters,
+                responseType: 'blob',
+                withCredentials: this.configuration.withCredentials,
+                headers,
+            }
+        );
     }
 
     private getMetadataProducersFacets(): Observable<MetadataFacets> {
         return this.konsultService.searchMetadataFacets(['producer_organization_name']);
     }
+
+
 
     private getMetadataThemesFacets(): Observable<MetadataFacets> {
         return this.konsultService.searchMetadataFacets(['theme']);

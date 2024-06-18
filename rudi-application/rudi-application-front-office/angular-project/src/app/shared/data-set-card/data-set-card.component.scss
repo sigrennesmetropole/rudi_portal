@@ -8,14 +8,13 @@
     cursor: pointer;
     padding: 17px;
     overflow: hidden;
-
+    min-height: 270px;
     // card sélectionnée
     &:focus {
         box-shadow: 0 0 10px 0 var(--focus-background);
         border-color: var(--primary-color);
         background-color: var(--focus-background);
     }
-
 
     mat-card-content {
         padding: 0;
@@ -96,7 +95,7 @@
             flex-direction: revert;
             height: auto;
         }
-        
+
         &:hover {
             background-color: var(--banner-solid-color);
 

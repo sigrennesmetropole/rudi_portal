@@ -1,5 +1,5 @@
 <div [formGroup]="formGroup">
-    <mat-radio-group [formControlName]="controlName" class="radio-container">
+    <mat-radio-group [formControlName]="controlName" class="radio-container" [ngClass]="{'confidentiality': !isConfidentialityValid && formGroup.get('confidentiality').errors?.required}">
         <div *ngFor="let suggestion of suggestions" class="radio-body">
             <mat-radio-button [value]="suggestion" [checked]="formGroup.get(controlName).value.code === suggestion.code">
                 <div class="option-title">{{suggestion.label}}</div>

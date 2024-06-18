@@ -101,14 +101,16 @@ public class CustomizationHelper extends ResourcesHelper {
 
 		data.getFooterDescription().getSocialNetworks().forEach(socialNetwork -> socialNetwork.setIcon(fillResourceMapping(socialNetwork.getIcon(), UUID.randomUUID().toString())));
 
+		data.getFooterDescription().setLogo(fillResourceMapping(data.getFooterDescription().getLogo(), UUID.randomUUID().toString()));
+
 		return data;
 	}
 
 	public CustomizationDescriptionData getCustomizationDescriptionData() {
-		if(!customizationCache.containsKey(CACHE_CUSTOMIZATION_DATA_KEY)){
-			try{
+		if (!customizationCache.containsKey(CACHE_CUSTOMIZATION_DATA_KEY)) {
+			try {
 				customizationCache.put(CACHE_CUSTOMIZATION_DATA_KEY, loadCustomizationDescription());
-			}catch (Exception e) {
+			} catch (Exception e) {
 				log.error("Failed to load customization", e);
 			}
 		}

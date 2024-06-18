@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {KonsultMetierService} from '@core/services/konsult-metier.service';
 import {SearchAutocompleteItem} from '@shared/search-autocomplete/search-autocomplete-item.interface';
 import {Metadata, MetadataGeographyBoundingBox} from 'micro_service_modules/api-kaccess';
 import {Address, KonsultService} from 'micro_service_modules/konsult/konsult-api';
@@ -38,7 +39,8 @@ export class DisplayMapService {
 
     constructor(
         private readonly konsultService: KonsultService,
-        private readonly konsultRvaService: KonsultRvaService
+        private readonly konsultRvaService: KonsultRvaService,
+        private readonly konsultMetierService: KonsultMetierService
     ) {
 
     }
@@ -178,47 +180,44 @@ export class DisplayMapService {
 
     /**
      * Récupération du contenu au format image pour un layer image
-     * @param globalId UUID du JDD
-     * @param mediaId l'id du média
+     * @param mediaUrl l'Url du média
      * @param src URL avec les paramètres d'appels (query params) vers le flux image carto
      */
-    getImageLayerContent(globalId: string, mediaId: string, src: string): Observable<ArrayBuffer> {
+    getImageLayerContent(mediaUrl: string, src: string): Observable<ArrayBuffer> {
         const queryParams = src.split('?')[1];
         const params: { [key: string]: string; } = {};
         const searchParams = new URLSearchParams(queryParams);
         searchParams.forEach((value: string, key: string) => {
             params[key] = value;
         });
-
-        return this.konsultService.callServiceMetadataMedia(globalId, mediaId, params).pipe(
-            switchMap((blob: Blob) => readFile(blob))
+        return this.konsultMetierService.callServiceMetadataMedia(mediaUrl, params).pipe(
+            switchMap((blob: Blob) => readFile(blob)),
         );
     }
 
     /**
      * Récupération du contenu au format vectoriel pour un layer vectoriel
-     * @param globalId UUID du JDD
-     * @param mediaId l'id du média
+     * @param mediaUrl l'url du média
      * @param src URL avec les paramètres d'appels (query params) vers le flux image vectoriel
      */
-    getFeatureLayerContent(globalId: string, mediaId: string, src: string): Observable<JSON> {
+    getFeatureLayerContent(mediaUrl: string, src: string): Observable<JSON> {
         const params: { [key: string]: string; } = {};
         const searchParams = new URLSearchParams(src);
         searchParams.forEach((value: string, key: string) => {
             params[key] = value;
         });
-        return this.konsultService.callServiceMetadataMedia(globalId, mediaId, params).pipe(
+        return this.konsultMetierService.callServiceMetadataMedia(mediaUrl, params).pipe(
             switchMap((blob: Blob) => this.toJson(blob)),
         );
     }
 
     /**
      * Téléchargement d'un GeoJSON d'un média
-     * @param globalId UUID du JDD
-     * @param mediaId ID du média
+     * @param mediaUrl URL du média
      */
-    downloadGeojson(globalId: string, mediaId: string): Observable<JSON> {
-        return this.konsultService.callServiceMetadataMedia(globalId, mediaId).pipe(
+    downloadGeojson(mediaUrl: string): Observable<JSON> {
+
+        return this.konsultMetierService.callServiceMetadataMedia(mediaUrl).pipe(
             switchMap((blob: Blob) => this.toJson(blob)),
         );
     }

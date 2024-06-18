@@ -43,9 +43,6 @@
     object-position: center;
 }
 
-
-
-
 /*card style*/
 
 @media screen and (max-width: 1037px) {
@@ -70,6 +67,7 @@
     color: #004680;
     font-size: 20px;
     font-weight: bold;
+    line-height: 24px;
     margin-bottom: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -117,5 +115,5 @@
 }
 
 .card-click-redirection, .card-click-redirection:hover, .card-click-redirection:visited {
-text-decoration: none !important;
+    text-decoration: none !important;
 }

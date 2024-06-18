@@ -4,6 +4,8 @@ renderType: freemarker
 areas:
   projectvalueOne:
     availableComponents:
+      projectvalueTitle:
+        id: rudi:components/projectvalue/projectvalueTitle    
       projectvalueDetail:
         id: rudi:components/projectvalue/projectvalueDetail
       projectvalueSimple:

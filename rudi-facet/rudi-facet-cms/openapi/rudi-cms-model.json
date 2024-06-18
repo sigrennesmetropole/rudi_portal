@@ -47,6 +47,9 @@
 					"id": {
 						"type": "string"
 					},
+					"title": {
+						"type": "string"
+					},
 					"content": {
 						"type": "string"
 					},

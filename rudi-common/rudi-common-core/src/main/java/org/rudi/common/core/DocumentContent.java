@@ -40,7 +40,7 @@ public class DocumentContent {
 
 	/**
 	 * Constructeur pour DocumentContent
-	 * 
+	 *
 	 * @param contentType exemple : {@link org.springframework.http.MediaType#IMAGE_PNG_VALUE MediaType.IMAGE_PNG_VALUE}
 	 */
 	public DocumentContent(String contentType, @Nonnull File file) {
@@ -110,15 +110,15 @@ public class DocumentContent {
 	 * @throws IOException en cas de problème avec la lecture du fichier
 	 */
 	public static DocumentContent fromResourcePath(String path) throws IOException {
-		URL url = Thread.currentThread().getContextClassLoader().getResource( path);
+		URL url = Thread.currentThread().getContextClassLoader().getResource(path);
 
-		try(InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream( path);){
+		try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);) {
 			String file = url.getFile();
 			String extension = FilenameUtils.getExtension(file);
 			String mimeType = URLConnection.guessContentTypeFromName(file);
 			String fileName = FilenameUtils.getName(file);
 
-			File tmpFile = File.createTempFile(TEMP_FILE_PREFIX, "."+extension);
+			File tmpFile = File.createTempFile(TEMP_FILE_PREFIX, "." + extension);
 			FileUtils.copyInputStreamToFile(inputStream, tmpFile);
 			return new DocumentContent(fileName, mimeType, tmpFile);
 		}

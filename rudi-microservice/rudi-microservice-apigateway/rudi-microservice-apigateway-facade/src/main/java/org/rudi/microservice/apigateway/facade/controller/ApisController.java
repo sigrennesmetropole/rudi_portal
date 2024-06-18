@@ -1,16 +1,13 @@
 package org.rudi.microservice.apigateway.facade.controller;
 
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_APIGATEWAY_ADMINISTRATOR;
-import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
-
 import java.util.UUID;
 
+import org.rudi.common.facade.util.UtilPageable;
 import org.rudi.microservice.apigateway.core.bean.Api;
 import org.rudi.microservice.apigateway.core.bean.ApiSearchCriteria;
 import org.rudi.microservice.apigateway.core.bean.Confidentiality;
 import org.rudi.microservice.apigateway.core.bean.PagedApiList;
 import org.rudi.microservice.apigateway.facade.controller.api.ApisApi;
-import org.rudi.microservice.apigateway.facade.util.UtilPageable;
 import org.rudi.microservice.apigateway.service.api.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
@@ -19,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_APIGATEWAY_ADMINISTRATOR;
+import static org.rudi.common.core.security.QuotedRoleCodes.MODULE_KALIM_ADMINISTRATOR;
 
 @RestController
 public class ApisController implements ApisApi {
@@ -72,4 +72,16 @@ public class ApisController implements ApisApi {
 		return ResponseEntity.ok(result);
 	}
 
+	/**
+	 * GET /apis/{api-id} : Get an API
+	 * Get an API
+	 *
+	 * @param apiId (required)
+	 * @return OK (status code 200)
+	 * or Internal server error (status code 500)
+	 */
+	@Override
+	public ResponseEntity<Api> getApi(UUID apiId) throws Exception {
+		return ResponseEntity.ok(apiService.getApi(apiId));
+	}
 }

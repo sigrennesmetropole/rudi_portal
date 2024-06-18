@@ -1,8 +1,10 @@
-
 @import "responsive";
 @import "common-style";
 @import "pagination";
 
+.mat-drawer-container {
+    background-color: unset;
+}
 
 .mat-sidenav {
     margin-top: 106px;
@@ -40,11 +42,23 @@
 }
 
 .hero-content-container {
-    margin: 110px auto 80px auto;
+    margin: 170px auto 80px auto;
 }
 
 .hero-right-picto-container, .hero-left-picto-container {
-    margin-top: 110px;
+    margin-top: 100px;
+}
+
+.hero-right-picto-container {
+    img {
+        margin-left: -100px;
+    }
+}
+
+.hero-left-picto-container {
+    img {
+        margin-right: -100px;
+    }
 }
 
 .hero-text-container {
@@ -119,7 +133,8 @@
 }
 
 .news-list-container {
-    margin: auto;
+    position: relative;
+    margin: 120px auto auto auto;
 }
 
 .news-list-text-container {

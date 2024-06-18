@@ -69,5 +69,13 @@
             "^/selfdata/v1": ""
         },
         "changeOrigin": true
+    },
+    "/media": {
+        "target": "http://localhost:8092/apigateway/datasets",
+        "secure": false,
+        "pathRewrite": {
+            "^/media": ""
+        },
+        "changeOrigin": true
     }
 }

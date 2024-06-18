@@ -1,26 +1,22 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Order, ORDERS} from '@core/services/konsult-metier.service';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Item} from '@features/data-set/components/filter-forms/array-filter-form.component';
 import {TranslateService} from '@ngx-translate/core';
 
 interface OrderItem extends Item {
     libelle: string;
-    value: Order;
+    value: string;
 }
-@Component({
-  selector: 'cms-order',
-  templateUrl: './order.component.html',
-  styleUrl: './order.component.scss'
-})
-export class CmsOrderComponent implements OnInit {
 
-    @Input() orders: Order[] = ORDERS;
+@Component({
+    selector: 'cms-order',
+    templateUrl: './order.component.html',
+    styleUrl: './order.component.scss'
+})
+export class CmsOrderComponent {
 
     @Input() items: OrderItem[] = [];
-    menuIsOpened = false;
-
-    @Input() order!: Order;
     @Output() orderChange = new EventEmitter<string>();
+    menuIsOpened = false;
 
     constructor(
         protected readonly translateService: TranslateService
@@ -36,9 +32,6 @@ export class CmsOrderComponent implements OnInit {
     set selectedItem(item: OrderItem) {
         this._selectedItem = item;
         this.orderChange.emit(item.value);
-    }
-
-    ngOnInit(): void {
     }
 
     toggleMenu(): void {

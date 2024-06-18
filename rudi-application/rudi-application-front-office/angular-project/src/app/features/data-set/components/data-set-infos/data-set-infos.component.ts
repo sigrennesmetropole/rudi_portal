@@ -175,7 +175,7 @@ export class DataSetInfosComponent implements OnInit {
      */
     onDownloadFile(item: Media): void {
         this.isLoading = true;
-        this.konsultMetierService.downloadMetadataMedia(this.metadata.global_id, item.media_id)
+        this.konsultMetierService.downloadMetadataMedia(item.connector.url)
             .subscribe({
                 next: (response) => {
                     this.isLoading = false;

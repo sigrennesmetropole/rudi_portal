@@ -9,13 +9,21 @@ import java.util.UUID;
 import javax.script.ScriptContext;
 
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.bpmn.bean.workflow.EMailData;
 import org.rudi.facet.bpmn.bean.workflow.EMailDataModel;
+import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity;
 import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.email.EMailService;
 import org.rudi.facet.generator.text.impl.TemplateGeneratorImpl;
+import org.rudi.facet.organization.bean.Organization;
+import org.rudi.facet.organization.helper.OrganizationHelper;
+import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.service.helper.AbstractProjektWorkflowContext;
 import org.rudi.microservice.projekt.storage.dao.newdatasetrequest.NewDatasetRequestDao;
 import org.rudi.microservice.projekt.storage.dao.project.ProjectCustomDao;
@@ -38,12 +46,14 @@ public class NewDatasetRequestWorkflowContext extends
 		AbstractProjektWorkflowContext<NewDatasetRequestEntity, NewDatasetRequestDao, NewDatasetRequestAssigmentHelper> {
 
 	private final ProjectCustomDao projectCustomDao;
+	private final OrganizationHelper organizationHelper;
 
 	public NewDatasetRequestWorkflowContext(EMailService eMailService, TemplateGeneratorImpl templateGenerator,
 			NewDatasetRequestDao assetDescriptionDao, NewDatasetRequestAssigmentHelper assignmentHelper,
-			ACLHelper aclHelper, FormHelper formHelper, ProjectCustomDao projectCustomDao) {
+			ACLHelper aclHelper, FormHelper formHelper, ProjectCustomDao projectCustomDao, OrganizationHelper organizationHelper) {
 		super(eMailService, templateGenerator, assetDescriptionDao, assignmentHelper, aclHelper, formHelper);
 		this.projectCustomDao = projectCustomDao;
+		this.organizationHelper = organizationHelper;
 	}
 
 	@Transactional(readOnly = false)
@@ -97,4 +107,40 @@ public class NewDatasetRequestWorkflowContext extends
 		}
 	}
 
+	/**
+	 * Envoi de courriel
+	 *
+	 * @param scriptContext   le context du script
+	 * @param executionEntity le context d'execution
+	 * @param eMailData
+	 * @param roleCode        le code d'un rôle destinataire
+	 */
+	@Override
+	public void sendEMailToRole(ScriptContext scriptContext, ExecutionEntity executionEntity, EMailData eMailData, String roleCode) {
+		AssetDescriptionEntity assetDescription = lookupAssetDescriptionEntity(executionEntity);
+
+		try{
+			//On rajoute le nom de l'utilisateur ou de l'organisateur ayant initié le projet.
+			injectData(executionEntity,"userName", getUserDenomination(assetDescription.getInitiator()));
+		}catch (AppServiceException e) {
+			log.warn("une erreur est survenur lors du chargement de l'organisation: {}",assetDescription.getInitiator());
+		}
+
+		super.sendEMailToRole(scriptContext, executionEntity, eMailData, roleCode);
+	}
+
+	private String getUserDenomination(String inititator) throws GetOrganizationException {
+		User u = getAclHelper().getUserByLogin(inititator);
+		if (u != null && u.getType().equals(UserType.PERSON)) {
+			return String.format("%s %s",u.getLastname(), u.getFirstname()).trim();
+		}
+		else {
+			Organization o = organizationHelper.getOrganization(UUID.fromString(inititator));
+			if(o != null){
+				return o.getName();
+			}
+		}
+		log.error("Aucun utilisateur trouvé et aucune organisation non plus {}",inititator);
+		return StringUtils.EMPTY;
+	}
 }

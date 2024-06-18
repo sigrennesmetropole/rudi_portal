@@ -22,7 +22,7 @@ import com.nimbusds.jwt.SignedJWT;
 /**
  * Classe utilitaire des gestion de token JWT
  */
-@Component
+@Component("JwtTokenUtilApiGateway")
 public class JwtTokenUtil extends AbstractJwtTokenUtil implements Serializable {
 
 	private static final long serialVersionUID = -2550185165626007488L;

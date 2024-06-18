@@ -40,6 +40,10 @@
 		{
 			"name": "miscellaneous",
 			"description": "Services divers"
+		},
+		{
+			"name": "linked-dataset",
+			"description": "Service de gestion des linked datasets"
 		}
 	],
 	"paths": {
@@ -4300,6 +4304,40 @@
 					},
 					"503": {
 						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/linked-dataset/{datasetUuid}/myAccess": {
+			"get": {
+				"tags": [
+					"linked-dataset"
+				],
+				"summary": "Définit si l'utilisateur connecté à un linked dataset",
+				"description": "Définit si l'utilisateur connecté a accès au linked dataset ciblé",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "datasetUuid",
+						"description": "Uuid du linkedDataset auquel on souhaite avoir accès.",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"operationId": "isMyAccessGratedToDataset",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
 					}
 				}
 			}

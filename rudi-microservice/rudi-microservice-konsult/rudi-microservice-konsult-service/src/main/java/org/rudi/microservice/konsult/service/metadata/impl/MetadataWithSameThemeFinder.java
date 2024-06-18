@@ -1,21 +1,23 @@
 package org.rudi.microservice.konsult.service.metadata.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.ListUtils;
-import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
-import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
-import org.rudi.facet.kaccess.bean.Metadata;
-import org.rudi.facet.kaccess.bean.MetadataFacetValues;
-import org.rudi.facet.kaccess.constant.RudiMetadataField;
-import org.rudi.facet.kaccess.helper.FacetsHelper;
-import org.rudi.facet.kaccess.service.dataset.DatasetService;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.ListUtils;
+import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
+import org.rudi.facet.kaccess.bean.DatasetSearchCriteria;
+import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.facet.kaccess.bean.MetadataFacetValues;
+import org.rudi.facet.kaccess.bean.MetadataListFacets;
+import org.rudi.facet.kaccess.constant.RudiMetadataField;
+import org.rudi.facet.kaccess.helper.FacetsHelper;
+import org.rudi.facet.kaccess.service.dataset.DatasetService;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -86,13 +88,14 @@ class MetadataWithSameThemeFinder {
 	}
 
 	public Integer getNumberOfDatasetsOnTheSameTheme(String doi) throws DataverseAPIException {
-		final var baseDataset = datasetService.getDataset(doi);
-		final var otherProducerDatasetSearchCriteria = new DatasetSearchCriteria()
+		final Metadata baseDataset = datasetService.getDataset(doi);
+		final DatasetSearchCriteria otherProducerDatasetSearchCriteria = new DatasetSearchCriteria()
 				.themes(Collections.singletonList(baseDataset.getTheme()))
 				.keywords(baseDataset.getKeywords())
 				.orderByScoreOfKeywords(true)
 				.limit(1);
-		final var searchResult = datasetService.searchDatasets(otherProducerDatasetSearchCriteria, Collections.emptyList());
-		return searchResult.getMetadataList().getTotal().intValue();
+		final MetadataListFacets searchResult = datasetService.searchDatasets(otherProducerDatasetSearchCriteria, Collections.emptyList());
+		// -1 car on ne veut pas compter le dataset en paramètre
+		return searchResult.getMetadataList().getTotal().intValue() - 1;
 	}
 }

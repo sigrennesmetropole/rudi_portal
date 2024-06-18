@@ -48,6 +48,16 @@
     padding: 0 10px;
 }
 
+.submit-project-link {
+    color: var(--focus);
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+        color: var(--primary-color);
+    }
+}
+
 @mixin mobile-screen {
     .desktop-list-container {
         display: none;
