@@ -8,6 +8,8 @@ import lombok.val;
 @Component
 public class ConsentsUtils {
 
+	private ConsentsUtils() {}
+
 	private static final int DAY_PER_WEEK = 7;
 	private static final int DAY_PER_MONTH = 30;
 	private static final int DAY_PER_YEAR = 365;

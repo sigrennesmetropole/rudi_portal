@@ -1,15 +1,5 @@
 package org.rudi.microservice.strukture.service.organization;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +36,16 @@ import org.rudi.microservice.strukture.storage.entity.organization.OrganizationR
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
 @StruktureSpringBootTest
 class OrganizationMembersHelperTestUT {
 
@@ -70,7 +70,7 @@ class OrganizationMembersHelperTestUT {
 	}
 
 	@Test
-	void isConnectedUserAuthorizedToSearchMembers_ok_on_organizationAdministrator() throws AppServiceException {
+	void isAuthenticatedUserAuthorizedToSearchMembers_ok_on_organizationAdministrator() throws AppServiceException {
 
 		AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin("login");
@@ -93,11 +93,11 @@ class OrganizationMembersHelperTestUT {
 		when(aclHelper.getUserByLogin(any())).thenReturn(user);
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 
-		assertTrue(organizationMembersHelper.isConnectedUserOrganizationAdministrator(organization.getUuid()));
+		assertTrue(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organization.getUuid()));
 	}
 
 	@Test
-	void isConnectedUserAuthorizedToSearchMembers_ko_on_organizationEditor() throws AppServiceException {
+	void isAuthenticatedUserAuthorizedToSearchMembers_ko_on_organizationEditor() throws AppServiceException {
 
 		AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin("login");
@@ -120,11 +120,11 @@ class OrganizationMembersHelperTestUT {
 		when(aclHelper.getUserByLogin(any())).thenReturn(user);
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 
-		assertFalse(organizationMembersHelper.isConnectedUserOrganizationAdministrator(organization.getUuid()));
+		assertFalse(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organization.getUuid()));
 	}
 
 	@Test
-	void isConnectedUserAuthorizedToSearchMembers_ko_on_userNotFromOrganization() throws AppServiceException {
+	void isAuthenticatedUserAuthorizedToSearchMembers_ko_on_userNotFromOrganization() throws AppServiceException {
 
 		AuthenticatedUser authenticatedUser = new AuthenticatedUser();
 		authenticatedUser.setLogin("login");
@@ -141,7 +141,7 @@ class OrganizationMembersHelperTestUT {
 		when(aclHelper.getUserByLogin(any())).thenReturn(user);
 		when(utilContextHelper.getAuthenticatedUser()).thenReturn(authenticatedUser);
 
-		assertFalse(organizationMembersHelper.isConnectedUserOrganizationAdministrator(organization.getUuid()));
+		assertFalse(organizationMembersHelper.isAuthenticatedUserOrganizationAdministrator(organization.getUuid()));
 	}
 
 	@Test
@@ -249,9 +249,9 @@ class OrganizationMembersHelperTestUT {
 		OrganizationMemberEntity member2 = new OrganizationMemberEntity();
 		member2.setUserUuid(robot.getUuid());
 
-		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq("")))
+		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(""),any()))
 				.thenReturn(List.of(person, robot));
-		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(null)))
+		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(), eq(null),any()))
 				.thenReturn(List.of(person, robot));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
@@ -273,7 +273,7 @@ class OrganizationMembersHelperTestUT {
 		member2.setUserUuid(robot.getUuid());
 
 		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(),
-				eq(UserType.PERSON.getValue()))).thenReturn(List.of(person));
+				eq(UserType.PERSON.getValue()),any())).thenReturn(List.of(person));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
 		assertEquals(1, users.size());
@@ -296,7 +296,7 @@ class OrganizationMembersHelperTestUT {
 		member2.setUserUuid(robot.getUuid());
 
 		when(aclHelper.searchUsersWithCriteria(eq(List.of(person.getUuid(), robot.getUuid())), any(),
-				eq(UserType.ROBOT.getValue()))).thenReturn(List.of(robot));
+				eq(UserType.ROBOT.getValue()),any())).thenReturn(List.of(robot));
 		List<User> users = organizationMembersHelper.searchCorrespondingUsers(List.of(member1, member2), criteria);
 		assertFalse(CollectionUtils.isEmpty(users));
 		assertEquals(1, users.size());

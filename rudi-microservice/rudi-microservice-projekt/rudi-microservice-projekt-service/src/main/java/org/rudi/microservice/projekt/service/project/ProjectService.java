@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
+import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.facet.kmedia.bean.KindOfData;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
 import org.rudi.microservice.projekt.core.bean.ComputeIndicatorsSearchCriteria;
@@ -14,7 +15,6 @@ import org.rudi.microservice.projekt.core.bean.NewDatasetRequest;
 import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -62,10 +62,10 @@ public interface ProjectService {
 	 *
 	 * @param projectUuid l'uuid du projet
 	 * @param kindOfData  le type de média
-	 * @param media       le média à remplacer dans Dataverse
+	 * @param documentContent       le média à remplacer dans Dataverse
 	 * @throws AppServiceException En cas d'erreur avec le service d'upload
 	 */
-	void uploadMedia(UUID projectUuid, KindOfData kindOfData, Resource media) throws AppServiceException;
+	void uploadMedia(UUID projectUuid, KindOfData kindOfData, DocumentContent documentContent) throws AppServiceException;
 
 	/**
 	 * Supprime le média associé à ce projet
@@ -82,7 +82,7 @@ public interface ProjectService {
 	 * @param datasetRequest La requête pour les nouvelles données
 	 */
 	NewDatasetRequest createNewDatasetRequest(UUID projectUuid, NewDatasetRequest datasetRequest)
-			throws AppServiceNotFoundException, AppServiceException;
+			throws AppServiceException;
 
 	/**
 	 * Recupère la liste des demandes de nouveau jdd associé à un projet
@@ -98,7 +98,7 @@ public interface ProjectService {
 	 * @param newDatasetRequest La demande de jdd modifiée
 	 */
 	NewDatasetRequest updateNewDatasetRequest(UUID projectUuid, NewDatasetRequest newDatasetRequest)
-			throws AppServiceNotFoundException, AppServiceException;
+			throws AppServiceException;
 
 	/**
 	 * Recupère une demande de jdd pour un projet donné et un UUID de requête donnée
@@ -117,7 +117,7 @@ public interface ProjectService {
 	 * @return
 	 */
 	void deleteNewDatasetRequest(UUID projectUuid, UUID requestUuid)
-			throws AppServiceNotFoundException, AppServiceException;
+			throws AppServiceException;
 
 	/**
 	 * @param searchCriteria {projet dont on cherche les autres demandes, producteur non concerné par ses demandes (optionnel)}
@@ -141,15 +141,16 @@ public interface ProjectService {
 	 */
 	Page<Project> getMyProjects(ProjectSearchCriteria searchCriteria, Pageable pageable) throws GetOrganizationException;
 
-
 	/**
 	 * Détermine si l'utilisateur connecté est owner du projet passé en paramètre.
 	 *
 	 * @param projectUuid UUID du projet
 	 * @return true si l'authenticatedUser est owner du projet, false sinon
-	 * @throws Exception
+	 * @throws GetOrganizationException exception lors de la récupération de l'organization liée au projet
+	 * @throws AppServiceUnauthorizedException erreur lors de l'identification de l'utilisateur connecté
+	 * @throws AppServiceNotFoundException erreur lors de la récupération du projet
 	 */
-	boolean isAuthenticatedUserProjectOwner(UUID projectUuid) throws Exception;
+	boolean isAuthenticatedUserProjectOwner(UUID projectUuid)  throws GetOrganizationException, AppServiceUnauthorizedException, AppServiceNotFoundException;
 
 	List<ProjectByOwner> getNumberOfProjectsPerOwners(ProjectSearchCriteria criteria);
 }

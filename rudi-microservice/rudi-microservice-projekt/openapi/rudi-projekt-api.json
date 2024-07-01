@@ -2024,10 +2024,15 @@
 				],
 				"requestBody": {
 					"content": {
-						"application/octet-stream": {
+						"multipart/form-data": {
 							"schema": {
-								"type": "string",
-								"format": "binary"
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
 							}
 						}
 					}

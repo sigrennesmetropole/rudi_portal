@@ -29,7 +29,7 @@ import {
     TerritorialScale
 } from 'micro_service_modules/projekt/projekt-model';
 import {forkJoin, Observable, of, zip} from 'rxjs';
-import {catchError, map, mapTo, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {Base64EncodedLogo, ImageLogoService} from '../../image-logo.service';
 import {KonsultMetierService} from '../../konsult-metier.service';
 import {PropertiesAdapter} from '../../properties-adapter';
@@ -152,7 +152,7 @@ export class ProjektMetierService {
      */
     deleteProject(project: Project): Observable<boolean> {
         if (project != null) {
-            return this.projektService.deleteProject(project.uuid).pipe(mapTo(true));
+            return this.projektService.deleteProject(project.uuid).pipe(map(() => true));
         }
 
         return of(false);
@@ -281,7 +281,7 @@ export class ProjektMetierService {
             datasetUuid => this.projektService.unlinkProjectToDataset(projectUuid, datasetUuid)
         );
         return zip(...link$).pipe(
-            mapTo(void 0)
+            map(() => undefined)
         );
     }
 
@@ -297,7 +297,7 @@ export class ProjektMetierService {
 
         const observables = linkedDatasets
             .map((linkedDataset: LinkedDataset) => this.projektService.updateLinkedDataset(project.uuid, linkedDataset));
-        return forkJoin(observables).pipe(mapTo(true));
+        return forkJoin(observables).pipe(map(() => true));
     }
 
     /**
@@ -381,7 +381,7 @@ export class ProjektMetierService {
             mapBackFront.set(addedBack, add);
         });
 
-        const observables = [];
+        const observables: Observable<any>[] = [];
 
         // On fait chaque ajout
         newDatasetRequests.forEach((newDatasetRequest: NewDatasetRequest) => {
@@ -395,7 +395,7 @@ export class ProjektMetierService {
         });
 
         return forkJoin(observables).pipe(
-            mapTo(true)
+            map(() => true)
         );
     }
 
@@ -410,13 +410,13 @@ export class ProjektMetierService {
             return of(true);
         }
 
-        const observables = [];
+        const observables: Observable<any>[] = [];
 
         newDatasetRequests.forEach((toDelete: NewDatasetRequest) => {
             observables.push(this.projektService.deleteNewDatasetRequest(project.uuid, toDelete.uuid));
         });
 
-        return forkJoin(observables).pipe(mapTo(true));
+        return forkJoin(observables).pipe(map(() => true));
     }
 
     /**
@@ -430,13 +430,13 @@ export class ProjektMetierService {
             return of(true);
         }
 
-        const observables = [];
+        const observables: Observable<any>[] = [];
 
         newDatasetRequests.forEach((toEdit: NewDatasetRequest) => {
             observables.push(this.projektService.updateNewDatasetRequest(project.uuid, toEdit));
         });
 
-        return forkJoin(observables).pipe(mapTo(true));
+        return forkJoin(observables).pipe(map(() => true));
     }
 
     /**

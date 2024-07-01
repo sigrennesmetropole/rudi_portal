@@ -28,6 +28,12 @@ public class RegistrationHelper {
 		rudiClientRegistrationRepository.findRegistrationOrRegister(login, password);
 	}
 
+	/**
+	 *
+	 * @param login login de la personne ciblée
+	 * @param password mot de passe de la personne ciblée.
+	 * @throws AdminOperationException
+	 */
 	public void assignInternalSubscriberRole(String login, String password) throws AdminOperationException {
 		adminService.assignRoleToUser(APIManagerProperties.Roles.INTERNAL_SUBSCRIBER, login);
 	}

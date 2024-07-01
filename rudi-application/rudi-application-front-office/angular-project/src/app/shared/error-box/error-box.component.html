@@ -1,10 +1,13 @@
 <div class="error-zone">
-    <mat-icon class="error-icon">{{'error'}}</mat-icon>
+    <div class="icon-container">
+        <mat-icon class="error-icon">{{'error'}}</mat-icon>
+    </div>
     <!-- Bloc erreur textuel -->
-    <p *ngIf="hasText()">
+    <div *ngIf="hasText()">
         <!-- le texte de l'erreur -->
         <span>{{text}}</span>
         <!-- le texte cliquable -->
-        <span *ngIf="hasClickableText()" class="error-clickable" (click)="handleClickClickableText()">{{clickableText}}</span>
-    </p>
+        <span *ngIf="hasClickableText()" class="error-clickable"
+              (click)="handleClickClickableText()">{{clickableText}}</span>
+    </div>
 </div>

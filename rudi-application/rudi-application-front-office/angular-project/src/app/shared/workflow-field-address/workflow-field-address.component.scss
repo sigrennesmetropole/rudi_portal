@@ -1,7 +1,6 @@
-@import "../../styles/common-style";
-@import "../../styles/colors";
+@import "common-style";
 @import "../workflow-field/workflow-field.component";
 
 .input-error {
-    color: $error-color;
+    color: var(--error-color);
 }

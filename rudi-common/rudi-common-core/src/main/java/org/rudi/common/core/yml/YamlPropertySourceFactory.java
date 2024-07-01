@@ -4,6 +4,7 @@
 package org.rudi.common.core.yml;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -28,10 +29,8 @@ public class YamlPropertySourceFactory implements PropertySourceFactory {
 			properties = new Properties();
 		}
 
-		String sourceName = "unknown";
-		if (encodedResource.getResource().getFilename() != null) {
-			sourceName = encodedResource.getResource().getFilename();
-		}
+		String sourceName = Objects.requireNonNullElse(encodedResource.getResource().getFilename(), "unkonwn");
+
 		return new PropertiesPropertySource(sourceName, properties);
 	}
 }

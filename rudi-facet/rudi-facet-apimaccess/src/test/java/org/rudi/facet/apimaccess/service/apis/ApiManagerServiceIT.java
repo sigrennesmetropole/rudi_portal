@@ -1,7 +1,5 @@
 package org.rudi.facet.apimaccess.service.apis;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +36,8 @@ import org.wso2.carbon.apimgt.rest.api.devportal.Subscription;
 import org.wso2.carbon.apimgt.rest.api.devportal.SubscriptionList;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ApimaccessSpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ApiManagerServiceIT {
@@ -59,7 +59,7 @@ class ApiManagerServiceIT {
 
 	@Test
 	@Order(1)
-	@Disabled
+	@Disabled("Failed to publish api -- Non fonctionnel")
 	void testScenario() throws APIManagerException {
 		// récupération des subscription policies
 		LimitingPolicies subscriptionLimitingPolicies = policyService

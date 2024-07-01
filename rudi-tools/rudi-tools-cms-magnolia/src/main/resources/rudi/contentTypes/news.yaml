@@ -11,19 +11,26 @@ model:
     - name: publishdate
       type: date
     - name: unpublishdate
-      type: date  
+      type: date
+    - name: author
+    - name: link
+      multiple: true
+      type: localizedmessage
+    - name: modified
+      multiple: true
+      type: localizedmessage
     - name: title1
       multiple: true
       type: localizedmessage
     - name: title2
       multiple: true
-      type: localizedmessage   
+      type: localizedmessage
     - name: sumup
       multiple: true
       type: localizedrichtext
     - name: body
       multiple: true
-      type: localizedrichtext  
+      type: localizedrichtext
     - name: image1
       type: asset
     - name: image2
@@ -44,8 +51,8 @@ model:
               label: Deutschland
             - value: it
               label: Italia
-        - name: message 
-    - name: localizedrichtext     
+        - name: message
+    - name: localizedrichtext
       properties:
         - name: locale
           options:
@@ -57,6 +64,5 @@ model:
               label: Deutschland
             - value: it
               label: Italia
-        - name: message  
-          type: richText  
-     
+        - name: message
+          type: richText

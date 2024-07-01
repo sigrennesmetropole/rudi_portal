@@ -108,6 +108,8 @@ public class OrganizationsController implements OrganizationsApi {
 				.organizationUuid(uuid)
 				.searchText(searchText)
 				.type(memberType)
+				//Rajout de la limit pour que les deux listes à mapper soient de la même taille
+				.limit(limit)
 				.build();
 		val page = organizationService.searchOrganizationMembers(criteria, pageable);
 		return ResponseEntity.ok(
@@ -119,8 +121,8 @@ public class OrganizationsController implements OrganizationsApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + USER + ", " + MODULE_STRUKTURE_ADMINISTRATOR + ")")
-	public ResponseEntity<Boolean> isConnectedUserOrganizationAdministrator(UUID organizationUuid) throws Exception {
-		return ResponseEntity.ok(organizationService.isConnectedUserOrganizationAdministrator(organizationUuid));
+	public ResponseEntity<Boolean> isAuthenticatedUserOrganizationAdministrator(UUID organizationUuid) throws Exception {
+		return ResponseEntity.ok(organizationService.isAuthenticatedOrganizationAdministrator(organizationUuid));
 	}
 
 	@Override

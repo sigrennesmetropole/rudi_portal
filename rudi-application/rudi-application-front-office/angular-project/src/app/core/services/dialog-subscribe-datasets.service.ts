@@ -6,6 +6,9 @@ import {
     DialogSubscribeDatasetsData
 } from '@features/personal-space/components/dialog-subscribe-datasets/dialog-subscribe-datasets.component';
 import {
+    ProjectModificationConfirmationPopinComponent
+} from '@features/project/components/project-modification-confirmation-popin/project-modification-confirmation-popin.component';
+import {
     DeletionConfirmationPopinComponent
 } from '@shared/project-datasets-tables/deletion-confirmation-popin/deletion-confirmation-popin.component';
 import {Project} from 'micro_service_modules/projekt/projekt-api';
@@ -49,6 +52,15 @@ export class DialogSubscribeDatasetsService {
         const dialogConfig = new DefaultMatDialogConfig<string>();
         dialogConfig.data = requestUuid;
         const dialogRef = this.dialog.open(DeletionConfirmationPopinComponent, dialogConfig);
+        return dialogRef.afterClosed();
+    }
+
+    /**
+     * Ouverture d'une dialog permettant de confirmer la modification de la réutilisation
+     */
+    public openDialogUpdateConfirmation(): Observable<DialogClosedData<string>> {
+        const dialogConfig = new DefaultMatDialogConfig<string>();
+        const dialogRef = this.dialog.open(ProjectModificationConfirmationPopinComponent, dialogConfig);
         return dialogRef.afterClosed();
     }
 }

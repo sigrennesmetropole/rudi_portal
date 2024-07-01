@@ -1,135 +1,7 @@
-@import "variables-rudi";
 @import "common-style";
 
-::ng-deep {
-    #dialog-content {
-        max-width: 768px;
-        font-family: "Open Sans", sans-serif;
-    }
-
-    .mat-dialog-container {
-        padding: 66px 40px 66px 40px;
-        overflow-x: hidden;
-        max-height: 92vh;
-    }
-
-    .mat-dialog-content {
-        display: block;
-        margin: 0 -24px;
-        padding: 0 59px;
-        max-height: 65vh;
-        overflow: inherit;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .dialog-header-button {
-        float: right;
-        margin-top: -40px
-    }
-
-    //*** style commun  dialog **///
-
-    .icon-close {
-        svg {
-            height: 24px;
-            width: 24px;
-            fill: black;
-            opacity: 0.54;
-            border: solid 1px grey;
-            border-radius: 20px;
-            padding: 5px;
-        }
-
-        svg:hover {
-            opacity: 1;
-            background-color: $primary-color;
-            fill: white;
-        }
-    }
-
-    .text-area-height {
-        max-height: 260px;
-        height: 260px;
-        border-radius: 4px;
-    }
-
-    .dialog-title {
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 20px;
-        text-align: center;
-        display: block;
-        color: $primary-color;
-    }
-
-    .description {
-        text-align: center;
-        color: $primary-text;
-        font-family: OpenSans, sans-serif;
-        font-size: 16px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.5;
-    }
-
-
-    .step-required-information {
-        font-family: OpenSans, sans-serif;
-        font-size: 14px;
-        color: $primary-text-light;
-        text-align: center;
-    }
-
-    .required-symbol {
-        color: $error-color;
-    }
-
-
-    .dialog-cancel {
-        background-color: $secondary-color;
-        border: solid 1px $blocks-and-menus-outline;
-        color: $primary-text-light;
-        width: 160px;
-        height: 42px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: bold;
-
-        &:hover {
-            background-color: $primary-color;
-            color: $secondary-color;
-        }
-    }
-
-    .dialog-validate {
-        background-color: $primary-color;
-        color: $secondary-color;
-        width: 160px;
-        height: 42px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: bold;
-
-        &:hover {
-            background-color: $focus;
-            color: $secondary-color;
-        }
-    }
-
-    .mat-dialog-actions {
-        padding-bottom: 40px;
-    }
-
-
-    /*** Fin ***/
-
-}
-
-*:focus-visible {
-    // on ne veut pas les rectangles bleu sur focus du champ input
-    outline: none;
-
+form {
+    text-align: left;
 }
 
 mat-form-field {
@@ -149,15 +21,9 @@ mat-label {
     color: black;
 }
 
-mat-error {
-    padding-bottom: 4em;
-    font-size: 14px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.43;
-    letter-spacing: normal;
-    color: $error-color;
+
+.text-area-height {
+    max-height: 260px;
+    height: 260px;
+    border-radius: 4px;
 }
-
-

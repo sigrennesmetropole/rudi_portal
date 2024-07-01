@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {PageTitleService} from '@core/services/page-title.service';
+import {TranslateService} from '@ngx-translate/core';
 import * as moment from 'moment';
 import {map} from 'rxjs/operators';
 import {ProjectDependenciesFetchers, ProjectDependenciesService} from '@core/services/asset/project/project-dependencies.service';
@@ -26,7 +28,9 @@ export class MyProjectDetailsComponent implements OnInit {
 
     constructor(private readonly route: ActivatedRoute,
                 private projectDependenciesService: ProjectDependenciesService,
-                private projectDependenciesFetchers: ProjectDependenciesFetchers) {
+                private projectDependenciesFetchers: ProjectDependenciesFetchers,
+                private readonly pageTitleService: PageTitleService,
+                private readonly translateService: TranslateService) {
     }
 
     ngOnInit(): void {
@@ -51,6 +55,11 @@ export class MyProjectDetailsComponent implements OnInit {
             })
         ).subscribe({
             next: (dependencies: MyProjectDetailsDependencies) => {
+                if (dependencies.project.title) {
+                    this.pageTitleService.setPageTitle(dependencies.project.title, this.translateService.instant('pageTitle.defaultDetail'));
+                } else {
+                    this.pageTitleService.setPageTitleFromUrl('/personal-space/my-activity');
+                }
                 this.project = dependencies.project;
                 this.projectLogo = dependencies.logo;
                 this.projectOwnerInfo = dependencies.ownerInfo;

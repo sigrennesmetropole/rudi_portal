@@ -1,17 +1,15 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 @import "responsive";
 
 :host {
     display: flex;
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     padding: 8px 80px;
 }
 
 @mixin mobile-screen {
     :host {
-        padding: 18px 80px 8px 80px;
+        padding: 18px 80px 8px 20px;
         flex-direction: column;
         height: unset;
         gap: 10px;

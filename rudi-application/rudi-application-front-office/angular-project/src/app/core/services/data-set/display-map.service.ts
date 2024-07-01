@@ -4,7 +4,6 @@ import {Metadata, MetadataGeographyBoundingBox} from 'micro_service_modules/api-
 import {Address, KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {LayerInformation, Proj4Information} from 'micro_service_modules/konsult/konsult-model';
 import {Feature} from 'ol';
-import {applyTransform} from 'ol/extent';
 import GeoJSON from 'ol/format/GeoJSON';
 import {Geometry, Polygon} from 'ol/geom';
 import {get, getTransform, Projection, TransformFunction} from 'ol/proj';
@@ -257,10 +256,7 @@ export class DisplayMapService {
                 proj4.defs(epsgString, proj4String);
                 register(proj4);
                 const customProjection = get(epsgString);
-                const from4326ToCustomProjection = getTransform(GPS_PROJECTION, epsgString);
                 customProjection.setWorldExtent(worldExtent);
-                const extent = applyTransform(worldExtent, from4326ToCustomProjection, undefined, 8);
-                customProjection.setExtent(extent);
                 return customProjection;
             })
         );

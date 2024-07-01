@@ -1,11 +1,5 @@
 package org.rudi.microservice.projekt.service.project;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.RoleCodes;
@@ -62,6 +57,11 @@ import org.springframework.data.domain.PageRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 /**
  * Class de test de la couche service
@@ -76,6 +76,7 @@ class ProjectServiceUT {
 			"Projet de suivi des poubelles jaunes orangées");
 	private static final String DEFAULT_LOGO_FILE_NAME = "media/default-logo.png";
 	private static final String SECOND_LOGO_FILE_NAME = "media/project-logo-changed.png";
+	private static final String REJECTED_LOGO_TYPE = "media/not_matched_logo_type.svg";
 
 	private final ProjectService projectService;
 	private final ProjectDao projectDao;
@@ -906,8 +907,7 @@ class ProjectServiceUT {
 		// Récupération du projectUuid pour le lier avec la newDatasetRequest
 		final UUID projectUuid = createdProject.getUuid();
 
-		val logo = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(DEFAULT_LOGO_FILE_NAME);
-
+		val logo = getLogoFromPath(DEFAULT_LOGO_FILE_NAME);
 		// Je suis connecté avec le porteur du projet, j'ai donc accès à la modification.
 		assertAll(() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, logo));
 
@@ -915,11 +915,32 @@ class ProjectServiceUT {
 		final UUID otherManager = UUID.randomUUID();
 		mockAuthenticatedUserFromManager(otherManager);
 
-		val newLogo = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(SECOND_LOGO_FILE_NAME);
+		val newLogo = getLogoFromPath(SECOND_LOGO_FILE_NAME);
 
 		// Une exception est levée, car je ne suis pas connecté avec un utilisateur qui est Owner du projet
 		assertThrows(AppServiceUnauthorizedException.class,
 				() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, newLogo));
+	}
+
+	@Test
+	@DisplayName("Ajout d'un media a un projet - not allowed logo type")
+	void uploadProjectMediaWithWrongContentType() throws AppServiceException, IOException {
+		// Creation du projet
+		final Project projectToCreate = jsonResourceReader.read(PROJET_LAMPADAIRES.getJsonPath(), Project.class);
+		createEntities(projectToCreate);
+
+		mockAuthenticatedUserToCreateProject(projectToCreate);
+
+		projectToCreate.setTargetAudiences(projectToCreate.getTargetAudiences().stream()
+				.sorted(Comparator.comparing(TargetAudience::getUuid)).collect(Collectors.toList()));
+
+		final Project createdProject = projectService.createProject(projectToCreate);
+		// Récupération du projectUuid pour le lier avec la newDatasetRequest
+		final UUID projectUuid = createdProject.getUuid();
+
+		val logo = getLogoFromPath(REJECTED_LOGO_TYPE);
+		// Je suis connecté avec le porteur du projet, j'ai donc accès à la modification.
+		assertThrows(IllegalArgumentException.class,() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, logo));
 	}
 
 	@Test
@@ -938,7 +959,7 @@ class ProjectServiceUT {
 		// Récupération du projectUuid pour le lier avec la newDatasetRequest
 		final UUID projectUuid = createdProject.getUuid();
 
-		val logo = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(DEFAULT_LOGO_FILE_NAME);
+		val logo = getLogoFromPath(DEFAULT_LOGO_FILE_NAME);
 
 		// Je suis connecté avec le porteur du projet, j'ai donc accès à la modification.
 		assertAll(() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, logo));
@@ -968,6 +989,11 @@ class ProjectServiceUT {
 	private long countProjects() {
 		val pageable = PageRequest.of(0, 100);
 		return projectService.searchProjects(new ProjectSearchCriteria(), pageable).getTotalElements();
+	}
+
+	private DocumentContent getLogoFromPath(String path) throws IOException {
+		val logo = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(path);
+		return DocumentContent.fromResource(logo, false);
 	}
 
 	@Data

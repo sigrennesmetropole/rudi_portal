@@ -176,12 +176,12 @@ export class DataSetInfosComponent implements OnInit {
     onDownloadFile(item: Media): void {
         this.isLoading = true;
         this.konsultMetierService.downloadMetadataMedia(this.metadata.global_id, item.media_id)
-            .subscribe(
-                (response) => {
+            .subscribe({
+                next: (response) => {
                     this.isLoading = false;
                     this.downLoadFile(response);
                 },
-                () => {
+                error: () => {
                     this.isLoading = false;
                     const message = this.translateService.instant('common.echec');
                     const linkLabel = this.translateService.instant('snackbarTemplate.ici');
@@ -192,7 +192,7 @@ export class DataSetInfosComponent implements OnInit {
                         });
                     });
                 }
-            );
+            });
     }
 
 

@@ -1,6 +1,8 @@
 package org.rudi.microservice.projekt.service.notifications.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -12,8 +14,7 @@ import org.rudi.microservice.projekt.service.workflow.LinkedDatasetTaskServiceIm
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,8 +31,7 @@ public class NotifyServiceImpl implements NotifyService {
 		TaskQuery taskQuery = taskService.createTaskQuery();
 		// Type de tasks à chercher
 		taskQuery.processDefinitionKey(LinkedDatasetTaskServiceImpl.PROCESS_DEFINITION_ID);
-		List<Task> tasks = taskQuery.list();
-		return tasks;
+		return taskQuery.list();
 	}
 
 	@Override
@@ -43,11 +43,10 @@ public class NotifyServiceImpl implements NotifyService {
 				// Calcule et retourne la nouvelle liste des candidats éligibles
 				List<String> potentialsUsers = bpmnHelper.recomputeCandidateUsers(task);
 				// Si notre user en fait partie, alors on l'ajoute vraiment à la task
-				if (CollectionUtils.isNotEmpty(potentialsUsers) && potentialsUsers.contains(login)) {
-					// S'assurer que la task n'était pas déjà affectée à l'utilisateur
-					if(!bpmnHelper.isCandidateUser(task.getId(), login)) {
-						bpmnHelper.addTaskCandidateUser(task.getId(), login);
-					}
+				// && S'assurer que la task n'était pas déjà affectée à l'utilisateur
+				if (CollectionUtils.isNotEmpty(potentialsUsers) && potentialsUsers.contains(login)
+						&& !bpmnHelper.isCandidateUser(task.getId(), login)) {
+					bpmnHelper.addTaskCandidateUser(task.getId(), login);
 				}
 			}
 		}

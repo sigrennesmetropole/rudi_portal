@@ -1,7 +1,18 @@
 package org.rudi.facet.kaccess.service.dataset.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.rudi.facet.kaccess.constant.RudiMetadataField.RUDI_ELEMENT_SPEC;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.facet.dataverse.api.dataset.DatasetOperationAPI;
@@ -31,39 +42,24 @@ import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.rudi.facet.kaccess.constant.RudiMetadataField.RUDI_ELEMENT_SPEC;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class DatasetServiceImpl implements DatasetService {
 
-	private static final List<FieldSpec> METADATAFIELDS = Arrays.asList(
-			RudiMetadataField.STORAGE_STATUS, // actuellement obligatoire pour les mappers
-			RudiMetadataField.GLOBAL_ID,
-			RudiMetadataField.RESOURCE_TITLE,
-			RudiMetadataField.SYNOPSIS,
-			RudiMetadataField.SUMMARY_TEXT,
-			RudiMetadataField.PRODUCER_ORGANIZATION_ID,
-			RudiMetadataField.THEME,
-			RudiMetadataField.KEYWORDS,
-			RudiMetadataField.CONFIDENTIALITY
-	);
+	private static final List<FieldSpec> METADATAFIELDS = Arrays.asList(RudiMetadataField.STORAGE_STATUS, // actuellement obligatoire pour les mappers
+			RudiMetadataField.GLOBAL_ID, RudiMetadataField.RESOURCE_TITLE, RudiMetadataField.SYNOPSIS,
+			RudiMetadataField.SUMMARY_TEXT, RudiMetadataField.PRODUCER_ORGANIZATION_ID, RudiMetadataField.THEME,
+			RudiMetadataField.KEYWORDS, RudiMetadataField.CONFIDENTIALITY);
 	public static final String MISSING_GLOBAL_ID = "L'identifiant du jeu de donnée est absent";
 	private final DatasetOperationAPI datasetOperationAPI;
 	private final MetadataBlockHelper metadataBLockHelper;
 	/**
-	 * @see SearchConfiguration#searchElementDatasetMapperForMultipleDatasets(SearchElementDatasetMapperWithGetDataset, SearchElementDatasetMapperWithMetadataBlocks)
+	 * @see SearchConfiguration#searchElementDatasetMapperForMultipleDatasets(SearchElementDatasetMapperWithGetDataset,
+	 *      SearchElementDatasetMapperWithMetadataBlocks)
 	 */
 	private final SearchElementDatasetMapper searchElementDatasetMapperForMultipleDatasets;
 	/**
@@ -72,9 +68,9 @@ public class DatasetServiceImpl implements DatasetService {
 	private final SearchElementDatasetMapper searchElementDatasetMapperForOneDataset;
 	private final SearchCriteriaMapper searchCriteriaMapper;
 	private final MetadatafieldsMapper metadatafieldsMapper;
-	@Value("${dataverse.api.rudi.data.alias}")
+	@Value("${dataverse.api.rudi.data.alias:rudi_data}")
 	private String rudiAlias;
-	@Value("${dataverse.api.rudi.archive.alias}")
+	@Value("${dataverse.api.rudi.archive.alias:rudi_archive}")
 	private String archiveAlias;
 	@Value("${dataverse.api.useMockedMetadataBlocks:false}")
 	private boolean useMockedMetadataBlocks;
@@ -95,7 +91,8 @@ public class DatasetServiceImpl implements DatasetService {
 		}
 
 		MetadataListFacets metadataListFacets = searchDatasets(
-				new DatasetSearchCriteria().globalIds(Collections.singletonList(globalId)).offset(0).limit(1), Collections.emptyList(), true);
+				new DatasetSearchCriteria().globalIds(Collections.singletonList(globalId)).offset(0).limit(1),
+				Collections.emptyList(), true);
 		MetadataList metadataList = metadataListFacets.getMetadataList();
 
 		if (metadataList.getTotal() == 0 || metadataList.getItems().isEmpty()) {
@@ -143,9 +140,10 @@ public class DatasetServiceImpl implements DatasetService {
 		return searchDatasets(datasetSearchCriteria, facets, false);
 	}
 
-	private MetadataListFacets searchDatasets(DatasetSearchCriteria datasetSearchCriteria, List<String> facets, boolean doNotUseMetadatafields) throws DataverseAPIException {
-		final SearchParams rawSearchParams = searchCriteriaMapper.datasetSearchCriteriaToSearchParams(datasetSearchCriteria,
-				CollectionUtils.isNotEmpty(facets));
+	private MetadataListFacets searchDatasets(DatasetSearchCriteria datasetSearchCriteria, List<String> facets,
+			boolean doNotUseMetadatafields) throws DataverseAPIException {
+		final SearchParams rawSearchParams = searchCriteriaMapper
+				.datasetSearchCriteriaToSearchParams(datasetSearchCriteria, CollectionUtils.isNotEmpty(facets));
 
 		final SearchParams searchParams;
 		if (doNotUseMetadatafields) {
@@ -170,8 +168,8 @@ public class DatasetServiceImpl implements DatasetService {
 
 	private void injectMockedMetadataBlocks(SearchElements<SearchDatasetInfo> searchElements) {
 		final DatasetMetadataBlock mockedDatasetMetadataBlocks = loadMockedDatasetMetadataBlocks();
-		searchElements.getItems().forEach(searchDatasetInfo ->
-				searchDatasetInfo.setMetadataBlocks(mockedDatasetMetadataBlocks));
+		searchElements.getItems()
+				.forEach(searchDatasetInfo -> searchDatasetInfo.setMetadataBlocks(mockedDatasetMetadataBlocks));
 	}
 
 	private DatasetMetadataBlock loadMockedDatasetMetadataBlocks() {
@@ -191,39 +189,35 @@ public class DatasetServiceImpl implements DatasetService {
 
 	@Override
 	public boolean datasetExists(DatasetSearchCriteria datasetSearchCriteria) throws DataverseAPIException {
-		final DatasetSearchCriteria limitedSearchCriteria = datasetSearchCriteria
-				.offset(0)
-				.limit(1);
-		final SearchParams searchParams = searchCriteriaMapper.datasetSearchCriteriaToSearchParams(
-				limitedSearchCriteria,
-				false);
+		final DatasetSearchCriteria limitedSearchCriteria = datasetSearchCriteria.offset(0).limit(1);
+		final SearchParams searchParams = searchCriteriaMapper
+				.datasetSearchCriteriaToSearchParams(limitedSearchCriteria, false);
 		final SearchElements<SearchDatasetInfo> searchElements = datasetOperationAPI.searchDataset(searchParams);
 		return searchElements.getTotal() > 0;
 	}
 
 	@Override
 	public void deleteDataset(UUID globalId) throws DataverseAPIException {
-		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria().globalIds(Collections.singletonList(globalId));
-		final SearchParams searchParams = searchCriteriaMapper.datasetSearchCriteriaToSearchParams(datasetSearchCriteria, false);
+		final DatasetSearchCriteria datasetSearchCriteria = new DatasetSearchCriteria()
+				.globalIds(Collections.singletonList(globalId));
+		final SearchParams searchParams = searchCriteriaMapper
+				.datasetSearchCriteriaToSearchParams(datasetSearchCriteria, false);
 
 		final SearchElements<SearchDatasetInfo> searchElements = datasetOperationAPI.searchDataset(searchParams);
 
-		final long exceptionsCount = searchElements.getItems().stream()
-				.map(SearchDatasetInfo::getGlobalId)
-				.map(doi -> {
-					try {
-						deleteDataset(doi);
-						return null;
-					} catch (DataverseAPIException | RuntimeException e) {
-						log.info("Error when trying to delete dataset " + doi, e);
-						return e;
-					}
-				})
-				.filter(Objects::nonNull)
-				.count();
+		final long exceptionsCount = searchElements.getItems().stream().map(SearchDatasetInfo::getGlobalId).map(doi -> {
+			try {
+				deleteDataset(doi);
+				return null;
+			} catch (DataverseAPIException | RuntimeException e) {
+				log.info("Error when trying to delete dataset " + doi, e);
+				return e;
+			}
+		}).filter(Objects::nonNull).count();
 
 		if (exceptionsCount > 0) {
-			final String message = String.format("%s error(s) when deleting dataset(s) with globalId = %s", exceptionsCount, globalId);
+			final String message = String.format("%s error(s) when deleting dataset(s) with globalId = %s",
+					exceptionsCount, globalId);
 			throw new DataverseAPIException(message);
 		}
 	}

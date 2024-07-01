@@ -13,6 +13,7 @@ import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -56,9 +57,12 @@ public class ProjektHelper {
 	 * @return true si l'uuid to check est autorisé à accéder au jeu de données, null sinon
 	 */
 	public boolean hasAccessToDataset(UUID uuidToCheck, UUID globalId) {
-		return Boolean.TRUE.equals(
-				projektWebClient.get().uri(uriBuilder -> uriBuilder.path(projektProperties.getHasAccessToDatasetPath())
-						.build(uuidToCheck, globalId)).retrieve().bodyToMono(Boolean.class).block());
+		return Boolean.TRUE.equals(hasMonoAccessToDataset(uuidToCheck, globalId).block());
+	}
+
+	public Mono<Boolean> hasMonoAccessToDataset(UUID uuidToCheck, UUID globalId) {
+		return projektWebClient.get().uri(uriBuilder -> uriBuilder.path(projektProperties.getHasAccessToDatasetPath())
+				.build(uuidToCheck, globalId)).retrieve().bodyToMono(Boolean.class);
 	}
 
 	/**
@@ -86,7 +90,7 @@ public class ProjektHelper {
 	public Long getNumberOfValidatedProjects() {
 		PagedProjectList validatedProjectList = projektWebClient.get()
 				.uri(uriBuilder -> uriBuilder.path(projektProperties.getGetProjectsPath())
-						.queryParam("status", Arrays.asList(ProjectStatus.VALIDATED)).queryParam("offset", 0)
+						.queryParam("status", List.of(ProjectStatus.VALIDATED)).queryParam("offset", 0)
 						.queryParam("limit", 0).build())
 				.retrieve().bodyToMono(PagedProjectList.class).block();
 

@@ -1,8 +1,7 @@
-@import "colors";
 @import "responsive";
 
 .key-figures-container {
-    background-color: $primary-color;
+    background-color: var(--primary-color);
     min-height: 250px;
     display: flex;
     align-items: center;
@@ -28,7 +27,7 @@
 .figure-key {
     padding: 20px;
 
-    color: $white;
+    color: var(--white);
 
     .count {
         margin-bottom: 15px;

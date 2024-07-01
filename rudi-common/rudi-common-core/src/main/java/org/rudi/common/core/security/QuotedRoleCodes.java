@@ -25,6 +25,8 @@ public final class QuotedRoleCodes {
 	public static final String MODULE_STRUKTURE_ADMINISTRATOR = "'" + RoleCodes.MODULE_STRUKTURE_ADMINISTRATOR + "'";
 	public static final String MODULE_KONSENT = "'" + RoleCodes.MODULE_KONSENT + "'";
 	public static final String MODULE_KONSENT_ADMINISTRATOR = "'" + RoleCodes.MODULE_KONSENT_ADMINISTRATOR + "'";
+	public static final String MODULE_APIGATEWAY = "'" + RoleCodes.MODULE_APIGATEWAY + "'";
+	public static final String MODULE_APIGATEWAY_ADMINISTRATOR = "'" + RoleCodes.MODULE_APIGATEWAY_ADMINISTRATOR + "'";
 	public static final String ORGANIZATION = "'" + RoleCodes.ORGANIZATION + "'";
 	public static final String PROJECT_MANAGER = "'" + RoleCodes.PROJECT_MANAGER + "'";
 	public static final String PROVIDER = "'" + RoleCodes.PROVIDER + "'";

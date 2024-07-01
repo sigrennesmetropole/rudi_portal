@@ -2,7 +2,6 @@
     <!--  Liste des filtres-->
     <mat-sidenav #sidenav (keydown.escape)="sidenav.close()" disableClose>
         <app-filter-sidenav-container (close)="sidenav.close()" titleKey="filterBox.filtres">
-            <p (click)="deleteAllFilters()" class="filter-link ms-0 py-2">{{'filterBox.toutEffacer'|translate}}</p>
 
             <div (click)="sidenavOrder.open(); sidenav.close()" class="rudi-sidenav-container-filter">
                 {{'sortBox.sort'|translate}}
@@ -41,7 +40,8 @@
                 </div>
             </div>
 
-            <div (click)="sidenavRestrictedAccess.open(); sidenav.close()" class="rudi-sidenav-container-filter"
+            <div (click)="sidenavRestrictedAccess.open(); sidenav.close()"
+                 class="rudi-sidenav-container-filter bottom-border"
                  *ngIf="accessStatusfilterForcedValue === undefined">
                 {{'filterBox.restrictedAccess.statut'|translate}}
                 <div>
@@ -53,11 +53,9 @@
             </div>
 
             <div class="rudi-sidenav-container-footer mt-5">
-                <button
-                    (click)="submitFilters()"
-                    class="rudi-blue-large-button"
-                    mat-raised-button>
-                    {{'filterBox.valider'|translate}}
+                <button color="primary" type="submit" mat-raised-button class="rudi-blue-button"
+                        (click)="submitFilters()">
+                    {{'filterBox.toutEffacer'|translate}}
                 </button>
             </div>
         </app-filter-sidenav-container>
@@ -132,16 +130,17 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <div
-            [ngClass]="{'p-small': mediaSize.isSm === true, 'p-medium': mediaSize.isMd, 'p-large':mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
-            class="container-fluid">
+        <div class="container-fluid"
+             [ngClass]="{'p-small': mediaSize.isXs || mediaSize.isSm,'p-medium': mediaSize.isMd, 'p-large': mediaSize.isDeviceDesktop}">
+
 
             <app-page-title [title1]="'searchbox.jeux'|translate"
                             [title2]="'searchbox.donnees'|translate"
                             class="d-flex justify-content-center w-100"></app-page-title>
 
             <app-list-container [accessStatusForcedValue]="accessStatusfilterForcedValue"
-                                [orders]="orders"></app-list-container>
+                                [orders]="orders"
+                                [themes]="themes"></app-list-container>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,13 +1,13 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {LogService} from '@core/services/log.service';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AccountService} from './account.service';
 import {ANONYMOUS_USERNAME, AnonymousAuthentication} from './authentication/anonymous-authentication';
 import {AuthenticationMethod, AuthenticationState} from './authentication/authentication-method';
 import {LoginAuthentication} from './authentication/login-authentication';
-import {LogService} from '@core/services/log.service';
 
 /**
  * Le header qui contient le token qui certifie si on est authentifié ou pas
@@ -171,13 +171,13 @@ export class AuthenticationService {
 
         if (form == null || form.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION) == null
             || form.get(AuthenticationService.FIELD_PASSWORD_AUTHENTICATION) == null) {
-            return throwError(new Error('paramètres manquant pour effectuer une authentification (formulaire nul ou incomplet)'));
+            return throwError(() => new Error('paramètres manquant pour effectuer une authentification (formulaire nul ou incomplet)'));
         }
 
         return this.accountService.isAccountCreatedNotValidated(form.get(AuthenticationService.FIELD_LOGIN_AUTHENTICATION).value).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('error server is not active :', error.message);
-                throw new Error(AuthenticationService.ERROR_SERVER_IS_NOT_ACTIVE);
+                return throwError(() =>  new Error(AuthenticationService.ERROR_SERVER_IS_NOT_ACTIVE));
             }),
             switchMap((isAccountCreatedNotValidated: boolean) => {
                 if (isAccountCreatedNotValidated) {
@@ -188,11 +188,9 @@ export class AuthenticationService {
                         catchError((error: HttpErrorResponse) => {
                             console.error('error server authent :', error.message);
                             if (error.status >= 400 && error.status < 500) {
-                                // Si erreur connu, alors on affiche un message au client
-                                throw new Error('' + error.status);
+                                return throwError(() => new Error('' + error.status));
                             }
-                            // Erreur innatendu du server
-                            throw new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE);
+                            return throwError(() => new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE));
                         })
                     );
                 }
@@ -212,7 +210,7 @@ export class AuthenticationService {
             catchError((error: HttpErrorResponse) => {
                 AuthenticationService.clearTokens();
                 this.setAuthenticationErrorForUsername(login, error);
-                throw new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE);
+                return throwError(() => new Error(AuthenticationService.ERROR_SERVER_AUTHENTICATE));
             })
         );
     }

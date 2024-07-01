@@ -1,40 +1,55 @@
 <div *ngIf="hasSelectedItems" class="d-flex d-table-cell keywords-row mb-5">
 
-    <button *ngFor="let theme of selectedThemeItems" class="rudi-btn-md d-flex align-items-center mb-2"
-            mat-flat-button>
-        {{ theme.name }}
-        <mat-icon iconPositionEnd (click)="deleteThemeFilter(theme)" aria-hidden="false" aria-label="close icon"
-                  class="pointer filter-icon">close
-        </mat-icon>
-    </button>
-
-    <button *ngFor="let producer of selectedProducerItems"
-            class="rudi-btn-md d-flex align-items-center mb-2" mat-flat-button>
-        {{ producer.name }}
-        <mat-icon iconPositionEnd (click)="deleteProducerFilter(producer)" aria-hidden="false" aria-label="close icon"
-                  class="pointer filter-icon">close
-        </mat-icon>
-    </button>
-
-    <button *ngFor="let date of selectedDatesItems" class="rudi-btn-md d-flex align-items-center mb-2"
-            mat-flat-button>
-        {{ date.name }}
-        <mat-icon iconPositionEnd (click)="deleteDateFilter(date)" aria-hidden="false" aria-label="close icon"
-                  class="pointer filter-icon">close
-        </mat-icon>
-    </button>
-
-    <ng-container *ngFor="let restrictedAccessItem of notNullSelectedAccessStatusItems">
-        <button class="rudi-btn-md d-flex align-items-center mb-2" mat-flat-button>
-            {{ restrictedAccessItem.name }}
-            <mat-icon iconPositionEnd (click)="deleteRestrictedAccessFilter()" aria-hidden="false" aria-label="close icon"
-                      class="pointer filter-icon">close
+    <!-- THEME -->
+    <div *ngFor="let theme of selectedThemeItems"
+         class="button-filter-container">
+        <div class="button-filter-texte">
+            {{ theme.name }}
+        </div>
+        <div class="button-filter-icon-container" (click)="deleteThemeFilter(theme)">
+            <mat-icon aria-hidden="false" aria-label="close icon">close
             </mat-icon>
-        </button>
+        </div>
+    </div>
+
+    <!-- PRODUCER -->
+    <div *ngFor="let producer of selectedProducerItems"
+         class="button-filter-container">
+        <div class="button-filter-texte">
+            {{ producer.name }}
+        </div>
+        <div class="button-filter-icon-container" (click)="deleteProducerFilter(producer)">
+            <mat-icon aria-hidden="false" aria-label="close icon">close
+            </mat-icon>
+        </div>
+    </div>
+
+    <!-- DATE -->
+    <div *ngFor="let date of selectedDatesItems"
+         class="button-filter-container">
+        <div class="button-filter-texte">
+            {{ date.name }}
+        </div>
+        <div class="button-filter-icon-container" (click)="deleteDateFilter(date)">
+            <mat-icon aria-hidden="false" aria-label="close icon">close
+            </mat-icon>
+        </div>
+    </div>
+
+    <!-- JDD STATUS -->
+    <ng-container *ngFor="let restrictedAccessItem of notNullSelectedAccessStatusItems">
+        <div class="button-filter-container">
+            <div class="button-filter-texte">
+                {{ restrictedAccessItem.name }}
+            </div>
+            <div class="button-filter-icon-container" (click)="deleteRestrictedAccessFilter()">
+                <mat-icon aria-hidden="false" aria-label="close icon">close
+                </mat-icon>
+            </div>
+        </div>
     </ng-container>
 
-
-    <span *ngIf="hasSelectedAllOtherFiltre()" (click)="deleteAllFilters()"
-          class="filter-link">{{ 'filterBox.toutEffacer' | translate}}</span>
-
+    <span *ngIf="hasSelectedAllOtherFiltre()" (click)="deleteAllFilters()" class="filter-link">
+        {{ 'filterBox.toutEffacer' | translate}}
+    </span>
 </div>

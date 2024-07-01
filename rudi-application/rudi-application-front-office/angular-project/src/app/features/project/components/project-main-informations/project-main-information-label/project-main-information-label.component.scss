@@ -1,0 +1,30 @@
+@import "common-style";
+@import "bootstrap/scss/bootstrap-grid";
+
+.project-detail-label {
+    @extend .pb-1;
+
+    color: var(--primary-color);
+    font-size: 13px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.54;
+    letter-spacing: normal;
+}
+
+.project-detail-label-title{
+    @extend .d-flex;
+}
+
+.project-detail-label-subtitle {
+    @extend .mb-3;
+    @extend .mt-3;
+
+    color: var(--secondary-text);
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.31;
+    letter-spacing: normal;
+}

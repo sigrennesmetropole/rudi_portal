@@ -1,52 +1,57 @@
-<div id="dialog-content">
+<div id="dialog-container">
     <mat-dialog-content>
-        <div class="dialog-header-close-button" fxLayoutAlign="end center">
-            <button mat-icon-button [mat-dialog-close]="null" (click)="handleClose()">
-                <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
+
+        <div class="dialog-cross-button">
+            <button mat-icon-button (click)="handleClose()">
+                <mat-icon svgIcon="icon-close" class="cross-button"></mat-icon>
             </button>
         </div>
-        <span class="dialog-title">{{'project.request-details-dialog.title'|translate}}</span>
-        <p class="description">{{'project.request-details-dialog.description' | translate}}</p>
-        <p class="step-required-information">
-            <span class="required-symbol">*</span>
-            {{'common.requiredInformation' | translate}}
-        </p>
-
-        <form [formGroup]="formGroup">
-
-            <!-- date de fin envisagée -->
-            <div class="d-flex">
-                <mat-label>{{'project.request-details-dialog.date'|translate}}</mat-label>
-                <span class="ms-1 mat-error">{{'signup.etoile'|translate}}</span>
-            </div>
-            <mat-hint class="title-hint">{{'project.request-details-dialog.dateHint'|translate}}</mat-hint>
-            <div>
-                <app-month-year-datepicker [formGroup]="formGroup" controlName="date"
-                                           [errorMessage]="'project.request-details-dialog.dateError' | translate"
-                                           [startDate]="startDate">
-                </app-month-year-datepicker>
+        <div class="dialog-content">
+            <div class="dialog-title">{{'project.request-details-dialog.title'|translate}}</div>
+            <div class="dialog-description">{{'project.request-details-dialog.description' | translate}}</div>
+            <div class="step-required-information">
+                <span class="required-symbol">*</span>
+                {{'common.requiredInformation' | translate}}
             </div>
 
-            <!-- comment -->
-            <div class="d-flex">
-                <mat-label>{{'project.request-details-dialog.comment'|translate}}</mat-label>
-            </div>
-            <mat-hint class="title-hint">{{'project.request-details-dialog.commentHint'|translate}}</mat-hint>
-            <mat-form-field appearance="outline">
-                <textarea formControlName="comment" matInput rows="15" [maxLength]="commentMaxLength"></textarea>
-            </mat-form-field>
 
-        </form>
+            <form [formGroup]="formGroup">
 
-        <mat-dialog-actions class="d-flex justify-content-between">
-            <button class="buttons mat-stroked-button btn dialog-cancel" mat-raised-button (click)="handleCancel()">
-                <span>{{'project.addDatasetPopup.cancel'|translate}}</span>
-            </button>
-            <button class="buttons mat-stroked-button btn dialog-validate" mat-raised-button (click)="submit()"
-                    [disabled]="formGroup.invalid">
-                <span>{{'project.addDatasetPopup.validate'|translate}}</span>
-            </button>
-        </mat-dialog-actions>
+                <!-- date de fin envisagée -->
+                <div class="d-flex mt-4">
+                    <mat-label class="dialog-subtitle">{{'project.request-details-dialog.date'|translate}}</mat-label>
+                    <span class="required-symbol">{{'signup.etoile'|translate}}</span>
+                </div>
+                <mat-hint class="dialog-description">{{'project.request-details-dialog.dateHint'|translate}}</mat-hint>
+                <div>
+                    <app-month-year-datepicker [formGroup]="formGroup" controlName="date"
+                                               [errorMessage]="'project.request-details-dialog.dateError' | translate"
+                                               [startDate]="startDate">
+                    </app-month-year-datepicker>
+                </div>
 
+                <!-- comment -->
+                <div class="d-flex">
+                    <mat-label
+                        class="dialog-subtitle">{{'project.request-details-dialog.comment'|translate}}</mat-label>
+                </div>
+                <mat-hint
+                    class="dialog-description">{{'project.request-details-dialog.commentHint'|translate}}</mat-hint>
+                <mat-form-field appearance="outline">
+                    <textarea formControlName="comment" matInput rows="15" [maxLength]="commentMaxLength"></textarea>
+                </mat-form-field>
+
+            </form>
+
+            <mat-dialog-actions class="dialog-buttons">
+                <button class="secondary-raised-button" mat-raised-button (click)="handleCancel()">
+                    <span>{{'project.addDatasetPopup.cancel'|translate}}</span>
+                </button>
+                <button class="primary-raised-button" mat-raised-button (click)="submit()"
+                        [disabled]="formGroup.invalid">
+                    <span>{{'project.addDatasetPopup.validate'|translate}}</span>
+                </button>
+            </mat-dialog-actions>
+        </div>
     </mat-dialog-content>
 </div>

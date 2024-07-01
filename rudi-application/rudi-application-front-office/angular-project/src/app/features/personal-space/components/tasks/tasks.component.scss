@@ -3,25 +3,20 @@
 ::ng-deep {
     table {
         width: 100%;
-        font-family: OpenSans, sans-serif;
         cursor: pointer;
-
-        * {
-            font-family: OpenSans, sans-serif;
-        }
 
         tr {
             height: unset;
 
             &:focus, &:active, &:hover {
-                background-color: $selected-table-row;
+                background-color: var(--selected-table-row);
             }
         }
 
         th {
             font-weight: 600;
             font-size: 13px;
-            color: $primary-text;
+            color: var(--primary-text);
             padding: 12px 24px;
 
             mat-icon {
@@ -65,10 +60,6 @@
     width: 23ch;
 }
 
-.table-header {
-    font-family: OpenSans, sans-serif;
-}
-
 .table-header:first-child {
     text-decoration: underline;
 }
@@ -84,7 +75,7 @@
     white-space: nowrap;
     padding: 5px 18px;
     font-size: 13px;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 // Taille fixe colonne date (format dd/mm/yyyy) marge de 16 caractères

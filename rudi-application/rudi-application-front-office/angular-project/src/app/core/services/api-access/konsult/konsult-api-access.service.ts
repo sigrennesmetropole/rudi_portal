@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
+import {UserService} from '@core/services/user.service';
 import {TranslateService} from '@ngx-translate/core';
 import {AclService} from 'micro_service_modules/acl/acl-api';
 import {KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
 import {Observable, throwError} from 'rxjs';
-import {UserService} from '@core/services/user.service';
 import {AbstractApiAccessService} from '../abstract-api-access.service';
 import {Credentials} from '../credentials';
 import {SubscriptionData} from '../subscription-data';
@@ -43,11 +43,11 @@ export class KonsultApiAccessService extends AbstractApiAccessService {
     hasSubscribedToDataset(subscriptionData: SubscriptionData): Observable<boolean> {
 
         if (subscriptionData.metadata == null) {
-            return throwError(Error('Impossible de vérifier la souscription si on ne propose pas de JDD'));
+            return throwError(() => Error('Impossible de vérifier la souscription si on ne propose pas de JDD'));
         }
 
         if (subscriptionData.linkedDataset == null) {
-            return throwError(Error('Impossible de vérifier la souscription à un JDD sans fournir une demande'));
+            return throwError(() => Error('Impossible de vérifier la souscription à un JDD sans fournir une demande'));
         }
 
         return this.konsultService.hasSubscribeToLinkedDataset(subscriptionData.metadata.global_id, subscriptionData.linkedDataset.uuid);
@@ -56,11 +56,11 @@ export class KonsultApiAccessService extends AbstractApiAccessService {
     subscribeToDataset(subscriptionData: SubscriptionData): Observable<unknown> {
 
         if (subscriptionData.metadata == null) {
-            return throwError(Error('Impossible de souscrire si on ne propose pas de JDD'));
+            return throwError(() => Error('Impossible de souscrire si on ne propose pas de JDD'));
         }
 
         if (subscriptionData.linkedDataset == null) {
-            return throwError(Error('Impossible de souscrire à un JDD sans fournir une demande'));
+            return throwError(() => Error('Impossible de souscrire à un JDD sans fournir une demande'));
         }
 
         return this.konsultService.subscribeToLinkedDataset(subscriptionData.metadata.global_id, subscriptionData.linkedDataset.uuid);

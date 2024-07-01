@@ -1,12 +1,13 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import {User} from 'micro_service_modules/acl/acl-api';
-import {Organization} from 'micro_service_modules/strukture/strukture-model';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {LogService} from '@core/services/log.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
+import {PageTitleService} from '@core/services/page-title.service';
 import {UserService} from '@core/services/user.service';
 import {TranslateService} from '@ngx-translate/core';
+import {User} from 'micro_service_modules/acl/acl-api';
+import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {switchMap, tap} from 'rxjs/operators';
 
 
@@ -22,15 +23,15 @@ export class DetailComponent implements OnInit {
     public _displayAdministrationTab: boolean;
 
     constructor(private readonly route: ActivatedRoute,
+                private readonly router: Router,
                 private readonly organizationService: OrganizationMetierService,
                 private readonly userService: UserService,
                 private readonly logService: LogService,
-                private readonly translateService: TranslateService,
-                private readonly snackbarService: SnackBarService) {
+                private readonly pageTitleService: PageTitleService,
+                private readonly translateService: TranslateService) {
     }
 
     ngOnInit(): void {
-
         this.route.params.pipe(
             switchMap((params: Params) => {
                 // Si uuid, on charge l'organization
@@ -46,11 +47,22 @@ export class DetailComponent implements OnInit {
         ).subscribe(
             {
                 next: (organization: Organization) => {
+                    if (organization.name) {
+                        this.pageTitleService.setPageTitle(organization.name, this.translateService.instant('pageTitle.defaultDetail'));
+                    } else {
+                        this.pageTitleService.setPageTitleFromUrl('/organization');
+                    }
                     this.isLoading = false;
                     this.organization = organization;
                 },
-                error: err => {
-                    this.logService.error(err);
+                error: (error: HttpErrorResponse) => {
+                    this.logService.error(error);
+                    if (error.status == 400) {
+                        this.router.navigate(['/error/400']);
+                    }
+                    if (error.status == 404) {
+                        this.router.navigate(['/error/404']);
+                    }
                     this.isLoading = false;
                 }
             }
@@ -62,13 +74,14 @@ export class DetailComponent implements OnInit {
     }
 
     isAdministrator(organizationUuid: string): void {
-        this.organizationService.isAdministrator(organizationUuid).subscribe(
-            (isAdministrator: boolean) => {
-                this._displayAdministrationTab = isAdministrator;
-            },
-            (error) => {
-                this.logService.error(error);
-            }
-        );
+        this.organizationService.isAdministrator(organizationUuid)
+            .subscribe({
+                next: (isAdministrator: boolean) => {
+                    this._displayAdministrationTab = isAdministrator;
+                },
+                error: (error) => {
+                    this.logService.error(error);
+                }
+            });
     }
 }

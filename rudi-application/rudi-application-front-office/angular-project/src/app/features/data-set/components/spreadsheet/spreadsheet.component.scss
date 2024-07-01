@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .ag-grid-style {
     width: 100%;
@@ -13,22 +11,20 @@
 
     ::ng-deep {
         .ag-header-row-column {
-            background-color: $primary-color;
+            background-color: var(--primary-color);
         }
 
         .ag-header-cell {
-            font-family: OpenSans, sans-serif;
             cursor: pointer;
             font-weight: 600;
-            color: $white;
+            color: var(--white);
         }
 
         .ag-first-cell-column {
-            background-color: $primary-color;
-            font-family: OpenSans, sans-serif;
+            background-color: var(--primary-color);
             cursor: pointer;
             font-weight: 600;
-            color: $white;
+            color: var(--white);
         }
 
         .ag-icon {

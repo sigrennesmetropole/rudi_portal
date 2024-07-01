@@ -24,7 +24,7 @@ export interface Data {
 }
 
 export enum Level {
-    INFO, ERROR
+    INFO, ERROR, SUCCESS
 }
 
 /**

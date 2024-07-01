@@ -28,8 +28,8 @@ import org.rudi.microservice.konsent.service.exception.KonsentUnauthorizedExcept
 import org.rudi.microservice.konsent.service.helper.TreatmentHelper;
 import org.rudi.microservice.konsent.service.helper.UserHelper;
 import org.rudi.microservice.konsent.service.mapper.data.DataManagerMapper;
-import org.rudi.microservice.konsent.service.mapper.treatmentversion.TreatmentVersionMapper;
 import org.rudi.microservice.konsent.service.mapper.treatment.TreatmentsMapper;
+import org.rudi.microservice.konsent.service.mapper.treatmentversion.TreatmentVersionMapper;
 import org.rudi.microservice.konsent.service.treatment.TreatmentsService;
 import org.rudi.microservice.konsent.service.treatment.impl.fields.common.CreateTreatmentVersionFieldProcessor;
 import org.rudi.microservice.konsent.service.treatment.impl.fields.common.UpdateTreatmentVersionFieldProcessor;
@@ -106,7 +106,7 @@ public class TreatmentsServiceImpl implements TreatmentsService {
 		val treatmentEntity = getTreatment(uuid);
 		val connectedUserUuid = aclHelper.getAuthenticatedUserUuid();
 		boolean canDelete = userOwnsTreatment(treatmentEntity, connectedUserUuid)
-				|| userHelper.isConnectedUserModuleAdministrator();
+				|| userHelper.isAuthenticatedUserModuleAdministrator();
 
 		if (!canDelete) {
 			throw new AppServiceUnauthorizedException("L'utilisateur n'a pas le droit de supprimer le traitement");
@@ -137,7 +137,7 @@ public class TreatmentsServiceImpl implements TreatmentsService {
 		val treatmentEntity = getTreatment(treatmentUuid);
 
 		boolean userCanDelete = userOwnsTreatment(treatmentEntity, connectedUserUuid)
-				|| userHelper.isConnectedUserModuleAdministrator();
+				|| userHelper.isAuthenticatedUserModuleAdministrator();
 		if (!userCanDelete) {
 			throw new AppServiceUnauthorizedException("L'utilisateur n'a pas le droit de supprimer cette version");
 		}
@@ -168,7 +168,7 @@ public class TreatmentsServiceImpl implements TreatmentsService {
 		val treatmentEntity = treatmentsCustomDao.getTreatmentByUuidAndStatus(uuid, statusIsValidated);
 
 		boolean userCanGet = userOwnsTreatment(treatmentEntity, connectedUserUuid)
-				|| userHelper.isConnectedUserModuleAdministrator();
+				|| userHelper.isAuthenticatedUserModuleAdministrator();
 		if (!userCanGet) {
 			throw new AppServiceUnauthorizedException("L'utilisateur n'a pas le droit de récupérer cette version");
 		}
@@ -201,7 +201,7 @@ public class TreatmentsServiceImpl implements TreatmentsService {
 
 		val connectedUserUuid = aclHelper.getAuthenticatedUserUuid();
 		boolean userCanPublish = userOwnsTreatment(treatmentEntity, connectedUserUuid)
-				|| userHelper.isConnectedUserModuleAdministrator();
+				|| userHelper.isAuthenticatedUserModuleAdministrator();
 		if (!userCanPublish) {
 			throw new AppServiceUnauthorizedException("L'utilisateur n'a pas le droit de publier le traitement");
 		}
@@ -259,7 +259,7 @@ public class TreatmentsServiceImpl implements TreatmentsService {
 		// vérification du droit de MAJ
 		val connectedUserUuid = aclHelper.getAuthenticatedUserUuid();
 		boolean userCanUpdate = userOwnsTreatment(existingTreatmentEntity, connectedUserUuid)
-				|| userHelper.isConnectedUserModuleAdministrator();
+				|| userHelper.isAuthenticatedUserModuleAdministrator();
 		if (!userCanUpdate) {
 			throw new AppServiceUnauthorizedException("L'utilisateur n'a pas le droit de modifier le traitement");
 		}

@@ -1,6 +1,6 @@
 {
-    "overrideCssFile": "/style-override.css",
-	"mainLogo": "/assets/main-logo.png",
+	"overrideCssFile": "/style-override.css",
+	"mainLogo": "/assets/main-logo.svg",
 	"heroDescription": {
 		"leftImage": "/assets/hero/left-image.png",
 		"rightImage": "/assets/hero/right-image.png",
@@ -59,11 +59,11 @@
 		"descriptions": [
 			{
 				"locale": "fr_FR",
-				"text": "Une Réutilisation est la description par un Utilisateur de l’usage d’un ou plusieurs jeux de données du catalogue. Tout Utilisateur inscrit peut déclarer une Réutilisation en décrivant le résultat produit (article, application, etc) et en indiquant le ou les jeux de données utilisés."
+				"text": "Les données du catalogue Rudi peuvent être réutilisées librement ou sur demande pour réaliser des projets et des services nouveaux. Consultez les réutilisations soumises par les autres utilisateurs et renseignez vos propres projets "
 			},
 			{
 				"locale": "en_GB",
-				"text": "A Re-use is the description by a User of the use of one or more datasets from the catalog. Any registered User can declare a Re-use by describing the result produced (article, application, etc.) and indicating the dataset(s) used."
+				"text": "Rudi catalog data can be reused freely or on request to create new projects and services. Consult the re-uses submitted by other users and enter your own projects"
 			}
 		]
 	},
@@ -123,6 +123,121 @@
 				]
 			}
 		]
-
+	},
+	"cmsNewsDescription": {
+		"category": "/rudi/news",
+		"alauneCategory": "/rudi/news/a-la-une",
+		"templateDetailed": "rudi-news@one-news-detailed",
+		"templateSimple": "rudi-news@one-news",
+		"templateSimpleWithImage": "rudi-news@one-news-with-image",
+		"templateNewsList": "rudi-news@one-news-with-image-card",
+		"newsListPath": "cms/news/rudi-news@one-news-with-image-card"
+	},
+	"cmsTermsDescription": {
+		"category": "/rudi/terms",
+		"cguCategory": "/rudi/terms/cgu",
+		"legalMentionCategory": "/rudi/terms/legal-mention",
+		"privacyPolicyCategory": "/rudi/terms/privacy-policy",
+		"copyrightsCategory": "/rudi/terms/copyrights",
+		"templateDetailed": "rudi-terms@one-term-detailed",
+		"templateSimple": "rudi-terms@one-term"
+	},
+	"cmsProjectValuesDescription": {
+		"titles1": [
+			{
+				"locale": "fr_FR",
+				"text": "Les fonctionnalités de"
+			},
+			{
+				"locale": "en_GB",
+				"text": "The features of"
+			}
+		],
+		"titles2": [
+			{
+				"locale": "fr_FR",
+				"text": "Rudi"
+			},
+			{
+				"locale": "en_GB",
+				"text": "Rudi"
+			}
+		],
+		"descriptions": [
+			{
+				"locale": "fr_FR",
+				"text": "Découvrez comment Rudi peut vous être utile, que vous soyez producteur de données, porteur de projet, usager des services de Rennes Métropole, ou en tant qu'autre collectivité."
+			},
+			{
+				"locale": "en_GB",
+				"text": "Find out how Rudi can help you, whether you're a data producer, a project developer, a user of Rennes Métropole services, or another local authority."
+			}
+		],
+		"category": "/rudi/projectvalues",
+		"mainCategory": "/rudi/projectvalues/main",
+		"templateDetailed": "rudi-project-values@one-projectvalue-detailed",
+		"templateSimple": "rudi-project-values@one-projectvalue"
+	},
+	"footerDescription": {
+		"logo": "/assets/footer/logo.svg",
+		"socialNetworks": [
+			{
+				"label": "Linkedin",
+				"url": "https://www.linkedin.com/company/portail-rudi",
+				"icon": "/assets/footer/linkedin.svg"
+			},
+			{
+				"label": "Loopedin",
+				"url": "https://app.loopedin.io/rudi",
+				"icon": "/assets/footer/loopedin.svg"
+			},
+			{
+				"label": "Github",
+				"url": "https://github.com/sigrennesmetropole/rudi_portal",
+				"icon": "/assets/footer/github.svg"
+			}
+		]
+	},
+	"newsPageDescription": {
+		"titles1": [
+			{
+				"locale": "fr_FR",
+				"text": "Découvrir"
+			},
+			{
+				"locale": "en_GB",
+				"text": "Discover"
+			}
+		],
+		"titles2": [
+			{
+				"locale": "fr_FR",
+				"text": "toutes les actualités"
+			},
+			{
+				"locale": "en_GB",
+				"text": "all news"
+			}
+		],
+		"orders": [
+			{
+				"libelles": [
+					{
+						"locale": "fr_FR",
+						"text": "La plus récente"
+					}
+				],
+				"value": "-publishdate"
+			},
+			{
+				"libelles": [
+					{
+						"locale": "fr_FR",
+						"text": "La plus ancienne"
+					}
+				],
+				"value": "publishdate"
+			}
+		]
 	}
 }

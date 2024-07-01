@@ -1,5 +1,3 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
 .selfdata-container {
@@ -39,12 +37,12 @@
     margin-bottom: 20px;
     text-align: center;
     display: block;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 .information-request-subtitle {
     font-size: 14px;
-    color: $primary-text-light;
+    color: var(--primary-text-light);
     text-align: center;
 }
 
@@ -64,7 +62,7 @@ button {
     width: 150px;
 
     &.cancel-button {
-        color: $primary-text-light;
+        color: var(--primary-text-light);
     }
 
     &.send-button {

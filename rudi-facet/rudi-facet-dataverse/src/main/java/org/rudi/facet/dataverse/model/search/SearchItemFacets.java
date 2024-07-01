@@ -1,13 +1,15 @@
 package org.rudi.facet.dataverse.model.search;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
 @Data
-public class SearchItemFacets {
+public class SearchItemFacets implements Serializable {
 
     @JsonProperty("friendly")
     private String friendly;

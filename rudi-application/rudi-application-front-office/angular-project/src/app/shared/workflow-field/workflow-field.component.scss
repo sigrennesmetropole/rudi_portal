@@ -19,7 +19,7 @@ mat-error {
     font-style: normal;
     line-height: 1.43;
     letter-spacing: normal;
-    color: $error-color;
+    color: var(--error-color);
 }
 
 *:focus-visible {
@@ -32,7 +32,7 @@ mat-error {
 
     .mat-focused .mat-form-field-label {
         /*change color of label*/
-        color: $focus !important;
+        color: var(--focus) !important;
     }
 
     // Customization du formulaire Angular Material
@@ -41,7 +41,7 @@ mat-error {
         .mat-form-field-outline-start,
         .mat-form-field-outline-gap,
         .mat-form-field-outline-end {
-            background: $banner-solid-color-60;
+            background: var(--banner-solid-color-60);
         }
 
         .mat-form-field-infix {
@@ -49,19 +49,18 @@ mat-error {
         }
 
         input {
-            font-family: OpenSans, sans-serif;
             font-size: 15px;
-            color: $primary-text !important;
+            color: var(--primary-text) !important;
             height: 2em;
         }
 
     }
 
     .mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
-        background: $primary-color !important;
+        background: var(--primary-color) !important;
     }
 
     .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
-        color: $primary-color;
+        color: var(--primary-color);
     }
 }

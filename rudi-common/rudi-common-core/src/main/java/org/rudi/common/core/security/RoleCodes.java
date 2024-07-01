@@ -1,13 +1,14 @@
 package org.rudi.common.core.security;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
- * Valeurs possibles pour le rôle d'un utilisateur.
- * Cf. org.rudi.microservice.acl.storage.entity.role.RoleEntity.
- * On ne peut pas utiliser un Enum car les annotations Java n'acceptent que des constantes.
+ * Valeurs possibles pour le rôle d'un utilisateur. Cf. org.rudi.microservice.acl.storage.entity.role.RoleEntity. On ne peut pas utiliser un Enum car
+ * les annotations Java n'acceptent que des constantes.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RoleCodes {
-	private RoleCodes() {
-	}
 
 	public static final String ADMINISTRATOR = "ADMINISTRATOR";
 	public static final String ANONYMOUS = "ANONYMOUS";
@@ -27,6 +28,8 @@ public final class RoleCodes {
 	public static final String MODULE_KONSENT = "MODULE_KONSENT";
 	public static final String MODULE_KONSENT_ADMINISTRATOR = "MODULE_KONSENT_ADMINISTRATOR";
 	public static final String MODULE_STRUKTURE_ADMINISTRATOR = "MODULE_STRUKTURE_ADMINISTRATOR";
+	public static final String MODULE_APIGATEWAY = "MODULE_APIGATEWAY";
+	public static final String MODULE_APIGATEWAY_ADMINISTRATOR = "MODULE_APIGATEWAY_ADMINISTRATOR";
 	public static final String ORGANIZATION = "ORGANIZATION";
 	public static final String PROJECT_MANAGER = "PROJECT_MANAGER";
 	public static final String PROVIDER = "PROVIDER";

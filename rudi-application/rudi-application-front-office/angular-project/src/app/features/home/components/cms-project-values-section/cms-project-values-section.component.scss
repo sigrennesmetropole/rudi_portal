@@ -1,0 +1,145 @@
+@import "responsive";
+
+.project-values-section-container {
+    margin: 30px auto 0 auto;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(to bottom,
+        var(--focus-background) 0%,
+        var(--focus-background) 70%,
+        transparent 70%,
+        transparent 100%
+    );
+}
+
+
+.project-values-row {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.project-values-container {
+    margin: auto;
+}
+
+.project-values-text-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .project-values-text {
+        max-width: 550px;
+        text-align: center;
+        line-height: 45px;
+    }
+
+    .project-values-title {
+        @extend .project-values-text;
+        padding-top: 20px;
+        font-size: 38px;
+        color: var(--primary-color);
+        font-weight: 700;
+        margin: 0;
+
+    }
+
+    .project-values-subtitle {
+        @extend .project-values-text;
+        font-size: 34px;
+        color: var(--accent-color);
+    }
+
+    .project-values-description {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        max-width: 550px;
+        text-align: center;
+    }
+}
+
+
+/* RESPONSIVE */
+@mixin mobile-screen {
+    .project-values-section-container {
+        background: linear-gradient(to bottom,
+            var(--focus-background) 0%,
+            var(--focus-background) 90%,
+            transparent 70%,
+            transparent 100%
+        );
+    }
+    .project-values-row {
+        align-items: center;
+        flex-direction: column;
+        gap: 20px;
+
+        .project-values {
+            flex: 1;
+            max-width: 280px;
+            width: 100%;
+        }
+    }
+}
+
+@mixin tablet-screen {
+    .project-values-section-container {
+        background: linear-gradient(to bottom,
+            var(--focus-background) 0%,
+            var(--focus-background) 85%,
+            transparent 70%,
+            transparent 100%
+        );
+    }
+    .project-values-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0 50px;
+
+        .project-values {
+            flex: 1 0 35%;
+        }
+    }
+}
+
+
+@mixin desktop-screen {
+    .project-values-row {
+        flex-direction: row;
+
+        .project-values {
+            flex: 1;
+            max-width: 280px;
+        }
+    }
+    .project-values {
+        flex: 1;
+        max-width: 280px;
+    }
+}
+
+@include xs() {
+    @include mobile-screen;
+}
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include tablet-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include desktop-screen;
+}
+
+
+

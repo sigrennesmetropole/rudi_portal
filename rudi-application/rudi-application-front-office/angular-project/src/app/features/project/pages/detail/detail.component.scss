@@ -1,14 +1,30 @@
-@import "variables-rudi";
 @import "common-style";
 
 .mat-drawer-content {
     overflow-x: hidden;
 }
 
+.bandeau-btn-access {
+    @include button-blue;
+
+    .icon-style {
+        color: white;
+
+        &-mobile {
+            margin: 0;
+        }
+    }
+}
+
+.bandeau-btn-access:hover {
+    background-color: var(--focus);
+    color: var(--secondary-color);
+}
+
 //****** Style mat-menu du bandeau *******
 .menu-libelle {
     font-size: 15px;
-    color: $primary-text;
+    color: var(--primary-text);
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
@@ -26,8 +42,12 @@
     padding-top: 115px;
     height: calc(100% - 170px);
 
+    .bandeau-icon-libelle {
+        display: none;
+    }
+
     .card-project-type-sm-title {
-        border-bottom: 1px solid $blocks-and-menus-outline;
+        border-bottom: 1px solid var(--blocks-and-menus-outline);
         padding-top: 15px;
     }
 
@@ -42,7 +62,7 @@
             height: 120px;
             overflow: hidden;
             border-radius: 4px;
-            border: solid 1px $keywords-outline;
+            border: solid 1px var(--keywords-outline);
 
             img {
                 margin: 0;
@@ -72,7 +92,7 @@
 
     .project-card {
         box-shadow: none;
-        border: solid 1.1px $blocks-and-menus-outline;
+        border: solid 1.1px var(--blocks-and-menus-outline);
         border-radius: 6px;
         padding: 29px;
     }
@@ -86,10 +106,6 @@
         font-weight: 600;
         font-style: normal;
         font-stretch: normal;
-    }
-
-    .text-underline {
-        text-decoration: underline;
     }
 
     .user-identity {
@@ -167,11 +183,11 @@
 
         .contact {
             padding: 20px 0;
-            border-top: 1px solid $blocks-and-menus-outline;
-            border-bottom: 1px solid $blocks-and-menus-outline;
+            border-top: 1px solid var(--blocks-and-menus-outline);
+            border-bottom: 1px solid var(--blocks-and-menus-outline);
 
             a {
-                color: $focus !important;
+                color: var(--focus) !important;
                 text-decoration: underline;
             }
 
@@ -194,8 +210,8 @@
             padding: 8px 11px 0 11px;
             height: 40px;
             border-radius: 4px;
-            border: solid 1px $blocks-and-menus-outline;
-            background-color: $banner-solid-color;
+            border: solid 1px var(--blocks-and-menus-outline);
+            background-color: var(--banner-solid-color);
 
             .label-date {
                 font-size: 12px;
@@ -233,20 +249,20 @@
             height: 70px;
             padding: 10px 4px 10px 4px;
             border-radius: 3.4px;
-            border: solid 0.9px $blocks-and-menus-outline;
+            border: solid 0.9px var(--blocks-and-menus-outline);
             justify-content: center;
         }
 
     }
 
-    &-sm {
+    .button-info {
+        background-color: var(--primary-color);
+        color: var(--banner-solid-color);
+    }
 
+    &-xs, &-sm {
         .bandeau {
             margin: 0 -60px 0 -60px;
-        }
-
-        .bandeau-icon-libelle {
-            display: none;
         }
 
         .card-margin-top {
@@ -257,7 +273,7 @@
             display: none;
 
             &-title {
-                border-bottom: 1px solid $blocks-and-menus-outline;
+                border-bottom: 1px solid var(--blocks-and-menus-outline);
             }
         }
 
@@ -271,7 +287,7 @@
             padding: 5px;
             align-items: center;
             border-radius: 3.4px;
-            border: solid 0.9px $blocks-and-menus-outline;
+            border: solid 0.9px var(--blocks-and-menus-outline);
             margin-left: 0;
         }
 
@@ -303,18 +319,6 @@
         .date-range-hour {
             font-size: 14px;
             font-weight: normal;
-        }
-
-        .bandeau-btn-access {
-            color: black;
-            background-color: $secondary-color;
-            font-size: 14px;
-            font-weight: normal;
-        }
-
-        .button-info {
-            background-color: $primary-color;
-            color: $banner-solid-color;
         }
 
         .card-description-keyword {

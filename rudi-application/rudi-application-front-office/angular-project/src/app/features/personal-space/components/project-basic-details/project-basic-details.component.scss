@@ -1,9 +1,9 @@
-@import "variables-rudi";
 @import "common-style";
 
 .card-title {
     display: flex;
     flex-direction: column;
+    padding: 4px 0 20px 0;
 }
 
 .card-label {
@@ -15,11 +15,11 @@
 
 .contact {
     padding: 20px 0;
-    border-top: 1px solid $blocks-and-menus-outline;
-    border-bottom: 1px solid $blocks-and-menus-outline;
+    border-top: 1px solid var(--blocks-and-menus-outline);
+    border-bottom: 1px solid var(--blocks-and-menus-outline);
 
     a {
-        color: $focus !important;
+        color: var(--focus) !important;
         text-decoration: underline;
     }
 
@@ -47,8 +47,8 @@
     margin: 1.5em 0 1em 0;
     padding: 0.5em;
     border-radius: 4px;
-    border: solid 1px $blocks-and-menus-outline;
-    background-color: $banner-solid-color;
+    border: solid 1px var(--blocks-and-menus-outline);
+    background-color: var(--banner-solid-color);
 
     .label-date {
         font-size: 12px;

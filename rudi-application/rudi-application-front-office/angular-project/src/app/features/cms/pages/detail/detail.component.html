@@ -1,0 +1,8 @@
+<div
+    [ngClass]="{'p-small': mediaSize.isXs || mediaSize.isSm,'p-medium': mediaSize.isMd, 'p-large': mediaSize.isDeviceDesktop}">
+
+    <app-loader [isTransparent]="true" [allPage]="false" [active]="isLoading"></app-loader>
+
+    <div *ngIf="isSuccess" [innerHTML]="safeHtml"></div>
+
+</div>

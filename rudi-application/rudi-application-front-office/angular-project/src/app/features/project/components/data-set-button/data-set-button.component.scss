@@ -1,11 +1,8 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .basic-primary-button {
-    background-color: $primary-color;
+    background-color: var(--primary-color);
     color: #e7e9ed;
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
     font-weight: bold;
     font-stretch: normal;
@@ -20,8 +17,8 @@
     word-wrap: break-word;
 
     &:hover {
-        background-color: $focus;
-        color: $secondary-color;
+        background-color: var(--focus);
+        color: var(--secondary-color);
     }
 
 }

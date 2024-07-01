@@ -1,7 +1,12 @@
 package org.rudi.microservice.kalim.service.integration.impl.validator;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import org.rudi.facet.dataverse.api.exceptions.DataverseAPIException;
 import org.rudi.facet.kaccess.constant.RudiMetadataField;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
@@ -11,12 +16,8 @@ import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequest
 import org.rudi.microservice.kalim.storage.entity.integration.IntegrationRequestErrorEntity;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import static org.rudi.microservice.kalim.service.IntegrationError.ERR_403;
 
 /**
@@ -28,8 +29,12 @@ import static org.rudi.microservice.kalim.service.IntegrationError.ERR_403;
 public class DatasetCreatorIsAuthenticatedValidator {
 	private final DatasetService datasetService;
 
+	/**
+	 *
+	 * @param handler de la requête
+	 * @return false -- contrôle désactivé
+	 */
 	public boolean canBeUsedBy(IntegrationRequestTreatmentHandler handler) {
-//		return handler instanceof PutIntegrationRequestTreatmentHandler || handler instanceof DeleteIntegrationRequestTreatmentHandler;
 		// Contrôle désactivé par la RUDI-1459
 		return false;
 	}

@@ -188,7 +188,7 @@ public abstract class AbstractWorkflowContext<E extends AssetDescriptionEntity, 
 	 */
 	public void sendEMailToRole(ScriptContext scriptContext, ExecutionEntity executionEntity, EMailData eMailData,
 			String roleCode) {
-		LOGGER.debug("Send email to initiator...");
+		LOGGER.debug("Send email to role...");
 		try {
 			AssetDescriptionEntity assetDescription = lookupAssetDescriptionEntity(executionEntity);
 			List<User> users = aclHelper.searchUsers(roleCode);
@@ -254,6 +254,8 @@ public abstract class AbstractWorkflowContext<E extends AssetDescriptionEntity, 
 
 	/**
 	 * Retourne la liste des users candidats pour la tâche
+	 * Utilisable via une balise bpmn:humanPerformer
+	 * cf rudi-facet/rudi-facet-bpmn/README.md
 	 * 
 	 * @param scriptContext   le context
 	 * @param executionEntity l'entité d'execution
@@ -404,6 +406,9 @@ public abstract class AbstractWorkflowContext<E extends AssetDescriptionEntity, 
 
 			EMailDataModel<E, A> eMailDataModel = createEmailDataModel(executionEntity, assetDescription, subject,
 					roleName);
+
+			eMailDataModel.addAllData(eMailData.getData());
+
 			DocumentContent subjectContent = templateGenerator.generateDocument(eMailDataModel);
 			subject = FileUtils.readFileToString(subjectContent.getFile(), StandardCharsets.UTF_8);
 		}
@@ -426,6 +431,9 @@ public abstract class AbstractWorkflowContext<E extends AssetDescriptionEntity, 
 
 			EMailDataModel<E, A> eMailDataModel = createEmailDataModel(executionEntity, assetDescription, bodyTemplate,
 					roleName);
+
+			eMailDataModel.addAllData(eMailData.getData());
+
 			return templateGenerator.generateDocument(eMailDataModel);
 		} else {
 			return null;

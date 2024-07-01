@@ -1,6 +1,3 @@
-@import "variables-rudi";
-@import "colors";
-
 img {
     width: 100%;
     height: 100%;
@@ -12,6 +9,6 @@ img {
     height: 70px;
     padding: 10px 4px 10px 4px;
     border-radius: 3.4px;
-    border: solid 0.9px $blocks-and-menus-outline;
-    background: $secondary-color;
+    border: solid 0.9px var(--blocks-and-menus-outline);
+    background: var(--secondary-color);
 }

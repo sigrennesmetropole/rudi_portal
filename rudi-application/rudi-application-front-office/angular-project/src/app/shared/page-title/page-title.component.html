@@ -1,6 +1,6 @@
 <div class="page-title-container">
     <div class="search-box-title d-flex align-items-center justify-content-center w-100"
-         [ngClass]="{'search-box-title-sm': mediaSize.isSm || mediaSize.isMd, 'search-box-title-lg':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl }">
+         [class]="{'search-box-title-sm': mediaSize.isDeviceMobile, 'search-box-title-lg':  mediaSize.isDeviceDesktop }">
         {{title1}} <span class="ms-2"> {{title2}}</span>
     </div>
     <div class="subtitle-3 d-flex align-items-center justify-content-center w-100"> {{title3}}</div>

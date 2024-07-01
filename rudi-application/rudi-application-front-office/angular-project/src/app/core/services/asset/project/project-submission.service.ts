@@ -1,6 +1,17 @@
 import {Injectable} from '@angular/core';
 import {AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
+import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
+import {KonsultMetierService} from '@core/services/konsult-metier.service';
+import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {ObjectType} from '@core/services/tasks/object-type.enum';
+import {LinkedDatasetTaskMetierService} from '@core/services/tasks/projekt/linked-dataset-task-metier.service';
+import {NewDatasetRequestTaskMetierService} from '@core/services/tasks/projekt/new-dataset-request-task-metier.service';
+import {ProjectTaskMetierService} from '@core/services/tasks/projekt/project-task-metier.service';
+import {UserService} from '@core/services/user.service';
+import {consistentPeriodValidator} from '@core/validators/consistent-period-validator';
 import {
     SelectProjectDialogComponent,
     SelectProjectDialogData
@@ -24,7 +35,6 @@ import {DataRequestItem} from '@features/project/model/data-request-item';
 import {ProjectDatasetItem} from '@features/project/model/project-dataset-item';
 import {ProjectDatasetPictoType} from '@features/project/model/project-dataset-picto-type';
 import {UpdateAction} from '@features/project/model/upate-action';
-import {consistentPeriodValidator} from '@core/validators/consistent-period-validator';
 import {TranslateService} from '@ngx-translate/core';
 import {RequestDetails} from '@shared/models/request-details';
 import {TitleIconType} from '@shared/models/title-icon-type';
@@ -52,17 +62,7 @@ import {
 import {Organization} from 'micro_service_modules/strukture/strukture-model';
 import {Moment} from 'moment';
 import {forkJoin, Observable, of} from 'rxjs';
-import {map, mapTo, switchMap} from 'rxjs/operators';
-import {DefaultMatDialogConfig} from '@core/services/default-mat-dialog-config';
-import {AccessStatusFiltersType} from '@core/services/filters/access-status-filters-type';
-import {KonsultMetierService} from '@core/services/konsult-metier.service';
-import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {ObjectType} from '@core/services/tasks/object-type.enum';
-import {LinkedDatasetTaskMetierService} from '@core/services/tasks/projekt/linked-dataset-task-metier.service';
-import {NewDatasetRequestTaskMetierService} from '@core/services/tasks/projekt/new-dataset-request-task-metier.service';
-import {ProjectTaskMetierService} from '@core/services/tasks/projekt/project-task-metier.service';
-import {UserService} from '@core/services/user.service';
+import {map, switchMap} from 'rxjs/operators';
 import {ProjektMetierService} from './projekt-metier.service';
 
 /**
@@ -230,7 +230,7 @@ export class ProjectSubmissionService {
             type: ['', Validators.required],
             url: ['', Validators.pattern(/^(http|https|ftp):\/\/.*$/)],
             reuse_status: ['', Validators.required],
-            confidentiality: this.formBuilder.control(DEFAULT_CONFIDENTIALITY_CODE, Validators.required),
+            confidentiality: ['', Validators.required],
         }, {
             // Contrôle cross champs sur la période
             validators: [consistentPeriodValidator({beginControlName: 'begin_date', endControlName: 'end_date'})],
@@ -249,11 +249,11 @@ export class ProjectSubmissionService {
      * @param reuseStatus statut de la réutilisation (réutilisation en cours ou terminé)
      */
     public projectFormGroupToProject(step1FormGroup: FormGroup,
-                                     step2FormGroup: FormGroup,
                                      user: User,
                                      projectType: ProjectType,
                                      confidentiality: Confidentiality,
-                                     reuseStatus: ReutilisationStatus): Project {
+                                     reuseStatus: ReutilisationStatus,
+                                     step2FormGroup?: FormGroup): Project {
         const ownerType = step2FormGroup.get('ownerType').value as OwnerType;
         return {
             title: step1FormGroup.get('title').value,
@@ -571,14 +571,14 @@ export class ProjectSubmissionService {
             // 2) S'il y a des demandes de JDD les créer et les lier au projet
             switchMap((createdProject: Project) => {
                 return this.manageRequestsToProjects(createdProject, dataRequests).pipe(
-                    mapTo(createdProject)
+                    map(() => createdProject)
                 );
             }),
 
             // 3) S'il y a des JDDs liés, on les gère (ajout et suppression)
             switchMap(createdProject => {
                 return this.manageLinkedDatasetsToProjects(createdProject, linkedDatasets, mapRequestDetailsByDatasetUuid).pipe(
-                    mapTo(createdProject)
+                    map(() => createdProject)
                 );
             }),
 
@@ -586,7 +586,7 @@ export class ProjectSubmissionService {
             switchMap(createdProject => {
                 if (image != null) {
                     return this.uploadImage(createdProject, image).pipe(
-                        mapTo(createdProject)
+                        map(() => createdProject)
                     );
                 } else {
                     return of(createdProject);
@@ -610,27 +610,27 @@ export class ProjectSubmissionService {
         return this.projektMetierService.updateProject(project).pipe(
             switchMap(() => {
                 return this.manageRequestsToProjects(project, dataRequests).pipe(
-                    mapTo(project)
+                    map(() => project)
                 );
             }),
             switchMap(updatedProject => {
                 return this.manageLinkedDatasetsToProjects(updatedProject, linkedDatasets, mapRequestDetailsByDatasetUuid).pipe(
-                    mapTo(updatedProject)
+                    map(() => updatedProject)
                 );
             }),
             switchMap(updatedProject => {
                 if (imageAction === UpdateAction.AJOUT) {
                     return this.uploadImage(updatedProject, image).pipe(
-                        mapTo(updatedProject)
+                        map(() => updatedProject)
                     );
                 } else if (imageAction === UpdateAction.SUPPRESSION) {
                     return this.projektMetierService.removeLogo(updatedProject.uuid).pipe(
-                        mapTo(updatedProject)
+                        map(() => updatedProject)
                     );
                 } else if (imageAction === UpdateAction.MISE_A_JOUR) {
                     return this.projektMetierService.removeLogo(updatedProject.uuid).pipe(
                         switchMap(() => this.uploadImage(updatedProject, image)),
-                        mapTo(updatedProject)
+                        map(() => updatedProject)
                     );
                 } else {
                     return of(updatedProject);
@@ -659,7 +659,7 @@ export class ProjectSubmissionService {
                 );
             }
             return of(null);
-          });
+        });
 
         return forkJoin(link$);
     }
@@ -721,16 +721,16 @@ export class ProjectSubmissionService {
      */
     public createLinkedDatasetFromProject(linkToCreate: LinkedDatasetFromProject): Observable<void> {
         const createdProject: Project = linkToCreate.project;
-        const map: Map<string, RequestDetails> = new Map();
-        map.set(linkToCreate.datasetUuid, linkToCreate.requestDetail);
+        const mapDataset: Map<string, RequestDetails> = new Map();
+        mapDataset.set(linkToCreate.datasetUuid, linkToCreate.requestDetail);
 
         // Lier les demandes (la seule en l'occurence) au projet
-        return this.projektMetierService.linkProjectToDatasets(createdProject.uuid, [linkToCreate.datasetUuid], map).pipe(
+        return this.projektMetierService.linkProjectToDatasets(createdProject.uuid, [linkToCreate.datasetUuid], mapDataset).pipe(
             // Quand ça se termine on démarre les taches
             switchMap((linksCreated: LinkedDataset[]) => this.createAndStartLinkedDatasetsAndFallback(linksCreated, createdProject)),
 
             // Observable mappé sur void
-            mapTo(null)
+            map(() => null)
         );
     }
 
@@ -762,7 +762,7 @@ export class ProjectSubmissionService {
                     add: this.projektMetierService.addNewDatasetRequests(createdProject, added),
                     delete: this.projektMetierService.deleteDatasetRequests(createdProject, deleted),
                     edit: this.projektMetierService.upddateDatasetRequests(createdProject, edited)
-                }).pipe(mapTo(true));
+                }).pipe(map(() => true));
             })
         );
     }
@@ -801,7 +801,7 @@ export class ProjectSubmissionService {
                     add: this.projektMetierService.linkProjectToDatasets(createdProject.uuid, added, mapRequestDetailsByDatasetUuid),
                     delete: this.projektMetierService.unlinkDatasetsToProject(createdProject.uuid, deleted),
                     edit: this.projektMetierService.updateLinkedDatasets(createdProject, modified)
-                }).pipe(mapTo(true));
+                }).pipe(map(() => true));
             })
         );
     }
@@ -907,7 +907,6 @@ export class ProjectSubmissionService {
      */
     private manageNewDatasetRequestWorkflow(requestAdded: NewDatasetRequest, createdProject: Project): Observable<Task> {
         return this.newDatasetRequestTaskMetierService.createDraft(requestAdded).pipe(
-
             switchMap((associatedTask: Task) => {
                 if (createdProject.project_status === ProjectStatus.Validated) {
                     // Only start the task if the project is "Validated"
@@ -918,6 +917,29 @@ export class ProjectSubmissionService {
                 }
             })
         );
+    }
+
+    /**
+     * Mets à jour les champs du task avec les valeurs du premier formulaire
+     * @param toUpdate le task à modifier
+     * @param form le formulaire qui contient les valeurs à jour
+     */
+    // tslint:disable-next-line:no-any
+    public updateProjectTaskField(toUpdate: any, form: FormGroup, confidentialities: Confidentiality[]): void {
+        toUpdate.asset.title = form.value.title;
+        toUpdate.asset.description = form.value.description;
+        toUpdate.asset.expected_completion_start_date = form.value.begin_date;
+        toUpdate.asset.expected_completion_end_date = form.value.end_date;
+        toUpdate.asset.target_audiences = form.value.publicCible;
+        toUpdate.asset.territorial_scale = form.value.echelle;
+        toUpdate.asset.detailed_territorial_scale = form.value.territoire;
+        toUpdate.asset.desired_supports = form.value.accompagnement;
+        toUpdate.asset.access_url = form.value.url;
+        toUpdate.asset.reutilisation_status = form.value.reuse_status;
+        toUpdate.asset.confidentiality = this.searchConfidentiality(
+            form.value.confidentiality.code, confidentialities
+        );
+        toUpdate.asset.type = form.value.type;
     }
 }
 

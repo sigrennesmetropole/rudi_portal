@@ -1,0 +1,119 @@
+@media screen and (max-width: 1023px) {
+    .news-sumup-container {
+        display: none;
+    }
+
+    .img-container {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .img-container {
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+
+.btn-container {
+    margin: 10px 0 20px 0;
+}
+
+
+.news-title1 {
+    color: #004680;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.news-sumup {
+    color: #004680;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Nombre de lignes à afficher */
+    -webkit-box-orient: vertical;
+}
+
+.img-container img {
+    object-fit: cover;
+    max-width: 100%;
+    object-position: center;
+}
+
+/*card style*/
+
+@media screen and (max-width: 1037px) {
+    .card-news-sumup-container {
+        display: none;
+    }
+
+    .card-img-container {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .card-img-container {
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+
+.card-news-title1 {
+    color: #004680;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 24px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.card-news-sumup {
+    color: #004680;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Nombre de lignes à afficher */
+    -webkit-box-orient: vertical;
+}
+
+.card-img-container {
+    height: 210px;
+}
+
+.card-img-container img {
+    object-fit: cover;
+    max-width: 100%;
+    object-position: center;
+    height: 210px;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-news-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: #cbcdd1 1px solid;
+    height: 360px;
+    cursor: pointer;
+}
+
+.card-news-container:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.05), 0 1px 10px rgba(0, 0, 0, 0.22);
+}
+
+.card-news-text-content {
+    padding: 0.5rem;
+}
+
+.card-click-redirection, .card-click-redirection:hover, .card-click-redirection:visited {
+    text-decoration: none !important;
+}

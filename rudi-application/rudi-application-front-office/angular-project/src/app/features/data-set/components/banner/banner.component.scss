@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .rudi-filters-toolbar {
     width: auto;
@@ -9,8 +7,8 @@
     padding-left: 95px;
 
     :focus-visible {
-    outline: $focus solid 1px;
-    color: $focus;
+    outline: var(--focus) solid 1px;
+    color: var(--focus);
     }
 }
 
@@ -28,7 +26,7 @@
 }
 
 .mat-menu-panel::-webkit-scrollbar-thumb {
-  background-color: $keywords-outline;
+  background-color: var(--keywords-outline);
     border-radius: 40px;
     border: 12px solid white;
 }
@@ -43,14 +41,14 @@
 }
 
 .route-button {
-    background-color: $primary-color;
+    background-color: var(--primary-color);
     color: #e7e9ed;
     font-weight: 600;
     padding: 7px 22px 7px 22px;
     line-height: 1.84rem;
 
     &:hover {
-        background-color: $focus;
-        color: $secondary-color;
+        background-color: var(--focus);
+        color: var(--secondary-color);
     }
 }

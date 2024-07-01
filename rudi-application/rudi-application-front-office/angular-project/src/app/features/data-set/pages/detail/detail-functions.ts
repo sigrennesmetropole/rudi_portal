@@ -46,7 +46,7 @@ export class DetailFunctions {
                             this.logService.error('Accès impossible au média', error);
                             return of(false);
                         }
-                        return throwError(error);
+                        return throwError(() => error);
                     })
                 );
             }

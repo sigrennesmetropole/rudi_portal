@@ -1,11 +1,15 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
+
+.card {
+    padding: 16px;
+
+    mat-card-content {
+        padding: 0;
+    }
+}
 
 .card-demand-label {
     height: 36px;
-    margin: 0 105px 8px 2px;
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: bold;
     font-stretch: normal;
@@ -13,12 +17,10 @@
     line-height: 1.72;
     letter-spacing: normal;
     text-align: left;
-    color: $black;
+    color: var(--black);
 }
 
 .organization-name {
-    margin: 0 37px 5px 0;
-    font-family: OpenSans, sans-serif;
     font-size: 15px;
     font-weight: normal;
     font-stretch: normal;
@@ -31,5 +33,5 @@
 
 .organization-name .text-style-1 {
     font-weight: 600;
-    color: $black;
+    color: var(--black);
 }

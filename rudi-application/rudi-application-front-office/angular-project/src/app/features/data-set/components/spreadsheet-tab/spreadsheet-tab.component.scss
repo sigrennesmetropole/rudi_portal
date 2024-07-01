@@ -1,4 +1,3 @@
-@import "colors";
 @import "common-style";
 
 .search-box-container {
@@ -10,20 +9,10 @@
     input[type="search"]::-webkit-search-results-decoration {
         display: none;
     }
-    .search-box-title {
-        color: $primary-color;
-        height: 56px;
-
-        span {
-            color: $accent-color;
-            font-weight: normal;
-        }
-
-    }
 
     .search-input {
         border-radius: 6px;
-        border: 0.8px solid $blocks-and-menus-outline;
+        border: 0.8px solid var(--blocks-and-menus-outline);
         height: 48px;
         margin: 22px 25px 42px 15px;
     }
@@ -42,7 +31,7 @@
             }
 
             &-icon {
-                color: $primary-color;
+                color: var(--primary-color);
                 position: absolute;
                 margin-left: 16px;
             }
@@ -66,7 +55,7 @@
     }
 
     input::placeholder {
-        color: $primary-text-light !important;
+        color: var(--primary-text-light) !important;
     }
 
     .text-indent {

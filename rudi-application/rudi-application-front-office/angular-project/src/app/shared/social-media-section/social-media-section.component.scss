@@ -1,0 +1,23 @@
+.footer-icon-container {
+    .footer-link {
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+
+        .icon-container {
+            margin-right: 5px;
+        }
+
+        &:hover {
+            color: var(--accent-color-svg);
+            text-decoration: none;
+
+            .icon-container {
+                //Les icons doivent posséder la classe suivant:
+                .social-network-logo {
+                    stroke: var(--accent-color-svg);
+                }
+            }
+        }
+    }
+}

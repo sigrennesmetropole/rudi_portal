@@ -1,0 +1,50 @@
+:root {
+    --primary-color: #004680;
+    --primary-text: #323643;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    font-family: "OpenSans", sans-serif;
+}
+
+.page-container{
+    width: 100%;
+    height: 100vh;
+}
+
+.page-container .logo-container{
+    padding: 30px 0 0 30px;
+}
+
+.page-container .content {
+    padding: 50px 20px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-container .content img{
+    width: 30%;
+}
+
+.page-container .content .text-container{
+    text-align: center;
+}
+
+.page-container .content .text-container h1{
+    color: var(--primary-color);
+}
+
+.page-container .content .text-container p{
+    color: var(--primary-text);
+    font-size: 18px;
+}
+
+@media (max-width: 768px) { 
+    .page-container .content {
+        padding: 20% 0 0 0;
+    }
+}

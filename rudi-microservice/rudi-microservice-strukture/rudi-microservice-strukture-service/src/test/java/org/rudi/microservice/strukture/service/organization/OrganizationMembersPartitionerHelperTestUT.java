@@ -1,13 +1,5 @@
 package org.rudi.microservice.strukture.service.organization;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -43,6 +35,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @StruktureSpringBootTest
 class OrganizationMembersPartitionerHelperTestUT {
@@ -91,7 +91,14 @@ class OrganizationMembersPartitionerHelperTestUT {
 		List<Pageable> partitions = organizationMembersPartitionerHelper.getOrganizationMembersPartition(criteria,
 				partitionSize);
 		assertFalse(CollectionUtils.isEmpty(partitions));
-		assertEquals(4, partitions.size());
+
+		// On attend 5 partitions :
+		//  - 0 -> 9
+		//  - 10 -> 19
+		//  - 20 -> 29
+		//  - 30 -> 39
+		//  - 40 -> 49 (ici 42 -> car 43 membres)
+		assertEquals(5, partitions.size());
 		List<Pageable> sortedPartititons = partitions.stream().sorted(this::compare).collect(Collectors.toList());
 		for (int i = 0; i < sortedPartititons.size(); i++) {
 			Pageable partition = sortedPartititons.get(i);
@@ -138,7 +145,7 @@ class OrganizationMembersPartitionerHelperTestUT {
 
 		// On mocke la partie ACL, on se moque de savoir si les users sont filtrés ou pas, on vérifie dans ce test
 		// que l'ensemble des opérations se déroule bien
-		when(aclHelper.searchUsersWithCriteria(any(), any(), any())).thenReturn(users);
+		when(aclHelper.searchUsersWithCriteria(any(), any(), any(), any())).thenReturn(users);
 
 		List<OrganizationUserMember> membersEnriched = organizationMembersPartitionerHelper
 				.partitionToEnrichedMembers(partition, criteria);

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AuthenticationService} from './authentication.service';
@@ -8,7 +8,7 @@ import {AuthenticationState} from './authentication/authentication-method';
 @Injectable({
     providedIn: 'root'
 })
-export class UserGuardService implements CanActivate, CanActivateChild {
+export class UserGuardService {
 
     constructor(
         public readonly authenticationService: AuthenticationService,
@@ -34,14 +34,14 @@ export class UserGuardService implements CanActivate, CanActivateChild {
 
                         // je suis autre chose, je retourne sur la page de login avec le message d'information
                         this.router.navigate
-                            (['/login'],
-                                {
-                                    queryParams: {
-                                        redirectTo: state.url,
-                                        snackBar: 'project.buttonPopover.genericUnauthorizedMessage'
-                                    }
+                        (['/login'],
+                            {
+                                queryParams: {
+                                    redirectTo: state.url,
+                                    snackBar: 'project.buttonPopover.genericUnauthorizedMessage'
                                 }
-                            );
+                            }
+                        );
                         return false;
                     }
                 )

@@ -5,13 +5,13 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {MatSelectChange} from '@angular/material/select';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
-import {DataSetActionsAuthorizationService} from '@core/services/data-set/data-set-actions-authorization.service';
-import {map} from 'rxjs/operators';
-import {Metadata} from 'micro_service_modules/api-kaccess';
 import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
+import {DataSetActionsAuthorizationService} from '@core/services/data-set/data-set-actions-authorization.service';
 import {UserService} from '@core/services/user.service';
-import {LinkedDataset, Project} from 'micro_service_modules/projekt/projekt-model';
 import {filterEach} from '@shared/utils/rxjs-pipes';
+import {Metadata} from 'micro_service_modules/api-kaccess';
+import {LinkedDataset, Project} from 'micro_service_modules/projekt/projekt-model';
+import {map} from 'rxjs/operators';
 import {CloseEvent, DialogClosedData} from '../../models/dialog-closed-data';
 
 
@@ -106,12 +106,15 @@ export class SelectProjectDialogComponent implements OnInit {
         this.projektMetierService.getMyAndOrganizationsProjectsWithoutPagination().pipe(
             filterEach((myProject: Project) => this.dataSetActionsAuthorizationService.canAddDatasetFromProject(myProject)),
         )
-            .subscribe(myProjects => {
-                this.isLoading = false;
-                this.myProjects = myProjects;
-            }, e => {
-                this.isLoading = false;
-                console.error('Cannot retrieve my projects', e);
+            .subscribe({
+                next: (myProjects) => {
+                    this.isLoading = false;
+                    this.myProjects = myProjects;
+                },
+                error: (err) => {
+                    this.isLoading = false;
+                    console.error('Cannot retrieve my projects', err);
+                }
             });
     }
 

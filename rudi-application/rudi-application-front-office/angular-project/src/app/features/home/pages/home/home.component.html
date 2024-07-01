@@ -6,13 +6,30 @@
             [heroDescription]="customizationDescription?.hero_description"
         ></app-hero-section>
     </div>
-    <div class="themes-section" *ngIf="themes">
-        <div class="themes-container">
-            <app-themes-section
-                [themes]="themes"
-                [isLoading]="themesIsLoading"
-            ></app-themes-section>
+<!--    Themes Section-->
+    <ng-container>
+        <app-loader [isTransparent]="true" [noText]="true" [allPage]="false" [active]="themesIsLoading"></app-loader>
+        <div class="themes-section" *ngIf="themes.length > 0 && !themesIsLoading">
+            <div class="themes-container">
+                <app-themes-section
+                    [themes]="themes"
+                    [isLoading]="themesIsLoading"
+                ></app-themes-section>
+            </div>
         </div>
+    </ng-container>
+
+    <div class="news-section">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="customizationDescriptionIsLoading"></app-loader>
+        <app-cms-news-section *ngIf="!customizationDescriptionIsLoading"
+                              [cmsNewsDescription]="customizationDescription.cms_news_description"
+                              [newsPageDescription]="customizationDescription.news_page_description"
+        ></app-cms-news-section>
+    </div>
+
+    <div class="projectvalues-section">
+        <app-loader [isTransparent]="true" [allPage]="false" [active]="customizationDescriptionIsLoading"></app-loader>
+        <app-cms-project-values-section *ngIf="!customizationDescriptionIsLoading" [cmsProjectValuesDescription]="customizationDescription.cms_project_values_description"></app-cms-project-values-section>
     </div>
 
     <div class="jdd-section">

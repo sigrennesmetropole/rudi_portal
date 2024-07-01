@@ -78,6 +78,7 @@ export class ProjectApiTabComponent implements OnInit {
                     this.loading = false;
                     this.hideIdentificationCard = false;
                     console.error(e);
+                    this.passwordError = true;
                 }
             }
         );

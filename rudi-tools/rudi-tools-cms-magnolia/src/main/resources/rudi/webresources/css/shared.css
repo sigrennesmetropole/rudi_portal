@@ -1,0 +1,68 @@
+.btn {
+    background: #004680;
+    border-radius: 28px;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    filter: brightness(125%);
+    background: #004680;
+    border-radius: 28px;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.title-detail {
+    font-size: 38px;
+    line-height: 42px;
+    color: #004680;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.title1-detail {
+    font-size: 38px;
+    line-height: 42px;
+    color: #004680;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.title2-detail {
+    font-size: 26px;
+    line-height: 30px;
+    color: #004680;
+}
+
+.modified-at {
+    color: #71757e;
+    margin: 10px 0 10px 0;
+}
+
+/*Image pour les template détaillé*/
+.img-container-detail {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.img-container-detail .img-detail {
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.img-container-detail .img-caption-detail {
+    margin-top: 10px;
+    text-align: right;
+    font-size: 16px;
+    color: #004680;
+}
+
+.content-detail {
+    color: #323643;
+    font-size: 16px;
+}
+

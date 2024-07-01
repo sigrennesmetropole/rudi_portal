@@ -1,11 +1,10 @@
 package org.rudi.microservice.strukture.service.producer;
 
+import java.util.UUID;
+
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.kmedia.bean.KindOfData;
-import org.springframework.core.io.Resource;
-
-import java.util.UUID;
 
 /**
  * @author GTR18509
@@ -27,10 +26,10 @@ public interface ProducerService {
 	 *
 	 * @param producerUuid l'uuid du producteur
 	 * @param kindOfData   le type de média
-	 * @param media        le média à remplacer dans Dataverse
+	 * @param documentContent le média à remplacer dans Dataverse
 	 * @throws AppServiceException En cas d'erreur avec le service d'upload
 	 */
-	void uploadMedia(UUID producerUuid, KindOfData kindOfData, Resource media) throws AppServiceException;
+	void uploadMedia(UUID producerUuid, KindOfData kindOfData, DocumentContent documentContent) throws AppServiceException;
 
 	/**
 	 * Supprime le média associé à ce producteur

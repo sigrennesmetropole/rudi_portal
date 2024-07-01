@@ -1,9 +1,10 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
 import {UserGuardService} from '@core/services/user-guard.service';
 import {HomeComponent} from '@features/home/pages/home/home.component';
 import {NotAuthorizedComponent} from '@features/login/pages/not-authorized/not-authorized.component';
+import {ErrorPageComponent} from '@shared/error-page/error-page.component';
 import {AclConfigurationResolver} from '@shared/resolver/acl-configuration-resolver';
 
 const routes: Routes = [
@@ -12,7 +13,7 @@ const routes: Routes = [
         path: 'catalogue',
         loadChildren: () => import('./features/data-set/data-set.module')
             .then(m => m.DataSetModule),
-        canActivate: [AuthGuard],
+        canActivate: mapToCanActivate([AuthGuard]),
         resolve: {
             aclAppInfo: AclConfigurationResolver
         }
@@ -21,13 +22,13 @@ const routes: Routes = [
         path: 'projets',
         loadChildren: () => import('./features/project/project.module')
             .then(m => m.ProjectModule),
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
     {
         path: 'login',
         loadChildren: () => import('./features/login/login.module')
             .then(m => m.LoginModule),
-        canActivate: [AuthGuard],
+        canActivate: mapToCanActivate([AuthGuard]),
         resolve: {
             aclAppInfo: AclConfigurationResolver
         }
@@ -36,17 +37,18 @@ const routes: Routes = [
         path: 'personal-space',
         loadChildren: () => import('./features/personal-space/personal-space.module')
             .then(m => m.PersonalSpaceModule),
-        canActivate: [UserGuardService]
+        canActivate: mapToCanActivate([UserGuardService])
     },
     {
         path: 'organization',
         loadChildren: () => import('./features/organization/organization.module')
             .then(m => m.OrganizationModule),
-        canActivate: [AuthGuard],
+        canActivate: mapToCanActivate([AuthGuard]),
         resolve: {
             aclAppInfo: AclConfigurationResolver
         }
     },
+
     {
         path: '',
         redirectTo: 'home',
@@ -60,9 +62,23 @@ const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
+    },
+    {
+        path: 'cms',
+        loadChildren: () => import('./features/cms/cms.module')
+            .then(m => m.CmsModule),
+        canActivate: mapToCanActivate([AuthGuard])
+    },
+    {
+        path: 'error/:status',
+        component: ErrorPageComponent
+    },
+    {
+        path: '**',
+        pathMatch: 'full',
+        redirectTo: 'error/404'
     }
-
 ];
 
 @NgModule({

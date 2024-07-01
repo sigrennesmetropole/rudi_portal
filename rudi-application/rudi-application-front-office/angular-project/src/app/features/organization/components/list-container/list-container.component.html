@@ -4,16 +4,20 @@
     </mat-toolbar>
 
     <ng-container *ngIf="organizations$ | async as organizations">
-
         <div class="d-flex py-3 justify-content-between">
             <!--Nombre de résultats-->
             <div class=" w-50 search-count">
-                <ng-container *ngIf="!organizations">
-                    {{'searchbox.searchIsRunning'|translate}}
-                </ng-container>
-                <ng-container *ngIf="totalOrganizations$ | async as totalOrganizations">
-                    {{totalOrganizations}} {{'searchbox.results'|translate}}{{totalOrganizations > 1 ? 's' : ''}}
-                </ng-container>
+                <div *ngIf="totalOrganizations$ | async as totalOrganizations">
+                    <div *ngIf="(totalOrganizations$ | async) > 0">
+                        {{totalOrganizations}} {{'searchbox.results'|translate}}{{totalOrganizations > 1 ? 's' : ''}}
+                    </div>
+                    <div *ngIf="(totalOrganizations$ | async) == 0">
+                        {{'searchbox.noResult' | translate}}
+                    </div>
+                </div>
+                    <div *ngIf="isLoadingCatalogue$ | async as isLoading">
+                        {{'searchbox.searchIsRunning'|translate}}
+                    </div>
             </div>
 
             <app-order *ngIf="mediaSize.isXl || mediaSize.isLg || mediaSize.isXxl"

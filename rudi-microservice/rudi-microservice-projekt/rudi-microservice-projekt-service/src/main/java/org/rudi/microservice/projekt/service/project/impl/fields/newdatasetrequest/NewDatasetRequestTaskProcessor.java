@@ -18,14 +18,14 @@ class NewDatasetRequestTaskProcessor implements DeleteNewDatasetRequestFieldProc
 	private final TaskService<NewDatasetRequest> newDatasetRequestTaskService;
 
 	@Override
-	public void process(@Nullable NewDatasetRequestEntity project, NewDatasetRequestEntity existingProject)
+	public void process(@Nullable NewDatasetRequestEntity newDatasetRequestEntity, NewDatasetRequestEntity existingNewDatasetRequest)
 			throws AppServiceException {
-		if (existingProject == null) {
+		if (existingNewDatasetRequest == null) {
 			return;
 		}
-		if (newDatasetRequestTaskService.hasTask(existingProject.getUuid())) {
+		if (newDatasetRequestTaskService.hasTask(existingNewDatasetRequest.getUuid())) {
 			throw new AppServiceForbiddenException(
-					String.format("NewDatasetRequest %s has a running task", existingProject.getUuid()));
+					String.format("NewDatasetRequest %s has a running task", existingNewDatasetRequest.getUuid()));
 		}
 	}
 

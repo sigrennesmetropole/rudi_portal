@@ -32,12 +32,23 @@ public class CmsMagnoliaConfiguration {
 
 	private Map<String, String> assetTypeCssSelectors = new HashMap<>();
 
+	private Map<String, String> assetTypeTitleTemplates = new HashMap<>();
+
+	@Value("${cms.magnolia.fullTextLimit:500}")
+	private int fullTextLimit;
+
 	@Value("${temporary.directory:${java.io.tmpdir}}")
 	private String temporaryDirectory;
 
 	private String temporaryFileExtension = ".html";
 
 	private String temporaryFilePrefix = "rudi-cms-";
+
+	@Value("${front-office.route-to-cms:/cms/detail}")
+	private String frontOfficeRoute;
+
+	@Value("${front-office.route-to-cms-resources:/cms/resources?resourcePath=%s}")
+	private String frontOfficeResourcesRoute;
 
 	public String getDefaultCategory(CmsAssetType cmsAssetType) {
 		return assetTypeCategories.get(cmsAssetType.name().toLowerCase());

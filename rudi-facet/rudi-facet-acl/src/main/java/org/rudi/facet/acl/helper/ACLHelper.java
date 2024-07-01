@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,8 +42,8 @@ import reactor.core.publisher.Mono;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LIMIT_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_AND_DENOMINATION_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_LOGIN_PARAMETER;
 import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_TYPE_PARAMETER;
@@ -55,7 +56,6 @@ import static org.rudi.facet.acl.helper.UserSearchCriteria.USER_UUIDS_PARAMETER;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class ACLHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
@@ -115,11 +115,15 @@ public class ACLHelper {
 	 */
 	@Nullable
 	public User getUserByUUID(UUID userUuid) {
+		return getMonoUserByUUID(userUuid).block();
+	}
+
+	@Nullable
+	public Mono<User> getMonoUserByUUID(UUID userUuid) {
 		if (userUuid == null) {
 			throw new IllegalArgumentException("user uuid required");
 		}
-		return loadBalancedWebClient.get().uri(buildUsersGetDeleteURL(userUuid)).retrieve().bodyToMono(User.class)
-				.block();
+		return loadBalancedWebClient.get().uri(buildUsersGetDeleteURL(userUuid)).retrieve().bodyToMono(User.class);
 	}
 
 	/**
@@ -174,21 +178,27 @@ public class ACLHelper {
 	 */
 	@Nullable
 	private User getUser(UserSearchCriteria criteria) {
-
-		UserPageResult pageResult = loadBalancedWebClient.get()
-				.uri(buildUsersSearchURL(),
-						uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
-								.queryParam(UserSearchCriteria.USER_LOGIN_PARAMETER, criteria.getLogin())
-								.queryParam(UserSearchCriteria.USER_PASSWORD_PARAMETER, criteria.getPassword())
-								.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
-										formatListParameter(criteria.getRoleUuids()))
-								.build())
-				.retrieve().bodyToMono(UserPageResult.class).block();
+		UserPageResult pageResult = getMonoUsers(criteria).block();
 		if (pageResult != null && CollectionUtils.isNotEmpty(pageResult.getElements())) {
 			return pageResult.getElements().get(0);
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * @return l'utilisateur correspondant aux critères, null sinon
+	 */
+	@Nullable
+	public Mono<UserPageResult> getMonoUsers(UserSearchCriteria criteria) {
+
+		return loadBalancedWebClient.get().uri(buildUsersSearchURL(), uriBuilder -> uriBuilder
+				.queryParam(LIMIT_PARAMETER, 1)
+				.queryParamIfPresent(UserSearchCriteria.USER_LOGIN_PARAMETER, Optional.ofNullable(criteria.getLogin()))
+				.queryParamIfPresent(UserSearchCriteria.USER_PASSWORD_PARAMETER,
+						Optional.ofNullable(criteria.getPassword()))
+				.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER, formatListParameter(criteria.getRoleUuids()))
+				.build()).retrieve().bodyToMono(UserPageResult.class);
 	}
 
 	@Nullable
@@ -275,11 +285,11 @@ public class ACLHelper {
 			final var criteria = UserSearchCriteria.builder()
 					.roleUuids(Arrays.stream(roles).map(Role::getUuid).collect(Collectors.toList())).build();
 
+			// Retrait de la limit à 1 : envoie de mail au role MODERATOR
+			// et pas seulement à 1 membre ayant le role MODERATOR
 			UserPageResult pageResult = loadBalancedWebClient.get()
 					.uri(buildUsersSearchURL(),
-							uriBuilder -> uriBuilder.queryParam(LIMIT_PARAMETER, 1)
-									.queryParam(UserSearchCriteria.USER_LOGIN_PARAMETER, criteria.getLogin())
-									.queryParam(UserSearchCriteria.USER_PASSWORD_PARAMETER, criteria.getPassword())
+							uriBuilder -> uriBuilder
 									.queryParam(UserSearchCriteria.ROLE_UUIDS_PARAMETER,
 											formatListParameter(criteria.getRoleUuids()))
 									.build())
@@ -294,7 +304,7 @@ public class ACLHelper {
 
 	@NotNull
 	public List<User> searchUsersWithCriteria(List<UUID> userUuids, @Nullable String searchText,
-			@Nullable String type) {
+			@Nullable String type, @Nullable Integer limit) {
 		List<User> result = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(userUuids)) {
 			if (searchText == null) {
@@ -318,6 +328,7 @@ public class ACLHelper {
 							.queryParam(USER_LOGIN_AND_DENOMINATION_PARAMETER, criteria.getLoginAndDenomination())
 							.queryParam(USER_TYPE_PARAMETER,
 									criteria.getUserType() != null ? criteria.getUserType().toString() : null)
+							.queryParam(USER_LIMIT_PARAMETER, limit)
 							.build())
 					.retrieve().bodyToMono(UserPageResult.class).block();
 			if (pageResult != null && pageResult.getElements() != null) {

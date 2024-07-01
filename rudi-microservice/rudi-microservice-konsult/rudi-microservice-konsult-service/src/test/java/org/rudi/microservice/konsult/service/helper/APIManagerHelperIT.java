@@ -16,9 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.acl.bean.ClientKey;
 import org.rudi.facet.acl.bean.User;
@@ -41,7 +39,9 @@ import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.projekt.helper.ProjektHelper;
+import org.rudi.microservice.konsult.service.KonsultSpringBootTest;
 import org.rudi.microservice.konsult.service.exception.AccessDeniedMetadataMediaException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.wso2.carbon.apimgt.rest.api.publisher.API;
@@ -50,12 +50,18 @@ import org.wso2.carbon.apimgt.rest.api.publisher.APIList;
 
 import lombok.val;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
+@KonsultSpringBootTest
 class APIManagerHelperIT {
 
 	private static String anonymousUsername;
+
+	@Autowired
 	private AdditionalPropertiesHelper additionalPropertiesHelper;
+
+	@Autowired
 	private APIManagerHelper apiManagerHelper;
+
 	@Mock
 	private APIsService apIsService;
 	@Mock

@@ -4,12 +4,9 @@
         <h2 class="title2">{{ projectsDescription.title2 }}</h2>
     </div>
     <div class="d-flex flex-column align-items-center">
-        <div class="subtitle-container">
-            <h3 class="subtitle">{{ projectsDescription.subtitle }}</h3>
-        </div>
 
         <div class="description-container">
-            <p class="description">{{ projectsDescription.description }}</p>
+            <p class="description">{{ projectsDescription.description }} <span class="submit-project-link" (click)="submitProject()" >{{ 'home.projectsSection.viaOurForm' | translate }}</span></p>
         </div>
     </div>
 
@@ -33,7 +30,7 @@
     </div>
 
     <div class="text-center">
-        <button class="button-redirect" (click)="redirectToProject()" mat-stroked-button>
+        <button class="button-redirect" (click)="redirectToProject()">
             <span>{{ 'home.projectsSection.seeMoreProjects' | translate }}</span>
         </button>
     </div>

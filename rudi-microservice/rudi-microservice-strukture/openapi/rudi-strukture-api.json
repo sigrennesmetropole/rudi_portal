@@ -1178,10 +1178,15 @@
 				],
 				"requestBody": {
 					"content": {
-						"application/octet-stream": {
+						"multipart/form-data": {
 							"schema": {
-								"type": "string",
-								"format": "binary"
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
 							}
 						}
 					}
@@ -1680,7 +1685,7 @@
 				],
 				"summary": "Vérifie si l'utilisateur connecté est membre administrateur de l'organisation",
 				"description": "Vérifie si l'utilisateur connecté est membre administrateur de l'organisation",
-				"operationId": "isConnectedUserOrganizationAdministrator",
+				"operationId": "isAuthenticatedUserOrganizationAdministrator",
 				"parameters": [
 					{
 						"in": "path",

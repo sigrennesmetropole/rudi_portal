@@ -1,32 +1,36 @@
-<div id="content-style">
+<div id="dialog-container">
     <mat-dialog-content id="dialog-content">
-        <div class="dialog-header-close-button" fxLayoutAlign="end center">
-            <button mat-icon-button [mat-dialog-close]="null">
-                <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
+        <div class="dialog-cross-button">
+            <button mat-icon-button (click)="handleClose()">
+                <mat-icon svgIcon="icon-close" class="cross-button"></mat-icon>
             </button>
         </div>
-        <app-page-title class="confirmer-action"
-                        [title1]="'metaData.selfdataInformationRequest.viewing.attachment.popin.title' | translate">
-        </app-page-title>
-        <app-page-subtitle class="font-weight-bold"
-                           [text]="'metaData.selfdataInformationRequest.viewing.attachment.popin.alert' | translate">
-        </app-page-subtitle>
-        <div class="d-flex mt-4 mb-4">
-            <div class="me-2">
-                <mat-checkbox [(ngModel)]="consent" class="signup-checkbox" required></mat-checkbox>
+
+        <div class="dialog-content">
+            <div
+                class="dialog-title">{{'metaData.selfdataInformationRequest.viewing.attachment.popin.title' | translate}}</div>
+            <div
+                class="dialog-description fw-bold">{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.alert' | translate }}</div>
+
+            <div class="d-flex mt-4 mb-4">
+                <div class="me-2">
+                    <mat-checkbox [(ngModel)]="consent" class="signup-checkbox" required></mat-checkbox>
+                </div>
+                <div
+                    class="dialog-description text-start">{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.consentText' | translate }}</div>
             </div>
-            <div>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.consentText' | translate }}</div>
+
+            <app-loader [active]="attachmentLoader" [isLight]="true" [allPage]="false" [noText]="true"></app-loader>
+
+            <mat-dialog-actions class="dialog-buttons">
+                <button class="secondary-raised-button" mat-raised-button [mat-dialog-close]="null">
+                    <span>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.cancel' | translate }}</span>
+                </button>
+                <button class="primary-raised-button" mat-raised-button (click)="openDocument()"
+                        [disabled]="!consent || attachmentLoader">
+                    <span>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.download' | translate }}</span>
+                </button>
+            </mat-dialog-actions>
         </div>
-        <app-loader [active]="attachmentLoader" [isLight]="true" [allPage]="false" [noText]="true"></app-loader>
-        <mat-dialog-actions class="d-flex justify-content-center dialog-footer-button">
-            <button class="buttons mat-stroked-button btn dialog-cancel cancel-btn" mat-raised-button
-                    [mat-dialog-close]="null">
-                <span>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.cancel' | translate }}</span>
-            </button>
-            <button class="buttons mat-stroked-button btn dialog-validate confirm-btn" mat-raised-button
-                    (click)="openDocument()" [disabled]="!consent || attachmentLoader">
-                <span>{{ 'metaData.selfdataInformationRequest.viewing.attachment.popin.download' | translate }}</span>
-            </button>
-        </mat-dialog-actions>
     </mat-dialog-content>
 </div>

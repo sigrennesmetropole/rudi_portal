@@ -1,4 +1,3 @@
-@import "colors";
 @import "responsive";
 
 .swiper-container {
@@ -14,6 +13,7 @@
     .swiper {
         width: 100%;
         height: 100%;
+        padding-bottom: 10px;
     }
 
     .swiper-button-next, .swiper-button-prev {

@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
 import {UserGuardService as UserGuard} from '@core/services/user-guard.service';
 import {DetailComponent} from './pages/detail/detail.component';
@@ -17,37 +17,37 @@ const routes: Routes = [
         // Path Data Sets
         path: '',
         component: ListComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
     {
         // Path detail catalogue
         path: 'detail/:uuid',
         component: DetailComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
     {
         // Path detail catalogue
         path: 'detail/:uuid/:name',
         component: DetailComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
     {
         // Path demande d'information
         path: 'detail/:uuid/selfdata-information-request-creation',
         component: SelfdataInformationRequestCreationComponent,
-        canActivate: [UserGuard]
+        canActivate: mapToCanActivate([UserGuard])
     },
     {
         // Path demande d'information
         path: 'detail/:uuid/selfdata-information-request-creation-success',
         component: SelfdataInformationRequestCreationSuccessComponent,
-        canActivate: [UserGuard]
+        canActivate: mapToCanActivate([UserGuard])
     },
     {
         // Path detail
         path: 'details',
         component: DetailComponent,
-        canActivate: [AuthGuard]
+        canActivate: mapToCanActivate([AuthGuard])
     },
 ];
 

@@ -20,11 +20,11 @@ export abstract class TaskMetierService<T extends AssetDescription> {
      */
     doAction(action: Action, task: Task): Observable<Task> {
         return this.claimTask(task.id).pipe(
-            catchError(err => this.unclaimTask(task.id).pipe(switchMap(() => throwError(err)))),
+            catchError(err => this.unclaimTask(task.id).pipe(switchMap(() => throwError(() => err)))),
             switchMap(() => this.updateTask(task)),
-            catchError(err => this.unclaimTask(task.id).pipe(switchMap(() => throwError(err)))),
+            catchError(err => this.unclaimTask(task.id).pipe(switchMap(() => throwError(() => err)))),
             switchMap(() => this.doIt(task.id, action.name)),
-            catchError(err => this.unclaimTask(task.id).pipe(switchMap(() => throwError(err)))),
+            catchError(err => this.unclaimTask(task.id).pipe(switchMap(() => throwError(() => err)))),
             switchMap(() => this.unclaimTask(task.id)),
         );
     }

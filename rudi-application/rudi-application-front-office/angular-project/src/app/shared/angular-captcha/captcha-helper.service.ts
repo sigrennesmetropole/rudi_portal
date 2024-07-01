@@ -48,15 +48,15 @@ export class CaptchaHelperService {
     originCaptchaHtml = originCaptchaHtml.replace(/<script.*<\/script>/g, '');
     const relativeUrls = originCaptchaHtml.match(/(src|href)=\"([^"]+)\"/g);
 
-    let relativeUrl, relativeUrlPrefixPattern, absoluteUrl,
-        changedCaptchaHtml = originCaptchaHtml;
+      let relativeUrl, relativeUrlPrefixPattern, absoluteUrl,
+          changedCaptchaHtml = originCaptchaHtml;
 
-    for (let i = 0; i < relativeUrls.length; i++) {
-      relativeUrl = relativeUrls[i].slice(0, -1).replace(/src=\"|href=\"/, '');
-      relativeUrlPrefixPattern = new RegExp('.*' + captchaEndpointHandler);
-      absoluteUrl = relativeUrl.replace(relativeUrlPrefixPattern, backendUrl + captchaEndpointHandler);
-      changedCaptchaHtml = changedCaptchaHtml.replace(relativeUrl, absoluteUrl);
-    }
+      for (let i = 0; i < relativeUrls.length; i++) {
+          relativeUrl = relativeUrls[i].slice(0, -1).replace(/src=\"|href=\"/, '');
+          relativeUrlPrefixPattern = new RegExp('.*' + captchaEndpointHandler);
+          absoluteUrl = relativeUrl.replace(relativeUrlPrefixPattern, backendUrl + captchaEndpointHandler);
+          changedCaptchaHtml = changedCaptchaHtml.replace(relativeUrl, absoluteUrl);
+      }
 
     return changedCaptchaHtml;
   }

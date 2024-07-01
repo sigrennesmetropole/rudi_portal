@@ -1,5 +1,4 @@
 @import "loaders.css/loaders.min.css";
-@import "colors";
 
 .custom-loader {
     position: inherit;
@@ -15,24 +14,24 @@
         background: none;
 
         > div {
-            background-color: $black;
+            background-color: var(--black);
         }
     }
 
     &.light {
-        background: $ligth-bacground;
+        background: var(--light-background);
 
         > div {
-            background-color: $black;
+            background-color: var(--black);
         }
 
     }
 
     &.dark {
-        background: $dark-bacground;
+        background: var(--dark-background);
 
         > div {
-            background-color: $white;
+            background-color: var(--white);
         }
     }
 
@@ -43,11 +42,11 @@
         transform: translate(-50%, -50%);
 
         &.dark {
-            color: $white;
+            color: var(--white);
         }
 
         &.white {
-            color: $black;
+            color: var(--black);
         }
     }
 }
@@ -59,7 +58,7 @@
 }
 
 .min-loader {
-    border: 1px solid $min-loader;
+    border: 1px solid var(--min-loader);
     border-radius: 50%;
     border-top: 1px solid black;
     border-bottom: 1px solid black;

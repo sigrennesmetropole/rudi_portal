@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
 import {IconRegistryService} from '@core/services/icon-registry.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {RequestToStudy} from '@core/services/tasks-aggregator/request-to-study.interface';
 import {TasksAggregatorService} from '@core/services/tasks-aggregator/tasks-aggregator.service';
+import {TranslateService} from '@ngx-translate/core';
 import {ALL_TYPES} from '@shared/models/title-icon-type';
 import {Level} from '@shared/notification-template/notification-template.component';
 
@@ -34,18 +34,19 @@ export class MyNotificationsComponent implements OnInit {
 
     ngOnInit(): void {
         this.searchIsRunning = true;
-        this.tasksAggregratorService.loadTasks().subscribe(requestsToStudy => {
-            this.requestsToStudy = requestsToStudy;
-        }, (e) => {
-            console.error('Cannot retrieve requests to study', e);
-            this.snackBarService.openSnackBar({
-                message: this.translateService.instant('error.technicalError'),
-                level: Level.ERROR
+        this.tasksAggregratorService.loadTasks()
+            .subscribe({
+                next: (requestsToStudy) => this.requestsToStudy = requestsToStudy,
+                error: (e) => {
+                    console.error('Cannot retrieve requests to study', e);
+                    this.snackBarService.openSnackBar({
+                        message: this.translateService.instant('error.technicalError'),
+                        level: Level.ERROR
+                    });
+                    this.searchIsRunning = false;
+                },
+                complete: () => this.searchIsRunning = false
             });
-            this.searchIsRunning = false;
-        }, () => {
-            this.searchIsRunning = false;
-        });
     }
 
     /**

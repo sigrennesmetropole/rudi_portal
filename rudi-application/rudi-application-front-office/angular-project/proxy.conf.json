@@ -22,6 +22,14 @@
         },
         "changeOrigin": true
     },
+    "/konsult/v1/cms": {
+        "target": "http://localhost:8087/konsult/v1/cms",
+        "secure": false,
+        "pathRewrite": {
+            "^/konsult/v1/cms": ""
+        },
+        "changeOrigin": true
+    },
     "/konsult/v1": {
         "target": "http://localhost:8082/konsult/v1",
         "secure": false,

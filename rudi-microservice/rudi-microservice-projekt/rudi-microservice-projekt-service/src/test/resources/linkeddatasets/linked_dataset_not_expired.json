@@ -3,7 +3,7 @@
 	"datasetUuid": "6b892a75-a306-4149-b512-0ec20cc5c6e1",
 	"datasetOrganisationUuid": "0fbceabf-c794-4fa4-a965-0074b374f34f",
 	"comment": "Linked dataset non expiré",
-	"endDate": "2024-06-08T15:00:00.000",
+	"endDate": "2048-06-08T15:00:00.000",
 	"linkedDatasetStatus": "VALIDATED",
 	"datasetConfidentiality": "RESTRICTED",
 	"project_fk": 1,

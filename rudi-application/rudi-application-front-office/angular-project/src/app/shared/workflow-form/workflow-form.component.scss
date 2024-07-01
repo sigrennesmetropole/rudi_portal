@@ -1,26 +1,21 @@
-@import "colors";
-
 label {
     margin-bottom: 0.7em;
 
     .title {
-        font-family: OpenSans, sans-serif;
         font-size: 16px;
-        color: $secondary-text;
+        color: var(--secondary-text);
         line-height: 2;
     }
 
     .description {
-        font-family: OpenSans, sans-serif;
         font-size: 14px;
-        color: $primary-text-light;
+        color: var(--primary-text-light);
     }
 }
 
 .help-title {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
-    color: $secondary-text;
+    color: var(--secondary-text);
     line-height: 2;
     text-align: center;
     margin-bottom: 1em;
@@ -29,7 +24,7 @@ label {
 .section-card {
     border-style: solid;
     border-width: 1px;
-    border-color: $blocks-and-menus-outline;
+    border-color: var(--blocks-and-menus-outline);
     box-shadow: none;
     padding-top: 19px;
     padding-bottom: 0;

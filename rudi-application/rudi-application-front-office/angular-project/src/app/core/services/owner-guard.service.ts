@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -7,14 +7,14 @@ import {map} from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
-export class OwnerGuardService implements CanActivate, CanActivateChild {
+export class OwnerGuardService {
 
     // Gestion d'un loader durant l'authentification
     public loader = false;
 
     constructor(
         private readonly projectService: ProjektService,
-        private readonly router: Router, ) {
+        private readonly router: Router,) {
     }
 
     /**

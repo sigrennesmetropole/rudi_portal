@@ -33,17 +33,22 @@
                                         <mat-label>{{'signup.nom'|translate}}</mat-label>
                                         <input type="text" matInput placeholder="{{'signup.nom'|translate}}"
                                                formControlName="nom" autocomplete="off">
+                                        <mat-hint class="mt-1 signup-hint">
+                                            <em class="fa fa-info-circle fa-2x me-2"></em> {{'signup.infoName'|translate}}
+                                        </mat-hint>
                                     </mat-form-field>
-
 
                                     <mat-form-field>
                                         <mat-label>{{'signup.prenom'|translate}}</mat-label>
                                         <input type="text" matInput placeholder="{{'signup.prenom'|translate}}"
                                                formControlName="prenom" autocomplete="off">
+                                        <mat-hint class="mt-1 signup-hint" >
+                                            <em class="fa fa-info-circle fa-2x me-2"></em> {{'signup.infoFirstName'|translate}}
+                                        </mat-hint>
                                     </mat-form-field>
 
 
-                                    <mat-form-field hideRequiredMarker>
+                                    <mat-form-field hideRequiredMarker >
                                         <mat-label>{{'signup.adresseMail'|translate}} <span
                                             class="mat-error">{{'signup.etoile'|translate}}</span></mat-label>
                                         <input type="email" matInput
@@ -69,11 +74,11 @@
                                             <mat-icon
                                                 class="hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                                         </button>
-                                        <mat-error
+                                        <mat-error class="mt-1"
                                             *ngIf="formControls.password.errors?.minlength">
                                             <em class="fa fa-info-circle fa-2x me-2"></em>{{'signup.passwordErrorPre'|translate}} {{passwordMinLength}} {{'signup.passwordErrorPost'|translate}}
                                         </mat-error>
-                                        <mat-error
+                                        <mat-error class="mt-1"
                                             *ngIf="formControls.password.errors?.required">
                                             <em class="fa fa-info-circle fa-2x me-2"></em>{{'signup.passwordRequired'|translate}}
                                         </mat-error>
@@ -98,10 +103,10 @@
                                             <mat-icon
                                                 class="hidePassword">{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                                         </button>
-                                        <mat-error *ngIf="formControls.confirmPassword.errors?.required">
+                                        <mat-error *ngIf="formControls.confirmPassword.errors?.required" class="mt-1">
                                             <em class="fa fa-info-circle fa-2x me-2"></em>{{'signup.passwordConfirmRequired'|translate}}
                                         </mat-error>
-                                        <mat-error *ngIf="formControls.confirmPassword.errors?.confirmedValidator">
+                                        <mat-error *ngIf="formControls.confirmPassword.errors?.confirmedValidator" class="mt-1">
                                             <em class="fa fa-info-circle fa-2x me-2"></em>{{'signup.passwordConfirmError'|translate}}
                                         </mat-error>
                                     </mat-form-field>

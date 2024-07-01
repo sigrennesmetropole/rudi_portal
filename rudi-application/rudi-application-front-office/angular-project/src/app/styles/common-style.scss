@@ -1,34 +1,11 @@
-@import "colors";
-@import "variables-rudi";
-@import "mat-theming";
-@import "font-open-sans";
-@import "font-montserrat";
 @import 'mixins';
 @import 'functions';
 
-.search-box-title {
-    color: $primary-color;
-    height: 56px;
-
-    span {
-        color: $accent-color;
-        font-weight: normal;
+.rudi-select-panel-footer {
+    button {
+        width: 100%;
     }
-
-    &-sm {
-        font-weight: bold;
-        font-size: 28px;
-        margin-bottom: 5px;
-    }
-
-    &-lg {
-        font-weight: bold;
-        font-size: 38px;
-        margin-bottom: 20px;
-    }
-
 }
-
 
 .pagination-container {
     margin-top: 40px;
@@ -39,251 +16,64 @@
     margin: 16px 0 0 -20px;
 }
 
-::ng-deep .style-snackbar {
-    color: $secondary-color;
-    width: 75%;
-    position: absolute !important;
-    top: 54px;
-}
-
-::ng-deep .mat-snack-bar-container {
-    transform: scale(1);
-    opacity: 1;
-    z-index: 100;
-    background-color: #004680;
-    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
-    position: fixed;
-    top: 150px;
-    width: 90vw !important;
-    margin: auto !important;
-    left: 0;
-    right: 0;
-    max-width: 95vw !important;
-    min-width: 15vw !important;
-}
-
-::ng-deep .red-snackbar {
-    background: $error-color;
-
-    a {
-        color: $error-color-text;
-        text-decoration: underline;
-    }
-}
-
-::ng-deep .account-error-style {
-    background-color: #d04838 !important;
-    opacity: 1;
-    z-index: 100;
-    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
-    position: fixed;
-    top: 100px;
-    margin: auto;
-    left: 0;
-    right: 0;
-}
-
-
 *:focus-visible {
-    outline: $focus solid 1px;
-}
-
-.keywords-row {
-    align-items: center;
-    margin-top: 10px;
-    flex-wrap: wrap;
+    outline: var(--focus) solid 1px;
 }
 
 .rudi-card-border {
-    border-color: $blocks-and-menus-outline;
+    border-color: var(--blocks-and-menus-outline);
 }
 
-.rudi-simple-menu-button {
-    box-shadow: none !important;
-    color: black;
+::ng-deep rudi-blue-button {
+    width: 230px;
+    height: 40px;
+    margin: 20px 15px 0 0;
+    padding: 7px 0 7px 0;
+    border-radius: 3px;
+    background-color: var(--focus);
+    color: white;
     font-size: 14px;
-    font-weight: normal;
-    border-radius: 6px;
-    border: none;
-    padding-right: 15px;
-    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &:focus {
-        outline: none;
-        background: none;
-    }
-
-    .rudi-select-arrow {
-        margin-left: 20px;
-    }
-}
-
-::ng-deep {
-    .rudi-select-button {
-        box-shadow: none !important;
-        color: #000000;
-        border-radius: 6px;
-        border: 1px solid $blocks-and-menus-outline;
-        padding-right: 15px;
-        margin-right: 12px;
-        min-width: 190px;
-
-        &.active {
-            border-color: $focus;
-            color: $focus;
-        }
-
-        &:focus {
-            outline: none;
-        }
-
-        span {
-            display: inline-block;
-            width: 100%;
-            text-align: left;
-        }
-
-        .rudi-select-arrow {
-            float: right;
-            //padding-top: 8px;
-        }
-
-        .mat-badge-content {
-            text-align: center !important;
-            color: white !important;
-            background-color: $primary-color !important;
-        }
-    }
-
-    .rudi-icon-back {
-        background-color: $secondary-color;
-        color: $primary-color;
-        box-shadow: none;
-        border: 1px solid $primary-color;
-
-        .mat-mini-fab .mat-button-wrapper {
-            padding: 0 !important;
-        }
-
-        &.mat-mini-fab.mat-accent {
-            background-color: white !important;
-            color: $primary-color !important;
-            border: 1px solid $keywords-outline !important;
-            box-shadow: none;
-        }
-
-        .mat-icon {
-            width: 38px !important;
-            height: 28px !important;
-        }
-    }
-
-    .rudi-blue-large-button {
-        width: 100%;
-        margin: 20px 0 0 0;
-        padding: 14px 0 14px 0;
-        border-radius: 3px;
-        background-color: $focus;
+    &.mat-raised-button.mat-button-disabled {
+        background-color: var(--primary-text-light) !important;
         color: white;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &.mat-raised-button.mat-button-disabled {
-            background-color: $primary-text-light !important;
-            color: white;
-            font-size: 16px;
-        }
-    }
-
-    .rudi-blue-button {
-        width: 230px;
-        height: 40px;
-        margin: 20px 15px 0 0;
-        padding: 7px 0 7px 0;
-        border-radius: 3px;
-        background-color: $focus;
-        color: white;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &.mat-raised-button.mat-button-disabled {
-            background-color: $primary-text-light !important;
-            color: white;
-        }
-    }
-}
-
-.rudi-select-panel {
-    height: min-content;
-    padding: 16px 10px 16px 25px;
-    color: $primary-text;
-    font-size: 15px;
-
-    ul {
-        max-height: 300px;
-        overflow-x: auto;
-        scrollbar-width: thin; /* "auto" or "thin" */
-        scrollbar-color: gray white; /* scroll thumb and track */
-    }
-
-    &-footer {
-        display: flex;
-        justify-content: center;
     }
 }
 
 .rudi-radio-group {
     font-size: 14px;
-    color: $primary-text;
+    color: var(--primary-text);
 }
 
 .rudi-radio-button {
     margin-bottom: 20px;
 }
 
-.rudi-menu-button {
-    width: 200px;
-    height: 36px;
-    margin: 20px 0 0 0;
-    padding: 7px 0 7px 0;
-    border-radius: 3px;
-    color: black;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-        background-color: $focus;
-    }
-}
-
 .rudi-btn {
     &-sm {
-        border: 1px solid $keywords-outline;
+        border: 1px solid var(--keywords-outline);
         border-radius: 4px;
         height: 30px;
         margin: 0 4px 0;
         padding: 0 7px;
         font-size: 13px;
         font-weight: normal;
-        color: $primary-text;
+        color: var(--primary-text);
         min-width: initial;
     }
 
     &-md {
-        border: 1px solid $keywords-outline;
+        border: 1px solid var(--keywords-outline);
         border-radius: 4px;
         height: 30px;
         margin-right: 6px;
         padding: 10px 10px 10px 14px;
         font-size: 13px;
         font-weight: normal;
-        color: $primary-text;
+        color: var(--primary-text);
         min-width: initial;
     }
 
@@ -295,7 +85,7 @@
 
     &-theme-detail {
         font-size: 14px;
-        color: $primary-text;
+        color: var(--primary-text);
         background-position-x: 10px;
         background-position-y: center;
         background-size: 20px;
@@ -337,16 +127,8 @@
     font-weight: 500;
 }
 
-.text-underline {
-    text-decoration: underline;
-}
-
 .pointer {
     cursor: pointer;
-}
-
-.rudi-header-marge {
-    margin-right: 80px;
 }
 
 .w-20 {
@@ -385,6 +167,14 @@
     padding-left: -47px;
 }
 
+.p-small {
+    padding: 150px 20px 10px 20px !important;
+}
+
+.p-medium {
+    padding: 150px 40px 10px 40px !important;
+}
+
 .p-large {
     padding: 150px 80px 30px 80px !important;
 }
@@ -395,38 +185,6 @@
     margin-left: -80px;
 }
 
-.p-small {
-    padding: 150px 20px 10px 20px !important;
-}
-
-.p-medium {
-    padding: 150px 40px 10px 40px !important;
-}
-
-.pl-large {
-    padding-left: 50vw !important;
-}
-
-.pl-small {
-    padding-left: 20px !important;
-}
-
-.pl-medium {
-    padding-left: 40px !important;
-}
-
-.footer-margin-right {
-    margin-right: 80px;
-}
-
-.footer-margin-left {
-    margin-left: 80px;
-}
-
-.rudi-icon-theme {
-    background-color: $primary-color;
-}
-
 .rudi-icon-bordered {
     font-size: 15px;
     border-radius: 17px;
@@ -434,43 +192,14 @@
     font-stretch: normal;
     font-style: normal;
     letter-spacing: normal;
-    color: $secondary-color;
-    background-color: $focus;
-    border: 1px solid $focus;
+    color: var(--secondary-color);
+    background-color: var(--focus);
+    border: 1px solid var(--focus);
     line-height: 2.5;
 }
 
 .rudi-icon-encircled {
     @include encircled(1.7em);
-}
-
-.rudi-filter-box-libelle {
-    color: $primary-color;
-    font-style: normal;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: normal;
-}
-
-.rudi-filter-box-libelle-hover {
-    color: $secondary-color;
-}
-
-
-.blue-theme {
-    color: $primary-color;
-}
-
-.spacer {
-    flex: 1 1 auto;
-}
-
-.suivez-nous {
-    margin: 0 auto;
-}
-
-.mentions-legales {
-    margin: 0 auto;
 }
 
 mat-toolbar a:hover {
@@ -481,52 +210,28 @@ mat-toolbar a:hover {
     pointer-events: none;
 }
 
-.required-symbol {
-    color: $error-color;
-}
-
-.link-bold-underlined-colored {
-    color: $primary-color;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
 /****Banner / Toolbar container style *****/
 @mixin button-blue() {
-    background-color: $primary-color;
-    color: $banner-solid-color;
+    background-color: var(--primary-color);
+    color: var(--banner-solid-color);
     font-weight: 600;
     height: 42px;
 }
 
 .bandeau-card {
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     height: 60px;
     padding: 8px 80px;
 
     .button {
-        font-family: OpenSans, sans-serif;
         cursor: pointer;
         font-weight: 400;
         border-radius: 6px;
     }
 
-    .bandeau-btn-access {
-        @include button-blue;
-
-        .icon-style {
-            color: white;
-        }
-    }
-
-    .bandeau-btn-access:hover {
-        background-color: $focus;
-        color: $secondary-color;
-    }
-
     .button-info {
-        background-color: $secondary-color;
-        color: $primary-text;
+        background-color: var(--secondary-color);
+        color: var(--primary-text);
         font-weight: 600;
         height: 42px;
 
@@ -543,7 +248,7 @@ mat-toolbar a:hover {
 }
 
 .sidebar-content-pd {
-    padding: $header-version-height 0 0 0;
+    padding: var(--header-version-height) 0 0 0;
 }
 
 .mt-6 {

@@ -18,4 +18,6 @@ COPY postgresql-42.2.18.jar /usr/local/tomcat/lib/postgresql-42.2.18.jar
 #COPY web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml
 #COPY jackrabbit-bundle-postgres-search.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/config/repo-conf
 
+COPY server.xml /usr/local/tomcat/conf/server.xml
+
 ENV CATALINA_OPTS="-Xmx2048m -Dmagnolia.update.auto=true"

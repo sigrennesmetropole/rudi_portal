@@ -1,0 +1,30 @@
+@import "colors";
+@import "responsive";
+
+.news-section-container {
+    width: 80%;
+    height: 100%;
+    margin: auto;
+
+    .title {
+        text-align: center;
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 20px;
+    }
+}
+
+.news-with-image {
+    padding-right: 50px;
+    border-right: solid 3px var(--accent-color);
+}
+
+.news-without-image {
+    padding-left: 50px;
+}
+
+.divider {
+    border-top: solid 1px var(--fake-line);
+}
+
+

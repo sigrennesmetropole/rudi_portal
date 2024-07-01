@@ -2,6 +2,13 @@ import {CommonModule} from '@angular/common';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {MatStepperModule} from '@angular/material/stepper';
 import {CoreModule} from '@core/core.module';
+import {
+    ProjectMainInformationDateComponent
+} from '@features/project/components/project-main-informations/project-main-information-date/project-main-information-date.component';
+import {
+    ProjectMainInformationLabelComponent
+} from '@features/project/components/project-main-informations/project-main-information-label/project-main-information-label.component';
+import {ProjectMainInformationsComponent} from '@features/project/components/project-main-informations/project-main-informations.component';
 import {SharedModule} from '@shared/shared.module';
 import {FilePickerModule} from '@sleiss/ngx-awesome-uploader';
 import {DataSetModule} from '@features/data-set/data-set.module';
@@ -43,7 +50,10 @@ import {ProjectRoutingModule} from './project-routing.module';
         SuccessProjectCreationDialogComponent,
         ProjectDatasetListComponent,
         RequestDetailsDialogComponent,
-        SuccessStep3TemplateComponent
+        SuccessStep3TemplateComponent,
+        ProjectMainInformationsComponent,
+        ProjectMainInformationDateComponent,
+        ProjectMainInformationLabelComponent,
     ],
     imports: [
         CommonModule,
@@ -54,6 +64,7 @@ import {ProjectRoutingModule} from './project-routing.module';
         DataSetModule,
         MatStepperModule
     ],
+    exports: [ProjectMainInformationsComponent, ProjectMainInformationLabelComponent, ProjectMainInformationDateComponent, BannerComponent],
     providers:
         [
             {provide: 'DEFAULT_LANGUAGE', useValue: 'fr'}

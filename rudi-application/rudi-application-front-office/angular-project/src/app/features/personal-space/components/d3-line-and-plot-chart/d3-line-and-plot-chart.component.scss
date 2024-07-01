@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "common-style";
 
 .bar {
     fill: steelblue;
@@ -8,7 +6,6 @@
 }
 
 .legend {
-    font-family: OpenSans, sans-serif;
     font-size: 13px;
     font-weight: 600;
     line-height: 1.59;
@@ -17,7 +14,6 @@
 
 .serie-name {
     width: 113px;
-    font-family: OpenSans, sans-serif;
     font-size: 12px;
     line-height: 1.72;
     color: var(--3-texte-gris-fonc);

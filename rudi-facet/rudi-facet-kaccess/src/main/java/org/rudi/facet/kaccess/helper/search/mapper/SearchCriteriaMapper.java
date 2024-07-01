@@ -59,7 +59,7 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 
 	private final DateTimeMapper dateTimeMapper;
 
-	@Value("${dataverse.api.rudi.data.alias}")
+	@Value("${dataverse.api.rudi.data.alias:rudi_data}")
 	private String rudiAlias;
 
 	public SearchParams datasetSearchCriteriaToSearchParams(DatasetSearchCriteria datasetSearchCriteria,
@@ -143,8 +143,9 @@ public class SearchCriteriaMapper extends DatasetSearchCriteriaMapper {
 					datasetSearchCriteria.getProducerNames());
 		}
 
-		if(!CollectionUtils.isEmpty(datasetSearchCriteria.getProducerUuids())){
-			fqFilter.add(RudiMetadataField.PRODUCER_ORGANIZATION_ID.getIndex(), datasetSearchCriteria.getProducerUuids());
+		if (!CollectionUtils.isEmpty(datasetSearchCriteria.getProducerUuids())) {
+			fqFilter.add(RudiMetadataField.PRODUCER_ORGANIZATION_ID.getIndex(),
+					datasetSearchCriteria.getProducerUuids());
 		}
 
 		if (datasetSearchCriteria.getDateDebut() != null) {

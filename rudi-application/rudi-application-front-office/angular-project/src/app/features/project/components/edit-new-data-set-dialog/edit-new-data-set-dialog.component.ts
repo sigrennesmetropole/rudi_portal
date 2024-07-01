@@ -71,7 +71,7 @@ export class EditNewDataSetDialogComponent implements OnInit {
         this.mediaSize = this.breakpointObserver.getMediaSize();
 
         this.newDatasetRequestFormGroup = this.formBuilder.group({
-            title: [''],
+            title: ['', Validators.required],
             description: ['', Validators.required]
         });
 

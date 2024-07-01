@@ -1,53 +1,27 @@
-$icon: 32px;
+:root {
+    --icon: 32px;
 
-$header-index: 2;
-$app-header-height: 100px;
-$app-footer-height: 231px;
-$content-margin-top: 106px;
-$bloc-min-width: 360px;
-$bloc-space-width: 16px;
-/**********************************************************************************************
- ********************************** Screen size ***********************************************
- **********************************************************************************************/
-// Mini smarphones
-$screen-xs-max: 459px;
+    --header-index: 2;
+    --app-header-height: 100px;
+    --app-footer-height: 231px;
+    --content-margin-top: 106px;
+    --bloc-min-width: 360px;
+    --bloc-space-width: 16px;
 
-// smarphones modernes
-$screen-sm-min: 460px;
-$screen-sm-max: 767px;
-$card-height-sm: 200px;
+    --card-height-sm: 200px;
+    --card-height-md: 100px;
+    --card-height-lg: 290px;
+    --card-project-height-lg: 440px;
 
-// Tablettes
-$screen-md-min: 768px;
-$screen-md-max: 1023px;
-$card-height-md: 100px;
+    // Bootstrap
+    --bootstrap-gutter: 15px;
 
+    /// Hauteur de la bannière affichant des informations sur la version en cours tout en haut de l'écran
+    --header-version-height: 50px;
 
-// desktops
-$screen-lg-min: 1024px;
-$screen-lg-max: 1439px;
-$card-height-lg: 290px;
-$card-project-height-lg: 440px;
+    /** project-pt ***/
+    --padding-top: 150px;
 
-// large desktops
-$screen-xl-min: 1440px;
-
-// Bootstrap
-$bootstrap-gutter: 15px;
-
-/// Hauteur de la bannière affichant des informations sur la version en cours tout en haut de l'écran
-$header-version-height: 50px;
-
-/** project-pt ***/
-$padding-top: 150px;
-
-//**gap ***/
-$gap: 16px;
-
-$grid-breakpoints: (
-    xs: 0,
-    sm: $screen-sm-min,
-    md: $screen-md-min,
-    lg: $screen-lg-min,
-    xl: $screen-xl-min,
-);
+    //**gap ***/
+    --gap: 16px;
+}

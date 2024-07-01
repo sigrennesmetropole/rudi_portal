@@ -1,4 +1,5 @@
 import {HttpErrorResponse} from '@angular/common/http';
+import {UserService} from '@core/services/user.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ErrorWithCause} from '@shared/models/error-with-cause';
 import {AclService} from 'micro_service_modules/acl/acl-api';
@@ -8,9 +9,8 @@ import {ApiKeys, ApiKeysType, KonsultService} from 'micro_service_modules/konsul
 import {Project, ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {OrganizationService} from 'micro_service_modules/strukture/api-strukture';
 import {from, Observable, of, throwError} from 'rxjs';
-import {catchError, filter, map, mapTo, mergeMap, reduce, switchMap} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, reduce, switchMap} from 'rxjs/operators';
 import {LinkedDatasetMetadatas} from '../asset/project/project-dependencies.service';
-import {UserService} from '@core/services/user.service';
 import {Credentials} from './credentials';
 import {LinkWithSubscribability} from './link-with-subscribability';
 import {SubscriptionData} from './subscription-data';
@@ -63,7 +63,7 @@ export abstract class AbstractApiAccessService {
     getCredentialsForContext(password: string, ownerType: OwnerType, ownerUuid: string): Observable<Credentials> {
 
         if (!password) {
-            return throwError('Paramètres obligatoires manquants');
+            return throwError(() => 'Paramètres obligatoires manquants');
         }
 
         // On veut récupérer le login pour vérifier les accès
@@ -147,17 +147,16 @@ export abstract class AbstractApiAccessService {
 
         return this.hasSubscribedToDataset(subscriptionData).pipe(
             catchError((hasSubscribeError: HttpErrorResponse) => {
-                throw new ErrorWithCause('Erreur lors de la vérification de la souscription au JDD', hasSubscribeError);
+                return throwError(() => new ErrorWithCause('Erreur lors de la vérification de la souscription au JDD', hasSubscribeError));
             }),
             switchMap((hasSubscribed: boolean) => {
                 if (!hasSubscribed) {
                     return this.subscribeToDataset(subscriptionData).pipe(
                         // Si erreur HTTP pendant la souscription stop chaînage
                         catchError((subscribeError: HttpErrorResponse) => {
-                            throw new ErrorWithCause('Erreur lors de la souscription au JDD', subscribeError);
+                            return throwError(() => new ErrorWithCause('Erreur lors de la souscription au JDD', subscribeError));
                         }),
-
-                        mapTo(new SubscriptionRequestResult(subscriptionData.metadata, SubscriptionRequestStatus.SUCCESS))
+                        map(() => new SubscriptionRequestResult(subscriptionData.metadata, SubscriptionRequestStatus.SUCCESS))
                     );
                 }
 
@@ -209,7 +208,7 @@ export abstract class AbstractApiAccessService {
                 if (!hasAccess) {
                     return this.enableApi(credentials).pipe(
                         catchError((error: HttpErrorResponse) => this.handleApiAccessError(error)),
-                        mapTo(credentials)
+                        map(() => credentials)
                     );
                 }
                 // Si on les a go étape 3
@@ -228,7 +227,7 @@ export abstract class AbstractApiAccessService {
 
         if (httpError.status === 403) {
             const errorMessage = this.translateService.instant('personalSpace.apiAccess.errorPassword');
-            return throwError(new ErrorWithCause(errorMessage, httpError));
+            return throwError(() => new ErrorWithCause(errorMessage, httpError));
         }
 
         throw Error('Erreur lors de la vérification des accès API pour l\'utilisateur connecté');

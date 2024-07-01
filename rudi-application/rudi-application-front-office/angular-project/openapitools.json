@@ -12,6 +12,7 @@
     "Credentials": "../../api-apimaccess/model/credentials",
     "CmsAsset": "../../api-cms/model/cmsAsset",
     "CmsAssetType": "../../api-cms/model/cmsAssetType",
-    "CmsCategory": "../../api-cms/model/cmsCategory"
+    "CmsCategory": "../../api-cms/model/cmsCategory",
+    "PagedCmsAssets": "../../api-cms/model/pagedCmsAssets"
   }
 }

@@ -12,7 +12,7 @@ public class UserHelper {
 
 	private final UtilContextHelper utilContextHelper;
 
-	public boolean isConnectedUserModuleAdministrator() {
+	public boolean isAuthenticatedUserModuleAdministrator() {
 		return utilContextHelper.hasRole(MODULE_KONSENT);
 	}
 }

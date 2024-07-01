@@ -16,6 +16,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
 import org.rudi.facet.bpmn.bean.workflow.EMailData;
 import org.rudi.facet.bpmn.bean.workflow.EMailDataModel;
@@ -24,6 +26,7 @@ import org.rudi.facet.email.EMailService;
 import org.rudi.facet.generator.text.impl.TemplateGeneratorImpl;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
+import org.rudi.facet.organization.bean.Organization;
 import org.rudi.facet.organization.bean.OrganizationMember;
 import org.rudi.facet.organization.helper.OrganizationHelper;
 import org.rudi.facet.organization.helper.exceptions.GetOrganizationException;
@@ -135,6 +138,9 @@ public class LinkedDatasetWorkflowContext
 					log.info("Assignees: {}", StringUtils.join(assignees, ", "));
 				}
 				if (eMailData != null) {
+					//On rajoute le nom de l'utilisateur ou de l'organisateur ayant initié le projet.
+					injectData(executionEntity,"userName", getUserDenomination(assetDescription.getInitiator()));
+
 					sendEMail(executionEntity, assetDescription, eMailData, assigneeEmails, null);
 				}
 			} catch (Exception e) {
@@ -176,6 +182,21 @@ public class LinkedDatasetWorkflowContext
 				log.warn("Member with user uuid \"{}\" does not exist as user in ACL", member.getUserUuid());
 			}
 		}
+	}
+
+	private String getUserDenomination(String inititator) throws GetOrganizationException {
+		User u = getAclHelper().getUserByLogin(inititator);
+		if (u != null && u.getType().equals(UserType.PERSON)) {
+			return String.format("%s %s",u.getLastname(), u.getFirstname()).trim();
+		}
+		else {
+			Organization o = organizationHelper.getOrganization(UUID.fromString(inititator));
+			if(o != null){
+				return o.getName();
+			}
+		}
+		log.error("Aucun utilisateur trouvé et aucune organisation non plus {}",inititator);
+		return StringUtils.EMPTY;
 	}
 
 }

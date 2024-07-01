@@ -112,7 +112,10 @@ public class BpmnHelper {
 	public org.activiti.engine.task.Task queryTaskByAssetId(Long assetId) {
 		org.activiti.engine.TaskService taskService = processEngine.getTaskService();
 		TaskQuery taskQuery = taskService.createTaskQuery();
-		taskQuery.taskVariableValueEquals(TaskConstants.ME_ID, assetId);
+
+		// Recherche au niveau du process et non de la tâche. La tâche ne contient pas le meId.
+		taskQuery.or().processVariableValueEquals(TaskConstants.ME_ID, assetId)
+				.processVariableValueEquals(TaskConstants.ME_ID, assetId.intValue()).endOr();
 
 		List<org.activiti.engine.task.Task> tasks = taskQuery.list();
 		if (CollectionUtils.isNotEmpty(tasks)) {
@@ -352,10 +355,8 @@ public class BpmnHelper {
 	private SequenceFlow lookupSequenceFlowInTask(SequenceFlow outgoing, String actionName) {
 		SequenceFlow result = null;
 		FlowElement subFlowElement = outgoing.getTargetFlowElement();
-		if (subFlowElement instanceof org.activiti.bpmn.model.Task) {
-			if (outgoing.getName().equalsIgnoreCase(actionName)) {
-				result = outgoing;
-			}
+		if (subFlowElement instanceof org.activiti.bpmn.model.Task && outgoing.getName().equalsIgnoreCase(actionName)) {
+			result = outgoing;
 		}
 		return result;
 	}

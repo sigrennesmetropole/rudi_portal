@@ -5,7 +5,7 @@
     margin: 0 16% 0 16%;
     padding: 4%;
     box-shadow: none;
-    border: solid 1px $blocks-and-menus-outline;
+    border: solid 1px var(--blocks-and-menus-outline);
 }
 
 .img-wip {
@@ -17,7 +17,6 @@
     margin-top: 2%;
     font-size: 2.5vh;
     font-weight: bold;
-    font-family: OpenSans, sans-serif;
-    color: $primary-color;
+    color: var(--primary-color);
     text-align: center;
 }

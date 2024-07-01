@@ -1,7 +1,4 @@
-@import "colors";
 @import "common-style";
-@import "variables-rudi";
-
 
 .title-hint {
     width: 608px;
@@ -18,14 +15,9 @@
 
 
 .label {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
-    color: $secondary-text;
+    color: var(--secondary-text);
     line-height: 2
-}
-
-.required-symbol {
-    color: $error-color;
 }
 
 .attachment {
@@ -48,32 +40,30 @@
 }
 
 .image-name {
-    font-family: OpenSans, sans-serif;
     font-size: 16px;
     line-height: 1.25;
     text-align: left;
-    color: $primary-text;
+    color: var(--primary-text);
 }
 
 .image-size {
-    font-family: OpenSans, sans-serif;
     font-size: 12px;
     line-height: 1.67;
     text-align: left;
-    color: $primary-text;
+    color: var(--primary-text);
     padding-top: 5px;
 }
 
 .error-message {
-    color: $error-color;
+    color: var(--error-color);
     font-size: 16px;
     margin-top: 14px;
 }
 
 .error-fake-input {
-    border: 1px solid $error-color;
+    border: 1px solid var(--error-color);
 }
 
 .fake-input {
-    border: 1px solid $fake-line;
+    border: 1px solid var(--fake-line);
 }

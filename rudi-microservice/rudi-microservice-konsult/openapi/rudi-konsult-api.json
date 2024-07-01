@@ -1060,10 +1060,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "CmsAsset"
-									}
+									"$ref": "PagedCmsAssets"
 								}
 							}
 						}
@@ -1123,6 +1120,42 @@
 							"application/json": {
 								"schema": {
 									"$ref": "CmsAsset"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
+					}
+				}
+			}
+		},
+		"/cms/resources": {
+			"get": {
+				"tags": [
+					"konsult"
+				],
+				"summary": "Téléchargement d'une resource du CMS",
+				"description": "Téléchargement d'une resource du CMS",
+				"operationId": "downloadResource",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "resourcePath",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
 								}
 							}
 						}

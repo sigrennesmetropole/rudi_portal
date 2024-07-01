@@ -6,7 +6,7 @@
 
     .pagination-previous,
     .pagination-next {
-        color: $primary-text-light !important;
+        color: var(--primary-text-light) !important;
         font-weight: normal !important;
         font-stretch: normal;
         white-space: nowrap;
@@ -26,7 +26,7 @@
 
     .current {
         padding: 0.1875rem 0.625rem;
-        background: $primary-color !important;
+        background: var(--primary-color) !important;
         color: #fefefe;
         cursor: default;
         border-radius: 3px;
@@ -34,7 +34,7 @@
     }
 
     a, button {
-        color: $primary-color !important;
+        color: var(--primary-color) !important;
         font-weight: 600 !important;
     }
 

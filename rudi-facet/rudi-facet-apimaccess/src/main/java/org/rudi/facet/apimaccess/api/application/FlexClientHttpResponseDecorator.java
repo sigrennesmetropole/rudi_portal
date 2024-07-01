@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.rudi.facet.apimaccess.api.ContentTypeUtils;
+import org.rudi.common.core.util.ContentTypeUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ClientHttpResponse;
 import org.springframework.http.client.reactive.ClientHttpResponseDecorator;

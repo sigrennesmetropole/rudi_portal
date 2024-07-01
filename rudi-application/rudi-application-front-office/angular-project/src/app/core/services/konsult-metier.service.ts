@@ -18,6 +18,10 @@ export const MAX_RESULTS_PER_REQUEST = 100;
 const CRYPT_SUFFIX = '+crypt';
 const UNKNOWN_EXTENSION = 'Extension inconnue du système';
 
+export type Order = 'title' | '-title' | 'updatedDate' | '-updatedDate' | 'code' | '-code' | 'order_';
+export const ORDERS: Order[] = ['title', '-title', 'updatedDate', '-updatedDate'];
+export const DEFAULT_PROJECT_ORDER: Order = '-updatedDate';
+
 @Injectable({
     providedIn: 'root'
 })

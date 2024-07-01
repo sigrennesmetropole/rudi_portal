@@ -47,6 +47,9 @@
 					"id": {
 						"type": "string"
 					},
+					"title": {
+						"type": "string"
+					},
 					"content": {
 						"type": "string"
 					},
@@ -59,6 +62,41 @@
 						"format": "date-time"
 					}
 				}
+			},
+			"PagedList": {
+				"description": "Liste paginée d'éléments",
+				"type": "object",
+				"required": [
+					"total",
+					"elements"
+				],
+				"properties": {
+					"total": {
+						"description": "Nombre total d'éléments pour cette recherche (peut être supérieur au nombre d'éléments de la page courante)",
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"PagedCmsAssets": {
+				"description": "Liste paginée d'assets issus du CMS",
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PagedList"
+					},
+					{
+						"properties": {
+							"elements": {
+								"description": "Assets issus du CMS de la page courante",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/CmsAsset"
+								}
+							}
+						}
+					}
+				]
 			}
 		}
 	}

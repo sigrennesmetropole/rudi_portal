@@ -16,6 +16,9 @@
                                 <mat-card-content>
                                     <app-project-main-informations
                                         [project]="dependencies.project"
+                                        (updateInProgressEvent)="updateInProgress($event)"
+                                        (updateCurrentTaskEvent)="updateCurrentTask($event)"
+                                        [isProjectUpdatable]="true"
                                     ></app-project-main-informations>
 
                                     <app-open-dataset-table
@@ -60,7 +63,7 @@
                             <mat-card-subtitle class="section-sub-title">
                                 {{dependencies.ownerInfo.name}}
                             </mat-card-subtitle>
-                            <mat-card-content>
+                            <mat-card-content class="section-content">
                                 <app-clipboard-field
                                     [content]="dependencies.project.contact_email"
                                 ></app-clipboard-field>
@@ -74,9 +77,11 @@
 
             </app-tab>
 
-            <app-banner-button *ngFor="let action of actions" (click)="openPopinForAction(action)">
-                {{action.label}}
-            </app-banner-button>
+                    <app-banner-button [projectIsUpdating]="isUpdateInProgress"  *ngFor="let action of actions" (click)="openPopinForAction(action, isUpdateInProgress, this.currentTask)">
+                    {{action.label}}
+                </app-banner-button>
+
+
         </app-tabs>
     </div>
 </app-page>

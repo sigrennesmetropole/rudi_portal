@@ -29,8 +29,9 @@ export class SearchOrganizationsService {
     currentSortOrder$: BehaviorSubject<Order>;
     totalOrganizations$: BehaviorSubject<number>;
     organizations$: BehaviorSubject<OrganizationBean[]>;
-    datasetCountLoading: BehaviorSubject<boolean>;
-    projectsCountLoading: BehaviorSubject<boolean>;
+    isLoadingCatalogue$: BehaviorSubject<boolean>;
+    datasetCountLoading$: BehaviorSubject<boolean>;
+    projectsCountLoading$: BehaviorSubject<boolean>;
 
     constructor(
         private organizationService: OrganizationService,
@@ -45,8 +46,9 @@ export class SearchOrganizationsService {
         this.currentSortOrder$ = new BehaviorSubject(searchDefaultOrder);
         this.totalOrganizations$ = new BehaviorSubject(0);
         this.organizations$ = new BehaviorSubject([]);
-        this.datasetCountLoading = new BehaviorSubject(false);
-        this.projectsCountLoading = new BehaviorSubject(false);
+        this.isLoadingCatalogue$ = new BehaviorSubject(true);
+        this.datasetCountLoading$ = new BehaviorSubject(false);
+        this.projectsCountLoading$ = new BehaviorSubject(false);
     }
 
     initSubscriptions(userUuid?: string, itemPerPage?: number) {
@@ -93,6 +95,7 @@ export class SearchOrganizationsService {
 
 
     private searchOrganisations(searchRequest: SearchOrganisationsRequest): void {
+        this.isLoadingCatalogue$.next(true);
         this.organizationService.searchOrganizationsBeans(
             searchRequest.userUuid,
             searchRequest.offset,
@@ -101,14 +104,14 @@ export class SearchOrganizationsService {
         ).subscribe((data: PagedOrganizationBeanList) => {
             this.totalOrganizations$.next(data.total);
             this.organizations$.next(data.elements);
-
+            this.isLoadingCatalogue$.next(false);
             this.updateOrganizationsProjectCount();
             this.updateOrganizationDatasetCount();
         });
     }
 
     private updateOrganizationsProjectCount(): void {
-        this.projectsCountLoading.next(true);
+        this.projectsCountLoading$.next(true);
         const organizations: OrganizationBean[] = [...this.organizations$.value];
 
         this.projektService.getNumberOfProjectsPerOwners({
@@ -122,13 +125,13 @@ export class SearchOrganizationsService {
                 }
             });
 
-            this.projectsCountLoading.next(false);
+            this.projectsCountLoading$.next(false);
             this.organizations$.next(organizations);
         });
     }
 
     private updateOrganizationDatasetCount(): void {
-        this.datasetCountLoading.next(true);
+        this.datasetCountLoading$.next(true);
         const organizations: OrganizationBean[] = [...this.organizations$.value];
 
         this.konsultService.searchMetadataFacets(['producer_organization_id']).subscribe(
@@ -140,7 +143,7 @@ export class SearchOrganizationsService {
                         organization.datasetCount = datasetCount.count;
                     }
                 });
-                this.datasetCountLoading.next(false);
+                this.datasetCountLoading$.next(false);
                 this.organizations$.next(organizations);
             });
     }

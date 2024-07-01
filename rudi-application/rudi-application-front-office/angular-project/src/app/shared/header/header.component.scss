@@ -1,6 +1,4 @@
-@import "colors";
 @import "common-style";
-@import "variables-rudi";
 
 /***** Nav bar style *********/
 
@@ -9,7 +7,7 @@
 }
 
 .nav-item {
-    background: $secondary-color;
+    background: var(--secondary-color);
 }
 
 .header-logo {
@@ -30,7 +28,7 @@
     border-bottom: none;
     border-top: none;
     border-right: none;
-    color: $rudi-header-primary-color;
+    color: var(--rudi-header-primary-color);
 }
 
 /***** Nav navbar-collaps style *********/
@@ -52,22 +50,22 @@
     margin-right: 20px;
     font-size: 12px;
     letter-spacing: 0.07em;
-    color: $rudi-header-primary-color;
+    color: var(--rudi-header-primary-color);
     text-transform: uppercase;
 }
 
 .navbar-link-color {
-    color: $rudi-header-primary-color;
+    color: var(--rudi-header-primary-color);
     font-weight: bold;
     font-stretch: normal;
     font-style: normal;
 
     &:hover {
-        color: $accent-color-svg;
+        color: var(--accent-color-svg);
     }
 
     &.active {
-        color: $accent-color-svg !important;
+        color: var(--accent-color-svg) !important;
     }
 }
 
@@ -78,10 +76,10 @@
 /***** Fin *********/
 .header-version {
     width: 100%;
-    height: $header-version-height;
+    height: var(--header-version-height);
     margin: 0 -20px 0 0;
-    background-color: $primary-color;
-    color: $secondary-color;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
 
     &-title {
         font-size: 14px;
@@ -111,8 +109,12 @@
             top: 74px;
             animation: fadeIn 1s;
             @keyframes fadeIn {
-                0% { opacity: 0; }
-                100% { opacity: 1; }
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
             }
         }
 
@@ -125,7 +127,7 @@
         }
 
         .navbar-menu-items {
-            background-color: $rudi-header-primary-color;
+            background-color: var(--rudi-header-primary-color);
             margin-top: 20px;
             padding-top: 25px;
             padding-bottom: 30px;
@@ -146,14 +148,14 @@
         }
 
         .collapse ul.header-navbar-link-color > li > a.active-item {
-            color: $accent-color-svg !important;
+            color: var(--accent-color-svg) !important;
         }
     }
 
     .header-version {
         position: fixed;
         z-index: 100;
-        height: $header-version-height;
+        height: var(--header-version-height);
         padding: 8px 0 4px 0;
 
         &-title {
@@ -178,7 +180,7 @@
 
 .notification-connected {
     position: relative;
-    background: $accent-color-svg;
+    background: var(--accent-color-svg);
     border-radius: 50%;
     width: 10px;
     height: 10px;
@@ -200,14 +202,14 @@
         text-transform: uppercase;
         font-size: 12px;
         letter-spacing: .07em;
-        color: $rudi-header-primary-color;
+        color: var(--rudi-header-primary-color);
 
         &:focus {
             outline: none;
         }
 
         &:hover {
-            border-color: $accent-color-svg;
+            border-color: var(--accent-color-svg);
         }
 
         mat-icon {
@@ -242,19 +244,19 @@
         margin-bottom: 1px;
 
         &:hover {
-            border-color: $accent-color-svg;
+            border-color: var(--accent-color-svg);
         }
     }
 }
 
 .title {
-    font-family: OpenSans, serif;
     font-size: 14px;
     font-weight: 600;
     line-height: 2.57;
     text-align: left;
     color: var(--0-classic-blue);
 }
-.hr{
+
+.hr {
     margin: 0;
 }

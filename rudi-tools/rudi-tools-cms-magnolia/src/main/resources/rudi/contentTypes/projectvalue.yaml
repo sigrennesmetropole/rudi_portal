@@ -13,7 +13,10 @@ model:
       multiple: true
     - name: title
       type: localizedmessage
-      multiple: true      
+      multiple: true
+    - name: modified
+      multiple: true
+      type: localizedmessage
     - name: body
       type: localizedrichtext
       multiple: true
@@ -36,9 +39,9 @@ model:
             - value: de
               label: Deutschland
             - value: it
-              label: Italia                            
-        - name: message 
-    - name: localizedrichtext     
+              label: Italia
+        - name: message
+    - name: localizedrichtext
       properties:
         - name: locale
           options:
@@ -50,5 +53,5 @@ model:
               label: Deutschland
             - value: it
               label: Italia
-        - name: message  
+        - name: message
           type: richText       

@@ -1,6 +1,4 @@
-@import "colors";
 @import "responsive";
-@import "variables-rudi";
 @import "common-style";
 
 .hero-section-container {
@@ -26,7 +24,7 @@
 .hero-title {
     @extend .hero-text;
     font-size: 38px;
-    color: $primary-color;
+    color: var(--primary-color);
     font-weight: 700;
     margin: 0;
 
@@ -35,7 +33,7 @@
 .hero-subtitle {
     @extend .hero-text;
     font-size: 34px;
-    color: $accent-color;
+    color: var(--accent-color);
 }
 
 .hero-section-right-edge-picto {

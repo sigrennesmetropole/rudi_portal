@@ -9,30 +9,66 @@ subApps:
   detail:
     form:
       properties:
+        link:
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                maxLength: 256        
+                required: true
+        modified:
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                maxLength: 256
+                required: true
         title1:
-          locale:
-            rows: 1
-            maxLength: 5
-          message:
-            rows: 1
-            maxLength: 256
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                maxLength: 256
+                required: true
         title2:
-          locale:
-            rows: 1
-            maxLength: 5
-          message:
-            rows: 1
-            maxLength: 256
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                maxLength: 256
+                required: true
         sumup:
-          locale:
-            rows: 1
-            maxLength: 5
-          message:
-            rows: 10
-            maxLength: 512         
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                required: true
+                $type: richTextField
+                height: 700
+                images: true
+                tables: true
+                alignment: true
+                source: true
+                lists: true
+                configJsFile: /.resources/rudi/webresources/ckeditor/config-magnolia-extended.js    
         body:
-          locale:
-            rows: 1
-            maxLength: 5
-          message:
-            rows: 20
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                $type: richTextField
+                required: true
+                height: 700
+                images: true
+                tables: true
+                alignment: true
+                source: true
+                lists: true
+                configJsFile: /.resources/rudi/webresources/ckeditor/config-magnolia-extended.js    
+

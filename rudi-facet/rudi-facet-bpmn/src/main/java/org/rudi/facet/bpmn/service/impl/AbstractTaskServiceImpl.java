@@ -153,6 +153,8 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 					&& assetDescriptionEntity.getStatus() != Status.DRAFT) {
 				throw new IllegalArgumentException("Asset is already linked to a task");
 			}
+			// vérifications du droit pour l'utilisateur de créer la tache
+			checkRightsOnInitEntity(assetDescriptionEntity);
 		} else {
 			// s'il existe pas => création de l'entité
 			assetDescriptionEntity = assetDescriptionHelper.createAssetEntity(assetDescription);
@@ -182,6 +184,10 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 		if (assetDescriptionEntity == null || assetDescriptionEntity.getStatus() != Status.DRAFT) {
 			throw new IllegalArgumentException("Invalid task");
 		}
+
+		// vérifications du droit pour l'utilisateur de créer la tache
+		checkRightsOnInitEntity(assetDescriptionEntity);
+
 		// mise à jour de l'entité
 		assetDescriptionEntity = updateDraftAsset(task, assetDescriptionEntity);
 
@@ -454,8 +460,10 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 				UUID uuid = UUID.fromString(processInstanceBusinessKey);
 				E assetDescription = loadAndUpdateAssetDescription(uuid);
 
-				// mise à jour de l'entité
-				assetDescriptionHelper.updateAssetEntity((D) task.getAsset(), assetDescription);
+				if (checkUpdate(assetDescription)) {
+					// mise à jour de l'entité si dans un état autorisé.
+					assetDescriptionHelper.updateAssetEntity((D) task.getAsset(), assetDescription);
+				}
 
 				// mise à jour des datas de l'entité
 				updateAssetData(task, originalTask, assetDescription);
@@ -766,4 +774,13 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	}
 
 	protected abstract AbstractTaskServiceImpl<E, D, R, A, H> lookupMe();
+
+	// assetDescriptionEntity utilisé dans les enfants
+	protected boolean checkUpdate(E assetDescriptionEntity) {// NOSONAR
+		return true;
+	}
+
+	protected void checkRightsOnInitEntity(E assetDescriptionEntity) throws IllegalArgumentException {
+		// nothing to do by default
+	}
 }

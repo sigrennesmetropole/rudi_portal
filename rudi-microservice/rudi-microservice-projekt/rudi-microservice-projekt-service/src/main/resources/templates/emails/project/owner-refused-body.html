@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Rudi - Votre demande de nouvelles données</title>
+    <style type="text/css">
+        body {
+            font-family: Montserrat;
+            font-size: 12px;
+            color: #004680;
+        }
+
+        a {
+            font-weight: bold;
+            color: #004680;
+        }
+
+        a:hover {
+            color: #004680;
+        }
+    </style>
+</head>
+<body style="font-family:Montserrat;font-size:12px;	color:#004680;">
+<div>
+    <p>Bonjour,</p>
+    <p>
+        L'équipe RUDI a refusé votre demande de publication pour la réutilisation : ${asset.title}, pour le motif
+        suivant
+        : "${messageToProjectOwner}".
+    </p>
+    <p>
+        Vous pouvez traiter ce refus depuis votre espace "Mes notifications" soit en soumettant à nouveau votre
+        réutilisation ou soit en l'archivant.
+    </p>
+    <p>
+        Vous pouvez contacter l'équipe Rudi pour toute information supplémentaire en cliquant <a
+            href="https://rudi.datarennes.fr/portail-beta-contact/">ici</a>.
+    </p>
+    <p>
+        Veuillez-vous connecter afin de traiter la demande.</p>
+    <p>
+        A très bientôt, <br>
+        L'équipe RUDI <br>
+        <a href="${urlServer}">${urlServer}</a>
+    </p>
+</div>
+</body>
+</html>

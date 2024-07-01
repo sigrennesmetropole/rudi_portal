@@ -50,7 +50,7 @@ public class OrganizationMembersHelper {
 	 * @return si le droit ou non
 	 * @throws AppServiceException erreur non autorisé, ou erreur technique
 	 */
-	public boolean isConnectedUserOrganizationAdministrator(UUID organizationUuid) throws AppServiceException {
+	public boolean isAuthenticatedUserOrganizationAdministrator(UUID organizationUuid) throws AppServiceException {
 
 		OrganizationEntity organization = organizationDao.findByUuid(organizationUuid);
 		if (organization == null) {
@@ -70,6 +70,26 @@ public class OrganizationMembersHelper {
 
 		return organization.getMembers().stream().anyMatch(member -> member.getUserUuid().equals(user.getUuid())
 				&& member.getRole().equals(OrganizationRole.ADMINISTRATOR));
+	}
+
+	public boolean isAuthenticatedUserOrganizationMember(UUID organizationUuid) throws AppServiceException {
+		OrganizationEntity organization = organizationDao.findByUuid(organizationUuid);
+		if (organization == null) {
+			throw new AppServiceNotFoundException(OrganizationEntity.class, organizationUuid);
+		}
+
+		AuthenticatedUser authenticatedUser = utilContextHelper.getAuthenticatedUser();
+		if (authenticatedUser == null) {
+			throw new AppServiceUnauthorizedException("Aucun utilisateur connecté");
+		}
+
+		User user = aclHelper.getUserByLogin(authenticatedUser.getLogin());
+		if (user == null) {
+			throw new AppServiceUnauthorizedException(
+					"Aucun utilisateur correspondant à l'utilisateur connecté dans ACL");
+		}
+
+		return organization.getMembers().stream().anyMatch(member -> member.getUserUuid().equals(user.getUuid()));
 	}
 
 	/**
@@ -126,11 +146,10 @@ public class OrganizationMembersHelper {
 			userType = searchCriteria.getType() != null ? searchCriteria.getType().toString() : "";
 		}
 
-		return aclHelper.searchUsersWithCriteria(memberUuids, searchText, userType);
+		return aclHelper.searchUsersWithCriteria(memberUuids, searchText, userType, searchCriteria.getLimit());
 	}
 
 	/**
-	 *
 	 * @param login    de l'utilisateur
 	 * @param userUuid de l'utilsateur
 	 * @return le user correspondant soit au login soit à l'uuid, si les deux sont passés, l'uuid prime
@@ -161,14 +180,14 @@ public class OrganizationMembersHelper {
 		// Si seulement le userUuid a été passé
 		if (userUuid != null) {
 			if (userByUUID == null) {
-				throw new UserNotFoundException("L'utilisateur dont l'uuid a été passé n'est pas connu de Rudi",
+				throw new UserNotFoundException("L'UUID renseignée n'est pas rattachée à un utilisateur RUDI.",
 						AppServiceExceptionsStatus.NOT_FOUND);
 			}
 			return userByUUID;
 		}
 		// Si seulement le login a été passé
 		if (userByLogin == null) {
-			throw new UserNotFoundException("L'utilisateur dont le login a été passé n'est pas connu de Rudi",
+			throw new UserNotFoundException("L'adresse e-mail renseignée n'est pas rattachée à un utilisateur RUDI.",
 					AppServiceExceptionsStatus.NOT_FOUND);
 		}
 		return userByLogin;

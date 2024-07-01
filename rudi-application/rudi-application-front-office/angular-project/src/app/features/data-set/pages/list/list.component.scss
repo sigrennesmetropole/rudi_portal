@@ -1,161 +1,180 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 
+::ng-deep {
+    .rudi-blue-large-button {
+        width: 100%;
+        margin: 20px 0 0 0;
+        padding: 14px 0 14px 0;
+        border-radius: 3px;
+        background-color: var(--focus);
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.mat-raised-button.mat-button-disabled {
+            background-color: var(--primary-text-light) !important;
+            color: white;
+            font-size: 16px;
+        }
+    }
+}
+
 ::ng-deep .ngx-pagination {
-  padding-left: 0;
-  margin-left: -6px !important;
+    padding-left: 0;
+    margin-left: -6px !important;
 }
 
 
 ::ng-deep .ngx-pagination .pagination-previous {
-  color: $primary-text-light !important;
-  font-weight: normal !important;
-  font-stretch: normal;
+    color: var(--primary-text-light) !important;
+    font-weight: normal !important;
+    font-stretch: normal;
 }
 
 ::ng-deep .ngx-pagination .pagination-next {
-  color: $primary-text-light !important;
-  font-weight: normal !important;
-  font-stretch: normal;
+    color: var(--primary-text-light) !important;
+    font-weight: normal !important;
+    font-stretch: normal;
 }
 
 ::ng-deep .ngx-pagination .current {
-  padding: 0.1875rem 0.625rem;
-  background: $primary-color !important;
-  color: #fefefe;
-  cursor: default;
-  font-size: 14px;
-  border-radius: 3px;
-  text-decoration: none;
+    padding: 0.1875rem 0.625rem;
+    background: var(--primary-color) !important;
+    color: #fefefe;
+    cursor: default;
+    font-size: 14px;
+    border-radius: 3px;
+    text-decoration: none;
 
 }
 
 ::ng-deep .ngx-pagination a, .ngx-pagination button {
-  color: $primary-color !important;
-  display: block;
-  padding: 0.1875rem 0.625rem;
-  font-weight: 600 !important;
-  font-stretch: normal !important;
-  font-style: normal !important;
+    color: var(--primary-color) !important;
+    display: block;
+    padding: 0.1875rem 0.625rem;
+    font-weight: 600 !important;
+    font-stretch: normal !important;
+    font-style: normal !important;
 
 }
 
 .pagination-font-size {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 
 .strong-p {
-  width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .search-count {
-  font-size: 1.4em;
-  font-weight: 600;
+    font-size: 1.4em;
+    font-weight: 600;
 }
 
 .data-set-full-height {
-  height: calc(100% - 170px);
+    height: calc(100% - 170px);
 }
 
 .data-set-container {
 
-  &-sm {
-    min-height: $card-height-sm;
-    width: 100%;
+    &-sm {
+        min-height: var(--card-height-sm);
+        width: 100%;
 
-    .container-filter-box {
-      .rudi-filter-box {
-        width: 90px;
-        height: 34px;
-        border-radius: 17px;
-        background-color: $focus;
-      }
+        .container-filter-box {
+            .rudi-filter-box {
+                width: 90px;
+                height: 34px;
+                border-radius: 17px;
+                background-color: var(--focus);
+            }
+        }
+
+        ::ng-deep .ngx-pagination .pagination-previous {
+            color: var(--primary-text-light) !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            font-size: 15px;
+        }
+
+        ::ng-deep .ngx-pagination .pagination-next {
+            padding-left: 0 !important;
+            color: var(--primary-text-light) !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            font-size: 15px;
+
+        }
     }
 
-    ::ng-deep .ngx-pagination .pagination-previous {
-      color: $primary-text-light !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      font-size: 15px;
+
+    &-lg {
+        height: var(--card-height-lg);
+        min-width: 362px;
+        width: 48%;
+        margin: 16px 16px 0 0;
+
+        ::ng-deep .ngx-pagination .pagination-previous {
+            margin-right: 40px !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            color: var(--primary-text-light) !important;
+        }
+
+        ::ng-deep .ngx-pagination .pagination-next {
+            padding-left: 40px !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            color: var(--primary-text-light) !important;
+        }
+
     }
 
-    ::ng-deep .ngx-pagination .pagination-next {
-      padding-left: 0 !important;
-      color: $primary-text-light !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      font-size: 15px;
+    &-xl {
+        min-height: var(--card-height-lg);
+        margin: 16px 16px 0 0;
+        width: 32%;
 
-    }
-  }
+        ::ng-deep .ngx-pagination .pagination-previous {
+            margin-right: 40px !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            color: var(--primary-text-light) !important;
+        }
 
-
-  &-lg {
-    height: $card-height-lg;
-    min-width: 362px;
-    width: 48%;
-    margin: 16px 16px 0 0;
-
-    ::ng-deep .ngx-pagination .pagination-previous {
-      margin-right: 40px !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      color: $primary-text-light !important;
+        ::ng-deep .ngx-pagination .pagination-next {
+            padding-left: 40px !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            color: var(--primary-text-light) !important;
+        }
     }
 
-    ::ng-deep .ngx-pagination .pagination-next {
-      padding-left: 40px !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      color: $primary-text-light !important;
+    &-xxl {
+        min-height: var(--card-height-lg);
+        margin: 16px 16px 0 0;
+        width: 24%;
+
+        ::ng-deep .ngx-pagination .pagination-previous {
+            margin-right: 40px !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            color: var(--primary-text-light) !important;
+        }
+
+        ::ng-deep .ngx-pagination .pagination-next {
+            padding-left: 40px !important;
+            font-weight: normal !important;
+            font-stretch: normal;
+            color: var(--primary-text-light) !important;
+        }
     }
-
-  }
-
-  &-xl {
-    min-height: $card-height-lg;
-    margin: 16px 16px 0 0;
-    width: 32%;
-
-    ::ng-deep .ngx-pagination .pagination-previous {
-      margin-right: 40px !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      color: $primary-text-light !important;
-    }
-
-    ::ng-deep .ngx-pagination .pagination-next {
-      padding-left: 40px !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      color: $primary-text-light !important;
-    }
-  }
-
-  &-xxl {
-    min-height: $card-height-lg;
-    margin: 16px 16px 0 0;
-    width: 24%;
-
-    ::ng-deep .ngx-pagination .pagination-previous {
-      margin-right: 40px !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      color: $primary-text-light !important;
-    }
-
-    ::ng-deep .ngx-pagination .pagination-next {
-      padding-left: 40px !important;
-      font-weight: normal !important;
-      font-stretch: normal;
-      color: $primary-text-light !important;
-    }
-  }
 }
 
 .pagination-spacing-sm {
@@ -167,37 +186,43 @@
 }
 
 .mat-sidenav {
-  margin-top: 106px;
-  width: 100%;
+    margin-top: 106px;
+    width: 100%;
 }
 
 .mat-drawer-content {
-  overflow-x: hidden;
+    overflow-x: hidden;
+}
+
+.bottom-border {
+    border-bottom: 1px solid grey;
 }
 
 .rudi-sidenav-container-filter {
-  font-size: 15px;
-  padding: 20px 0 20px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  border-top: 1px solid grey;
-  color: $primary-text;
+    font-size: 15px;
+    padding: 20px 0 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-top: 1px solid grey;
+    color: var(--primary-text);
 
-  .mat-badge-content {
-    background : $focus;
-    top: 20px !important;
-    font-size: 14px;
-    font-weight: normal;
-    width: 30px;
-    height: 30px;
-    left: -20px;
-  }
+    .mat-badge-content {
+        background: var(--focus);
+        top: 20px !important;
+        font-size: 14px;
+        font-weight: normal;
+        width: 30px;
+        height: 30px;
+        left: -20px;
+    }
 
 }
 
 .rudi-sidenav-container-footer {
-  display: flex;
-  justify-content: center;
+
+    button {
+        width: 100%;
+    }
 }

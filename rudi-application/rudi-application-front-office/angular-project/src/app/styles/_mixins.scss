@@ -1,7 +1,5 @@
-@import 'colors';
-
 @mixin card-container-bgcolor {
-    background-color: $rudi-login-background-color;
+    background-color: var(--rudi-login-background-color);
 }
 
 @mixin card-form-container {
@@ -12,7 +10,7 @@
 @mixin card-header-title {
     font-size: 28px;
     line-height: 49.2px;
-    color: $primary-color;
+    color: var(--primary-color);
     font-weight: bold;
 }
 
@@ -37,8 +35,8 @@
     height: 60px;
     border-radius: 6px;
     padding: 0.5em;
-    background-color: $primary-color;
-    color: $secondary-color;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     width: 100%;
 
     &.mat-mdc-button-disabled {

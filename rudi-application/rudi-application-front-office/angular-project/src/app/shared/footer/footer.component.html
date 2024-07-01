@@ -1,111 +1,67 @@
+<div class="first-section-container"
+     [ngClass]="{'first-section-container-mobile': mediaSize.isXs || mediaSize.isSm,
+                        'first-section-container-tablet': mediaSize.isMd,
+                        'first-section-container-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl
+                        }">
+    <a class="button-redirect"
+       [ngClass]="{'button-redirect-mobile': mediaSize.isXs || mediaSize.isSm, 'button-redirect-tablet': mediaSize.isMd, 'button-redirect-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+       href="{{'rudidatarennes.contact'|getBackendProperty|async}}"
+       rel="noopener noreferrer">{{ 'footer.contactezNous'|translate }}</a>
+
+
+    <div class="social-media-section-container"
+         [ngClass]="{'social-media-section-container-mobile': mediaSize.isXs || mediaSize.isSm,
+                        'social-media-section-container-tablet': mediaSize.isMd,
+                        'social-media-section-container-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+    >
+        <app-social-media-section
+            *ngIf="!customizationDescriptionIsLoading"
+            [footerDescription]="customizationDescription?.footer_description"
+        ></app-social-media-section>
+    </div>
+</div>
+
 <mat-divider
     [ngClass]="{'mat-divider-horizontal': mediaSize.isDeviceDesktop, 'mat-divider-horizontal-mobile': mediaSize.isDeviceMobile}"
     xmlns="http://www.w3.org/1999/html"></mat-divider>
 
-<!--Toolbar nous contacter - Mention legales-->
-<mat-toolbar *ngIf="mediaSize.isDeviceDesktop" class="rudi-footer-container-lg">
-    <mat-toolbar-row class="toolbar-icon-group justify-content-between" style="margin-top:59px">
-        <div class="d-flex align-items-center w-15 justify-content-start">
-            <a class="btn-nous-contacter" href="{{'rudidatarennes.contact' | getBackendProperty|async}}"
-               rel="noopener noreferrer"
-            >{{'footer.nousContacter'|translate}}</a>
-        </div>
-        <div id="menu-footer"
-             class="menu-footer font-weight-normal footer-menu-lg d-flex justify-content-end align-items-center w-85">
-            <a href="{{'rudidatarennes.cgu'|getBackendProperty|async}}" rel="noopener noreferrer"
-               class="rudi-label-lien">{{'footer.cgu'|translate}}</a>
-            <mat-divider class="divider-color" [vertical]="true"></mat-divider>
-            <a href="{{'rudidatarennes.confidentialite'|getBackendProperty|async}}" rel="noopener noreferrer"
-               class="rudi-label-lien">{{'footer.politiqueConfidentialite'|translate}}</a>
-            <mat-divider [vertical]="true"></mat-divider>
-            <a href="{{'rudidatarennes.mentionsLegales'|getBackendProperty|async}}" rel="noopener noreferrer"
-               class="rudi-label-lien">{{'footer.mentionLegale'|translate}}</a>
-        </div>
-    </mat-toolbar-row>
+<div class="second-section-container"
+     [ngClass]="{'second-section-container-mobile': mediaSize.isXs || mediaSize.isSm,
+                        'second-section-container-tablet': mediaSize.isMd,
+                        'second-section-container-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+    <div class="copyright-section"
+         [ngClass]="{'copyright-section-mobile': mediaSize.isXs || mediaSize.isSm,
+                        'copyright-section-tablet': mediaSize.isMd,
+                        'copyright-section-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+        <p>{{ 'footer.propulsePar'|translate }}</p>
 
-    <!--    Toolbar Copyright - reseau social-->
-    <mat-toolbar-row class="toolbar-icon-group justify-content-between bandeau-bleu-footer" style="margin-top:59px">
-        <div id="bandeau-bleu-footer" class="d-flex align-items-center w-15 justify-content-start">
-            <span
-                class="rudi-label-lien"> {{'footer.rudiCopyright' | translate:{currentYear: currentYear} }}</span>
-            <mat-divider [vertical]="true"></mat-divider>
-            <span
-                class="rudi-label-lien">{{'footer.tousDroits'|translate}}</span>
-            <mat-divider [vertical]="true"></mat-divider>
-            <span class="rudi-label-lien"
-                  *ngIf="appInfo !== undefined">{{'footer.version' | translate}} {{appInfo?.version}}</span>
+        <div class="d-flex">
+            <div class="footer-logo-container navbar-brand me-2">
+                <a routerLink="/home">
+                    <img *ngIf="!logoIsLoading" class="footer-logo" [src]="logoSrc"
+                         alt="Logo bleu orange beta de rennes metropole"/>
+                </a>
+            </div>
+            <div>
+                <div class="footer-primary-text">{{ 'footer.ccByCa'|translate }}</div>
+                <div class="d-flex align-items-center justify-content-center copyright-title"
+                     [ngClass]="{'copyright-title-mobile': mediaSize.isXs || mediaSize.isSm,
+                        'copyright-title-tablet': mediaSize.isMd,
+                        'copyright-title-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+                    <span
+                        class="footer-primary-text rudi-version-label">{{ 'footer.rudiCopyright' | translate }}</span>
+                    <span class="footer-primary-text">{{ appInfo?.version }}</span>
+                </div>
+            </div>
         </div>
-        <app-loader [allPage]="false" [isLight]="true" [noText]="true"
-                    [active]="loading"></app-loader>
-        <div *ngIf="!loading"
-             class="font-weight-normal footer-menu-lg d-flexjustify-content-end align-items-center w-85 pointer footer-social-link">
-            <span><a [href]="twitterLinkHref" rel="noopener noreferrer" target="_blank">
-                <em class="fa fa-twitter fa-1x fa-icon-style me-4"></em></a></span>
-            <span><a [href]="linkedinLinkHref" rel="noopener noreferrer" target="_blank"><em
-                class="fa fa-linkedin fa-1x fa-icon-style"></em></a></span>
-            <span><em
-                class="fa fa-angle-up fa-1x fa-icon-style fa-angle-marge" (click)="goToTop()"></em>
-            </span>
-        </div>
-    </mat-toolbar-row>
-</mat-toolbar>
+    </div>
+    <div class="terms-section"
+         [ngClass]="{'terms-section-mobile': mediaSize.isXs || mediaSize.isSm,
+                        'terms-section-tablet': mediaSize.isMd,
+                        'terms-section-desktop':  mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}">
+        <div *ngFor="let term of termsValues" [innerHTML]="term"
+             [ngClass]="'rudi-label-lien-mobile-mention'"></div>
 
-<!--Fin toolbar Desktop -->
 
-<!-- Toolbar Mobile -->
-<!--Button nous contacter-->
-<mat-toolbar *ngIf="mediaSize.isDeviceMobile" class="rudi-footer-container">
-    <mat-toolbar-row style="margin-top: 56px">
-        <div class="d-flex align-items-center w-15 justify-content-start">
-            <button mat-flat-button class="btn-nous-contacter text-uppercase">
-                <a href="{{'rudidatarennes.contact'|getBackendProperty|async}}"
-                   rel="noopener noreferrer">{{'footer.nousContacter'|translate}}</a>
-            </button>
-        </div>
-    </mat-toolbar-row>
-
-    <!--    Block CDU et Mentions legales-->
-    <mat-toolbar-row class="justify-content-end font-weight-normal footer-legal-notice" style="margin-top: 132px">
-        <p class="d-flex align-items-center">
-            <a href="{{'rudidatarennes.cgu'|getBackendProperty|async}}"
-               class="rudi-label-lien-mobile-mention">{{'footer.cgu'|translate}}</a>
-            <mat-divider class="divider-bleu" [vertical]="true"></mat-divider>
-            <a href="{{'rudidatarennes.confidentialite'|getBackendProperty|async}}"
-               class="rudi-label-lien-mobile-mention">{{'footer.politiqueConfidentialite'|translate}}</a>
-            <mat-divider class="divider-bleu" [vertical]="true"></mat-divider>
-            <a href="{{'rudidatarennes.mentionsLegales'|getBackendProperty|async}}"
-               class="rudi-label-lien-mobile-mention">{{'footer.mentionLegale'|translate}}</a>
-        </p>
-    </mat-toolbar-row>
-
-    <!-- Block Copyright -->
-    <mat-toolbar-row class="toolbar-icon-group toolbar-row-copyright">
-        <div class="d-flex align-items-center justify-content-center" style="margin-top: 60px;">
-            <span
-                class="rudi-label-lien-mobile">{{'footer.rudiCopyright' | translate:{currentYear: currentYear} }}</span>
-            <span class="rudi-label-lien-mobile mx-0">|</span>
-            <span class="rudi-label-lien-mobile">{{'footer.tousDroits'|translate}}</span>
-            <span class="rudi-label-lien-mobile mx-0">|</span>
-            <span class="rudi-label-lien-mobile">{{appInfo?.version}}</span>
-        </div>
-
-        <!--  Group reseau social-->
-        <div class="font-weight-normal d-flex align-items-center justify-content-center footer-social-link"
-             style="margin-top: 25px;">
-            <span><a href="https://twitter.com/projetrudi?lang=fr" rel="noopener noreferrer" target="_blank">
-                <em class="fa fa-twitter fa-1x fa-icon-style-mobile me-4"></em></a></span>
-            <span><a href="https://www.linkedin.com/company/projet-rudi/" rel="noopener noreferrer" target="_blank"><em
-                class="fa fa-linkedin fa-1x fa-icon-style-mobile"></em></a></span>
-        </div>
-
-        <!--   Button goTop-->
-        <div class="font-weight-normal d-flex align-items-center justify-content-end me-3"
-             style="margin-top: 5px;margin-bottom: 34px">
-            <span><em
-                class="fa fa-angle-up fa-1x fa-icon-style-mobile fa-angle-marge" (click)="goToTop()"></em>
-            </span>
-        </div>
-    </mat-toolbar-row>
-</mat-toolbar>
-<!-- Fin toolbar Mobile -->
-
+    </div>
+</div>

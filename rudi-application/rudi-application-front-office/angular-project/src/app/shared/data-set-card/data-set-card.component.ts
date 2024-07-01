@@ -70,13 +70,11 @@ export class DataSetCardComponent implements OnInit {
     }
 
     get titleMaxLength(): number {
-        if (this.mediaSize.isLg || this.mediaSize.isSm) {
-            return 60;
-        } else if (this.mediaSize.isMd) {
-            return 80;
-        } else {
-            return 70;
-        }
+        return 60;
+    }
+
+    get descriptionMaxLength(): number {
+        return 200;
     }
 
     get isRestricted(): boolean {

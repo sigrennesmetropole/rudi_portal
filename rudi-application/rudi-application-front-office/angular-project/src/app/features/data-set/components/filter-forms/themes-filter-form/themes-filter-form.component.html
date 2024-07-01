@@ -1,25 +1,25 @@
 <form *ngIf="formGroup" [formGroup]="formGroup" class="filter-child">
     <div class="filter-child-form">
-    <ul [class]="ulClass" [formArrayName]="formArrayName">
-        <li *ngFor="let theme of items; let i = index" [formGroupName]="i">
-            <mat-checkbox
-                [checked]="isChecked(theme)"
-                [value]="theme.value"
-                class="rudi-checkbox"
-                formControlName="checked"
-            >{{theme.name}}
-            </mat-checkbox>
-        </li>
-    </ul>
+        <ul [class]="ulClass" [formArrayName]="formArrayName">
+            <li *ngFor="let theme of items; let i = index" [formGroupName]="i">
+                <mat-checkbox
+                    [checked]="isChecked(theme)"
+                    [value]="theme.value"
+                    class="rudi-checkbox"
+                    formControlName="checked"
+                >{{theme.name}}
+                </mat-checkbox>
+            </li>
+        </ul>
     </div>
-    <div>
+    <div class="rudi-select-panel-footer">
         <button
             color="primary"
             (click)="submitForm()"
             class="rudi-blue-button"
             mat-raised-button
             type="submit"
-      [disabled]="!submitIsEnabled"
+            [disabled]="!submitIsEnabled"
         >{{'common.appliquer'|translate}}</button>
     </div>
 </form>

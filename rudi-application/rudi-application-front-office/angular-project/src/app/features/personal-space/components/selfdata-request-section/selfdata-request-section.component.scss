@@ -5,14 +5,12 @@
     font-weight: bold;
     line-height: 1.44;
     letter-spacing: normal;
-    font-family: OpenSans, sans-serif;
 }
 
 .panel-subtitle {
     font-size: 16px;
     font-weight: 600;
     color: var(--0-classic-blue);
-    font-family: OpenSans, sans-serif;
     margin-top: 15px;
 }
 
@@ -20,7 +18,6 @@
     font-size: 15px;
     line-height: 1.6;
     color: var(--3-texte-gris-fonc);
-    font-family: OpenSans, sans-serif;
 }
 
 ::ng-deep {
@@ -30,16 +27,16 @@
 
     .mat-expansion-indicator {
         width: 30px;
-        border: 1.6px solid $focus;
+        border: 1.6px solid var(--focus);
         border-radius: 15px;
         height: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $focus;
+        color: var(--focus);
 
         &::after {
-            color: $focus;
+            color: var(--focus);
         }
     }
 
@@ -51,16 +48,15 @@
 button, button.mat-raised-button {
     font-weight: 600;
     border-radius: 6px;
-    background-color: $primary-color;
-    color: $secondary-color;
-    font-family: OpenSans, sans-serif;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     font-size: 14px;
     height: 42px;
 }
 
 .button-active:hover {
-    background-color: $primary-color;
-    color: $secondary-color;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     cursor: pointer;
 }
 
@@ -78,7 +74,6 @@ button, button.mat-raised-button {
     font-weight: bold;
     line-height: 1.86;
     color: var(--0-classic-blue);
-    font-family: OpenSans, sans-serif;
 }
 
 .panel-demand-link-details {
@@ -90,5 +85,4 @@ button, button.mat-raised-button {
     text-decoration: underline;
     color: var(--0-classic-blue);
     cursor: pointer;
-    font-family: OpenSans, sans-serif;
 }

@@ -100,7 +100,7 @@
 					}
 				}
 			},
-			"Proj4Information":  {
+			"Proj4Information": {
 				"description": "Informations nécessaires pour récupérer les informations sur une projection (genre EPSG:3948)",
 				"type": "object",
 				"properties": {
@@ -181,7 +181,7 @@
 					"PROJEKT"
 				]
 			},
-			"KeyFigure":{
+			"KeyFigure": {
 				"description": "Element correspondant à 1 chiffre clé",
 				"type": "object",
 				"properties": {
@@ -212,6 +212,93 @@
 					}
 				}
 			},
+			"CmsAbstractDescription": {
+				"description": "Element abstrait de la configuration CMS",
+				"type": "object",
+				"properties": {
+					"category": {
+						"type": "string"
+					},
+					"template_detail": {
+						"type": "string"
+					},
+					"template_simple": {
+						"type": "string"
+					}
+				}
+			},
+			"CmsNewsDescription": {
+				"description": "Element CMS pour les news",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/CmsAbstractDescription"
+					},
+					{
+						"properties": {
+							"alaune_category": {
+								"type": "string"
+							},
+							"template_simple_with_image": {
+								"type": "string"
+							},
+							"template_news_list": {
+								"type": "string"
+							},
+							"news_list_path": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"CmsTermsDescription": {
+				"description": "Element CMS pour les Terms",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/CmsAbstractDescription"
+					},
+					{
+						"properties": {
+							"cgu_category": {
+								"type": "string"
+							},
+							"privacy_policy_category": {
+								"type": "string"
+							},
+							"legal_mention_category": {
+								"type": "string"
+							},
+							"copyrights_category": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
+			"CmsProjectValuesDescription": {
+				"description": "Element CMS pour les valeur de projet",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/CmsAbstractDescription"
+					},
+					{
+						"properties": {
+							"main_category": {
+								"type": "string"
+							},
+							"title1": {
+								"type": "string"
+							},
+							"title2": {
+								"type": "string"
+							},
+							"description": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			},
 			"CustomizationDescription": {
 				"description": "Element configurable de l'application",
 				"type": "object",
@@ -230,8 +317,91 @@
 					},
 					"key_figures_description": {
 						"$ref": "#/components/schemas/KeyFiguresDescription"
+					},
+					"cms_news_description": {
+						"$ref": "#/components/schemas/CmsNewsDescription"
+					},
+					"cms_terms_description": {
+						"$ref": "#/components/schemas/CmsTermsDescription"
+					},
+					"cms_project_values_description": {
+						"$ref": "#/components/schemas/CmsProjectValuesDescription"
+					},
+					"footer_description": {
+						"$ref": "#/components/schemas/FooterDescription"
+					},
+					"news_page_description": {
+						"$ref": "#/components/schemas/NewsPageDescription"
 					}
 				}
+			},
+			"SocialNetwork": {
+				"description": "Elements du footer, correspondant aux réseaux sociaux",
+				"type": "object",
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"icon": {
+						"type": "string"
+					}
+				}
+			},
+			"FooterDescription": {
+				"description": "Elements du footer",
+				"type": "object",
+				"properties": {
+					"logo": {
+						"type": "string"
+					},
+					"socialNetworks": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SocialNetwork"
+						}
+					}
+				}
+			},
+			"AssetsPageOrder": {
+				"description": "Tri pour la page de liste des assets",
+				"type": "object",
+				"properties": {
+					"libelle": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			},
+			"AssetsPageDescription": {
+				"description": "Elements minimaux nécessaire à l'affichage d'une page de list de cms assets",
+				"type": "object",
+				"properties": {
+					"title1": {
+						"type": "string"
+					},
+					"title2": {
+						"type": "string"
+					},
+					"orders": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AssetsPageOrder"
+						}
+					}
+				}
+			},
+			"NewsPageDescription": {
+				"description": "Elements de la page d'affichage de toutes les actualités",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/AssetsPageDescription"
+					}
+				]
 			}
 		}
 	}

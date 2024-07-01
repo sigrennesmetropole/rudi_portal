@@ -32,7 +32,10 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.io.RandomAccessReadBufferedFile;
+import org.apache.pdfbox.pdfwriter.compress.CompressParameters;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -40,6 +43,7 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
@@ -122,9 +126,8 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 		// récupération du fichier source
 		File sourceFile = getSourceFile(source);
 
-		try (OutputStream os = new FileOutputStream(destinationFile)) {
-			// chargement du fichier
-			PDDocument document = PDDocument.load(sourceFile);
+		try (OutputStream os = new FileOutputStream(destinationFile);
+				PDDocument document = Loader.loadPDF(new RandomAccessReadBufferedFile(sourceFile))) {
 
 			int accessPermissions = SignatureUtils.getMDPPermission(document);
 			if (accessPermissions == 1) {
@@ -149,7 +152,7 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 			}
 
 			// sauvegarde du document initial
-			document.saveIncremental(os);
+			document.save(os, CompressParameters.NO_COMPRESSION);
 
 			result = new DocumentContent(source.getFileName(), source.getContentType(), destinationFile);
 		} catch (Exception e) {
@@ -291,11 +294,11 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 	protected PDDocument createPseudoFile() throws IOException {
 		// on créé un fichier qui contient l'image de signature
 		File result = temporaryHelper.createOutputFile();
-		try(PDDocument document = new PDDocument()){
+		try (PDDocument document = new PDDocument()) {
 			PDPage page = new PDPage(PDRectangle.A4);
 			document.addPage(page);
 			PDPageContentStream contentStream = new PDPageContentStream(document, page);
-			contentStream.setFont(PDType1Font.HELVETICA, 14);
+			contentStream.setFont(new PDType1Font(FontName.HELVETICA), 14);
 
 			PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
 			if (acroForm == null) {
@@ -350,22 +353,22 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 			PDRectangle bbox = new PDRectangle(rectangle.getWidth(), rectangle.getHeight());
 			Matrix initialScale = null;
 			switch (sourceDocument.getPage(pageNumber).getRotation()) {
-				case ROTATION_90:
-					form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
-					initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
-							bbox.getHeight() / bbox.getWidth());
-					break;
-				case ROTATION_180:
-					form.setMatrix(AffineTransform.getQuadrantRotateInstance(2));
-					break;
-				case 270:
-					form.setMatrix(AffineTransform.getQuadrantRotateInstance(3));
-					initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
-							bbox.getHeight() / bbox.getWidth());
-					break;
-				case ROTATION_0:
-				default:
-					break;
+			case ROTATION_90:
+				form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
+				initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
+						bbox.getHeight() / bbox.getWidth());
+				break;
+			case ROTATION_180:
+				form.setMatrix(AffineTransform.getQuadrantRotateInstance(2));
+				break;
+			case 270:
+				form.setMatrix(AffineTransform.getQuadrantRotateInstance(3));
+				initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(),
+						bbox.getHeight() / bbox.getWidth());
+				break;
+			case ROTATION_0:
+			default:
+				break;
 			}
 			form.setBBox(bbox);
 
@@ -417,31 +420,31 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 		PDRectangle rect = new PDRectangle();
 		// signing should be at the same position regardless of page rotation.
 		switch (page.getRotation()) {
-			case ROTATION_90:
-				rect.setLowerLeftY(x);
-				rect.setUpperRightY(x + width);
-				rect.setLowerLeftX(y);
-				rect.setUpperRightX(y + height);
-				break;
-			case ROTATION_180:
-				rect.setUpperRightX(pageRect.getWidth() - x);
-				rect.setLowerLeftX(pageRect.getWidth() - x - width);
-				rect.setLowerLeftY(y);
-				rect.setUpperRightY(y + height);
-				break;
-			case ROTATION_270:
-				rect.setLowerLeftY(pageRect.getHeight() - x - width);
-				rect.setUpperRightY(pageRect.getHeight() - x);
-				rect.setLowerLeftX(pageRect.getWidth() - y - height);
-				rect.setUpperRightX(pageRect.getWidth() - y);
-				break;
-			case ROTATION_0:
-			default:
-				rect.setLowerLeftX(x);
-				rect.setUpperRightX(x + width);
-				rect.setLowerLeftY(pageRect.getHeight() - y - height);
-				rect.setUpperRightY(pageRect.getHeight() - y);
-				break;
+		case ROTATION_90:
+			rect.setLowerLeftY(x);
+			rect.setUpperRightY(x + width);
+			rect.setLowerLeftX(y);
+			rect.setUpperRightX(y + height);
+			break;
+		case ROTATION_180:
+			rect.setUpperRightX(pageRect.getWidth() - x);
+			rect.setLowerLeftX(pageRect.getWidth() - x - width);
+			rect.setLowerLeftY(y);
+			rect.setUpperRightY(y + height);
+			break;
+		case ROTATION_270:
+			rect.setLowerLeftY(pageRect.getHeight() - x - width);
+			rect.setUpperRightY(pageRect.getHeight() - x);
+			rect.setLowerLeftX(pageRect.getWidth() - y - height);
+			rect.setUpperRightX(pageRect.getWidth() - y);
+			break;
+		case ROTATION_0:
+		default:
+			rect.setLowerLeftX(x);
+			rect.setUpperRightX(x + width);
+			rect.setLowerLeftY(pageRect.getHeight() - y - height);
+			rect.setUpperRightY(pageRect.getHeight() - y);
+			break;
 		}
 		return rect;
 	}
@@ -526,7 +529,8 @@ public class PDFSignerImpl implements PDFSigner, SignatureInterface {
 		}
 	}
 
-	private PDRectangle createOptionsRectangle(PDAcroForm acroForm, SignatureDescription signatureDescription, PDDocument document){
+	private PDRectangle createOptionsRectangle(PDAcroForm acroForm, SignatureDescription signatureDescription,
+			PDDocument document) {
 		PDRectangle rectangle = null;
 		// sign a PDF with an existing empty signature, as created by the CreateEmptySignatureForm example.
 		PDSignature signature = findExistingSignature(acroForm, signatureDescription.getFieldname());

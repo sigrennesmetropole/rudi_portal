@@ -33,7 +33,6 @@ export class DatasetListComponent implements OnInit {
     @Input() producerUuid?: string;
     @Input() limit = MAX_RESULTS_PER_PAGE;
     @Input() mediaSize: MediaSize;
-    @Input() resultsPerRow: number | undefined;
     /** On peut sélectionner une carte dans la liste ? */
     @Input() isSelectable = false;
     @Input() accessStatusHiddenValues;
@@ -117,15 +116,17 @@ export class DatasetListComponent implements OnInit {
         this.isLoading = true;
         this.konsultMetierService
             .searchMetadatas(this.filtersService.currentFilters, this.accessStatusHiddenValues, this.offset, this.limit)
-            .subscribe((data) => {
+            .subscribe({
+                next: (data) => {
                     this.metadataList = data ?? EMPTY_METADATA_LIST;
                     this.metadataListTotal.emit(data.total);
                     this.isLoading = false;
                 },
-                (error) => {
+                error: (error) => {
                     this.isLoading = false;
                     this.logService.error('getMetadatas failed', error.message);
-                });
+                }
+            });
     }
 
     /**

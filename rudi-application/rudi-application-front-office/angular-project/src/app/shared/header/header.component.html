@@ -1,77 +1,84 @@
 <div class="header-container mat-typography" [ngClass]="ngClass">
-    <div *ngIf="mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl">
+    <div *ngIf="mediaSize.isXl || mediaSize.isXxl">
         <nav class="header-nav rudi-header-container navbar navbar-expand pe-0"
              aria-label="navbar-desktop">
             <div class="header-logo-container navbar-brand">
-                <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
-                    <mat-icon class="header-logo" aria-hidden="false"
-                              aria-label="Logo bleu orange beta de rennes metropole"
-                              svgIcon="logo-bleu-orange"></mat-icon>
+                <a routerLink="/home">
+                    <img *ngIf="!logoIsLoading" class="header-logo" [src]="logo"
+                         alt="Logo bleu orange beta de rennes metropole"/>
                 </a>
             </div>
-            <div class="justify-content-end navbar-menu-items header-container-lg not-clickable navbar-expand collapse show"
-                 id="main-nav">
+            <div
+                class="justify-content-end navbar-menu-items header-container-lg not-clickable navbar-expand collapse show"
+                id="main-nav">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 me-2">
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase"
+                        <a class="nav-link text-uppercase text-decoration-none"
                            rel="noopener noreferrer"
                            routerLink="home"
-                           routerLinkActive="active-item"
+                           [routerLinkActive]="'active'"
                         >
                             <em class="fa fa-home fa-1x me-2"></em>
-                            <span>{{'header.accueil'| translate}}</span>
+                            <span>{{ 'header.accueil'| translate }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="#" routerLink="catalogue"
+                        <a class="nav-link text-uppercase text-decoration-none" href="#" routerLink="catalogue"
                            [routerLinkActive]="'active'"><span
-                            class="ul-items-mobile">{{'header.catalogue'| translate}}</span></a>
+                            class="ul-items-mobile">{{ 'header.catalogue'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="#" routerLink="projets"
-                           rel="noopener noreferrer" class="nav-link text-uppercase"
-                           [routerLinkActive]="'active'"><span>{{'header.reutilisations'| translate}}</span></a>
+                           rel="noopener noreferrer" class="nav-link text-uppercase text-decoration-none"
+                           [routerLinkActive]="'active'"><span>{{ 'header.reutilisations'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="#" routerLink="organization"
+                        <a class="nav-link text-uppercase text-decoration-none" href="#" routerLink="organization"
                            [routerLinkActive]="'active'"><span
-                            class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
+                            class="ul-items-mobile">{{ 'header.organisations'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" [routerLinkActive]="'active'" [href]="urlToDoc"
+                        <a class="nav-link text-uppercase text-decoration-none" [routerLinkActive]="'active'"
+                           [href]="urlToDoc"
                            rel="noopener noreferrer" target="_blank">
                             <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
-                            <span>{{'header.documentation'| translate}}</span>
+                            <span>{{ 'header.documentation'| translate }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
+                        <a class="nav-link text-uppercase text-decoration-none"
+                           href="{{'rudidatarennes.index'|getBackendProperty|async}}"
                            target="_blank"
                            rel="noopener noreferrer" [routerLinkActive]="'active'">
                             <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
-                            <span>{{'header.blogProjet'| translate}}</span></a>
+                            <span>{{ 'header.blogProjet'| translate }}</span></a>
                     </li>
                     <li class="nav-item account-btn">
                         <button *ngIf="!isConnectedAsUser" mat-stroked-button (click)="handleClickGoLogin()">
-                            <span>{{'header.logIn'| translate}}</span>
+                            <span>{{ 'header.logIn'| translate }}</span>
                         </button>
                         <button *ngIf="isConnectedAsUser" [matMenuTriggerFor]="accountMenu" mat-stroked-button>
                             <img class="img-style" alt="{{'header.monCompte'| translate}}"
                                  src="assets/images/mon_compte.png">
-                            <span>{{'header.monCompte'| translate}}</span>
+                            <span>{{ 'header.monCompte'| translate }}</span>
                         </button>
                         <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
                             <button class="title" mat-menu-item
-                                    (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
+                                    (click)="handleClickGoMonCompte()">{{ 'header.accountMenu.myAccount'| translate }}
+                            </button>
                             <button class="title" mat-menu-item
-                                    (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.myNotifications'| translate}}</button>
+                                    (click)="handleClickGoReceivedLinkedDatasets()">{{ 'header.accountMenu.myNotifications'| translate }}
+                            </button>
                             <button class="title" mat-menu-item
-                                    (click)="handleClickGoToReuse()">{{'header.accountMenu.myActivity'| translate}}</button>
+                                    (click)="handleClickGoToReuse()">{{ 'header.accountMenu.myActivity'| translate }}
+                            </button>
                             <button class="title" mat-menu-item
-                                    (click)="handleClickGoToMySelfdata()">{{'header.accountMenu.mySelfdata'| translate}}</button>
+                                    (click)="handleClickGoToMySelfdata()">{{ 'header.accountMenu.mySelfdata'| translate }}
+                            </button>
                             <hr class="hr">
                             <button (click)="handleClickLogout()" class="title"
-                                    mat-menu-item>{{'header.logOut'| translate}}</button>
+                                    mat-menu-item>{{ 'header.logOut'| translate }}
+                            </button>
                         </mat-menu>
                     </li>
                 </ul>
@@ -79,12 +86,12 @@
         </nav>
     </div>
 
-    <div *ngIf="mediaSize.isSm || mediaSize.isMd">
+    <div *ngIf="mediaSize.isXs || mediaSize.isSm || mediaSize.isMd || mediaSize.isLg">
         <nav class="navbar header-nav rudi-header-container" aria-label="navbar-mobile">
             <span>
-                <a href="{{'rudidatarennes.beta'|getBackendProperty|async}}">
-                <img class="header-logo" src="../../../assets/images/logo_bleu_orange.svg"
-                     alt="Logo bleu orange beta de rennes metropole">
+                <a routerLink="/home">
+                    <img *ngIf="!logoIsLoading" class="header-logo" [src]="logo"
+                         alt="Logo bleu orange beta de rennes metropole"/>
                 </a>
             </span>
 
@@ -99,16 +106,21 @@
                 </button>
                 <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
                     <button mat-menu-item
-                            (click)="handleClickGoMonCompte()">{{'header.accountMenu.myAccount'| translate}}</button>
+                            (click)="handleClickGoMonCompte()">{{ 'header.accountMenu.myAccount'| translate }}
+                    </button>
                     <button mat-menu-item
-                            (click)="handleClickGoReceivedLinkedDatasets()">{{'header.accountMenu.myNotifications'| translate}}</button>
+                            (click)="handleClickGoReceivedLinkedDatasets()">{{ 'header.accountMenu.myNotifications'| translate }}
+                    </button>
                     <button mat-menu-item
-                            (click)="handleClickGoToReuse()">{{'header.accountMenu.myActivity'| translate}}</button>
+                            (click)="handleClickGoToReuse()">{{ 'header.accountMenu.myActivity'| translate }}
+                    </button>
                     <button mat-menu-item
-                            (click)="handleClickGoToMySelfdata()">{{'header.accountMenu.mySelfdata'| translate}}</button>
+                            (click)="handleClickGoToMySelfdata()">{{ 'header.accountMenu.mySelfdata'| translate }}
+                    </button>
                     <hr class="hr">
                     <button (click)="handleClickLogout()" class="title"
-                            mat-menu-item>{{'header.logOut'| translate}}</button>
+                            mat-menu-item>{{ 'header.logOut'| translate }}
+                    </button>
                 </mat-menu>
                 <!-- button menu burger -->
                 <button
@@ -128,38 +140,41 @@
             </div>
 
             <!-- Fin button menu burger -->
-            <div class="justify-content-end navbar-menu-items header-container-sm collapse" [ngClass]="{ show: !isCollapsed }" id="main-nav2">
+            <div class="justify-content-end navbar-menu-items header-container-sm collapse"
+                 [ngClass]="{ show: !isCollapsed }" id="main-nav2">
                 <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="home"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="home"
                            rel="noopener noreferrer" routerLinkActive="active-item">
-                            <span class="ul-items-mobile">{{'header.accueil'| translate}}</span></a>
+                            <span class="ul-items-mobile">{{ 'header.accueil'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="catalogue"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="catalogue"
                            routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{'header.catalogue'| translate}}</span></a>
+                            class="ul-items-mobile">{{ 'header.catalogue'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="projets"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="projets"
                            routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{'header.reutilisations'| translate}}</span></a>
+                            class="ul-items-mobile">{{ 'header.reutilisations'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" routerLink="organization"
+                        <a class="nav-link text-decoration-none" href="#" routerLink="organization"
                            routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{'header.organisations'| translate}}</span></a>
+                            class="ul-items-mobile">{{ 'header.organisations'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"
+                        <a class="nav-link text-decoration-none"
+                           href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"
                            rel="noopener noreferrer"
                            [routerLinkActive]="'active-item'"><span
-                            class="ul-items-mobile">{{'header.documentation'| translate}}</span></a>
+                            class="ul-items-mobile">{{ 'header.documentation'| translate }}</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{'rudidatarennes.index'|getBackendProperty|async}}"
+                        <a class="nav-link text-decoration-none"
+                           href="{{'rudidatarennes.index'|getBackendProperty|async}}"
                            rel="noopener noreferrer" [routerLinkActive]="'active'">
-                            <span class="ul-items-mobile">{{'header.blogProjet'| translate}}</span></a>
+                            <span class="ul-items-mobile">{{ 'header.blogProjet'| translate }}</span></a>
                     </li>
                 </ul>
             </div>

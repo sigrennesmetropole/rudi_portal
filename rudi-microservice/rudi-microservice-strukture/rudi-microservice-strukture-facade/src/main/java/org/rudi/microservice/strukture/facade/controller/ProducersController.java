@@ -1,18 +1,19 @@
 package org.rudi.microservice.strukture.facade.controller;
 
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.helper.ControllerHelper;
-import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.facet.kmedia.bean.KindOfData;
-import org.rudi.microservice.strukture.service.producer.ProducerService;
 import org.rudi.microservice.strukture.facade.controller.api.ProducersApi;
+import org.rudi.microservice.strukture.service.producer.ProducerService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +30,10 @@ public class ProducersController implements ProducersApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> uploadProducerMediaByType(UUID producerUuid, KindOfData kindOfData, Resource body) throws AppServiceException {
-		producerService.uploadMedia(producerUuid, kindOfData, body);
+	public ResponseEntity<Void> uploadProducerMediaByType(UUID producerUuid, KindOfData kindOfData, MultipartFile file) throws Exception {
+		DocumentContent documentContent = controllerHelper.documentContentFrom(file);
+
+		producerService.uploadMedia(producerUuid, kindOfData, documentContent);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

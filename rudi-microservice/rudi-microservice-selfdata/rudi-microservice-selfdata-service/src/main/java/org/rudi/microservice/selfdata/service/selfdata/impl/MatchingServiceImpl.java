@@ -24,7 +24,7 @@ class MatchingServiceImpl implements MatchingService {
 	public UUID getMatchingToken(UUID datasetUuid, String login) throws AppServiceNotFoundException {
 		User user = aclHelper.getUserByLogin(login);
 		if (user == null) {
-			throw new AppServiceNotFoundException(new EmptyResultDataAccessException(String.format("Aucun utilisateur trouvé pour ce login", login), MINIMUM_USER_NUMBER));
+			throw new AppServiceNotFoundException(new EmptyResultDataAccessException(String.format("Aucun utilisateur trouvé pour ce login %s", login), MINIMUM_USER_NUMBER));
 		}
 
 		SelfdataTokenTupleEntity tokenTupleEntity = selfdataTokenDao.findByDatasetUuidAndUserUuid(datasetUuid, user.getUuid());

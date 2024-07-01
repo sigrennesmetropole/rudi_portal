@@ -1,4 +1,3 @@
-@import "variables-rudi";
 @import "common-style";
 
 .mat-drawer-content {
@@ -8,7 +7,7 @@
 //****** Style mat-menu du bandeau *******
 .menu-libelle {
     font-size: 15px;
-    color: $primary-text;
+    color: var(--primary-text);
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
@@ -28,6 +27,10 @@
         height: 100%;
     }
 
+    .project-card {
+        padding: 16px;
+    }
+
     &-sm {
 
         .card-description-keyword {
@@ -45,6 +48,7 @@
 
     }
 }
+
 // On annule la règle /pages/list/list.component.scss "::ng-deep .row"
 .row {
     margin-right: -15px;

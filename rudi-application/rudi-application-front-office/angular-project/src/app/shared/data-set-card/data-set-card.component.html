@@ -17,9 +17,9 @@
             <span class="w-100 data-set-card-title data-set-card-title-margin">
                 <mat-icon class="key-icon" *ngIf="isRestricted" svgIcon="key_icon_88_blue"></mat-icon>
                 <mat-icon class="self-data-icon" *ngIf="isSelfdata" svgIcon="self-data-icon"></mat-icon>
-                {{metadata.resource_title | truncateText: titleMaxLength}}
+                {{ metadata.resource_title | truncateText: titleMaxLength}}
             </span>
-            <p class="data-set-card-summary">{{ getSynopsis(metadata) | truncateText: 181}}</p>
+            <p class="data-set-card-summary">{{ getSynopsis(metadata) | truncateText: descriptionMaxLength}}</p>
         </div>
         <mat-icon *ngIf="isRestricted || isSelfdata"
                   [ngClass]="{'triangle-restricted': isRestricted, 'triangle-selfdata': isSelfdata}"

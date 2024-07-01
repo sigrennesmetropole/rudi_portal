@@ -6,19 +6,18 @@
 }
 
 button, .button {
-    font-family: OpenSans, sans-serif;
     cursor: pointer;
     font-weight: 600;
     border-radius: 6px;
     height: 42px;
     padding-left: 20px;
     padding-right: 20px;
-    color: $primary-text;
+    color: var(--primary-text);
     border: solid 1px var(--4-contours-blocs-menus);
-    background-color: $secondary-color;
+    background-color: var(--secondary-color);
 
     &.active {
-        color: $secondary-color;
+        color: var(--secondary-color);
         background-color: var(--0-classic-blue);
     }
 }

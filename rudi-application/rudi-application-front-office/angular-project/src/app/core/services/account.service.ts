@@ -51,7 +51,7 @@ export class AccountService {
         // Appel REST création de compte
         return this.aclService.requestAccountCreation(account).pipe(
             // Erreur pendant la création de compte on arrête tout et on renvoie une chaîne qui décrit l'erreur
-            catchError((error: HttpErrorResponse) => throwError(this.handleErrorCreateAccount(error)))
+            catchError((error: HttpErrorResponse) => throwError(() => this.handleErrorCreateAccount(error)))
         );
     }
 

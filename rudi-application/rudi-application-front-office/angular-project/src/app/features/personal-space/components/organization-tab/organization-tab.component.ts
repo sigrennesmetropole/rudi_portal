@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {OrganizationBean} from 'micro_service_modules/strukture/api-strukture';
 import {BreakpointObserverService, NgClassObject} from '@core/services/breakpoint-observer.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
 import {UserService} from '@core/services/user.service';
 import {SearchOrganizationsService} from '@shared/list-organization-card/search-organizations.service';
+import {OrganizationBean} from 'micro_service_modules/strukture/api-strukture';
 import {Observable} from 'rxjs';
 
 
@@ -35,8 +35,8 @@ export class OrganizationTabComponent implements OnInit, OnDestroy {
         this.itemsPerPage = 9;
         this.organizations$ = searchOrganizationsService.organizations$;
         this.totalOrganizations$ = searchOrganizationsService.totalOrganizations$;
-        this.datasetCountLoading$ = searchOrganizationsService.datasetCountLoading;
-        this.projectCountLoading$ = searchOrganizationsService.projectsCountLoading;
+        this.datasetCountLoading$ = searchOrganizationsService.datasetCountLoading$;
+        this.projectCountLoading$ = searchOrganizationsService.projectsCountLoading$;
     }
 
     get paginationControlsNgClass(): NgClassObject {
@@ -61,18 +61,18 @@ export class OrganizationTabComponent implements OnInit, OnDestroy {
      */
     public getMyOrganisations(): void {
         this.utilisateurService.getConnectedUser()
-            .subscribe(
-                (user) => {
+            .subscribe({
+                next: (user) => {
                     this.searchOrganizationsService.initSubscriptions(user?.uuid, this.itemsPerPage);
                     this.isLoading = false;
                     this.errorLoading = false;
                 },
-                (e) => {
+                error: (e) => {
                     console.error(e);
                     this.isLoading = false;
                     this.errorLoading = true;
                 }
-            );
+            });
     }
 
     /**

@@ -27,4 +27,6 @@ public class OrganizationMembersSearchCriteria {
 
 	private UUID userUuid;
 
+	private Integer limit;
+
 }

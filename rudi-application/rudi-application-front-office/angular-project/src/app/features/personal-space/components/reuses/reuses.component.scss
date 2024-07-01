@@ -24,25 +24,20 @@
 ::ng-deep {
     table {
         width: 100%;
-        font-family: OpenSans, sans-serif;
-
-        * {
-            font-family: OpenSans, sans-serif;
-        }
 
         tr {
             height: unset;
             cursor: pointer;
 
             &:focus, &:active, &:hover {
-                background-color: $selected-table-row;
+                background-color: var(--selected-table-row);
             }
         }
 
         th {
             font-weight: 600;
             font-size: 13px;
-            color: $primary-text;
+            color: var(--primary-text);
             padding: 12px 24px;
 
             mat-icon {

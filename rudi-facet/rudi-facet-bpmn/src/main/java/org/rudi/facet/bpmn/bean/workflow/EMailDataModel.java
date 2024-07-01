@@ -87,6 +87,15 @@ public class EMailDataModel<E extends AssetDescriptionEntity, A extends Assignme
 		localDatas.put(name, value);
 	}
 
+	public void addAllData(Map<String, Object> data){
+		if(data != null) {
+			if (localDatas == null) {
+				localDatas = new HashMap<>();
+			}
+			localDatas.putAll(data);
+		}
+	}
+
 	@Override
 	protected void fillDataModel(Map<String, Object> data) {
 		data.put("assignmentHelper", assignmentHelper);

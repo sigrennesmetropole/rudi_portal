@@ -1,5 +1,3 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 @import "pagination";
 
@@ -19,14 +17,13 @@
 }
 
 .search-count {
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.44;
     letter-spacing: normal;
-    color: $secondary-text;
+    color: var(--secondary-text);
 }
 
 .list-headers {
@@ -36,6 +33,6 @@
 
 .project-container {
     min-height: 550px; // taille minimale pour afficher les popover sans qu'elles soient tronquées
-    padding-top: $padding-top;
+    padding-top: var(--padding-top);
 }
 

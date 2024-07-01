@@ -9,15 +9,14 @@
 }
 
 .titre-jdd {
-    font-family: OpenSans, sans-serif;
     font-size: 15px;
     font-weight: bold;
     text-align: left;
-    color: $primary-color;
+    color: var(--primary-color);
 }
 
 .fake-btn-status {
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     border-radius: 14px;
     white-space: nowrap;
     padding: 5px 18px;
@@ -32,7 +31,6 @@
 }
 
 .table-title-style {
-    font-family: OpenSans, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: left;
@@ -43,10 +41,9 @@
 }
 
 .table-header {
-    font-family: OpenSans, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: $primary-text;
+    color: var(--primary-text);
     //overide the mat table margin css
     padding: 0px !important
 }

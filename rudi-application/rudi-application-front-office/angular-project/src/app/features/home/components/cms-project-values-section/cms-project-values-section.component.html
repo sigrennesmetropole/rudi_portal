@@ -1,0 +1,15 @@
+<div class="project-values-section-container" *ngIf="displayComponent">
+    <div class="project-values-background"></div>
+    <div class="project-values-container">
+        <div class="project-values-text-container">
+            <h1 class="project-values-title">{{ this.cmsProjectValuesDescription.title1 }}</h1>
+            <h2 class="project-values-subtitle">{{ this.cmsProjectValuesDescription.title2 }}</h2>
+            <p class="project-values-description">{{ this.cmsProjectValuesDescription.description }}</p>
+        </div>
+        <div class="project-values-row">
+            <div *ngFor="let projectValue of projectValues" [innerHTML]="projectValue"
+                 [ngClass]="'project-values'"></div>
+        </div>
+    </div>
+</div>
+

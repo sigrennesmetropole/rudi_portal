@@ -15,14 +15,16 @@ export function appInitializerFactory(translate: TranslateService, injector: Inj
         locationInitialized.then(() => {
             const langToSet = 'fr';
             translate.setDefaultLang('fr');
-            translate.use(langToSet).subscribe(() => {
-                TRANSLATE_SERVICE_IS_READY.next(void 0);
-            }, err => {
-                console.error(`Problem with '${langToSet}' language initialization.'`);
-                TRANSLATE_SERVICE_IS_READY.error(err);
-            }, () => {
-                resolve(null);
-                TRANSLATE_SERVICE_IS_READY.complete();
+            translate.use(langToSet).subscribe({
+                next: () => TRANSLATE_SERVICE_IS_READY.next(void 0),
+                error: (err) => {
+                    console.error(`Problem with '${langToSet}' language initialization.'`);
+                    TRANSLATE_SERVICE_IS_READY.error(err);
+                },
+                complete: () => {
+                    resolve(null);
+                    TRANSLATE_SERVICE_IS_READY.complete();
+                }
             });
         });
     });

@@ -10,11 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.ehcache.Cache;
 import org.rudi.common.core.DocumentContent;
 
-
 public abstract class ResourcesHelper {
 	protected abstract String getBasePackage();
+
 	protected abstract String getBaseDirectory();
+
 	protected abstract Cache<String, DocumentContent> getCache();
+
 	private final BidiMap<String, String> resourceMapping = new DualHashBidiMap<>();
 
 	public DocumentContent loadResources(String resourceUuid) throws IOException {
@@ -22,12 +24,12 @@ public abstract class ResourcesHelper {
 		String resourceName = resourceMapping.get(resourceUuid);
 
 		// Si la ressourceMapping ne contient pas de ressource de ce nom, on ne retourne rien.
-		if(StringUtils.isBlank(resourceName)){
+		if (StringUtils.isBlank(resourceName)) {
 			return result;
 		}
 
 		//Si la ressource est déjà dans le cache, on la retourne directement.
-		if(getCache().containsKey(resourceUuid)){
+		if (getCache().containsKey(resourceUuid)) {
 			// Récupération de la ressource dans le cache
 			result = getCache().get(resourceUuid);
 
@@ -35,12 +37,12 @@ public abstract class ResourcesHelper {
 			result.closeStream();
 
 			// Vérification de la présence du fichier temporaire avant de le retourner
-			if(result.getFile().exists() && result.getFile().isFile()){
+			if (result.getFile().exists() && result.getFile().isFile()) {
 				return result;
 			}
 		}
 
-		String uri = resourceName.replace("../","/");
+		String uri = resourceName.replace("../", "/");
 		File f = new File(getBaseDirectory(), uri);
 		if (f.exists() && f.isFile()) {
 			String extension = FilenameUtils.getExtension(f.getName());
@@ -53,9 +55,9 @@ public abstract class ResourcesHelper {
 		return result;
 	}
 
-	public String fillResourceMapping(String value, String key){
+	public String fillResourceMapping(String value, String key) {
 		// Si la valeur n'est pas déjà présente dans la Map on la rajoute à l'aide de la clé passée en paramètre.
-		if(!resourceMapping.containsValue(value)){
+		if (!resourceMapping.containsValue(value)) {
 			// Map Bidirectionelle : key->value && value->key
 			resourceMapping.put(key, value);
 		}
@@ -63,4 +65,6 @@ public abstract class ResourcesHelper {
 		// Soit la clé insérée précédemment, soit celle déjà présente.
 		return resourceMapping.getKey(value);
 	}
+
+
 }

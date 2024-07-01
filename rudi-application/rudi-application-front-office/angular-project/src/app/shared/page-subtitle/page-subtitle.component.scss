@@ -1,9 +1,8 @@
-@import "variables-rudi";
 @import "common-style";
 
 .subtitle-container {
     text-align: center;
-    color: $primary-text;
+    color: var(--primary-text);
     font-size: 16px;
     line-height: 1.5;
 }

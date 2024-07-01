@@ -3,22 +3,41 @@
 [#assign lang = ctx.getParameter('lang')!"fr"]
 [#assign newsContent = ctx.newsContent!]
 
-[#-------------- RENDERING --------------]
-
+[#-------------- RENDERING ----------------]
 [#if newsContent?has_content]
-<div class="news-container">
-        <h2 class="news-title1">${localized(newsContent,"title1",lang)!}</h2>
-        <h3 class="news-title2">${localized(newsContent,"title2",lang)!}</h3>
+    <div class="news-container">
+        <link rel="stylesheet" type="text/css" href="${ctx.contextPath}/.resources/rudi/webresources/css/shared.css"/>
+        <link rel="stylesheet" type="text/css" href="${ctx.contextPath}/.resources/rudi/webresources/css/news.css"/>
 
         [#assign asset = damfn.getAsset(newsContent.image2)!]
         [#if asset?has_content]
-        	[#assign url=damfn.getRendition(asset, "small-square").getLink()!]
+            [#assign image_url=damfn.getRendition(asset, "small-square").getLink()!]
+            [#assign image_caption=damfn.getAssetMap(asset).title!]
         [#else]
-        	[#assign url=""]
+            [#assign image_url=""]
+            [#assign image_caption=""]
         [/#if]
 
-        <div class="news-body" style="background-image: url(${url});" >
-                ${localized(newsContent,"body",lang)!}
+        [#assign newsContentNode = cmsfn.asJCRNode(newsContent)!]
+        [#if newsContentNode?has_content]
+            [#assign id = newsContent["jcr:uuid"]!]
+            [#assign lastModifiedProperty = newsContentNode.getProperty("mgnl:lastModified")!]
+            [#assign date = lastModifiedProperty.getDate()!]
+        [/#if]
+
+        <div class="title1-detail">${localized(newsContent,"title1",lang)}</div>
+        <div class="title2-detail">${localized(newsContent,"title2",lang)}</div>
+
+        <div class="modified-at">${localized(newsContent,"modified",lang)} ${date?string("dd.MM.yyyy")}</div>
+
+        <div class="img-container-detail">
+            <img class="img-detail" src="${image_url!}"/>
+            <div class="img-caption-detail">${image_caption!}</div>
         </div>
-</div>
+
+        <div class="content-detail">
+            ${localized(newsContent,"body",lang)}
+        </div>
+
+    </div>
 [/#if]

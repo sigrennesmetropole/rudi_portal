@@ -6,17 +6,14 @@ import {CoreModule} from '@core/core.module';
 import {NgbPopoverModule} from '@ng-bootstrap/ng-bootstrap';
 import {BotDetectCaptchaModule} from '@shared/angular-captcha/botdetect-captcha.module';
 import {ClipboardFieldComponent} from '@shared/clipboard-field/clipboard-field.component';
+import {ErrorPageComponent} from '@shared/error-page/error-page.component';
 import {ListOrganizationCardComponent} from '@shared/list-organization-card/list-organization-card.component';
 import {OrganizationCardComponent} from '@shared/organization-card/organization-card.component';
 import {ToStringPipe} from '@shared/pipes/to-string.pipe';
 import {DatasetTableComponent} from '@shared/project-datasets-tables/dataset-table/dataset-table.component';
-import {
-    ProjectMainInformationDateComponent
-} from '@shared/project-main-informations/project-main-information-date/project-main-information-date.component';
-import {
-    ProjectMainInformationLabelComponent
-} from '@shared/project-main-informations/project-main-information-label/project-main-information-label.component';
+
 import {SearchBoxComponent} from '@shared/search-box/search-box.component';
+import {SocialMediaSectionComponent} from '@shared/social-media-section/social-media-section.component';
 import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
 import {WorkflowFormDialogComponent} from '@shared/workflow-form-dialog/workflow-form-dialog.component';
 import {IsSectionDisplayedPipe} from '@shared/workflow-form/pipes/is-section-displayed.pipe';
@@ -72,7 +69,6 @@ import {OpenDatasetTableComponent} from './project-datasets-tables/open-dataset-
 import {RestrictedDatasetTableComponent} from './project-datasets-tables/restricted-dataset-table/restricted-dataset-table.component';
 import {ProjectHeadingComponent} from './project-heading/project-heading.component';
 import {ProjectListComponent} from './project-list/project-list.component';
-import {ProjectMainInformationsComponent} from './project-main-informations/project-main-informations.component';
 import {RadioListComponent} from './radio-list/radio-list.component';
 import {ResetPasswordErrorBoxComponent} from './reset-password-error-box/reset-password-error-box.component';
 import {RudiCaptchaComponent} from './rudi-captcha/rudi-captcha.component';
@@ -97,9 +93,11 @@ import {WorkflowFieldComponent} from './workflow-field/workflow-field.component'
 import {WorkflowFormSubmitSuccessComponent} from './workflow-form-submit-success/workflow-form-submit-success.component';
 import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
 
+
 @NgModule({
     declarations:
         [
+            ErrorPageComponent,
             OrganizationCardComponent,
             ListOrganizationCardComponent,
             SearchBoxComponent,
@@ -142,9 +140,6 @@ import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
             WorkflowFormDialogComponent,
             CopiedButtonComponent,
             PasswordComponent,
-            ProjectMainInformationsComponent,
-            ProjectMainInformationDateComponent,
-            ProjectMainInformationLabelComponent,
             ProjectHeadingComponent,
             DatasetsInfosComponent,
             WorkInProgressComponent,
@@ -184,7 +179,8 @@ import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
             ClipboardFieldComponent,
             IsSectionDisplayedPipe,
             IsSectionOnlyHelpPipe,
-            RudiSwiperComponent
+            RudiSwiperComponent,
+            SocialMediaSectionComponent,
         ],
     imports: [
         CommonModule,
@@ -194,9 +190,10 @@ import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
         MatAutocompleteModule,
         BotDetectCaptchaModule,
         MatTableModule,
-        NgbPopoverModule
+        NgbPopoverModule,
     ],
     exports: [
+        ErrorPageComponent,
         ProjectCardComponent,
         OrganizationCardComponent,
         ListOrganizationCardComponent,
@@ -240,9 +237,6 @@ import {WorkflowFormComponent} from './workflow-form/workflow-form.component';
         WorkflowFormDialogComponent,
         CopiedButtonComponent,
         PasswordComponent,
-        ProjectMainInformationsComponent,
-        ProjectMainInformationLabelComponent,
-        ProjectMainInformationDateComponent,
         ProjectHeadingComponent,
         DatasetsInfosComponent,
         WorkInProgressComponent,

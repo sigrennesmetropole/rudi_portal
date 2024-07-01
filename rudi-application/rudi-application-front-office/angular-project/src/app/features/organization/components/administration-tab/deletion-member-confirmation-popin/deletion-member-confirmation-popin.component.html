@@ -1,27 +1,31 @@
-<div id="dialog-content">
+<div id="dialog-container">
     <mat-dialog-content>
-        <div class="dialog-header-close-button" fxLayoutAlign="end center">
+        <div class="dialog-cross-button">
             <button mat-icon-button (click)="handleClose()">
                 <mat-icon svgIcon="icon-close" class="icon-close"></mat-icon>
             </button>
         </div>
-        <div class="blue-theme text-alignement"
-             [translate]="'metaData.administrationTab.membersTable.deletePopin.title'"></div>
-        <div
-            class="text-alignement description"> {{'metaData.administrationTab.membersTable.deletePopin.text' | translate}}</div>
-        <div class="text-alignement description0">
-            {{'metaData.administrationTab.membersTable.deletePopin.text2' | translate}}
+        <div class="dialog-content">
+            <div class="dialog-title">
+                {{'metaData.administrationTab.membersTable.deletePopin.title' | translate}}
+            </div>
+            <div
+                class="dialog-description"> {{'metaData.administrationTab.membersTable.deletePopin.text' | translate}}</div>
+            <div class="dialog-description">
+                {{'metaData.administrationTab.membersTable.deletePopin.text2' | translate}}
+            </div>
+            <div class="dialog-description">
+                {{'metaData.administrationTab.membersTable.deletePopin.text3' | translate}}
+            </div>
+
+            <mat-dialog-actions class="dialog-buttons">
+                <button class="secondary-raised-button" mat-raised-button [mat-dialog-close]="null">
+                    <span>{{'personalSpace.project.tabs.deletion.confirmationPopup.cancel'| translate}}</span>
+                </button>
+                <button class="primary-raised-button" mat-raised-button (click)="validate()">
+                    <span>{{'personalSpace.project.tabs.deletion.confirmationPopup.validate'| translate}}</span>
+                </button>
+            </mat-dialog-actions>
         </div>
-        <div class="text-alignement description0">
-            {{'metaData.administrationTab.membersTable.deletePopin.text3' | translate}}
-        </div>
-        <mat-dialog-actions class="d-flex justify-content-between dialog-footer-button">
-            <button class="buttons mat-stroked-button btn dialog-cancel" mat-raised-button [mat-dialog-close]="null">
-                <span>{{'personalSpace.project.tabs.deletion.confirmationPopup.cancel'| translate}}</span>
-            </button>
-            <button class="buttons mat-stroked-button btn dialog-validate" mat-raised-button (click)="validate()">
-                <span>{{'personalSpace.project.tabs.deletion.confirmationPopup.validate'| translate}}</span>
-            </button>
-        </mat-dialog-actions>
     </mat-dialog-content>
 </div>

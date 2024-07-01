@@ -9,8 +9,11 @@ model:
   nodeType: lib:term
   properties:
     - name: link
-      type: localizedmessage    
-      multiple: true 
+      type: localizedmessage
+      multiple: true
+    - name: modified
+      multiple: true
+      type: localizedmessage
     - name: title
       type: localizedmessage
       multiple: true
@@ -32,9 +35,9 @@ model:
             - value: de
               label: Deutschland
             - value: it
-              label: Italia                            
-        - name: message 
-    - name: localizedrichtext     
+              label: Italia
+        - name: message
+    - name: localizedrichtext
       properties:
         - name: locale
           options:
@@ -46,5 +49,5 @@ model:
               label: Deutschland
             - value: it
               label: Italia
-        - name: message  
+        - name: message
           type: richText          

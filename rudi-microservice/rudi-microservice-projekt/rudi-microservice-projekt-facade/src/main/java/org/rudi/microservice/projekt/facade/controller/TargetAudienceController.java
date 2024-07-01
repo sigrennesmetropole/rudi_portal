@@ -31,18 +31,18 @@ public class TargetAudienceController implements TargetAudienceApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
-	public ResponseEntity<Void> deleteTargetAudience(UUID uuid) throws Exception {
+	public ResponseEntity<Void> deleteTargetAudience(UUID uuid) {
 		targetAudienceService.deleteTargetAudience(uuid);
 		return ResponseEntity.noContent().build();
 	}
 
 	@Override
-	public ResponseEntity<TargetAudience> getTargetAudience(UUID uuid) throws Exception {
+	public ResponseEntity<TargetAudience> getTargetAudience(UUID uuid) {
 		return ResponseEntity.ok(targetAudienceService.getTargetAudience(uuid));
 	}
 
 	@Override
-	public ResponseEntity<PagedTargetAudienceList> searchTargetAudiences(Integer limit, Integer offset, String order) throws Exception {
+	public ResponseEntity<PagedTargetAudienceList> searchTargetAudiences(Integer limit, Integer offset, String order) {
 		val searchCriteria = new TargetAudienceSearchCriteria();
 		val pageable = utilPageable.getPageable(offset, limit, order);
 		val page = targetAudienceService.searchTargetAudiences(searchCriteria, pageable);
@@ -55,7 +55,7 @@ public class TargetAudienceController implements TargetAudienceApi {
 
 	@Override
 	@PreAuthorize("hasAnyRole(" + ADMINISTRATOR + ")")
-	public ResponseEntity<Void> updateTargetAudience(TargetAudience targetAudience) throws Exception {
+	public ResponseEntity<Void> updateTargetAudience(TargetAudience targetAudience) throws IllegalArgumentException {
 		targetAudienceService.updateTargetAudience(targetAudience);
 		return ResponseEntity.noContent().build();
 	}

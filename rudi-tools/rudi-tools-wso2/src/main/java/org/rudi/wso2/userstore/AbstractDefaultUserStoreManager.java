@@ -68,7 +68,7 @@ public abstract class AbstractDefaultUserStoreManager extends AbstractUserStoreM
 
 	protected static final String NULL_CONNECTION_MESSAGE = "null connection";
 
-	protected static final Log LOGGER = LogFactory.getLog(RudiUserStoreManager.class);
+	protected static final Log LOGGER = LogFactory.getLog(AbstractDefaultUserStoreManager.class);
 
 	protected static final String QUERY_FILTER_STRING_ANY = STAR;
 	protected static final String SQL_FILTER_STRING_ANY = PERCENT;

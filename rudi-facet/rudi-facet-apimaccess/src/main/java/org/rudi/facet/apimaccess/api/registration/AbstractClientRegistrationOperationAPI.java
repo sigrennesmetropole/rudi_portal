@@ -14,10 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class AbstractClientRegistrationOperationAPI<S extends ClientRegistrationResponse> {
@@ -42,8 +42,8 @@ public abstract class AbstractClientRegistrationOperationAPI<S extends ClientReg
 	 */
 	@Nonnull
 	public S getRegistration(String username, String password) throws SSLException, GetClientRegistrationException {
-		final var webClient = buildWebClient();
-		final var mono = webClient.get()
+		final WebClient localWebClient = buildWebClient();
+		final var mono = localWebClient.get()
 				.uri(uriBuilder -> uriBuilder.port(properties.getPort()).path(getRegistrationPath())
 						.queryParam(RegistrationRequestV11.CLIENT_NAME, username).build())
 				.headers(httpHeaders -> httpHeaders.setBasicAuth(username, password)).exchange()
@@ -66,8 +66,8 @@ public abstract class AbstractClientRegistrationOperationAPI<S extends ClientReg
 
 	public S register(String username, String password, RegistrationRequest requestPayload)
 			throws SSLException, BuildClientRegistrationException {
-		final var webClient = buildWebClient();
-		final var mono = webClient.post()
+		final WebClient localWebClient = buildWebClient();
+		final var mono = localWebClient.post()
 				.uri(uriBuilder -> uriBuilder.port(properties.getPort()).path(getRegistrationPath()).build())
 				.headers(httpHeaders -> httpHeaders.setBasicAuth(username, password))
 				.contentType(MediaType.APPLICATION_JSON).body(Mono.just(requestPayload), requestPayload.getClass())

@@ -10,12 +10,33 @@ subApps:
     form:
       properties:
         link:
-          rows: 1
-          maxLength: 32
-          required: true
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                maxLength: 256        
+                required: true
         title:
-          rows: 1
-          maxLength: 256
-          required: true
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                maxLength: 256
+                required: true
         body:
-          rows: 20
+          field:
+            properties:
+              locale:
+                required: true
+              message:
+                $type: richTextField
+                required: true
+                height: 700
+                images: true
+                tables: true
+                alignment: true
+                source: true
+                lists: true
+                configJsFile: /.resources/rudi/webresources/ckeditor/config-magnolia-extended.js    

@@ -1,5 +1,3 @@
-@import "colors";
-@import "variables-rudi";
 @import "common-style";
 @import "responsive";
 
@@ -10,7 +8,7 @@
 //****** Style mat-menu du banner *******
 .menu-libelle {
     font-size: 15px;
-    color: $primary-text;
+    color: var(--primary-text);
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
@@ -26,9 +24,9 @@
     width: 191px;
     height: 40px;
     text-align: center;
-    color: $secondary-color;
+    color: var(--secondary-color);
     border-radius: 3px;
-    background-color: $focus;
+    background-color: var(--focus);
     font-weight: 500;
     font-stretch: normal;
     font-style: normal;
@@ -36,7 +34,7 @@
 }
 
 .btn-download-format {
-    background-color: $blocks-and-menus-outline;
+    background-color: var(--blocks-and-menus-outline);
 }
 
 //****** Fin Style mat-menu du banner *******
@@ -55,7 +53,7 @@
         height: 120px;
         align-items: center;
         border-radius: 4px;
-        border: solid 0.9px $blocks-and-menus-outline;
+        border: solid 0.9px var(--blocks-and-menus-outline);
         margin-left: 80px;
     }
 
@@ -78,7 +76,7 @@
         &-lg {
             border-radius: 6px;
             padding: 30px 24px 28px 30px;
-            border: solid 1px $blocks-and-menus-outline;
+            border: solid 1px var(--blocks-and-menus-outline);
         }
     }
 
@@ -120,12 +118,12 @@
     }
 
     .banner-card {
-        background-color: $banner-solid-color;
+        background-color: var(--banner-solid-color);
         height: 60px;
         padding: 8px 80px;
 
         .icon-syle {
-            color: $primary-text-light;
+            color: var(--primary-text-light);
         }
 
         .icon-information {
@@ -145,8 +143,8 @@
         /// Bouton dans la bannière
         button {
             @extend .button;
-            background-color: $primary-color;
-            color: $banner-solid-color;
+            background-color: var(--primary-color);
+            color: var(--banner-solid-color);
             font-weight: 600;
             padding: 7px 25px 7px 20px;
             line-height: 1.84rem;
@@ -161,11 +159,11 @@
             }
 
             &:not([disabled]):hover {
-                background-color: $focus;
-                color: $secondary-color;
+                background-color: var(--focus);
+                color: var(--secondary-color);
 
                 mat-icon {
-                    color: $secondary-color;
+                    color: var(--secondary-color);
                 }
             }
 
@@ -181,7 +179,7 @@
 
         .banner-btn-download:hover {
             .icon-syle {
-                color: $secondary-color;
+                color: var(--secondary-color);
             }
         }
 
@@ -202,7 +200,7 @@
             width: 18px;
             vertical-align: middle;
             font-size: 30px;
-            color: $primary-text-light;
+            color: var(--primary-text-light);
         }
 
         .card-title {
@@ -256,11 +254,11 @@
 
         .type-licence {
             padding: 15px 0 15px 0;
-            border-top: 1px solid $blocks-and-menus-outline;
-            border-bottom: 1px solid $blocks-and-menus-outline;
+            border-top: 1px solid var(--blocks-and-menus-outline);
+            border-bottom: 1px solid var(--blocks-and-menus-outline);
 
             a {
-                color: $focus !important;
+                color: var(--focus) !important;
                 text-decoration: underline;
             }
 
@@ -279,8 +277,8 @@
             padding: 8px 11px 0 11px;
             height: 40px;
             border-radius: 4px;
-            border: solid 1px $blocks-and-menus-outline;
-            background-color: $banner-solid-color;
+            border: solid 1px var(--blocks-and-menus-outline);
+            background-color: var(--banner-solid-color);
 
             .label-date-publication {
                 font-size: 12px;
@@ -318,7 +316,7 @@
             height: 70px;
             padding: 10px 4px 10px 4px;
             border-radius: 3.4px;
-            border: solid 0.9px $blocks-and-menus-outline;
+            border: solid 0.9px var(--blocks-and-menus-outline);
             justify-content: center;
         }
 
@@ -381,7 +379,7 @@
             display: none;
 
             &-title {
-                border-bottom: 1px solid $blocks-and-menus-outline;
+                border-bottom: 1px solid var(--blocks-and-menus-outline);
             }
         }
 
@@ -418,8 +416,6 @@
             padding-top: 21px;
 
             &-header {
-                padding-left: 15px;
-                padding-right: 15px;
 
                 button {
                     margin-top: 15px;
@@ -457,19 +453,16 @@
 
 }
 
-@mixin cards-margin-horizontal {
-    margin-left: -$bootstrap-gutter;
-    margin-right: -$bootstrap-gutter;
-}
-
 .banner-reuses {
     margin-top: 80px;
-    background-color: $banner-solid-color;
-    padding: 65px 95px 43px 95px;
+    background-color: var(--banner-solid-color);
+    padding: 65px 15px 43px 15px;
     min-height: 360px; // taille minimale pour afficher les popover sans qu'elles soient tronquées
 
     &-header {
-        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
 
         h2 {
             margin-bottom: 0;
@@ -478,34 +471,27 @@
     }
 
     .blue-theme {
-        font-family: OpenSans, sans-serif;
         font-size: 26px;
         font-weight: bold;
         line-height: 1.08;
     }
 
     .button {
-        background-color: $primary-color;
-        color: $banner-solid-color;
+        background-color: var(--primary-color);
+        color: var(--banner-solid-color);
         font-weight: 600;
         padding: 7px 22px 7px 22px;
         line-height: 1.84rem;
     }
 
     .button:hover {
-        background-color: $focus;
-        color: $secondary-color;
+        background-color: var(--focus);
+        color: var(--secondary-color);
     }
 
     &-cards {
         margin-top: 22px;
-        @include cards-margin-horizontal;
-
-        @include sm() {
-            padding: 0 15px;
-        }
     }
-
 }
 
 .metadata-theme-lg {
@@ -526,9 +512,8 @@ img {
     margin-top: 15px;
 
     .nav-link {
-        color: $black !important;
+        color: var(--black) !important;
         cursor: pointer;
-        font-family: Helvetica, serif;
         font-size: 14px;
     }
 }

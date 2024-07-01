@@ -1,5 +1,3 @@
-@import "variables-rudi";
-@import "colors";
 @import "common-style";
 @import "bootstrap/scss/bootstrap-grid";
 
@@ -17,13 +15,13 @@
 
 .rudi-panel-title {
     font-size: 16px;
-    color: $primary-text;
+    color: var(--primary-text);
     font-weight: 600;
 }
 
 .rudi-panel-data-language {
     border-radius: 4px;
-    border: solid 1px $blocks-and-menus-outline;
+    border: solid 1px var(--blocks-and-menus-outline);
 
     .rudi-panel-data-data-language {
         font-size: 12px;
@@ -31,7 +29,7 @@
         font-stretch: normal;
         font-style: normal;
         letter-spacing: normal;
-        color: $primary-text;
+        color: var(--primary-text);
     }
 
     .rudi-panel-language-value {
@@ -51,7 +49,7 @@
 .rudi-panel-available-count {
     font-size: 15px;
     font-weight: 600;
-    color: $primary-color;
+    color: var(--primary-color);
     margin-left: -20px;
 }
 
@@ -63,11 +61,11 @@
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: $primary-color
+    color: var(--primary-color)
 }
 
 .rudi-bloc-access-condition {
-    color: $focus !important;
+    color: var(--focus) !important;
 }
 
 
@@ -86,7 +84,7 @@
 
 .rudi-panel-body {
     font-size: 15px;
-    color: $primary-text;
+    color: var(--primary-text);
 
     &.panel-provider {
 
@@ -103,10 +101,10 @@
 .rudi-panel-card {
     margin-bottom: 12px;
     font-size: 12px;
-    color: $primary-text;
+    color: var(--primary-text);
     padding: 11px 16px;
     border-radius: 6px;
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
 
     &:first-child {
         margin-top: 10px;
@@ -139,6 +137,11 @@
 }
 
 ::ng-deep {
+    .mat-expansion-panel {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
     .stockage-expansion-panel .rudi-expansion-panel {
         .stockage-panel {
             margin-bottom: 12px;
@@ -168,17 +171,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: $primary-text-light;
+            color: var(--primary-text-light);
 
             &::after {
-                color: $primary-text-light;
+                color: var(--primary-text-light);
             }
         }
 
         .rudi-panel-table {
             width: 100%;
-            border-left: 1px solid $blocks-and-menus-outline;
-            border-right: 1px solid $blocks-and-menus-outline;
+            border-left: 1px solid var(--blocks-and-menus-outline);
+            border-right: 1px solid var(--blocks-and-menus-outline);
         }
 
         .mat-expansion-panel-body {
@@ -191,13 +194,13 @@
 .rudi-mat-expansion-panel-source {
     height: 40px;
     border-radius: 6px;
-    border: solid 1px $blocks-and-menus-outline;
-    background-color: $banner-solid-color;
+    border: solid 1px var(--blocks-and-menus-outline);
+    background-color: var(--banner-solid-color);
     padding: 0 20px 3px 17px;
 
     .mat-expansion-indicator:hover, .mat-expansion-indicator:focus, .mat-expansion-indicator.open {
         width: 30px;
-        border: 1.6px solid $focus;
+        border: 1.6px solid var(--focus);
         border-radius: 15px;
         height: 30px;
         display: flex;
@@ -245,23 +248,23 @@ table td {
 }
 
 .rudi-panel-table-header {
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
     padding: 20px;
-    color: $primary-text;
+    color: var(--primary-text);
     font-size: 15px;
     font-weight: 600;
 }
 
 .rudi-panel-tbody-border {
-    border-left: 1px solid $blocks-and-menus-outline;
-    border-right: 1px solid $blocks-and-menus-outline;
-    border-bottom: 1px solid $blocks-and-menus-outline;
+    border-left: 1px solid var(--blocks-and-menus-outline);
+    border-right: 1px solid var(--blocks-and-menus-outline);
+    border-bottom: 1px solid var(--blocks-and-menus-outline);
 }
 
 .rudi-panel-source-download {
-    background-color: $primary-text-light;
+    background-color: var(--primary-text-light);
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
     height: 40px;
@@ -277,16 +280,16 @@ table td {
         font-stretch: normal;
         font-style: normal;
         letter-spacing: normal;
-        color: $secondary-color;
+        color: var(--secondary-color);
     }
 }
 
 .rudi-panel-source-download:hover {
-    background-color: $focus;
-    color: $secondary-color;
+    background-color: var(--focus);
+    color: var(--secondary-color);
 
     .source-download-libelle:hover {
-        color: $secondary-color;
+        color: var(--secondary-color);
     }
 }
 
@@ -313,13 +316,13 @@ table td {
 
 .type-licence-libelle {
     font-size: 14px;
-    color: $primary-color;
+    color: var(--primary-color);
     text-decoration: underline;
 }
 
 .dataset-info-file-structure {
     text-decoration: underline;
-    color: $focus !important;
+    color: var(--focus) !important;
 
     a {
         background-color: transparent;

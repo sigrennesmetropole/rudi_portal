@@ -1,6 +1,7 @@
 package org.rudi.facet.apimaccess.api;
 
 import org.junit.jupiter.api.Test;
+import org.rudi.common.core.util.ContentTypeUtils;
 import org.springframework.http.MediaType;
 
 import static org.rudi.common.test.RudiAssertions.assertThat;

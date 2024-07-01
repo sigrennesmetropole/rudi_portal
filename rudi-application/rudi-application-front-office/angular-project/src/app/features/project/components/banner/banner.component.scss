@@ -1,6 +1,4 @@
 @import "common-style";
-@import "variables-rudi";
-@import "colors";
 
 .rudi-filters-toolbar {
     width: auto !important;
@@ -8,12 +6,12 @@
     left: 42%!important;
     right: 50%;
     margin: 42px -50vw 35px -50vw;
-    background-color: $banner-solid-color;
+    background-color: var(--banner-solid-color);
 
 
     :focus-visible {
-        outline: $focus solid 1px;
-        color: $focus;
+        outline: var(--focus) solid 1px;
+        color: var(--focus);
     }
 
     .popover-position {

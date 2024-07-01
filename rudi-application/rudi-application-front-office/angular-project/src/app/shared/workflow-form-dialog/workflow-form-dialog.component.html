@@ -1,40 +1,35 @@
-<mat-icon
-    class="icon-close"
-    svgIcon="icon-close"
-    [mat-dialog-close]="null"
-    (click)="onClickClose()"
-></mat-icon>
+<div id="dialog-container">
+    <mat-dialog-content>
+        <div class="dialog-cross-button">
+            <button mat-icon-button (click)="onClickClose()">
+                <mat-icon svgIcon="icon-close" class="cross-button"></mat-icon>
+            </button>
+        </div>
 
-<mat-dialog-content>
-    <span class="dialog-title">{{dialogData.title}}</span>
+        <div class="dialog-content">
+            <div class="dialog-title">{{dialogData.title}}</div>
 
-    <p class="step-required-information" *ngIf="hasRequiredFields">
-        <span class="required-symbol">*</span>
-        {{'common.requiredInformation' | translate}}
-    </p>
+            <p class="step-required-information" *ngIf="hasRequiredFields">
+                <span class="required-symbol">*</span>
+                {{'common.requiredInformation' | translate}}
+            </p>
+            <app-workflow-form
+                #workflowForm
+                [workflowForm]="dialogData.form"
+                (submitEvent)="handleFormSubmit()"
+            ></app-workflow-form>
 
-    <app-workflow-form
-        #workflowForm
-        [workflowForm]="dialogData.form"
-        (submitEvent)="handleFormSubmit()"
-    ></app-workflow-form>
 
-    <mat-dialog-actions class="d-flex justify-content-between">
-        <button
-            mat-stroked-button
-            class="buttons mat-stroked-button btn dialog-cancel"
-            (click)="onClickClose()"
-        >
-            <span>{{'popup.cancel'|translate}}</span>
-        </button>
+            <mat-dialog-actions class="dialog-buttons">
+                <button class="secondary-raised-button" mat-raised-button (click)="onClickClose()">
+                    <span>{{'popup.cancel'|translate}}</span>
+                </button>
+                <button class="primary-raised-button" mat-raised-button (click)="onClickConfirm()"
+                        *ngIf="!workflowFormComponent.isReadonly">
+                    <span>{{'popup.confirm'|translate}}</span>
+                </button>
+            </mat-dialog-actions>
+        </div>
+    </mat-dialog-content>
 
-        <button
-            *ngIf="!workflowFormComponent.isReadonly"
-            mat-stroked-button
-            class="buttons mat-stroked-button btn dialog-validate"
-            (click)="onClickConfirm()"
-        >
-            <span>{{'popup.confirm'|translate}}</span>
-        </button>
-    </mat-dialog-actions>
-</mat-dialog-content>
+</div>

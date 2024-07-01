@@ -1,14 +1,13 @@
-@import "variables-rudi";
 @import "common-style";
 @import "_responsive";
 
-.header-img-container{
+.header-img-container {
 
     .header-img {
         width: 120px;
         height: 120px;
         border-radius: 4px;
-        border: solid 0.9px $blocks-and-menus-outline;
+        border: solid 0.9px var(--blocks-and-menus-outline);
         display: flex;
         align-items: center;
 
@@ -20,7 +19,12 @@
     }
 }
 
-.header-ressource-container{
+.picto {
+    min-height: 20px;
+    min-width: 20px;
+}
+
+.header-ressource-container {
     display: flex;
     margin-left: 0;
 }
@@ -34,7 +38,6 @@
 }
 
 .blue-theme {
-    font-family: OpenSans, sans-serif;
     font-size: 26px;
     font-weight: bold;
     line-height: 1.08;
@@ -48,8 +51,7 @@
 
 .dataset-icon {
     width: 25px;
-    vertical-align: text-bottom;
-    margin-right: 0.5em;
+    margin-right: 0.1rem;
 }
 
 .organization-logo {
@@ -59,10 +61,16 @@
 
 .header-metadata {
     padding-top: 20px;
-    padding-left: 80px;
-    padding-right: 80px;
     margin: 0 0 30px 0;
     display: flex;
+}
+
+.p-small {
+    padding-top: 0 !important;
+}
+
+.p-large {
+    padding-top: 0 !important;
 }
 
 @mixin mobile() {
@@ -72,7 +80,11 @@
     .header-ressource-container {
         margin-left: 0;
     }
+    .resource-title {
+        font-size: 18px;
+    }
 }
+
 @mixin desktop() {
     .header-metadata {
         flex-direction: row;

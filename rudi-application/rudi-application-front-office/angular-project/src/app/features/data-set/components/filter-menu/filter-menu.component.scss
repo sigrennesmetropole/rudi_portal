@@ -1,1 +1,38 @@
 @import "common-style";
+
+::ng-deep .rudi-select-button {
+    box-shadow: none !important;
+    color: #000000;
+    border-radius: 6px;
+    border: 1px solid var(--blocks-and-menus-outline);
+    padding-right: 15px;
+    margin-right: 12px;
+    min-width: 190px;
+
+    &.active {
+        border-color: var(--focus);
+        color: var(--focus);
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    span {
+        display: inline-block;
+        width: 100%;
+        text-align: left;
+    }
+
+    .rudi-select-arrow {
+        float: right;
+    }
+
+    .mat-badge-content {
+        text-align: center !important;
+        color: white !important;
+        background-color: var(--primary-color) !important;
+        top: -10px !important;
+        left: 94%;
+    }
+}

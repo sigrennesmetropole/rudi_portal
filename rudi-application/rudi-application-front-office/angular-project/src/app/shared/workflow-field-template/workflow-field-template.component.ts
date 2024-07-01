@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, Type, ViewContainerRef} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {WorkflowFieldDateComponent} from '@shared/workflow-field-date/workflow-field-date.component';
 import {Field, Section} from 'micro_service_modules/api-bpmn';
@@ -38,8 +38,7 @@ export class WorkflowFieldTemplateComponent implements OnInit {
     submit: EventEmitter<void> = new EventEmitter<void>();
 
     constructor(
-        public viewContainerRef: ViewContainerRef,
-        private componentFactoryResolver: ComponentFactoryResolver
+        public viewContainerRef: ViewContainerRef
     ) {
     }
 
@@ -52,8 +51,7 @@ export class WorkflowFieldTemplateComponent implements OnInit {
         viewContainerRef.clear();
 
         this.getWorkflowFieldComponentType().subscribe(componentType => {
-            const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentType);
-            const componentRef = viewContainerRef.createComponent<WorkflowFieldComponent>(componentFactory);
+            const componentRef = viewContainerRef.createComponent(componentType);
             Object.assign(componentRef.instance, {
                 formGroup: this.formGroup,
                 formControlNamePrefix: this.section.name,

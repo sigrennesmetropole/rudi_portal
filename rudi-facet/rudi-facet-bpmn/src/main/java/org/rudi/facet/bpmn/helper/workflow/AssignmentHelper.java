@@ -4,6 +4,7 @@
 package org.rudi.facet.bpmn.helper.workflow;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.rudi.facet.acl.bean.User;
 import org.rudi.facet.bpmn.entity.workflow.AssetDescriptionEntity;
@@ -19,5 +20,7 @@ public interface AssignmentHelper<E extends AssetDescriptionEntity> {
 	String computeAssignee(E assetDescription, String roleCode);
 
 	User getUserByLogin(String login);
+
+	User getUserByUuid(UUID uuid);
 
 }

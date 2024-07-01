@@ -24,15 +24,17 @@ import org.springframework.stereotype.Component;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import static org.rudi.microservice.konsult.service.constant.BeanIds.CUSTOMIZATION_DATA_CACHE;
 import static org.rudi.microservice.konsult.service.constant.BeanIds.CUSTOMIZATION_RESOURCES_CACHE;
 
 /**
  * @author FNI18300
- *
  */
 @Component
 @Slf4j
 public class CustomizationHelper extends ResourcesHelper {
+
+	private static final String CACHE_CUSTOMIZATION_DATA_KEY = "customization-data";
 
 	@Getter(AccessLevel.PROTECTED)
 	@Value("${customization.base-package:customization}")
@@ -45,6 +47,8 @@ public class CustomizationHelper extends ResourcesHelper {
 	@Getter(AccessLevel.PROTECTED)
 	private final Cache<String, DocumentContent> cache;
 
+	private final Cache<String, CustomizationDescriptionData> customizationCache;
+
 	@Value("${customization.filename:customization.json}")
 	private String customizationFilename;
 
@@ -52,10 +56,9 @@ public class CustomizationHelper extends ResourcesHelper {
 
 	private final List<KeyFigureComputer> keyFigureComputers;
 
-	private CustomizationDescriptionData customizationDescriptionData = null;
-
-	CustomizationHelper(@Qualifier(CUSTOMIZATION_RESOURCES_CACHE) Cache<String, DocumentContent> cache, List<KeyFigureComputer> keyFigureComputers, ObjectMapper objectMapper){
+	CustomizationHelper(@Qualifier(CUSTOMIZATION_RESOURCES_CACHE) Cache<String, DocumentContent> cache, @Qualifier(CUSTOMIZATION_DATA_CACHE) Cache<String, CustomizationDescriptionData> customizationCache, List<KeyFigureComputer> keyFigureComputers, ObjectMapper objectMapper) {
 		this.cache = cache;
+		this.customizationCache = customizationCache;
 		this.keyFigureComputers = keyFigureComputers;
 		this.objectMapper = objectMapper;
 	}
@@ -83,7 +86,6 @@ public class CustomizationHelper extends ResourcesHelper {
 	/**
 	 * Remplit le resourceMapping avec les valeurs receuillis dans le JSON et les remplace dans l'objet de retour par des UUIDs ou des identifiants.
 	 *
-	 *
 	 * @param data données issues de la lecture du fichier .json
 	 * @return ces mêmes data, en ayant remplacé les chemins vers les fichiers par des UUIDs
 	 */
@@ -93,27 +95,30 @@ public class CustomizationHelper extends ResourcesHelper {
 		data.setMainLogo(fillResourceMapping(data.getMainLogo(), UUID.randomUUID().toString()));
 
 		data.getHeroDescription().setLeftImage(fillResourceMapping(data.getHeroDescription().getLeftImage(), UUID.randomUUID().toString()));
-
 		data.getHeroDescription().setRightImage(fillResourceMapping(data.getHeroDescription().getRightImage(), UUID.randomUUID().toString()));
 
 		data.getKeyFiguresDescription().setKeyFiguresLogo(fillResourceMapping(data.getKeyFiguresDescription().getKeyFiguresLogo(), UUID.randomUUID().toString()));
+
+		data.getFooterDescription().getSocialNetworks().forEach(socialNetwork -> socialNetwork.setIcon(fillResourceMapping(socialNetwork.getIcon(), UUID.randomUUID().toString())));
+
+		data.getFooterDescription().setLogo(fillResourceMapping(data.getFooterDescription().getLogo(), UUID.randomUUID().toString()));
 
 		return data;
 	}
 
 	public CustomizationDescriptionData getCustomizationDescriptionData() {
-		if (customizationDescriptionData == null) {
+		if (!customizationCache.containsKey(CACHE_CUSTOMIZATION_DATA_KEY)) {
 			try {
-				customizationDescriptionData = loadCustomizationDescription();
+				customizationCache.put(CACHE_CUSTOMIZATION_DATA_KEY, loadCustomizationDescription());
 			} catch (Exception e) {
 				log.error("Failed to load customization", e);
 			}
 		}
-		return customizationDescriptionData;
+		return customizationCache.get(CACHE_CUSTOMIZATION_DATA_KEY);
 	}
 
 
-	private void fillKeyFiguresData(CustomizationDescriptionData data){
+	private void fillKeyFiguresData(CustomizationDescriptionData data) {
 		if (data.getKeyFiguresDescription() != null
 				&& CollectionUtils.isNotEmpty(data.getKeyFiguresDescription().getKeyFigures())) {
 
@@ -121,8 +126,8 @@ public class CustomizationHelper extends ResourcesHelper {
 			for (KeyFigureData keyFigure : data.getKeyFiguresDescription().getKeyFigures()) {
 
 				// Parcours de la liste des KeyFigureComputer pour trouver celui qui correspond au KeyFigure
-				for (KeyFigureComputer computer: keyFigureComputers) {
-					if(computer.accept(keyFigure.getType())){
+				for (KeyFigureComputer computer : keyFigureComputers) {
+					if (computer.accept(keyFigure.getType())) {
 						computer.compute(keyFigure);
 					}
 				}

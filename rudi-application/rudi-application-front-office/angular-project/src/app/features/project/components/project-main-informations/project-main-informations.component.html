@@ -1,0 +1,110 @@
+<div class="project-container">
+    <app-loader [active]="isLoading"></app-loader>
+    <div class="d-flex justify-content-between" *ngIf="!isUpdating">
+        <mat-card-title class="card-title">
+            {{'personalSpace.project.reutilisation'|translate}}
+        </mat-card-title>
+
+        <!--bouton modification réutilisation-->
+        <button mat-raised-button class="primary-raised-button right"
+                *ngIf="isRefusedProject && isProjectUpdatable"
+                (click)="updateProjectTaskInfo()">
+            {{ 'personalSpace.project.updateInformations'|translate }}
+        </button>
+    </div>
+
+
+    <mat-card-content *ngIf="project" class="p-0">
+
+<ng-container *ngIf="!isUpdating; else updateProjectForm">
+        <!--titre de la réutilisation-->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.reutilisationTitle'|translate"
+            [value]="project.title | toString"
+        ></app-project-main-information-label>
+
+        <!--description de la réutilisation-->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.description'|translate"
+            [value]="project.description | toString"
+        ></app-project-main-information-label>
+
+        <!--période | dateDebut | dateFin-->
+        <app-project-main-information-date
+            *ngIf="this.project.expected_completion_end_date || this.project.expected_completion_start_date"
+            [startDate]="this.project.expected_completion_start_date"
+            [endDate]="this.project.expected_completion_end_date"
+        ></app-project-main-information-date>
+
+        <!--support desiré -->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.targetAudience'|translate"
+            [value]="project.target_audiences | toString "
+        ></app-project-main-information-label>
+
+        <!--échelle-->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.scale' | translate"
+            [value]="project.territorial_scale?.label | toString"
+        ></app-project-main-information-label>
+
+        <!--territoire concernée-->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.territorialScale'| translate"
+            [value]="project.detailed_territorial_scale | toString"
+        ></app-project-main-information-label>
+
+        <!--statut de la réutilisation  -->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.reuseStatus' | translate"
+            [value]="project.reutilisation_status?.label | toString"
+        ></app-project-main-information-label>
+
+        <!--type de réutilisation -->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.re-use'|translate"
+            [value]="project.type?.label | toString"
+        ></app-project-main-information-label>
+
+        <!--support desiré -->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.desiredSupport'|translate"
+            [value]="project.desired_supports | toString"
+        ></app-project-main-information-label>
+
+        <!--confidentialité -->
+        <app-project-main-information-label
+            [label]="'personalSpace.project.confidentiality'|translate"
+            [value]="project.confidentiality?.label | toString"
+        ></app-project-main-information-label>
+
+</ng-container>
+
+        <ng-template #updateProjectForm>
+            <app-step1-project [isPublished]="isPublished"
+                               [step1FormGroup]="step1FormGroup"
+                               [suggestions]="suggestions"
+                               [publicCible]="publicCible"
+                               [reuseStatus]="reuseStatus"
+                               [territoireScale]="territorialScales"
+                               [supports]="supports"
+                               [projectType]="projectType"
+                               (imageModified)="handleImageChanged($event)">
+            </app-step1-project>
+
+            <div class="d-flex justify-content-between flex-wrap">
+                <button mat-stroked-button class="secondary-stroked-button"
+                        (click)="updateProjectTaskInfo()">
+                    {{ 'personalSpace.project.annuler'|translate }}
+                </button>
+
+                <button mat-raised-button class="primary-raised-button right"
+                        (click)="updateConfirmation()">
+                    {{ 'personalSpace.project.confirmer'|translate }}
+                </button>
+            </div>
+        </ng-template>
+
+
+    </mat-card-content>
+</div>

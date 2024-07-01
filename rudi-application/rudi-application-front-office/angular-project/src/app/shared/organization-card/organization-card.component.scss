@@ -1,24 +1,22 @@
-@import "variables-rudi";
 @import "common-style";
 
 .organization-card {
 
     box-shadow: none;
-    border: solid 1.1px $blocks-and-menus-outline;
+    border: solid 1.1px var(--blocks-and-menus-outline);
     cursor: pointer;
     padding: 10px 10px 10px 10px;
     overflow: hidden;
     margin-bottom: 1em;
 
     .organization-card-content {
-        min-height: $card-height-sm;
-        max-height: $card-height-sm;
+        min-height: var(--card-height-sm);
+        max-height: var(--card-height-sm);
     }
 
     .resource-title {
-        font-family: OpenSans, sans-serif;
         font-size: 16px;
-        color: $primary-color;
+        color: var(--primary-color);
         font-weight: 600;
         margin-top: 5px;
         margin-left: 1em;

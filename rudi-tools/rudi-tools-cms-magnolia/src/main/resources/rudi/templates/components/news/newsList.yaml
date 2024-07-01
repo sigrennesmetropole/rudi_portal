@@ -10,3 +10,5 @@ areas:
         id: rudi:components/news/newsDetail
       newsSimple:
         id: rudi:components/news/newsSimple
+      newsSimpleWithImage:
+        id: rudi:components/news/newsSimpleWithImage

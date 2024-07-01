@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {AuthGuardService} from '@core/services/auth-guard.service';
 import {UserGuardService} from '@core/services/user-guard.service';
 import {DetailComponent} from './pages/detail/detail.component';
@@ -15,17 +15,17 @@ const routes: Routes = [
     {
         path: 'soumettre-un-projet',
         component: SubmissionProjectComponent,
-        canActivate: [AuthGuardService, UserGuardService]
+        canActivate: mapToCanActivate([AuthGuardService, UserGuardService])
     },
     {
         path: 'detail/:uuid',
         component: DetailComponent,
-        canActivate: [AuthGuardService]
+        canActivate: mapToCanActivate([AuthGuardService])
     },
     {
         path: 'detail/:uuid/:name',
         component: DetailComponent,
-        canActivate: [AuthGuardService]
+        canActivate: mapToCanActivate([AuthGuardService])
     }
 ];
 

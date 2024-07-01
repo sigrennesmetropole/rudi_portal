@@ -1,12 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
-import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {MediaSize} from '@core/services/breakpoint-observer.service';
 import {LogService} from '@core/services/log.service';
 import {DialogMemberOrganizationService} from '@core/services/organization/dialog-member-organization.service';
 import {OrganizationMetierService} from '@core/services/organization/organization-metier.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
+import {CloseEvent, DialogClosedData} from '@features/data-set/models/dialog-closed-data';
 import {TranslateService} from '@ngx-translate/core';
 import {BackPaginationSort} from '@shared/back-pagination/back-pagination-sort';
 import {SortTableInterface} from '@shared/back-pagination/sort-table-interface';
@@ -14,7 +14,7 @@ import {Level} from '@shared/notification-template/notification-template.compone
 import {OrganizationRole, OrganizationUserMember} from 'micro_service_modules/strukture/api-strukture';
 import {Organization, OrganizationMember, PagedOrganizationUserMembers} from 'micro_service_modules/strukture/strukture-model';
 import {BehaviorSubject, combineLatest, EMPTY, merge, Observable, of} from 'rxjs';
-import {debounceTime, filter, map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {OrganizationMemberDialogData} from './organization-member-dialog-data';
 
 @Component({
@@ -66,7 +66,7 @@ export class OrganizationMembersTableComponent implements OnInit {
     );
 
     paginationIsReset: Observable<SortTableInterface> = this.userInputChanged.pipe(
-        mapTo(this.DEFAULT_SORT)
+        map(() => this.DEFAULT_SORT)
     );
 
     launchSearchEvent = new BehaviorSubject<SortTableInterface>(this.DEFAULT_SORT);
@@ -214,29 +214,29 @@ export class OrganizationMembersTableComponent implements OnInit {
         this.addOrganizationMember(organizationMember$, this.organization.uuid).pipe(
             tap(() => this.userTypedEvent.next(this.searchText))
         ).subscribe({
-                next: () => {
-                    this.searchIsRunning = false;
+            next: () => {
+                this.searchIsRunning = false;
+                this.snackbarService.openSnackBar({
+                    message: this.translateService.instant('metaData.administrationTab.membersTable.addPopin.success'),
+                    level: Level.INFO
+                });
+            },
+            complete: () => {
+                this.searchIsRunning = false;
+                this.hasError = false;
+            },
+            error: err => {
+                if (err.status === 401 || err.status === 404) {
                     this.snackbarService.openSnackBar({
-                        message: this.translateService.instant('metaData.administrationTab.membersTable.addPopin.success'),
-                        level: Level.INFO
+                        message: err.error.label,
+                        level: Level.ERROR
                     });
-                },
-                complete: () => {
-                    this.searchIsRunning = false;
-                    this.hasError = false;
-                },
-                error: err => {
-                    if (err.status === 401 || err.status === 404) {
-                        this.snackbarService.openSnackBar({
-                            message: err.error.label,
-                            level: Level.ERROR
-                        });
-                    } else {
-                        this.hasError = true;
-                    }
-                    this.searchIsRunning = false;
+                } else {
+                    this.hasError = true;
                 }
-            });
+                this.searchIsRunning = false;
+            }
+        });
     }
 
     /**

@@ -36,9 +36,6 @@ import org.rudi.microservice.projekt.service.helper.MyInformationsHelper;
 import org.rudi.microservice.projekt.service.helper.ProjektAuthorisationHelper;
 import org.rudi.microservice.projekt.service.mapper.LinkedDatasetMapper;
 import org.rudi.microservice.projekt.service.project.LinkedDatasetService;
-import org.rudi.microservice.projekt.service.project.impl.fields.AddDatasetToProjectProcessor;
-import org.rudi.microservice.projekt.service.project.impl.fields.DeleteDatasetFromProjectProcessor;
-import org.rudi.microservice.projekt.service.project.impl.fields.UpdateDatasetInProjectProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.CreateLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.DeleteLinkedDatasetFieldProcessor;
 import org.rudi.microservice.projekt.service.project.impl.fields.linkeddataset.UpdateLinkedDatasetFieldProcessor;
@@ -64,10 +61,6 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 	private final List<UpdateLinkedDatasetFieldProcessor> updateLinkedDatasetProcessors;
 	private final List<DeleteLinkedDatasetFieldProcessor> deleteLinkedDatasetProcessors;
 
-	private final List<AddDatasetToProjectProcessor> addDatasetToProjectProcessors;
-	private final List<DeleteDatasetFromProjectProcessor> deleteDatasetFromProjectProcessors;
-	private final List<UpdateDatasetInProjectProcessor> updateDatasetInProjectProcessors;
-
 	private final ProjectDao projectDao;
 	private final LinkedDatasetMapper linkedDatasetMapper;
 	private final LinkedDatasetCustomDao linkedDatasetCustomDao;
@@ -90,9 +83,7 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant d'ajouter le lien sur le dataset
-		for (final AddDatasetToProjectProcessor processor : addDatasetToProjectProcessors) {
-			processor.process(null, project);
-		}
+		projektAuthorisationHelper.checkStatusForProjectModification(project);
 
 		val linkedDatasetEntity = linkedDatasetMapper.dtoToEntity(linkedDataset);
 
@@ -170,9 +161,7 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
 		// Vérification des droits de l'utilisateur et du statut du projet avant de modifier le lien sur le dataset
-		for (final UpdateDatasetInProjectProcessor processor : updateDatasetInProjectProcessors) {
-			processor.process(null, project);
-		}
+		projektAuthorisationHelper.checkStatusForProjectModification(project);
 
 		val entity = linkedDatasetMapper.dtoToEntity(linkedDataset);
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
@@ -202,10 +191,8 @@ public class LinkedDatasetServiceImpl implements LinkedDatasetService {
 
 		projektAuthorisationHelper.checkRightsAdministerProjectDataset(project);
 
-		// Vérification des droits de l'utilisateur et du statut du projet avant de supprimer le lien sur le dataset
-		for (final DeleteDatasetFromProjectProcessor processor : deleteDatasetFromProjectProcessors) {
-			processor.process(null, project);
-		}
+		// Vérification du statut du projet avant de supprimer le lien sur le dataset
+		projektAuthorisationHelper.checkStatusForProjectModification(project);
 
 		if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
 			Iterator<LinkedDatasetEntity> it = project.getLinkedDatasets().iterator();

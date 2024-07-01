@@ -1,12 +1,9 @@
-@import "variables-rudi";
-@import "colors";
 @import "common-style";
 @import "responsive";
 
 
 .my-profil-title {
     font-size: 17px;
-    font-family: OpenSans, sans-serif;
     font-weight: bold;
     margin-bottom: 22px;
 }
@@ -19,7 +16,7 @@
 .my-profil-card {
     box-shadow: none;
     width: 100%;
-    border: solid 1.1px $blocks-and-menus-outline;
+    border: solid 1.1px var(--blocks-and-menus-outline);
     padding: 17px 17px 17px 17px;
     overflow: hidden;
     margin-bottom: 100px;
@@ -61,7 +58,6 @@ mat-card-content {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 15px;
-    font-family: OpenSans, sans-serif;
 
     .text-section{
         display: flex;
@@ -70,7 +66,7 @@ mat-card-content {
     }
 
     .keyword {
-        color: $primary-color
+        color: var(--primary-color)
     }
 }
 

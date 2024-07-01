@@ -32,6 +32,7 @@ public enum InterfaceContract {
 
 	private final boolean validable;
 
+	@SuppressWarnings("unused") // constructeur utilisé lors du rajout de certains JDDs
 	private InterfaceContract(String urlPath) {
 		this(urlPath, false);
 	}

@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
+import org.rudi.facet.acl.bean.User;
 import org.rudi.microservice.strukture.core.bean.OrganizationMembersSearchCriteria;
 import org.rudi.microservice.strukture.core.bean.OrganizationUserMember;
 import org.rudi.microservice.strukture.service.helper.organization.comparator.OrganizationMemberAddedDateComparator;
@@ -32,7 +33,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 
 @Component
 @Transactional(readOnly = true)
@@ -77,7 +77,8 @@ public class OrganizationMembersPartitionerHelper {
 		if (totalElements < partitionSize) {
 			numberOfPartitions = 1;
 		} else {
-			numberOfPartitions = totalElements / partitionSize;
+			double partitions = (double)totalElements / partitionSize;
+			numberOfPartitions = (long) Math.ceil(partitions);
 		}
 
 		List<Pageable> partitions = new ArrayList<>();
@@ -98,8 +99,9 @@ public class OrganizationMembersPartitionerHelper {
 	 */
 	public List<OrganizationUserMember> partitionToEnrichedMembers(Pageable partition,
 			OrganizationMembersSearchCriteria searchCriteria) {
-		val basicMembers = organizationMemberCustomDao.searchOrganizationMembers(searchCriteria, partition);
-		val correspondingUsers = organizationMembersHelper.searchCorrespondingUsers(basicMembers.getContent(),
+
+		Page<OrganizationMemberEntity> basicMembers = organizationMemberCustomDao.searchOrganizationMembers(searchCriteria, partition);
+		List<User> correspondingUsers = organizationMembersHelper.searchCorrespondingUsers(basicMembers.getContent(),
 				searchCriteria);
 
 		Map<Boolean, List<OrganizationMemberEntity>> partitionedMembers = organizationMembersHelper

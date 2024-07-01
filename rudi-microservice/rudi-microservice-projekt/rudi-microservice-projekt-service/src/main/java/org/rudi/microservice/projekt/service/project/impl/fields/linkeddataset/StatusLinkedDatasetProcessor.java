@@ -51,13 +51,12 @@ class StatusLinkedDatasetProcessor implements CreateLinkedDatasetFieldProcessor,
 				linkedDataset.setInitiator(authenticatedUser.getLogin());
 			}
 		}
-		if (linkedDataset != null && existingLinkedDataset != null) {
-			// en modification si on est plus en draft on en peut plus changer les valeurs
-			if (existingLinkedDataset.getStatus() != Status.DRAFT) {
+		// en modification si on est plus en draft on en peut plus changer les valeurs
+		if (linkedDataset != null && existingLinkedDataset != null && existingLinkedDataset.getStatus() != Status.DRAFT) {
 				throw new AppServiceException(
 						String.format("LinkedDataset %s is already handled and could not be modified",
 								existingLinkedDataset.getUuid()));
-			}
+
 		}
 	}
 

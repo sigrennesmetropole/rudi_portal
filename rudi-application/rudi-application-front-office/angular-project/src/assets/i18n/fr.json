@@ -7,35 +7,55 @@
             "searchbarPlaceholder": "Rechercher un jeu de données..."
         },
         "themesSection": {
-            "title": "Thématiques de recherche"
+            "title": "Rechercher par thématique"
+        },
+        "newsSection": {
+            "title": "Actualités à la une",
+            "seeMoreNews": "Voir toutes les actualités"
+        },
+        "projectValuesSection": {
+            "title1": "Les fonctionnalités",
+            "title2": "Rudi ",
+            "description": "Découvrez comment Rudi peut vous être utile, que vous soyez producteur de données, porteur de projet, usager des services de Rennes Métropole, ou en tant qu'autre collectivité."
         },
         "projectsSection": {
             "title1": "Découvrez",
             "title2": "les réutilisations",
             "subtitle": "Les réutilisations RUDI",
-            "description": "Une Réutilisation est la description par un Utilisateur de l’usage d’un ou plusieurs jeux de données du catalogue. Tout Utilisateur inscrit peut déclarer une Réutilisation en décrivant le résultat produit (article, application, etc) et en indiquant le ou les jeux de données utilisés.",
-            "seeMoreProjects": "Voir toutes les réutilisations"
+            "description": "Les données du catalogue Rudi peuvent être réutilisées librement ou sur demande pour réaliser des projets et des services nouveaux. Consultez les réutilisations soumises par les autres utilisateurs et renseignez vos propres projets ",
+            "seeMoreProjects": "Voir toutes les réutilisations",
+            "viaOurForm": "via notre formulaire."
         },
         "jddSection": {
-            "title": "Dernières publications",
+            "title": "Derniers jeux de données publiés",
             "seeMore": "Voir tous les jeux de données"
         },
         "keyFiguresSection": {
             "altLogo": "Logo de la section des chiffres clés"
         }
     },
+    "pageNotFound": {
+        "invalidUrlErrorMessage": "L'URL saisie est invalide",
+        "ressourceNotFoundErrorMessage": "La ressource est introuvable.",
+        "defaultErrorMessage": "Une erreur interne est survenue",
+        "contactAdmin": "Merci de contacter un administrateur si le problème persiste",
+        "clickHere": "en cliquant ici"
+    },
     "pageTitle": {
         "/": "Catalogue",
+        "/home": "Accueil",
         "/organization": "Organisations",
         "/catalogue": "Catalogue",
         "/projets": "Réutilisations",
         "/projets/soumettre-un-projet": "Réutilisations",
         "/personal-space/my-account": "Mon compte",
-        "/login": "Mon compte",
+        "/login": "Connexion",
         "/personal-space/my-activity": "Mon activité",
         "/personal-space/selfdata-datasets": "Mes données personnelles",
         "/personal-space/my-notifications": "Mes notifications",
-        "/personal-space/new-request-detail": "Demande de nouvelles données"
+        "/personal-space/new-request-detail": "Demande de nouvelles données",
+        "/cms/news": "Actualités",
+        "defaultDetail": "Détail"
     },
     "project": {
         "confidentiality": {
@@ -218,6 +238,10 @@
             "dateError": "la date de fin d'accès est obligatoire"
         }
     },
+    "news": {
+        "decouvrir": "Découvrir",
+        "toutes_actualites": "toutes les actualités"
+    },
     "popup": {
         "ok": "Ok",
         "close": "Fermer",
@@ -252,9 +276,10 @@
         }
     },
     "footer": {
-        "rudiCopyright": "© {currentYear} RUDI",
+        "rudiCopyright": "© RUDI - Version : ",
         "accessibilte": "Accessibilité",
         "cgu": "CGU",
+        "conditionsUtilisation": "Conditions d'utilisation",
         "mentionLegale": "Mentions légales",
         "reseau": "Suivez-nous sur",
         "twitter": "Twitter",
@@ -262,8 +287,10 @@
         "linkedin": "LinkedIn",
         "politiqueConfidentialite": "Politique de confidentialité",
         "tousDroits": "Tous droits réservés",
-        "nousContacter": "Nous contacter",
-        "version": "Version : "
+        "contactezNous": "Contactez-nous",
+        "version": "Version : ",
+        "ccByCa": "CC-BY-SA",
+        "propulsePar": "Propulsé par :"
     },
     "authentification": {
         "title": "Bienvenue",
@@ -386,6 +413,8 @@
         "errorLoginNotMail": "Le champ login n'est pas au format : adresse e-mail",
         "errorLoginAlreadyExists": "Le login renseigné est déjà associé à un compte utilisateur",
         "errorPasswordLength": "Le mot de passe renseigné ne respecte pas les contraintes de longueur",
+        "infoName": "Votre nom sera renseigné dans votre espace \"Mon compte\" ainsi que sur vos demandes d’accès et vos réutilisations effectuées sur Rudi.",
+        "infoFirstName": "Votre prénom sera renseigné dans votre espace \"Mon compte\" ainsi que sur vos demandes d’accès et vos réutilisations effectuées sur Rudi.",
         "rgpd": {
             "title": "Protection des données personnelles",
             "p1": "Les données personnelles vous concernant recueillies dans ce formulaire seront utilisées uniquement pour la gestion de votre compte Rudi et afin de vous contacter concernant l'utilisation du service et ses évolutions. Ces données seront supprimées en l'absence d'utilisation de votre compte durant 24 mois.",
@@ -408,7 +437,8 @@
         "errorAccountValidationEnd": "Vous pouvez saisir la même adresse mail que précédemment.",
         "successResetPassword": "Votre mot de passe a bien été modifié. Vous pouvez maintenant vous connecter au portail Rudi.",
         "resetPasswordError": "Le délai de réinitialisation de votre mot de passe est dépassé. Nous vous invitons à renouveler votre demande en cliquant ",
-        "ici": "ici"
+        "ici": "ici",
+        "successInitPassword": "Un mail de réinitialisation de votre mot de passe vous a été envoyé. Vous n'avez pas reçu de mail ? Consulter vos spams et si le mail n'y figure pas, veuillez contacter "
     },
     "searchbox": {
         "jeux": "Jeux",
@@ -442,7 +472,7 @@
         "valider": "Valider"
     },
     "sortBox": {
-        "sort": "Trie par",
+        "sort": "Trié par",
         "orderedBy": "Trié par",
         "resource_title": "Titre de A à Z",
         "-resource_title": "Titre de Z à A",
@@ -556,7 +586,7 @@
         "contact": "Contacter",
         "motsclesAssocies": "Mots-clés associés",
         "themes": "Thèmes :",
-        "themeEtMotCle": "Thème et mots-clés",
+        "thematiqueEtMotCle": "Thématique et mots-clés",
         "autre": "autre",
         "file": "Fichier",
         "service": "API",
@@ -1213,6 +1243,9 @@
             "territorialScale": "Territoire concerné",
             "desiredSupport": "Accompagnement souhaité",
             "confidentiality": "Confidentialité",
+            "updateInformations": "Modifier les informations",
+            "annuler": "Annuler",
+            "confirmer": "Confirmer",
             "re-use": "Type de réutilisation",
             "basicInfos": {
                 "projectType": "Type de réutilisation",
@@ -1254,6 +1287,16 @@
                     }
                 },
                 "information": "Information",
+                "update": {
+                    "title": "Modifier les informations",
+                    "text": "Vous vous apprêtez à modifier les informations de votre réutilisation. Celle-ci sera mise à jour de façon irrémédiable au clic sur “Confirmer”.",
+                    "confirmationPopup": {
+                        "cancel": "Annuler",
+                        "validate": "Confirmer"
+                    },
+                    "success": "Votre réutilisation a été mis à jour.",
+                    "error": "Modification echouée."
+                },
                 "deletion": {
                     "impossible": "Vous ne pouvez pas retirer ce jeu de données de votre projet car votre demande n'a pas encore été traitée par l'équipe Rudi.",
                     "title": "Retirer un jeu de données",
@@ -1321,6 +1364,7 @@
             "required": "Champ obligatoire",
             "consumerKey": "Consumer Key",
             "consumerSecret": "Consumer Secret",
+            "errorPassword": "Le mot de passe que vous avez saisi n'est pas valide. Veuillez re-saisir le mot de passe.",
             "textConsumerKey": "Votre Consumer Key est le login à renseigner pour vous authentifier lorsque vous requêtez des API.",
             "textConsumerSecret": "Votre Consumer Secret est le mot de passe à renseigner pour vous authentifier lorsque vous requêtez des API."
         },

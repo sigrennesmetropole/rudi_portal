@@ -1,9 +1,8 @@
-@import "variables-rudi";
 @import "common-style";
 
 .dataset-card {
 
-    border-top: solid 1px $keywords-outline;
+    border-top: solid 1px var(--keywords-outline);
     margin: 1em 0 0 0;
     padding-top: 1em;
 
@@ -17,8 +16,8 @@
             height: 70px;
             padding: 10px 4px 10px 4px;
             border-radius: 3.4px;
-            border: solid 0.9px $blocks-and-menus-outline;
-            background: $secondary-color;
+            border: solid 0.9px var(--blocks-and-menus-outline);
+            background: var(--secondary-color);
         }
     }
 
@@ -27,7 +26,6 @@
         align-items: center;
         width: 70%;
         overflow: hidden;
-        font-family: OpenSans, sans-serif;
         margin-left: 12px;
         margin-right: 12px;
 
@@ -38,12 +36,12 @@
         &-organization_name {
             font-size: 12px;
             line-height: 1.67;
-            color: $primary-text;
+            color: var(--primary-text);
         }
 
         &-resource_title {
             font-size: 16px;
-            color: $primary-color;
+            color: var(--primary-color);
             font-weight: 600;
             @include max-3-lignes;
         }
@@ -60,15 +58,18 @@
         align-items: center;
         justify-content: flex-end;
 
-        mat-icon {
+        .rudi-icon-encircled {
             cursor: pointer;
             margin-right: 14px;
-        }
-
-        .rudi-icon-encircled {
             font-size: 18px;
-            border-color: $encircled-color;
-            color: $encircled-color
+            border-color: var(--encircled-color);
+            color: var(--encircled-color);
+
+            &:hover {
+                border: none;
+                color: var(--secondary-color);
+                background-color: var(--primary-color);
+            }
         }
     }
 

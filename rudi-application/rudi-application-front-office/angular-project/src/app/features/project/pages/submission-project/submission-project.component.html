@@ -8,11 +8,10 @@
     </h1>
     <p class="description">{{'project.stepper.submission.description' | translate}}</p>
 
-    <mat-stepper orientation="horizontal" [disableRipple]="true" class="rudi-stepper" labelPosition="bottom" linear>
+    <mat-stepper #submissionStepper orientation="horizontal" [disableRipple]="true" class="rudi-stepper" labelPosition="bottom" linear>
         <ng-template matStepperIcon="edit">
             <mat-icon>check</mat-icon>
         </ng-template>
-
 
         <!-- Etape 1 -->
         <mat-step [editable]="true" [stepControl]="step1FormGroup"
@@ -27,15 +26,18 @@
                                [territoireScale]="territorialScales"
                                [supports]="supports"
                                [projectType]="projectType"
-                               (imageModified)="handleImageChanged($event)">
+                               (imageModified)="handleImageChanged($event)"
+                               [isConfidentialityValid]="isConfidentialityValid"
+            >
             </app-step1-project>
 
             <!-- Boutons de gestion de l'étape -->
-            <div class="buttons">
-                <button class="button mat-stroked-button previous-button" mat-button (click)="clickCancel()">
+            <div class="d-flex justify-content-between mt-5">
+                <button mat-stroked-button class="secondary-stroked-button" (click)="clickCancel()">
                     <span>{{ 'project.stepper.cancel' | translate }}</span>
                 </button>
-                <button class="button mat-stroked-button next-button" mat-raised-button matStepperNext>
+
+                <button mat-raised-button class="primary-raised-button" (click)="clickNext()">
                     <span>{{ 'project.stepper.continue' | translate }}</span>
                 </button>
             </div>
@@ -50,11 +52,11 @@
             </app-step2-project>
 
             <!-- Boutons de gestion de l'étape -->
-            <div class="buttons">
-                <button class="button mat-stroked-button previous-button" mat-button matStepperPrevious>
+            <div class="d-flex justify-content-between mt-5">
+                <button mat-stroked-button class="secondary-stroked-button" matStepperPrevious>
                     <span>{{ 'project.stepper.previous' | translate }}</span>
                 </button>
-                <button class="button mat-stroked-button next-button" mat-raised-button matStepperNext>
+                <button mat-raised-button class="primary-raised-button" matStepperNext>
                     <span>{{ 'project.stepper.continue' | translate }}</span>
                 </button>
             </div>
@@ -78,20 +80,20 @@
             >
             </app-step3-project>
             <!-- Boutons de gestion de l'étape -->
-            <div class="buttons" *ngIf="!isSubmitted">
-                <button class="button mat-stroked-button" mat-button matStepperPrevious>
+            <div class="d-flex justify-content-between mt-5" *ngIf="!isSubmitted">
+                <button mat-stroked-button class="secondary-stroked-button" matStepperPrevious>
                     <span>{{ 'project.stepper.previous' | translate }}</span>
                 </button>
+
                 <span class="spacer"></span>
 
                 <!-----Masquer le bouton "Enregistrer" RUDI-3197 ----->
-                <button *ngIf="false" (click)="save()" class="button mat-stroked-button next-button me-3"
-                        mat-raised-button matStepperNext>
+                <button *ngIf="false" (click)="save()" mat-raised-button class="primary-raised-button" matStepperNext>
                     <span>{{ 'project.stepper.submission.publish.enregistrer' | translate }}</span>
                 </button>
 
-                <button (click)="submit()" class="button mat-stroked-button next-button"
-                        mat-raised-button matStepperNext [ngClass]="!isSubmit ? 'submit': 'next-button'">
+                <button mat-raised-button class="primary-raised-button" [disabled]="!isSubmit"
+                        (click)="submit()" matStepperNext>
                     <span>{{ 'project.stepper.submission.publish.submit' | translate }}</span>
                 </button>
             </div>

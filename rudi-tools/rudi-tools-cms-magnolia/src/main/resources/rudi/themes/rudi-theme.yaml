@@ -1,7 +1,7 @@
 cssFiles:
-  travels-magnolia:
+  rudi-main:
     addFingerPrint: true
-    link: /.resources/rudi/css/rudi.css
+    link: /.resources/rudi/webresources/css/rudi.css
     media: all
 
 imaging:

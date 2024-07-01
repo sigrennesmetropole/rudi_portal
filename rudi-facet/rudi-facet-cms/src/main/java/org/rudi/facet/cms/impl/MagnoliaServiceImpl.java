@@ -5,8 +5,13 @@ package org.rudi.facet.cms.impl;
 
 import static java.nio.file.StandardOpenOption.WRITE;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +21,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.Tika;
 import org.ehcache.Cache;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.rudi.common.core.DocumentContent;
 import org.rudi.facet.cms.CmsService;
 import org.rudi.facet.cms.bean.CmsAsset;
 import org.rudi.facet.cms.bean.CmsAssetType;
 import org.rudi.facet.cms.bean.CmsCategory;
+import org.rudi.facet.cms.bean.PagedCmsAssets;
 import org.rudi.facet.cms.exception.CmsException;
 import org.rudi.facet.cms.impl.configuration.BeanIds;
 import org.rudi.facet.cms.impl.configuration.CmsMagnoliaConfiguration;
@@ -32,13 +41,14 @@ import org.rudi.facet.cms.impl.model.CmsMagnoliaCategory;
 import org.rudi.facet.cms.impl.model.CmsMagnoliaNode;
 import org.rudi.facet.cms.impl.model.CmsMagnoliaPage;
 import org.rudi.facet.cms.impl.model.CmsRequest;
+import org.rudi.facet.cms.impl.utils.ResourceUriRewriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.RequiredArgsConstructor;
@@ -50,14 +60,38 @@ import reactor.core.publisher.Flux;
  *
  */
 @Slf4j
-@Component
+@Service
 @ConditionalOnProperty(name = "cms.implementation", havingValue = "magnolia")
 @RequiredArgsConstructor
 public class MagnoliaServiceImpl implements CmsService {
 
 	public static final String GET_API_URL = "/.rest/delivery/{apps-name}/v1";
 
+	public static final String GET_API_URL_ITEM = "/.rest/delivery/{apps-name}";
+
 	public static final String APPS_NAME_PATH = "apps-name";
+	// les uris de la forme : "/dam/jrc:{UUID}/"
+	private static final String URI_REGEX = "/dam/jcr:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/";
+
+	// /.imaging/default/dam/rudi/png.png/jcr:content.png
+	private static final String IMAGING_REGEX = "/.imaging/default/dam/[a-zA-Z0-9._%#!%$=+@:-]";
+
+	private static final String RESOURCES_REGEX = "/\\.resources/[a-zA-Z0-9_./ -]*";
+
+	private static final String FILENAME_REGEX = "[A-Za-z0-9_%#!%$=+@: -]+\\.[a-zA-Z0-9]{3,4}";
+
+	private static final String URI_AND_FILENAME_REGEX = URI_REGEX + FILENAME_REGEX;
+
+	public static final String IMAGE1_CSS_QUERY = "img[src~=" + URI_AND_FILENAME_REGEX + "]";
+	private static final String IMAGE2_CSS_QUERY = "img[src~=" + IMAGING_REGEX + "]";
+	public static final String STYLE_CSS_QUERY = "[style~=background-image: url\\(" + URI_AND_FILENAME_REGEX + "\\);]";
+	public static final String ANCHOR_CSS_QUERY = "a[href~=" + URI_AND_FILENAME_REGEX + "]";
+	public static final String LINK_CSS_QUERY = "link[href~=" + RESOURCES_REGEX + "]";
+
+	public static final String RESOURCES_CSS_QUERY = IMAGE1_CSS_QUERY + "," + IMAGE2_CSS_QUERY + "," + STYLE_CSS_QUERY
+			+ "," + ANCHOR_CSS_QUERY + "," + LINK_CSS_QUERY;
+
+	public static final String SELF_CSS_QUERY = "a[href~=^@self/([^/]+)/([^/]+)/([^/]+)/([^/]+)$]";
 
 	public static final String CATAGORIES_PARAM = "categories";
 
@@ -66,6 +100,8 @@ public class MagnoliaServiceImpl implements CmsService {
 	private final List<AbstractCmsMagnoliaHandler<?>> cmsMagnoliaHandlers;
 
 	private final CmsCategoryMapper cmsCategoryMapper;
+
+	private final List<ResourceUriRewriter> resourceUriRewriters;
 
 	@Autowired
 	@Qualifier(BeanIds.CMS_WEB_CLIENT)
@@ -79,6 +115,10 @@ public class MagnoliaServiceImpl implements CmsService {
 	@Qualifier(BeanIds.CMS_ASSET_EHCACHE)
 	private Cache<String, CmsAsset> cacheAssets;
 
+	@Autowired
+	@Qualifier(BeanIds.CMS_RESOURCES_EHCACHE)
+	private Cache<String, DocumentContent> cacheResources;
+
 	/**
 	 * <ul>
 	 * <li>http://ren1vml0158:9090/.rest/delivery/categories/v1</li>
@@ -86,7 +126,7 @@ public class MagnoliaServiceImpl implements CmsService {
 	 * <li>http://ren1vml0158:9090/.rest/delivery/news/v1</li>
 	 * <li>http://ren1vml0158:9090/.rest/delivery/projectvalues/v1</li>
 	 * </ul>
-	 * 
+	 *
 	 * Mise en cache des catégories afin de permettre la correspondance entre uuid de catégorie et nom L'idée de d'utiliser les APIs
 	 */
 	@Override
@@ -133,22 +173,35 @@ public class MagnoliaServiceImpl implements CmsService {
 	}
 
 	@Override
-	public List<CmsAsset> renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
+	public PagedCmsAssets renderAssets(CmsAssetType assetType, String assetTemplate, CmsRequest request, Integer offset,
 			Integer limit, String order) throws CmsException {
-		final List<CmsAsset> result = new ArrayList<>();
+		final PagedCmsAssets result = new PagedCmsAssets();
+		final List<CmsAsset> elements = new ArrayList<>();
 		String defaultCategory = cmsMagnoliaConfiguration.getDefaultCategory(assetType);
+
 		List<String> categories = new ArrayList<>();
+
+		// On ajoute les categories présente dans la requête
 		if (request.getCategories() != null) {
-			categories.addAll(request.getCategories());
+			// Ces catégories sont converties en UUID correspondant dans Magnolia
+			// Si une catégorie passé ne correspond à rien dans magnolia --> vide
+			categories.addAll(convertCategories(request.getCategories()));
 		}
-		if (!categories.contains(defaultCategory)) {
-			categories.add(defaultCategory);
+
+		// Si aucune des catégories passées en paramètre ne correspond à une catégorie présente dans magnolia
+		// Ou si aucune catégorie n'a été passée en paramètre
+		if (CollectionUtils.isEmpty(categories)) {
+			// On rajoute la catégorie par défaut correspondant au type d'asset souhaité.
+			categories.addAll(convertCategories(List.of(defaultCategory)));
 		}
+		// on remplace les catégories par celles issues de la traduction
+		request.setCategories(categories);
+
 		AbstractCmsMagnoliaHandler<?> abstractCmsMagnoliaHandler = lookupHandler(assetType);
 		if (abstractCmsMagnoliaHandler != null) {
-			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(convertCategories(categories),
-					request.getFilters(), offset, limit, order);
+			CmsMagnoliaPage<?> page = abstractCmsMagnoliaHandler.searchItems(request, offset, limit, order);
 			if (page.getTotal() > 0 && CollectionUtils.isNotEmpty(page.getResults())) {
+				result.setTotal(page.getTotal());
 				page.getResults().forEach(item -> {
 					CmsAsset asset = cacheAssets.get(computeAssetKeyCache(assetType, item.getId(), assetTemplate));
 					if (asset == null) {
@@ -157,12 +210,85 @@ public class MagnoliaServiceImpl implements CmsService {
 					if (asset != null) {
 						asset.setCreationDate(item.getCreated());
 						asset.setUpdateDate(item.getLastModified());
-						result.add(asset);
+						elements.add(asset);
 					}
 				});
 			}
 		}
+		result.setElements(elements);
 		return result;
+	}
+
+	/**
+	 * @param resourcePath path Magnolia vers la ressource
+	 * @return une Ressource sous la forme de DocumentContent
+	 * @throws CmsException exception lancée par le CMS
+	 */
+	@Override
+	public DocumentContent downloadResource(String resourcePath) throws CmsException {
+		DocumentContent documentContent = null;
+
+		// Si le cache contient déjà la ressource, on la renvoie directement.
+		if (cacheResources.containsKey(resourcePath)) {
+			documentContent = cacheResources.get(resourcePath);
+
+			// Remise à zéro du stream de la ressource.
+			documentContent.closeStream();
+
+			if (documentContent.getFile().exists() && documentContent.getFile().isFile()) {
+				return documentContent;
+			}
+		}
+
+		log.info("Load cms resources {}", resourcePath);
+
+		int lastIndexBeforeExtension = resourcePath.lastIndexOf(".");
+		String fileExtension = resourcePath.substring(lastIndexBeforeExtension);
+		// Le +1 sert à échapper le "/"
+		String fileName = resourcePath.replaceAll("[.:/-]", "_") + resourcePath.substring(lastIndexBeforeExtension);
+
+		// appel à magnolia
+		Flux<DataBuffer> flux = magnoliaWebClient.get().uri(resourcePath).retrieve().bodyToFlux(DataBuffer.class);
+		try {
+			File outputFile = createOutputFile(fileExtension);
+			DataBufferUtils.write(flux, Path.of(outputFile.getPath()), WRITE).block();
+
+			// Création du documentContent
+			if (outputFile.exists() && outputFile.isFile()) {
+				String type = computeMimeType(fileName, outputFile);
+				documentContent = new DocumentContent(fileName, type, outputFile);
+
+				log.info("Cache cms resources {} / {}", fileName, type);
+
+				// mise en cache
+				cacheResources.put(resourcePath, documentContent);
+			}
+		} catch (IOException e) {
+			throw new CmsException("Failed to download ressources:" + resourcePath, e);
+		}
+
+		return documentContent;
+	}
+
+	private String computeMimeType(String fileName, File file) throws IOException {
+		String type = Files.probeContentType(Path.of(fileName));
+		if (!isValidMimeType(type)) {
+			FileNameMap fileNameMap = URLConnection.getFileNameMap();
+			type = fileNameMap.getContentTypeFor(fileName);
+		}
+		if (!isValidMimeType(type)) {
+			Tika tika = new Tika();
+			type = tika.detect(file);
+		}
+		if (!isValidMimeType(type)) {
+			Tika tika = new Tika();
+			type = tika.detect(fileName);
+		}
+		return type;
+	}
+
+	private boolean isValidMimeType(String type) {
+		return !(type == null || "application/octet-stream".equals(type));
 	}
 
 	protected List<String> convertCategories(List<String> categories) {
@@ -181,23 +307,21 @@ public class MagnoliaServiceImpl implements CmsService {
 
 	protected CmsAsset downloadAsset(CmsAssetType assetType, String assetTemplate, Locale locale, String id) {
 		CmsAsset result = null;
-		Flux<DataBuffer> flux = magnoliaWebClient.get()
-				.uri("rudi/" + convertTemplateName(assetTemplate) + ".html",
-						uriBuilder -> uriBuilder.queryParam("id", id)
-								.queryParamIfPresent("lang",
-										locale != null ? Optional.of(locale.getLanguage()) : Optional.empty())
-								.build())
-				.retrieve().bodyToFlux(DataBuffer.class);
+		Flux<DataBuffer> flux = createAssetFlux(assetTemplate, locale, id);
 
 		try {
-			File outputFile = createOutputFile();
+			File outputFile = createOutputFile(cmsMagnoliaConfiguration.getTemporaryFileExtension());
 			DataBufferUtils.write(flux, Path.of(outputFile.getPath()), WRITE).block();
 			Document document = Jsoup.parse(outputFile, "UTF-8");
 			Element element = document.selectFirst("div." + cmsMagnoliaConfiguration.getCssSelector(assetType));
+
 			if (element != null) {
+				element = replaceResourcesLinks(element); // remplacer les liens des images par des appels à konsult
+				element = replaceSelfLinks(element); // remplacer @self par /cms/detail
 				result = new CmsAsset();
 				result.setId(id);
 				result.setContent(element.outerHtml());
+				result.setTitle(renderTitle(assetType, id, locale, result.getContent()));
 				cacheAssets.put(computeAssetKeyCache(assetType, id, assetTemplate), result);
 			}
 		} catch (Exception e) {
@@ -205,6 +329,56 @@ public class MagnoliaServiceImpl implements CmsService {
 		}
 
 		return result;
+	}
+
+	private String renderTitle(CmsAssetType assetType, String id, Locale locale, String defaultValue) {
+		String title = null;
+		try {
+			String templateTilte = cmsMagnoliaConfiguration.getAssetTypeTitleTemplates()
+					.get(assetType.name().toLowerCase());
+			Flux<DataBuffer> fluxTitle = createAssetFlux(templateTilte, locale, id);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataBufferUtils.write(fluxTitle, baos).blockFirst();
+			title = Jsoup.parse(baos.toString(StandardCharsets.UTF_8)).text();
+		} catch (Exception e) {
+			log.warn("Failed to generate title for " + id, e);
+		}
+		if (StringUtils.isEmpty(title)) {
+			String text = Jsoup.parse(defaultValue).text();
+			title = text.substring(0, Math.min(text.length(), 30));
+		}
+		return title;
+	}
+
+	private Flux<DataBuffer> createAssetFlux(String assetTemplate, Locale locale, String id) {
+		return magnoliaWebClient.get()
+				.uri("rudi/" + convertTemplateName(assetTemplate) + ".html",
+						uriBuilder -> uriBuilder.queryParam("id", id)
+								.queryParamIfPresent("lang",
+										locale != null ? Optional.of(locale.getLanguage()) : Optional.empty())
+								.build())
+				.retrieve().bodyToFlux(DataBuffer.class);
+	}
+
+	protected Element replaceResourcesLinks(Element element) {
+		Elements resources = element.select(MagnoliaServiceImpl.RESOURCES_CSS_QUERY);
+
+		if (!resources.isEmpty()) {
+			List<String> regexes = List.of(URI_AND_FILENAME_REGEX, RESOURCES_REGEX, IMAGING_REGEX);
+			resources.forEach(e -> resourceUriRewriters.forEach(rewriter -> {
+				if (rewriter.accept(e)) {
+					rewriter.compute(e, regexes, cmsMagnoliaConfiguration.getFrontOfficeResourcesRoute());
+				}
+			}));
+		}
+		return element;
+	}
+
+	protected Element replaceSelfLinks(Element element) {
+		// recherche de tous les liens de la forme @self/{type}/{id}/{template}/{titre} et remplacement de leur attributs
+		element.select(MagnoliaServiceImpl.SELF_CSS_QUERY).replaceAll(a -> a.attr("href",
+				StringUtils.replace(a.attr("href"), "@self", cmsMagnoliaConfiguration.getFrontOfficeRoute())));
+		return element;
 	}
 
 	protected String convertTemplateName(String template) {
@@ -215,11 +389,10 @@ public class MagnoliaServiceImpl implements CmsService {
 		}
 	}
 
-	protected File createOutputFile() throws IOException {
+	protected File createOutputFile(String fileExtension) throws IOException {
 		File generateFile = null;
 		if (StringUtils.isNotEmpty(cmsMagnoliaConfiguration.getTemporaryDirectory())) {
-			generateFile = File.createTempFile(cmsMagnoliaConfiguration.getTemporaryFilePrefix(),
-					cmsMagnoliaConfiguration.getTemporaryFileExtension(),
+			generateFile = File.createTempFile(cmsMagnoliaConfiguration.getTemporaryFilePrefix(), fileExtension,
 					new File(cmsMagnoliaConfiguration.getTemporaryDirectory()));
 		} else {
 			generateFile = File.createTempFile(cmsMagnoliaConfiguration.getTemporaryFilePrefix(),
@@ -235,7 +408,7 @@ public class MagnoliaServiceImpl implements CmsService {
 		return GET_API_URL;
 	}
 
-	protected AbstractCmsMagnoliaHandler<? extends CmsMagnoliaNode> lookupHandler(CmsAssetType assetType) {
+	protected AbstractCmsMagnoliaHandler<? extends CmsMagnoliaNode> lookupHandler(CmsAssetType assetType) {// NOSONAR
 		return cmsMagnoliaHandlers.stream().filter(h -> h.getAssetType() == assetType).findFirst().orElse(null);
 	}
 
