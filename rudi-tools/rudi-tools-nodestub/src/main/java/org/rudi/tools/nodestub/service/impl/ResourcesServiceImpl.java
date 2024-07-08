@@ -1,14 +1,5 @@
-package org.rudi.tools.nodestub.service;
+package org.rudi.tools.nodestub.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.rudi.facet.kaccess.bean.Metadata;
-import org.rudi.tools.nodestub.config.NodeStubConfiguration;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Nullable;
 import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -18,10 +9,23 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+import org.rudi.facet.kaccess.bean.Metadata;
+import org.rudi.tools.nodestub.config.NodeStubConfiguration;
+import org.rudi.tools.nodestub.service.ResourcesService;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class ResourcesServiceImpl implements ResourcesService {
+public class ResourcesServiceImpl implements ResourcesService {
 	private final NodeStubConfiguration nodeStubConfiguration;
 	private final ObjectMapper mapper;
 
@@ -31,9 +35,7 @@ class ResourcesServiceImpl implements ResourcesService {
 		final File[] files = resourcesDirectory.listFiles();
 		if (files != null) {
 			final AtomicInteger atomicCount = new AtomicInteger(0);
-			return Arrays.stream(files)
-					.map(this::getMetadata)
-					.filter(Objects::nonNull)
+			return Arrays.stream(files).map(this::getMetadata).filter(Objects::nonNull)
 					.filter(metadata -> updateAfter == null || wasUpdatedAfter(metadata, updateAfter))
 					.filter(metadata -> isBetweenOffsetAndLimit(atomicCount, offset, limit))
 					.collect(Collectors.toList());
@@ -42,7 +44,6 @@ class ResourcesServiceImpl implements ResourcesService {
 			return Collections.emptyList();
 		}
 	}
-
 
 	@Nullable
 	@SuppressWarnings("squid:S2583") // si on tente de lire un fichier rpt, on objet metadata global_id null est quand même lu

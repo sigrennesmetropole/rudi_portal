@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.rudi.common.core.json.JsonResourceReader;
 import org.rudi.facet.kaccess.bean.Metadata;
 import org.rudi.tools.nodestub.config.NodeStubConfiguration;
+import org.rudi.tools.nodestub.service.impl.ResourcesServiceImpl;
 
 import java.io.File;
 import java.io.IOException;

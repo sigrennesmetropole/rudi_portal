@@ -70,11 +70,11 @@
         },
         "changeOrigin": true
     },
-    "/media": {
+    "/medias": {
         "target": "http://localhost:8092/apigateway/datasets",
         "secure": false,
         "pathRewrite": {
-            "^/media": ""
+            "^/medias": ""
         },
         "changeOrigin": true
     }

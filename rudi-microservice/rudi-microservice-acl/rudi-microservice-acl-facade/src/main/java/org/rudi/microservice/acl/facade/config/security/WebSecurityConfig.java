@@ -100,6 +100,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						anonymous.authorities(List.of(new SimpleGrantedAuthority("USER")));
 					})
 					// installation des filtres
+					.addFilterBefore(createOAuth2Filter(), UsernamePasswordAuthenticationFilter.class)
+					.addFilterBefore(createJwtRequestFilter(), UsernamePasswordAuthenticationFilter.class)
 					.apply(JwtAuthenticationProcessingFilterConfigurer.jwtAuthenticationProcessingConfigurer()
 							.loginFailureHandler(loginFailureHandler).loginSuccessHandler(loginSuccessHandler)
 							.userAuthenticationProvider(userAuthenticationProvider).loginParameter(loginParameter)
@@ -107,9 +109,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.and()
 					.apply(AnonymousAuthenticationProcessingFilterConfigurer
 							.anonymousAuthenticationProcessingConfigurer().loginFailureHandler(loginFailureHandler)
-							.loginSuccessHandler(loginSuccessHandler).loginAnonymous(loginAnonymous))
-					.and().addFilterBefore(createOAuth2Filter(), UsernamePasswordAuthenticationFilter.class)
-					.addFilterBefore(createJwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+							.loginSuccessHandler(loginSuccessHandler).loginAnonymous(loginAnonymous));
 			if (!disablePreAuthentification) {
 				http.addFilterAfter(createPreAuthenticationFilter(), BasicAuthenticationFilter.class);
 			}

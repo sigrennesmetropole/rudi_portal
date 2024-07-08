@@ -101,32 +101,6 @@
 				}
 			}
 		},
-		"/encryption-key": {
-			"get": {
-				"tags": [
-					"konsult"
-				],
-				"summary": "Récupération de la clé publique pour chiffrer les médias d'un jeu de données",
-				"description": "Récupération de la clé publique pour chiffrer les médias d'un jeu de données",
-				"operationId": "getEncryptionKey",
-				"responses": {
-					"200": {
-						"description": "Le fichier correspondant à la clé publique",
-						"content": {
-							"application/octet-stream": {
-								"schema": {
-									"type": "string",
-									"format": "binary"
-								}
-							}
-						}
-					},
-					"500": {
-						"$ref": "#/components/responses/InternalServerError"
-					}
-				}
-			}
-		},
 		"/apim/has-enabled-api": {
 			"put": {
 				"tags": [

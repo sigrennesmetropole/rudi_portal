@@ -74,13 +74,14 @@
                              class="d-flex align-items-center">
                             <mat-icon class="icon-syle icon-save me-l">save_alt</mat-icon>
                             <div
-                                [ngClass]="{'banner-icon-libelle': mediaSize.isSm}">{{'availableFormats.telecharger'|translate}}</div>
+                                [ngClass]="{'banner-icon-libelle': mediaSize.isSm}">{{ 'availableFormats.telecharger'|translate }}
+                            </div>
                             <mat-menu #formatMenu="matMenu" role="menu" xPosition="after">
                                 <div (click)="$event.stopPropagation()" class="rudi-select-panel" fxLayout="column">
                                     <form [formGroup]="form">
                                         <div class="menu-radioGroup-scrollable">
                                             <h4 class="menu-libelle"
-                                                tabindex="0">{{'availableFormats.formatsDisponibles'|translate}}</h4>
+                                                tabindex="0">{{ 'availableFormats.formatsDisponibles'|translate }}</h4>
 
                                             <mat-radio-group #radioGroup="matRadioGroup"
                                                              (click)="$event.stopPropagation()"
@@ -91,7 +92,7 @@
                                                     [checked]="i === 0"
                                                     [value]="item"
                                                     class="mb-2">
-                                                    {{getMediaFileExtension(item)}}
+                                                    {{ getMediaFileExtension(item) }}
                                                 </mat-radio-button>
                                             </mat-radio-group>
                                         </div>
@@ -105,7 +106,8 @@
                                             tabindex="3"
                                             type="submit"
                                         >
-                                            {{'availableFormats.telecharger'|translate}}</button>
+                                            {{ 'availableFormats.telecharger'|translate }}
+                                        </button>
                                     </form>
 
                                 </div>
@@ -117,7 +119,7 @@
                 <!-- Faire une demande d'information sur ses données personnelles detenues -->
                 <app-banner-button *ngIf="isSelfdata" (click)="handleClickSelfdataInformationRequest()">
                     <mat-icon class="key-icon me-2" svgIcon="icone_donnees_personnelles"></mat-icon>
-                    <span>{{'metaData.selfdataInformationRequest.wholeTitle'|translate}}</span>
+                    <span>{{ 'metaData.selfdataInformationRequest.wholeTitle'|translate }}</span>
                 </app-banner-button>
 
                 <!-- Demander l'accès à un JDD restreint -->
@@ -125,7 +127,7 @@
                                    (click)="handleClickRequestAccess()">
                     <div class="d-flex align-items-center">
                         <mat-icon class="key-icon me-2" svgIcon="key_icon_circle"></mat-icon>
-                        <span>{{'metaData.restrictedDatasetRequest'|translate}}</span>
+                        <span>{{ 'metaData.restrictedDatasetRequest'|translate }}</span>
                     </div>
                 </app-banner-button>
 
@@ -134,11 +136,13 @@
             <!-- Fin Bandeau -->
 
 
-            <div *ngIf="linkedProjects" class="banner-reuses">
+            <div *ngIf="linkedProjects"
+                 [ngClass]="{'p-small': mediaSize.isDeviceMobile, 'p-large': mediaSize.isDeviceDesktop}"
+                 class="banner-reuses">
 
                 <div class="banner-reuses-header d-flex justify-content-between">
-                    <h2 class="blue-theme">{{'metaData.reutilisations.titre'|translate}}{{linkedProjects.length > 1 ? 's' : ''}}
-                        ({{linkedProjects.length}})</h2>
+                    <h2 class="blue-theme">{{ 'metaData.reutilisations.titre'|translate }}{{ linkedProjects.length > 1 ? 's' : '' }}
+                        ({{ linkedProjects.length }})</h2>
                     <span class="spacer"></span>
                     <app-popover
                         (click)="clickDeclareReuse()"
@@ -160,7 +164,7 @@
                 </div>
 
                 <div *ngIf="!linkedProjects.length">
-                    {{'metaData.reutilisations.aucuneReutilisation'|translate}}
+                    {{ 'metaData.reutilisations.aucuneReutilisation'|translate }}
                 </div>
 
             </div>

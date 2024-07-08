@@ -3,6 +3,8 @@
  */
 package org.rudi.wso2.mediation;
 
+import static org.rudi.wso2.mediation.PublicKeyURLComparator.PUBLIC_KEY_URL_PROPERTY;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +25,8 @@ import javax.annotation.Nullable;
 import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.osgi.framework.FrameworkUtil;
 import org.rudi.facet.crypto.KeyGeneratorFromPem;
@@ -31,12 +35,12 @@ import org.rudi.facet.crypto.RudiAlgorithmSpec;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.API;
 
-import static org.rudi.wso2.mediation.PublicKeyURLComparator.PUBLIC_KEY_URL_PROPERTY;
-
 /**
  * @author FNI18300
  */
 public class EncryptedMediaHandler extends AbstractRudiHandler {
+
+	private static final Log LOGGER = LogFactory.getLog(AbstractRudiHandler.class);
 
 	protected static final String ENCRYPTED_PROPERTY = "encrypted";
 	protected static final String PRIVATE_KEY_PATH_PROPERTY = "privateKeyURL";
@@ -47,7 +51,6 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 	 * Chemin (relatif au classpath) vers la clé privée par défaut
 	 */
 	private static final String DEFAULT_PRIVATE_KEY_PATH = "encryption_key.key";
-
 
 	private final MediaCipherOperator mediaCipherOperator = new MediaCipherOperator(RudiAlgorithmSpec.DEFAULT);
 	private final PublicKeyComparator publicKeyContentComparator = new PublicKeyContentComparator();
@@ -66,25 +69,30 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 		if (!isEncrypted(engagedApi)) {
 			return false;
 		}
-		return publicKeyContentComparator.usesSamePublicKey(this, engagedApi) ||
-				publicKeyURLComparator.usesSamePublicKey(this, engagedApi);
+		return publicKeyContentComparator.usesSamePublicKey(this, engagedApi)
+				|| publicKeyURLComparator.usesSamePublicKey(this, engagedApi);
 	}
 
 	private boolean isEncrypted(API engagedApi) {
-		final var encryptedPropertyValue = AdditionalPropertiesUtil.getAdditionalProperty(ENCRYPTED_PROPERTY, engagedApi);
+		final var encryptedPropertyValue = AdditionalPropertiesUtil.getAdditionalProperty(ENCRYPTED_PROPERTY,
+				engagedApi);
 		return Boolean.TRUE.toString().equals(encryptedPropertyValue);
 	}
 
 	@Override
 	protected void doHandleResponse(MessageContext messageContext) throws Exception {
+		LOGGER.debug("====================>doHandleResponse");
 		decrypt(messageContext);
 	}
 
 	private void decrypt(MessageContext messageContext) throws Exception {
-		replaceBody(messageContext, this::replaceBodyInputStream, this::computeNewContentType, this::computeNewContentDisposition);
+		LOGGER.debug("====================>decrypt");
+		replaceBody(messageContext, this::replaceBodyInputStream, this::computeNewContentType,
+				this::computeNewContentDisposition);
 	}
 
 	private InputStream replaceBodyInputStream(InputStream originalBody) throws IOException, GeneralSecurityException {
+		LOGGER.debug("====================>replaceBodyInputStream");
 		final var file = File.createTempFile("EncryptedMediaHandler", ".decrypt");
 		try (final var fos = new FileOutputStream(file)) {
 			decrypt(originalBody, fos);
@@ -123,7 +131,8 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 	/**
 	 * Effectue le déchiffrement
 	 */
-	protected void decrypt(InputStream encryptedStream, OutputStream decryptedStream) throws IOException, GeneralSecurityException {
+	protected void decrypt(InputStream encryptedStream, OutputStream decryptedStream)
+			throws IOException, GeneralSecurityException {
 		mediaCipherOperator.decrypt(encryptedStream, getPrivateKey(), decryptedStream);
 	}
 
@@ -141,16 +150,14 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 		return FrameworkUtil.getBundle(getClass()).getResource(DEFAULT_PRIVATE_KEY_PATH);
 	}
 
-	@SuppressWarnings({
-			"unchecked", // getProperties() n'est pas modifiable
+	@SuppressWarnings({ "unchecked", // getProperties() n'est pas modifiable
 			"unused" // utilisé par le fichier XML de l'API généré par le velocity_template.xml
 	})
 	public void setPrivateKeyURL(String privatKeyPath) {
 		getProperties().put(PRIVATE_KEY_PATH_PROPERTY, privatKeyPath);
 	}
 
-	@SuppressWarnings({
-			"java:S100", // nom de la propriété généré automatiquement par WSO2
+	@SuppressWarnings({ "java:S100", // nom de la propriété généré automatiquement par WSO2
 			"unused" // généré automatiquement par WSO2 lorsqu'on ajoute la propriété "privateKeyURL" dans le velocity_template.xml
 	})
 	public void setPrivate_key_url(String privatKeyPath) {
@@ -159,7 +166,7 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 
 	private PrivateKey getPrivateKey() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		if (privateKey == null) {
-			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.keyPairAlgorithm;
+			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.getKeyPairAlgorithm();
 			final var keyInputStream = getPrivateKeyURL().openConnection().getInputStream();
 			privateKey = keyGeneratorFromPem.generatePrivateKey(keyPairAlgorithm, keyInputStream);
 		}
@@ -170,17 +177,14 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 		return new URL((String) getProperties().get(PUBLIC_KEY_URL_PROPERTY));
 	}
 
-	@SuppressWarnings({
-			"unchecked", // getProperties() n'est pas modifiable
+	@SuppressWarnings({ "unchecked", // getProperties() n'est pas modifiable
 			"unused" // utilisé par le fichier XML de l'API généré par le velocity_template.xml
 	})
 	public void setPublicKeyURL(String publicKeyURL) {
 		getProperties().put(PUBLIC_KEY_URL_PROPERTY, publicKeyURL);
 	}
 
-
-	@SuppressWarnings({
-			"java:S100", // nom de la propriété généré automatiquement par WSO2
+	@SuppressWarnings({ "java:S100", // nom de la propriété généré automatiquement par WSO2
 			"unused" // généré automatiquement par WSO2 lorsqu'on ajoute la propriété "publicKeyURL" dans le velocity_template.xml
 	})
 	public void setPublic_key_url(String publicKeyURL) {
@@ -200,14 +204,15 @@ public class EncryptedMediaHandler extends AbstractRudiHandler {
 			final var encodedPublicKeyContent = getPublicKey().getEncoded();
 			return Base64.getEncoder().encodeToString(encodedPublicKeyContent);
 		} catch (SSLHandshakeException e) {
-			// TODO en attendant la génération de certificats non auto-signés pour la dev/qualif/r7, on renvoie le contenu de la clé publique en dur dans le code => cf RUDI-2527
+			// TODO en attendant la génération de certificats non auto-signés pour la dev/qualif/r7, on renvoie le contenu de la clé publique en dur dans le code
+			// => cf RUDI-2527
 			return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMenROzRDb8V/uBLS6Ey90sWdhbRhv8R1QIYSRs3YjMZ2HBdMOQzuMQvyUF5lJv0KDNjYIf74n3+rDNxICkTlm7cwggtks/JOdNw1o/fGbU83tlAnSr4QbLCCqThzslchiKmGVH5pCiV/aX2bl81iNKkGDiFpmyT/au8+OtZOZe910sDnBsyPHH+wCkh/bb4E+tkKHUGLKpi4T8cm9wrNXFySxP532zuPsJ5CsaDWyu3jXivfYvC5Q520B72F+eK6nIdozONJLMtd9lFegxuRtU3fsYMAZww77hiCsH5mgfLo+iwXicdTCWogkGl8n9ODYhUwIDAQAB";
 		}
 	}
 
 	private PublicKey getPublicKey() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		if (publicKey == null) {
-			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.keyPairAlgorithm;
+			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.getKeyPairAlgorithm();
 			final var keyInputStream = getPublicKeyURL().openConnection().getInputStream();
 			publicKey = keyGeneratorFromPem.generatePublicKey(keyPairAlgorithm, keyInputStream);
 		}

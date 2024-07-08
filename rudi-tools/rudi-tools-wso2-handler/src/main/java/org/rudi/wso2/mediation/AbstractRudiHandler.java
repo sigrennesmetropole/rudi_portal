@@ -33,6 +33,8 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 
 	protected static final String API_UT_API_PROPERTY = "api.ut.api";
 
+	protected static final String API_UUID_PROPERTY = "API_UUID";
+
 	private static final String OPEN_API_STRING_PROPERTY_KEY = "OPEN_API_STRING";
 
 	private static final String OPEN_API_OBJECT_PROPERTY_KEY = "OPEN_API_OBJECT";
@@ -102,7 +104,9 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 		logAll(messageContext, "Out");
 
 		try {
+			LOGGER.debug("====================>isengaged");
 			if (engageResponse(messageContext)) {
+				LOGGER.debug("====================>isengaged=true");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("EncryptedHandler engaged for"
 							+ messageContext.getProperty(RESTConstants.REST_API_CONTEXT));
@@ -134,32 +138,39 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 	protected void replaceBody(MessageContext messageContext, BodyReplacer bodyReplacer,
 			Function<MessageContext, String> contentTypeComputer,
 			@Nullable Function<MessageContext, String> contentDispositionComputer) throws Exception {
-
+		LOGGER.debug("====================>replaceBody0");
 		// On sauvegarde le Content-Type original
 		final var originalContentType = getContentType(messageContext);
 
+		LOGGER.debug("====================>replaceBody1 " + originalContentType);
 		// On force le Content-Type pour empêcher WSO2 d'interpréter le body comme du XML
 		setContentType(messageContext, BINARY_CONTENT_TYPE);
 
+		LOGGER.debug("====================>replaceBody2");
 		// récupération du message Axis2 sous jacent
 		final var axis2MC = getAxis2MessageContext(messageContext);
 
+		LOGGER.debug("====================>replaceBody3 " + axis2MC);
 		// construction du message
 		RelayUtils.buildMessage(axis2MC, true);
 
+		LOGGER.debug("====================>replaceBody4");
 		// On restaure le Content-Type original avant traitement par le contentTypeComputer
 		setContentType(messageContext, originalContentType);
 
+		LOGGER.debug("====================>replaceBody5");
 		// récupération de la réponse
 		// Remplacement du body
 		SOAPUtils.replaceBody(axis2MC.getEnvelope(), bodyReplacer);
 
+		LOGGER.debug("====================>replaceBody6");
 		// Remplacement du Content-Type
 		final var newContentType = contentTypeComputer.apply(messageContext);
 		if (newContentType != null) {
 			setContentType(messageContext, newContentType);
 		}
 
+		LOGGER.debug("====================>replaceBody7");
 		// Remplacement du Content-Disposition
 		if (contentDispositionComputer != null) {
 			final var newContentDisposition = contentDispositionComputer.apply(messageContext);
@@ -167,6 +178,7 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 				setContentDisposition(messageContext, newContentDisposition);
 			}
 		}
+		LOGGER.debug("====================>replaceBody8");
 	}
 
 	protected org.apache.axis2.context.MessageContext getAxis2MessageContext(MessageContext messageContext) {
@@ -199,13 +211,37 @@ abstract class AbstractRudiHandler extends AbstractHandler implements ManagedLif
 	}
 
 	/**
-	 * Créé un identifiant unique d'API à partir du context
+	 * Créé un identifiant unique d'API à partir du context Exemple de données:
+	 * 
+	 * <ul>
+	 * <li>Property(api.ut.api of class java.lang.String)=3eaf59f4-6a8f-4efa-8fa3-9e833e444848_dwnl</li>
+	 * <li>Property(api.ut.requestTime of class java.lang.String)=1719331933721</li>
+	 * <li>Property(api.ut.backendRequestTime of class java.lang.String)=1719331933764</li>
+	 * <li>Property(api.ut.version of class java.lang.String)=1.0.0</li>
+	 * <li>Property(api.ut.status of class java.lang.String)=PUBLISHED</li>
+	 * <li>Property(api.ut.userId of class java.lang.String)=RUDI/<login>@carbon.super</li>
+	 * <li>Property(api.ut.userName of class java.lang.String)=RUDI/<login>@carbon.super</li>
+	 * <li>Property(api.ut.backendRequestEndTime of class java.lang.Long)=1719331933793</li>
+	 * <li>Property(api.ut.application.id of class java.lang.String)=8</li>
+	 * <li>Property(api.ut.context of class java.lang.String)=/datasets/3eaf59f4-6a8f-4efa-8fa3-9e833e444848/dwnl/1.0.0</li>
+	 * <li>Property(api.ut.resource of class java.lang.String)=/dwnl/1.0.0</li>
+	 * <li>Property(api.ut.api_type of class java.lang.String)=API</li>
+	 * <li>Property(api.ut.apiPublisher of class java.lang.String)=admin</li>
+	 * <li>Property(api.ut.consumerKey of class java.lang.String)=xxxxxx</li>
+	 * <li>Property(api.ut.api_version of class java.lang.String)=1.0.0</li>
+	 * <li>Property(api.ut.hostName of class java.lang.String)=localhost</li>
+	 * <li>Property(api.ut.application.name of class java.lang.String)=rudi_application</li>
+	 * <li>Property(api.ut.HTTP_METHOD of class java.lang.String)=GET</li>
+	 * <li>Property(API_UUID of class java.lang.String)=9e1a6714-78c7-4bcb-bba8-27c622b6021e</li>
+	 * </ul>
+	 * 
 	 */
 	protected APIIdentifier createAPIIdentifier(MessageContext messageContext) {
-		final var selectedApi = Utils.getSelectedAPI(messageContext);
+		org.apache.synapse.api.API selectedApi = Utils.getSelectedAPI(messageContext);
 		String providerName = (String) messageContext.getProperty(API_UT_API_PUBLISHER_PROPERTY);
 		String apiName = (String) messageContext.getProperty(API_UT_API_PROPERTY);
-		return new APIIdentifier(providerName, apiName, selectedApi.getVersion());
+		String apiUuid = (String) messageContext.getProperty(API_UUID_PROPERTY);
+		return new APIIdentifier(providerName, apiName, selectedApi.getVersion(), apiUuid);
 	}
 
 	protected API getEngagedApi(MessageContext messageContext) throws APIManagementException {

@@ -1,4 +1,4 @@
-package org.rudi.tools.nodestub.service.impl;
+package org.rudi.tools.nodestub.service.matching.impl;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,10 +17,10 @@ import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.tools.nodestub.bean.MatchingDescription;
 import org.rudi.tools.nodestub.bean.MatchingField;
 import org.rudi.tools.nodestub.config.NodeStubConfiguration;
-import org.rudi.tools.nodestub.service.MatchingProcessor;
-import org.rudi.tools.nodestub.service.MatchingRequest;
-import org.rudi.tools.nodestub.service.MatchingService;
-import org.rudi.tools.nodestub.service.MatchingTokenMetadata;
+import org.rudi.tools.nodestub.service.matching.MatchingProcessor;
+import org.rudi.tools.nodestub.service.matching.MatchingRequest;
+import org.rudi.tools.nodestub.service.matching.MatchingService;
+import org.rudi.tools.nodestub.service.matching.MatchingTokenMetadata;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 

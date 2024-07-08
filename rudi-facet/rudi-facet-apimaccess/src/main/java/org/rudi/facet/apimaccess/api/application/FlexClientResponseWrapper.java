@@ -90,6 +90,7 @@ public class FlexClientResponseWrapper extends ClientResponseWrapper {
 	}
 
 	protected static <T> BodyExtractor<Mono<T>, ReactiveHttpInputMessage> toMono(ResolvableType elementType) {
+		//ICI
 		return (inputMessage, context) -> readWithMessageReaders(inputMessage, context, elementType,
 				(HttpMessageReader<T> reader) -> readToMono(inputMessage, context, elementType, reader),
 				ex -> Mono.from(unsupportedErrorHandler(inputMessage, ex)), skipBodyAsMono(inputMessage));

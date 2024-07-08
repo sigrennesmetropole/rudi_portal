@@ -3,8 +3,6 @@ package org.rudi.microservice.projekt.service.confidentiality.impl;
 import java.util.List;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.Confidentiality;
 import org.rudi.microservice.projekt.core.bean.ConfidentialitySearchCriteria;
@@ -17,12 +15,14 @@ import org.rudi.microservice.projekt.storage.dao.confidentiality.Confidentiality
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ConfidentialityServiceImpl implements ConfidentialityService {
 
 	private final List<UpdateConfidentialityValidator> updateConfidentialityValidators;

@@ -1,7 +1,7 @@
 /**
  * RUDI Portail
  */
-package org.rudi.tools.nodestub.service;
+package org.rudi.tools.nodestub.service.matching;
 
 import java.util.List;
 import java.util.UUID;

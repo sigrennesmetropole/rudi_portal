@@ -1,7 +1,7 @@
 /**
  * RUDI Portail
  */
-package org.rudi.microservice.apigateway.facade.config.security;
+package org.rudi.microservice.apigateway.facade.config.security.oauth2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +11,16 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.rudi.common.core.security.AuthenticatedUser;
 import org.rudi.common.core.security.UserType;
+import org.rudi.common.service.util.ApplicationContext;
+import org.rudi.facet.acl.bean.ProjectKeystore;
+import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.acl.helper.ProjectKeystoreSearchCriteria;
+import org.rudi.microservice.apigateway.facade.config.gateway.ApiGatewayConstants;
+import org.rudi.microservice.apigateway.facade.config.security.AbstractAuthenticationWebFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +44,8 @@ import reactor.core.publisher.Mono;
 public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2WebFilter.class);
+
+	private ACLHelper aclHelper;
 
 	private RestTemplate restTemplate = null;
 
@@ -93,6 +103,14 @@ public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 
 	private AuthenticatedUser createAuthenticatedUser(OAuth2TokenData tokenData) {
 		AuthenticatedUser user = new AuthenticatedUser(tokenData.getClientId(), UserType.ROBOT);
+		ProjectKeystoreSearchCriteria searchCriteria = ProjectKeystoreSearchCriteria.builder()
+				.clientId(tokenData.getClientId()).build();
+		// on essaye de récupérer le keystore (donc l'uuid du projet)
+		Page<ProjectKeystore> keyStores = getAclHelper().searchProjectKeystores(searchCriteria, Pageable.ofSize(1));
+		if (!keyStores.isEmpty()) {
+			user.addData(ApiGatewayConstants.PROJECTKEY_STORE_UUID,
+					keyStores.getContent().get(0).getProjectUuid().toString());
+		}
 		user.setRoles(new ArrayList<>());
 		if (CollectionUtils.isNotEmpty(tokenData.getAuthorities())) {
 			for (String role : tokenData.getAuthorities()) {
@@ -118,6 +136,13 @@ public class OAuth2WebFilter extends AbstractAuthenticationWebFilter {
 		}
 
 		return new HttpEntity<>(map, headers);
+	}
+
+	protected ACLHelper getAclHelper() {
+		if (aclHelper == null) {
+			aclHelper = ApplicationContext.getBean(ACLHelper.class);
+		}
+		return aclHelper;
 	}
 
 }

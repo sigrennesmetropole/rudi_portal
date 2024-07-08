@@ -22,4 +22,6 @@ public final class ApiGatewayConstants {
 	public static final String APIGATEWAY_UNKNOWN_LOGIN = "unknown";
 
 	public static final String APIGATEWAY_ERROR_HEADER_NAME = "X-Error-Message";
+
+	public static final String PROJECTKEY_STORE_UUID = "projectKeyStoreUuid";
 }

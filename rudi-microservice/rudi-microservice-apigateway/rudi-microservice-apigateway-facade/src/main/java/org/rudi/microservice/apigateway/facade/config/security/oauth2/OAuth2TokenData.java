@@ -1,7 +1,7 @@
 /**
  * RUDI Portail
  */
-package org.rudi.microservice.apigateway.facade.config.security;
+package org.rudi.microservice.apigateway.facade.config.security.oauth2;
 
 import java.util.List;
 

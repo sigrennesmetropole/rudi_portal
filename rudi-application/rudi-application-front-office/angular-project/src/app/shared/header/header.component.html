@@ -1,184 +1,144 @@
-<div class="header-container mat-typography" [ngClass]="ngClass">
-    <div *ngIf="mediaSize.isXl || mediaSize.isXxl">
-        <nav class="header-nav rudi-header-container navbar navbar-expand pe-0"
-             aria-label="navbar-desktop">
-            <div class="header-logo-container navbar-brand">
-                <a routerLink="/home">
-                    <img *ngIf="!logoIsLoading" class="header-logo" [src]="logo"
-                         alt="Logo bleu orange beta de rennes metropole"/>
+<div class="header-container">
+
+    <a routerLink="/home">
+        <img *ngIf="!logoIsLoading" class="header-logo" [src]="logo"
+             alt="Logo bleu orange beta de rennes metropole"/>
+    </a>
+
+    <div id="main-nav" [ngClass]="{
+        'menu-container-mobile': mediaSize.isDeviceMobile,
+        'menu-container-desktop': mediaSize.isDeviceDesktop
+    }">
+        <div *ngIf="mediaSize.isDeviceMobile">
+            <div *ngTemplateOutlet="menuMobile"></div>
+        </div>
+        <div *ngIf="mediaSize.isDeviceDesktop">
+            <div *ngTemplateOutlet="menuList"></div>
+        </div>
+        
+        <div *ngIf="isConnectedAsUser">
+            <button [matMenuTriggerFor]="accountMenu" mat-stroked-button [ngClass]="{
+                    'my-account-btn-mobile': mediaSize.isSm || mediaSize.isXs || mediaSize.isMd || mediaSize.isLg,
+                    'my-account-btn-desktop': mediaSize.isXl || mediaSize.isXxl
+                }">
+                <div class="btn-text-container">
+                    <img alt="{{'header.monCompte'| translate}}"
+                         src="assets/images/mon_compte.png">
+                    <div *ngIf="mediaSize.isXl || mediaSize.isXxl">
+                        <span class="text-btn">{{ 'header.monCompte'| translate }}</span>
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div *ngIf="!isConnectedAsUser">
+            <div *ngIf="mediaSize.isDeviceMobile">
+                <a class="login-btn-mobile" href="#" routerLink="login" mat-mini-fab
+                   aria-label="Redirection vers la page de connexion"
+                   (click)="handleClickGoLogin()">
+                    <mat-icon fontIcon="account_circle" aria-hidden="false" aria-label="Ouvrir le menu"></mat-icon>
                 </a>
             </div>
-            <div
-                class="justify-content-end navbar-menu-items header-container-lg not-clickable navbar-expand collapse show"
-                id="main-nav">
-                <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0 me-2">
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase text-decoration-none"
-                           rel="noopener noreferrer"
-                           routerLink="home"
-                           [routerLinkActive]="'active'"
-                        >
-                            <em class="fa fa-home fa-1x me-2"></em>
-                            <span>{{ 'header.accueil'| translate }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase text-decoration-none" href="#" routerLink="catalogue"
-                           [routerLinkActive]="'active'"><span
-                            class="ul-items-mobile">{{ 'header.catalogue'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" routerLink="projets"
-                           rel="noopener noreferrer" class="nav-link text-uppercase text-decoration-none"
-                           [routerLinkActive]="'active'"><span>{{ 'header.reutilisations'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase text-decoration-none" href="#" routerLink="organization"
-                           [routerLinkActive]="'active'"><span
-                            class="ul-items-mobile">{{ 'header.organisations'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase text-decoration-none" [routerLinkActive]="'active'"
-                           [href]="urlToDoc"
-                           rel="noopener noreferrer" target="_blank">
-                            <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
-                            <span>{{ 'header.documentation'| translate }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase text-decoration-none"
-                           href="{{'rudidatarennes.index'|getBackendProperty|async}}"
-                           target="_blank"
-                           rel="noopener noreferrer" [routerLinkActive]="'active'">
-                            <em class="fa fa-external-link fa-1x me-2  icon-hide-mobile"></em>
-                            <span>{{ 'header.blogProjet'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item account-btn">
-                        <button *ngIf="!isConnectedAsUser" mat-stroked-button (click)="handleClickGoLogin()">
-                            <span>{{ 'header.logIn'| translate }}</span>
-                        </button>
-                        <button *ngIf="isConnectedAsUser" [matMenuTriggerFor]="accountMenu" mat-stroked-button>
-                            <img class="img-style" alt="{{'header.monCompte'| translate}}"
-                                 src="assets/images/mon_compte.png">
-                            <span>{{ 'header.monCompte'| translate }}</span>
-                        </button>
-                        <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
-                            <button class="title" mat-menu-item
-                                    (click)="handleClickGoMonCompte()">{{ 'header.accountMenu.myAccount'| translate }}
-                            </button>
-                            <button class="title" mat-menu-item
-                                    (click)="handleClickGoReceivedLinkedDatasets()">{{ 'header.accountMenu.myNotifications'| translate }}
-                            </button>
-                            <button class="title" mat-menu-item
-                                    (click)="handleClickGoToReuse()">{{ 'header.accountMenu.myActivity'| translate }}
-                            </button>
-                            <button class="title" mat-menu-item
-                                    (click)="handleClickGoToMySelfdata()">{{ 'header.accountMenu.mySelfdata'| translate }}
-                            </button>
-                            <hr class="hr">
-                            <button (click)="handleClickLogout()" class="title"
-                                    mat-menu-item>{{ 'header.logOut'| translate }}
-                            </button>
-                        </mat-menu>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-
-    <div *ngIf="mediaSize.isXs || mediaSize.isSm || mediaSize.isMd || mediaSize.isLg">
-        <nav class="navbar header-nav rudi-header-container" aria-label="navbar-mobile">
-            <span>
-                <a routerLink="/home">
-                    <img *ngIf="!logoIsLoading" class="header-logo" [src]="logo"
-                         alt="Logo bleu orange beta de rennes metropole"/>
+            <div *ngIf="mediaSize.isDeviceDesktop">
+                <a class="login-btn-desktop" href="#" routerLink="login"
+                   aria-label="Redirection vers la page de connexion"
+                   (click)="handleClickGoLogin()">
+                    {{ 'header.logIn'| translate }}
                 </a>
-            </span>
-
-            <!-- Conteneur boutons actions -->
-            <div class="buttons-container">
-                <!-- Bouton mon compte -->
-                <button *ngIf="!isConnectedAsUser" mat-stroked-button (click)="handleClickGoLogin()">
-                    <mat-icon>account_circle</mat-icon>
-                </button>
-                <button *ngIf="isConnectedAsUser" [matMenuTriggerFor]="accountMenu" mat-stroked-button>
-                    <img class="img-style" alt="mon_compte" src="assets/images/mon_compte.png">
-                </button>
-                <mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
-                    <button mat-menu-item
-                            (click)="handleClickGoMonCompte()">{{ 'header.accountMenu.myAccount'| translate }}
-                    </button>
-                    <button mat-menu-item
-                            (click)="handleClickGoReceivedLinkedDatasets()">{{ 'header.accountMenu.myNotifications'| translate }}
-                    </button>
-                    <button mat-menu-item
-                            (click)="handleClickGoToReuse()">{{ 'header.accountMenu.myActivity'| translate }}
-                    </button>
-                    <button mat-menu-item
-                            (click)="handleClickGoToMySelfdata()">{{ 'header.accountMenu.mySelfdata'| translate }}
-                    </button>
-                    <hr class="hr">
-                    <button (click)="handleClickLogout()" class="title"
-                            mat-menu-item>{{ 'header.logOut'| translate }}
-                    </button>
-                </mat-menu>
-                <!-- button menu burger -->
-                <button
-                    class="navbar-toggler custom-toggler header-btn-toggle p-2"
-                    type="button"
-                    (click)="handleClickBurger()"
-                    aria-controls="main-nav"
-                    aria-expanded="false"
-                    aria-label="Ouvrir">
-                    <span *ngIf="isCollapsed"
-                          class="navbar-toggler-icon d-flex align-items-center justify-content-center">
-                    </span>
-                    <span *ngIf="!isCollapsed">
-                        <em class="fa fa-times fa-1x me-2 pointer disabled"></em>
-                    </span>
-                </button>
             </div>
-
-            <!-- Fin button menu burger -->
-            <div class="justify-content-end navbar-menu-items header-container-sm collapse"
-                 [ngClass]="{ show: !isCollapsed }" id="main-nav2">
-                <ul class="navbar-nav header-navbar-link-color mt-2 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-decoration-none" href="#" routerLink="home"
-                           rel="noopener noreferrer" routerLinkActive="active-item">
-                            <span class="ul-items-mobile">{{ 'header.accueil'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-decoration-none" href="#" routerLink="catalogue"
-                           routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{ 'header.catalogue'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-decoration-none" href="#" routerLink="projets"
-                           routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{ 'header.reutilisations'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-decoration-none" href="#" routerLink="organization"
-                           routerLinkActive="active-item"><span
-                            class="ul-items-mobile">{{ 'header.organisations'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-decoration-none"
-                           href="{{'rudidatarennes.wiki'|getBackendProperty|async}}" target="_blank"
-                           rel="noopener noreferrer"
-                           [routerLinkActive]="'active-item'"><span
-                            class="ul-items-mobile">{{ 'header.documentation'| translate }}</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-decoration-none"
-                           href="{{'rudidatarennes.index'|getBackendProperty|async}}"
-                           rel="noopener noreferrer" [routerLinkActive]="'active'">
-                            <span class="ul-items-mobile">{{ 'header.blogProjet'| translate }}</span></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        </div>
     </div>
 </div>
 
+<ng-template #menuMobile>
+    <button class="burger-menu-btn" mat-mini-fab aria-label="Button d'ouverture du menu"
+            (click)="handleClickBurger()">
+
+        <div *ngIf="isCollapsed">
+            <mat-icon fontIcon="menu" aria-hidden="false" aria-label="Ouvrir le menu"></mat-icon>
+        </div>
+        <div *ngIf="!isCollapsed">
+            <mat-icon fontIcon="close" aria-hidden="false" aria-label="Fermer le menu"></mat-icon>
+        </div>
+    </button>
+
+    <div class="mobile-container" *ngIf="!isCollapsed">
+        <div *ngTemplateOutlet="menuList"></div>
+    </div>
+</ng-template>
+
+<ng-template #menuList>
+    <ul [ngClass]="{
+        'list-container-mobile': mediaSize.isDeviceMobile,
+        'list-container-desktop': mediaSize.isDeviceDesktop
+    }">
+        <li>
+            <a [ngClass]="ngClassNavLink"
+               rel="noopener noreferrer"
+               routerLink="home"
+               [routerLinkActive]="'active'"
+               (click)="handleClickBurger()"
+            >
+                <em class="fa fa-home me-2"></em>
+                <span>{{ 'header.accueil'| translate }}</span>
+            </a>
+        </li>
+        <li>
+            <a [ngClass]="ngClassNavLink" href="#" routerLink="catalogue"
+               [routerLinkActive]="'active'"
+               (click)="handleClickBurger()">
+                {{ 'header.catalogue'| translate }}
+            </a>
+        </li>
+        <li>
+            <a [ngClass]="ngClassNavLink" href="#" routerLink="projets"
+               rel="noopener noreferrer"
+               [routerLinkActive]="'active'"
+               (click)="handleClickBurger()">
+                {{ 'header.reutilisations'| translate }}
+            </a>
+        </li>
+        <li>
+            <a [ngClass]="ngClassNavLink" href="#" routerLink="organization"
+               [routerLinkActive]="'active'"
+               (click)="handleClickBurger()">
+                {{ 'header.organisations'| translate }}
+            </a>
+        </li>
+        <li>
+            <a [ngClass]="ngClassNavLink" [routerLinkActive]="'active'"
+               [href]="urlToDoc"
+               rel="noopener noreferrer" target="_blank">
+                <em class="fa fa-external-link me-2"></em>
+                <span>{{ 'header.documentation'| translate }}</span>
+            </a>
+        </li>
+        <li>
+            <a [ngClass]="ngClassNavLink"
+               href="{{'rudidatarennes.index'|getBackendProperty|async}}"
+               target="_blank"
+               rel="noopener noreferrer" [routerLinkActive]="'active'">
+                <em class="fa fa-external-link  me-2"></em>
+                <span>{{ 'header.blogProjet'| translate }}</span></a>
+        </li>
+    </ul>
+</ng-template>
+
+<!-- MENU 'MON COMPTE' -->
+<mat-menu #accountMenu="matMenu" role="menu" xPosition="before">
+    <button mat-menu-item
+            (click)="handleClickGoMonCompte()">{{ 'header.accountMenu.myAccount'| translate }}
+    </button>
+    <button mat-menu-item
+            (click)="handleClickGoReceivedLinkedDatasets()">{{ 'header.accountMenu.myNotifications'| translate }}
+    </button>
+    <button mat-menu-item
+            (click)="handleClickGoToReuse()">{{ 'header.accountMenu.myActivity'| translate }}
+    </button>
+    <button mat-menu-item
+            (click)="handleClickGoToMySelfdata()">{{ 'header.accountMenu.mySelfdata'| translate }}
+    </button>
+    <hr class="m-0">
+    <button (click)="handleClickLogout()"
+            mat-menu-item>{{ 'header.logOut'| translate }}
+    </button>
+</mat-menu>

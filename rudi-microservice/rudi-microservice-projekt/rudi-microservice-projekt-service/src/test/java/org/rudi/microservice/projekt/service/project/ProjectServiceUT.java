@@ -1,5 +1,11 @@
 package org.rudi.microservice.projekt.service.project;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -57,11 +63,6 @@ import org.springframework.data.domain.PageRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 /**
  * Class de test de la couche service
@@ -393,7 +394,7 @@ class ProjectServiceUT {
 		final Project updatedProject = projectService.updateProject(project);
 
 		assertThat(updatedProject).as("Aucun champ n'a été modifié à part le titre").usingRecursiveComparison()
-				.ignoringFields("datasetRequests", "creationDate", "updatedDate").isEqualTo(project);
+				.ignoringFields("datasetRequests", "linkedDatasets", "creationDate", "updatedDate").isEqualTo(project);
 	}
 
 	@Test
@@ -452,7 +453,7 @@ class ProjectServiceUT {
 				.sorted(Comparator.comparing(TargetAudience::getUuid)).collect(Collectors.toList()));
 
 		assertThat(updatedProject).as("Aucun champ n'a été modifié à part le titre").usingRecursiveComparison()
-				.ignoringFields("datasetRequests", "creationDate", "updatedDate").isEqualTo(project);
+				.ignoringFields("datasetRequests", "linkedDatasets", "creationDate", "updatedDate").isEqualTo(project);
 	}
 
 	@Test
@@ -940,7 +941,8 @@ class ProjectServiceUT {
 
 		val logo = getLogoFromPath(REJECTED_LOGO_TYPE);
 		// Je suis connecté avec le porteur du projet, j'ai donc accès à la modification.
-		assertThrows(IllegalArgumentException.class,() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, logo));
+		assertThrows(IllegalArgumentException.class,
+				() -> projectService.uploadMedia(projectUuid, KindOfData.LOGO, logo));
 	}
 
 	@Test

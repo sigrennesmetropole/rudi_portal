@@ -1,7 +1,7 @@
 /**
  * RUDI Portail
  */
-package org.rudi.tools.nodestub.service.impl;
+package org.rudi.tools.nodestub.service.matching.impl;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -14,7 +14,7 @@ import org.rudi.tools.nodestub.bean.MatchingField;
 import org.rudi.tools.nodestub.component.helper.MatchingDataHelper;
 import org.rudi.tools.nodestub.config.NodeStubConfiguration;
 import org.rudi.tools.nodestub.datafactory.service.DechetsService;
-import org.rudi.tools.nodestub.service.MatchingProcessor;
+import org.rudi.tools.nodestub.service.matching.MatchingProcessor;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;

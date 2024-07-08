@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 @EqualsAndHashCode
-class FirstBlock {
+public class FirstBlock {
 	private final SecretKey secretKey;
 	private final byte[] initialisationVector;
 }

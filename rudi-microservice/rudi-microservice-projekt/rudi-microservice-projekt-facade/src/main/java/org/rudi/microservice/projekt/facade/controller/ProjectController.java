@@ -11,7 +11,10 @@ import static org.rudi.common.core.security.QuotedRoleCodes.USER;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.rudi.bpmn.core.bean.Form;
+import org.rudi.bpmn.core.bean.HistoricInformation;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.facade.helper.ControllerHelper;
@@ -80,10 +83,11 @@ public class ProjectController implements ProjectsApi {
 
 	@Override
 	public ResponseEntity<PagedProjectList> searchProjects(List<UUID> datasetUuids, List<UUID> linkedDatasetUuids,
-			List<UUID> ownerUuids, List<ProjectStatus> status, Integer offset, Integer limit, String order)
-			throws Exception {
+			List<UUID> ownerUuids, List<UUID> projectUuids, List<ProjectStatus> status, Integer offset, Integer limit,
+			String order) throws Exception {
 		val searchCriteria = new ProjectSearchCriteria().datasetUuids(datasetUuids)
-				.linkedDatasetUuids(linkedDatasetUuids).ownerUuids(ownerUuids).status(status);
+				.linkedDatasetUuids(linkedDatasetUuids).ownerUuids(ownerUuids).projectUuids(projectUuids)
+				.status(status);
 		val pageable = utilPageable.getPageable(offset, limit, order);
 		val page = projectService.searchProjects(searchCriteria, pageable);
 		return ResponseEntity.ok(new PagedProjectList().total(page.getTotalElements()).elements(page.getContent()));
@@ -342,9 +346,15 @@ public class ProjectController implements ProjectsApi {
 
 		List<ProjectKey> projectKeys = projectService.searchProjectKeys(searchCriteria);
 		ProjectKeyPageResult result = new ProjectKeyPageResult();
-		result.setTotal((long)projectKeys.size());
+		result.setTotal((long) projectKeys.size());
 		result.setElements(projectKeys);
 		return ResponseEntity.ok(result);
+	}
+
+	@Override
+	public ResponseEntity<List<HistoricInformation>> getProjectTaskHistoryByTaskId(String taskId,
+			@Valid Boolean asAdmin) throws Exception {
+		return ResponseEntity.ok(projectTaskService.getTaskHistoryByTaskId(taskId, asAdmin));
 	}
 
 }

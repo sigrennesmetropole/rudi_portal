@@ -18,14 +18,14 @@ import lombok.val;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReutilisationStatusServiceImpl implements ReutilisationStatusService {
 	private final ReutilisationStatusDao reutilisationStatusDao;
 	private final ReutilisationStatusCustomDao reutilisationStatusCustomDao;
 	private final ReutilisationStatusMapper reutilisationStatusMapper;
 
-
 	@Override
-	@Transactional
+	@Transactional // readonly = false
 	public ReutilisationStatus createReutilisationStatus(ReutilisationStatus reutilisationStatus) {
 
 		assignReadOnlyFields(reutilisationStatus);
@@ -41,12 +41,14 @@ public class ReutilisationStatusServiceImpl implements ReutilisationStatusServic
 	}
 
 	@Override
-	public Page<ReutilisationStatus> searchReutilisationStatus(ReutilisationStatusSearchCriteria criteria, Pageable pageable) {
-		return reutilisationStatusMapper.entitiesToDto(reutilisationStatusCustomDao.searchReutilisationStatus(criteria, pageable),pageable);
+	public Page<ReutilisationStatus> searchReutilisationStatus(ReutilisationStatusSearchCriteria criteria,
+			Pageable pageable) {
+		return reutilisationStatusMapper
+				.entitiesToDto(reutilisationStatusCustomDao.searchReutilisationStatus(criteria, pageable), pageable);
 	}
 
 	@Override
-	@Transactional
+	@Transactional // readonly = false
 	public ReutilisationStatus updateReutilisationStatus(UUID uuid, ReutilisationStatus reutilisationStatus) {
 		final var entity = reutilisationStatusDao.findByUUID(uuid);
 		reutilisationStatusMapper.dtoToEntity(reutilisationStatus, entity);

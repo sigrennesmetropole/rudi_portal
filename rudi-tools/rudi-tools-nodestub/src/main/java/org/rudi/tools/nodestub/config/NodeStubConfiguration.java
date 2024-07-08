@@ -20,6 +20,7 @@ import lombok.Setter;
 public class NodeStubConfiguration {
 	private File reportsDirectory;
 	private File resourcesDirectory;
+	private File endpointsDirectory;
 
 	/**
 	 * Répertoire contenant les tokens générés suite à un appariement Selfdata (cf RUDI-2395).
@@ -27,8 +28,7 @@ public class NodeStubConfiguration {
 	private Path matchingTokensDirectory;
 
 	/**
-	 * la propriété utilisé pour être authentifié en tant que nodestub définit l'UUID de moi-même
-	 * donc je la prend ici
+	 * la propriété utilisé pour être authentifié en tant que nodestub définit l'UUID de moi-même donc je la prend ici
 	 */
 	@Getter
 	@Value("${module.oauth2.client-id}")

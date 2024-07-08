@@ -4,19 +4,19 @@
         <div *ngIf="!headingLoading">
             <div class="d-flex justify-content-center">
             <span
-                class="card-text">{{pageTitle}}</span>
+                class="card-text">{{ pageTitle }}</span>
             </div>
 
-            <div class="d-flex justify-content-center">
+            <div class="title-container">
                     <span class="icon-header-title">
                       <mat-icon class="large-icon-size" aria-hidden="false" aria-label=""
                                 [svgIcon]="icon"></mat-icon>
                     </span>
-                <span class="header-title">{{pageSubTitle}}</span>
+                <span class="header-title">{{ pageSubTitle }}</span>
             </div>
 
-            <div *ngIf="status" class="d-flex justify-content-center">
-                <span class="status-chip">{{status}}</span>
+            <div *ngIf="status" class="status-container">
+                <span class="status-chip">{{ status }}</span>
             </div>
         </div>
     </div>

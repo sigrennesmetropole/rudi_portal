@@ -2,11 +2,10 @@
 <mat-sidenav-container>
     <mat-sidenav-content class="sidebar-content-pd">
         <app-loader [active]="loading"></app-loader>
-        <div *ngIf="project" [ngClass]="{'project-container-sm': mediaSize.isSm  || mediaSize.isMd,
-            'project-container-lg':  mediaSize.isLg, 'project-container-xl': mediaSize.isXl, 'project-container-xxl': mediaSize.isXxl}"
+        <div *ngIf="project"
              class="project-container ps-0 pe-0 container-fluid">
             <!-- Icon et titre de la ressource -->
-            <div class="project-header ml">
+            <div [ngClass]="{'px-small': mediaSize.isDeviceMobile,'px-large': mediaSize.isDeviceDesktop}">
                 <app-project-heading [logo]="projectLogo" [ownerDescription]="userIdentity"
                                      [projectTitle]="project.title"
                                      [status]="project.functional_status"></app-project-heading>
@@ -15,7 +14,8 @@
 
             <!-- Bandeau-->
             <div class="bandeau">
-                <mat-toolbar class="bandeau-card">
+                <mat-toolbar [ngClass]="{'px-small': mediaSize.isDeviceMobile,'px-large': mediaSize.isDeviceDesktop}"
+                             class="bandeau-card">
                     <button class="button button-info" disabled mat-raised-button>
                         <mat-icon
                             [class]="(mediaSize.isXs || mediaSize.isSm) ? 'icon-information-sm' : 'icon-information'"
@@ -38,26 +38,19 @@
             </div>
             <!-- Fin Bandeau -->
             <!-- Card Description et Colonne de droite -->
-            <div class="row mt-3 px-80 card-description-keyword-row">
+            <div [ngClass]="{'px-small': mediaSize.isDeviceMobile,'px-large': mediaSize.isDeviceDesktop}"
+                 class="row mt-3 card-description-keyword-row">
 
                 <!--  Card Description -->
-                <div [ngClass]="{'col-7': mediaSize.isMd,
-                    'col-8':  mediaSize.isSm  || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
-                     class="card-description-keyword">
-                    <mat-card class="project-card project-card-description">
-
+                <div class="col-sm-12 col-lg-8">
+                    <mat-card class="project-card">
                         <app-project-main-informations [isProjectUpdatable]="false"
                                                        [project]="project"></app-project-main-informations>
-
                     </mat-card>
-
                 </div>
 
                 <!-- Colonne de droite -->
-                <div [ngClass]="{'col-5': mediaSize.isMd,
-                    'col-4':  mediaSize.isSm  || mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
-                     class="card-project-type">
-
+                <div class="col-sm-12 col-lg-4">
                     <!-- Informations générales -->
                     <mat-card class="card-main-information project-card pb-4">
                         <div class="card-project-type-title">
@@ -85,7 +78,6 @@
                                 </span>
                             </div>
                         </div>
-
                     </mat-card>
 
                     <!-- Jeux de données utilisés -->

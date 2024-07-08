@@ -21,6 +21,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.rudi.bpmn.core.bean.Action;
 import org.rudi.bpmn.core.bean.AssetDescription;
 import org.rudi.bpmn.core.bean.Form;
+import org.rudi.bpmn.core.bean.HistoricInformation;
 import org.rudi.bpmn.core.bean.Status;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.common.core.DocumentContent;
@@ -44,6 +46,8 @@ import org.rudi.facet.bpmn.helper.form.FormHelper;
 import org.rudi.facet.bpmn.helper.workflow.AssetDescriptionHelper;
 import org.rudi.facet.bpmn.helper.workflow.AssignmentHelper;
 import org.rudi.facet.bpmn.helper.workflow.BpmnHelper;
+import org.rudi.facet.bpmn.helper.workflow.HistoricHelper;
+import org.rudi.facet.bpmn.mapper.workflow.HistoricInformationMapper;
 import org.rudi.facet.bpmn.service.AssetDescriptionActionListener;
 import org.rudi.facet.bpmn.service.InitializationService;
 import org.rudi.facet.bpmn.service.TaskConstants;
@@ -52,6 +56,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
@@ -112,6 +118,12 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 
 	@Autowired(required = false)
 	private List<AssetDescriptionActionListener<E>> assetListeners;
+
+	@Autowired
+	private HistoricHelper historicHelper;
+
+	@Autowired
+	private HistoricInformationMapper historicInformationMapper;
 
 	protected AbstractTaskServiceImpl(ProcessEngine processEngine, FormHelper formHelper, BpmnHelper bpmnHelper,
 			UtilContextHelper utilContextHelper, InitializationService initializationService, R assetDescriptionDao,
@@ -783,4 +795,17 @@ public abstract class AbstractTaskServiceImpl<E extends AssetDescriptionEntity, 
 	protected void checkRightsOnInitEntity(E assetDescriptionEntity) throws IllegalArgumentException {
 		// nothing to do by default
 	}
+
+	@Override
+	public List<HistoricInformation> getTaskHistoryByTaskId(String taskId, Boolean asAdmin)
+			throws InvalidDataException {
+		org.activiti.engine.task.Task task = bpmnHelper.queryTaskById(taskId, asAdmin);
+
+		// collecte des historiques de workflow
+		Page<HistoricActivityInstance> historicActivityInstances = historicHelper
+				.collectHistoricActivitiByProcessInstanceId(task.getProcessInstanceId(), Pageable.unpaged());
+
+		return historicInformationMapper.entitiesToDto(historicActivityInstances.getContent());
+	}
+
 }

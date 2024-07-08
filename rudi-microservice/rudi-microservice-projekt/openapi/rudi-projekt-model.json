@@ -232,6 +232,14 @@
 								},
 								"minItems": 0
 							},
+							"linked_datasets": {
+								"description": "Jeu de données associé",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/LinkedDataset"
+								},
+								"minItems": 0
+							},
 							"is_a_reuse": {
 								"description": "true si le projet est en fait une réutilisation",
 								"type": "boolean",
@@ -366,6 +374,14 @@
 							},
 							"owner_uuids": {
 								"description": "UUIDs des utilisateurs ou des organisations ayant déclaré la réutilisation ou soumis le projet",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid"
+								}
+							},
+							"project_uuids": {
+								"description": "UUIDs des projets",
 								"type": "array",
 								"items": {
 									"type": "string",

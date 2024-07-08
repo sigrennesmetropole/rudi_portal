@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.exception.AppServiceBadRequestException;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.acl.core.bean.ProjectKey;
@@ -27,7 +28,6 @@ import org.rudi.microservice.acl.storage.dao.user.UserDao;
 import org.rudi.microservice.acl.storage.entity.projectkey.ProjectKeyEntity;
 import org.rudi.microservice.acl.storage.entity.projectkey.ProjectKeystoreEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
-import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

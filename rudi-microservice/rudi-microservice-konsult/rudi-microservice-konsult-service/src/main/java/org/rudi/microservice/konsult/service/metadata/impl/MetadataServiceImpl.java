@@ -79,8 +79,6 @@ public class MetadataServiceImpl implements MetadataService {
 			throw new MetadataNotFoundException(e);
 		} catch (DataverseAPIException e) {
 			throw new DataverseExternalServiceException(e);
-		} catch (APIManagerException e) {
-			throw new APIManagerExternalServiceException(e);
 		}
 	}
 
@@ -186,7 +184,7 @@ public class MetadataServiceImpl implements MetadataService {
 		return datasetService.searchDatasets(datasetSearchCriteria, facets);
 	}
 
-	private void rewriteMediaUrls(Metadata metadata) throws APIManagerException {
+	private void rewriteMediaUrls(Metadata metadata) {
 		for (final Media media : metadata.getAvailableFormats()) {
 			this.rewriteMediaUrl(metadata, media);
 		}

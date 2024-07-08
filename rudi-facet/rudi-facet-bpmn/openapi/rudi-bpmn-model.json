@@ -399,6 +399,17 @@
 					}
 				}
 			},
+			"HistoricInformationType": {
+				"enum": [
+					"CREATE",
+					"REMOVE",
+					"UPDATE",
+					"DELETE",
+					"ADD",
+					"TASK"
+				],
+				"type": "string"
+			},
 			"HistoricInformation": {
 				"type": "object",
 				"properties": {

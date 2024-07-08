@@ -10,7 +10,7 @@ import org.rudi.common.service.exception.AppServiceUnauthorizedException;
 import org.rudi.tools.nodestub.bean.MatchingDescription;
 import org.rudi.tools.nodestub.bean.MatchingField;
 import org.rudi.tools.nodestub.controller.api.MatchingApi;
-import org.rudi.tools.nodestub.service.MatchingService;
+import org.rudi.tools.nodestub.service.matching.MatchingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

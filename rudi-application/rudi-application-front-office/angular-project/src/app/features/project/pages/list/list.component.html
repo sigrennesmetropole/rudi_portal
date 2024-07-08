@@ -15,20 +15,20 @@
             </app-banner>
 
             <div
-                [ngClass]="{'data-set-full-height-sm': mediaSize.isSm || mediaSize.isMd, 'px-20': mediaSize.isXs}"
-                class="data-set-full-height mt-4 px-80">
+                [ngClass]="{'px-small': mediaSize.isXs || mediaSize.isSm, 'px-medium': mediaSize.isMd, 'px-large': mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl}"
+                class="mt-4">
                 <div class="list-headers">
                     <!--Nombre de résultats-->
                     <div class=" w-50 search-count">
                         <ng-container *ngIf="searchIsRunning">
-                            {{'searchbox.searchIsRunning'|translate}}
+                            {{ 'searchbox.searchIsRunning'|translate }}
                         </ng-container>
                         <ng-container *ngIf="!searchIsRunning">
                             <div *ngIf="projectListTotal >= 1">
-                                <span>{{projectListTotal}} {{'searchbox.results'|translate}}{{projectListTotal > 1 ? 's' : ''}}</span>
+                                <span>{{ projectListTotal }} {{ 'searchbox.results'|translate }}{{ projectListTotal > 1 ? 's' : '' }}</span>
                             </div>
                             <div *ngIf="projectListTotal == 0">
-                                <span>{{'searchbox.noResult'|translate}}</span>
+                                <span>{{ 'searchbox.noResult'|translate }}</span>
                             </div>
                         </ng-container>
 

@@ -9,6 +9,8 @@ import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,8 @@ public class MediaCipherOperator extends CipherOperator {
 		this.firstBlockCipherOperator = new FirstBlockCipherOperator(spec);
 	}
 
-	public void encrypt(InputStream decryptedStream, Key publicKey, OutputStream encryptedStream) throws GeneralSecurityException, IOException {
+	public void encrypt(InputStream decryptedStream, Key publicKey, OutputStream encryptedStream)
+			throws GeneralSecurityException, IOException {
 		final var secretKey = CryptoUtil.generateSecretKey(spec.secretKeyAlgorithm, spec.secretKeySize);
 		final var initialisationVector = CryptoUtil.generateRandomNonce(spec.initializationVectorLength);
 		final var firstBlock = new FirstBlock(secretKey, initialisationVector);
@@ -37,30 +40,56 @@ public class MediaCipherOperator extends CipherOperator {
 		final var encryptedFirstBlock = firstBlockCipherOperator.encrypt(firstBlock, publicKey);
 		encryptedStream.write(encryptedFirstBlock);
 
-		final AlgorithmParameterSpec parameterSpec = new GCMParameterSpec(spec.authenticationTagLength, initialisationVector);
+		final AlgorithmParameterSpec parameterSpec = new GCMParameterSpec(spec.authenticationTagLength,
+				initialisationVector);
 		encryptWithKey(decryptedStream, secretKey, encryptedStream, parameterSpec);
 	}
 
-	public void decrypt(InputStream encryptedStream, Key privateKey, OutputStream decryptedStream) throws GeneralSecurityException, IOException {
+	public void decrypt(InputStream encryptedStream, Key privateKey, OutputStream decryptedStream)
+			throws GeneralSecurityException, IOException {
 		final var firstBlock = decryptFirstBlock(encryptedStream, privateKey, spec);
 		final var secretKey = firstBlock.getSecretKey();
 		final var initialisationVector = firstBlock.getInitialisationVector();
 
-		final AlgorithmParameterSpec parameterSpec = new GCMParameterSpec(spec.authenticationTagLength, initialisationVector);
+		decryptNextBlocks(secretKey, initialisationVector, encryptedStream, decryptedStream);
+	}
+
+	public void decryptNextBlocks(SecretKey secretKey, byte[] initialisationVector, InputStream encryptedStream,
+			OutputStream decryptedStream) throws GeneralSecurityException, IOException {
+		final AlgorithmParameterSpec parameterSpec = new GCMParameterSpec(spec.authenticationTagLength,
+				initialisationVector);
 		decryptWithKey(encryptedStream, secretKey, decryptedStream, parameterSpec);
 	}
 
-	private FirstBlock decryptFirstBlock(InputStream encryptedStream, Key privateKey, RudiAlgorithmSpec rudiSpec) throws GeneralSecurityException, IOException {
+	public FirstBlock decryptFirstBlock(InputStream encryptedStream, Key privateKey, RudiAlgorithmSpec rudiSpec)
+			throws GeneralSecurityException, IOException {
 		final var encryptedFirstBlock = new byte[rudiSpec.firstBlockSpec.getFirstBlockSizeInBytes()];
 		int count;
 		int offset = 0;
-		while ((count = encryptedStream.read(encryptedFirstBlock,offset, encryptedFirstBlock.length - offset)) > 0){
+		while ((count = encryptedStream.read(encryptedFirstBlock, offset, encryptedFirstBlock.length - offset)) > 0) {
 			offset += count;
-			if(offset >= encryptedFirstBlock.length){
+			if (offset >= encryptedFirstBlock.length) {
 				break;
 			}
 		}
 		return firstBlockCipherOperator.decrypt(encryptedFirstBlock, privateKey);
+	}
+
+	public Cipher decryptUpdateNextBlocks(SecretKey secretKey, byte[] initialisationVector, InputStream encryptedStream,
+			OutputStream decryptedStream) throws GeneralSecurityException, IOException {
+		final AlgorithmParameterSpec parameterSpec = new GCMParameterSpec(spec.authenticationTagLength,
+				initialisationVector);
+		return decryptUpdateWithKey(encryptedStream, secretKey, decryptedStream, parameterSpec);
+	}
+
+	public void decryptUpdateNextBlocks(Cipher cipher, InputStream encryptedStream, OutputStream decryptedStream)
+			throws GeneralSecurityException, IOException {
+		decryptUpdateWithKey(cipher, encryptedStream, decryptedStream);
+	}
+
+	public void decryptFinalNextBlokcs(Cipher cipher, OutputStream decryptedStream)
+			throws GeneralSecurityException, IOException {
+		decryptFinalWithKey(cipher, decryptedStream);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -79,20 +108,20 @@ public class MediaCipherOperator extends CipherOperator {
 
 		final var outputFilePath = inputFilePath.resolveSibling(inputFilePath.getFileName() + "." + modeString + "ed");
 
-		try (
-				final var inputFileStream = Files.newInputStream(inputFilePath);
-				final var outputFileStream = Files.newOutputStream(outputFilePath)
-		) {
+		try (final var inputFileStream = Files.newInputStream(inputFilePath);
+				final var outputFileStream = Files.newOutputStream(outputFilePath)) {
 			final var mediaCipherOperator = new MediaCipherOperator(RudiAlgorithmSpec.DEFAULT);
 			final var keyGeneratorFromPem = new KeyGeneratorFromPem();
 			final var keyAlgorithm = mediaCipherOperator.spec.firstBlockSpec.keyPairAlgorithm;
 
 			if (modeString.equals("encrypt")) {
-				final var publicKey = keyGeneratorFromPem.generatePublicKey(keyAlgorithm, Files.newInputStream(keyPath));
+				final var publicKey = keyGeneratorFromPem.generatePublicKey(keyAlgorithm,
+						Files.newInputStream(keyPath));
 				mediaCipherOperator.encrypt(inputFileStream, publicKey, outputFileStream);
 			}
 			if (modeString.equals("decrypt")) {
-				final var privateKey = keyGeneratorFromPem.generatePrivateKey(keyAlgorithm, Files.newInputStream(keyPath));
+				final var privateKey = keyGeneratorFromPem.generatePrivateKey(keyAlgorithm,
+						Files.newInputStream(keyPath));
 				mediaCipherOperator.decrypt(inputFileStream, privateKey, outputFileStream);
 			}
 		}

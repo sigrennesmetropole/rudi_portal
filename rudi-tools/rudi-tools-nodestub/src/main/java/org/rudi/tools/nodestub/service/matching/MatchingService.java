@@ -1,4 +1,4 @@
-package org.rudi.tools.nodestub.service;
+package org.rudi.tools.nodestub.service.matching;
 
 import java.io.IOException;
 import java.util.List;

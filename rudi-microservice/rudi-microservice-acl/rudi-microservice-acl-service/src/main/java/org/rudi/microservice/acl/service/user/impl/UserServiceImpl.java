@@ -20,6 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.common.core.LongId;
 import org.rudi.common.core.security.AuthenticatedUser;
+import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.helper.UtilContextHelper;
 import org.rudi.common.service.util.PageableUtil;
@@ -55,7 +56,6 @@ import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
 import org.rudi.microservice.acl.storage.entity.address.AddressRoleEntity;
 import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
-import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -66,8 +66,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service de gestion des utilisateurs RUDI
@@ -464,7 +464,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public org.rudi.microservice.acl.core.bean.ClientRegistrationDto getClientRegistration(String login) throws GetClientRegistrationException, BuildClientRegistrationException, SSLException {
+	public org.rudi.microservice.acl.core.bean.ClientRegistrationDto getClientRegistration(String login)
+			throws GetClientRegistrationException, BuildClientRegistrationException, SSLException {
 		ClientRegistration registration = null;
 		// Register anonymous et rudi
 		if (login.equals(anonymousUsername)) {
@@ -480,7 +481,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ClientRegistrationDto registerClientByPassword(String login, String password) throws GetClientRegistrationException, BuildClientRegistrationException, SSLException {
+	public ClientRegistrationDto registerClientByPassword(String login, String password)
+			throws GetClientRegistrationException, BuildClientRegistrationException, SSLException {
 		return clientRegistrationMapper
 				.entityToDto(rudiClientRegistrationRepository.findRegistrationOrRegister(login, password));
 	}

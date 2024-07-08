@@ -883,6 +883,18 @@
 					},
 					{
 						"in": "query",
+						"name": "projectUuids",
+						"description": "UUIDs des projets",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"format": "uuid"
+							}
+						}
+					},
+					{
+						"in": "query",
 						"name": "status",
 						"schema": {
 							"type": "array",
@@ -3845,6 +3857,52 @@
 					},
 					"503": {
 						"$ref": "#/components/responses/ServiceUnavailable"
+					}
+				}
+			}
+		},
+		"/projects/tasks/{task-id}/historic": {
+			"get": {
+				"tags": [
+					"task"
+				],
+				"summary": "Récupération de l'historique d'une tâche (asset + tâche)",
+				"description": "Récupération de l'historique d'une tâche (asset + tâche)",
+				"operationId": "getProjectTaskHistoryByTaskId",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "task-id",
+						"description": "Id de la tâche",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}, {
+						"in": "query",
+						"name": "asAdmin",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "./../../../rudi-facet/rudi-facet-bpmn/openapi/rudi-bpmn-model.json#/components/schemas/HistoricInformation"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}

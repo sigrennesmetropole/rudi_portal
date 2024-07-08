@@ -18,6 +18,7 @@ import lombok.val;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TargetAudienceServiceImpl implements TargetAudienceService {
 	private final TargetAudienceMapper targetAudienceMapper;
 	private final TargetAudienceDao targetAudienceDao;
@@ -25,7 +26,8 @@ public class TargetAudienceServiceImpl implements TargetAudienceService {
 
 	@Override
 	public Page<TargetAudience> searchTargetAudiences(TargetAudienceSearchCriteria searchCriteria, Pageable pageable) {
-		return targetAudienceMapper.entitiesToDto(targetAudienceCustomDao.searchTargetAudiences(searchCriteria, pageable), pageable);
+		return targetAudienceMapper
+				.entitiesToDto(targetAudienceCustomDao.searchTargetAudiences(searchCriteria, pageable), pageable);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class TargetAudienceServiceImpl implements TargetAudienceService {
 	@Override
 	@Transactional
 	public TargetAudience updateTargetAudience(TargetAudience targetAudience) throws IllegalArgumentException {
-		if(targetAudience.getUuid() == null){
+		if (targetAudience.getUuid() == null) {
 			throw new IllegalArgumentException("UUID targetaudience missing");
 		}
 		final var entity = targetAudienceDao.findByUUID(targetAudience.getUuid());

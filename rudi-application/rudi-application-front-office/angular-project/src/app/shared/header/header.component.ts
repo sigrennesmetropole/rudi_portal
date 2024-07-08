@@ -86,15 +86,17 @@ export class HeaderComponent implements OnInit {
     /**
      * Récupérer les classes CSS pour mobile/desktop
      */
-    get ngClass(): NgClassObject {
-        return this.breakpointObserver.getNgClassFromMediaSize('header-container');
+    get ngClassNavLink(): NgClassObject {
+        return this.breakpointObserver.getNgClassFromMediaSize('nav-link');
     }
 
     /**
      * Evenet : sur clic du burger
      */
     handleClickBurger(): void {
-        this.isCollapsed = !this.isCollapsed;
+        if (this.mediaSize.isDeviceMobile) {
+            this.isCollapsed = !this.isCollapsed;
+        }
     }
 
     handleClickGoLogin(): void {

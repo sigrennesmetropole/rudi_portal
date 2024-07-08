@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -64,6 +65,10 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class ACLHelper {
+
+	private static final String ORDER_PARAMETER = "order";
+
+	private static final String OFFSET_PARAMETER = "offset";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ACLHelper.class);
 
@@ -106,19 +111,19 @@ public class ACLHelper {
 	private String updateUserPasswordEndpointUrl;
 
 	@Getter
-	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores}")
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-keystores}")
 	private String searchOrCreateProjectKeystoresUrl;
 
 	@Getter
-	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores/{project-key-store-uuid}}")
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.get.url:/acl/v1/project-keystores/{project-key-store-uuid}}")
 	private String getOrDeleteProjectKeystoresUrl;
 
 	@Getter
-	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores/{project-key-store-uuid}/project-keys}")
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.create.url:/acl/v1/project-keystores/{project-key-store-uuid}/project-keys}")
 	private String createProjectKeyUrl;
 
 	@Getter
-	@Value("${rudi.facet.acl.endpoint.project-key-stores.search.url:/acl/v1/project-key-stores/{project-key-store-uuid}/project-keys/{project-key-uuid}}")
+	@Value("${rudi.facet.acl.endpoint.project-key-stores.delete.url:/acl/v1/project-keystores/{project-key-store-uuid}/project-keys/{project-key-uuid}}")
 	private String deleteProjectKeyUrl;
 
 	@Getter
@@ -556,11 +561,50 @@ public class ACLHelper {
 				projectKeyStoreUuid, PROJECT_KEY_UUID_PARAMETER, projectKeyUuid)).retrieve().toBodilessEntity().block();
 	}
 
+	/**
+	 * @param searchCriteria
+	 * @param page
+	 * @return
+	 */
 	public Page<ProjectKeystore> searchProjectKeystores(ProjectKeystoreSearchCriteria searchCriteria, Pageable page) {
-		ProjectKeystorePageResult projectKeystorePageResult = loadBalancedWebClient.get()
-				.uri(getSearchOrCreateProjectKeystoresUrl()).retrieve().bodyToMono(ProjectKeystorePageResult.class)
-				.block();
-		return new PageImpl<>(projectKeystorePageResult.getElements(), page, projectKeystorePageResult.getTotal());
+		ProjectKeystorePageResult projectKeystorePageResult = searchMonoProjectKeystores(searchCriteria, page).block();
+		return new PageImpl<>(projectKeystorePageResult != null ? projectKeystorePageResult.getElements() : List.of(),
+				page, projectKeystorePageResult != null ? projectKeystorePageResult.getTotal() : 0);
+	}
+
+	/**
+	 * @param searchCriteria
+	 * @param page
+	 * @return
+	 */
+	public Mono<ProjectKeystorePageResult> searchMonoProjectKeystores(ProjectKeystoreSearchCriteria searchCriteria,
+			Pageable page) {
+		return loadBalancedWebClient.get().uri(buildSearchOrCreateProjectKeystoreUrl(), uriBuilder -> uriBuilder
+				.queryParamIfPresent("client-id", Optional.ofNullable(searchCriteria.getClientId()))
+				.queryParamIfPresent("min-expiration-date", Optional.ofNullable(searchCriteria.getMinExpirationDate()))
+				.queryParamIfPresent("max-expiration-date", Optional.ofNullable(searchCriteria.getMaxExpirationDate()))
+				.queryParamIfPresent("project-uuids", Optional.ofNullable(searchCriteria.getProjectUuids()))
+				.queryParamIfPresent(OFFSET_PARAMETER, Optional.ofNullable(page.getOffset()))
+				.queryParamIfPresent(LIMIT_PARAMETER, Optional.ofNullable(page.getPageSize()))
+				.queryParamIfPresent(ORDER_PARAMETER, Optional.ofNullable(convertSort(page.getSort()))).build())
+				.retrieve().bodyToMono(ProjectKeystorePageResult.class);
+	}
+
+	protected String convertSort(Sort sort) {
+		if (sort == null || sort.isUnsorted()) {
+			return null;
+		}
+		StringBuilder sortBuilder = new StringBuilder();
+		sort.forEach(order -> {
+			if (sortBuilder.length() > 0) {
+				sortBuilder.append(',');
+			}
+			if (order.isDescending()) {
+				sortBuilder.append('-');
+			}
+			sortBuilder.append(order.getProperty());
+		});
+		return sortBuilder.toString();
 	}
 
 }

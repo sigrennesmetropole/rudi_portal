@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
+import {ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {BreakpointObserverService, MediaSize, NgClassObject} from '@core/services/breakpoint-observer.service';
 import {URIComponentCodec} from '@core/services/codecs/uri-component-codec';
+import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
 
 @Component({
     selector: 'app-project-card',
@@ -17,11 +18,17 @@ export class ProjectCardComponent implements OnInit {
         private readonly breakpointObserver: BreakpointObserverService,
         private readonly uriComponentCodec: URIComponentCodec,
         private readonly router: Router,
+        private readonly projektMetierService: ProjektMetierService,
     ) {
     }
 
     ngOnInit(): void {
         this.mediaSize = this.breakpointObserver.getMediaSize();
+        if (!this.projectCatalogItem.logo) {
+            this.projektMetierService.getProjectLogo(this.projectCatalogItem.project.uuid).subscribe((logo) => {
+                this.projectCatalogItem.logo = logo;
+            });
+        }
     }
 
     get ngClass(): NgClassObject {

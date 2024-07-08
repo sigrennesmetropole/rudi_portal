@@ -3,8 +3,6 @@ package org.rudi.microservice.projekt.service.type.impl;
 import java.util.List;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.ProjectType;
 import org.rudi.microservice.projekt.core.bean.ProjectTypeSearchCriteria;
@@ -17,12 +15,14 @@ import org.rudi.microservice.projekt.storage.dao.type.ProjectTypeDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = false)
 public class ProjectTypeServiceImpl implements ProjectTypeService {
 
 	private final List<UpdateProjectTypeValidator> updateProjectTypeValidators;

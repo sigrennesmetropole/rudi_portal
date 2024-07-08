@@ -453,10 +453,12 @@
 
 }
 
+.p-large, .p-small {
+    padding-top: 80px !important;
+}
+
 .banner-reuses {
-    margin-top: 80px;
     background-color: var(--banner-solid-color);
-    padding: 65px 15px 43px 15px;
     min-height: 360px; // taille minimale pour afficher les popover sans qu'elles soient tronquées
 
     &-header {

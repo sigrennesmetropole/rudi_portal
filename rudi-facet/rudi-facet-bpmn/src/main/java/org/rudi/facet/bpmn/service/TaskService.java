@@ -3,6 +3,7 @@
  */
 package org.rudi.facet.bpmn.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -10,6 +11,7 @@ import javax.annotation.Nullable;
 import org.hibernate.exception.DataException;
 import org.rudi.bpmn.core.bean.AssetDescription;
 import org.rudi.bpmn.core.bean.Form;
+import org.rudi.bpmn.core.bean.HistoricInformation;
 import org.rudi.bpmn.core.bean.Task;
 import org.rudi.facet.bpmn.exception.FormConvertException;
 import org.rudi.facet.bpmn.exception.FormDefinitionException;
@@ -114,4 +116,6 @@ public interface TaskService<D extends AssetDescription> {
 	 * @return
 	 */
 	String getAssociatedTaskId(UUID assetUuid);
+
+	List<HistoricInformation> getTaskHistoryByTaskId(String taskId, Boolean asAdmin) throws InvalidDataException;
 }

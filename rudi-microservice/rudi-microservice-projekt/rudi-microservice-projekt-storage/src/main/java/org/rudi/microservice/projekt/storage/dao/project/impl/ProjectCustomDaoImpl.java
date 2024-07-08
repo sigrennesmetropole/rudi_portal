@@ -70,6 +70,8 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 								.in(linkedDatasetEntityUuids))
 				.add(searchCriteria.getOwnerUuids(),
 						(project, ownerUuids) -> project.get(FIELD_OWNER_UUID).in(ownerUuids))
+				.add(searchCriteria.getProjectUuids(),
+						(project, projectUuids) -> project.get(FIELD_UUID).in(projectUuids))
 				.add(searchCriteria.getStatus(), ProjectStatus::valueOf,
 						(project, status) -> project.get(FIELD_PROJECT_STATUS).in(status));
 	}
@@ -111,9 +113,9 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 		List<Predicate> predicates = new ArrayList<>();
 		predicates.add(builder.equal(countRoot.get(FIELD_UUID), searchCriteria.getProjectUuid()));
 		final Join<ProjectEntity, LinkedDatasetEntity> join = countRoot.join(FIELD_LINKED_DATASETS);
-		//Seulement les jdds restreints demandés sont à récuperer, les jdds ouverts n'étant pas des demandes au sen fonctionnel
+		// Seulement les jdds restreints demandés sont à récuperer, les jdds ouverts n'étant pas des demandes au sen fonctionnel
 		predicates.add(builder.equal(join.get(FIELD_DATASET_CONFIDENTIALITY), DatasetConfidentiality.RESTRICTED));
-		if(searchCriteria.getExcludedProducerUuid() != null) {
+		if (searchCriteria.getExcludedProducerUuid() != null) {
 			predicates.add(builder.notEqual(join.get(FIELD_PRODUCER_UUID), searchCriteria.getExcludedProducerUuid()));
 		}
 		countQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
@@ -130,22 +132,20 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 	}
 
 	@Override
-	public Integer getNumberOfLinkedDatasets(UUID projectUuid){ //etendre en 2 méthodes
+	public Integer getNumberOfLinkedDatasets(UUID projectUuid) { // etendre en 2 méthodes
 		return queryLauncher(projectUuid, FIELD_LINKED_DATASETS).intValue();
 	}
 
 	@Override
-	public Integer getNumberOfNewRequests(UUID projectUuid){ //etendre en 2 méthodes
+	public Integer getNumberOfNewRequests(UUID projectUuid) { // etendre en 2 méthodes
 		return queryLauncher(projectUuid, FIELD_DATASET_REQUESTS).intValue();
 	}
 
-
-
-	private<T> Long queryLauncher(UUID projectUuid, String fieldToJoin) {
+	private <T> Long queryLauncher(UUID projectUuid, String fieldToJoin) {
 		val builder = entityManager.getCriteriaBuilder();
 		val countQuery = builder.createQuery(Long.class);
 		val countRoot = countQuery.from(entitiesClass);
-		//Parametrer avec la classe
+		// Parametrer avec la classe
 		final Join<ProjectEntity, T> join = countRoot.join(fieldToJoin);
 
 		List<Predicate> predicates = new ArrayList<>();
@@ -156,20 +156,20 @@ public class ProjectCustomDaoImpl extends AbstractCustomDaoImpl<ProjectEntity, P
 		return entityManager.createQuery(countQuery).getSingleResult();
 	}
 
-
 	@Override
 	public List<ProjectByOwner> getNumberOfProjectsPerOwners(List<UUID> owners) {
 		val builder = entityManager.getCriteriaBuilder();
 		val countQuery = builder.createQuery(ProjectByOwner.class);
 		val countRoot = countQuery.from(entitiesClass);
-		//Ajout des filtres
+		// Ajout des filtres
 		List<Predicate> predicates = new ArrayList<>();
-		if(CollectionUtils.isNotEmpty(owners)){
+		if (CollectionUtils.isNotEmpty(owners)) {
 			predicates.add(countRoot.get(FIELD_OWNER_UUID).in(owners));
 		}
 		countQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
 		countQuery.groupBy(countRoot.get(FIELD_OWNER_UUID));
-		countQuery.select(builder.construct(ProjectByOwner.class, countRoot.get(FIELD_OWNER_UUID),builder.countDistinct(countRoot)));
+		countQuery.select(builder.construct(ProjectByOwner.class, countRoot.get(FIELD_OWNER_UUID),
+				builder.countDistinct(countRoot)));
 		return entityManager.createQuery(countQuery).getResultList();
 	}
 }

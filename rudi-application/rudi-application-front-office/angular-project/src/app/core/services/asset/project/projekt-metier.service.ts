@@ -78,6 +78,7 @@ export class ProjektMetierService {
             criteria.dataset_uuids,
             criteria.linked_dataset_uuids,
             criteria.owner_uuids,
+            criteria.project_uuids,
             criteria.status,
             criteria.offset,
             criteria.limit,

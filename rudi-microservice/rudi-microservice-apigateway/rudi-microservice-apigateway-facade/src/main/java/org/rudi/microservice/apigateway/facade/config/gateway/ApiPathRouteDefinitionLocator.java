@@ -7,17 +7,25 @@ import static java.util.Collections.synchronizedMap;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rudi.microservice.apigateway.core.bean.Api;
+import org.rudi.microservice.apigateway.core.bean.ApiMethod;
+import org.rudi.microservice.apigateway.core.bean.ApiParameter;
 import org.rudi.microservice.apigateway.core.bean.ApiSearchCriteria;
+import org.rudi.microservice.apigateway.facade.config.gateway.filters.DatasetDecryptGatewayFilterFactory;
 import org.rudi.microservice.apigateway.service.api.ApiService;
+import org.rudi.microservice.apigateway.service.encryption.EncryptionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.config.PropertiesRouteDefinitionLocator;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
@@ -48,16 +56,22 @@ public class ApiPathRouteDefinitionLocator extends InMemoryRouteDefinitionReposi
 
 	private static final List<String> SCHEMES = List.of("https", "http", "ftp", "ftps");
 
-	@Value("${rudi.apigateway.routs.page-size:50}")
+	@Value("${rudi.apigateway.routes.page-size:50}")
 	private int pageSize;
+
+	@Value("${rudi.apigateway.encryption.key-urls:http[s]?://.*/(konsult|apigateway)/v1/encryption-key.*}")
+	private String encryptionKeyUrlPattern;
 
 	private final ApiService apiService;
 
+	private final EncryptionService encryptionService;
+
 	private final Map<String, RouteDefinition> routes = synchronizedMap(new LinkedHashMap<String, RouteDefinition>());
 
-	public ApiPathRouteDefinitionLocator(ApiService apiService) {
+	public ApiPathRouteDefinitionLocator(ApiService apiService, EncryptionService encryptionService) {
 		super();
 		this.apiService = apiService;
+		this.encryptionService = encryptionService;
 	}
 
 	@Override
@@ -85,44 +99,106 @@ public class ApiPathRouteDefinitionLocator extends InMemoryRouteDefinitionReposi
 		return Flux.fromIterable(routesSafeCopy.values());
 	}
 
-	private void addRouteDefinition(Map<String, RouteDefinition> routes, Api api) throws URISyntaxException {
+	protected void addRouteDefinition(Map<String, RouteDefinition> routes, Api api) throws URISyntaxException {
 		RouteDefinition routeDefinition = new RouteDefinition();
 		routeDefinition.setId(api.getUuid().toString());
 		routeDefinition.setUri(new URI(api.getUrl()));
 
 		if (!isValidUri(routeDefinition.getUri())) {
+			// reject uri
+			log.warn("Reject invalid uri {}", routeDefinition.getUri());
 			return;
 		}
 
-		List<PredicateDefinition> predicateDefinitions = new ArrayList<>();
-		String path = buildPath(api);
-		predicateDefinitions.add(new PredicateDefinition("Path=" + path));
-		if (CollectionUtils.isNotEmpty(api.getMethods())) {
-			api.getMethods().forEach(method -> predicateDefinitions.add(new PredicateDefinition("Method=" + method)));
-		}
-		routeDefinition.setPredicates(predicateDefinitions);
+		String path = preparePredicate(routeDefinition, api);
 
 		List<FilterDefinition> filters = new ArrayList<>();
-		// on enlève le chemin par défaut de rudi
-		filters.add(new FilterDefinition("StripPrefix=" + computeStrip(path)));
-		// et on réécrit le header d'authentification car l'irisa n'aime pas
-		filters.add(new FilterDefinition("MapRequestHeader=Authorization,X-Authorization"));
-		filters.add(new FilterDefinition("RemoveRequestHeader=Authorization"));
+		handleDefaultFilters(filters, path);
+
+		if (api.getParameters().stream()
+				.anyMatch(e -> e.getName().equals(DatasetDecryptGatewayFilterFactory.ENCRYPTED_PROPERTY))) {
+			handleCryptedDatasetFilter(filters, api);
+		}
 		routeDefinition.setFilters(filters);
 
 		routes.put(routeDefinition.getId(), routeDefinition);
 	}
 
-	private boolean isValidUri(URI uri) {
+	protected void handleDefaultFilters(List<FilterDefinition> filters, String path) {
+		// on enlève le chemin par défaut de rudi
+		filters.add(new FilterDefinition("StripPrefix=" + computeStrip(path)));
+		// et on réécrit le header d'authentification car l'irisa n'aime pas
+		filters.add(new FilterDefinition("MapRequestHeader=Authorization,X-Authorization"));
+		filters.add(new FilterDefinition("RemoveRequestHeader=Authorization"));
+	}
+
+	protected String preparePredicate(RouteDefinition routeDefinition, Api api) {
+		List<PredicateDefinition> predicateDefinitions = new ArrayList<>();
+		String path = buildPath(api);
+		predicateDefinitions.add(new PredicateDefinition("Path=" + path));
+		if (CollectionUtils.isNotEmpty(api.getMethods())) {
+			String methodValues = api.getMethods().stream().map(ApiMethod::name).collect(Collectors.joining(","));
+			predicateDefinitions.add(new PredicateDefinition("Method=" + methodValues));
+		}
+		routeDefinition.setPredicates(predicateDefinitions);
+		return path;
+	}
+
+	protected void handleCryptedDatasetFilter(List<FilterDefinition> filters, Api api) {
+		boolean handle = false;
+		// cibler les paramètres (encrypted et nsplus)
+		Optional<ApiParameter> publicKeyUrlApiParameter = api.getParameters().stream()
+				.filter(e -> e.getName().equals(DatasetDecryptGatewayFilterFactory.PUBLIC_KEY_URL_PROPERTY))
+				.findFirst();
+		if (publicKeyUrlApiParameter.isPresent()
+				&& publicKeyUrlApiParameter.get().getValue().matches(encryptionKeyUrlPattern)) {
+			log.info("Accept crypted dataset with url {}", publicKeyUrlApiParameter.get().getValue());
+			handle = true;
+		}
+
+		// ce paramètre est pour gérer les aspects historique de rudi (d'où le camel case ou snake case...)
+		Optional<ApiParameter> publicKeyPartialContentApiParameter = api.getParameters().stream()
+				.filter(e -> e.getName().equals(DatasetDecryptGatewayFilterFactory.PUBLIC_KEY_PARTIAL_CONTENT_PROPERTY)
+						|| e.getName().equals(
+								DatasetDecryptGatewayFilterFactory.PUBLIC_KEY_PARTIAL_CONTENT_CAMEL_CASE_PROPERTY))
+				.findFirst();
+		if (!handle && publicKeyPartialContentApiParameter.isPresent()) {
+			try {
+				PublicKey defaultPublicKey = encryptionService.getPublicEncryptionKey(null);
+				byte[] publicKeyByte = defaultPublicKey.getEncoded();
+				// Base64 encoded string
+				String publicKeyString = Base64.getEncoder().encodeToString(publicKeyByte);
+				if (publicKeyString.startsWith(publicKeyPartialContentApiParameter.get().getValue())) {
+					log.info("Accept crypted dataset with key cut");
+					handle = true;
+				}
+			} catch (Exception e) {
+				log.warn("Failed to get public key to check key cut", e);
+			}
+		}
+
+		if (handle) {
+			log.info("Crypted dataset {} use portal key", api.getApiId());
+			// ajout du type mime dans le context
+			String newMimeType = api.getParameters().stream()
+					.filter(e -> e.getName().equals(DatasetDecryptGatewayFilterFactory.MIME_TYPE_PROPERTY)).findFirst()
+					.map(ApiParameter::getValue).orElse("");
+			filters.add(new FilterDefinition(String.format("DatasetDecrypt=%s", newMimeType)));
+		} else {
+			log.info("Crypted dataset {} does not use portal key", api.getApiId());
+		}
+	}
+
+	protected boolean isValidUri(URI uri) {
 		return StringUtils.isNotEmpty(uri.getScheme()) && SCHEMES.contains(uri.getScheme());
 	}
 
-	private int computeStrip(String path) {
+	protected int computeStrip(String path) {
 		int partCount = path.split("/").length;
 		return partCount > 1 ? partCount - 1 : 0;
 	}
 
-	private String buildPath(Api api) {
+	protected String buildPath(Api api) {
 		return ApiGatewayConstants.APIGATEWAY_DATASETS_PATH + api.getGlobalId() + "/" + api.getMediaId() + "/"
 				+ api.getContract();
 	}

@@ -6,7 +6,7 @@
         [status]="dependencies?.project?.functional_status" [icon]="'project-svg-icon'"
     ></app-task-detail-header>
 
-    <div class="bandeau" *ngIf="!isLoading">
+    <div *ngIf="!isLoading">
         <app-tabs>
             <app-tab [icon]="'icon-reutilisation'" [label]="'personalSpace.projectDetails.projectTab' | translate">
                 <ng-template>
@@ -61,7 +61,7 @@
                                 {{ 'personalSpace.projectDetails.projectOwner' | translate }}
                             </mat-card-title>
                             <mat-card-subtitle class="section-sub-title">
-                                {{dependencies.ownerInfo.name}}
+                                {{ dependencies.ownerInfo.name }}
                             </mat-card-subtitle>
                             <mat-card-content class="section-content">
                                 <app-clipboard-field
@@ -77,9 +77,10 @@
 
             </app-tab>
 
-                    <app-banner-button [projectIsUpdating]="isUpdateInProgress"  *ngFor="let action of actions" (click)="openPopinForAction(action, isUpdateInProgress, this.currentTask)">
-                    {{action.label}}
-                </app-banner-button>
+            <app-banner-button [projectIsUpdating]="isUpdateInProgress" *ngFor="let action of actions"
+                               (click)="openPopinForAction(action, isUpdateInProgress, this.currentTask)">
+                {{ action.label }}
+            </app-banner-button>
 
 
         </app-tabs>

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.rudi</groupId>
 		<artifactId>rudi-microservice-projekt</artifactId>
-		<version>3.0.1</version>
+		<version>3.0.2</version>
 	</parent>
 
 	<artifactId>rudi-microservice-projekt-facade</artifactId>
@@ -180,7 +180,8 @@
 						AssetDescription=org.rudi.bpmn.core.bean.AssetDescription,
 						Task=org.rudi.bpmn.core.bean.Task,
 						ProjectKey=org.rudi.facet.acl.bean.ProjectKey,
-						ProjectKeyPageResult=org.rudi.facet.acl.bean.ProjectKeyPageResult
+						ProjectKeyPageResult=org.rudi.facet.acl.bean.ProjectKeyPageResult,
+						HistoricInformation=org.rudi.bpmn.core.bean.HistoricInformation
 					</schemaMappings>
 					<generatorName>spring</generatorName>
 					<library>spring-boot</library>

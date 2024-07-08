@@ -16,8 +16,8 @@ import org.rudi.tools.nodestub.datafactory.apirecette.bean.BarChartData;
 import org.rudi.tools.nodestub.datafactory.apirecette.bean.GenericDataObject;
 import org.rudi.tools.nodestub.datafactory.apirecette.controller.api.ApiApi;
 import org.rudi.tools.nodestub.datafactory.service.DechetsService;
-import org.rudi.tools.nodestub.service.MatchingService;
-import org.rudi.tools.nodestub.service.MatchingTokenMetadata;
+import org.rudi.tools.nodestub.service.matching.MatchingService;
+import org.rudi.tools.nodestub.service.matching.MatchingTokenMetadata;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

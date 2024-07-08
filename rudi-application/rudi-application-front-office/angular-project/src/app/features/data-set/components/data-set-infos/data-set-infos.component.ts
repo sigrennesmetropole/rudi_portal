@@ -317,9 +317,7 @@ export class DataSetInfosComponent implements OnInit {
         if (!interfaceContract) {
             return undefined;
         }
-        const isHandledByKonsult = interfaceContract === 'dwnl';
-        const urlPrefix = isHandledByKonsult ? '' : '/apm';
-        return window.location.host + urlPrefix + '/medias/' + media.media_id + '/' + interfaceContract + '/1.0.0';
+        return window.location.host + media.connector.url;
     }
 
     /**

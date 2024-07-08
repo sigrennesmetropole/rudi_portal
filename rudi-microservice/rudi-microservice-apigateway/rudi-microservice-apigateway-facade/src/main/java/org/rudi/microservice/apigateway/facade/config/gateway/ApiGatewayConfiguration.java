@@ -9,12 +9,15 @@ import org.rudi.facet.kaccess.service.dataset.DatasetService;
 import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.facet.selfdata.helper.SelfdataHelper;
 import org.rudi.microservice.apigateway.facade.config.gateway.filters.AccessControlGlobalFilter;
+import org.rudi.microservice.apigateway.facade.config.gateway.filters.DatasetDecryptGatewayFilterFactory;
 import org.rudi.microservice.apigateway.facade.config.gateway.filters.LogGlobalFilter;
 import org.rudi.microservice.apigateway.facade.config.gateway.filters.RerouteToRequestUrlFilter;
 import org.rudi.microservice.apigateway.facade.config.gateway.filters.SelfdataGlobalFilter;
 import org.rudi.microservice.apigateway.service.api.ApiService;
+import org.rudi.microservice.apigateway.service.encryption.EncryptionService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.gateway.config.GatewayAutoConfiguration;
+import org.springframework.cloud.gateway.config.conditional.ConditionalOnEnabledFilter;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.InMemoryRouteDefinitionRepository;
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
@@ -33,11 +36,13 @@ public class ApiGatewayConfiguration extends GatewayAutoConfiguration {
 
 	private final ApiService apiService;
 
+	private final EncryptionService encryptionService;
+
 	@Bean
 	@ConditionalOnMissingBean(RouteDefinitionRepository.class)
 	@Override
 	public InMemoryRouteDefinitionRepository inMemoryRouteDefinitionRepository() {
-		return new ApiPathRouteDefinitionLocator(apiService);
+		return new ApiPathRouteDefinitionLocator(apiService, encryptionService);
 	}
 
 	@Bean
@@ -62,6 +67,14 @@ public class ApiGatewayConfiguration extends GatewayAutoConfiguration {
 	@Bean
 	public RerouteToRequestUrlFilter rerouteToRequestUrlFilter() {
 		return new RerouteToRequestUrlFilter();
+	}
+
+	@Bean
+	@ConditionalOnEnabledFilter
+	public DatasetDecryptGatewayFilterFactory datasetDecryptGatewayFilterFactory(EncryptionService encryptionService,
+			DatasetService datasetService) {
+		// TODO RUDI-4728 : revoir cette parie ?
+		return new DatasetDecryptGatewayFilterFactory(encryptionService, datasetService);
 	}
 
 }

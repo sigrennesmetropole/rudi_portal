@@ -6,11 +6,12 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Arrays;
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.microservice.konsult.core.sitemap.SitemapDescriptionData;
 import org.rudi.microservice.konsult.core.sitemap.SitemapEntryData;
 import org.rudi.microservice.konsult.core.sitemap.StaticSitemapEntry;
 import org.rudi.microservice.konsult.core.sitemap.StaticSitemapEntryData;
 import org.rudi.microservice.konsult.core.sitemap.UrlListTypeData;
-import org.rudi.microservice.konsult.service.sitemap.UrlListComputer;
+import org.rudi.microservice.konsult.service.sitemap.AbstractUrlListComputer;
 import org.sitemaps.schemas.sitemap.TUrl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,11 +22,16 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class StaticUrlListComputerImpl implements UrlListComputer {
+public class StaticUrlListComputerImpl extends AbstractUrlListComputer {
 
 	@Getter(AccessLevel.PUBLIC)
 	@Value("${front.urlServer:http://www.rudi.bzh}")
 	private String urlServer;
+
+	@Override
+	public boolean accept(SitemapEntryData sitemapEntryData) {
+		return super.accept(sitemapEntryData) && (sitemapEntryData instanceof StaticSitemapEntryData);
+	}
 
 	@Override
 	public UrlListTypeData getAcceptedData() {
@@ -33,12 +39,7 @@ public class StaticUrlListComputerImpl implements UrlListComputer {
 	}
 
 	@Override
-	public List<TUrl> compute(SitemapEntryData sitemapEntryData) throws AppServiceException {
-		if (!(sitemapEntryData instanceof StaticSitemapEntryData)) {
-			throw new AppServiceException(
-					String.format("Le type de données recu par le computer n'est pas valide : %s au lieu de %s",
-							sitemapEntryData.getClass().toString(), StaticSitemapEntryData.class.toString()));
-		}
+	public List<TUrl> computeInternal(SitemapEntryData sitemapEntryData, SitemapDescriptionData sitemapDescriptionData) throws AppServiceException {
 
 		StaticSitemapEntryData data = (StaticSitemapEntryData) sitemapEntryData;
 

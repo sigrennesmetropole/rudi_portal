@@ -34,7 +34,8 @@ public class WebSecurityConfig {
 	private static final String[] SB_PERMIT_ALL_URL = {
 			// swagger ui / openapi
 			"/nodestub/v3/api-docs/**", "/nodestub/swagger-ui/**", "/nodestub/swagger-ui.html",
-			"/nodestub/swagger-resources/**", "/configuration/ui", "/configuration/security", "/webjars/**" };
+			"/nodestub/swagger-resources/**", "/configuration/ui", "/configuration/security", "/webjars/**",
+			"/nodestub/endpoints/**" };
 
 	@Value("${module.oauth2.check-token-uri}")
 	private String checkTokenUri;
@@ -83,7 +84,8 @@ public class WebSecurityConfig {
 
 	@Bean
 	public JwtRequestFilter createJwtRequestFilter() {
-		return new NodestubJwtRequestFilter(SB_PERMIT_ALL_URL, utilContextHelper, nodestubJwtTokenUtil, oAuth2RestTemplate);
+		return new NodestubJwtRequestFilter(SB_PERMIT_ALL_URL, utilContextHelper, nodestubJwtTokenUtil,
+				oAuth2RestTemplate);
 	}
 
 	private Filter createOAuth2Filter() {

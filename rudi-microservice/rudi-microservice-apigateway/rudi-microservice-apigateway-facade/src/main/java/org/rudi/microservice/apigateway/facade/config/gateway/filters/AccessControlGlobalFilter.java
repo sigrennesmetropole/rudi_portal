@@ -6,8 +6,14 @@ package org.rudi.microservice.apigateway.facade.config.gateway.filters;
 import java.security.Principal;
 import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.rudi.facet.acl.bean.ProjectKeystore;
+import org.rudi.facet.acl.bean.User;
+import org.rudi.facet.acl.bean.UserPageResult;
+import org.rudi.facet.acl.bean.UserType;
 import org.rudi.facet.acl.helper.ACLHelper;
+import org.rudi.facet.acl.helper.ProjectKeystoreSearchCriteria;
 import org.rudi.facet.acl.helper.UserSearchCriteria;
 import org.rudi.facet.kaccess.helper.dataset.metadatadetails.MetadataDetailsHelper;
 import org.rudi.facet.kaccess.service.dataset.DatasetService;
@@ -15,6 +21,7 @@ import org.rudi.facet.projekt.helper.ProjektHelper;
 import org.rudi.facet.selfdata.helper.SelfdataHelper;
 import org.rudi.microservice.apigateway.facade.config.gateway.exception.UnauthorizedException;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Mono;
@@ -64,8 +71,8 @@ public class AccessControlGlobalFilter extends AbstractMetadataGlobalFilter {
 		// on est sur un jdd restreint
 		return exchange.getPrincipal().map(Principal::getName).onErrorStop()
 				.flatMap(login -> getAclHelper().getMonoUsers(UserSearchCriteria.builder().login(login).build()))
-				.map(this::mapUserToUuid).switchIfEmpty(Mono.error(new UnauthorizedException("Invalid user (R)")))
-				.flatMap(userUuid -> getProjektHelper().hasMonoAccessToDataset(userUuid, datasetIdentifiers.getLeft()))
+				.flatMap(this::extractUser).switchIfEmpty(Mono.error(new UnauthorizedException("Invalid user (R)")))
+				.flatMap(user -> hasAccessToDataset(user, datasetIdentifiers))
 				.flatMap(a -> chain(a, exchange, chain, "(R)")).then()
 				.doOnError(e -> onFinalError(e, exchange, chain, ""));
 	}
@@ -90,6 +97,37 @@ public class AccessControlGlobalFilter extends AbstractMetadataGlobalFilter {
 		} else {
 			return chain.filter(exchange);
 		}
+	}
+
+	protected Mono<User> extractUser(UserPageResult userPageResult) {
+		if (userPageResult != null && CollectionUtils.isNotEmpty(userPageResult.getElements())) {
+			return Mono.just(userPageResult.getElements().get(0));
+		} else {
+			return Mono.empty();
+		}
+	}
+
+	protected Mono<Boolean> hasAccessToDataset(User user, Pair<UUID, UUID> datasetIdentifiers) {
+		Mono<Boolean> result = null;
+
+		if (user.getType() == UserType.API) {
+			ProjectKeystoreSearchCriteria searchCriteria = ProjectKeystoreSearchCriteria.builder()
+					.clientId(user.getLogin()).build();
+			// on essaye de récupérer le keystore (donc l'uuid du projet)
+			result = getAclHelper().searchMonoProjectKeystores(searchCriteria, Pageable.ofSize(1)).map(keystores -> {
+				if (CollectionUtils.isNotEmpty(keystores.getElements())) {
+					return keystores.getElements().get(0);
+				} else {
+					return null;
+				}
+			}).switchIfEmpty(Mono.error(new UnauthorizedException("Invalid user (R)")))
+					.map(ProjectKeystore::getProjectUuid).flatMap(projectUuid -> getProjektHelper()
+							.hasMonoAccessToDataset(projectUuid, datasetIdentifiers.getLeft()));
+
+		} else {
+			result = getProjektHelper().hasMonoAccessToDataset(user.getUuid(), datasetIdentifiers.getLeft());
+		}
+		return result;
 	}
 
 	@Override

@@ -20,8 +20,7 @@ import org.rudi.facet.doks.properties.DoksProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-public
-class DocumentCipherOperator {
+public class DocumentCipherOperator {
 
 	private final MediaCipherOperator mediaCipherOperator;
 	private final KeyGeneratorFromPem keyGeneratorFromPem;
@@ -30,7 +29,8 @@ class DocumentCipherOperator {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 
-	public DocumentCipherOperator(KeyGeneratorFromPem keyGeneratorFromPem, ResourceHelper resourceHelper, DoksProperties doxProperties) {
+	public DocumentCipherOperator(KeyGeneratorFromPem keyGeneratorFromPem, ResourceHelper resourceHelper,
+			DoksProperties doxProperties) {
 		mediaCipherOperator = new MediaCipherOperator(RudiAlgorithmSpec.DEFAULT);
 		this.keyGeneratorFromPem = keyGeneratorFromPem;
 		this.resourceHelper = resourceHelper;
@@ -48,30 +48,34 @@ class DocumentCipherOperator {
 		}
 	}
 
-	public void encrypt(InputStream decryptedStream, OutputStream encryptedStream) throws GeneralSecurityException, IOException {
+	public void encrypt(InputStream decryptedStream, OutputStream encryptedStream)
+			throws GeneralSecurityException, IOException {
 		mediaCipherOperator.encrypt(decryptedStream, getPublicKey(), encryptedStream);
 	}
 
 	private PublicKey getPublicKey() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		if (publicKey == null) {
-			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.keyPairAlgorithm;
+			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.getKeyPairAlgorithm();
 			// TODO RUDI-2841 Générer une nouvelle clé, différente de celle des médias chiffrés de la RUDI-2387
-			final var keyResource = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(doxProperties.getPublicKeyPath());
+			final var keyResource = resourceHelper
+					.getResourceFromAdditionalLocationOrFromClasspath(doxProperties.getPublicKeyPath());
 			final var keyInputStream = keyResource.getInputStream();
 			publicKey = keyGeneratorFromPem.generatePublicKey(keyPairAlgorithm, keyInputStream);
 		}
 		return publicKey;
 	}
 
-	public void decrypt(InputStream encryptedStream, OutputStream decryptedStream) throws GeneralSecurityException, IOException {
+	public void decrypt(InputStream encryptedStream, OutputStream decryptedStream)
+			throws GeneralSecurityException, IOException {
 		mediaCipherOperator.decrypt(encryptedStream, getPrivateKey(), decryptedStream);
 	}
 
 	private PrivateKey getPrivateKey() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		if (privateKey == null) {
-			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.keyPairAlgorithm;
+			final var keyPairAlgorithm = RudiAlgorithmSpec.DEFAULT.firstBlockSpec.getKeyPairAlgorithm();
 			// TODO RUDI-2841 Générer une nouvelle clé, différente de celle des médias chiffrés de la RUDI-2387
-			final var keyResource = resourceHelper.getResourceFromAdditionalLocationOrFromClasspath(doxProperties.getPrivateKeyPath());
+			final var keyResource = resourceHelper
+					.getResourceFromAdditionalLocationOrFromClasspath(doxProperties.getPrivateKeyPath());
 			final var keyInputStream = keyResource.getInputStream();
 			privateKey = keyGeneratorFromPem.generatePrivateKey(keyPairAlgorithm, keyInputStream);
 		}

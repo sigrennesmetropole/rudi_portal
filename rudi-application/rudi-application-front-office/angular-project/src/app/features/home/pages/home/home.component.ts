@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Order} from '@core/services/asset/project/projekt-metier.service';
+import {Order, ProjektMetierService} from '@core/services/asset/project/projekt-metier.service';
 import {CustomizationService} from '@core/services/customization.service';
 import {FiltersService} from '@core/services/filters.service';
 import {KonsultMetierService} from '@core/services/konsult-metier.service';
@@ -8,11 +8,10 @@ import {ThemeCacheService} from '@core/services/theme-cache.service';
 import {Theme} from '@features/home/types';
 import {ProjectCatalogItem} from '@features/project/model/project-catalog-item';
 import {TranslateService} from '@ngx-translate/core';
-import {mapEach} from '@shared/utils/ObservableUtils';
 import {Metadata, MetadataList} from 'micro_service_modules/api-kaccess';
 import {CustomizationDescription, KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {SimpleSkosConcept} from 'micro_service_modules/kos/kos-api';
-import {PagedProjectList, Project, ProjectStatus, ProjektService} from 'micro_service_modules/projekt/projekt-api';
+import {PagedProjectList, ProjectStatus, ProjektService} from 'micro_service_modules/projekt/projekt-api';
 import {Subject} from 'rxjs';
 import {distinctUntilChanged, filter, map, takeUntil} from 'rxjs/operators';
 
@@ -42,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         private readonly filtersService: FiltersService,
         private readonly konsultService: KonsultService,
         private readonly projektService: ProjektService,
+        private readonly projektMetierService: ProjektMetierService,
         private readonly logger: LogService,
         private readonly translateService: TranslateService,
         private readonly themeCacheService: ThemeCacheService,
@@ -107,16 +107,18 @@ export class HomeComponent implements OnInit, OnDestroy {
             null,
             null,
             null,
+            null,
             PROJECT_STATUS,
             0,
             3,
             DEFAULT_PROJECT_ORDER
         ).pipe(
-            map((data: PagedProjectList) => data.elements ?? []),
-            mapEach((project: Project) => new ProjectCatalogItem({project}))
+            map((data: PagedProjectList) => {
+                return data.elements.map(elem => new ProjectCatalogItem({project: elem}));
+            }),
         ).subscribe({
-            next: (projectCatalogItem: ProjectCatalogItem[]) => {
-                this.projects = projectCatalogItem;
+            next: (projects: ProjectCatalogItem[]) => {
+                this.projects = projects;
                 this.projectsIsLoading = false;
             },
             error: error => {

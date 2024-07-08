@@ -1,7 +1,8 @@
 package org.rudi.microservice.projekt.service.territory.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.UUID;
+
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.TerritorialScale;
 import org.rudi.microservice.projekt.core.bean.TerritorialScaleSearchCriteria;
@@ -14,13 +15,14 @@ import org.rudi.microservice.projekt.storage.dao.territory.TerritorialScaleDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TerritorialScaleServiceImpl implements TerritorialScaleService {
 
 	private final List<UpdateTerritorialScaleValidator> updateTerritorialScaleValidators;
@@ -29,8 +31,10 @@ public class TerritorialScaleServiceImpl implements TerritorialScaleService {
 	private final TerritorialScaleCustomDao territorialScaleCustomDao;
 
 	@Override
-	public Page<TerritorialScale> searchTerritorialScales(TerritorialScaleSearchCriteria searchCriteria, Pageable pageable) {
-		return territorialScaleMapper.entitiesToDto(territorialScaleCustomDao.searchTerritorialScales(searchCriteria, pageable), pageable);
+	public Page<TerritorialScale> searchTerritorialScales(TerritorialScaleSearchCriteria searchCriteria,
+			Pageable pageable) {
+		return territorialScaleMapper
+				.entitiesToDto(territorialScaleCustomDao.searchTerritorialScales(searchCriteria, pageable), pageable);
 	}
 
 	@Override

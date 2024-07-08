@@ -1,8 +1,11 @@
 <div class="bandeau">
-    <mat-toolbar class="bandeau-card">
+    <mat-toolbar class="bandeau-card" [ngClass]="{
+            'px-small': mediaSize.isXs || mediaSize.isSm,
+            'px-medium': mediaSize.isMd,
+            'px-large': mediaSize.isLg || mediaSize.isXl || mediaSize.isXxl
+        }">
         <span class="spacer"></span>
-        <app-popover class="me-3"
-                     (click)="submitProject()"
+        <app-popover (click)="submitProject()"
                      buttonLogo="rudi_picto_projet"
                      [buttonMessageBody]="'project.buttonSubmitParagraph1'|translate"
                      [buttonMessageFooter]="'project.buttonSubmitParagraph2'|translate"

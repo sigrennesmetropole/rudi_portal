@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.rudi.common.service.exception.AppServiceException;
+import org.rudi.microservice.konsult.core.sitemap.SitemapDescriptionData;
 import org.rudi.microservice.konsult.core.sitemap.SitemapEntryData;
 import org.rudi.microservice.konsult.core.sitemap.UrlListTypeData;
-import org.rudi.microservice.konsult.service.sitemap.UrlListComputer;
+import org.rudi.microservice.konsult.service.sitemap.AbstractUrlListComputer;
 import org.sitemaps.schemas.sitemap.TUrl;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ProjectsUrlListComputerImpl implements UrlListComputer {
+public class ProjectsUrlListComputerImpl extends AbstractUrlListComputer {
 
 	@Override
 	public UrlListTypeData getAcceptedData() {
@@ -24,7 +25,7 @@ public class ProjectsUrlListComputerImpl implements UrlListComputer {
 	}
 
 	@Override
-	public List<TUrl> compute(SitemapEntryData sitemapEntryData) throws AppServiceException {
+	public List<TUrl> computeInternal(SitemapEntryData sitemapEntryData, SitemapDescriptionData sitemapDescriptionData) throws AppServiceException {
 		log.error("TODO implement computer for projects elements");
 		return new ArrayList<>();
 	}

@@ -13,11 +13,12 @@
     .swiper {
         width: 100%;
         height: 100%;
-        padding-bottom: 10px;
+        padding: 10px 0 25px 0;
     }
 
     .swiper-button-next, .swiper-button-prev {
         top: var(--swiper-button-top-offset, 60px);
+
         &::after {
             content: none;
         }
@@ -37,7 +38,7 @@
         }
     }
 
-    @include xs(){
+    @include xs() {
         @include nav-button-for-small-screens;
     }
 

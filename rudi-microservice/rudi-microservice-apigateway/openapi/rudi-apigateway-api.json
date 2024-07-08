@@ -40,6 +40,10 @@
 		{
 			"name": "miscellaneous",
 			"description": "Services divers"
+		},
+		{
+			"name": "encryption",
+			"description": "Services chiffrement"
 		}
 	],
 	"paths": {
@@ -566,6 +570,43 @@
 								}
 							}
 						}
+					}
+				}
+			}
+		},
+		"/encryption-key": {
+			"get": {
+				"tags": [
+					"encryption"
+				],
+				"summary": "Récupération de la clé publique pour chiffrer le média d'un jeu de données",
+				"description": "Récupération de la clé publique pour chiffrer le média d'un jeu de données",
+				"operationId": "getEncryptionKey",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "media-id",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Le fichier correspondant à la clé publique",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"500": {
+						"$ref": "#/components/responses/InternalServerError"
 					}
 				}
 			}

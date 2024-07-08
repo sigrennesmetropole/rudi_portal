@@ -1,4 +1,6 @@
 {
+	"maxUrlCount": 50000,
+	"maxUrlSize": 2048,
 	"staticSitemapEntries": {
 		"urlList": [
 			{

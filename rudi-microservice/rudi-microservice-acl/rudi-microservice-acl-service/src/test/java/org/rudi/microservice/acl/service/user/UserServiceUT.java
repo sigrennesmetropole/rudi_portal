@@ -512,7 +512,7 @@ class UserServiceUT {
 		dataUsers.forEach(user -> {
 			user.setUuid(UUID.randomUUID());
 			user.setPassword("dfjdsklfjdsklfdsjl");
-			user.setType(org.rudi.microservice.acl.storage.entity.user.UserType.PERSON);
+			user.setType(org.rudi.common.core.security.UserType.PERSON);
 		});
 		userDao.saveAll(dataUsers);
 

@@ -7,16 +7,24 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.microservice.projekt.core.bean.LinkedDataset;
+import org.rudi.microservice.projekt.core.bean.LinkedDatasetStatus;
 import org.rudi.microservice.projekt.core.bean.PagedProjectList;
+import org.rudi.microservice.projekt.core.bean.Project;
 import org.rudi.microservice.projekt.core.bean.ProjectByOwner;
 import org.rudi.microservice.projekt.core.bean.ProjectSearchCriteria;
 import org.rudi.microservice.projekt.core.bean.ProjectStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -88,12 +96,68 @@ public class ProjektHelper {
 	}
 
 	public Long getNumberOfValidatedProjects() {
-		PagedProjectList validatedProjectList = projektWebClient.get()
-				.uri(uriBuilder -> uriBuilder.path(projektProperties.getGetProjectsPath())
-						.queryParam("status", List.of(ProjectStatus.VALIDATED)).queryParam("offset", 0)
-						.queryParam("limit", 0).build())
-				.retrieve().bodyToMono(PagedProjectList.class).block();
+		ProjectSearchCriteria searchCriteria = new ProjectSearchCriteria().status(List.of(ProjectStatus.VALIDATED));
+		Page<Project> projects = searchProjects(searchCriteria, Pageable.ofSize(1));
+		return projects.getTotalElements();
+	}
 
-		return validatedProjectList.getTotal();
+	public boolean hasProjectAccessToDataset(UUID projectUuid, UUID datasetUuid) {
+		boolean result = false;
+		ProjectSearchCriteria searchCriteria = new ProjectSearchCriteria().projectUuids(List.of(projectUuid))
+				.datasetUuids(List.of(datasetUuid));
+		Page<Project> projects = searchProjects(searchCriteria, Pageable.ofSize(1));
+		if (!projects.isEmpty()) {
+			Project project = projects.getContent().get(0);
+			if (CollectionUtils.isNotEmpty(project.getLinkedDatasets())) {
+				LinkedDataset linkedDataset = project.getLinkedDatasets().stream()
+						.filter(item -> item.getDatasetUuid().equals(datasetUuid)).findFirst().orElse(null);
+				if (linkedDataset != null && linkedDataset.getLinkedDatasetStatus() == LinkedDatasetStatus.VALIDATED) {
+					result = true;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param searchCriteria
+	 * @param page
+	 * @return
+	 */
+	public Page<Project> searchProjects(ProjectSearchCriteria searchCriteria, Pageable page) {
+		PagedProjectList projects = projektWebClient.get().uri(uriBuilder -> uriBuilder
+				.path(projektProperties.getSearchProjectsPath())
+				.queryParamIfPresent("datasetUuids", Optional.ofNullable(searchCriteria.getDatasetUuids()))
+				.queryParamIfPresent("linkedDatasetUuids", Optional.ofNullable(searchCriteria.getLinkedDatasetUuids()))
+				.queryParamIfPresent("ownerUuids", Optional.ofNullable(searchCriteria.getOwnerUuids()))
+				.queryParamIfPresent("projectUuids", Optional.ofNullable(searchCriteria.getProjectUuids()))
+				.queryParamIfPresent("status", Optional.ofNullable(searchCriteria.getStatus()))
+				.queryParamIfPresent("offset", Optional.ofNullable(page.getOffset()))
+				.queryParamIfPresent("limit", Optional.ofNullable(page.getPageSize()))
+				.queryParamIfPresent("order", Optional.ofNullable(convertSort(page.getSort()))).build()).retrieve()
+				.bodyToMono(PagedProjectList.class).block();
+		if (projects != null) {
+			return new PageImpl<>(projects.getElements(), page, projects.getTotal());
+		} else {
+			return Page.empty();
+		}
+	}
+
+	protected String convertSort(Sort sort) {
+		if (sort == null || sort.isUnsorted()) {
+			return null;
+		}
+		StringBuilder sortBuilder = new StringBuilder();
+		sort.forEach(order -> {
+			if (sortBuilder.length() > 0) {
+				sortBuilder.append(',');
+			}
+			if (order.isDescending()) {
+				sortBuilder.append('-');
+			}
+			sortBuilder.append(order.getProperty());
+		});
+		return sortBuilder.toString();
 	}
 }

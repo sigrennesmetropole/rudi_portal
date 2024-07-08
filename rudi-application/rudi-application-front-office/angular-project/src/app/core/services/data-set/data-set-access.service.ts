@@ -26,7 +26,6 @@ export class DataSetAccessService {
         } else if (MetadataUtils.isSelfdata(metadata)) {
             return of(false);
         } else if (MetadataUtils.isRestricted(metadata)) {
-            //TODO foussetteszissi
             return this.service.isMyAccessGratedToDataset(metadata.global_id);
         }
 

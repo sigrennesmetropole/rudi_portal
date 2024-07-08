@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.common.service.exception.AppServiceNotFoundException;
 import org.rudi.common.service.exception.MissingParameterException;
@@ -43,7 +44,6 @@ import org.rudi.microservice.acl.storage.entity.accountregistration.AccountRegis
 import org.rudi.microservice.acl.storage.entity.accountupdate.ResetPasswordRequestEntity;
 import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
-import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,8 +207,8 @@ public class AccountServiceImpl implements AccountService {
 		// date du jour - accountRegistrationValidity
 		LocalDateTime reference = LocalDateTime.now().minus(Duration.ofMinutes(accountRegistrationValidity));
 		// recherche des toutes les accontRegistation plus ancienne que cette date
-		List<AccountRegistrationEntity> accountRegistrations = accountRegistrationDao.findByCreationDateBefore(
-				reference);
+		List<AccountRegistrationEntity> accountRegistrations = accountRegistrationDao
+				.findByCreationDateBefore(reference);
 		// purge
 		if (CollectionUtils.isNotEmpty(accountRegistrations)) {
 			for (AccountRegistrationEntity accountRegistration : accountRegistrations) {
@@ -289,9 +289,9 @@ public class AccountServiceImpl implements AccountService {
 		passwordEntity.setUserUuid(currentUser.getUuid());
 		passwordEntity.setToken(UUID.randomUUID());
 		passwordEntity.setCreationDate(LocalDateTime.now());
-		//Sauvegarde de la request d'update
+		// Sauvegarde de la request d'update
 		resetPasswordRequestDao.save(passwordEntity);
-		//Send token email
+		// Send token email
 		emailHelper.sendTokenToChangePassword(passwordEntity, email, Locale.FRENCH);
 	}
 
@@ -301,8 +301,8 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public void deleteAllExpiredToken() {
 		resetPasswordRequestDao.findAll().forEach(element -> {
-			if ((LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - element.getCreationDate()
-					.toEpochSecond(ZoneOffset.UTC)) / HEURE_EN_SECONDE >= 1) {
+			if ((LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+					- element.getCreationDate().toEpochSecond(ZoneOffset.UTC)) / HEURE_EN_SECONDE >= 1) {
 				resetPasswordRequestDao.delete(element);
 			}
 		});

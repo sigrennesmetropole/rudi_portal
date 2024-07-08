@@ -76,7 +76,9 @@
 				"type": "string",
 				"enum": [
 					"PERSON",
-					"ROBOT"
+					"ROBOT",
+					"MICROSERVICE",
+					"API"
 				]
 			},
 			"AddressType": {

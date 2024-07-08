@@ -384,6 +384,45 @@
 					}
 				}
 			}
+		},
+		"/endpoints/{media-uuid}": {
+			"get": {
+				"tags": [
+					"matching"
+				],
+				"summary": "Téléchargement de données",
+				"operationId": "callEndpoint",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "media-uuid",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/BadRequestError"
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					}
+				}
+			}
 		}
 	},
 	"components": {

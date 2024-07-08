@@ -1,7 +1,10 @@
 package org.rudi.microservice.projekt.service.support.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.projekt.core.bean.Support;
 import org.rudi.microservice.projekt.core.bean.SupportSearchCriteria;
@@ -14,14 +17,14 @@ import org.rudi.microservice.projekt.storage.dao.support.SupportDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nonnull;
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SupportServiceImpl implements SupportService {
 
 	private final List<UpdateSupportValidator> updateSupportValidators;

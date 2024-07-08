@@ -63,12 +63,12 @@ public class OrganizationHelper {
 		final var members = getOrganizationMembers(organizationUuid);
 
 		// On vérifie si l'utilisateur est déjà présent avant d'essayer de l'ajouter
-		if(!members.isEmpty()){
+		if (!members.isEmpty()) {
 			Optional<OrganizationMember> existingMember = members
 					.stream()
 					.filter(m -> member.getUserUuid().equals(m.getUserUuid())).findFirst();
 
-			if(existingMember.isPresent()){
+			if (existingMember.isPresent()) {
 				return existingMember.get();
 			}
 		}
@@ -167,6 +167,9 @@ public class OrganizationHelper {
 	}
 
 	private List<UUID> extractUuidFromPageList(PagedOrganizationList page) {
+		if (page == null || page.getTotal() <= 0) {
+			return new ArrayList<>();
+		}
 		return page.getElements().stream().map(Organization::getUuid).collect(Collectors.toList());
 	}
 }

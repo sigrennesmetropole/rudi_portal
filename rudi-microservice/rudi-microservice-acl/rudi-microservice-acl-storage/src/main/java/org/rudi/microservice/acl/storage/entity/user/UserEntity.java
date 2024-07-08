@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.common.core.security.UserType;
 import org.rudi.common.storage.entity.AbstractLongIdEntity;
 import org.rudi.microservice.acl.core.common.SchemaConstants;
 import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;

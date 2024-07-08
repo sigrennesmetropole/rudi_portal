@@ -1,4 +1,4 @@
-package org.rudi.microservice.apigateway.facade.config.security;
+package org.rudi.microservice.apigateway.facade.config.security.jwt;
 
 import java.io.Serializable;
 import java.util.Date;

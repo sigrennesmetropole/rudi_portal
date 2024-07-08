@@ -74,13 +74,13 @@ class EncryptedMediaHandlerTest {
 
 	// Exemple d'API réelle en dev : 007faa17-d6e0-43a3-9248-19572eaa926a_dwnl
 	@ParameterizedTest
-	@CsvSource({ "https://rudi.open-dev.com/konsult/v1/encryption-key,,,plain/text",
-			"https://rudi.open-dev.com/konsult/v1/encryption-key,,plain/text,plain/text",
-			"https://rudi.open-dev.com/konsult/v1/encryption-key,,plain/text+crypt,plain/text+crypt",
-			"https://rudi.open-dev.com/konsult/v1/encryption-key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,,plain/text",
-			"file:../../rudi-microservice/rudi-microservice-konsult/rudi-microservice-konsult-facade/src/main/resources/encryption_key_public.key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,,plain/text",
-			"file:../../rudi-microservice/rudi-microservice-konsult/rudi-microservice-konsult-facade/src/main/resources/encryption_key_public.key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,plain/text,plain/text,plain/text",
-			"file:../../rudi-microservice/rudi-microservice-konsult/rudi-microservice-konsult-facade/src/main/resources/encryption_key_public.key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,plain/text+crypt,plain/text+crypt", })
+	@CsvSource({ "https://rudi.open-dev.com/apigateway/v1/encryption-key,,,plain/text",
+			"https://rudi.open-dev.com/apigateway/v1/encryption-key,,plain/text,plain/text",
+			"https://rudi.open-dev.com/apigateway/v1/encryption-key,,plain/text+crypt,plain/text+crypt",
+			"https://rudi.open-dev.com/apigateway/v1/encryption-key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,,plain/text",
+			"file:../../rudi-microservice/rudi-microservice-apigateway/rudi-microservice-apigateway-service/src/test/resources/encryption/encryption_default_key_public.key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,,plain/text",
+			"file:../../rudi-microservice/rudi-microservice-apigateway/rudi-microservice-apigateway-service/src/test/resources/encryption/encryption_default_key_public.key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,plain/text,plain/text,plain/text",
+			"file:../../rudi-microservice/rudi-microservice-apigateway/rudi-microservice-apigateway-service/src/test/resources/encryption/encryption_default_key_public.key,MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS3nTZOj01kq1V6wKpMe,plain/text+crypt,plain/text+crypt", })
 	void handleResponse_engaged(final String apiPublicKeyURL, final String apiPublicKeyPartialContent,
 			final String originalMimeType, final String expectedOutputContentType)
 			throws APIManagementException, IOException {

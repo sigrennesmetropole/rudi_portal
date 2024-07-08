@@ -13,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.rudi.common.core.security.UserType;
 import org.rudi.common.storage.dao.AbstractCustomDaoImpl;
 import org.rudi.microservice.acl.core.bean.UserSearchCriteria;
 import org.rudi.microservice.acl.storage.dao.user.UserCustomDao;
@@ -20,7 +21,6 @@ import org.rudi.microservice.acl.storage.entity.address.AbstractAddressEntity;
 import org.rudi.microservice.acl.storage.entity.address.EmailAddressEntity;
 import org.rudi.microservice.acl.storage.entity.role.RoleEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
-import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -121,24 +121,24 @@ public class UserCustomDaoImpl extends AbstractCustomDaoImpl<UserEntity, UserSea
 				predicates.add(root.get(FIELD_UUID).in(searchCriteria.getUserUuids()));
 			}
 
-			//login-and-denomination
+			// login-and-denomination
 			if (searchCriteria.getLoginAndDenomination() != null) {
 				String searchText = searchCriteria.getLoginAndDenomination();
 				searchText = searchText.toLowerCase(Locale.ROOT);
 				searchText = '%' + searchText + '%'; // Permet de chercher avec une partie de la chaine de caractère cible
-				val predicateOR = builder.or(
-						builder.like(builder.lower(root.get(FIELD_LOGIN)), searchText),
+				val predicateOR = builder.or(builder.like(builder.lower(root.get(FIELD_LOGIN)), searchText),
 						builder.like(builder.lower(root.get(FIELD_LASTNAME)), searchText),
-						builder.like(builder.lower(root.get(FIELD_FIRSTNAME)), searchText)
-				);
+						builder.like(builder.lower(root.get(FIELD_FIRSTNAME)), searchText));
 				predicates.add(predicateOR);
 			}
 
 			// Email address
-			if(searchCriteria.getUserEmail() != null) {
+			if (searchCriteria.getUserEmail() != null) {
 				Join<UserEntity, AbstractAddressEntity> joinAddresses = root.join(FIELD_ADDRESSES);
-				Join<UserEntity, EmailAddressEntity> joinEmailAddresses = builder.treat(joinAddresses, EmailAddressEntity.class);
-				predicateStringCriteriaForJoin(searchCriteria.getUserEmail(), FIELD_EMAIL, predicates, builder, joinEmailAddresses);
+				Join<UserEntity, EmailAddressEntity> joinEmailAddresses = builder.treat(joinAddresses,
+						EmailAddressEntity.class);
+				predicateStringCriteriaForJoin(searchCriteria.getUserEmail(), FIELD_EMAIL, predicates, builder,
+						joinEmailAddresses);
 			}
 
 			// Définition de la clause Where

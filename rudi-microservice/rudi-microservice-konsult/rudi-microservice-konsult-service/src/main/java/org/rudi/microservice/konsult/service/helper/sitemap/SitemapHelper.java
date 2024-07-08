@@ -3,37 +3,36 @@
  */
 package org.rudi.microservice.konsult.service.helper.sitemap;
 
-import static org.rudi.microservice.konsult.service.constant.BeanIds.SITEMAP_DATA_CACHE;
-import static org.rudi.microservice.konsult.service.constant.BeanIds.SITEMAP_RESOURCES_CACHE;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.collections4.CollectionUtils;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections4.ListUtils;
 import org.ehcache.Cache;
 import org.rudi.common.core.DocumentContent;
 import org.rudi.common.core.resources.ResourcesHelper;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.konsult.core.sitemap.SitemapDescriptionData;
 import org.rudi.microservice.konsult.core.sitemap.SitemapEntryData;
-import org.rudi.microservice.konsult.service.sitemap.UrlListComputer;
+import org.rudi.microservice.konsult.service.sitemap.AbstractUrlListComputer;
 import org.sitemaps.schemas.sitemap.TUrl;
 import org.sitemaps.schemas.sitemap.Urlset;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import static org.rudi.microservice.konsult.service.constant.BeanIds.SITEMAP_DATA_CACHE;
+import static org.rudi.microservice.konsult.service.constant.BeanIds.SITEMAP_RESOURCES_CACHE;
 
 /**
  * @author FNI18300
@@ -66,11 +65,11 @@ public class SitemapHelper extends ResourcesHelper {
 
 	private final ObjectMapper objectMapper;
 
-	private final List<UrlListComputer> urlListComputers;
+	private final List<AbstractUrlListComputer> urlListComputers;
 
 	SitemapHelper(@Qualifier(SITEMAP_RESOURCES_CACHE) Cache<String, DocumentContent> cache,
 			@Qualifier(SITEMAP_DATA_CACHE) Cache<String, SitemapDescriptionData> sitemapCache,
-			ObjectMapper objectMapper, List<UrlListComputer> urlListComputers) {
+			ObjectMapper objectMapper, List<AbstractUrlListComputer> urlListComputers) {
 		this.cache = cache;
 		this.sitemapCache = sitemapCache;
 		this.objectMapper = objectMapper;
@@ -79,7 +78,7 @@ public class SitemapHelper extends ResourcesHelper {
 	}
 
 	protected SitemapDescriptionData loadSitemapDescription() throws IOException {
-		SitemapDescriptionData result = null;
+		SitemapDescriptionData result;
 		File f = new File(baseDirectory, sitemapConfigFilename);
 		if (f.exists() && f.isFile()) {
 			try (JsonParser p = objectMapper.createParser(f)) {
@@ -116,25 +115,25 @@ public class SitemapHelper extends ResourcesHelper {
 
 	public Urlset buildUrlset(SitemapDescriptionData sitemapDescriptionData) {
 		Urlset urlset = new Urlset();
+		List<TUrl> globalList = new ArrayList<>();
 
-		for (SitemapEntryData sitemapEntryData : CollectionUtils.union(
+		for (SitemapEntryData sitemapEntryData : ListUtils.union(
 				Collections.singletonList(sitemapDescriptionData.getStaticSitemapEntries()),
-				sitemapDescriptionData.getSitemapEntries())) {
-
+				sitemapDescriptionData.getSitemapEntries()
+		)) {
 			// Parcours de la liste des KeyFigureComputer pour trouver celui qui correspond au KeyFigure
-			for (UrlListComputer computer : urlListComputers) {
-				if (computer.accept(sitemapEntryData.getType())) {
-					try {
-						List<TUrl> staticUrlList;
-						staticUrlList = computer.compute(sitemapEntryData);
-						urlset.getUrl().addAll(staticUrlList);
-					} catch (AppServiceException e) {
-						log.error("Erreur lors de la construction de la liste d'URL de type {}",
-								sitemapEntryData.getType(), e);
-					}
+			for (AbstractUrlListComputer computer : urlListComputers) {
+				try {
+					List<TUrl> urlList = computer.compute(sitemapEntryData, sitemapDescriptionData);
+					globalList.addAll(urlList);
+				} catch (AppServiceException e) {
+					log.error("Erreur lors de la construction de la liste d'URL de type {}",
+							sitemapEntryData.getType(), e);
 				}
 			}
 		}
+		globalList = SitemapUtils.limitList(globalList, sitemapDescriptionData.getMaxUrlCount());
+		urlset.getUrl().addAll(globalList);
 		return urlset;
 	}
 

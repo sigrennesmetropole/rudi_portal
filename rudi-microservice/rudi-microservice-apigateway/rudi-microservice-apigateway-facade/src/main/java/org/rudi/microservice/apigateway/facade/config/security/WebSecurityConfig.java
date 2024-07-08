@@ -3,6 +3,8 @@ package org.rudi.microservice.apigateway.facade.config.security;
 import java.util.Arrays;
 
 import org.rudi.common.facade.config.filter.AbstractJwtTokenUtil;
+import org.rudi.microservice.apigateway.facade.config.security.jwt.JwtWebFilter;
+import org.rudi.microservice.apigateway.facade.config.security.oauth2.OAuth2WebFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,26 +34,13 @@ import org.springframework.web.server.WebFilter;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 //@EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-
-	public static final String REGISTRATION_ID = "rudi_module";
-
-	private static final String ACTUATOR_URL = "/actuator/**";
-
-	private static final String[] SB_PERMIT_ALL_URL = {
-			// URL public
-			"/apigateway/v1/application-information", "/apigateway/v1/healthCheck",
-			// OAuth2
-			"/oauth/**",
-			// swagger ui / openapi
-			"favicon.ico", "/apigateway/v3/api-docs/**", "/apigateway/swagger-ui/**", "/apigateway/swagger-ui.html",
-			"/apigateway/swagger-resources/**", "/apigateway/webjars/**",
-			// configuration ?
-			"/configuration/ui", "/configuration/security" };
 
 	@Value("${application.role.administrateur.code}")
 	private String administrateurRoleCode;
@@ -88,12 +77,13 @@ public class WebSecurityConfig {
 		http.authorizeExchange(exchanges -> {
 			exchanges.matchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll();
 			if (!disableAuthentification) {
-				exchanges.pathMatchers(SB_PERMIT_ALL_URL).permitAll();
-				exchanges.pathMatchers(ACTUATOR_URL).authenticated();
+				exchanges.pathMatchers(SecurityConstants.SB_PERMIT_ALL_URL).permitAll();
+				exchanges.pathMatchers(SecurityConstants.ACTUATOR_URL).authenticated();
 				exchanges.anyExchange().authenticated().and()
 						.addFilterBefore(createOAuth2Filter(), SecurityWebFiltersOrder.AUTHENTICATION)
 						.addFilterBefore(createJwtRequestFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
 			} else {
+				log.warn("/!\\ Authentification is disabled");
 				exchanges.anyExchange().permitAll();
 			}
 		});
@@ -106,7 +96,7 @@ public class WebSecurityConfig {
 
 	@Bean(name = "rudi_oauth2_repository")
 	public ReactiveClientRegistrationRepository getRegistration() {
-		ClientRegistration clientRegistration = ClientRegistration.withRegistrationId(REGISTRATION_ID)
+		ClientRegistration clientRegistration = ClientRegistration.withRegistrationId(SecurityConstants.REGISTRATION_ID)
 				.tokenUri(tokenUri).clientId(clientId).clientSecret(clientSecret)
 				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS).scope(scopes).build();
 		return new InMemoryReactiveClientRegistrationRepository(clientRegistration);
@@ -149,11 +139,11 @@ public class WebSecurityConfig {
 	}
 
 	public WebFilter createJwtRequestFilter() {
-		return new JwtWebFilter(SB_PERMIT_ALL_URL, jwtTokenUtil);
+		return new JwtWebFilter(SecurityConstants.SB_PERMIT_ALL_URL, jwtTokenUtil);
 	}
 
 	private WebFilter createOAuth2Filter() {
-		return new OAuth2WebFilter(SB_PERMIT_ALL_URL, checkTokenUri, internalRestTemplate);
+		return new OAuth2WebFilter(SecurityConstants.SB_PERMIT_ALL_URL, checkTokenUri, internalRestTemplate);
 	}
 
 }

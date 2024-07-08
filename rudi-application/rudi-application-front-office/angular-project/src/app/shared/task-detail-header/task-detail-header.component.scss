@@ -1,5 +1,5 @@
 @import "common-style";
-
+@import "responsive";
 
 .demand-resume {
     margin-top: 20px;
@@ -21,11 +21,54 @@
     @include card-header-title;
 }
 
-.status-chip {
-    border-radius: 14px;
-    background-color: var(--background-s-lection-active-tableau);
-    white-space: nowrap;
-    padding: 5px 18px;
-    font-size: 13px;
-    color: var(--primary-color);
+.status-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 38px;
+
+    .status-chip {
+        border-radius: 14px;
+        background-color: var(--background-s-lection-active-tableau);
+        white-space: nowrap;
+        padding: 5px 18px;
+        font-size: 13px;
+        color: var(--primary-color);
+    }
+}
+
+.title-container {
+    display: flex;
+    justify-content: center;
+}
+
+@mixin mobile-screen {
+    .title-container {
+        padding: 8px 20px;
+    }
+}
+
+@mixin desktop-screen {
+    .title-container {
+        padding: 8px 80px;
+    }
+}
+
+@include xs() {
+    @include mobile-screen;
+}
+
+@include sm() {
+    @include mobile-screen;
+}
+
+@include md() {
+    @include mobile-screen;
+}
+
+@include lg() {
+    @include desktop-screen;
+}
+
+@include xl() {
+    @include desktop-screen;
 }

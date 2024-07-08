@@ -480,12 +480,20 @@
 								"$ref": "#/components/schemas/OwnerType"
 							},
 							"dataset_requests": {
-									"description": "Demande de nouveau jdd associé",
-									"type": "array",
-									"items": {
-											"$ref": "#/components/schemas/NewDatasetRequest"
-										},
-									"minItems": 0
+								"description": "Demande de nouveau jdd associé",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/NewDatasetRequest"
+								},
+								"minItems": 0
+							},
+							"linked_datasets": {
+								"description": "Jeu de données associé",
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/LinkedDataset"
+								},
+								"minItems": 0
 							},
 							"is_a_reuse": {
 									"description": "true si le projet est en fait une réutilisation",
@@ -602,6 +610,14 @@
 							},
 							"owner_uuids": {
 								"description": "UUIDs des utilisateurs ou des organisations ayant déclaré la réutilisation ou soumis le projet",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"format": "uuid"
+								}
+							},
+							"project_uuids": {
+								"description": "UUIDs des projets",
 								"type": "array",
 								"items": {
 									"type": "string",

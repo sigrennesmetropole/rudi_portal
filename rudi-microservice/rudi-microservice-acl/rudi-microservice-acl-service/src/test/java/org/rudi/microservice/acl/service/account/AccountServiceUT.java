@@ -1,7 +1,20 @@
 package org.rudi.microservice.acl.service.account;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import javax.mail.internet.MimeMessage;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.rudi.common.core.security.UserType;
 import org.rudi.common.service.exception.AppServiceException;
 import org.rudi.microservice.acl.core.bean.Account;
 import org.rudi.microservice.acl.core.bean.User;
@@ -12,21 +25,9 @@ import org.rudi.microservice.acl.storage.dao.accountregistration.AccountRegistra
 import org.rudi.microservice.acl.storage.dao.user.UserDao;
 import org.rudi.microservice.acl.storage.entity.accountregistration.AccountRegistrationEntity;
 import org.rudi.microservice.acl.storage.entity.user.UserEntity;
-import org.rudi.microservice.acl.storage.entity.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
 
 @AclSpringBootTest
 class AccountServiceUT {
@@ -162,7 +163,7 @@ class AccountServiceUT {
 		doCallRealMethod().when(javaMailSender).createMimeMessage();
 		doNothing().when(javaMailSender).send((MimeMessage) any());
 
-		assertThrows(PasswordLengthException.class,() -> accountService.registerAccount(account));
+		assertThrows(PasswordLengthException.class, () -> accountService.registerAccount(account));
 	}
 
 	@Test
@@ -180,13 +181,13 @@ class AccountServiceUT {
 		doCallRealMethod().when(javaMailSender).createMimeMessage();
 		doNothing().when(javaMailSender).send((MimeMessage) any());
 
-		assertThrows(PasswordNotMatchingRegexException.class,() -> accountService.registerAccount(account));
+		assertThrows(PasswordNotMatchingRegexException.class, () -> accountService.registerAccount(account));
 
 		account.setPassword("someth1ngudmngayeahwaza");
-		assertThrows(PasswordNotMatchingRegexException.class,() -> accountService.registerAccount(account));
+		assertThrows(PasswordNotMatchingRegexException.class, () -> accountService.registerAccount(account));
 
 		account.setPassword("soMeth1ngudmngayeahwaza");
-		assertThrows(PasswordNotMatchingRegexException.class,() -> accountService.registerAccount(account));
+		assertThrows(PasswordNotMatchingRegexException.class, () -> accountService.registerAccount(account));
 
 		account.setPassword("soMeth1ngudmngaye@hwaza");
 		accountService.registerAccount(account);
